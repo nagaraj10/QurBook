@@ -2,39 +2,45 @@ class SignIn {
   int status;
   bool success;
   String message;
-  SignInResponse signInResponse;
+  SignInResponse response;
 
-  SignIn({this.status, this.success, this.message, this.signInResponse});
+  SignIn({this.status, this.success, this.message, this.response});
 
-  factory SignIn.fromJson(Map<String, dynamic> parsedJson) {
-    var statusCode = parsedJson['status'];
-    var successValue = parsedJson['success'];
-    var messageString = parsedJson['message'];
-    var responseString = parsedJson['response'];
+  SignIn.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    success = json['success'];
+    message = json['message'];
+    response = json['response'] != null
+        ? new SignInResponse.fromJson(json['response'])
+        : null;
+  }
 
-    SignInResponse signInResponse = SignInResponse.fromJson(responseString);
-
-    return SignIn(
-        status: statusCode,
-        success: successValue,
-        message: messageString,
-        signInResponse: signInResponse);
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['success'] = this.success;
+    data['message'] = this.message;
+    if (this.response != null) {
+      data['response'] = this.response.toJson();
+    }
+    return data;
   }
 }
 
 class SignInResponse {
-  String creationTime;
-  String expirationTime;
+  String createdTimeString;
+  String expiryTimeString;
 
-  SignInResponse({this.creationTime, this.expirationTime});
+  SignInResponse({this.createdTimeString, this.expiryTimeString});
 
-  factory SignInResponse.fromJson(Map<String, dynamic> parsedJson) {
-    var createdTimeString = parsedJson['creationTime'];
-    var expiryTimeString = parsedJson['expirationTime'];
-
-    return SignInResponse(
-      creationTime: createdTimeString,
-      expirationTime: expiryTimeString,
-    );
+  SignInResponse.fromJson(Map<String, dynamic> parsedJson) {
+    createdTimeString = parsedJson['creationTime'];
+    expiryTimeString = parsedJson['expirationTime'];
+  }
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['creationTime'] = this.createdTimeString;
+    data['expirationTime'] = this.expiryTimeString;
+    return data;
   }
 }

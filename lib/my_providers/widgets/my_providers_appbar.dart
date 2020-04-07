@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {
   TabController tabController;
@@ -7,54 +9,39 @@ class MyProvidersAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return AppBar(
-      flexibleSpace: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: <Color>[
-              const Color(0XFF6717CD),
-              const Color(0XFF0A41A6)
-            ],
-                stops: [
-              0.3,
-              1
-            ])),
-      ),
-      leading: IconButton(
-        icon: Icon(
-          Icons.arrow_back_ios,
-          size: 20,
-        ),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
       backgroundColor: Colors.transparent,
+
       elevation: 0,
-      bottom: TabBar(
+      flexibleSpace: TabBar(
         tabs: [
           Tab(
-            text: 'Doctors',
+            text: CommonConstants.doctors,
           ),
           Tab(
-            text: 'Hospitals',
+            text: CommonConstants.hospitals,
           ),
           Tab(
-            text: 'Laboratories',
+            text: CommonConstants.labs,
           ),
         ],
-        controller: _tabController,
+        controller: tabController,
+        labelColor: Color(new CommonUtil().getMyPrimaryColor()),
         indicatorSize: TabBarIndicatorSize.label,
-        indicatorColor: Colors.white,
-        indicatorWeight: 4,
+        indicatorColor: Color(new CommonUtil().getMyPrimaryColor()),
+        indicatorWeight: 2,
       ),
-      title: Text('My Providers'),
-      centerTitle: false,
+      /*   title: Container(
+        height: 0,
+      ), */
+      leading: Container(
+        height: 0,
+        width: 0,
+      ),
+      //title: Text('My Providers'),
+      //centerTitle: false,
     );
   }
 
-  Size get preferredSize => new Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => new Size.fromHeight(30);
 }

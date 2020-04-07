@@ -26,7 +26,7 @@ dependencies:
   flutter_launcher_icons: "^0.7.0"
   flutter_country_picker: ^0.1.6
   font_awesome_flutter: ^8.5.0
-  rxdart: ^0.23.1
+  rxdart: ^0.22.0
   http: ^0.12.0+3
   intl: ^0.16.1
   shimmer: ^1.0.1
@@ -38,8 +38,31 @@ dependencies:
   flutter_svg: ^0.16.1
   local_auth: ^0.6.1
   flutter_arc_speed_dial: ^1.0.2
-
-
+  curved_navigation_bar: ^0.3.1
+  shared_preferences: ^0.5.6
+  avatar_glow: ^1.1.0
+  google_maps_flutter: ^0.5.22
+  auto_size_text: ^2.1.0
+  dio: ^3.0.8
+  flutter_sound:
+  flutter_google_places: ^0.2.3
+  geocoder: ^0.2.1
+  geolocator: ^5.2.1
+  uuid:
+  dotted_border: ^1.0.4
+  webview_flutter: ^0.3.19+7
+  video_player:
+  image_picker: ^0.6.1+10
+  carousel_slider:
+  multi_image_picker: ^4.6.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+  flutter_absolute_path: ^1.0.6
+  provider: ^4.0.4
+  #sms_retriever:
+  get: ^1.11.1
+  tflite: 1.0.4
+  sqflite:
+  devicelocale: ^0.2.2 
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -64,30 +87,20 @@ flutter:
   assets:
     - assets/user/avatar.png
     - assets/bg/login-bg.png
-    - assets/icons/faq.svg
-    - assets/icons/feedback.svg
-    - assets/icons/home.svg
-    - assets/icons/logout.svg
-    - assets/icons/my_family.svg
-    - assets/icons/providers.svg
-    - assets/icons/rate_us.svg
-    - assets/icons/settings.svg
-    - assets/navicons/settings.svg
-    - assets/navicons/schedule.svg
-    - assets/navicons/user.svg
+    - assets/icons/
     - assets/launcher/myfhb.png
-    - assets/navicons/calendar.png
-    - assets/navicons/robot.png
-    - assets/navicons/home.png
-    - assets/navicons/user.png
-    - assets/navicons/settings.png
+    - assets/navicons/
     - assets/norecordfound.png
-    - assets/navicons/my_family.png
-    - assets/navicons/my_providers.png
-    - assets/navicons/my_records.png
     - assets/bg/family_bg.png
     - assets/bot/maya_bot.png
     - assets/login_icon.png
+    - assets/maya/
+    - assets/settings/
+    - assets/providers/
+    - assets/help_docs/
+    - assets/video/
+    - assets/
+
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

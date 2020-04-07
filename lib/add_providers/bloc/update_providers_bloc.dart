@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:myfhb/add_providers/models/update_providers_id.dart';
-import 'package:myfhb/add_providers/services/add_providers_repository.dart';
+import 'package:myfhb/add_providers/services/update_providers_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 
-class AddProvidersBloc implements BaseBloc {
-  AddProvidersRepository addProvidersRepository;
+class UpdateProvidersBloc implements BaseBloc {
+  UpdateProvidersRepository updateProvidersRepository;
   String providerId;
+  bool isPreferred;
 
   // 1
   // Doctors
@@ -36,8 +37,8 @@ class AddProvidersBloc implements BaseBloc {
   Stream<ApiResponse<UpdateProvidersId>> get labsStream =>
       hospitalsProvidersController.stream;
 
-  AddProvidersBloc() {
-    addProvidersRepository = AddProvidersRepository();
+  UpdateProvidersBloc() {
+    updateProvidersRepository = UpdateProvidersRepository();
 
     // 1
     // Doctors
@@ -60,8 +61,8 @@ class AddProvidersBloc implements BaseBloc {
   updateDoctorsIdWithUserDetails() async {
     doctorsSink.add(ApiResponse.loading('Signing in user'));
     try {
-      UpdateProvidersId updateProvidersId = await addProvidersRepository
-          .updateDoctorsIdWithUserDetails(providerId);
+      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+          .updateDoctorsIdWithUserDetails(providerId, isPreferred);
       doctorsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       doctorsSink.add(ApiResponse.error(e.toString()));
@@ -74,8 +75,8 @@ class AddProvidersBloc implements BaseBloc {
   updateHospitalsIdWithUserDetails() async {
     hospitalsSink.add(ApiResponse.loading('Signing in user'));
     try {
-      UpdateProvidersId updateProvidersId = await addProvidersRepository
-          .updateHospitalsIdWithUserDetails(providerId);
+      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+          .updateHospitalsIdWithUserDetails(providerId, isPreferred);
       hospitalsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       hospitalsSink.add(ApiResponse.error(e.toString()));
@@ -88,8 +89,8 @@ class AddProvidersBloc implements BaseBloc {
   updateLabsIdWithUserDetails() async {
     labsSink.add(ApiResponse.loading('Signing in user'));
     try {
-      UpdateProvidersId updateProvidersId =
-          await addProvidersRepository.updateLabsIdWithUserDetails(providerId);
+      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+          .updateLabsIdWithUserDetails(providerId, isPreferred);
       labsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       labsSink.add(ApiResponse.error(e.toString()));

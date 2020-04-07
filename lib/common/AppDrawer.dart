@@ -5,6 +5,7 @@ import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class AppDrawer extends StatefulWidget {
   @override
@@ -91,8 +92,9 @@ class AppDrawerState extends State<AppDrawer> {
             child: DrawerHeader(
               decoration: BoxDecoration(
                   gradient: LinearGradient(colors: <Color>[
-                Colors.deepPurple,
-                Colors.deepPurpleAccent
+                //FIXME need to discuss     
+                Color(new CommonUtil().getMyPrimaryColor()),
+                Color(new CommonUtil().getMyGredientColor())
               ])),
               child: Column(
                 children: <Widget>[
@@ -107,7 +109,7 @@ class AppDrawerState extends State<AppDrawer> {
                       height: 90.0,
                       padding: const EdgeInsets.all(5.0), // borde width
                       decoration: new BoxDecoration(
-                        color: Colors.deepPurple[100]
+                        color: Color(new CommonUtil().getMyPrimaryColor())
                             .withOpacity(0.5), // border color
                         shape: BoxShape.circle,
                       )),
@@ -167,7 +169,10 @@ class AppDrawerState extends State<AppDrawer> {
                   ],
                 ),
                 gradient: LinearGradient(
-                  colors: <Color>[Colors.deepPurple[300], Colors.deepPurple],
+                  colors: <Color>[//Colors.deepPurple[300], Colors.deepPurple
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor())
+                  ],
                 ),
                 onPressed: () {
                   PageNavigator.goToPermanent(context, '/sign_in_screen');

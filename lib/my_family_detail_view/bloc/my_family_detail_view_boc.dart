@@ -1,0 +1,76 @@
+import 'dart:async';
+
+import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
+import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_repository.dart';
+import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/resources/network/ApiResponse.dart';
+
+class MyFamilyDetailViewBloc implements BaseBloc {
+  StreamController _healthReportListController;
+  StreamController _categoryController;
+
+  // 1
+
+  StreamSink<ApiResponse<UserHealthResponseList>> get healthReportListSink =>
+      _healthReportListController.sink;
+
+  Stream<ApiResponse<UserHealthResponseList>> get healthReportStream =>
+      _healthReportListController.stream;
+
+  // 2
+  StreamSink<ApiResponse<CategoryResponseList>> get categoryListSink =>
+      _categoryController.sink;
+
+  Stream<ApiResponse<CategoryResponseList>> get categoryListStream =>
+      _categoryController.stream;
+
+  MyFamilyDetailViewRepository _healthReportListForUserRepository;
+
+  String userId;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+    _healthReportListController?.close();
+    _categoryController?.close();
+  }
+
+  MyFamilyDetailViewBloc() {
+    _healthReportListForUserRepository = MyFamilyDetailViewRepository();
+
+    _healthReportListController =
+        StreamController<ApiResponse<UserHealthResponseList>>();
+
+    _categoryController = StreamController<ApiResponse<CategoryResponseList>>();
+  }
+
+  getHelthReportList() async {
+    healthReportListSink.add(ApiResponse.loading('Signing in user'));
+    try {
+      UserHealthResponseList userHealthResponseList =
+          await _healthReportListForUserRepository.getHealthReportList(userId);
+      healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
+    } catch (e) {
+      healthReportListSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+  }
+
+  Future<CategoryResponseList> getCategoryList() async {
+    categoryListSink.add(ApiResponse.loading('Signing in user'));
+
+    CategoryResponseList categoryResponseList;
+
+    try {
+      categoryResponseList =
+          await _healthReportListForUserRepository.getCategoryList();
+    } catch (e) {
+      categoryListSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+
+    return categoryResponseList;
+  }
+}

@@ -162,24 +162,25 @@ class MetaInfo {
   Laboratory laboratory;
   Hospital hospital;
   String dateOfExpiry;
-  MediaTypeInfo idType;
+  //MediaTypeInfo idType;
 
-  MetaInfo(
-      {this.categoryInfo,
-      this.dateOfVisit,
-      this.deviceReadings,
-      this.doctor,
-      this.fileName,
-      this.hasVoiceNotes,
-      this.isDraft,
-      this.mediaTypeInfo,
-      this.memoText,
-      this.memoTextRaw,
-      this.sourceName,
-      this.laboratory,
-      this.hospital,
-      this.dateOfExpiry,
-      this.idType});
+  MetaInfo({
+    this.categoryInfo,
+    this.dateOfVisit,
+    this.deviceReadings,
+    this.doctor,
+    this.fileName,
+    this.hasVoiceNotes,
+    this.isDraft,
+    this.mediaTypeInfo,
+    this.memoText,
+    this.memoTextRaw,
+    this.sourceName,
+    this.laboratory,
+    this.hospital,
+    this.dateOfExpiry,
+    //this.idType
+  });
 
   MetaInfo.fromJson(Map<String, dynamic> json) {
     categoryInfo = json['categoryInfo'] != null
@@ -210,9 +211,9 @@ class MetaInfo {
         ? new Hospital.fromJson(json['hospital'])
         : null;
     dateOfExpiry = json['dateOfExpiry'];
-    idType = json['idType'] != null
+    /* idType = json['idType'] != null
         ? new MediaTypeInfo.fromJson(json['idType'])
-        : null;
+        : null; */
   }
 
   Map<String, dynamic> toJson() {
@@ -244,9 +245,9 @@ class MetaInfo {
       data['hospital'] = this.hospital.toJson();
     }
     data['dateOfExpiry'] = this.dateOfExpiry;
-    if (this.idType != null) {
+    /*  if (this.idType != null) {
       data['idType'] = this.idType.toJson();
-    }
+    } */
     return data;
   }
 }
@@ -263,6 +264,7 @@ class CategoryInfo {
   String logo;
   String url;
   int localid;
+  bool isActive;
 
   CategoryInfo(
       {this.categoryDescription,
@@ -275,7 +277,8 @@ class CategoryInfo {
       this.isRead,
       this.logo,
       this.url,
-      this.localid});
+      this.localid,
+      this.isActive});
 
   CategoryInfo.fromJson(Map<String, dynamic> json) {
     categoryDescription = json['categoryDescription'];
@@ -289,6 +292,7 @@ class CategoryInfo {
     logo = json['logo'];
     url = json['url'];
     localid = json['localid'];
+    isActive = json['isActive'];
   }
 
   Map<String, dynamic> toJson() {
@@ -304,6 +308,8 @@ class CategoryInfo {
     data['logo'] = this.logo;
     data['url'] = this.url;
     data['localid'] = this.localid;
+    data['isActive'] = this.isActive;
+
     return data;
   }
 }
@@ -311,21 +317,25 @@ class CategoryInfo {
 class DeviceReadings {
   String parameter;
   String unit;
-  String values;
+  String value;
 
-  DeviceReadings({this.parameter, this.unit, this.values});
+  DeviceReadings({this.parameter, this.unit, this.value});
 
   DeviceReadings.fromJson(Map<String, dynamic> json) {
     parameter = json['parameter'];
+    if (json['value'] is int) {
+      value = json['value'].toString();
+    } else {
+      value = json['value'];
+    }
     unit = json['unit'];
-    values = json['values'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['parameter'] = this.parameter;
     data['unit'] = this.unit;
-    data['values'] = this.values;
+    data['values'] = this.value;
     return data;
   }
 }
@@ -385,7 +395,7 @@ class MediaTypeInfo {
   String description;
   String id;
   bool isAITranscription;
-  String isActive;
+  bool isActive;
   bool isCreate;
   bool isDelete;
   bool isDisplay;
@@ -423,7 +433,12 @@ class MediaTypeInfo {
     description = json['description'];
     id = json['id'];
     isAITranscription = json['isAITranscription'];
-    isActive = json['isActive'];
+    if (json['isActive'] is bool) {
+      isActive = json['isActive'];
+    } else {
+      isActive = bool.fromEnvironment(json['isActive']);
+    }
+
     isCreate = json['isCreate'];
     isDelete = json['isDelete'];
     isDisplay = json['isDisplay'];
@@ -470,9 +485,9 @@ class Laboratory {
   String email;
   String id;
   bool isUserDefined;
-  int latitude;
+  String latitude;
   String logoThumbnail;
-  int longitude;
+  String longitude;
   String name;
   String website;
   String zipcode;
@@ -504,12 +519,26 @@ class Laboratory {
     email = json['email'];
     id = json['id'];
     isUserDefined = json['isUserDefined'];
-    latitude = json['latitude'];
+    if (json['latitude'] is String) {
+      latitude = json['latitude'];
+    } else {
+      latitude = json['latitude'].toString();
+    }
+    if (json['longitude'] is String) {
+      longitude = json['longitude'];
+    } else {
+      longitude = json['longitude'].toString();
+    }
+    //latitude = json['latitude'];
     logoThumbnail = json['logoThumbnail'];
-    longitude = json['longitude'];
+    //longitude = json['longitude'];
     name = json['name'];
     website = json['website'];
-    zipcode = json['zipcode'];
+    if (zipcode is String) {
+      zipcode = json['zipcode'];
+    } else {
+      zipcode = json['zipcode'].toString();
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -543,9 +572,9 @@ class Hospital {
   String email;
   String id;
   bool isUserDefined;
-  int latitude;
+  String latitude;
   String logoThumbnail;
-  int longitude;
+  String longitude;
   String name;
   String website;
   String zipcode;
@@ -577,12 +606,25 @@ class Hospital {
     email = json['email'];
     id = json['id'];
     isUserDefined = json['isUserDefined'];
-    latitude = json['latitude'];
+    if (json['latitude'] is String) {
+      latitude = json['latitude'];
+    } else {
+      latitude = json['latitude'].toString();
+    }
+    if (json['longitude'] is String) {
+      longitude = json['longitude'];
+    } else {
+      longitude = json['longitude'].toString();
+    }
+
     logoThumbnail = json['logoThumbnail'];
-    longitude = json['longitude'];
     name = json['name'];
     website = json['website'];
-    zipcode = json['zipcode'];
+    if (zipcode is String) {
+      zipcode = json['zipcode'];
+    } else {
+      zipcode = json['zipcode'].toString();
+    }
   }
 
   Map<String, dynamic> toJson() {

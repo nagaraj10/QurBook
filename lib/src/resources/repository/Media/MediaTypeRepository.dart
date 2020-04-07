@@ -1,3 +1,4 @@
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -20,8 +21,10 @@ class MediaTypeRepository {
   }
 
   Future<dynamic> getDocumentImage(String metaMasterID) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
     final response = await _helper.getDocumentImage(
-        "mediameta/" + Constants.USER_ID + "/getRawMedia/" + metaMasterID);
+        "mediameta/" + userID + "/getRawMedia/" + metaMasterID);
     return response;
   }
 }

@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 
-import '../models/DoctorsListResponse.dart';
-import '../services/DoctorsListRepository.dart';
+import '../models/doctors_list_response.dart';
+import '../services/doctors_list_repository.dart';
 
 class DoctorsListBlock implements BaseBloc {
   DoctorsListRepository _doctorsListRepository;

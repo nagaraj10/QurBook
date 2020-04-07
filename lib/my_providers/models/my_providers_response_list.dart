@@ -214,7 +214,7 @@ class LaboratoryModel {
   String id;
   String createdBy;
   String name;
-  Null logo;
+  String logo;
   String latitude;
   String longitude;
   String logoThumbnail;

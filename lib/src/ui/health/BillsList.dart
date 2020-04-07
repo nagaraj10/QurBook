@@ -1,16 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/common/PreferenceUtil.dart';
 
 class BillsList extends StatefulWidget {
   final CompleteData completeData;
   final Function callBackToRefresh;
 
-  BillsList(this.completeData, this.callBackToRefresh);
+  final String categoryName;
+  final String categoryId;
+
+  final Function(String, String) getDataForParticularLabel;
+
+  BillsList(this.completeData, this.callBackToRefresh, this.categoryName,
+      this.categoryId, this.getDataForParticularLabel);
+
   @override
   _BillsListState createState() => new _BillsListState();
 }
@@ -24,9 +35,9 @@ class _BillsListState extends State<BillsList> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-
-    /*  WidgetsBinding.instance
-        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show()); */
+    widget.getDataForParticularLabel(widget.categoryName, widget.categoryId);
+    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName);
+    PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId);
     super.initState();
   }
 
@@ -45,7 +56,7 @@ class _BillsListState extends State<BillsList> {
       onRefresh: _refresh,
       child: mediaMetaInfoObj.length > 0
           ? Container(
-              color: const Color(0xFFF7F9Fb),
+              color: const Color(fhbColors.bgColorContainer),
               child: ListView.builder(
                 itemBuilder: (c, i) =>
                     getCardWidgetForBills(mediaMetaInfoObj[i], i),
@@ -53,9 +64,9 @@ class _BillsListState extends State<BillsList> {
               ))
           : Container(
               child: Center(
-                  //child: Text('No Data Available'),
-                  child: Image.asset('assets/norecordfound.png')),
-              color: Colors.grey[300],
+                child: Text('No Data Available'),
+              ),
+              color: const Color(fhbColors.bgColorContainer),
             ),
     );
   }
@@ -68,57 +79,56 @@ class _BillsListState extends State<BillsList> {
   }
 
   getCardWidgetForBills(MediaMetaInfo mediaMetaInfoObj, int i) {
-    return new Padding(
-        padding: new EdgeInsets.only(top: 10, bottom: 5),
+    return InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RecordDetailScreen(
+                data: mediaMetaInfoObj,
+              ),
+            ),
+          );
+        },
         child: Container(
             padding: EdgeInsets.all(10.0),
-            color: Colors.white,
+            margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(fhbColors.cardShadowColor),
+                  blurRadius: 16, // has the effect of softening the shadow
+                  spreadRadius: 0, // has the effect of extending the shadow
+                )
+              ],
+            ),
             child: Row(
               children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      Container(
-                        color: Colors.grey[200],
-                        width: 50.0,
-                        height: 50.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              new FHBUtils().convertMonthFromString(
-                                  mediaMetaInfoObj.createdOn),
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                            Text(
-                                new FHBUtils().convertDateFromString(
-                                    mediaMetaInfoObj.createdOn),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w500))
-                          ],
-                        ),
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                    ],
+                CircleAvatar(
+                  radius: 25,
+                  backgroundColor: const Color(fhbColors.bgColorContainer),
+                  child: Image.network(
+                    mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                        ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
+                        : Constants.BASERURL +
+                            mediaMetaInfoObj.metaInfo.mediaTypeInfo.logo,
+                    height: 25,
+                    width: 25,
+                    color: Color(new CommonUtil().getMyPrimaryColor()),
                   ),
                 ),
                 SizedBox(
-                  width: 10,
+                  width: 20,
                 ),
                 Expanded(
-                  flex: 4,
+                  flex: 6,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      SizedBox(height: 10.0),
+                      //SizedBox(height: 10.0),
                       Text(
                         mediaMetaInfoObj.metaInfo.fileName != null
                             ? mediaMetaInfoObj.metaInfo.fileName
@@ -127,33 +137,46 @@ class _BillsListState extends State<BillsList> {
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                       ),
+                      Text(
+                        new FHBUtils()
+                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
+                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                      )
                     ],
                   ),
                 ),
                 Expanded(
                   flex: 1,
                   child: Column(
-                    children: <Widget>[
-                      getDocumentImageWidget(mediaMetaInfoObj),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      mediaMetaInfoObj.isBookmarked
-                          ? Icon(
-                              Icons.bookmark,
-                              color: Colors.grey,
-                            )
-                          : Icon(
-                              Icons.bookmark,
-                              color: Colors.red,
-                            ),
-                      mediaMetaInfoObj.metaInfo.hasVoiceNotes
+                      /* Icon(
+                    Icons.more_horiz,
+                    color: Colors.grey,
+                    size: 20,
+                  ), */
+                      //SizedBox(height: 10),
+                      IconButton(
+                          icon: mediaMetaInfoObj.isBookmarked
+                              ? ImageIcon(
+                                  AssetImage(
+                                      'assets/icons/record_fav_active.png'),
+                                      //TODO chnage theme
+                                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                                  size: 20,
+                                )
+                              : ImageIcon(
+                                  AssetImage('assets/icons/record_fav.png'),
+                                  color: Colors.black,
+                                  size: 20,
+                                ),
+                          onPressed: () {
+                            new CommonUtil()
+                                .bookMarkRecord(mediaMetaInfoObj, _refresh);
+                          }),
+                      (mediaMetaInfoObj.metaInfo.hasVoiceNotes != null &&
+                              mediaMetaInfoObj.metaInfo.hasVoiceNotes)
                           ? Icon(
                               Icons.mic,
                               color: Colors.black54,

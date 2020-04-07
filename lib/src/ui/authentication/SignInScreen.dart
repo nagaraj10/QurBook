@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/model/Authentication/SignIn.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
+import 'package:myfhb/src/ui/authentication/SignUpScreen.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/CommonUtil.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -33,28 +39,79 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Stack(
-          //alignment: Alignment.center,
-          children: <Widget>[
-            Container(child: Image.asset('assets/bg/login-bg.png')),
-            Center(
-              child: Container(
+        //backgroundColor: Colors.white,
+        //NOTE commented app bar 
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          leading: Container(),
+          elevation: 0,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 40),
+                child: Text(
+                  'Welcome',
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    //TODO chnage theme
+                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500),
+                ),
+              ),
+              Padding(
                 padding: EdgeInsets.all(10),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                child: Text(
+                  'get started with MyFHB',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+
+              /*    Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  'Enter your mobile number',
+                  style: TextStyle(
+                      color: Colors.black38, fontWeight: FontWeight.w500),
+                ),
+              ), */
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: ImageIcon(
+                  AssetImage('assets/icons/otp_icon.png'),
+                  size: 70,
+                  //TODO chnage theme
+                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 20, bottom: 20, left: 40, right: 40),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(width: 1.0, color: Colors.black54),
+                    ),
+                  ),
+                  child: Row(
+                    //crossAxisAlignment: CrossAxisAlignment.baseline,
                     children: <Widget>[
                       CountryPicker(
                         nameTextStyle: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.w500),
                         dialingCodeTextStyle: TextStyle(
-                            color: Colors.black, fontWeight: FontWeight.w500),
+                            color: Colors.black54, fontWeight: FontWeight.w500),
                         dense: false,
                         showFlag: true, //displays flag, true by default
                         showDialingCode:
                             true, //displays dialing code, false by default
-                        showName: true, //displays country name, true by default
+                        showName:
+                            false, //displays country name, true by default
                         showCurrency: false, //eg. 'British pound'
                         showCurrencyISO: false, //eg. 'GBP'
                         onChanged: (Country country) {
@@ -65,206 +122,148 @@ class _SignInScreenState extends State<SignInScreen> {
                         selectedCountry: _selected,
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: 30, right: 30),
-                        height: 1,
-                        width: double.infinity,
+                        //margin: EdgeInsets.only(left: 30, right: 30),
+                        width: 1,
+                        height: 30,
                         color: Colors.grey.withOpacity(0.5),
                       ),
-                      SizedBox(height: 20),
-                      Container(
-                          margin: EdgeInsets.only(left: 30, right: 30),
-                          width: double.infinity,
+                      Expanded(
                           child: mobileNumberField(
                               _loginBloc, phoneTextController)),
-                      SizedBox(
+                      /* Container(
+                        //margin: EdgeInsets.only(left: 30, right: 30),
+                        width: 1,
                         height: 20,
-                      ),
-                      Text(
-                        Constants.SignInOtpText,
-                        style: TextStyle(fontSize: 12),
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      submitButton(_loginBloc, _selected.dialingCode,
-                          phoneTextController)
+                        color: Colors.grey.withOpacity(0.5),
+                      ), */
                     ],
                   ),
                 ),
-                constraints: BoxConstraints(
-                  maxHeight: 300,
-                ),
-                margin: EdgeInsets.only(left: 40, right: 40, top: 200),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.rectangle,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10.0, // soften the shadow
-                      spreadRadius: 5.0, //extend the shadow
-                      offset: Offset(
-                        0.0, // Move to right 10  horizontally
-                        5.0, // Move to bottom 5 Vertically
-                      ),
-                    )
-                  ],
-                ),
               ),
-            ),
-            Positioned(
-              top: 60,
-              left: 100,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[Image.asset('assets/login_icon.png')],
-              ),
-            )
-          ],
-        )
-
-        /*Center(
-          child: Padding(
-        padding: EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              Constants.ENTER_MOB_NUM,
-              textAlign: TextAlign.start,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                CountryPicker(
-                  dense: false,
-                  showFlag: true, //displays flag, true by default
-                  showDialingCode:
-                      true, //displays dialing code, false by default
-                  showName: false, //displays country name, true by default
-                  showCurrency: false, //eg. 'British pound'
-                  showCurrencyISO: false, //eg. 'GBP'
-                  onChanged: (Country country) {
-                    setState(() {
-                      _selected = country;
-                      print('selected country code : ${country.dialingCode}');
-                    });
-                  },
-                  selectedCountry: _selected,
+              SizedBox(height: 20),
+              /*  InkWell(
+                child: Container(
+                  child: Text('New Member? Sign Up'),
+                  padding: EdgeInsets.all(10),
                 ),
-                Container(
-                  width: 1,
-                  height: 20,
-                  color: Colors.blueGrey,
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Expanded(child: mobileNumberField(_loginBloc)),
-              ],
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 20, right: 20),
-              height: 1,
-              color: Colors.blueGrey.withOpacity(0.5),
-            ),
-            SizedBox(height: 20),
-            submitButton(_loginBloc, _selected.dialingCode),
-            StreamBuilder<ApiResponse<SignIn>>(
-              stream: _loginBloc.signInStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  switch (snapshot.data.status) {
-                    case Status.LOADING:
-                      return CircularProgressIndicator();
-                      break;
-
-                    case Status.ERROR:
-                      return Text('Oops, something went wrong',
-                          style: TextStyle(color: Colors.red));
-                      break;
-
-                    case Status.COMPLETED:
-                      print(snapshot.data.message);
-                      moveToNextScreen();
-                      return Container();
-                      break;
-                  }
-                } else {
-                  return Container(
-                    width: 0,
-                    height: 0,
-                  );
-                }
-              },
-            ),
-          ],
-        ),
-      )),*/
-        );
+                onTap: () {
+                  PageNavigator.goTo(context, '/sign_up_screen');
+                },
+              ), */
+              SizedBox(height: 20),
+              submitButton(
+                  _loginBloc, _selected.dialingCode, phoneTextController),
+              SizedBox(height: 20)
+            ],
+          ),
+        ));
   }
 
   moveToNextScreen() {
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        // PageNavigator.goTo(context, '/otp_verification_screen');
         PageNavigator.goTo(context, '/home_screen');
       });
     });
   }
-}
 
-Widget mobileNumberField(bloc, TextEditingController textController) {
-  return StreamBuilder<String>(
-    stream: bloc.mobileNumber,
-    builder: (context, snapshot) {
-      return TextField(
-        controller: textController,
-        onChanged: bloc.mobileNumberChanged,
-        keyboardType: TextInputType.phone,
-        inputFormatters: <TextInputFormatter>[
-          LengthLimitingTextInputFormatter(12),
-          WhitelistingTextInputFormatter.digitsOnly,
-          BlacklistingTextInputFormatter.singleLineFormatter,
-        ],
-        decoration: InputDecoration(
-            hintText: Constants.ENTER_MOB_NUM,
-            hintStyle: TextStyle(fontSize: 12)),
-      );
-    },
-  );
-}
+  Widget mobileNumberField(bloc, TextEditingController textController) {
+    return StreamBuilder<String>(
+      stream: bloc.mobileNumber,
+      builder: (context, snapshot) {
+        return TextField(
+          controller: textController,
+          onChanged: bloc.mobileNumberChanged,
+          keyboardType: TextInputType.phone,
+          inputFormatters: <TextInputFormatter>[
+            LengthLimitingTextInputFormatter(12),
+            WhitelistingTextInputFormatter.digitsOnly,
+            BlacklistingTextInputFormatter.singleLineFormatter,
+          ],
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: EdgeInsets.only(left: 10, right: 10),
+              hintText: Constants.ENTER_MOB_NUM,
+              hintStyle: TextStyle(fontSize: 12)),
+        );
+      },
+    );
+  }
 
-Widget submitButton(LoginBloc bloc, String countryCode,
-    TextEditingController phoneTextController) {
-  return StreamBuilder(
-    stream: bloc.submitCheck,
-    builder: (context, snapshot) {
-      return Container(
-        padding: EdgeInsets.all(20),
-        constraints: BoxConstraints(minWidth: 220, maxWidth: double.infinity),
-        child: RaisedGradientButton(
-            child: Text(
-              'NEXT',
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-            gradient: LinearGradient(
-              colors: <Color>[Colors.deepPurple[300], Colors.deepPurple],
-            ),
-            onPressed: //snapshot.hasData ? bloc.submit : null,
-                () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OtpVerifyScreen(
-                          enteredMobNumber: phoneTextController.text,
-                          selectedCountryCode: countryCode,
-                        )),
-              );
-            }),
+  Widget submitButton(LoginBloc bloc, String countryCode,
+      TextEditingController phoneTextController) {
+    return StreamBuilder(
+      stream: bloc.submitCheck,
+      builder: (context, snapshot) {
+        return Container(
+          //padding: EdgeInsets.all(20),
+          constraints: BoxConstraints(maxWidth: 220),
+          child: RaisedGradientButton(
+              child: Text(
+                'NEXT',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              gradient: LinearGradient(
+                colors: <Color>[
+                  //TODO chnage theme
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor()),
+                ],
+              ),
+              onPressed: () {
+                bloc
+                    .submit(phoneTextController.text, countryCode)
+                    .then((signInResponse) {
+                  print('paru' + signInResponse.toString());
+                  if (signInResponse.message == Constants.STR_MSG_SIGNUP ||
+                      signInResponse.message == Constants.STR_VERIFY_OTP ||
+                      signInResponse.message == Constants.STR_VERIFY_USER)
+                    //PageNavigator.goTo(context, '/sign_up_screen');
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return SignUpScreen(
+                            enteredMobNumber: phoneTextController.text,
+                            selectedCountryCode: countryCode,
+                            selectedCountry: _selected.name,
+                          );
+                        },
+                      ),
+                    );
+                  else{
+                     PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
+                        int.parse(countryCode));
+                    PreferenceUtil.saveString(
+                        CommonConstants.KEY_COUNTRYNAME, _selected.name);
+                         moveToNext(
+                        signInResponse, phoneTextController.text, countryCode);
+                  }
+                   
+                });
+              }),
+        );
+      },
+    );
+  }
+
+  void moveToNext(SignIn signIn, String phoneNumber, String countryCode) {
+    print('Outside signIn');
+
+    if (signIn.success) {
+      print('Inside signIn');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) {
+            return OtpVerifyScreen(
+              enteredMobNumber: phoneNumber,
+              selectedCountryCode: countryCode,
+              fromSignIn: true,
+            );
+          },
+        ),
       );
-    },
-  );
+    } else {
+      new FHBBasicWidget().getSnackBarWidget(context, signIn.message);
+    }
+  }
 }

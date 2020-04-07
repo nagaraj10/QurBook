@@ -4,7 +4,8 @@ class CategoryResponseList {
   String message;
   Response response;
 
-  CategoryResponseList({this.status, this.success, this.message, this.response});
+  CategoryResponseList(
+      {this.status, this.success, this.message, this.response});
 
   CategoryResponseList.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -29,16 +30,16 @@ class CategoryResponseList {
 
 class Response {
   int count;
-  List<Data> data;
+  List<CategoryData> data;
 
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
     count = json['count'];
     if (json['data'] != null) {
-      data = new List<Data>();
+      data = new List<CategoryData>();
       json['data'].forEach((v) {
-        data.add(new Data.fromJson(v));
+        data.add(new CategoryData.fromJson(v));
       });
     }
   }
@@ -53,7 +54,7 @@ class Response {
   }
 }
 
-class Data {
+class CategoryData {
   String id;
   String categoryName;
   String categoryDescription;
@@ -67,7 +68,7 @@ class Data {
   bool isEdit;
   bool isDelete;
 
-  Data(
+  CategoryData(
       {this.id,
       this.categoryName,
       this.categoryDescription,
@@ -81,7 +82,7 @@ class Data {
       this.isEdit,
       this.isDelete});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  CategoryData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     categoryName = json['categoryName'];
     categoryDescription = json['categoryDescription'];
@@ -112,7 +113,4 @@ class Data {
     data['isDelete'] = this.isDelete;
     return data;
   }
-
- 
-
 }

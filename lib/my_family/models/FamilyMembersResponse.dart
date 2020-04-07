@@ -28,12 +28,12 @@ class FamilyMembersList {
 }
 
 class Response {
-  Data data;
+  FamilyData data;
 
   Response({this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new FamilyData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -45,14 +45,14 @@ class Response {
   }
 }
 
-class Data {
+class FamilyData {
   List<Sharedbyme> sharedbyme;
   List<SharedToMe> sharedToMe;
   VirtualUserParent virtualUserParent;
 
-  Data({this.sharedbyme, this.sharedToMe, this.virtualUserParent});
+  FamilyData({this.sharedbyme, this.sharedToMe, this.virtualUserParent});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  FamilyData.fromJson(Map<String, dynamic> json) {
     if (json['sharedbyme'] != null) {
       sharedbyme = new List<Sharedbyme>();
       json['sharedbyme'].forEach((v) {
@@ -153,7 +153,8 @@ class ProfileData {
   bool isVirtualUser;
   String createdBy;
   ProfilePicThumbnail profilePicThumbnail;
-  Null bloodGroup;
+  QualifiedFullName qualifiedFullName;
+  String bloodGroup;
   String dateOfBirth;
   bool isTokenRefresh;
   String countryCode;
@@ -174,6 +175,7 @@ class ProfileData {
       this.isVirtualUser,
       this.createdBy,
       this.profilePicThumbnail,
+      this.qualifiedFullName,
       this.bloodGroup,
       this.dateOfBirth,
       this.isTokenRefresh,
@@ -196,6 +198,9 @@ class ProfileData {
     createdBy = json['createdBy'];
     profilePicThumbnail = json['profilePicThumbnail'] != null
         ? new ProfilePicThumbnail.fromJson(json['profilePicThumbnail'])
+        : null;
+    qualifiedFullName = json['qualifiedFullName'] != null
+        ? new QualifiedFullName.fromJson(json['qualifiedFullName'])
         : null;
     bloodGroup = json['bloodGroup'];
     dateOfBirth = json['dateOfBirth'];
@@ -290,8 +295,8 @@ class FamilyMemberData {
   bool isVirtualUser;
   String createdBy;
   ProfilePicThumbnail profilePicThumbnail;
-  Null bloodGroup;
-  Null dateOfBirth;
+  String bloodGroup;
+  String dateOfBirth;
   bool isTokenRefresh;
   String countryCode;
   bool isEmailVerified;
@@ -385,5 +390,19 @@ class VirtualUserParent {
     data['phoneNumber'] = this.phoneNumber;
     data['email'] = this.email;
     return data;
+  }
+}
+
+class QualifiedFullName {
+  String lastName;
+  String firstName;
+  String middleName;
+
+  QualifiedFullName({this.lastName, this.firstName, this.middleName});
+
+  QualifiedFullName.fromJson(Map<String, dynamic> json) {
+    lastName = json['lastName'];
+    firstName = json['firstName'];
+    middleName = json['middleName'];
   }
 }

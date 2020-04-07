@@ -1,6 +1,6 @@
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
-import '../models/DoctorsListResponse.dart';
+import '../models/doctors_list_response.dart';
 
 class DoctorsListRepository {
   ApiBaseHelper _helper = ApiBaseHelper();

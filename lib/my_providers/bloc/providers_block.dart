@@ -1,17 +1,17 @@
 import 'dart:async';
 
+import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
+import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/model/Family/FamilyMembersResponse.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/resources/repository/Providers/providers_repository.dart';
 
 class ProvidersBloc implements BaseBloc {
   ProvidersListRepository _providersListRepository;
   StreamController _providersListControlller;
 
-  StreamSink<ApiResponse<FamilyMembersList>> get providersListSink =>
+  StreamSink<ApiResponse<MyProvidersResponseList>> get providersListSink =>
       _providersListControlller.sink;
-  Stream<ApiResponse<FamilyMembersList>> get providersListStream =>
+  Stream<ApiResponse<MyProvidersResponseList>> get providersListStream =>
       _providersListControlller.stream;
 
   @override
@@ -21,16 +21,16 @@ class ProvidersBloc implements BaseBloc {
 
   ProvidersBloc() {
     _providersListControlller =
-        StreamController<ApiResponse<FamilyMembersList>>();
+        StreamController<ApiResponse<MyProvidersResponseList>>();
     _providersListRepository = ProvidersListRepository();
   }
 
-  getFamilyMembersList() async {
+  getMedicalPreferencesList() async {
     providersListSink.add(ApiResponse.loading('Signing in user'));
     try {
-      FamilyMembersList familyResponseList =
-          await _providersListRepository.getFamilyMembersList();
-      providersListSink.add(ApiResponse.completed(familyResponseList));
+      MyProvidersResponseList myProvidersResponseList =
+          await _providersListRepository.getMedicalPreferencesList();
+      providersListSink.add(ApiResponse.completed(myProvidersResponseList));
     } catch (e) {
       providersListSink.add(ApiResponse.error(e.toString()));
       print(e);

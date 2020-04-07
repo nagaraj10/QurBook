@@ -5,35 +5,40 @@ import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
 
-class CategoryListBlock implements BaseBloc {
+class CategoryListBlock implements BaseBloc{
+
   CategoryResponseListRepository _categoryResponseListRepository;
   StreamController _categoryListControlller;
 
-  StreamSink<ApiResponse<CategoryResponseList>> get categoryListSink =>
-      _categoryListControlller.sink;
-  Stream<ApiResponse<CategoryResponseList>> get categoryListStream =>
-      _categoryListControlller.stream;
+  StreamSink<ApiResponse<CategoryResponseList>> get categoryListSink => _categoryListControlller.sink;
+  Stream<ApiResponse<CategoryResponseList>> get categoryListStream => _categoryListControlller.stream;
 
+
+  
   @override
   void dispose() {
     _categoryListControlller?.close();
   }
 
-  CategoryListBlock() {
-    _categoryListControlller =
-        StreamController<ApiResponse<CategoryResponseList>>();
+  CategoryListBlock(){
+      _categoryListControlller = StreamController<ApiResponse<CategoryResponseList>>();
     _categoryResponseListRepository = CategoryResponseListRepository();
+
   }
 
-  getCategoryList() async {
+  getCategoryList()async{
+
     categoryListSink.add(ApiResponse.loading('Signing in user'));
     try {
-      CategoryResponseList categoryResponseList =
-          await _categoryResponseListRepository.getCategoryList();
+      CategoryResponseList categoryResponseList = await _categoryResponseListRepository.getCategoryList();
       categoryListSink.add(ApiResponse.completed(categoryResponseList));
     } catch (e) {
       categoryListSink.add(ApiResponse.error(e.toString()));
       print(e);
     }
+
   }
+
+
+
 }

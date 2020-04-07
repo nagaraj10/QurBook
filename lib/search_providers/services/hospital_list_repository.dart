@@ -1,4 +1,4 @@
-import 'package:myfhb/search_providers/models/HospitalListResponse.dart';
+import 'package:myfhb/search_providers/models/hospital_list_response.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
 class HospitalListRepository {

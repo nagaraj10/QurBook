@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class ShapesPainter extends CustomPainter {
   @override
@@ -30,8 +31,8 @@ class ShapesPainter extends CustomPainter {
 
     final Gradient gradient = new LinearGradient(colors: <Color>[
       //Colors.deepPurple[600],
-      Colors.deepPurple[800],
-      Colors.deepPurple,
+      Color(new CommonUtil().getMyPrimaryColor()),
+      Color(new CommonUtil().getMyGredientColor()),
     ], stops: [
       0.5,
       1.0
@@ -42,7 +43,7 @@ class ShapesPainter extends CustomPainter {
     final Paint paint1 = new Paint()..shader = gradient.createShader(rect);
 
     // center of the canvas is (x,y) => (width/2, height/2)
-    var bottomRight = Offset(size.width, size.height);
+    var bottomRight = Offset(size.width / 2, size.height + 60);
 
     // draw the circle with center having radius 75.0
     canvas.drawCircle(bottomRight, 260, paint1);
@@ -51,10 +52,10 @@ class ShapesPainter extends CustomPainter {
     paint.color = Colors.white;
 
     // center of the canvas is (x,y) => (width/2, height/2)
-    var innerCircle = Offset(size.width, size.height);
+    var innerCircle = Offset(size.width / 2, size.height + 50);
 
     // draw the circle with center having radius 75.0
-    canvas.drawCircle(innerCircle, 160.0, paint);
+    canvas.drawCircle(innerCircle, 150.0, paint);
   }
 
   @override

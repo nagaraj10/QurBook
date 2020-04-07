@@ -1,29 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
+import 'package:myfhb/notifications/myfhb_notifications.dart';
+import 'package:myfhb/schedules/my_schedules.dart';
+import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
-import 'package:myfhb/src/ui/user/UserAccount.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+
+//import 'bot/SuperMaya_sample.dart';
 
 class HomeScreen extends StatefulWidget {
+  static _HomeScreenState of(BuildContext context) =>
+      context.findAncestorStateOfType<State<HomeScreen>>();
+
+  final int bottomindex;
+  HomeScreenArguments arguments;
+
+  HomeScreen({this.bottomindex, this.arguments});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 2;
+  int _selectedIndex;
+  GlobalKey _bottomNavigationKey = GlobalKey();
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  final _widgetOptions = [
-    Text(
-      'Schedule',
-      style: optionStyle,
-    ),
-    SuperMaya(),
+  var _widgetOptions = [
     MyRecords(),
-    UserAccount(),
-    Text(
-      'Settings',
-      style: optionStyle,
-    ),
+    MySchedule(),
+    SuperMaya(),
+    //SuperMayaSample(),
+    MyFhbNotifications(),
+    MoreMenuScreen()
   ];
 
   void _onItemTapped(int index) {
@@ -32,69 +43,191 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void refresh() {
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.arguments.selectedIndex;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFf7f6f5),
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        unselectedItemColor: Colors.black45,
-        selectedItemColor: Colors.black,
-        selectedFontSize: 14,
-        selectedLabelStyle:
-            TextStyle(fontWeight: FontWeight.w600, color: Colors.black),
-        unselectedLabelStyle: TextStyle(color: Colors.black45),
-        //showSelectedLabels: true,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage('assets/navicons/calendar.png'),
-              //color: Colors.red,
-              size: 22,
-            ),
-
-            //Icon(Icons.schedule),
-            title: Text('Schedule'),
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage('assets/navicons/robot.png'),
-              //color: Colors.red,
-              size: 22,
-            ),
-            title: Text('Maya'),
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage('assets/navicons/home.png'),
-              //color: Colors.red,
-              size: 22,
-            ),
-            title: Text('My records'),
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage('assets/navicons/user.png'),
-              //color: Colors.red,
-              size: 22,
-            ),
-            title: Text('Profile'),
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(
-              AssetImage('assets/navicons/settings.png'),
-              //color: Colors.red,
-              size: 22,
-            ),
-            title: Text('Settings'),
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        //selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+      bottomNavigationBar: BottomNavigationWidget(
+        selectedPageIndex: _selectedIndex,
+        myFunc: _myFunc,
       ),
+    );
+  }
+
+  void _myFunc(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+}
+
+class BottomNavigationWidget extends StatefulWidget {
+  BottomNavigationWidget({this.selectedPageIndex, this.myFunc});
+  final int selectedPageIndex;
+  final Function myFunc;
+
+  @override
+  _BottomNavigationWidgetState createState() => _BottomNavigationWidgetState();
+}
+
+class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
+  GlobalKey _bottomNavigationKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Container(
+      color: Colors.transparent,
+      padding: EdgeInsets.only(top: 20),
+      child: CurvedNavigationBar(
+          key: _bottomNavigationKey,
+          index: widget.selectedPageIndex,
+          height: 60.0,
+          items: <Widget>[
+            Padding(
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ImageIcon(
+                      AssetImage('assets/navicons/records.png'),
+                      color: widget.selectedPageIndex == 0
+                          ? Colors.white
+                          : Colors.black,
+                      //size: 22,
+                    ),
+                    widget.selectedPageIndex == 0
+                        ? Container(
+                            height: 0,
+                            width: 0,
+                          )
+                        : Text(
+                            'My Records',
+                            style: TextStyle(fontSize: 10),
+                          )
+                  ],
+                )),
+            Padding(
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ImageIcon(
+                      AssetImage('assets/navicons/schedule.png'),
+                      color: widget.selectedPageIndex == 1
+                          ? Colors.white
+                          : Colors.black,
+                      size: 22,
+                    ),
+                    widget.selectedPageIndex == 1
+                        ? Container(
+                            height: 0,
+                            width: 0,
+                          )
+                        : Text(
+                            'Schedules',
+                            style: TextStyle(fontSize: 10),
+                          )
+                  ],
+                )),
+            Padding(
+                padding: EdgeInsets.all(0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                      PreferenceUtil.getStringValue('maya_asset') != null
+                          ? PreferenceUtil.getStringValue('maya_asset') + '.png'
+                          : 'assets/maya/maya_us.png',
+                      height: 32,
+                      width: 32,
+                    ),
+                    widget.selectedPageIndex == 2
+                        ? Container(
+                            height: 0,
+                            width: 0,
+                          )
+                        : Text(
+                            'Maya',
+                            style: TextStyle(fontSize: 10),
+                          )
+                  ],
+                )),
+            Padding(
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ImageIcon(
+                      AssetImage('assets/navicons/notifications.png'),
+                      color: widget.selectedPageIndex == 3
+                          ? Colors.white
+                          : Colors.black,
+                      //size: 22,
+                    ),
+                    widget.selectedPageIndex == 3
+                        ? Container(
+                            height: 0,
+                            width: 0,
+                          )
+                        : Text(
+                            'Notifications',
+                            style: TextStyle(fontSize: 10),
+                          )
+                  ],
+                )),
+            Padding(
+                padding: EdgeInsets.all(5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ImageIcon(
+                      AssetImage('assets/navicons/more.png'),
+                      color: widget.selectedPageIndex == 4
+                          ? Colors.white
+                          : Colors.black,
+                      size: 22,
+                    ),
+                    widget.selectedPageIndex == 4
+                        ? Container(
+                            height: 0,
+                            width: 0,
+                          )
+                        : Text(
+                            'More',
+                            style: TextStyle(fontSize: 10),
+                          )
+                  ],
+                )),
+          ],
+          color: Colors.white,
+          buttonBackgroundColor: widget.selectedPageIndex == 2
+              ? Colors.white
+              : Color(new CommonUtil().getMyPrimaryColor()),
+          backgroundColor: Colors.transparent,
+          animationCurve: Curves.linearToEaseOut,
+          animationDuration: Duration(milliseconds: 450),
+          /* onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        }, */
+          onTap: (index) {
+            widget.myFunc(index);
+          }),
     );
   }
 }

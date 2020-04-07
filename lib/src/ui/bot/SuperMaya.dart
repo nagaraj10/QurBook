@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import 'ChatScreen.dart';
 
 class SuperMaya extends StatefulWidget {
   @override
@@ -8,38 +13,25 @@ class SuperMaya extends StatefulWidget {
 
 class _SuperMayaState extends State<SuperMaya> {
   @override
+  void initState() {
+    super.initState();
+    PreferenceUtil.init();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: const Color(fhbColors.bgColorContainer),
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(60),
-          /*   child: Container(
-            decoration: BoxDecoration(
-                color: Colors.deepPurple,
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30))), */
           child: AppBar(
-            flexibleSpace: Container(
-              decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: <Color>[
-                    const Color(0XFF6717CD),
-                    const Color(0XFF0A41A6)
-                  ],
-                      stops: [
-                    0.3,
-                    1
-                  ])),
-            ),
+            flexibleSpace: GradientAppBar(),
             backgroundColor: Colors.transparent,
             leading: Container(),
             elevation: 0,
             title: Text('Maya'),
             centerTitle: true,
           ),
-          //),
         ),
         body: Center(
           child: Column(
@@ -47,14 +39,50 @@ class _SuperMayaState extends State<SuperMaya> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Image.asset(
-                'assets/bot/maya_bot.png',
+                PreferenceUtil.getStringValue('maya_asset') != null
+                    ? PreferenceUtil.getStringValue('maya_asset') + '_main.png'
+                    : 'assets/maya/maya_us_main.png',
+                height: 160,
+                width: 160,
                 //color: Colors.deepPurple,
               ),
               //Icon(Icons.people),
               Text(
                 'Hi, Im super Maya your health assistance',
                 softWrap: true,
-              )
+              ),
+              SizedBox(
+                height: 30,
+              ),
+
+              // IconButton(
+              //     icon: Icon(Icons.mic),
+              //     iconSize: 50.0,
+              //     onPressed: () => gettingReposnseFromNative())
+
+              SizedBox(
+                width: 100,
+                child: RaisedGradientButton(
+                    child: Text(
+                      'Start now',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+                    gradient: LinearGradient(
+                      colors: <Color>[
+                        Color(new CommonUtil().getMyPrimaryColor()),
+                        Color(new CommonUtil().getMyGredientColor()),
+                      ],
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ChatScreen();
+                          },
+                        ),
+                      );
+                    }),
+              ),
             ],
           ),
         ));

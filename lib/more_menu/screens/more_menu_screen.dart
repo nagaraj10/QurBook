@@ -1,0 +1,309 @@
+import 'package:flutter/material.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
+import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
+import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/src/ui/HomeScreen.dart';
+
+class MoreMenuScreen extends StatefulWidget {
+  Function refresh;
+
+  MoreMenuScreen({this.refresh});
+  @override
+  _MoreMenuScreenState createState() => _MoreMenuScreenState();
+}
+
+class _MoreMenuScreenState extends State<MoreMenuScreen> {
+  MyProfile myProfile =
+      PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+
+  List<String> mayaAssets = [
+    'assets/maya/maya_us',
+    'assets/maya/maya_india',
+    'assets/maya/maya_africa',
+    'assets/maya/maya_arab',
+  ];
+
+  List<int> myThemes = [
+    0xff00b4d5,
+    0xff4d9bc1,
+    0xff3da0a6,
+    0xfff6679f,
+    0xff7a72c7,
+  ];
+
+  List<int> myGradient = [
+    0xff02e0d3,
+    0xff779af6,
+    0xff66dca0,
+    0xffff727c,
+    0xff828bea,
+  ];
+
+  String selectedMaya = PreferenceUtil.getStringValue('maya_asset') != null
+      ? PreferenceUtil.getStringValue('maya_asset')
+      : 'assets/maya/maya_us.png';
+
+  int selectedPrimaryColor = PreferenceUtil.getSavedTheme('pri_color') != null
+      ? PreferenceUtil.getSavedTheme('pri_color')
+      : 0xff3da0a6;
+
+  int selectedGradientColor = PreferenceUtil.getSavedTheme('gre_color') != null
+      ? PreferenceUtil.getSavedTheme('gre_color')
+      : 0xff66dca0;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context).copyWith(dividerColor: Colors.transparent);
+    return Scaffold(
+        appBar: AppBar(
+            flexibleSpace: GradientAppBar(),
+            leading: Container(),
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.exit_to_app),
+                  onPressed: () {
+                    new FHBBasicWidget().exitApp(context, () {
+                      PreferenceUtil.clearAllData().then((value) {
+                        new CommonUtil().logout(moveToLoginPage);
+                      });
+                    });
+                  })
+            ]),
+        body: ListView(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 20, bottom: 20),
+              child: ListTile(
+                leading: ClipOval(
+                  child: FHBBasicWidget().getProfilePicWidget(
+                      myProfile.response.data.generalInfo.profilePicThumbnail),
+                ),
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      myProfile.response.data.generalInfo.name,
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      myProfile.response.data.generalInfo.countryCode +
+                          ' ' +
+                          myProfile.response.data.generalInfo.phoneNumber,
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    Text(
+                      myProfile.response.data.generalInfo.email,
+                      style: TextStyle(fontSize: 11),
+                    )
+                  ],
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 14,
+                ),
+                onTap: () {
+                  PageNavigator.goTo(context, '/user_accounts');
+                },
+              ),
+            ),
+            Divider(),
+            ListTile(
+              title: Text('Settings',
+                  style: TextStyle(fontWeight: FontWeight.w500)),
+              trailing: Icon(
+                Icons.arrow_forward_ios,
+                size: 14,
+              ),
+              onTap: () {
+                PageNavigator.goTo(context, '/app_settings');
+              },
+            ),
+            Divider(),
+            Theme(
+              data: theme,
+              child: ExpansionTile(
+                title: Text('Help and support',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500, color: Colors.black)),
+                children: <Widget>[
+                  InkWell(
+                    child: ListTile(
+                        title: Row(
+                      children: <Widget>[
+                        ImageIcon(
+                          AssetImage('assets/navicons/faq.png'),
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 20),
+                        Text(Constants.FAQ),
+                      ],
+                    )),
+                    onTap: () {
+                      openWebView(Constants.FAQ,
+                          'https://fhb.faqs.vsolgmi.com/', false);
+                    },
+                  ),
+                  ListTile(
+                      title: Row(
+                    children: <Widget>[
+                      ImageIcon(
+                        AssetImage('assets/navicons/feedback.png'),
+                        color: Colors.black,
+                      ),
+                      SizedBox(width: 20),
+                      Text('Feedback'),
+                    ],
+                  )),
+                  InkWell(
+                    child: ListTile(
+                        title: Row(
+                      children: <Widget>[
+                        ImageIcon(
+                          AssetImage('assets/settings/terms.png'),
+                          size: 20,
+                          //size: 30,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 20),
+                        Text(Constants.terms_of_service)
+                      ],
+                    )),
+                    onTap: () {
+                      openWebView(Constants.terms_of_service,
+                          'assets/help_docs/termsandconditions.html', true);
+                    },
+                  ),
+                  InkWell(
+                    onTap: () {
+                      openWebView(Constants.privacy_policy,
+                          'assets/help_docs/privacypolicy.html', true);
+                    },
+                    child: ListTile(
+                        title: Row(
+                      children: <Widget>[
+                        ImageIcon(
+                          AssetImage('assets/settings/privacy.png'),
+                          size: 20,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 20),
+                        Text('Privacy policy'),
+                      ],
+                    )),
+                  )
+                ],
+              ),
+            ),
+            Divider(),
+            Theme(
+              data: theme,
+              child: ExpansionTile(
+                  title: Text('Maya',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.black)),
+                  children: <Widget>[
+                    ListTile(
+                        title: Container(
+                      padding: EdgeInsets.only(top: 10, bottom: 10),
+                      height: 80,
+                      //width: 200,
+                      //color: Colors.green,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: mayaAssets.length,
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: () {
+                            PreferenceUtil.saveString(
+                                'maya_asset', mayaAssets[index]);
+                            selectedMaya = mayaAssets[index];
+                            setState(() {});
+                          },
+                          child: Card(
+                            color: mayaAssets[index] == selectedMaya
+                                ? Color(new CommonUtil().getMyPrimaryColor())
+                                : Colors.white,
+                            margin: EdgeInsets.all(2),
+                            child: Padding(
+                              padding: EdgeInsets.all(5),
+                              child: Image.asset(
+                                mayaAssets[index] + '.png',
+                                height: 50,
+                                width: 50,
+                              ),
+                            ),
+                            elevation: 1,
+                            shape: CircleBorder(),
+                            clipBehavior: Clip.antiAlias,
+                          ),
+                        ),
+                      ),
+                    ))
+                  ]),
+            ),
+            Divider(),
+            Theme(
+              data: theme,
+              child: ExpansionTile(
+                  title: Text('Themes',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500, color: Colors.black)),
+                  children: <Widget>[
+                    ListTile(
+                        title: Container(
+                            padding: EdgeInsets.only(top: 10, bottom: 10),
+                            height: 80,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: myThemes.length,
+                              itemBuilder: (context, index) => GestureDetector(
+                                onTap: () {
+                                  //TODO logic for adding the item into sharedprefernces
+                                  PreferenceUtil.saveTheme(
+                                      'pri_color', myThemes[index]);
+                                  PreferenceUtil.saveTheme(
+                                      'gre_color', myGradient[index]);
+                                  selectedPrimaryColor = myThemes[index];
+                                  print('you selected the index of $index');
+                                  HomeScreen.of(context).refresh();
+
+                                  setState(() {});
+                                },
+                                //NOTE need to copy this  one
+                                child: CircleAvatar(
+                                  backgroundColor: Color(myThemes[index]),
+                                  radius: 40,
+                                  child: myThemes[index] == selectedPrimaryColor
+                                      ? Icon(
+                                          Icons.check,
+                                          color: index > 3
+                                              ? Colors.black
+                                              : Colors.white,
+                                        )
+                                      : SizedBox(),
+                                ),
+                              ),
+                            ))),
+                  ]),
+            ),
+            Divider()
+          ],
+        ));
+  }
+
+  void openWebView(String title, String url, bool isLocal) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => MyFhbWebView(
+            title: title, selectedUrl: url, isLocalAsset: isLocal)));
+  }
+
+  void moveToLoginPage(SignOutResponse signOutResponse) {
+    PageNavigator.goToPermanent(context, '/sign_in_screen');
+  }
+}

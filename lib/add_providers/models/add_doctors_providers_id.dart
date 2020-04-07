@@ -1,12 +1,13 @@
-class AddProvidersId {
+class AddDoctorsProvidersId {
   int status;
   bool success;
   String message;
   Response response;
 
-  AddProvidersId({this.status, this.success, this.message, this.response});
+  AddDoctorsProvidersId(
+      {this.status, this.success, this.message, this.response});
 
-  AddProvidersId.fromJson(Map<String, dynamic> json) {
+  AddDoctorsProvidersId.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     success = json['success'];
     message = json['message'];
@@ -14,17 +15,6 @@ class AddProvidersId {
         ? new Response.fromJson(json['response'])
         : null;
   }
-
-//  Map<String, dynamic> toJson() {
-//    final Map<String, dynamic> data = new Map<String, dynamic>();
-//    data['status'] = this.status;
-//    data['success'] = this.success;
-//    data['message'] = this.message;
-//    if (this.response != null) {
-//      data['response'] = this.response.toJson();
-//    }
-//    return data;
-//  }
 }
 
 class Response {
@@ -40,23 +30,11 @@ class Response {
     if (json['data'] != null) {
       dic = json['data'];
       data = AddDoctorData.fromJson(dic);
-//
-//      json['data'].forEach((v) {
-//      });
     } else {
       print('No data found');
       print(json['data']);
     }
   }
-
-/*  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
-    if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
-    }
-    return data;
-  }*/
 }
 
 class AddDoctorData {

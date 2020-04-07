@@ -5,12 +5,21 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class VoiceRecordList extends StatefulWidget {
   final CompleteData completeData;
   final Function callBackToRefresh;
+  final String categoryName;
+  final String categoryId;
 
-  VoiceRecordList(this.completeData, this.callBackToRefresh);
+  final Function(String, String) getDataForParticularLabel;
+
+  VoiceRecordList(this.completeData, this.callBackToRefresh, this.categoryName,
+      this.categoryId, this.getDataForParticularLabel);
+
   @override
   _VoiceRecordListState createState() => new _VoiceRecordListState();
 }
@@ -24,7 +33,9 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-
+    widget.getDataForParticularLabel(widget.categoryName, widget.categoryId);
+    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName);
+    PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId);
     /* WidgetsBinding.instance
         .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show()); */
     super.initState();
@@ -45,7 +56,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
       onRefresh: _refresh,
       child: mediaMetaInfoObj.length > 0
           ? Container(
-              color: const Color(0xFFF7F9Fb),
+              color: const Color(fhbColors.bgColorContainer),
               child: ListView.builder(
                 itemBuilder: (c, i) =>
                     getCardWidgetForVoiceRecords(mediaMetaInfoObj[i], i),
@@ -55,7 +66,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
               child: Center(
                 child: Text('No Data Available'),
               ),
-              color: Colors.grey[300],
+              color: const Color(fhbColors.bgColorContainer),
             ),
     );
   }
@@ -67,97 +78,143 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   }
 
   getCardWidgetForVoiceRecords(MediaMetaInfo mediaMetaInfoObj, int i) {
-    return new Padding(
-        padding: new EdgeInsets.only(top: 10, bottom: 5),
-        child: Container(
-            padding: EdgeInsets.all(10.0),
-            color: Colors.white,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                      Container(
-                        color: Colors.grey[200],
-                        width: 50.0,
-                        height: 50.0,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              new FHBUtils().convertMonthFromString(
-                                  mediaMetaInfoObj.createdOn),
-                              style: TextStyle(color: Colors.black54),
-                            ),
-                            Text(
-                                new FHBUtils().convertDateFromString(
-                                    mediaMetaInfoObj.createdOn),
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 18))
-                          ],
+    return Container(
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(fhbColors.cardShadowColor),
+              blurRadius: 16, // has the effect of softening the shadow
+              spreadRadius: 0, // has the effect of extending the shadow
+            )
+          ],
+        ),
+        child: Row(
+          children: <Widget>[
+            /*   Expanded(
+              flex: 1,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(padding: EdgeInsets.only(top: 10)),
+                  Container(
+                    color: Colors.grey[200],
+                    width: 50.0,
+                    height: 50.0,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          new FHBUtils().convertMonthFromString(
+                              mediaMetaInfoObj.createdOn),
+                          style: TextStyle(color: Colors.black54),
                         ),
-                      ),
-                      Padding(padding: EdgeInsets.only(top: 10)),
-                    ],
+                        Text(
+                            new FHBUtils().convertDateFromString(
+                                mediaMetaInfoObj.createdOn),
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 18))
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  flex: 4,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: 10.0),
-                      Text(
-                        mediaMetaInfoObj.metaInfo.fileName != null
-                            ? mediaMetaInfoObj.metaInfo.fileName
-                            : '',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
+                  Padding(padding: EdgeInsets.only(top: 10)),
+                ],
+              ),
+            ),
+             */
+            CircleAvatar(
+              radius: 25,
+              backgroundColor: const Color(fhbColors.bgColorContainer),
+              child: mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                  ? Image.network(
+                      mediaMetaInfoObj.metaInfo.mediaTypeInfo.url,
+                      height: 25,
+                      width: 25,
+                      color:  Color(new CommonUtil().getMyPrimaryColor()),
+                    )
+                  : Icon(
+                      Icons.mic,
+                      size: 25,
+                      color:  Color(new CommonUtil().getMyPrimaryColor()),
+                    ),
+            ),
+            SizedBox(width: 20),
+            Expanded(
+              flex: 6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(height: 10.0),
+                  Text(
+                    mediaMetaInfoObj.metaInfo.fileName != null
+                        ? mediaMetaInfoObj.metaInfo.fileName
+                        : '',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      mediaMetaInfoObj.isBookmarked
-                          ? Icon(
-                              Icons.bookmark,
-                              color: Colors.grey,
+                  //SizedBox(height: 10),
+                  Text(
+                    new FHBUtils()
+                        .getFormattedDateString(mediaMetaInfoObj.createdOn),
+                    style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  /*  Icon(
+                    Icons.more_horiz,
+                    color: Colors.grey,
+                    size: 20,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ), */
+                  IconButton(
+                      icon: mediaMetaInfoObj.isBookmarked
+                          ? ImageIcon(
+                              AssetImage('assets/icons/record_fav_active.png'),
+                              //TODO change theme
+                              color: Color(new CommonUtil().getMyPrimaryColor()),
+                              size: 20,
                             )
-                          : Icon(
-                              Icons.bookmark,
-                              color: Colors.red,
+                          : ImageIcon(
+                              AssetImage('assets/icons/record_fav.png'),
+                              color: Colors.black,
+                              size: 20,
                             ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      mediaMetaInfoObj.metaInfo.hasVoiceNotes
-                          ? Icon(
-                              Icons.mic,
-                              color: Colors.black54,
-                            )
-                          : Container()
-                    ],
-                  ),
-                ),
-              ],
-            )));
+                      onPressed: () {
+                        new CommonUtil()
+                            .bookMarkRecord(mediaMetaInfoObj, _refresh);
+                      }),
+
+                  /*  mediaMetaInfoObj.metaInfo.hasVoiceNotes
+                      ? Icon(
+                          Icons.mic,
+                          color: Colors.black54,
+                        )
+                      : Container() */
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 
   getDocumentImagegetDocumentImageWidget(MediaMetaInfo data) {

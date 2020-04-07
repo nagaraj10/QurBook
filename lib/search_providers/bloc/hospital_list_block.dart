@@ -1,11 +1,11 @@
 import 'dart:async';
 
-import 'package:myfhb/search_providers/models/HospitalListResponse.dart';
-import 'package:myfhb/search_providers/services/HospitalListRepository.dart';
+import 'package:myfhb/search_providers/models/hospital_list_response.dart';
+import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 
-export 'package:myfhb/search_providers/models/HospitalListResponse.dart'
+export 'package:myfhb/search_providers/models/hospital_list_response.dart'
     show Data;
 
 class HospitalListBlock implements BaseBloc {

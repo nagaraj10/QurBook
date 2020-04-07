@@ -17,10 +17,19 @@ import 'package:myfhb/add_providers/models/add_labs_providers_id.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/add_providers/models/update_providers_id.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/search_providers/models/doctors_list_response.dart';
 import 'package:myfhb/search_providers/models/hospital_list_response.dart';
 import 'package:myfhb/search_providers/models/labs_list_response.dart';
+import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
+import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
@@ -66,6 +75,7 @@ class AddProvidersState extends State<AddProviders> {
   bool isSwitched = true;
 
   bool isPreferred;
+  bool myprovidersPreferred;
   BitmapDescriptor markerIcon;
 
   GoogleMapController googleMapControll;
@@ -88,7 +98,15 @@ class AddProvidersState extends State<AddProviders> {
   AddProvidersBloc addProvidersBloc;
   UpdateProvidersBloc updateProvidersBloc;
 
+  FamilyListBloc _familyListBloc;
+  MyProfileBloc _myProfileBloc;
+
   Address address;
+
+  MyProfile selectedProfile;
+  String selectedFamilyMemberName;
+
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   @override
   void initState() {
@@ -97,6 +115,11 @@ class AddProvidersState extends State<AddProviders> {
 
     addProvidersBloc = AddProvidersBloc();
     updateProvidersBloc = UpdateProvidersBloc();
+
+    _familyListBloc = new FamilyListBloc();
+    _familyListBloc.getFamilyMembersList();
+
+    _myProfileBloc = new MyProfileBloc();
 
 //    getCurrentLocation();
 
@@ -107,6 +130,25 @@ class AddProvidersState extends State<AddProviders> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+//      appBar: AppBar(
+//        leading: IconButton(
+//          icon: Icon(
+//            Icons.arrow_back_ios,
+//            size: 20,
+//          ),
+//          onPressed: () {
+//            Navigator.of(context).pop();
+//          },
+//        ),
+//        title: Text(
+//          CommonConstants.add_providers,
+//          style: TextStyle(
+//            fontWeight: FontWeight.w400,
+//            color: Colors.white,
+//            fontSize: 18,
+//          ),
+//        ),
+//      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         child: SingleChildScrollView(
@@ -224,13 +266,34 @@ class AddProvidersState extends State<AddProviders> {
                     _showUser(),
                     SizedBox(height: 10),
                     InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        if (widget.arguments.fromClass !=
+                            CommonConstants.myProviders) {
+                          CommonUtil.showLoadingDialog(
+                              context, _keyLoader, 'Please Wait');
+
+                          if (_familyListBloc != null) {
+                            _familyListBloc = null;
+                            _familyListBloc = new FamilyListBloc();
+                          }
+                          _familyListBloc
+                              .getFamilyMembersList()
+                              .then((familyMembersList) {
+                            // Hide Loading
+                            Navigator.of(_keyLoader.currentContext,
+                                    rootNavigator: true)
+                                .pop();
+                            getDialogBoxWithFamilyMemberScrap(
+                                familyMembersList.response.data);
+                          });
+                        }
+                      },
                       child: Text(
                         'Switch User',
                         style: TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
-                            color: ColorUtils.greencolor),
+                            color: Color(new CommonUtil().getMyPrimaryColor())),
                       ),
                     ),
                     SizedBox(height: 10),
@@ -248,8 +311,8 @@ class AddProvidersState extends State<AddProviders> {
                                   isPreferred = value;
                                 });
                               },
-                              activeTrackColor: ColorUtils.greencolor,
-                              activeColor: Colors.green,
+                              activeTrackColor: Theme.of(context).primaryColor,
+                              activeColor: Theme.of(context).primaryColor,
                             )),
                         Text(
                           'Set as Preferred',
@@ -356,7 +419,8 @@ class AddProvidersState extends State<AddProviders> {
     } else {
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
         doctorController.text = widget.arguments.doctorsModel.name;
-        isPreferred = widget.arguments.doctorsModel.isUserDefined;
+        isPreferred = widget.arguments.doctorsModel.isDefault;
+        myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
 //
 //        latitude = double.parse(widget.doctorsModel.latitude);
 //        longtiude = double.parse(widget.doctorsModel.longitude);
@@ -367,7 +431,9 @@ class AddProvidersState extends State<AddProviders> {
         addressLine2 = widget.arguments.doctorsModel.addressLine2;
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
         doctorController.text = widget.arguments.hospitalsModel.name;
-        isPreferred = widget.arguments.hospitalsModel.isUserDefined;
+        isPreferred = widget.arguments.hospitalsModel.isDefault;
+        myprovidersPreferred = widget.arguments.hospitalsModel.isDefault;
+
         latitude = widget.arguments.hospitalsModel.latitude == null
             ? 0.0
             : double.parse(widget.arguments.hospitalsModel.latitude);
@@ -381,7 +447,9 @@ class AddProvidersState extends State<AddProviders> {
         addressLine2 = widget.arguments.hospitalsModel.addressLine2;
       } else {
         doctorController.text = widget.arguments.labsModel.name;
-        isPreferred = widget.arguments.labsModel.isUserDefined;
+        isPreferred = widget.arguments.labsModel.isDefault;
+        myprovidersPreferred = widget.arguments.labsModel.isDefault;
+
         latitude = widget.arguments.labsModel.latitude == null
             ? 0.0
             : double.parse(widget.arguments.labsModel.latitude);
@@ -484,10 +552,14 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   Widget _showUser() {
+    MyProfile myProfile =
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+
     return Align(
       alignment: Alignment.topLeft,
-      child: Container(
-        width: 86,
+      child: UnconstrainedBox(
+          child: Container(
+        padding: EdgeInsets.all(5.0),
         height: 35,
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 246, 246, 246),
@@ -499,39 +571,44 @@ class AddProvidersState extends State<AddProviders> {
         ),
         child: Row(
           children: [
-            Container(
-              width: 35,
-              height: 35,
-              child: Image.asset(
-                ImageUrlUtils.avatarImg,
-                fit: BoxFit.fill,
-              ),
+            ClipOval(
+              child: selectedProfile == null
+                  ? FHBBasicWidget().getProfilePicWidget(
+                      myProfile.response.data.generalInfo.profilePicThumbnail)
+                  : FHBBasicWidget().getProfilePicWidget(selectedProfile
+                      .response.data.generalInfo.profilePicThumbnail),
             ),
-            Spacer(),
+            SizedBox(width: 5),
             Container(
-              margin: EdgeInsets.only(right: 24),
+              margin: EdgeInsets.only(right: 10),
               child: Text(
-                "Self",
+                selectedFamilyMemberName == null
+                    ? 'Self'
+                    : selectedFamilyMemberName,
+                softWrap: true,
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   color: Color.fromARGB(255, 85, 92, 89),
                   fontFamily: "Muli",
                   fontWeight: FontWeight.w700,
-                  fontSize: 10.76923,
+                  fontSize: 15,
                 ),
               ),
             ),
           ],
         ),
-      ),
+      )),
     );
   }
+
+//  new FHBBasicWidget()
+//      .getDefaultProfileImage()
 
   Widget _ShowDoctorTextField() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
       child: new TextField(
-        cursorColor: ColorUtils.greencolor,
+        cursorColor: Color(new CommonUtil().getMyPrimaryColor()),
         controller: doctorController,
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
@@ -547,10 +624,10 @@ class AddProvidersState extends State<AddProviders> {
         style: new TextStyle(
             fontWeight: FontWeight.w500,
             fontSize: 16.0,
-            color: ColorUtils.greencolor),
+            color: Theme.of(context).primaryColor),
         decoration: InputDecoration(
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: ColorUtils.greencolor),
+              borderSide: BorderSide(color: Theme.of(context).primaryColor),
             ),
 //            focusedBorder: UnderlineInputBorder(
 //              borderSide: BorderSide(color: ColorUtils.greencolor),
@@ -575,7 +652,7 @@ class AddProvidersState extends State<AddProviders> {
         width: 100,
         height: 40.0,
         decoration: new BoxDecoration(
-          color: ColorUtils.greencolor,
+          color: Theme.of(context).primaryColor,
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
           boxShadow: <BoxShadow>[
             BoxShadow(
@@ -587,7 +664,9 @@ class AddProvidersState extends State<AddProviders> {
         ),
         child: new Center(
           child: new Text(
-            'Add',
+            widget.arguments.fromClass == CommonConstants.myProviders
+                ? 'Update'
+                : 'Add',
             style: new TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -651,6 +730,8 @@ class AddProvidersState extends State<AddProviders> {
                 snapshot.data.data.response.data.id;
             updateProvidersBloc.updateDoctorsIdWithUserDetails();
 
+            new CommonUtil().getMedicalPreference();
+
             return Container();
           } else {
             return Container();
@@ -670,6 +751,9 @@ class AddProvidersState extends State<AddProviders> {
             updateProvidersBloc.providerId =
                 snapshot.data.data.response.data.id;
             updateProvidersBloc.updateHospitalsIdWithUserDetails();
+
+            new CommonUtil().getMedicalPreference();
+
             return Container();
           } else {
             return Container();
@@ -690,6 +774,8 @@ class AddProvidersState extends State<AddProviders> {
                 snapshot.data.data.response.data.id;
             updateProvidersBloc.updateLabsIdWithUserDetails();
 
+            new CommonUtil().getMedicalPreference();
+
             return Container();
           } else {
             return Container();
@@ -709,14 +795,14 @@ class AddProvidersState extends State<AddProviders> {
           if (!snapshot.hasData) return Container();
 
           if (snapshot.data.status == Status.COMPLETED) {
-            Navigator.pop(context, 1);
-//            Navigator.popUntil(context, (Route<dynamic> route) {
-//              bool shouldPop = false;
-//              if (route.settings.name == '/search_providers') {
-//                shouldPop = true;
-//              }
-//              return shouldPop;
-//            });
+//            Navigator.pop(context, 1);
+            Navigator.popUntil(context, (Route<dynamic> route) {
+              bool shouldPop = false;
+              if (route.settings.name == '/user_accounts') {
+                shouldPop = true;
+              }
+              return shouldPop;
+            });
             return Container();
           } else {
             return Container();
@@ -726,22 +812,38 @@ class AddProvidersState extends State<AddProviders> {
 
   void _addBtnTapped() {
     if (widget.arguments.hasData) {
+      CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+
       updateProvidersBloc.isPreferred = isPreferred;
 
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-        updateProvidersBloc.providerId = widget.arguments.data.id;
+        if (widget.arguments.fromClass == CommonConstants.myProviders) {
+          updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
+        } else {
+          updateProvidersBloc.providerId = widget.arguments.data.id;
+        }
         updateProvidersBloc.updateDoctorsIdWithUserDetails();
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
-        updateProvidersBloc.providerId = widget.arguments.hospitalData.id;
+        if (widget.arguments.fromClass == CommonConstants.myProviders) {
+          updateProvidersBloc.providerId = widget.arguments.hospitalsModel.id;
+        } else {
+          updateProvidersBloc.providerId = widget.arguments.hospitalData.id;
+        }
         updateProvidersBloc.updateHospitalsIdWithUserDetails();
       } else {
-        updateProvidersBloc.providerId = widget.arguments.labData.id;
+        if (widget.arguments.fromClass == CommonConstants.myProviders) {
+          updateProvidersBloc.providerId = widget.arguments.labsModel.id;
+        } else {
+          updateProvidersBloc.providerId = widget.arguments.labData.id;
+        }
         updateProvidersBloc.updateLabsIdWithUserDetails();
       }
     } else {
       var signInData = {};
 
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
+        CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+
         signInData['name'] = doctorController.text.toString();
         signInData['specialization'] = '';
         signInData['description'] = '';
@@ -781,6 +883,8 @@ class AddProvidersState extends State<AddProviders> {
                 );
               });
         } else {
+          CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+
           signInData['name'] = doctorController.text.toString();
           signInData['phoneNumbers'] = widget.arguments.placeDetail == null
               ? ''
@@ -830,6 +934,8 @@ class AddProvidersState extends State<AddProviders> {
                 );
               });
         } else {
+          CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+
           signInData['name'] = doctorController.text.toString();
           signInData['phoneNumbers'] = widget.arguments.placeDetail == null
               ? ''
@@ -875,4 +981,315 @@ class AddProvidersState extends State<AddProviders> {
   void _cancelBtnTapped() async {
     Navigator.pop(context);
   }
+
+  Future<Widget> getDialogBoxWithFamilyMemberScrap(FamilyData familyData) {
+    return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
+        familyData, context, _keyLoader, (context, userId, userName) {
+      setState(() {
+        selectedFamilyMemberName = userName;
+      });
+
+      PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
+        Navigator.of(context).pop();
+
+        getUserProfileData();
+        new CommonUtil().getMedicalPreference();
+      });
+    });
+  }
+
+  getUserProfileData() async {
+    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+
+    _myProfileBloc
+        .getMyProfileData(Constants.KEY_USERID_MAIN)
+        .then((profileData) {
+      print('Inside dashboard' + profileData.toString());
+      PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
+          .then((value) {
+        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+        Navigator.popUntil(context, (Route<dynamic> route) {
+          bool shouldPop = false;
+          if (route.settings.name == '/user_accounts') {
+            shouldPop = true;
+          }
+          return shouldPop;
+        });
+      });
+    });
+  }
+
+//@override
+//Widget build(BuildContext context) {
+//  // TODO: implement build
+//  return Scaffold(
+//    appBar: AppBar(
+//      elevation: 0,
+//      flexibleSpace: Container(
+//        decoration: BoxDecoration(
+//            gradient: LinearGradient(
+//                begin: Alignment.topLeft,
+//                end: Alignment.bottomRight,
+//                colors: <Color>[
+//                  const Color(0XFF6717CD),
+//                  const Color(0XFF0A41A6)
+//                ],
+//                stops: [
+//                  0.3,
+//                  1
+//                ])),
+//      ),
+//      leading: IconButton(
+//        icon: Icon(
+//          Icons.arrow_back_ios,
+//          size: 20,
+//        ),
+//        onPressed: () {
+//          Navigator.of(context).pop();
+//        },
+//      ),
+//      title: Text(
+//        CommonConstants.add_providers,
+//        style: TextStyle(
+//          fontWeight: FontWeight.w400,
+//          color: Colors.white,
+//          fontSize: 18,
+//        ),
+//      ),
+//    ),
+//    body: Container(
+//      constraints: BoxConstraints.expand(),
+//      child: Column(
+//        crossAxisAlignment: CrossAxisAlignment.start,
+//        children: <Widget>[
+//          InkWell(
+//            onTap: () {
+//              if (widget.arguments.hasData == false) {
+//                Navigator.pushNamed(
+//                  context,
+//                  '/add_address',
+//                  arguments: AddAddressArguments(
+//                      providerType: widget.arguments.searchKeyWord),
+//                ).then((value) {
+//                  print(widget.arguments.placeDetail.url);
+//
+//                  buildUI();
+//                  getAddressesFromCoordinates();
+//                });
+//              }
+//            },
+//            child: Container(
+//              //margin: EdgeInsets.all(5),
+//              child: Container(
+//                margin: EdgeInsets.all(10),
+//                color: Colors.white,
+//                child: TextField(
+//                  enabled: false,
+//                  controller: _textFieldController,
+//                  onChanged: (editedValue) {
+////                                  value = editedValue;
+////                                  widget.arguments.searchWord == CommonConstants.doctors
+////                                      ? _doctorsListBlock.getDoctorsList(value)
+////                                      : widget.arguments.searchWord == CommonConstants.hospitals
+////                                      ? _hospitalListBlock.getHospitalList(value)
+////                                      : _labsListBlock.getLabsList(value);
+//                    setState(() {});
+//                  },
+//                  decoration: InputDecoration(
+//                    fillColor: Colors.white,
+//                    prefixIcon: Icon(
+//                      Icons.search,
+//                      color: Colors.black54,
+//                    ),
+//                    hintText: 'Search',
+//                    hintStyle: TextStyle(color: Colors.black54),
+//                    border: InputBorder.none,
+//                  ),
+//                ),
+//              ),
+//              decoration: new BoxDecoration(
+//                gradient: LinearGradient(
+//                    begin: Alignment.topLeft,
+//                    end: Alignment.bottomRight,
+//                    colors: <Color>[
+//                      const Color(0XFF6717CD),
+//                      const Color(0XFF0A41A6)
+//                    ],
+//                    stops: [
+//                      0.3,
+//                      1
+//                    ]),
+//                /* borderRadius: new BorderRadius.all(
+//                  new Radius.circular(30.0),
+//                ), */
+//                //border: Border.all(color: Colors.black),
+//                //color: Colors.white
+//              ),
+//              padding: new EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+//            ),
+//
+////                          Container(
+////                            height: 40,
+////                            color: Colors.white,
+////                            margin:
+////                                EdgeInsets.only(left: 10, right: 10, top: 40),
+////                            child: Row(
+////                              children: <Widget>[
+////                                SizedBox(width: 10),
+////                                InkWell(
+////                                    onTap: () {
+////                                      Navigator.pop(context);
+////                                    },
+////                                    child: Image.asset(ImageUrlUtils.backImg,
+////                                        width: 16,
+////                                        height: 16,
+////                                        fit: BoxFit.cover)),
+////                                SizedBox(width: 10),
+////                                Text(CommonConstants.searchPlaces,
+////                                    style: TextStyle(
+////                                        fontSize: 16.0,
+////                                        fontWeight: FontWeight.w400,
+////                                        color: ColorUtils.greycolor1)),
+////                              ],
+////                            ),
+////                          )
+//          ),
+//          SingleChildScrollView(
+//            child: Column(
+//              children: <Widget>[
+//                Container(
+//                  width: MediaQuery.of(context).size.width,
+//                  height: 300,
+//                  child: Stack(
+//                    children: <Widget>[
+//                      GoogleMap(
+//                        scrollGesturesEnabled: false,
+//                        mapType: MapType.normal,
+//                        initialCameraPosition: kGooglePlex,
+//                        onCameraMove: _onCameraMove,
+//                        markers: Set.from(_markers),
+//                        onMapCreated: _onMapCreated,
+//                      ),
+//                      Column(
+//                        children: <Widget>[
+//                          Visibility(
+//                              visible: widget.arguments.hasData == true
+//                                  ? latitude == 0.0 ? true : false
+//                                  : false,
+//                              child: Container(
+//                                height: 300,
+//                                color: ColorUtils.blackcolor.withOpacity(0.7),
+//                                child: Center(
+//                                  child: Text(
+//                                    CommonConstants.comingSoon,
+//                                    style: TextStyle(
+//                                        fontSize: 16.0,
+//                                        fontWeight: FontWeight.w400,
+//                                        color: Colors.white),
+//                                  ),
+//                                ),
+//                              ))
+//                        ],
+//                      )
+//                    ],
+//                  ),
+//                ),
+//                Container(
+//                  padding: EdgeInsets.only(left: 10, top: 20, right: 10),
+//                  child: Column(
+//                    mainAxisAlignment: MainAxisAlignment.end,
+//                    crossAxisAlignment: CrossAxisAlignment.start,
+//                    children: <Widget>[
+//                      Visibility(
+//                          visible: widget.arguments.hasData == false
+//                              ? true
+//                              : false,
+//                          child: Text(
+//                            widget.arguments.hasData == false
+//                                ? 'Add ${widget.arguments.searchKeyWord}'
+//                                : '',
+//                            style: TextStyle(
+//                                fontSize: 18.0,
+//                                fontWeight: FontWeight.w500,
+//                                color: ColorUtils.blackcolor),
+//                          )),
+//                      _ShowDoctorTextField(),
+//                      SizedBox(height: 10),
+//                      Text(
+//                        'Associated Member',
+//                        style: TextStyle(
+//                            fontSize: 14.0,
+//                            fontWeight: FontWeight.w400,
+//                            color: ColorUtils.greycolor1),
+//                      ),
+//                      SizedBox(height: 10),
+//                      _showUser(),
+//                      SizedBox(height: 10),
+//                      InkWell(
+//                        onTap: () {},
+//                        child: Text(
+//                          'Switch User',
+//                          style: TextStyle(
+//                              fontSize: 14.0,
+//                              fontWeight: FontWeight.w400,
+//                              color: Theme.of(context).primaryColor),
+//                        ),
+//                      ),
+//                      SizedBox(height: 10),
+//                      Row(
+//                        children: <Widget>[
+//                          IgnorePointer(
+//                              ignoring: widget.arguments.fromClass ==
+//                                  CommonConstants.myProviders
+//                                  ? true
+//                                  : false,
+//                              child: Switch(
+//                                value: isPreferred,
+//                                onChanged: (value) {
+//                                  setState(() {
+//                                    isPreferred = value;
+//                                  });
+//                                },
+//                                activeTrackColor:
+//                                Theme.of(context).primaryColor,
+//                                activeColor: Theme.of(context).primaryColor,
+//                              )),
+//                          Text(
+//                            'Set as Preferred',
+//                            style: TextStyle(
+//                                fontSize: 14.0,
+//                                fontWeight: FontWeight.w400,
+//                                color: ColorUtils.blackcolor),
+//                          ),
+//                        ],
+//                      ),
+//                      Visibility(
+//                        visible: widget.arguments.fromClass ==
+//                            CommonConstants.myProviders
+//                            ? false
+//                            : true,
+//                        child: Row(
+//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                          children: <Widget>[
+//                            _showCancelButton(),
+//                            _showAddButton()
+//                          ],
+//                        ),
+//                      ),
+//                      SizedBox(height: 20),
+//                    ],
+//                  ),
+//                ),
+//              ],
+//            ),
+//          ),
+//          callAddDoctorProvidersStreamBuilder(addProvidersBloc),
+//          callAddHospitalProvidersStreamBuilder(addProvidersBloc),
+//          callAddLabProvidersStreamBuilder(addProvidersBloc),
+//          callUpdateProvidersStreamBuilder(updateProvidersBloc),
+//        ],
+//      ),
+//    ),
+//  );
 }

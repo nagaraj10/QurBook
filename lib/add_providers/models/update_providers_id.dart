@@ -1,19 +1,14 @@
-class MyProvidersResponseList {
+class UpdateProvidersId {
   int status;
   bool success;
   String message;
-  Response response;
 
-  MyProvidersResponseList(
-      {this.status, this.success, this.message, this.response});
+  UpdateProvidersId({this.status, this.success, this.message});
 
-  MyProvidersResponseList.fromJson(Map<String, dynamic> json) {
+  UpdateProvidersId.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     success = json['success'];
     message = json['message'];
-    response = json['response'] != null
-        ? new Response.fromJson(json['response'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -21,9 +16,7 @@ class MyProvidersResponseList {
     data['status'] = this.status;
     data['success'] = this.success;
     data['message'] = this.message;
-    if (this.response != null) {
-      data['response'] = this.response.toJson();
-    }
+
     return data;
   }
 }
