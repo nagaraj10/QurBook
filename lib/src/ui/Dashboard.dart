@@ -51,8 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     color: Colors.white,
                                   ),
                                   onTap: () {
-                                    PageNavigator.goTo(
-                                        context, '/my_providers');
+                                    PageNavigator.goTo(context, '/providers');
                                   },
                                 ),
                                 SizedBox(
