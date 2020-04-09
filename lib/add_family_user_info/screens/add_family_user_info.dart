@@ -98,6 +98,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   final lastNameController = TextEditingController();
   FocusNode lastNameFocus = FocusNode();
 
+  String strErrorMsg = '';
+
   @override
   void initState() {
     super.initState();
@@ -144,6 +146,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         selectedBloodGroup = widget.arguments.sharedbyme.profileData.bloodGroup;
 
         renameBloodGroup(selectedBloodGroup);
+      } else {
+        selectedBloodGroup = null;
+        selectedBloodRange = null;
       }
 
       if (widget.arguments.sharedbyme.profileData.gender != null) {
@@ -170,15 +175,35 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             widget.arguments.sharedbyme.profileData.phoneNumber;
         emailController.text = widget.arguments.sharedbyme.profileData.email;
       }
-
-      nameController.text = widget.arguments.sharedbyme.profileData.name;
+      if (widget.arguments.sharedbyme.profileData.qualifiedFullName != null) {
+        firstNameController.text = widget.arguments.sharedbyme.profileData
+                    .qualifiedFullName.firstName !=
+                null
+            ? widget
+                .arguments.sharedbyme.profileData.qualifiedFullName.firstName
+            : '';
+        middleNameController.text = widget.arguments.sharedbyme.profileData
+                    .qualifiedFullName.middleName !=
+                null
+            ? widget
+                .arguments.sharedbyme.profileData.qualifiedFullName.middleName
+            : '';
+        lastNameController.text = widget.arguments.sharedbyme.profileData
+                    .qualifiedFullName.lastName !=
+                null
+            ? widget.arguments.sharedbyme.profileData.qualifiedFullName.lastName
+            : '';
+      }
 
       if (widget.arguments.sharedbyme.profileData.bloodGroup != null &&
           widget.arguments.sharedbyme.profileData.bloodGroup != "null") {
         selectedBloodGroup = widget.arguments.sharedbyme.profileData.bloodGroup;
 
         renameBloodGroup(selectedBloodGroup);
-      } else {}
+      } else {
+        selectedBloodGroup = null;
+        selectedBloodRange = null;
+      }
 
       if (widget.arguments.sharedbyme.profileData.gender != null) {
         selectedGender = widget.arguments.sharedbyme.profileData.gender;
@@ -189,13 +214,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .split("T"); //by space" " the string need to splited
 
         dateOfBirthController.text = list[0];
-        if (firstTym) {
-          firstTym = false;
-          setState(() {
-            fetchedProfileData = widget
-                .arguments.sharedbyme.profileData.profilePicThumbnail.data;
-          });
-        }
+      }
+      if (firstTym) {
+        firstTym = false;
+        setState(() {
+          fetchedProfileData = widget
+                      .arguments.sharedbyme.profileData.profilePicThumbnail !=
+                  null
+              ? widget.arguments.sharedbyme.profileData.profilePicThumbnail.data
+              : null;
+        });
       }
     } else {
       addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo
@@ -243,30 +271,37 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void renameBloodGroup(String selectedBloodGroupClone) {
-    var bloodGroupSplitName = selectedBloodGroupClone.split('_');
+    print('selectedBloodGroupClone renameBloodGroup' + selectedBloodGroupClone);
+    if (selectedBloodGroupClone != null) {
+      var bloodGroupSplitName = selectedBloodGroupClone.split('_');
 
-    for (String bloodGroup in bloodGroupArray) {
+      if (bloodGroupSplitName.length > 1) {
+        for (String bloodGroup in bloodGroupArray) {
 //      var bloodgroupClone = bloodGroup.split(' ');
-      if (bloodGroupSplitName[0] == bloodGroup) {
-        selectedBloodGroup = bloodGroup;
-      }
-    }
+          if (bloodGroupSplitName[0] == bloodGroup) {
+            selectedBloodGroup = bloodGroup;
+          }
+        }
 
-    for (String bloodRange in bloodRangeArray) {
-//      var eachBloodGroup;
+        for (String bloodRange in bloodRangeArray) {
+          if (bloodGroupSplitName[1] == bloodRange) {
+            selectedBloodRange = bloodRange;
+          }
+        }
+      } else {
+        var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
+        for (String bloodGroup in bloodGroupArray) {
+//      var bloodgroupClone = bloodGroup.split(' ');
+          if (bloodGroupSplitName[0] == bloodGroup) {
+            selectedBloodGroup = bloodGroup;
+          }
 
-//      if (bloodGroupSplitName.length > 2) {
-//        eachBloodGroup = bloodGroupSplitName[1] +
-//            " " +
-//            bloodGroupSplitName[2] +
-//            " " +
-//            bloodGroupSplitName[3];
-//      } else {
-//        eachBloodGroup = bloodGroupSplitName[1];
-//      }
-
-      if (bloodGroupSplitName[1] == bloodRange) {
-        selectedBloodRange = bloodRange;
+          for (String bloodRange in bloodRangeArray) {
+            if (bloodGroupSplitName[1][0] == bloodRange) {
+              selectedBloodRange = bloodRange;
+            }
+          }
+        }
       }
     }
   }
@@ -1009,6 +1044,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     addFamilyUserInfoBloc.profilePic = MySliverAppBar.imageURI;
 
+    addFamilyUserInfoBloc.firstName = firstNameController.text;
+    addFamilyUserInfoBloc.middleName = middleNameController.text;
+    addFamilyUserInfoBloc.lastName = lastNameController.text;
+
     if (widget.arguments.fromClass == CommonConstants.my_family) {
       addFamilyUserInfoBloc.relationship = selectedRelationShip.roleName;
       addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData.id;
@@ -1017,7 +1056,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       if (firstNameController.text.length > 0 &&
           lastNameController.text.length > 0 &&
-          emailController.text.length > 0 &&
+          //emailController.text.length > 0 &&
           mobileNoController.text.length > 0 &&
           selectedGender.length > 0 &&
           dateOfBirthController.text.length > 0 &&
@@ -1066,30 +1105,39 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             title: "Error", content: CommonConstants.all_fields);
       }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-      CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+      if (doValidation()) {
+        CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
 
-      addFamilyUserInfoBloc.updateSelfProfile().then((value) {
-        if (value.success && value.status == 200) {
-          getUserProfileData();
-        } else {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        addFamilyUserInfoBloc.updateSelfProfile().then((value) {
+          if (value.success && value.status == 200) {
+            getUserProfileData();
+          } else {
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-          Navigator.popUntil(context, (Route<dynamic> route) {
-            bool shouldPop = false;
-            if (route.settings.name == '/user_accounts') {
-              shouldPop = true;
-            }
-            return shouldPop;
-          });
-        }
-      });
+            Navigator.popUntil(context, (Route<dynamic> route) {
+              bool shouldPop = false;
+              if (route.settings.name == '/user_accounts') {
+                shouldPop = true;
+              }
+              return shouldPop;
+            });
+          }
+        });
+      } else {
+        showDialog(
+            context: context,
+            child: new AlertDialog(
+              title: new Text("MyFHB"),
+              content: new Text(strErrorMsg),
+            ));
+      }
     } else {
       addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
       addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
       addFamilyUserInfoBloc.relationship = relationShipController.text;
 
       if (firstNameController.text.length > 0 &&
-          emailController.text.length > 0 &&
+          //emailController.text.length > 0 &&
           mobileNoController.text.length > 0 &&
           selectedGender.length > 0 &&
           dateOfBirthController.text.length > 0 &&
@@ -1120,6 +1168,38 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             title: "Error", content: CommonConstants.all_fields);
       }
     }
+  }
+
+  bool doValidation() {
+    bool isValid = false;
+
+    if (firstNameController.text == '') {
+      isValid = false;
+      strErrorMsg = 'Enter First Name';
+    } else if (lastNameController.text == '') {
+      isValid = false;
+      strErrorMsg = 'Enter LastName';
+    } else if (selectedGender.length == 0) {
+      isValid = false;
+      strErrorMsg = 'Select Gender';
+    } else if (dateOfBirthController.text.length == 0) {
+      isValid = false;
+      strErrorMsg = 'Select dob';
+    } else {
+      isValid = true;
+    }
+
+    if (selectedBloodGroup != null) {
+      if (selectedBloodRange == null) {
+        isValid = false;
+        strErrorMsg = 'Select Blood Range';
+      } else {
+        addFamilyUserInfoBloc.bloodGroup =
+            selectedBloodGroup + '_' + selectedBloodRange;
+      }
+    }
+
+    return isValid;
   }
 
   void dateOfBirthTapped() {

@@ -43,14 +43,20 @@ class AuthenticationRepository {
       String passsword,
       String bloodGroup,
       String dateOfBirth,
-      File file) async {
+      File file,
+      String middleName,
+      String lastName) async {
     Map<String, dynamic> mapForSignUp = new Map();
     mapForSignUp['sourceName'] = CommonConstants.strTrident;
     mapForSignUp['countryCode'] = countryCode;
     mapForSignUp['phoneNumber'] = phoneNumber;
     mapForSignUp['email'] = email;
     mapForSignUp['gender'] = gender;
-    mapForSignUp['name'] = name;
+    mapForSignUp['firstName'] = name;
+    mapForSignUp['lastName'] = lastName;
+
+    if (middleName != '') mapForSignUp['middleName'] = middleName;
+
     if (passsword != '') mapForSignUp['password'] = passsword;
     if (bloodGroup != '') mapForSignUp['bloodGroup'] = bloodGroup;
     if (dateOfBirth != '') mapForSignUp['dateOfBirth'] = dateOfBirth;
@@ -60,10 +66,12 @@ class AuthenticationRepository {
       mapForSignUp["profilePic"] =
           await MultipartFile.fromFile(file.path, filename: fileNoun);
     }
-    final response =
-        await _helper.signUpPage("authentication/signup", mapForSignUp);
+    //ssfinal response;
+    print(mapForSignUp.toString());
+    final response = await _helper.signUpPage("authentication/signup", mapForSignUp);
     return SignUp.fromJson(response);
   }
+
 
   Future<AddFamilyOTPResponse> verifyAddFamilyOTP(String otpVerifyData) async {
     final response = await _helper.verifyAddFamilyOTP(

@@ -7,6 +7,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/ShapesPainter.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -119,7 +120,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 onTap: () {
                                   //moveToNextScreen(3);
                                   Navigator.pushNamed(
-                                      context, '/user_accounts');
+                                    context,
+                                    '/user_accounts',
+                                    arguments:
+                                        UserAccountsArguments(selectedIndex: 2),
+                                  );
                                 })),
                         Positioned(
                             bottom: 130,
@@ -173,7 +178,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ],
                             ),
                             onTap: () {
-                              Navigator.pushNamed(context, '/user_accounts');
+                              Navigator.pushNamed(context, '/user_accounts',
+                                  arguments:
+                                      UserAccountsArguments(selectedIndex: 1));
                             },
                           ),
                         )

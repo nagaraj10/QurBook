@@ -61,18 +61,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
             )),
         body: SingleChildScrollView(
             child: Stack(
+          fit: StackFit.loose,
           alignment: Alignment.topCenter,
           children: <Widget>[
-            Container(
-              height: MediaQuery.of(context).size.height,
+            SingleChildScrollView(
+                child: Container(
+              // height: MediaQuery.of(context).size.height,
               padding: EdgeInsets.only(top: 200, left: 20, right: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Column(
+                  ListView(
+                    shrinkWrap: true,
                     children: <Widget>[
                       Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextField(
                           enabled: false,
                           controller: phoneNumber,
@@ -84,8 +88,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                           Colors.grey[200].withOpacity(0.5)))),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(10),
+                      /*   Padding(
+                        padding: EdgeInsets.all(5),
                         child: TextField(
                           controller: name,
                           decoration: InputDecoration(
@@ -95,9 +99,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                       color:
                                           Colors.grey[200].withOpacity(0.5)))),
                         ),
-                      ),
-                       Padding(
-                        padding: EdgeInsets.all(10),
+                      ),*/
+                      Padding(
+                        padding: EdgeInsets.all(5),
                         child: TextField(
                           controller: firstName,
                           decoration: InputDecoration(
@@ -109,7 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextField(
                           controller: middleName,
                           decoration: InputDecoration(
@@ -121,7 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextField(
                           controller: lastName,
                           decoration: InputDecoration(
@@ -133,9 +137,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         ),
                       ),
                       Padding(
-                          padding: EdgeInsets.all(10), child: genderDropDown()),
+                          padding: EdgeInsets.all(5), child: genderDropDown()),
                       Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(5),
                         child: TextField(
                           controller: email,
                           decoration: InputDecoration(
@@ -148,7 +152,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: 10),
                   Center(
                     child: Container(
                       constraints: BoxConstraints(maxWidth: 200),
@@ -169,7 +173,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   )
                 ],
               ),
-            ),
+            )),
             Stack(
               alignment: Alignment.bottomCenter,
               children: <Widget>[
@@ -214,6 +218,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         )));
   }
 
+
   Widget genderDropDown() {
     return DropdownButton<String>(
       isExpanded: true,
@@ -243,10 +248,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void createUser() {
     if (doValidation()) {
-      _loginBloc
+     _loginBloc
           .createUser('+' + widget.selectedCountryCode, widget.enteredMobNumber,
-              email.text, dropDownValue, name.text, '', '', '', imageURI)
-          .then((onValue) {
+              email.text, dropDownValue, firstName.text, '', '', '', imageURI,middleName.text,lastName.text)
+           .then((onValue) {
 
               PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
             int.parse(widget.selectedCountryCode));
@@ -274,22 +279,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-  bool doValidation() {
+   bool doValidation() {
     bool isValid = false;
 
     if (phoneNumber.text == '') {
       isValid = false;
       strErrorMsg = 'Enter MobileNumber';
-    } else if (name.text == '') {
+    } /*else if (name.text == '') {
       isValid = false;
       strErrorMsg = 'Enter Name';
-    }else if (firstName.text == '') {
+    }*/ else if (firstName.text == '') {
       isValid = false;
       strErrorMsg = 'Enter First Name';
-    }else if (middleName.text == '') {
+    } /*else if (middleName.text == '') {
       isValid = false;
       strErrorMsg = 'Enter Middle Name';
-    }else if (lastName.text == '') {
+    } */else if (lastName.text == '') {
       isValid = false;
       strErrorMsg = 'Enter LastName';
     } else {

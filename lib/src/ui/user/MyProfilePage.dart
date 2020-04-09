@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/common/CommonConstants.dart';
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -84,12 +85,28 @@ class _MyProfilePageState extends State<MyProfilePage> {
     var bloodGroup = TextEditingController();
     var dob = TextEditingController();
 
+    var firstName = TextEditingController();
+    var middleName = TextEditingController();
+    var lastName = TextEditingController();
+
     mobile.text = data.generalInfo.phoneNumber;
     name.text = data.generalInfo.name;
     email.text = data.generalInfo.email;
     gender.text = data.generalInfo.gender;
     bloodGroup.text = data.generalInfo.bloodGroup;
     dob.text = data.generalInfo.dateOfBirth;
+
+    
+    if (data.generalInfo.qualifiedFullName != null) {
+      firstName.text = data.generalInfo.qualifiedFullName.firstName;
+      middleName.text =
+          (data.generalInfo.qualifiedFullName.middleName != null &&
+                  data.generalInfo.qualifiedFullName.middleName != '')
+              ? data.generalInfo.qualifiedFullName.middleName
+              : '';
+      lastName.text = data.generalInfo.qualifiedFullName.lastName;
+    }
+
 
     return Container(
         color: Colors.white,
@@ -114,6 +131,36 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   enabled: false,
                   decoration: InputDecoration(
                       hintText: 'Name', hintStyle: TextStyle(fontSize: 12)),
+                ),
+              ),
+               Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: firstName,
+                  enabled: false,
+                  decoration: InputDecoration(
+                      hintText: CommonConstants.firstName,
+                      hintStyle: TextStyle(fontSize: 12)),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: middleName,
+                  enabled: false,
+                  decoration: InputDecoration(
+                      hintText: CommonConstants.middleName,
+                      hintStyle: TextStyle(fontSize: 12)),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: lastName,
+                  enabled: false,
+                  decoration: InputDecoration(
+                      hintText: CommonConstants.lastName,
+                      hintStyle: TextStyle(fontSize: 12)),
                 ),
               ),
               Padding(

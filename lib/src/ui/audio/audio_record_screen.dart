@@ -459,7 +459,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                   ],
                 ), */
             SizedBox(height: 40),
-            Container(
+          /*  Container(
               decoration: BoxDecoration(
                   color: Colors.grey[300],
                   borderRadius: BorderRadius.circular(30)),
@@ -556,7 +556,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
               ),
-            ),
+            ),*/
           ],
         ),
       ),

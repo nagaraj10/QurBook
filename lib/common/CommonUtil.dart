@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/FamilyMembersResponse.dart'as familyMember;
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
@@ -360,32 +360,43 @@ class CommonUtil {
     });
   }
 
-  Sharedbyme getProfileDetails() {
+  familyMember.Sharedbyme getProfileDetails() {
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     GeneralInfo generalInfo = myProfile.response.data.generalInfo;
-    LinkedData linkedData = new LinkedData(roleName: 'Self', nickName: 'Self');
-    ProfilePicThumbnail profilePicThumbnail =
+    familyMember.LinkedData linkedData =
+        new familyMember.LinkedData(roleName: 'Self', nickName: 'Self');
+    familyMember.ProfilePicThumbnail profilePicThumbnail =
         generalInfo.profilePicThumbnail != null
-            ? new ProfilePicThumbnail(
+            ? new familyMember.ProfilePicThumbnail(
                 type: generalInfo.profilePicThumbnail.type,
                 data: generalInfo.profilePicThumbnail.data)
             : null;
-    ProfileData profileData = new ProfileData(
-      id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
-      userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
-      name: generalInfo.name,
-      email: generalInfo.email,
-      dateOfBirth: generalInfo.dateOfBirth,
-      gender: generalInfo.gender,
-      bloodGroup: generalInfo.bloodGroup,
-      isVirtualUser: generalInfo.isVirtualUser,
-      phoneNumber: generalInfo.phoneNumber,
-      createdOn: generalInfo.createdOn,
-      profilePicThumbnail: profilePicThumbnail,
-    );
 
-    return new Sharedbyme(profileData: profileData, linkedData: linkedData);
+    familyMember.QualifiedFullName qualifiedFullName =
+        generalInfo.qualifiedFullName != null
+            ? new familyMember.QualifiedFullName(
+                firstName: generalInfo.qualifiedFullName.firstName,
+                middleName: generalInfo.qualifiedFullName.middleName,
+                lastName: generalInfo.qualifiedFullName.lastName)
+            : null;
+
+    familyMember.ProfileData profileData = new familyMember.ProfileData(
+        id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
+        userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
+        name: generalInfo.name,
+        email: generalInfo.email,
+        dateOfBirth: generalInfo.dateOfBirth,
+        gender: generalInfo.gender,
+        bloodGroup: generalInfo.bloodGroup,
+        isVirtualUser: generalInfo.isVirtualUser,
+        phoneNumber: generalInfo.phoneNumber,
+        createdOn: generalInfo.createdOn,
+        profilePicThumbnail: profilePicThumbnail,
+        qualifiedFullName: qualifiedFullName);
+
+    return new familyMember.Sharedbyme(
+        profileData: profileData, linkedData: linkedData);
   }
 
   void getMedicalPreference({Function callBackToRefresh}) {

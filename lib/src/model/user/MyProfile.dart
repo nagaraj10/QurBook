@@ -84,6 +84,7 @@ class GeneralInfo {
   String lastModifiedOn;
   String dateOfBirth;
   ProfilePicThumbnailMain profilePicThumbnail;
+  QualifiedFullName qualifiedFullName;
 
   GeneralInfo(
       {this.name,
@@ -118,6 +119,9 @@ class GeneralInfo {
     profilePicThumbnail = json['profilePicThumbnail'] != null
         ? new ProfilePicThumbnailMain.fromJson(json['profilePicThumbnail'])
         : null;
+         qualifiedFullName = json['qualifiedFullName'] != null
+        ? new QualifiedFullName.fromJson(json['qualifiedFullName'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -137,6 +141,9 @@ class GeneralInfo {
     data['dateOfBirth'] = this.dateOfBirth;
     if (this.profilePicThumbnail != null) {
       data['profilePicThumbnail'] = this.profilePicThumbnail.toJson();
+    }
+     if (this.qualifiedFullName != null) {
+      data['qualifiedFullName'] = this.qualifiedFullName.toJson();
     }
     return data;
   }
@@ -159,4 +166,26 @@ class ProfilePicThumbnailMain {
     data['data'] = this.data;
     return data;
   }
+}
+
+class QualifiedFullName {
+	String lastName;
+	String firstName;
+	String middleName;
+
+	QualifiedFullName({this.lastName, this.firstName, this.middleName});
+
+	QualifiedFullName.fromJson(Map<String, dynamic> json) {
+		lastName = json['lastName'];
+		firstName = json['firstName'];
+		middleName = json['middleName'];
+	}
+
+	Map<String, dynamic> toJson() {
+		final Map<String, dynamic> data = new Map<String, dynamic>();
+		data['lastName'] = this.lastName;
+		data['firstName'] = this.firstName;
+		data['middleName'] = this.middleName;
+		return data;
+	}
 }

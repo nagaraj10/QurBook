@@ -50,7 +50,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
   String userId;
 
-  String name, phoneNo, email, gender, bloodGroup, dateOfBirth, relationship;
+  String name, phoneNo, email, gender, bloodGroup, dateOfBirth, relationship,firstName,middleName,lastName;
 
   String relationshipJsonString;
 
@@ -148,7 +148,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     try {
       updateAddFamilyInfo =
           await addFamilyUserInfoRepository.updateSelfProfileInfo(userId, name,
-              phoneNo, email, gender, bloodGroup, dateOfBirth, profilePic);
+              phoneNo, email, gender, bloodGroup, dateOfBirth, profilePic,firstName,middleName,lastName);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));

@@ -6,6 +6,7 @@ import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -109,7 +110,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   size: 14,
                 ),
                 onTap: () {
-                  PageNavigator.goTo(context, '/user_accounts');
+                  Navigator.pushNamed(
+                    context,
+                    '/user_accounts',
+                    arguments: UserAccountsArguments(selectedIndex: 0),
+                  );
                 },
               ),
             ),

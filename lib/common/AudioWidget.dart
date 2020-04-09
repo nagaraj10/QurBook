@@ -19,7 +19,7 @@ enum t_MEDIA {
 }
 
 class AudioWidget extends StatefulWidget {
-  final String audioFile;
+   String audioFile;
   Function(bool, String) deleteAudioFile;
   AudioWidget(this.audioFile, this.deleteAudioFile);
   @override
@@ -72,7 +72,7 @@ class AudioWidgetState extends State<AudioWidget> {
     return getAudioWidgetWithPlayer();
   }
 
-  Widget getAudioWidgetWithPlayer() {
+ Widget getAudioWidgetWithPlayer() {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -103,22 +103,6 @@ class AudioWidgetState extends State<AudioWidget> {
               ),
             ),
           ),
-          /*Expanded(
-            child: Container(
-              width: 56.0,
-              height: 50.0,
-              child: ClipOval(
-                child: FlatButton(
-                  onPressed: onPausePlayerPressed(),
-                  //disabledColor: Colors.white,
-                  padding: EdgeInsets.all(4.0),
-                  child: Icon(onPausePlayerPressed() != null
-                      ? Icons.pause
-                      : Icons.pause),
-                ),
-              ),
-            ),
-          ),*/
           Expanded(
             flex: 6,
             child: Container(
@@ -144,7 +128,7 @@ class AudioWidgetState extends State<AudioWidget> {
               ),
             ),
           ),
-          /* Expanded(
+          /*  Expanded(
             flex: 1,
             child: Container(
               width: 56.0,
@@ -165,7 +149,10 @@ class AudioWidgetState extends State<AudioWidget> {
               child: IconButton(
                   icon: Icon(Icons.delete, size: 20, color: Colors.red[600]),
                   onPressed: () {
-                    widget.deleteAudioFile(false, "");
+                    widget.audioFile = '';
+                    setState(() {
+                      widget.deleteAudioFile(false, widget.audioFile);
+                    });
                   }))
         ],
         mainAxisAlignment: MainAxisAlignment.center,
@@ -173,6 +160,7 @@ class AudioWidgetState extends State<AudioWidget> {
       ),
     );
   }
+
 
   void seekToPlayer(int milliSecs) async {
     String result = await flutterSound.seekToPlayer(milliSecs);
