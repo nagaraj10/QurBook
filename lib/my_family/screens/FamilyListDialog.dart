@@ -197,6 +197,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                                             .data),
                                         height: 50,
                                         width: 50,
+                                        fit: BoxFit.cover,
                                       )),
                             SizedBox(width: 20),
                             Column(
@@ -236,8 +237,8 @@ class FamilyListDialogState extends State<FamilyListDialog> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  //TODO chnage theme
-                    color: Color( new CommonUtil().getMyPrimaryColor()),
+                    //TODO chnage theme
+                    color: Color(new CommonUtil().getMyPrimaryColor()),
                     borderRadius: BorderRadius.circular(10)),
                 child: FlatButton(
                   child: Text(

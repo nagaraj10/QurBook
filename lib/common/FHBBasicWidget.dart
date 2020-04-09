@@ -150,6 +150,7 @@ class FHBBasicWidget {
             Uint8List.fromList(profilePicThumbnail.data),
             height: 50,
             width: 50,
+            fit: BoxFit.cover,
           )
         : Container(
             color: Colors.white,
@@ -222,7 +223,7 @@ class FHBBasicWidget {
       onTap: () async {
         await Navigator.of(context)
             .push(MaterialPageRoute(
-          builder: (context) => AudioRecordScreen(fromVoice:false),
+          builder: (context) => AudioRecordScreen(fromVoice: false),
         ))
             .then((results) {
           if (results != null) {

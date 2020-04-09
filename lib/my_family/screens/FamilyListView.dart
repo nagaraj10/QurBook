@@ -37,7 +37,7 @@ class FamilyListView {
                             onTextFieldtap, _keyLoader)
                         : setupAlertDialoadContainer(
                             null, context, onTextFieldtap, _keyLoader),
-                    Container(
+                    /*  Container(
                       margin: EdgeInsets.only(left: 20, right: 20),
                       padding: EdgeInsets.only(left: 20, right: 20),
                       width: MediaQuery.of(context).size.width,
@@ -51,7 +51,7 @@ class FamilyListView {
                         ),
                         onPressed: () {},
                       ),
-                    )
+                    ) */
                   ],
                 ),
               ));
@@ -161,6 +161,7 @@ class FamilyListView {
                                                       .data),
                                               height: 50,
                                               width: 50,
+                                              fit: BoxFit.cover,
                                             )
                                           : Container(
                                               height: 50,

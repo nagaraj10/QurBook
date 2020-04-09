@@ -376,169 +376,154 @@ class _MyCustomAlertDialogState extends State<_MyCustomAlertDialog> {
 
   @override
   Widget build(BuildContext context) {
-    print('---------------Alert Dialog invoked--------------');
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
           // BorderRadius.all(Radius.circular(UIHelper.BorderRadiusSmall)),
           ),
       content: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+          scrollDirection: Axis.vertical,
+          child: Container(
+            constraints: BoxConstraints(minWidth: 320),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.cancel),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            ),
-            /*Center(
-                  child: Icon(
-                    Icons.info_outline,
-                    color: Colors.blue,
-                    size: 80,
-                  ),
-                ),*/
-            SizedBox(
-              height: 10.0,
-            ),
-            Center(
-                child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Text(
-                    widget.title,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      //fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                      //fontSize: UIHelper.FontMediumLarge,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        widget.title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                /*IconButton(
+                    IconButton(
                       icon: Icon(Icons.close),
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                    )*/
-              ],
-            )),
-            SizedBox(
-              height: 7.0,
-            ),
-            new TextFormField(
-              controller: nameHos,
-              decoration: InputDecoration(
-                //icon: const Icon(Icons.person),
-                labelText: 'Hospital Name',
-                errorText: _isHosEmpty ? 'Hospital name can\'t be empty' : null,
-              ),
-            ),
-            new TextFormField(
-              controller: nameDoc,
-              decoration: InputDecoration(
-                //icon: const Icon(Icons.person),
-                labelText: "Doctor's Name",
-
-                errorText: _isDocEmpty ? 'Doctor name can\'t be empty' : null,
-              ),
-            ),
-            InkWell(
-              child: new TextFormField(
-                controller: date,
-                decoration: const InputDecoration(
-                  suffixIcon: Icon(Icons.calendar_today, color: Colors.black),
-                  //icon: const Icon(Icons.calendar_today),
-                  labelText: 'Appointment Date',
+                    )
+                  ],
                 ),
-                enabled: false,
-                keyboardType: TextInputType.datetime,
-              ),
-              onTap: () async {
-                await _selectDate(context);
-                await _selectTime(context);
-              },
-            ),
-            new TextFormField(
-              controller: reason,
-              decoration: const InputDecoration(
-                //icon: const Icon(Icons.person),
-                labelText: 'Reason',
-              ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Center(
-              child: SizedBox(
-                height: 37,
-                width: 150,
-                child: RaisedGradientButton(
-                  borderRadius: 30,
-                  gradient: LinearGradient(
-                    colors: <Color>[
-                      //TODO chnage theme
-                      Color(new CommonUtil().getMyPrimaryColor()),
-                      Color(new CommonUtil().getMyGredientColor()),
-                    ],
+                SizedBox(
+                  height: 7.0,
+                ),
+                new TextFormField(
+                  controller: nameHos,
+                  decoration: InputDecoration(
+                    //icon: const Icon(Icons.person),
+                    labelText: 'Hospital Name',
+                    errorText:
+                        _isHosEmpty ? 'Hospital name can\'t be empty' : null,
                   ),
-                  //color: Colors.blue,
-                  child: Text(
-                    widget.actionText,
-                    style: TextStyle(
-                      //fontSize: UIHelper.FontRegular,
-                      color: Colors.white,
-                      //fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  onPressed: () async {
-                    if (nameHos.text.isEmpty || nameDoc.text.isEmpty) {
-                      setState(() {
-                        nameHos.text.isEmpty
-                            ? _isHosEmpty = true
-                            : _isHosEmpty = false;
-                        nameDoc.text.isEmpty
-                            ? _isDocEmpty = true
-                            : _isDocEmpty = false;
-                      });
+                ),
+                new TextFormField(
+                  controller: nameDoc,
+                  decoration: InputDecoration(
+                    //icon: const Icon(Icons.person),
+                    labelText: "Doctor's Name",
 
-                      setState(() {});
-                      return false;
-                    } else {
-                      /*Map<String, dynamic> items = {};
+                    errorText:
+                        _isDocEmpty ? 'Doctor name can\'t be empty' : null,
+                  ),
+                ),
+                InkWell(
+                  child: new TextFormField(
+                    controller: date,
+                    decoration: const InputDecoration(
+                      suffixIcon:
+                          Icon(Icons.calendar_today, color: Colors.black),
+                      //icon: const Icon(Icons.calendar_today),
+                      labelText: 'Appointment Date',
+                    ),
+                    enabled: false,
+                    keyboardType: TextInputType.datetime,
+                  ),
+                  onTap: () async {
+                    await _selectDate(context);
+                    await _selectTime(context);
+                  },
+                ),
+                new TextFormField(
+                  controller: reason,
+                  decoration: const InputDecoration(
+                    //icon: const Icon(Icons.person),
+                    labelText: 'Reason',
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Center(
+                  child: SizedBox(
+                    height: 37,
+                    width: 150,
+                    child: RaisedGradientButton(
+                      borderRadius: 30,
+                      gradient: LinearGradient(
+                        colors: <Color>[
+                          //TODO chnage theme
+                          Color(new CommonUtil().getMyPrimaryColor()),
+                          Color(new CommonUtil().getMyGredientColor()),
+                        ],
+                      ),
+                      //color: Colors.blue,
+                      child: Text(
+                        widget.actionText,
+                        style: TextStyle(
+                          //fontSize: UIHelper.FontRegular,
+                          color: Colors.white,
+                          //fontFamily: 'Poppins',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      onPressed: () async {
+                        if (nameHos.text.isEmpty || nameDoc.text.isEmpty) {
+                          setState(() {
+                            nameHos.text.isEmpty
+                                ? _isHosEmpty = true
+                                : _isHosEmpty = false;
+                            nameDoc.text.isEmpty
+                                ? _isDocEmpty = true
+                                : _isDocEmpty = false;
+                          });
+
+                          setState(() {});
+                          return false;
+                        } else {
+                          /*Map<String, dynamic> items = {};
                       items['nameHos'] = nameHos.text;
                       items['nameDoc'] = nameDoc.text;
                       items['date'] = DateTime.now().toString();
                       items['reason'] = reason.text;*/
-                      AppointmentModel model = new AppointmentModel(
-                          id: DateTime.now().millisecondsSinceEpoch.toString(),
-                          hName: nameHos.text,
-                          dName: nameDoc.text,
-                          appDate: DateTime.now().toString(),
-                          reason: reason.text);
+                          AppointmentModel model = new AppointmentModel(
+                              id: DateTime.now()
+                                  .millisecondsSinceEpoch
+                                  .toString(),
+                              hName: nameHos.text,
+                              dName: nameDoc.text,
+                              appDate: DateTime.now().toString(),
+                              reason: reason.text);
 
-                      await FHBUtils().createNewAppointment(model).then((_) {
-                        Navigator.of(context).pop();
-                        MyAppointment.of(widget.context).refresh();
-                      });
-                      return true;
-                    }
-                  },
+                          await FHBUtils()
+                              .createNewAppointment(model)
+                              .then((_) {
+                            Navigator.of(context).pop();
+                            MyAppointment.of(widget.context).refresh();
+                          });
+                          return true;
+                        }
+                      },
+                    ),
+                  ),
                 ),
-              ),
+                SizedBox(height: 20)
+              ],
             ),
-            SizedBox(height: 20)
-          ],
-        ),
-      ),
+          )),
     );
   }
 }

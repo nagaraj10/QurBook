@@ -163,10 +163,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               children: <Widget>[
                 ClipOval(
                     child: data.metaInfo.doctor != null
-                        ? Container(
-                            width: 50,
-                            height: 50,
-                            color: const Color(fhbColors.bgColorContainer))
+                        ? getDoctorProfileImageWidget(data)
                         : Container(
                             width: 50,
                             height: 50,
@@ -223,8 +220,9 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                               ? ImageIcon(
                                   AssetImage(
                                       'assets/icons/record_fav_active.png'),
-                                      //TODO chnage theme
-                                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                                  //TODO chnage theme
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(

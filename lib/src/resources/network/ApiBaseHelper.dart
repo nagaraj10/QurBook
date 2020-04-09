@@ -367,7 +367,9 @@ class ApiBaseHelper {
 
         var responseJson;
         if (response.headers['content-type'] == 'image/jpg' ||
-            response.headers['content-type'] == 'image/png') {
+            response.headers['content-type'] == 'image/png' ||
+            response.headers['content-type'] == 'image/*' ||
+            response.headers['content-type'] == 'audio/mp3') {
           /* String base64 = convert.base64Encode(response.bodyBytes);
           responseJson = convert.base64Decode(base64);*/
 
