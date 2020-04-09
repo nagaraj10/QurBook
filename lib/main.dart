@@ -18,10 +18,12 @@ import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/src/ui/camera/TakePictureScreen.dart';
 import 'package:myfhb/src/ui/camera/take_picture_screen_for_devices.dart';
+import 'package:myfhb/src/ui/connectivity_bloc.dart';
 import 'package:myfhb/src/ui/dashboard.dart';
 import 'package:myfhb/src/ui/settings/MySettings.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:provider/provider.dart';
 import 'add_address/screens/add_address_screen.dart';
 import 'add_family_otp/screens/add_family_otp_screen.dart';
 import 'add_family_user_info/screens/add_family_user_info.dart';
@@ -142,18 +144,24 @@ class _MyFHBState extends State<MyFHB> {
 
     flutterLocalNotificationsPlugin.initialize(platform,
         onSelectNotification: notificationAction);
-    return MaterialApp(
-      title: Constants.APP_NAME,
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-        primaryColor: Color(myPrimaryColor),
-        accentColor: Colors.white,
-      ),
-      home: SplashScreen(),
-      routes: routes,
-      debugShowCheckedModeBanner: false,
-      navigatorKey: Get.key,
-    );
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => ConnectivityBloc(),
+          )
+        ],
+        child: MaterialApp(
+          title: Constants.APP_NAME,
+          theme: ThemeData(
+            fontFamily: 'Poppins',
+            primaryColor: Color(myPrimaryColor),
+            accentColor: Colors.white,
+          ),
+          home: SplashScreen(),
+          routes: routes,
+          debugShowCheckedModeBanner: false,
+          navigatorKey: Get.key,
+        ));
   }
 
   Future<void> gettingResponseFromNative() async {

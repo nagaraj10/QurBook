@@ -64,6 +64,9 @@ dependencies:
   devicelocale: ^0.2.2 
   flutter_local_notifications:
   random_color:
+  image_gallery_saver:
+  permission_handler: ^5.0.0+hotfix.3
+  connectivity:
   
 dev_dependencies:
   flutter_test:

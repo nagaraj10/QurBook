@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart'as familyMember;
+import 'package:myfhb/my_family/models/FamilyMembersResponse.dart'
+    as familyMember;
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
@@ -679,5 +681,43 @@ class CommonUtil {
     print('value inside removeDuplicatevalues' +
         categoryDataList.length.toString());
     return categoryDataList;
+  }
+
+  Future<bool> checkNetworkConnectivity() async {
+    var connStatus = await Connectivity().checkConnectivity();
+    if (connStatus == ConnectivityResult.mobile ||
+        connStatus == ConnectivityResult.wifi) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  networkUI(BuildContext context, bool isOffline) {
+    Scaffold.of(context).showSnackBar(SnackBar(
+      content: customSnack(isOffline),
+      backgroundColor: isOffline ? Colors.green : Colors.red,
+    ));
+  }
+
+  Widget customSnack(bool isOffline) {
+    return Container(
+      height: 20.0,
+      color: isOffline ? Colors.green : Colors.red,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Icon(isOffline ? Icons.flash_on : Icons.flash_off),
+          SizedBox(
+            width: 10.0,
+          ),
+          Text(
+            isOffline ? 'back to online' : 'no connection',
+            style: TextStyle(color: Colors.white, fontSize: 15.0),
+          ),
+        ],
+      ),
+    );
   }
 }

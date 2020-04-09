@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/AudioWidget.dart';
@@ -17,6 +19,7 @@ import 'package:myfhb/record_detail/screens/record_info_card.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
+import 'package:myfhb/src/ui/imageSlider.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
@@ -25,6 +28,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class RecordDetailScreen extends StatefulWidget {
   final MediaMetaInfo data;
@@ -57,10 +61,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   int index = 0;
   int length = 0;
   List<dynamic> imagesPathMain = new List();
+  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
+  final Permission _storagePermission =
+      Platform.isAndroid ? Permission.storage : Permission.photos;
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
     PreferenceUtil.init();
+    _listenForPermissionStatus();
     _deleteRecordBloc = DeleteRecordBloc();
     _bookmarkRecordBloc = BookmarkRecordBloc();
     _isRecordBookmarked = widget.data.isBookmarked;
@@ -77,11 +86,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         backgroundColor: const Color(fhbColors.bgColorContainer),
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
           title: AutoSizeText(
-            widget.data.metaInfo.fileName==null?widget.data.metaInfo.mediaTypeInfo.name:widget.data.metaInfo.fileName,
+            widget.data.metaInfo.fileName == null
+                ? widget.data.metaInfo.mediaTypeInfo.name
+                : widget.data.metaInfo.fileName,
             maxLines: 1,
             minFontSize: 12,
             maxFontSize: 16,
@@ -116,9 +128,18 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Icon(
-                                  Icons.fullscreen,
-                                  color: Colors.white,
+                                IconButton(
+                                  //Todo need to add action for this icon
+                                  onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ImageSlider(
+                                                imageList: imagesPathMain,
+                                              ))),
+                                  icon: Icon(
+                                    Icons.fullscreen,
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 Text(
                                   '$index /$length',
@@ -140,8 +161,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               ? ImageIcon(
                                   AssetImage(
                                       'assets/icons/record_fav_active.png'),
-                                      //TODO chnage theme
-                                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                                  //TODO chnage theme
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
                                 )
                               : ImageIcon(
                                   AssetImage('assets/icons/record_fav.png'),
@@ -168,7 +190,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             _familyListBloc
                                 .getFamilyMembersList()
                                 .then((familyMembersList) {
-                                                          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                              Navigator.of(_keyLoader.currentContext,
+                                      rootNavigator: true)
+                                  .pop();
 
                               getDialogBoxWithFamilyMember(
                                   familyMembersList.response.data);
@@ -188,10 +212,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             color: Colors.black,
                           ),
                           onPressed: () {
-                            /* CommonUtil()
-                                                                                                                                                .writeToFile(widget.data.mediaMasterIds); */
-                            /*   CommonUtil().writeToFile(CommonUtil()
-                                                                                                                                                .getDocumentImageWidget(widget.data)); */
+                            requestPermission(_storagePermission)
+                                .then((status) {
+                              if (status == PermissionStatus.granted) {
+                                saveImageToGallery(imagesPathMain, context);
+                              } else {
+                                print(
+                                    'storage permission has not been given by the user');
+                              }
+                            });
                           }),
                       IconButton(
                           icon: ImageIcon(
@@ -247,22 +276,50 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 Icon(
                                   Icons.mic,
                                   //TODO chnage theme
-                                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
                                 ),
                                 SizedBox(width: 10),
-                                Text(
-                                  'Add voice note',
-                                  style: TextStyle(
+                                Text('Add voice note',
+                                    style: TextStyle(
                                       fontSize: 14,
                                       //TODO chnage theme
-                                      color: Color(new CommonUtil().getMyPrimaryColor()),
-                                ))
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                    ))
                               ],
                             ),
                           ),
                   )
           ],
         ));
+  }
+
+  _listenForPermissionStatus() async {
+    final status = await _storagePermission.status;
+    setState(() => _permissionStatus = status);
+  }
+
+  saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
+    _showSnackBar(context, 'Saving health record to gallery');
+    if (imagesPathMain.length > 1) {
+      for (int i = 0; i < imagesPathMain.length; i++) {
+        await ImageGallerySaver.saveImage(imagesPathMain[i]);
+      }
+      _showSnackBar(context, 'Download complete');
+    } else {
+      await ImageGallerySaver.saveImage(imagesPathMain[0]).then((res) {
+        _showSnackBar(context, 'Download complete');
+        return;
+      });
+    }
+  }
+
+  _showSnackBar(BuildContext context, String message) {
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(message),
+      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+    ));
   }
 
   getCategoryInfo(MetaInfo metaInfo) {
@@ -295,26 +352,22 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
-
-      /*   case 'Catcode006':
-                                                                                                                                                  return RecordInfoCard().getCardForMedicalRecord(widget.data.metaInfo);
-                                                                                                                                                  break;
-                                                                                                                                                case 'Catcode007':
-                                                                                                                                                  return RecordInfoCard().getCardForMedicalRecord(widget.data.metaInfo);
-                                                                                                                                                  break;
-                                                                                                                                                case 'Catcode008':
-                                                                                                                                                  return RecordInfoCard().getCardForMedicalRecord(widget.data.metaInfo);
-                                                                                                                                                  break;
-                                                                                                                                                case 'Catcode009':
-                                                                                                                                                  return RecordInfoCard().getCardForMedicalRecord(widget.data.metaInfo);
-                                                                                                                                                  break;
-                                                                                                                                                case 'Catcode010':
-                                                                                                                                                  return RecordInfoCard().getCardForMedicalRecord(widget.data.metaInfo);
-                                                                                                                                                  break; */
       default:
         return RecordInfoCard().getCardForPrescription(
             widget.data.metaInfo, widget.data.createdOn);
     }
+  }
+
+  Future<PermissionStatus> requestPermission(
+      Permission storagePermission) async {
+    final status = await storagePermission.request();
+
+    setState(() {
+      print(status);
+      _permissionStatus = status;
+    });
+
+    return status;
   }
 
   deleteRecord(String id) {
@@ -436,11 +489,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
     print('pary categoryName' + categoryName);
     if (categoryName != Constants.STR_DEVICES) {
-      String date=widget.data.metaInfo.dateOfVisit!=null?widget.data.metaInfo.dateOfVisit:'';
+      String date = widget.data.metaInfo.dateOfVisit != null
+          ? widget.data.metaInfo.dateOfVisit
+          : '';
 
-      if(date!=''){
-
-        date=FHBUtils().getFormattedDateOnly(date);
+      if (date != '') {
+        date = FHBUtils().getFormattedDateOnly(date);
       }
       switch (categoryName) {
         case Constants.STR_PRESCRIPTION:
@@ -551,7 +605,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   text: hospitalData != null ? hospitalData['name'] : ''),
               new TextEditingController(
                   text: doctorsData != null ? doctorsData['name'] : ''),
-              new TextEditingController(text: widget.data.metaInfo.dateOfVisit!=null?widget.data.metaInfo.dateOfVisit:''),
+              new TextEditingController(
+                  text: widget.data.metaInfo.dateOfVisit != null
+                      ? widget.data.metaInfo.dateOfVisit
+                      : ''),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
             print('Audio Path delete' + containsAudio.toString());
@@ -582,7 +639,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       PreferenceUtil.saveString(Constants.KEY_DEVICENAME, deviceName);
       switch (deviceName) {
         case Constants.STR_GLUCOMETER:
-          String glucoMeterValue = widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[0].value:'';
+          String glucoMeterValue = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[0].value
+              : '';
           String fileName = widget.data.metaInfo.fileName;
           List<bool> isSelected =
               widget.data.metaInfo.deviceReadings[1].unit == 'After'
@@ -614,8 +673,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           break;
 
         case Constants.STR_THERMOMETER:
-          String thermometerValue =
-             widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[0].value:'';
+          String thermometerValue = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[0].value
+              : '';
           String fileName = widget.data.metaInfo.fileName;
 
           new CommonDialogBox().getDialogBoxForTemperature(
@@ -642,7 +702,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: fileName));
           break;
         case Constants.STR_WEIGHING_SCALE:
-          String weightInKgs = widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[0].value:'';
+          String weightInKgs = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[0].value
+              : '';
           String fileName = widget.data.metaInfo.fileName;
 
           new CommonDialogBox().getDialogBoxForWeightingScale(
@@ -670,9 +732,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           break;
 
         case Constants.STR_PULSE_OXIMETER:
-          String oxygenSaturation =
-              widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[0].value:'';
-          String pulse = widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[1].value:'';
+          String oxygenSaturation = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[0].value
+              : '';
+          String pulse = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[1].value
+              : '';
           String fileName = widget.data.metaInfo.fileName;
 
           new CommonDialogBox().getDialogBoxForPulseOxidometer(
@@ -700,11 +765,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: fileName));
           break;
         case Constants.STR_BP_MONITOR:
-          String systolicPressure =
-              widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[0].value:'';
-          String diastolicPressure =
-              widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[1].value:'';
-          String pulse = widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[2].value:'';
+          String systolicPressure = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[0].value
+              : '';
+          String diastolicPressure = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[1].value
+              : '';
+          String pulse = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[2].value
+              : '';
           String fileName = widget.data.metaInfo.fileName;
 
           new CommonDialogBox().getDialogBoxForBPMonitor(
