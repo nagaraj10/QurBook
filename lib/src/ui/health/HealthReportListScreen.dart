@@ -220,7 +220,6 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                               ? ImageIcon(
                                   AssetImage(
                                       'assets/icons/record_fav_active.png'),
-                                  //TODO chnage theme
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,

@@ -213,21 +213,14 @@ class MyProvidersDoctorsList extends StatelessWidget {
                               SizedBox(height: 20),
                               InkWell(
                                   child: eachDoctorModel.isDefault == true
-                                      ? Icon(
-                                          Icons.bookmark,
-                                          size: 22,
-                                          color:
-                                              //TODO chnage theme
-                                              Color(new CommonUtil()
-                                                  .getMyPrimaryColor()),
+                                      ? ImageIcon(
+                                          AssetImage(
+                                              'assets/icons/record_fav_active.png'),
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
+                                          size: 20,
                                         )
-                                      : /* Icon(
-                                          Icons.bookmark,
-                                          size: 22,
-                                          color: Colors.grey,
-                                        ) */
-
-                                      Container(
+                                      : Container(
                                           height: 0,
                                           width: 0,
                                         )),

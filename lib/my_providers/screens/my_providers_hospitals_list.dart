@@ -122,11 +122,12 @@ class MyProvidersHospitalsList extends StatelessWidget {
                               SizedBox(height: 20),
                               InkWell(
                                   child: eachHospitalModel.isDefault == true
-                                      ? Icon(
-                                          Icons.bookmark,
-                                          size: 22,
+                                      ? ImageIcon(
+                                          AssetImage(
+                                              'assets/icons/record_fav_active.png'),
                                           color: Color(new CommonUtil()
                                               .getMyPrimaryColor()),
+                                          size: 20,
                                         )
                                       : Container(
                                           height: 0,
