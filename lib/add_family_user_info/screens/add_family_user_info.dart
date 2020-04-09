@@ -1017,7 +1017,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
       if (firstNameController.text.length > 0 &&
           lastNameController.text.length > 0 &&
-          emailController.text.length > 0 &&
           mobileNoController.text.length > 0 &&
           selectedGender.length > 0 &&
           dateOfBirthController.text.length > 0 &&
@@ -1089,7 +1088,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       addFamilyUserInfoBloc.relationship = relationShipController.text;
 
       if (firstNameController.text.length > 0 &&
-          emailController.text.length > 0 &&
           mobileNoController.text.length > 0 &&
           selectedGender.length > 0 &&
           dateOfBirthController.text.length > 0 &&

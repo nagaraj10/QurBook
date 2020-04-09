@@ -31,6 +31,7 @@ import 'package:myfhb/search_providers/models/labs_list_response.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
 class AddProviders extends StatefulWidget {
@@ -300,10 +301,11 @@ class AddProvidersState extends State<AddProviders> {
                     Row(
                       children: <Widget>[
                         IgnorePointer(
-                            ignoring: widget.arguments.fromClass ==
-                                    CommonConstants.myProviders
-                                ? true
-                                : false,
+//                            ignoring: widget.arguments.fromClass ==
+//                                    CommonConstants.myProviders
+//                                ? true
+//                                : false,
+                            ignoring: false,
                             child: Switch(
                               value: isPreferred,
                               onChanged: (value) {
@@ -324,10 +326,9 @@ class AddProvidersState extends State<AddProviders> {
                       ],
                     ),
                     Visibility(
-                      visible: widget.arguments.fromClass ==
-                              CommonConstants.myProviders
-                          ? false
-                          : true,
+//                      visible: widget.arguments.fromClass ==
+//                              CommonConstants.myProviders ? false : true,
+                      visible: true,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -555,50 +556,68 @@ class AddProvidersState extends State<AddProviders> {
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
-    return Align(
-      alignment: Alignment.topLeft,
-      child: UnconstrainedBox(
-          child: Container(
-        padding: EdgeInsets.all(5.0),
-        height: 35,
-        decoration: BoxDecoration(
-          color: Color.fromARGB(255, 246, 246, 246),
-          border: Border.all(
-            width: 0.7356,
-            color: Color.fromARGB(255, 239, 239, 239),
-          ),
-          borderRadius: BorderRadius.all(Radius.circular(17.05128)),
-        ),
-        child: Row(
-          children: [
-            ClipOval(
-              child: selectedProfile == null
-                  ? FHBBasicWidget().getProfilePicWidget(
-                      myProfile.response.data.generalInfo.profilePicThumbnail)
-                  : FHBBasicWidget().getProfilePicWidget(selectedProfile
-                      .response.data.generalInfo.profilePicThumbnail),
-            ),
-            SizedBox(width: 5),
-            Container(
-              margin: EdgeInsets.only(right: 10),
-              child: Text(
-                selectedFamilyMemberName == null
-                    ? 'Self'
-                    : selectedFamilyMemberName,
-                softWrap: true,
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  color: Color.fromARGB(255, 85, 92, 89),
-                  fontFamily: "Muli",
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
-                ),
+    return InkWell(
+        onTap: () {
+          if (widget.arguments.fromClass != CommonConstants.myProviders) {
+            CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+
+            if (_familyListBloc != null) {
+              _familyListBloc = null;
+              _familyListBloc = new FamilyListBloc();
+            }
+            _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+              // Hide Loading
+              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                  .pop();
+              getDialogBoxWithFamilyMemberScrap(
+                  familyMembersList.response.data);
+            });
+          }
+        },
+        child: Align(
+          alignment: Alignment.topLeft,
+          child: UnconstrainedBox(
+              child: Container(
+            padding: EdgeInsets.all(5.0),
+            height: 35,
+            decoration: BoxDecoration(
+              color: Color.fromARGB(255, 246, 246, 246),
+              border: Border.all(
+                width: 0.7356,
+                color: Color.fromARGB(255, 239, 239, 239),
               ),
+              borderRadius: BorderRadius.all(Radius.circular(17.05128)),
             ),
-          ],
-        ),
-      )),
-    );
+            child: Row(
+              children: [
+                ClipOval(
+                  child: selectedProfile == null
+                      ? FHBBasicWidget().getProfilePicWidget(myProfile
+                          .response.data.generalInfo.profilePicThumbnail)
+                      : FHBBasicWidget().getProfilePicWidget(selectedProfile
+                          .response.data.generalInfo.profilePicThumbnail),
+                ),
+                SizedBox(width: 5),
+                Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: Text(
+                    selectedFamilyMemberName == null
+                        ? 'Self'
+                        : selectedFamilyMemberName,
+                    softWrap: true,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      color: Color.fromARGB(255, 85, 92, 89),
+                      fontFamily: "Muli",
+                      fontWeight: FontWeight.w700,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )),
+        ));
   }
 
 //  new FHBBasicWidget()
@@ -811,32 +830,73 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   void _addBtnTapped() {
-    if (widget.arguments.hasData) {
-      CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
-
-      updateProvidersBloc.isPreferred = isPreferred;
-
-      if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-        if (widget.arguments.fromClass == CommonConstants.myProviders) {
-          updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
+    if (widget.arguments.hasData ||
+        widget.arguments.fromClass == CommonConstants.myProviders) {
+      if (widget.arguments.fromClass == CommonConstants.myProviders) {
+        if (myprovidersPreferred) {
+          // alert
+          Alert.displayAlertPlain(context,
+              title: "Error",
+              content:
+                  'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.');
         } else {
-          updateProvidersBloc.providerId = widget.arguments.data.id;
+          CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+
+          updateProvidersBloc.isPreferred = isPreferred;
+
+          if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
+            if (widget.arguments.fromClass == CommonConstants.myProviders) {
+              updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
+            } else {
+              updateProvidersBloc.providerId = widget.arguments.data.id;
+            }
+            updateProvidersBloc.updateDoctorsIdWithUserDetails();
+          } else if (widget.arguments.searchKeyWord ==
+              CommonConstants.hospitals) {
+            if (widget.arguments.fromClass == CommonConstants.myProviders) {
+              updateProvidersBloc.providerId =
+                  widget.arguments.hospitalsModel.id;
+            } else {
+              updateProvidersBloc.providerId = widget.arguments.hospitalData.id;
+            }
+            updateProvidersBloc.updateHospitalsIdWithUserDetails();
+          } else {
+            if (widget.arguments.fromClass == CommonConstants.myProviders) {
+              updateProvidersBloc.providerId = widget.arguments.labsModel.id;
+            } else {
+              updateProvidersBloc.providerId = widget.arguments.labData.id;
+            }
+            updateProvidersBloc.updateLabsIdWithUserDetails();
+          }
         }
-        updateProvidersBloc.updateDoctorsIdWithUserDetails();
-      } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
-        if (widget.arguments.fromClass == CommonConstants.myProviders) {
-          updateProvidersBloc.providerId = widget.arguments.hospitalsModel.id;
-        } else {
-          updateProvidersBloc.providerId = widget.arguments.hospitalData.id;
-        }
-        updateProvidersBloc.updateHospitalsIdWithUserDetails();
       } else {
-        if (widget.arguments.fromClass == CommonConstants.myProviders) {
-          updateProvidersBloc.providerId = widget.arguments.labsModel.id;
+        CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+
+        updateProvidersBloc.isPreferred = isPreferred;
+
+        if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
+          if (widget.arguments.fromClass == CommonConstants.myProviders) {
+            updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
+          } else {
+            updateProvidersBloc.providerId = widget.arguments.data.id;
+          }
+          updateProvidersBloc.updateDoctorsIdWithUserDetails();
+        } else if (widget.arguments.searchKeyWord ==
+            CommonConstants.hospitals) {
+          if (widget.arguments.fromClass == CommonConstants.myProviders) {
+            updateProvidersBloc.providerId = widget.arguments.hospitalsModel.id;
+          } else {
+            updateProvidersBloc.providerId = widget.arguments.hospitalData.id;
+          }
+          updateProvidersBloc.updateHospitalsIdWithUserDetails();
         } else {
-          updateProvidersBloc.providerId = widget.arguments.labData.id;
+          if (widget.arguments.fromClass == CommonConstants.myProviders) {
+            updateProvidersBloc.providerId = widget.arguments.labsModel.id;
+          } else {
+            updateProvidersBloc.providerId = widget.arguments.labData.id;
+          }
+          updateProvidersBloc.updateLabsIdWithUserDetails();
         }
-        updateProvidersBloc.updateLabsIdWithUserDetails();
       }
     } else {
       var signInData = {};

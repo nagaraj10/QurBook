@@ -34,7 +34,8 @@ class _UserAccountsState extends State<UserAccounts>
   void initState() {
     super.initState();
     PreferenceUtil.init();
-    _sliverTabController = TabController(vsync: this, length: 3);
+    _sliverTabController = TabController(
+        vsync: this, length: 3, initialIndex: widget.arguments.selectedIndex);
     _sliverTabController.addListener(_handleSelected);
   }
 
