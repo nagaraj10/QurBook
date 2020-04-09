@@ -1,14 +1,18 @@
-import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:myfhb/src/model/AppointmentModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:random_color/random_color.dart';
 
 class MyAppointment extends StatefulWidget {
+  static _MyAppointmentState of(BuildContext context) =>
+      context.findAncestorStateOfType<State<MyAppointment>>();
+
   @override
   State<StatefulWidget> createState() => new _MyAppointmentState();
 }
@@ -18,6 +22,7 @@ enum FormType { login, register }
 
 class _MyAppointmentState extends State<MyAppointment> {
   SharedPreferences prefs;
+  RandomColor _randomColor = RandomColor();
 
   dynamic detailsList =
       new List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
@@ -27,6 +32,10 @@ class _MyAppointmentState extends State<MyAppointment> {
   _MyAppointmentState() {
     //_emailFilter.addListener(_emailListen);
     //_passwordFilter.addListener(_passwordListen);
+  }
+
+  void refresh() {
+    setState(() {});
   }
 
   /*  void _emailListen() {
@@ -72,8 +81,17 @@ class _MyAppointmentState extends State<MyAppointment> {
               floatingActionButton: FloatingActionButton.extended(
                 onPressed: () {
                   // Add your onPressed code here!
-
-                  customDialog("New appointment", "Save", context, "Save");
+                  //customDialog("New appointment", "Save", context, "Save");
+                  showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext contxt) {
+                        return _MyCustomAlertDialog(
+                            title: 'New appointment',
+                            subtitle: 'Save',
+                            context: context,
+                            actionText: 'Save');
+                      });
                 },
                 label: Text('Add'),
                 icon: Icon(Icons.add),
@@ -83,6 +101,7 @@ class _MyAppointmentState extends State<MyAppointment> {
               body: new ListView.builder(
                   itemCount: detailsList.length,
                   itemBuilder: (BuildContext ctxt, int index) {
+                    AppointmentModel model = reverseDetailsList[index];
                     return Container(
                         padding: EdgeInsets.all(10),
                         margin: EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -104,33 +123,50 @@ class _MyAppointmentState extends State<MyAppointment> {
                           children: <Widget>[
                             CircleAvatar(
                               radius: 25,
-                              backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
-                              child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: EdgeInsets.zero,
-                                      child: Text(
-                                        new FHBUtils().convertMonthFromString(
-                                            reverseDetailsList[index]['date']),
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 11,
-                                            fontWeight: FontWeight.w300),
+                              backgroundColor: _randomColor.randomColor(),
+//                                  Color(new CommonUtil().getMyPrimaryColor()),
+
+                              child: Center(
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      /*Padding(
+                                        padding: EdgeInsets.zero,
+                                        child: Text(
+                                          */ /*new FHBUtils().convertMonthFromString(
+                                              reverseDetailsList[index]['date']),*/ /*
+                                          model.appDate
+                                          ,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w300),
+                                        ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.zero,
-                                      child: Text(
-                                        new FHBUtils().convertDateFromString(
-                                            reverseDetailsList[index]['date']),
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 18),
-                                      ),
-                                    )
-                                  ]),
+                                      Padding(
+                                        padding: EdgeInsets.zero,
+                                        child: Text(
+                                          */ /*new FHBUtils().convertDateFromString(
+                                              reverseDetailsList[index]['date'])*/ /*
+                                          model.appDate,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 18),
+                                        ),
+                                      )*/
+                                      Padding(
+                                        padding: EdgeInsets.all(2),
+                                        child: Text(
+                                          model.dName[0].toUpperCase(),
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      )
+                                    ]),
+                              ),
                             ),
                             SizedBox(
                               width: 20,
@@ -141,18 +177,14 @@ class _MyAppointmentState extends State<MyAppointment> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
-                                  Text(
-                                      toBeginningOfSentenceCase(
-                                          reverseDetailsList[index]['nameHos']),
+                                  Text(toBeginningOfSentenceCase(model.hName),
                                       style: TextStyle(
                                           fontWeight: FontWeight.w500,
                                           color: Colors.black)),
                                   SizedBox(height: 5),
                                   Text(
                                     'Dr. ' +
-                                        toBeginningOfSentenceCase(
-                                            reverseDetailsList[index]
-                                                ['nameDoc']),
+                                        toBeginningOfSentenceCase(model.dName),
                                     style: TextStyle(
                                         fontSize: 13,
                                         color: Colors.grey,
@@ -161,8 +193,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                   SizedBox(height: 5),
                                   Text(
                                     toBeginningOfSentenceCase(FHBUtils()
-                                        .getFormattedDateString(
-                                            reverseDetailsList[index]['date'])),
+                                        .getFormattedDateString(model.appDate)),
                                     style: TextStyle(
                                         fontSize: 12, color: Colors.grey[400]),
                                   )
@@ -174,14 +205,21 @@ class _MyAppointmentState extends State<MyAppointment> {
                                 child: Row(
                                   children: <Widget>[
                                     Container(
-                                        width: 1,
-                                        height: 30,
-                                        color: Color(new CommonUtil().getMyPrimaryColor())),
+                                      width: 1,
+                                      height: 30,
+                                      color: Colors.grey,
+                                    ),
                                     SizedBox(width: 10),
-                                    Icon(
-                                      FontAwesomeIcons.mapMarkedAlt,
-                                      size: 20,
-                                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                                    InkWell(
+                                      onTap: () {
+                                        FHBUtils().deleteAppointment(model.id);
+                                        setState(() {});
+                                      },
+                                      child: Icon(
+                                        Icons.delete,
+                                        size: 20,
+                                        color: Colors.red,
+                                      ),
                                     ),
                                   ],
                                 ))
@@ -267,187 +305,8 @@ class _MyAppointmentState extends State<MyAppointment> {
   }
  */
 
-  customDialog(String title, String subtitle, context1, String actionText,
-      {bool isForceFinishScreeen, bool isFromHelpDesk}) {
-    TextEditingController nameHos = new TextEditingController();
-    TextEditingController nameDoc = new TextEditingController();
-    TextEditingController reason = new TextEditingController();
-    TextEditingController date = new TextEditingController();
-
-    Future<void> _selectDate(BuildContext context) async {
-      final DateTime picked = await showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: new DateTime(1970, 8),
-          lastDate: new DateTime(2101));
-
-      //DateFormat('yyyy-MM-dd – kk:mm').format(now)
-      date.text = new DateFormat('dd MMM yyyy').format(picked).toString();
-    }
-
-    Future<void> _selectTime(BuildContext context) async {
-      final TimeOfDay picked = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
-      );
-      date.text = date.text +
-          " " +
-          picked.hour.toString() +
-          ":" +
-          picked.minute.toString();
-
-      setState(() {});
-    }
-
-    showDialog(
-      context: context1,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
-              // BorderRadius.all(Radius.circular(UIHelper.BorderRadiusSmall)),
-              ),
-          content: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                /* Center(
-                  child: Icon(
-                    Icons.info_outline,
-                    color: Colors.blue,
-                    size: 80,
-                  ),
-                ), */
-                SizedBox(
-                  height: 10.0,
-                ),
-                Center(
-                    child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        title,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          //fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                          //fontSize: UIHelper.FontMediumLarge,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    )
-                  ],
-                )),
-                SizedBox(
-                  height: 7.0,
-                ),
-                new TextFormField(
-                  controller: nameHos,
-                  decoration: const InputDecoration(
-                    //icon: const Icon(Icons.person),
-                    labelText: 'Hospital Name',
-                  ),
-                ),
-                new TextFormField(
-                  controller: nameDoc,
-                  decoration: const InputDecoration(
-                    //icon: const Icon(Icons.person),
-                    labelText: "Doctor's Name",
-                  ),
-                ),
-                InkWell(
-                  child: new TextFormField(
-                    controller: date,
-                    decoration: const InputDecoration(
-                      suffixIcon:
-                          Icon(Icons.calendar_today, color: Colors.black),
-                      //icon: const Icon(Icons.calendar_today),
-                      labelText: 'Appointment Date',
-                    ),
-                    enabled: false,
-                    keyboardType: TextInputType.datetime,
-                  ),
-                  onTap: () async {
-                    await _selectDate(context);
-                    await _selectTime(context);
-                  },
-                ),
-                new TextFormField(
-                  controller: reason,
-                  decoration: const InputDecoration(
-                    //icon: const Icon(Icons.person),
-                    labelText: 'Reason',
-                  ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Center(
-                  child: SizedBox(
-                    height: 37,
-                    width: 150,
-                    child: RaisedGradientButton(
-                      borderRadius: 30,
-                      gradient: LinearGradient(
-                        colors: <Color>[
-                          //TODO chnage theme
-                          Color(new CommonUtil().getMyPrimaryColor()),
-                          Color(new CommonUtil().getMyGredientColor()),
-                        ],
-                      ),
-                      //color: Colors.blue,
-                      child: Text(
-                        actionText,
-                        style: TextStyle(
-                          //fontSize: UIHelper.FontRegular,
-                          color: Colors.white,
-                          //fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      onPressed: () async {
-                        Map<String, dynamic> items = {};
-                        items['nameHos'] = nameHos.text;
-                        items['nameDoc'] = nameDoc.text;
-                        items['date'] = DateTime.now().toString();
-                        items['reason'] = reason.text;
-
-                        await detailsList.add(items);
-
-                        var sD = json.encode(detailsList);
-                        prefs.setString('key', sD);
-
-                        reverseDetailsList = detailsList.reversed.toList();
-
-                        setState(() {});
-
-                        Navigator.of(context).pop();
-                      },
-
-                      /*  shape: new RoundedRectangleBorder(
-                          borderRadius: new BorderRadius.circular(10),
-                        ) */
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20)
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   getProjectDetails() async {
-    prefs = await SharedPreferences.getInstance();
+    /*prefs = await SharedPreferences.getInstance();
 
     String getData = await prefs.get('key');
     if (getData == null) {
@@ -456,9 +315,230 @@ class _MyAppointmentState extends State<MyAppointment> {
       detailsList = json.decode(getData);
 
       reverseDetailsList = detailsList.reversed.toList();
-      ;
-    }
+    }*/
 
+    detailsList = await FHBUtils().getAllAppointments();
+    reverseDetailsList = detailsList.reversed.toList();
+    print(reverseDetailsList.toString());
     return detailsList;
+  }
+}
+
+class _MyCustomAlertDialog extends StatefulWidget {
+  final String title;
+  final String subtitle;
+  final BuildContext context;
+  final String actionText;
+  _MyCustomAlertDialog({
+    this.title,
+    this.subtitle,
+    this.context,
+    this.actionText,
+  });
+
+  @override
+  _MyCustomAlertDialogState createState() => _MyCustomAlertDialogState();
+}
+
+class _MyCustomAlertDialogState extends State<_MyCustomAlertDialog> {
+  TextEditingController nameHos = new TextEditingController();
+  TextEditingController nameDoc = new TextEditingController();
+  TextEditingController reason = new TextEditingController();
+  TextEditingController date = new TextEditingController();
+  bool _isHosEmpty = false;
+  bool _isDocEmpty = false;
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime.now().subtract(Duration(days: 1)),
+        lastDate: new DateTime(2100));
+
+    //DateFormat('yyyy-MM-dd – kk:mm').format(now)
+    //date.text = new DateFormat('dd MMM yyyy').format(picked).toString();
+    date.text = new FHBUtils().getFormattedDateOnly(picked.toString());
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    date.text = date.text +
+        " " +
+        picked.hour.toString() +
+        ":" +
+        picked.minute.toString();
+
+    setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print('---------------Alert Dialog invoked--------------');
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
+          // BorderRadius.all(Radius.circular(UIHelper.BorderRadiusSmall)),
+          ),
+      content: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.cancel),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ),
+            /*Center(
+                  child: Icon(
+                    Icons.info_outline,
+                    color: Colors.blue,
+                    size: 80,
+                  ),
+                ),*/
+            SizedBox(
+              height: 10.0,
+            ),
+            Center(
+                child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(
+                    widget.title,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      //fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                      //fontSize: UIHelper.FontMediumLarge,
+                    ),
+                  ),
+                ),
+                /*IconButton(
+                      icon: Icon(Icons.close),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )*/
+              ],
+            )),
+            SizedBox(
+              height: 7.0,
+            ),
+            new TextFormField(
+              controller: nameHos,
+              decoration: InputDecoration(
+                //icon: const Icon(Icons.person),
+                labelText: 'Hospital Name',
+                errorText: _isHosEmpty ? 'Hospital name can\'t be empty' : null,
+              ),
+            ),
+            new TextFormField(
+              controller: nameDoc,
+              decoration: InputDecoration(
+                //icon: const Icon(Icons.person),
+                labelText: "Doctor's Name",
+
+                errorText: _isDocEmpty ? 'Doctor name can\'t be empty' : null,
+              ),
+            ),
+            InkWell(
+              child: new TextFormField(
+                controller: date,
+                decoration: const InputDecoration(
+                  suffixIcon: Icon(Icons.calendar_today, color: Colors.black),
+                  //icon: const Icon(Icons.calendar_today),
+                  labelText: 'Appointment Date',
+                ),
+                enabled: false,
+                keyboardType: TextInputType.datetime,
+              ),
+              onTap: () async {
+                await _selectDate(context);
+                await _selectTime(context);
+              },
+            ),
+            new TextFormField(
+              controller: reason,
+              decoration: const InputDecoration(
+                //icon: const Icon(Icons.person),
+                labelText: 'Reason',
+              ),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            Center(
+              child: SizedBox(
+                height: 37,
+                width: 150,
+                child: RaisedGradientButton(
+                  borderRadius: 30,
+                  gradient: LinearGradient(
+                    colors: <Color>[
+                      //TODO chnage theme
+                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyGredientColor()),
+                    ],
+                  ),
+                  //color: Colors.blue,
+                  child: Text(
+                    widget.actionText,
+                    style: TextStyle(
+                      //fontSize: UIHelper.FontRegular,
+                      color: Colors.white,
+                      //fontFamily: 'Poppins',
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  onPressed: () async {
+                    if (nameHos.text.isEmpty || nameDoc.text.isEmpty) {
+                      setState(() {
+                        nameHos.text.isEmpty
+                            ? _isHosEmpty = true
+                            : _isHosEmpty = false;
+                        nameDoc.text.isEmpty
+                            ? _isDocEmpty = true
+                            : _isDocEmpty = false;
+                      });
+
+                      setState(() {});
+                      return false;
+                    } else {
+                      /*Map<String, dynamic> items = {};
+                      items['nameHos'] = nameHos.text;
+                      items['nameDoc'] = nameDoc.text;
+                      items['date'] = DateTime.now().toString();
+                      items['reason'] = reason.text;*/
+                      AppointmentModel model = new AppointmentModel(
+                          id: DateTime.now().millisecondsSinceEpoch.toString(),
+                          hName: nameHos.text,
+                          dName: nameDoc.text,
+                          appDate: DateTime.now().toString(),
+                          reason: reason.text);
+
+                      await FHBUtils().createNewAppointment(model).then((_) {
+                        Navigator.of(context).pop();
+                        MyAppointment.of(widget.context).refresh();
+                      });
+                      return true;
+                    }
+                  },
+                ),
+              ),
+            ),
+            SizedBox(height: 20)
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -21,7 +22,6 @@ import 'package:myfhb/src/ui/dashboard.dart';
 import 'package:myfhb/src/ui/settings/MySettings.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-
 import 'add_address/screens/add_address_screen.dart';
 import 'add_family_otp/screens/add_family_otp_screen.dart';
 import 'add_family_user_info/screens/add_family_user_info.dart';
@@ -125,9 +125,23 @@ class _MyFHBState extends State<MyFHB> {
   int myPrimaryColor = new CommonUtil().getMyPrimaryColor();
   static const platform = const MethodChannel('flutter.native/versioncode');
   String _responseFromNative = 'wait! Its loading';
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   @override
   Widget build(BuildContext context) {
+    var nsSettingsForAndroid =
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var nsSettingsForIOS = new IOSInitializationSettings();
+    var platform =
+        new InitializationSettings(nsSettingsForAndroid, nsSettingsForIOS);
+
+    Future notificationAction(String payload) async {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => AddReminder()));
+    }
+
+    flutterLocalNotificationsPlugin.initialize(platform,
+        onSelectNotification: notificationAction);
     return MaterialApp(
       title: Constants.APP_NAME,
       theme: ThemeData(
