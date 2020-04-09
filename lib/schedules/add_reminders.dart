@@ -1,77 +1,25 @@
-import 'dart:core';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:intl/intl.dart';
-import 'package:myfhb/src/model/ReminderModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 import 'package:myfhb/common/CommonUtil.dart';
 
 class AddReminder extends StatefulWidget {
-  // ignore: non_constant_identifier_names
-  final ReminderModel model;
-
-  AddReminder({this.model});
-
   @override
   _AddReminderState createState() => _AddReminderState();
 }
 
 class _AddReminderState extends State<AddReminder> {
-  bool isUpdate = false;
   List<bool> isSelected = [false, false, false];
-  /*DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();*/
-  static DateTime selectedDate;
-  static TimeOfDay selectedTime;
-  String id = '';
-  String myCurrentDate = '';
-  String myCurrentTime = '';
-
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-//  NotificationAppLaunchDetails notificationAppLaunchDetails;
-  @override
-  void initState() {
-    //init();
-
-    if (widget.model != null) {
-      isUpdate = true;
-      tileContoller.text = widget.model.title;
-      notesController.text = widget.model.notes;
-      var timeArray = widget.model.time.split(':');
-      selectedDate = DateTime.parse(widget.model.date);
-      selectedTime = TimeOfDay(
-          hour: int.parse(timeArray[0]),
-          minute: int.parse(timeArray[1].substring(0, 2)));
-      int intervalIndex = selectedInterval.indexOf(widget.model.interval);
-      isSelected[intervalIndex] = true;
-      print(
-          '==============is selected array on update mode${isSelected.toString()}======================');
-    } else {
-      isUpdate = false;
-      selectedDate = DateTime.now();
-      selectedTime = TimeOfDay.now();
-    }
-  }
-
-  /*init() async{
-    notificationAppLaunchDetails =
-    await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-    var nsSettingsForAndroid = new AndroidInitializationSettings('@mipmap/ic_launcher');
-    var nsSettingsForIOS = new IOSInitializationSettings();
-    var initializationSettingsForBothPlatoform = new InitializationSettings(nsSettingsForAndroid, nsSettingsForIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettingsForBothPlatoform,onSelectNotification: notificationAction);
-  }*/
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
 
   TextEditingController tileContoller = TextEditingController();
   TextEditingController notesController = TextEditingController();
   List<String> selectedInterval = ['Day', 'Week', 'Month'];
-  bool _isTitleEmpty = false;
-  bool _isNoteEmpty = false;
 
   int intervalIndex = 0;
 
@@ -85,7 +33,7 @@ class _AddReminderState extends State<AddReminder> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        title: isUpdate ? Text('Update Reminder') : Text('Add Reminder'),
+        title: Text('Add Reminder'),
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
@@ -104,19 +52,11 @@ class _AddReminderState extends State<AddReminder> {
                       children: <Widget>[
                         TextFormField(
                           controller: tileContoller,
-                          decoration: InputDecoration(
-                              labelText: 'Title',
-                              errorText: _isTitleEmpty
-                                  ? 'Title can\'t be Empty'
-                                  : null),
+                          decoration: InputDecoration(labelText: 'Title'),
                         ),
                         TextFormField(
                           controller: notesController,
-                          decoration: InputDecoration(
-                              labelText: 'Notes',
-                              errorText: _isNoteEmpty
-                                  ? 'Notes can\'t be Empty'
-                                  : null),
+                          decoration: InputDecoration(labelText: 'Notes'),
                         ),
                         Padding(
                           child: Text(
@@ -134,10 +74,8 @@ class _AddReminderState extends State<AddReminder> {
                               },
                               child: Row(
                                 children: <Widget>[
-                                  Text(
-                                      /*isUpdate?FHBUtils().getFormattedDateOnly(widget.model.date):*/
-                                      FHBUtils().getFormattedDateOnly(
-                                          selectedDate.toString())),
+                                  Text(FHBUtils().getFormattedDateOnly(
+                                      selectedDate.toString())),
                                   SizedBox(width: 10),
                                   Icon(
                                     Icons.calendar_today,
@@ -153,7 +91,7 @@ class _AddReminderState extends State<AddReminder> {
                               },
                               child: Row(
                                 children: <Widget>[
-                                  Text(/*isUpdate?widget.model.time:*/
+                                  Text(
                                       FHBUtils().formatTimeOfDay(selectedTime)),
                                   SizedBox(width: 10),
                                   Icon(
@@ -173,8 +111,7 @@ class _AddReminderState extends State<AddReminder> {
                           child: ToggleButtons(
                             borderColor: Colors.black,
                             //TODO chnage theme
-                            fillColor:
-                                Color(new CommonUtil().getMyPrimaryColor()),
+                            fillColor: Color(new CommonUtil().getMyPrimaryColor()),
                             borderWidth: 1,
                             selectedBorderColor: Colors.black,
                             selectedColor: Colors.white,
@@ -245,7 +182,7 @@ class _AddReminderState extends State<AddReminder> {
                 ]),
                 width: 200,
                 child: Text(
-                  isUpdate ? 'Update' : 'Save',
+                  'Save',
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
@@ -263,8 +200,8 @@ class _AddReminderState extends State<AddReminder> {
     final DateTime pickedDate = await showDatePicker(
         context: context,
         initialDate: selectedDate,
-        firstDate: DateTime.now().subtract(Duration(days: 1)),
-        lastDate: DateTime(2100));
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
     if (pickedDate != null && pickedDate != selectedDate)
       setState(() {
         selectedDate = pickedDate;
@@ -290,107 +227,29 @@ class _AddReminderState extends State<AddReminder> {
 
   void setReminder() async {
     //prefs = await SharedPreferences.getInstance();
-    //TODO logic to check text field is empty or not
-    if (tileContoller.text.isEmpty || notesController.text.isEmpty) {
-      setState(() {
-        tileContoller.text.isEmpty
-            ? _isTitleEmpty = true
-            : _isNoteEmpty = false;
-        notesController.text.isEmpty
-            ? _isNoteEmpty = true
-            : _isNoteEmpty = false;
-      });
-    } else {
-      ReminderModel model = new ReminderModel(
-          title: tileContoller.text,
-          notes: notesController.text,
-          interval: selectedInterval[intervalIndex],
-          date: selectedDate.toString(),
-          time: FHBUtils().formatTimeOfDay(selectedTime),
-          id: isUpdate ? id = widget.model.id : DateTime.now().toString());
 
-      if (isUpdate) {
-        await FHBUtils().update('reminders', model).then((res) {
-          Navigator.of(context).pop();
-        });
-      } else {
-        await FHBUtils().create(model, 'reminders').then((res) {
-          Navigator.of(context).pop();
-          //MyReminders.of(context).refresh();
-        });
-      }
-      _triggerNotification(model);
-    }
+    await getRemindersList();
+
+    Map<String, dynamic> items = {};
+    items['title'] = tileContoller.text;
+    items['notes'] = notesController.text;
+    items['date'] = FHBUtils().getFormattedDateOnly(selectedDate.toString());
+    items['time'] = FHBUtils().formatTimeOfDay(selectedTime);
+    items['interval'] = selectedInterval[intervalIndex];
+
+    await detailsList.add(items);
+
+    var reminderData = json.encode(detailsList);
+    prefs.setString('reminders', reminderData);
+
+    /*  //reverseDetailsList = detailsList.reversed.toList();
+
+    setState(() {}); */
+
+    Navigator.of(context).pop();
   }
 
-  void _triggerNotification(ReminderModel model) async {
-    var androidPlatformChannelSpecifies = new AndroidNotificationDetails(
-        'com.example.myfhb', 'MYFHB', 'Health Record channel',
-        importance: Importance.Max, priority: Priority.High);
-    var iosPlatformChannelSpecifies = new IOSNotificationDetails();
-    var platformChannelSpecifies = new NotificationDetails(
-        androidPlatformChannelSpecifies, iosPlatformChannelSpecifies);
-    //await flutterLocalNotificationsPlugin.show(0, 'TEST', 'Hi floks this sample notification', platformChannelSpecifies,payload: 'Hello mohan!! How are you?');
-    var timeArray = model.time.split(':');
-    var hour = int.parse(timeArray[0]);
-    var mintues = int.parse(timeArray[1].substring(0, 2));
-    var isAMPM = timeArray[1].substring(3);
-    var dayFormat = DateFormat('EEEE').format(DateTime.parse(model.date));
-    var weekDays = {
-      'Sunday': 0,
-      'Monday': 1,
-      'Tuesday': 2,
-      'Wednesday': 3,
-      'Thursday': 4,
-      'Friday': 5,
-      'Saturday': 6,
-    };
-
-    var myCurrentDay = weekDays['$dayFormat'];
-
-    if (isAMPM == 'PM') {
-      hour = hour + 12;
-      hour = hour > 23 ? 0 : hour;
-    }
-    switch (model.interval) {
-      case 'Day':
-        {
-          //var time = Time(hour, mintues, 0);
-          var time = Time(hour, mintues, 0);
-          await flutterLocalNotificationsPlugin.showDailyAtTime(
-              1, model.title, model.notes, time, platformChannelSpecifies);
-        }
-
-        break;
-      case 'Week':
-        {
-          var time = Time(hour, mintues, 0);
-          await flutterLocalNotificationsPlugin.showWeeklyAtDayAndTime(
-              2,
-              model.title,
-              model.notes,
-              Day.values[myCurrentDay],
-              time,
-              platformChannelSpecifies);
-        }
-        break;
-      case 'Month':
-        {
-          var time = DateTime.parse(widget.model.date);
-          await flutterLocalNotificationsPlugin.schedule(
-              3, model.title, model.notes, time, platformChannelSpecifies);
-        }
-        break;
-      default:
-        {}
-        break;
-    }
-
-    //await flutterLocalNotificationsPlugin.
-//    await flutterLocalNotificationsPlugin.show(0, 'TEST', 'Hi floks this sample notification', platformChannelSpecifies,payload: 'Hello mohan!! How are you?');
-  }
-
-  /*getRemindersList() async {
+  getRemindersList() async {
     prefs = await SharedPreferences.getInstance();
 
     String getData = await prefs.get('reminders');
@@ -403,5 +262,5 @@ class _AddReminderState extends State<AddReminder> {
     }
 
     return detailsList;
-  }*/
+  }
 }
