@@ -67,6 +67,8 @@ dependencies:
   image_gallery_saver:
   permission_handler: ^5.0.0+hotfix.3
   connectivity:
+  launch_review: ^2.0.0
+  intro_slider: ^2.2.9
   
 dev_dependencies:
   flutter_test:

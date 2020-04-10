@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/blocs/Authentication/OTPVerifyBloc.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
@@ -192,7 +188,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     return Scaffold(
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          title: Text('Otp Verification', style: TextStyle(fontSize: 18)),
+          title: Text('Otp verification', style: TextStyle(fontSize: 18)),
           leading: IconButton(
               icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
@@ -206,16 +202,16 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
             Padding(
               padding: EdgeInsets.only(top: 40),
               child: Text(
-                'Please enter the verification number',
+                'Please enter the otp received',
                 style: TextStyle(
                     color: Colors.black38, fontWeight: FontWeight.w500),
               ),
             ),
             Expanded(
-              child: Image.asset(
-                'assets/icons/otp_icon.png',
-                width: 80,
-                height: 80,
+              child: ImageIcon(
+                AssetImage('assets/icons/otp_icon.png'),
+                size: 70,
+                color: Color(CommonUtil().getMyPrimaryColor()),
               ),
             ),
             Expanded(
@@ -238,7 +234,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   ))),
                       SizedBox(height: 20),
                       Text(
-                        'Don' 't receive the otp?',
+                        'Didn\'t receive the otp?',
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       FlatButton(
@@ -251,7 +247,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                           child: Text(
                             'Resend Code',
                             style: TextStyle(
-                                color: Color(new CommonUtil().getMyPrimaryColor()),
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
                                 fontWeight: FontWeight.w600),
                           )),
                       SizedBox(height: 20)
@@ -406,7 +403,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   },
                                   child: Icon(
                                     Icons.backspace,
-                                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
                                   )),
                               MaterialButton(
                                 onPressed: () {
@@ -436,8 +434,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   });
                                   //matchOtp();
                                 },
-                                child:
-                                    Icon(Icons.done, color: Color(new CommonUtil().getMyPrimaryColor())),
+                                child: Icon(Icons.done,
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor())),
                               ),
                             ],
                           ),
@@ -726,7 +725,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
           padding: EdgeInsets.all(20),
           constraints: BoxConstraints(minWidth: 220, maxWidth: double.infinity),
           child: MaterialButton(
-              child: Icon(Icons.done, color: Color(new CommonUtil().getMyPrimaryColor())),
+              child: Icon(Icons.done,
+                  color: Color(new CommonUtil().getMyPrimaryColor())),
               onPressed: //snapshot.hasData ? bloc.submit : null,
                   () {
                 String otp = controller1.text +

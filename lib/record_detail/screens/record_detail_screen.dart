@@ -487,7 +487,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       hospitalData = widget.data.metaInfo.hospital.toJson();
     createdDateMethod();
 
-    print('pary categoryName' + categoryName);
     if (categoryName != Constants.STR_DEVICES) {
       String date = widget.data.metaInfo.dateOfVisit != null
           ? widget.data.metaInfo.dateOfVisit
@@ -509,9 +508,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            print('Audio Path delete' + containsAudio.toString());
-            print('Audio Path delete' + audioPath.toString());
-
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -519,9 +515,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('Audio Path DisplayPicture' + containsAudio.toString());
-            print('Audio Path DisplayPicture' + audioPath.toString());
-
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -540,9 +533,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                print('Audio Path delete' + containsAudio.toString());
-                print('Audio Path delete' + audioPath.toString());
-
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -550,9 +540,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               new List(),
               (containsAudio, audioPath) {
-                print('Audio Path DisplayPicture' + containsAudio.toString());
-                print('Audio Path DisplayPicture' + audioPath.toString());
-
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 

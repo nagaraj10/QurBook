@@ -45,7 +45,7 @@ class CommonConstants {
    * Following are the constants string used as hint text for the pop 
    * box that appears when a card is saved
    */
-  static String strMessage = 'Message';
+  //static String strMessage = 'Message';
   static String strDateOfVisit = 'Date of visit *';
   static String strHospitalName = 'Hospital Name *';
   static String strHospitalNameWithoutStar = 'Hospital Name ';

@@ -1016,7 +1016,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       height: 15,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strMessage),
+                        context, CommonConstants.strMemo),
                     fhbBasicWidget.getTextFiledWithNoHInt(context),
                     SizedBox(
                       height: 15,
@@ -1481,7 +1481,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       height: 15,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strMessage),
+                        context, CommonConstants.strMemo),
                     fhbBasicWidget.getTextFiledWithNoHInt(context),
                     SizedBox(
                       height: 15,
