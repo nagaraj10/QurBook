@@ -683,14 +683,17 @@ class CommonUtil {
     return categoryDataList;
   }
 
-  Future<bool> checkNetworkConnectivity() async {
-    var connStatus = await Connectivity().checkConnectivity();
-    if (connStatus == ConnectivityResult.mobile ||
-        connStatus == ConnectivityResult.wifi) {
-      return true;
-    } else {
-      return false;
+  String getMediaMasterIDForAudioFileType(
+      List<MediaMasterIds> mediaMasterIdsList) {
+    String mediaMasterId = '';
+
+    for (MediaMasterIds mediaMasterIdsObj in mediaMasterIdsList) {
+      if (mediaMasterIdsObj.fileType == Constants.audioFileType) {
+        mediaMasterId = mediaMasterIdsObj.id;
+      }
     }
+
+    return mediaMasterId;
   }
 
   networkUI(BuildContext context, bool isOffline) {

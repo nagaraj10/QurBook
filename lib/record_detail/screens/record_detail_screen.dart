@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
@@ -12,7 +14,6 @@ import 'package:myfhb/common/CommonDialogBox.dart';
 
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/record_detail/bloc/deleteRecordBloc.dart';
 import 'package:myfhb/record_detail/screens/record_info_card.dart';
@@ -20,6 +21,7 @@ import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/imageSlider.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
@@ -27,8 +29,9 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:carousel_slider/carousel_slider.dart';
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shimmer/shimmer.dart';
 
 class RecordDetailScreen extends StatefulWidget {
   final MediaMetaInfo data;
@@ -64,7 +67,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   PermissionStatus _permissionStatus = PermissionStatus.undetermined;
   final Permission _storagePermission =
       Platform.isAndroid ? Permission.storage : Permission.photos;
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   void initState() {
     super.initState();
@@ -85,8 +87,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (checkIfMp3IsPresent(widget.data) != '') {
+      widget.data.metaInfo.hasVoiceNotes = true;
+    }
     return Scaffold(
-        key: _scaffoldKey,
         backgroundColor: const Color(fhbColors.bgColorContainer),
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
@@ -153,84 +157,88 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     )),
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      IconButton(
-                          icon: _isRecordBookmarked
-                              ? ImageIcon(
-                                  AssetImage(
-                                      'assets/icons/record_fav_active.png'),
-                                  //TODO chnage theme
-                                  color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
-                                )
-                              : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
-                                  color: Colors.black,
-                                ),
-                          onPressed: () {
-                            bookMarkRecord(widget.data);
-                          }),
-                      IconButton(
-                          icon: ImageIcon(
-                            AssetImage('assets/icons/record_switch.png'),
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            print('Profile Pressed');
-                            //getAllFamilyMembers();
-                            CommonUtil.showLoadingDialog(
-                                context, _keyLoader, 'Please Wait');
+                  child: Builder(
+                    builder: (BuildContext contxt) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          IconButton(
+                              icon: _isRecordBookmarked
+                                  ? ImageIcon(
+                                      AssetImage(
+                                          'assets/icons/record_fav_active.png'),
+                                      //TODO chnage theme
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                    )
+                                  : ImageIcon(
+                                      AssetImage('assets/icons/record_fav.png'),
+                                      color: Colors.black,
+                                    ),
+                              onPressed: () {
+                                bookMarkRecord(widget.data);
+                              }),
+                          IconButton(
+                              icon: ImageIcon(
+                                AssetImage('assets/icons/record_switch.png'),
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                print('Profile Pressed');
+                                //getAllFamilyMembers();
+                                CommonUtil.showLoadingDialog(
+                                    contxt, _keyLoader, 'Please Wait');
 
-                            if (_familyListBloc != null) {
-                              _familyListBloc = null;
-                              _familyListBloc = new FamilyListBloc();
-                            }
-                            _familyListBloc
-                                .getFamilyMembersList()
-                                .then((familyMembersList) {
-                              Navigator.of(_keyLoader.currentContext,
-                                      rootNavigator: true)
-                                  .pop();
+                                if (_familyListBloc != null) {
+                                  _familyListBloc = null;
+                                  _familyListBloc = new FamilyListBloc();
+                                }
+                                _familyListBloc
+                                    .getFamilyMembersList()
+                                    .then((familyMembersList) {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
 
-                              getDialogBoxWithFamilyMember(
-                                  familyMembersList.response.data);
-                            });
-                          }),
-                      IconButton(
-                          icon: ImageIcon(
-                            AssetImage('assets/icons/record_edit.png'),
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            openAlertDialogBasedOnRecordDetails();
-                          }),
-                      IconButton(
-                          icon: ImageIcon(
-                            AssetImage('assets/icons/record_download.png'),
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            requestPermission(_storagePermission)
-                                .then((status) {
-                              if (status == PermissionStatus.granted) {
-                                saveImageToGallery(imagesPathMain, context);
-                              } else {
-                                print(
-                                    'storage permission has not been given by the user');
-                              }
-                            });
-                          }),
-                      IconButton(
-                          icon: ImageIcon(
-                            AssetImage('assets/icons/record_delete.png'),
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            deleteRecord(widget.data.id);
-                          })
-                    ],
+                                  getDialogBoxWithFamilyMember(
+                                      familyMembersList.response.data);
+                                });
+                              }),
+                          IconButton(
+                              icon: ImageIcon(
+                                AssetImage('assets/icons/record_edit.png'),
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                openAlertDialogBasedOnRecordDetails();
+                              }),
+                          IconButton(
+                              icon: ImageIcon(
+                                AssetImage('assets/icons/record_download.png'),
+                                color: Colors.black,
+                              ),
+                              onPressed: () async {
+                                requestPermission(_storagePermission)
+                                    .then((status) {
+                                  if (status == PermissionStatus.granted) {
+                                    saveImageToGallery(imagesPathMain, contxt);
+                                  } else {
+                                    print(
+                                        'storage permission has not been given by the user');
+                                  }
+                                });
+                              }),
+                          IconButton(
+                              icon: ImageIcon(
+                                AssetImage('assets/icons/record_delete.png'),
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                deleteRecord(widget.data.id);
+                              })
+                        ],
+                      );
+                    },
                   ),
                 ),
                 getCategoryInfo(widget.data.metaInfo),
@@ -244,12 +252,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     height: 60,
                     child: widget.data.metaInfo.hasVoiceNotes != null &&
                             widget.data.metaInfo.hasVoiceNotes
-                        ? SizedBox()
+                        ? showAudioWidgetIfVoiceNotesAvailable(widget.data)
                         : InkWell(
                             onTap: () {
                               Navigator.of(context)
                                   .push(MaterialPageRoute(
-                                builder: (context) => AudioRecordScreen(),
+                                builder: (context) => AudioRecordScreen(
+                                  fromVoice: false,
+                                ),
                               ))
                                   .then((results) {
                                 if (results != null) {
@@ -258,8 +268,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     audioPath = results['audioFile'];
                                     print('Audio Path' + audioPath);
                                     _healthReportListForUserBlock
-                                        .saveImage(audioPath,
-                                            widget.data.metaTypeId, '')
+                                        .saveImage(
+                                            audioPath, widget.data.id, '')
                                         .then((postImageResponse) {
                                       print('output audio mediaMaster' +
                                           postImageResponse
@@ -295,31 +305,36 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         ));
   }
 
-  _listenForPermissionStatus() async {
+  void _listenForPermissionStatus() async {
     final status = await _storagePermission.status;
     setState(() => _permissionStatus = status);
   }
 
-  saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
-    _showSnackBar(context, 'Saving health record to gallery');
+  void saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
+    //check the storage permission for both android and ios!
+    Scaffold.of(contxt).showSnackBar(SnackBar(
+      content: Text('Download Started'),
+      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+    ));
+    //CommonUtil().networkUI(contxt, false);
     if (imagesPathMain.length > 1) {
       for (int i = 0; i < imagesPathMain.length; i++) {
         await ImageGallerySaver.saveImage(imagesPathMain[i]);
       }
-      _showSnackBar(context, 'Download complete');
+      Scaffold.of(contxt).showSnackBar(SnackBar(
+        content: Text('All Files are downloaded, view in Gallery'),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+      ));
+      //CommonUtil().networkUI(contxt, true);
     } else {
       await ImageGallerySaver.saveImage(imagesPathMain[0]).then((res) {
-        _showSnackBar(context, 'Download complete');
+        Scaffold.of(contxt).showSnackBar(SnackBar(
+          content: Text('File downloaded, view in Gallery'),
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        ));
         return;
       });
     }
-  }
-
-  _showSnackBar(BuildContext context, String message) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-    ));
   }
 
   getCategoryInfo(MetaInfo metaInfo) {
@@ -358,18 +373,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
   }
 
-  Future<PermissionStatus> requestPermission(
-      Permission storagePermission) async {
-    final status = await storagePermission.request();
-
-    setState(() {
-      print(status);
-      _permissionStatus = status;
-    });
-
-    return status;
-  }
-
   deleteRecord(String id) {
     List<String> mediaIds = [];
     mediaIds.add(id);
@@ -401,19 +404,21 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Widget getAudioIconWithFile() {
     return Container(
+        height: 60,
         child: Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
-          containsAudio = containsAudioClone;
-          audioPath = audioPathClone;
-          postAudioToServer(widget.data.id);
-        }),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-        ),
-      ],
-    ));
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
+              containsAudio = containsAudioClone;
+              audioPath = audioPathClone;
+              postAudioToServer(widget.data.id);
+            }),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+            ),
+          ],
+        ));
   }
 
   void deleteAudioFile() {
@@ -945,5 +950,91 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         }
       },
     );
+  }
+
+  Future<PermissionStatus> requestPermission(
+      Permission storagePermission) async {
+    final status = await storagePermission.request();
+
+    setState(() {
+      print(status);
+      _permissionStatus = status;
+    });
+
+    return status;
+  }
+
+  /*showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
+    if (data.metaInfo.hasVoiceNotes) {
+
+      String mediaMetaId= new CommonUtil().getMediaMasterIDForAudioFileType(data.mediaMasterIds);
+      getWidgetForPlayingAudioFromServer(mediaMetaId);
+      //getWidgetForPlayingAudioFromServer('5af2ee90-593e-4672-966d-a2871f70357a');
+    }
+  }*/
+
+  showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
+    if (data.metaInfo.hasVoiceNotes) {
+      String mediaMetaId = checkIfMp3IsPresent(data);
+      getWidgetForPlayingAudioFromServer(mediaMetaId);
+    }
+  }
+
+  String checkIfMp3IsPresent(MediaMetaInfo data) {
+    String mediaMetaId =
+        new CommonUtil().getMediaMasterIDForAudioFileType(data.mediaMasterIds);
+    return mediaMetaId;
+  }
+
+  Widget getWidgetForPlayingAudioFromServer(String mediaMetaId) {
+    return FutureBuilder(
+      future: _healthReportListForUserBlock.getDocumentImage(mediaMetaId),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          print('snapshot.data audio' + snapshot.data);
+          _downloadMedia(snapshot.data, context).then((file) {
+            audioPath = file.path;
+            getAudioIconWithFile();
+          });
+          return SizedBox();
+          /*return Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                color: Colors.black),
+
+            */ /*Image.memory(
+              snapshot.data,
+              width: 40,
+              height: 60,
+            ),*/ /*
+          );*/
+        } else {
+          print('your sanpshot has not data');
+          return SizedBox();
+          /* return new SizedBox(
+            width: 40.0,
+            height: 60.0,
+            child: Container(color: Colors.red,),
+            */ /*Shimmer.fromColors(
+                baseColor: Colors.grey[200],
+                highlightColor: Colors.grey[400],
+                child: Container(
+                    width: 50, height: 50, color: Colors.grey[200])),*/ /*
+          );*/
+        }
+
+        ///load until snapshot.hasData resolves to true
+      },
+    );
+  }
+
+  Future<File> _downloadMedia(List data, BuildContext context) async {
+    var path;
+    await FHBUtils.createFolderInAppDocDir('myFHB/Audio').then((filePath) {
+      path = '$filePath${widget.data.metaInfo.fileName}.mp3';
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text('Download Started')));
+      return new File(path).writeAsBytesSync(data);
+    });
   }
 }

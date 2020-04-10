@@ -102,9 +102,9 @@ Future<void> main() async {
   });
 
   await FHBUtils.instance.initPlatformState();
-  //
+  await FHBUtils.instance.getDb();
 
-  /*  PreferenceUtil.saveString(
+  /* PreferenceUtil.saveString(
       Constants.KEY_USERID, 'ad5d2d37-4eaf-4d91-99e8-a07881d72649');
 
   PreferenceUtil.saveString(
@@ -128,6 +128,14 @@ class _MyFHBState extends State<MyFHB> {
   static const platform = const MethodChannel('flutter.native/versioncode');
   String _responseFromNative = 'wait! Its loading';
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    gettingResponseFromNative();
+  }
 
   @override
   Widget build(BuildContext context) {
