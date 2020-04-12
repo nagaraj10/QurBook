@@ -217,6 +217,7 @@ class _MyRecordsState extends State<MyRecords> {
                     PreferenceUtil.saveString(
                             Constants.KEY_CATEGORYID, categoryID)
                         .then((value) {
+                      print('category name in my records:' + categoryName);
                       if (categoryName == STR_DEVICES) {
                         PreferenceUtil.saveString(
                             Constants.stop_detecting, 'NO');
@@ -224,6 +225,7 @@ class _MyRecordsState extends State<MyRecords> {
                         Navigator.pushNamed(
                                 context, '/take_picture_screen_for_devices')
                             .then((value) {
+                          rebuildAllBlocks();
                           callBackToRefresh();
                         });
                       } else {
@@ -429,23 +431,27 @@ class _MyRecordsState extends State<MyRecords> {
               dataObj.categoryName, dataObj.id, getDataForParticularLabel));
         } else if (dataObj.categoryDescription ==
             CommonConstants.categoryDescriptionOthers) {
-          tabWidgetList.add(new OtherDocsList(completeData, callBackToRefresh,
-              dataObj.categoryName, dataObj.id, getDataForParticularLabel));
+          tabWidgetList.add(new OtherDocsList(
+              completeData,
+              callBackToRefresh,
+              dataObj.categoryName,
+              dataObj.id,
+              getDataForParticularLabel,
+              CommonConstants.categoryDescriptionOthers));
         } else if (dataObj.categoryDescription ==
             CommonConstants.categoryDescriptionVoiceRecord) {
           tabWidgetList.add(new VoiceRecordList(completeData, callBackToRefresh,
               dataObj.categoryName, dataObj.id, getDataForParticularLabel));
-        }
-        /*  else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionWearable) {
-          tabWidgetList.add(new IDDocsList(completeData, callBackToRefresh,
-              categoryName, dataObj.id, getDataForParticularLabel));
         } else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionFeedback) {
-          tabWidgetList.add(new IDDocsList(completeData, callBackToRefresh,
-              categoryName, dataObj.id, getDataForParticularLabel));
-        }  */
-        else {
+            CommonConstants.categoryDescriptionClaimsRecord) {
+          tabWidgetList.add(new OtherDocsList(
+              completeData,
+              callBackToRefresh,
+              dataObj.categoryName,
+              dataObj.id,
+              getDataForParticularLabel,
+              CommonConstants.categoryDescriptionClaimsRecord));
+        } else {
           tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
         }
       }

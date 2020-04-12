@@ -391,13 +391,22 @@ class ApiBaseHelper {
         var responseJson = convert.jsonDecode(response.body.toString());
         return responseJson;
       case 401:
-        PreferenceUtil.clearAllData().then((value) {
-          Get.offAll(SignInScreen());
-          Get.snackbar('Message', 'Logged into other Device');
-        });
+        var responseJson = convert.jsonDecode(response.body.toString());
+
+        if (responseJson['message'] == Constants.STR_OTPMISMATCHED) {
+          print(responseJson['message']);
+          //Get.snackbar('Message', responseJson['message']);
+          return responseJson;
+        } else {
+          PreferenceUtil.clearAllData().then((value) {
+            Get.offAll(SignInScreen());
+            Get.snackbar('Message', 'Logged into other Device');
+          });
+        }
 
         //PageNavigator.goToPermanent(context, '/dashboard_screen');
         break;
+
       case 403:
         PreferenceUtil.clearAllData().then((value) {
           Get.offAll(SignInScreen());

@@ -67,6 +67,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   PermissionStatus _permissionStatus = PermissionStatus.undetermined;
   final Permission _storagePermission =
       Platform.isAndroid ? Permission.storage : Permission.photos;
+  bool firsTym = true;
+
   @override
   void initState() {
     super.initState();
@@ -367,6 +369,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
+      case 'Catcode011':
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metaInfo, widget.data.createdOn);
+        break;
+
       default:
         return RecordInfoCard().getCardForPrescription(
             widget.data.metaInfo, widget.data.createdOn);
@@ -497,9 +504,18 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           ? widget.data.metaInfo.dateOfVisit
           : '';
 
-      if (date != '') {
+      /*   if (date != '') {
         date = FHBUtils().getFormattedDateOnly(date);
       }
+ */
+      if (firsTym) {
+        firsTym = false;
+      } else {
+        if (date != '') {
+          date = FHBUtils().getFormattedDateOnly(date);
+        }
+      }
+
       switch (categoryName) {
         case Constants.STR_PRESCRIPTION:
           String fileName = widget.data.metaInfo.fileName;
@@ -621,6 +637,37 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
             setState(() {});
           }, new List(), widget.data, true,
+              new TextEditingController(text: fileName));
+
+          break;
+        case Constants.STR_CLAIMSRECORD:
+          String fileName = widget.data.metaInfo.fileName;
+
+          new CommonDialogBox().getDialogBoxForBillsAndOthers(
+              context,
+              containsAudio,
+              audioPath,
+              (containsAudio, audioPath) {
+                print('Audio Path delete' + containsAudio.toString());
+                print('Audio Path delete' + audioPath.toString());
+
+                setState(() {
+                  audioPath = audioPath;
+                  containsAudio = containsAudio;
+                });
+              },
+              new List(),
+              (containsAudio, audioPath) {
+                print('Audio Path DisplayPicture' + containsAudio.toString());
+                print('Audio Path DisplayPicture' + audioPath.toString());
+
+                audioPath = audioPath;
+                containsAudio = containsAudio;
+
+                setState(() {});
+              },
+              widget.data,
+              true,
               new TextEditingController(text: fileName));
 
           break;

@@ -13,6 +13,7 @@ class CommonConstants {
   static String categoryDescriptionWearable = 'Catcode008';
   static String categoryDescriptionFeedback = 'Catcode00';
   static String categoryDescriptionVoiceRecord = 'Catcode010';
+  static String categoryDescriptionClaimsRecord = 'Catcode011';
 
   static final String CAT_JSON_GLUCOMETER = "Catcode002_Typecode001";
   static final String CAT_JSON_BP_METER = "Catcode002_Typecode002";

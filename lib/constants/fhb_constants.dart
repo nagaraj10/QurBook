@@ -46,6 +46,7 @@ const String STR_BILLS = 'Bills';
 const String STR_IDDOCS = 'ID Docs';
 const String STR_OTHERS = 'Others';
 const String STR_VOICERECORDS = 'Voice Records';
+const String STR_CLAIMSRECORD = 'Claim Records';
 
 const String KEY_USERID_MAIN = 'mainUserUD';
 const String KEY_PROFILE_MAIN = 'profileMain';
@@ -60,6 +61,8 @@ const String STR_VERIFY_USER =
     'Please complete your Sign Up process, by generating and verifying the OTP';
 
 const String KEY_VOICE_ID = 'Category_ID_VOICE';
+const String STR_OTPMISMATCHED =
+    'Requested operation forbidden. OTP Mismatched';
 
 const String KEY_PREFERRED_DOCTOR = 'prefered doctor';
 const String KEY_PREFERRED_HOSPITAL = 'prefered hospital';

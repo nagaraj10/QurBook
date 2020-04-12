@@ -73,6 +73,11 @@ class FHBBasicWidget {
         ));
   }
 
+  void showInSnackBar(String value, GlobalKey<ScaffoldState> scaffoldstate) {
+    final snackBar = SnackBar(content: Text(value));
+    scaffoldstate.currentState.showSnackBar(snackBar);
+  }
+
   Widget getTextFieldForDate(
       BuildContext context,
       TextEditingController dateController,

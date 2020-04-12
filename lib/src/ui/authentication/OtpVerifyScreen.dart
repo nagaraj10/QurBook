@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -30,6 +31,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   TextEditingController controller3 = new TextEditingController();
   TextEditingController controller4 = new TextEditingController();
   TextEditingController currController = new TextEditingController();
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   OTPVerifyBloc _otpVerifyBloc;
   @override
@@ -186,6 +188,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     ];
 
     return Scaffold(
+        key: scaffold_state,
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
           title: Text('Otp verification', style: TextStyle(fontSize: 18)),
@@ -818,22 +821,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   }
 
   void checkOTPResponse(OTPResponse otpResponse) {
-    /*  if (otpResponse.success) {
-                                                              PreferenceUtil.saveString(
-                                                                      Constants.KEY_USERID_MAIN, otpResponse.response.id)
-                                                                  .then((onValue) {
-                                                                PreferenceUtil.saveString(Constants.KEY_USERID, otpResponse.response.id)
-                                                                    .then((onValue) {
-                                                                  PreferenceUtil.saveString(
-                                                                          Constants.KEY_AUTHTOKEN, otpResponse.response.authToken)
-                                                                      .then((onValue) {
-                                                                    moveToDashboardScreen();
-                                                                  });
-                                                                });
-                                                              });
-                                                            } */
-
-    if (otpResponse.success) {
+    if (otpResponse.message == Constants.STR_OTPMISMATCHED) {
+      new FHBBasicWidget().showInSnackBar(otpResponse.message, scaffold_state);
+    } else {
       PreferenceUtil.saveString(
               Constants.KEY_USERID_MAIN, otpResponse.response.id)
           .then((onValue) {
