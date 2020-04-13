@@ -393,11 +393,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     } else {
       print(deviceName + " Paaaaaaaaaaaaaaaaaaru");
 
-<<<<<<< HEAD
       var digitRecog = true;
-=======
       //      displayDevicesList(deviceName);
->>>>>>> 15f8e6ff3175a8e0629a1260d5878bee7f3c8e15
 
       digitRecog =
           PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
