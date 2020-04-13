@@ -318,8 +318,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           _showRelationShipTextField(),
           _showEmailAddTextField(),
           _showGenderTextField(),
-          _showBloodGroupTextField(),
-          _showBloodRangeTextField(),
+          Row(
+            children: <Widget>[
+              _showBloodGroupTextField(),
+              _showBloodRangeTextField(),
+            ],
+          ),
           _showDateOfBirthTextField(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -689,74 +693,80 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   Widget _showBloodGroupTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
-        child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
-          controller: bloodGroupController,
-          maxLines: 1,
-          enabled: false,
-          keyboardType: TextInputType.text,
-          focusNode: bloodGroupFocus,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            FocusScope.of(context).requestFocus(bloodRangeFocus);
-          },
-          style: new TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            labelText: CommonConstants.blood_group,
-            hintText: CommonConstants.blood_group,
-            labelStyle: TextStyle(
-                fontSize: 13.0,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 14.0,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-            border: new UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          ),
-        ));
+        child: Container(
+            width: MediaQuery.of(context).size.width / 2 - 40,
+            child: TextField(
+              cursorColor: Theme.of(context).primaryColor,
+              controller: bloodGroupController,
+              maxLines: 1,
+              enabled: false,
+              keyboardType: TextInputType.text,
+              focusNode: bloodGroupFocus,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (term) {
+                FocusScope.of(context).requestFocus(bloodRangeFocus);
+              },
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+              decoration: InputDecoration(
+                labelText: CommonConstants.blood_group,
+                hintText: CommonConstants.blood_group,
+                labelStyle: TextStyle(
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.myFamilyGreyColor),
+                hintStyle: TextStyle(
+                  fontSize: 14.0,
+                  color: ColorUtils.myFamilyGreyColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: new UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: ColorUtils.myFamilyGreyColor)),
+              ),
+            )));
   }
 
   // 6
   Widget _showBloodRangeTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
-        child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
-          controller: bloodRangeController,
-          maxLines: 1,
-          enabled: false,
-          keyboardType: TextInputType.text,
-          focusNode: bloodRangeFocus,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            FocusScope.of(context).requestFocus(dateOfBirthFocus);
-          },
-          style: new TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            labelText: CommonConstants.blood_group,
-            hintText: CommonConstants.blood_group,
-            labelStyle: TextStyle(
-                fontSize: 13.0,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 14.0,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
-            ),
-            border: new UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          ),
-        ));
+        child: Container(
+            width: MediaQuery.of(context).size.width / 2 - 40,
+            child: TextField(
+              cursorColor: Theme.of(context).primaryColor,
+              controller: bloodRangeController,
+              maxLines: 1,
+              enabled: false,
+              keyboardType: TextInputType.text,
+              focusNode: bloodRangeFocus,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (term) {
+                FocusScope.of(context).requestFocus(dateOfBirthFocus);
+              },
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+              decoration: InputDecoration(
+                labelText: CommonConstants.blood_group,
+                hintText: CommonConstants.blood_group,
+                labelStyle: TextStyle(
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.myFamilyGreyColor),
+                hintStyle: TextStyle(
+                  fontSize: 14.0,
+                  color: ColorUtils.myFamilyGreyColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: new UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: ColorUtils.myFamilyGreyColor)),
+              ),
+            )));
   }
 
   // 7

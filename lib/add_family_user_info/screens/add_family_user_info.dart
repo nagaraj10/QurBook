@@ -400,12 +400,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     children: <Widget>[getGenderDetails()],
                   ),
                   Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[getBloodGroupDetails()],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[getBloodRangeDetails()],
+                    children: <Widget>[
+                      getBloodGroupDetails(),
+                      getBloodRangeDetails()
+                    ],
                   ),
                   _showDateOfBirthTextField(),
                   _showSaveButton()
@@ -828,7 +826,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: Container(
-              width: MediaQuery.of(context).size.width - 40,
+              width: MediaQuery.of(context).size.width / 2 - 40,
               child: DropdownButton(
                 isExpanded: true,
                 hint: Text(CommonConstants.blood_group),
@@ -857,7 +855,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: Container(
-              width: MediaQuery.of(context).size.width - 40,
+              width: MediaQuery.of(context).size.width / 2 - 40,
               child: DropdownButton(
                 isExpanded: true,
                 hint: Text(CommonConstants.blood_range),

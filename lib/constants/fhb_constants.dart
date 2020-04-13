@@ -70,4 +70,9 @@ const String KEY_PREFERRED_HOSPITAL = 'prefered hospital';
 const String KEY_PREFERRED_LAB = 'prefered lab';
 const String CURRENT_THEME = 'App Theme';
 const String stop_detecting = 'StopDetecting';
+<<<<<<< HEAD
+const String allowDeviceRecognition = 'allowDeviceRecognition';
+const String allowDigitRecognition = 'allowDigitRecognition';
+=======
 const String audioFileType = 'audio/mp3';
+>>>>>>> 15f8e6ff3175a8e0629a1260d5878bee7f3c8e15
