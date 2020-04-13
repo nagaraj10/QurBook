@@ -1,12 +1,9 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/model/user/MyProfile.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/widgets/GradientAppBar.dart';
 
 class MySettings extends StatefulWidget {
   @override
@@ -23,6 +20,18 @@ class _MySettingsState extends State<MySettings> {
   void initState() {
     super.initState();
     //PreferenceUtil.init();
+    setState(() {
+      _isdeviceRecognition =
+          PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
+                  'false'
+              ? false
+              : true;
+      _isdigitRecognition =
+          PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
+                  'false'
+              ? false
+              : true;
+    });
   }
 
   @override
@@ -109,10 +118,15 @@ class _MySettingsState extends State<MySettings> {
                       scale: 0.8,
                       child: Switch(
                         value: _isdigitRecognition,
-                        activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                        activeColor:
+                            Color(new CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) {
                           setState(() {
                             _isdigitRecognition = newValue;
+
+                            PreferenceUtil.saveString(
+                                Constants.allowDigitRecognition,
+                                _isdigitRecognition.toString());
                           });
                         },
                       ),
@@ -136,10 +150,15 @@ class _MySettingsState extends State<MySettings> {
                       scale: 0.8,
                       child: Switch(
                         value: _isdeviceRecognition,
-                        activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                        activeColor:
+                            Color(new CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) {
                           setState(() {
                             _isdeviceRecognition = newValue;
+
+                            PreferenceUtil.saveString(
+                                Constants.allowDeviceRecognition,
+                                _isdeviceRecognition.toString());
                           });
                         },
                       ),
@@ -163,7 +182,8 @@ class _MySettingsState extends State<MySettings> {
                       scale: 0.8,
                       child: Switch(
                         value: _isGoogleFit,
-                        activeColor: Color(new CommonUtil().getMyPrimaryColor()),
+                        activeColor:
+                            Color(new CommonUtil().getMyPrimaryColor()),
                         onChanged: (bool newValue) {
                           setState(() {
                             _isGoogleFit = newValue;

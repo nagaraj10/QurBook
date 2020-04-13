@@ -66,3 +66,5 @@ const String KEY_PREFERRED_HOSPITAL = 'prefered hospital';
 const String KEY_PREFERRED_LAB = 'prefered lab';
 const String CURRENT_THEME = 'App Theme';
 const String stop_detecting = 'StopDetecting';
+const String allowDeviceRecognition = 'allowDeviceRecognition';
+const String allowDigitRecognition = 'allowDigitRecognition';

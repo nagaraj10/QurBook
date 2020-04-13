@@ -13,6 +13,7 @@ import 'package:myfhb/common/OverlayDeviceDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/devices_tensorflow/widgets/camera.dart';
+import 'package:myfhb/src/utils/alert.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
@@ -65,30 +66,37 @@ class TakePictureScreenForDevicesState
     // To display the current output from the Camera,
     // create a CameraController.
 
-//    _controller = CameraController(
-//      // Get a specific camera from the list of available cameras.
-//      widget.cameras[0],
-//      // Define the resolution to use.
-//      ResolutionPreset.medium,
-//    );
-//
-//    _controller.initialize().then((value) {
-//      setState(() {});
-//    });
-
-    // Next, initialize the controller. This returns a Future.
-//    _initializeControllerFuture = _controller.initialize();
-
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
         ? Constants.IS_CATEGORYNAME_DEVICES
         : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
-
     print('pary categoryName' + categoryName);
+
+    isObjectDetecting =
+        PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
+                'false'
+            ? false
+            : true;
 
     initilzeData();
 
-    loadModel();
+    if (isObjectDetecting == false) {
+      _controller = CameraController(
+        // Get a specific camera from the list of available cameras.
+        widget.cameras[0],
+        // Define the resolution to use.
+        ResolutionPreset.medium,
+      );
+
+//      _controller.initialize().then((value) {
+//        setState(() {});
+//      });
+
+      //  Next, initialize the controller. This returns a Future.
+      _initializeControllerFuture = _controller.initialize();
+    } else {
+      loadModel();
+    }
   }
 
   void initilzeData() {
@@ -103,7 +111,7 @@ class TakePictureScreenForDevicesState
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
-//    _controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -112,41 +120,6 @@ class TakePictureScreenForDevicesState
     res = await Tflite.loadModel(
         model: "assets/device_detection.tflite",
         labels: "assets/devicelabels.txt");
-
-//    switch (_model) {
-//      case yolo:
-//        res = await Tflite.loadModel(
-//          model: "assets/yolov2_tiny.tflite",
-//          labels: "assets/yolov2_tiny.txt",
-//        );
-//        break;
-//
-//      case mobilenet:
-////        res = await Tflite.loadModel(
-////////            model: "assets/mobilenet_v1_1.0_224.tflite",
-////////            labels: "assets/mobilenet_v1_1.0_224.txt");
-//
-//        res = await Tflite.loadModel(
-//            model: "assets/device_detection.tflite",
-//            labels: "assets/devicelabels.txt");
-//        break;
-//
-//      case posenet:
-////        res = await Tflite.loadModel(
-////            model: "assets/posenet_mv1_075_float_from_checkpoints.tflite");
-//        res = await Tflite.loadModel(model: "assets/device_detection.tflite");
-//        break;
-//
-//      default:
-//        res = await Tflite.loadModel(
-//            model: "assets/device_detection.tflite",
-//            labels: "assets/devicelabels.txt");
-//
-////        res = await Tflite.loadModel(
-////            model: "assets/ssd_mobilenet.tflite",
-////            labels: "assets/ssd_mobilenet.txt");
-//    }
-//    print(res);
   }
 
   @override
@@ -158,11 +131,27 @@ class TakePictureScreenForDevicesState
         appBar: AppBar(title: Text(categoryName)),
         body: SafeArea(
             child: Stack(children: <Widget>[
-          Camera(
-            widget.cameras,
-            _model,
-            setRecognitions,
-          ),
+          isObjectDetecting == true ||
+                  PreferenceUtil.getStringValue(
+                          Constants.allowDeviceRecognition) ==
+                      'true'
+              ? Camera(
+                  widget.cameras,
+                  _model,
+                  setRecognitions,
+                )
+              : FutureBuilder<void>(
+                  future: _initializeControllerFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      // If the Future is complete, display the preview.
+                      return CameraPreview(_controller);
+                    } else {
+                      // Otherwise, display a loading indicator.
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
           isObjectDetecting == false
               ? Align(
                   alignment: Alignment.topCenter,
@@ -186,12 +175,14 @@ class TakePictureScreenForDevicesState
                                     decoration: BoxDecoration(),
                                     alignment: Alignment.center,
                                     child: AutoSizeText(
-                                      _recognitions.length > 0
-                                          ? deviceNames(_recognitions[0]
-                                                      ["detectedClass"]) !=
-                                                  "Others"
+                                      _recognitions != null
+                                          ? _recognitions.length > 0
                                               ? deviceNames(_recognitions[0]
-                                                  ["detectedClass"])
+                                                          ["detectedClass"]) !=
+                                                      "Others"
+                                                  ? deviceNames(_recognitions[0]
+                                                      ["detectedClass"])
+                                                  : deviceName
                                               : deviceName
                                           : deviceName,
                                       maxFontSize: 14,
@@ -330,28 +321,37 @@ class TakePictureScreenForDevicesState
                                       size: 40,
                                     ),
                                     onPressed: () async {
-                                      // Take the Picture in a try / catch block. If anything goes wrong,
-                                      // catch the error.
-                                      try {
-                                        // Ensure that the camera is initialized.
-                                        await _initializeControllerFuture;
+                                      if (deviceName == 'Choose Devices') {
+                                        // Alert
+                                        Alert.displayAlertPlain(context,
+                                            title: "Devices",
+                                            content:
+                                                'Please choose the devices');
+                                      } else {
+                                        // Take the Picture in a try / catch block. If anything goes wrong,
+                                        // catch the error.
+                                        try {
+                                          // Ensure that the camera is initialized.
+                                          await _initializeControllerFuture;
 
-                                        // Construct the path where the image should be saved using the
-                                        // pattern package.
-                                        final path = join(
-                                          // Store the picture in the temp directory.
-                                          // Find the temp directory using the `path_provider` plugin.
-                                          (await getTemporaryDirectory()).path,
-                                          'Prescription_${DateTime.now()}.jpg',
-                                        );
+                                          // Construct the path where the image should be saved using the
+                                          // pattern package.
+                                          final path = join(
+                                            // Store the picture in the temp directory.
+                                            // Find the temp directory using the `path_provider` plugin.
+                                            (await getTemporaryDirectory())
+                                                .path,
+                                            'Prescription_${DateTime.now()}.jpg',
+                                          );
 
-                                        // Attempt to take a picture and log where it's been saved.
-                                        await _controller.takePicture(path);
-                                        imagePaths.add(path);
-                                        setState(() {});
-                                      } catch (e) {
-                                        // If an error occurs, log the error to the console.
-                                        print(e);
+                                          // Attempt to take a picture and log where it's been saved.
+                                          await _controller.takePicture(path);
+                                          imagePaths.add(path);
+                                          setState(() {});
+                                        } catch (e) {
+                                          // If an error occurs, log the error to the console.
+                                          print(e);
+                                        }
                                       }
                                     },
                                   ),
@@ -437,37 +437,46 @@ class TakePictureScreenForDevicesState
                                       size: 40,
                                     ),
                                     onPressed: () async {
-                                      // Take the Picture in a try / catch block. If anything goes wrong,
-                                      // catch the error.
-                                      try {
-                                        // Ensure that the camera is initialized.
-                                        await _initializeControllerFuture;
+                                      if (deviceName == 'Choose Devices') {
+                                        // Alert
+                                        Alert.displayAlertPlain(context,
+                                            title: "Devices",
+                                            content:
+                                                'Please choose the devices');
+                                      } else {
+                                        // Take the Picture in a try / catch block. If anything goes wrong,
+                                        // catch the error.
+                                        try {
+                                          // Ensure that the camera is initialized.
+                                          await _initializeControllerFuture;
 
-                                        // Construct the path where the image should be saved using the
-                                        // pattern package.
-                                        final path = join(
-                                          // Store the picture in the temp directory.
-                                          // Find the temp directory using the `path_provider` plugin.
-                                          (await getTemporaryDirectory()).path,
-                                          'Prescription_${DateTime.now()}.jpg',
-                                        );
+                                          // Construct the path where the image should be saved using the
+                                          // pattern package.
+                                          final path = join(
+                                            // Store the picture in the temp directory.
+                                            // Find the temp directory using the `path_provider` plugin.
+                                            (await getTemporaryDirectory())
+                                                .path,
+                                            'Prescription_${DateTime.now()}.jpg',
+                                          );
 
-                                        // Attempt to take a picture and log where it's been saved.
-                                        await _controller.takePicture(path);
+                                          // Attempt to take a picture and log where it's been saved.
+                                          await _controller.takePicture(path);
 
-                                        if (isMultipleImages) {
-                                          isThumbnails = true;
-                                          imagePaths.add(path);
+                                          if (isMultipleImages) {
+                                            isThumbnails = true;
+                                            imagePaths.add(path);
 
-                                          setState(() {});
-                                        } else {
-                                          // If the picture was taken, display it on a new screen.
-                                          imagePaths.add(path);
-                                          callDisplayPictureScreen(context);
+                                            setState(() {});
+                                          } else {
+                                            // If the picture was taken, display it on a new screen.
+                                            imagePaths.add(path);
+                                            callDisplayPictureScreen(context);
+                                          }
+                                        } catch (e) {
+                                          // If an error occurs, log the error to the console.
+                                          print(e);
                                         }
-                                      } catch (e) {
-                                        // If an error occurs, log the error to the console.
-                                        print(e);
                                       }
                                     },
                                   ),

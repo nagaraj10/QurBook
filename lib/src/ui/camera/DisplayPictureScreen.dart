@@ -387,13 +387,25 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     } else {
       print(deviceName + " Paaaaaaaaaaaaaaaaaaru");
 
-//      displayDevicesList(deviceName);
+      var digitRecog = true;
 
-      skipTapped = false;
+      digitRecog =
+          PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
+                  'false'
+              ? false
+              : true;
 
-      readingDeviceDetails(deviceName);
+      if (digitRecog) {
+        //      displayDevicesList(deviceName);
 
-      onPostDeviceImageData(deviceName);
+        skipTapped = false;
+
+        readingDeviceDetails(deviceName);
+
+        onPostDeviceImageData(deviceName);
+      } else {
+        displayDevicesList(deviceName, null);
+      }
     }
   }
 
