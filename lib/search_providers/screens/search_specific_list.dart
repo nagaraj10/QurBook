@@ -11,6 +11,7 @@ import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 import '../bloc/doctors_list_block.dart';
 import '../bloc/hospital_list_block.dart';
@@ -499,15 +500,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 margin: EdgeInsets.all(0),
                 color: Colors.white,
                 child: Row(children: <Widget>[
-                  Expanded(
-                    flex: 1,
+                  SizedBox(
+                    width: 10,
+                  ),
+                  ClipOval(
                     child:
                         widget.arguments.searchWord == CommonConstants.doctors
-                            ? Container(
-                                height: 50, width: 50, color: Colors.grey[200])
-                            //getDoctorProfileImageWidget(id)
+                            ? getDoctorProfileImageWidget(id)
                             : getHospitalLogoImage(logo),
                   ),
+                  SizedBox(width: 20),
                   Expanded(
                       flex: 5,
                       child: getDataToView(
@@ -591,21 +593,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       future: _healthReportListForUserBlock.getProfilePic(id),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
-          return Image.memory(snapshot.data);
+          return Image.memory(
+            snapshot.data,
+            height: 50,
+            width: 50,
+            fit: BoxFit.cover,
+          );
         } else {
-          return Image.asset(ImageUrlUtils.avatarImg, width: 65, height: 90);
-//          return new SizedBox(
-//            width: 75.0,
-//            height: 75.0,
-//            child: Shimmer.fromColors(
-//                baseColor: Colors.grey[200],
-//                highlightColor: Colors.grey[550],
-//                child:
-//                    Container(width: 50, height: 50, color: Colors.grey[200])),
-//          );
+          return ImageIcon(
+            AssetImage('assets/icons/stetho.png'),
+            size: 40,
+            color: Color(CommonUtil().getMyPrimaryColor()),
+          );
         }
-
-        ///load until snapshot.hasData resolves to true
       },
     );
   }

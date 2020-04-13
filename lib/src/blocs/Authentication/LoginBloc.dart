@@ -65,11 +65,11 @@ class LoginBloc with Validators implements BaseBloc {
       String phoneNumber,
       String email,
       String gender,
-      String name,
+      String firstName,
       String passsword,
       String bloodGroup,
       String dateOfBirth,
-      File file) async {
+      File file,String middleName,String lastName) async {
     signUpSink.add(ApiResponse.loading('Signing in user'));
     SignUp signUp;
     try {
@@ -78,18 +78,17 @@ class LoginBloc with Validators implements BaseBloc {
           phoneNumber,
           email,
           gender,
-          name,
+          firstName,
           passsword,
           bloodGroup,
           dateOfBirth,
-          file);
+          file,middleName,lastName);
     } catch (e) {
       signUpSink.add(ApiResponse.error(e.toString()));
       print(e);
     }
     return signUp;
   }
-
   Future<SignOutResponse> logout() async {
     signOutSink.add(ApiResponse.loading('Sign out'));
     SignOutResponse signOutResponse;

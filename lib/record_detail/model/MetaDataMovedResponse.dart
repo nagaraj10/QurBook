@@ -55,7 +55,7 @@ class Data {
   String userId;
   MetaInfo metaInfo;
   bool isActive;
-  Null isVisible;
+  bool isVisible;
   String createdBy;
   String createdOn;
   String lastModifiedOn;
@@ -127,7 +127,7 @@ class MetaInfo {
   Hospital hospital;
   String fileName;
   List<DeviceReadings> deviceReadings;
- // Laboratory laboratory;
+  // Laboratory laboratory;
 
   MetaInfo(
       {this.categoryInfo,

@@ -6,10 +6,12 @@ import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/ui/HomeScreen.dart';
+import 'package:launch_review/launch_review.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   Function refresh;
@@ -109,7 +111,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   size: 14,
                 ),
                 onTap: () {
-                  PageNavigator.goTo(context, '/user_accounts');
+                  Navigator.pushNamed(
+                    context,
+                    '/user_accounts',
+                    arguments: UserAccountsArguments(selectedIndex: 0),
+                  );
                 },
               ),
             ),
@@ -195,6 +201,25 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                         ),
                         SizedBox(width: 20),
                         Text('Privacy policy'),
+                      ],
+                    )),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      LaunchReview.launch(
+                          androidAppId: "com.globalmantrainnovations.myfhb",
+                          iOSAppId: "");
+                    },
+                    child: ListTile(
+                        title: Row(
+                      children: <Widget>[
+                        ImageIcon(
+                          AssetImage('assets/icons/record_fav.png'),
+                          size: 20,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 20),
+                        Text('Rate us'),
                       ],
                     )),
                   )

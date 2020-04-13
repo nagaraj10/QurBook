@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/OverlayDeviceDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -128,7 +129,7 @@ class TakePictureScreenForDevicesState
     Size screen = MediaQuery.of(context).size;
 
     return Scaffold(
-        appBar: AppBar(title: Text(categoryName)),
+        appBar: AppBar(title: getWidgetForTitle(context)),
         body: SafeArea(
             child: Stack(children: <Widget>[
           isObjectDetecting == true ||
@@ -283,9 +284,9 @@ class TakePictureScreenForDevicesState
                                       fit: BoxFit.cover,
                                     ),
                                     /*  new Positioned(
-                            right: 0,
-                            top: 0,
-                            child:  */
+                                    right: 0,
+                                    top: 0,
+                                    child:  */
                                     new Container(
                                       padding: EdgeInsets.all(2),
                                       decoration: new BoxDecoration(
@@ -753,5 +754,31 @@ class TakePictureScreenForDevicesState
     }
 
     return device;
+  }
+
+  getWidgetForTitle(BuildContext context) {
+    return InkWell(
+      child: Text(categoryName),
+      onTap: () {
+        _showOverlayCategory(context);
+      },
+    );
+  }
+
+  void initializeData(BuildContext _context) {
+    categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+    if (categoryName != Constants.STR_DEVICES) {
+      Navigator.pushNamed(_context, '/take_picture_screen').then((value) {
+        Navigator.pop(_context);
+      });
+    } else {
+      setState(() {});
+    }
+  }
+
+  void _showOverlayCategory(BuildContext context) {
+    Navigator.of(context).push(OverlayCategoryDialog()).then((value) {
+      initializeData(context);
+    });
   }
 }

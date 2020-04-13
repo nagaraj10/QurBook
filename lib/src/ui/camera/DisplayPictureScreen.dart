@@ -9,8 +9,10 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/OverlayDeviceDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
@@ -53,8 +55,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   DateTime dateTime = DateTime.now();
 
-  String categoryName;
+  String categoryName, categoryNameClone;
   String categoryID;
+  bool firstTym = false;
+
+  GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   HealthReportListForUserBlock _healthReportListForUserBlock;
 
@@ -108,11 +113,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    initilzeData();
+    initialData();
     return Scaffold(
       key: _scaffoldKey,
-      appBar:
-          AppBar(flexibleSpace: GradientAppBar(), title: Text(categoryName)),
+      appBar: AppBar(
+          flexibleSpace: GradientAppBar(),
+          title: getWidgetForTitleAndSwithUser()),
       // The image is stored as a file on the device. Use the `Image.file`
       // constructor with the given path to display the image.
       body: Stack(
@@ -120,42 +126,42 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           Column(
             children: <Widget>[
               /* Padding(
-                padding: EdgeInsets.all(5),
-              ), */
-//              categoryName == CommonConstants.strDevice
-//                  ? Container(
-//                      //width: 120,
-//                      margin: EdgeInsets.all(10),
-//                      constraints: BoxConstraints(maxWidth: 220),
-//                      child: GestureDetector(
-//                        child: DottedBorder(
-//                          color: Color(new CommonUtil().getMyPrimaryColor()),
-//                          dashPattern: [9, 5],
-//                          child: Container(
-//                              padding: EdgeInsets.all(5),
-//                              decoration: BoxDecoration(),
-//                              alignment: Alignment.center,
-//                              child: AutoSizeText(
-//                                deviceName,
-//                                maxFontSize: 14,
-//                                minFontSize: 10,
-//                                textAlign: TextAlign.center,
-//                                style: TextStyle(
-//                                  //TODO chnage theme
-//                                    color:Color(new CommonUtil().getThemeColor()),
-//                                    fontSize: 14,
-//                                    fontWeight: FontWeight.w500),
-//                              )),
-//                        ),
-//                        onTap: () {
-//                          _showOverlay(context);
-//                        },
-//                      ),
-//                    )
-//                  : Container(),
-//              /*  Padding(
-//                padding: EdgeInsets.all(10),
-//              ), */
+                          padding: EdgeInsets.all(5),
+                        ), */
+              //              categoryName == CommonConstants.strDevice
+              //                  ? Container(
+              //                      //width: 120,
+              //                      margin: EdgeInsets.all(10),
+              //                      constraints: BoxConstraints(maxWidth: 220),
+              //                      child: GestureDetector(
+              //                        child: DottedBorder(
+              //                          color: Color(new CommonUtil().getMyPrimaryColor()),
+              //                          dashPattern: [9, 5],
+              //                          child: Container(
+              //                              padding: EdgeInsets.all(5),
+              //                              decoration: BoxDecoration(),
+              //                              alignment: Alignment.center,
+              //                              child: AutoSizeText(
+              //                                deviceName,
+              //                                maxFontSize: 14,
+              //                                minFontSize: 10,
+              //                                textAlign: TextAlign.center,
+              //                                style: TextStyle(
+              //                                  //TODO chnage theme
+              //                                    color:Color(new CommonUtil().getThemeColor()),
+              //                                    fontSize: 14,
+              //                                    fontWeight: FontWeight.w500),
+              //                              )),
+              //                        ),
+              //                        onTap: () {
+              //                          _showOverlay(context);
+              //                        },
+              //                      ),
+              //                    )
+              //                  : Container(),
+              //              /*  Padding(
+              //                padding: EdgeInsets.all(10),
+              //              ), */
               Expanded(
                 child: getCarousalImage(),
               ),
@@ -387,7 +393,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     } else {
       print(deviceName + " Paaaaaaaaaaaaaaaaaaru");
 
+<<<<<<< HEAD
       var digitRecog = true;
+=======
+      //      displayDevicesList(deviceName);
+>>>>>>> 15f8e6ff3175a8e0629a1260d5878bee7f3c8e15
 
       digitRecog =
           PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
@@ -477,7 +487,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     displayDevicesList(deviceName, null);
     skipTapped = true;
 
-//    displayDevicesList(device);
+    //    displayDevicesList(device);
   }
 
   displayDevicesList(String device, DigitRecogResponse digitRecogResponse) {
@@ -856,7 +866,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   getAllObjectToPost() {
     print('inside getAllObjectToPost');
-    initilzeData();
+    initialData();
     setFileName();
 
     isSelected = [true, false];
@@ -921,14 +931,14 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     print('I am here ' + mediaMetaID);
 
     /* _healthReportListForUserBlock
-        .saveImage(widget.imagePath, mediaMetaID, '')
-        .then((postImageResponse) {
-      print(
-          'output mediaMaster' + postImageResponse.response.data.mediaMasterId);
-
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
-    });*/
+                  .saveImage(widget.imagePath, mediaMetaID, '')
+                  .then((postImageResponse) {
+                print(
+                    'output mediaMaster' + postImageResponse.response.data.mediaMasterId);
+          
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              });*/
   }
 
   void postAudioToServer(String mediaMetaID) {
@@ -1028,7 +1038,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       height: 15,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strMessage),
+                        context, CommonConstants.strMemo),
                     fhbBasicWidget.getTextFiledWithNoHInt(context),
                     SizedBox(
                       height: 15,
@@ -1382,13 +1392,21 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         context: context, builder: (BuildContext context) => dialog);
   }
 
-  void initilzeData() {
+  void initialData() {
     print('inside initilzeData');
+
+    if (!firstTym) {
+      categoryNameClone =
+          PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+      firstTym = true;
+    }
 
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
         ? Constants.IS_CATEGORYNAME_DEVICES
         : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
+
+    print('category name : ' + categoryName);
   }
 
   Widget getToggleButton() {
@@ -1493,7 +1511,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                       height: 15,
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strMessage),
+                        context, CommonConstants.strMemo),
                     fhbBasicWidget.getTextFiledWithNoHInt(context),
                     SizedBox(
                       height: 15,
@@ -1945,7 +1963,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
     postMediaData["mediaTypeInfo"] = mediaDataObj.toJson();
 
-//    postMediaData["dateOfVisit"] = dateOfVisit.text;
+    //    postMediaData["dateOfVisit"] = dateOfVisit.text;
     postMediaData["memoText"] = '';
     postMediaData["hasVoiceNote"] = false;
     postMediaData["isDraft"] = false;
@@ -1970,6 +1988,61 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           displayDevicesList(deviceName, postImageResponse);
         }
       });
+    }
+  }
+
+  getWidgetForTitleAndSwithUser() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: InkWell(
+            child: Text(categoryName),
+            onTap: () {
+              _showOverlayCategoryDialog(context);
+            },
+          ),
+        ),
+        new SwitchProfile().buildActions(context, _keyLoader, callBackToRefresh)
+      ],
+    );
+  }
+
+  void callBackToRefresh() {
+    setState(() {
+      print('setState of home Screen');
+    });
+  }
+
+  void _showOverlayCategoryDialog(BuildContext context) {
+    Navigator.of(context).push(OverlayCategoryDialog()).then((value) {
+      initializeData();
+    });
+  }
+
+  /*  void initialData() {
+    print('inside initilzeData');
+
+    if (!firstTym) {
+      categoryNameClone =
+          PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+      firstTym = true;
+    }
+  } */
+
+  void initializeData() {
+    categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+    categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
+    if (categoryNameClone == categoryName &&
+        categoryName == Constants.STR_DEVICES) {
+    } else if (categoryName == Constants.STR_DEVICES) {
+      PreferenceUtil.saveString(Constants.stop_detecting, 'NO');
+
+      Navigator.pushNamed(context, '/take_picture_screen_for_devices')
+          .then((value) {
+        Navigator.pop(context);
+      });
+    } else {
+      setState(() {});
     }
   }
 }

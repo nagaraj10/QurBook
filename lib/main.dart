@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -17,11 +18,12 @@ import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/src/ui/camera/TakePictureScreen.dart';
 import 'package:myfhb/src/ui/camera/take_picture_screen_for_devices.dart';
+import 'package:myfhb/src/ui/connectivity_bloc.dart';
 import 'package:myfhb/src/ui/dashboard.dart';
 import 'package:myfhb/src/ui/settings/MySettings.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-
+import 'package:provider/provider.dart';
 import 'add_address/screens/add_address_screen.dart';
 import 'add_family_otp/screens/add_family_otp_screen.dart';
 import 'add_family_user_info/screens/add_family_user_info.dart';
@@ -100,9 +102,9 @@ Future<void> main() async {
   });
 
   await FHBUtils.instance.initPlatformState();
-  //
+  await FHBUtils.instance.getDb();
 
-  /*  PreferenceUtil.saveString(
+  /* PreferenceUtil.saveString(
       Constants.KEY_USERID, 'ad5d2d37-4eaf-4d91-99e8-a07881d72649');
 
   PreferenceUtil.saveString(
@@ -125,21 +127,49 @@ class _MyFHBState extends State<MyFHB> {
   int myPrimaryColor = new CommonUtil().getMyPrimaryColor();
   static const platform = const MethodChannel('flutter.native/versioncode');
   String _responseFromNative = 'wait! Its loading';
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    //notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    gettingResponseFromNative();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: Constants.APP_NAME,
-      theme: ThemeData(
-        fontFamily: 'Poppins',
-        primaryColor: Color(myPrimaryColor),
-        accentColor: Colors.white,
-      ),
-      home: SplashScreen(),
-      routes: routes,
-      debugShowCheckedModeBanner: false,
-      navigatorKey: Get.key,
-    );
+    var nsSettingsForAndroid =
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var nsSettingsForIOS = new IOSInitializationSettings();
+    var platform =
+        new InitializationSettings(nsSettingsForAndroid, nsSettingsForIOS);
+
+    Future notificationAction(String payload) async {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => AddReminder()));
+    }
+
+    flutterLocalNotificationsPlugin.initialize(platform,
+        onSelectNotification: notificationAction);
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => ConnectivityBloc(),
+          )
+        ],
+        child: MaterialApp(
+          title: Constants.APP_NAME,
+          theme: ThemeData(
+            fontFamily: 'Poppins',
+            primaryColor: Color(myPrimaryColor),
+            accentColor: Colors.white,
+          ),
+          home: SplashScreen(),
+          routes: routes,
+          debugShowCheckedModeBanner: false,
+          navigatorKey: Get.key,
+        ));
   }
 
   Future<void> gettingResponseFromNative() async {

@@ -845,9 +845,7 @@ class _MyFamilyState extends State<MyFamily> {
                         addFamilyUserInfo: addFamilyOTPResponse.response.data))
                 .then((value) {
               mobileNoController.text = '';
-              firstNameController.text = '';
-              middleNameController.text = '';
-              lastNameController.text = '';
+              //nameController.text = '';
               isPrimaryNoSelected = false;
               selectedRelationShip = null;
 
@@ -875,9 +873,7 @@ class _MyFamilyState extends State<MyFamily> {
                   isPrimaryNoSelected: isPrimaryNoSelected),
             ).then((value) {
               mobileNoController.text = '';
-              firstNameController.text = '';
-              middleNameController.text = '';
-              lastNameController.text = '';
+              //nameController.text = '';
               isPrimaryNoSelected = false;
               selectedRelationShip = null;
 

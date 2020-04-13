@@ -178,12 +178,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ],
                             ),
                             onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/user_accounts',
-                                arguments:
-                                    UserAccountsArguments(selectedIndex: 1),
-                              );
+                              Navigator.pushNamed(context, '/user_accounts',
+                                  arguments:
+                                      UserAccountsArguments(selectedIndex: 1));
                             },
                           ),
                         )

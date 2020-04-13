@@ -1,14 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data' show Uint8List;
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
 import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 enum t_MEDIA {
@@ -19,7 +16,7 @@ enum t_MEDIA {
 }
 
 class AudioWidget extends StatefulWidget {
-  final String audioFile;
+  String audioFile;
   Function(bool, String) deleteAudioFile;
   AudioWidget(this.audioFile, this.deleteAudioFile);
   @override
@@ -68,6 +65,12 @@ class AudioWidgetState extends State<AudioWidget> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return getAudioWidgetWithPlayer();
   }
@@ -103,22 +106,6 @@ class AudioWidgetState extends State<AudioWidget> {
               ),
             ),
           ),
-          /*Expanded(
-            child: Container(
-              width: 56.0,
-              height: 50.0,
-              child: ClipOval(
-                child: FlatButton(
-                  onPressed: onPausePlayerPressed(),
-                  //disabledColor: Colors.white,
-                  padding: EdgeInsets.all(4.0),
-                  child: Icon(onPausePlayerPressed() != null
-                      ? Icons.pause
-                      : Icons.pause),
-                ),
-              ),
-            ),
-          ),*/
           Expanded(
             flex: 6,
             child: Container(
@@ -144,7 +131,7 @@ class AudioWidgetState extends State<AudioWidget> {
               ),
             ),
           ),
-          /* Expanded(
+          /*  Expanded(
             flex: 1,
             child: Container(
               width: 56.0,
@@ -165,7 +152,10 @@ class AudioWidgetState extends State<AudioWidget> {
               child: IconButton(
                   icon: Icon(Icons.delete, size: 20, color: Colors.red[600]),
                   onPressed: () {
-                    widget.deleteAudioFile(false, "");
+                    widget.audioFile = '';
+                    setState(() {
+                      widget.deleteAudioFile(false, widget.audioFile);
+                    });
                   }))
         ],
         mainAxisAlignment: MainAxisAlignment.center,
@@ -264,11 +254,18 @@ class AudioWidgetState extends State<AudioWidget> {
     }
   }
 
-  onPausePlayerPressed() {
+  /*  onPausePlayerPressed() {
     return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
             flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
         ? pausePlayer
         : null;
+  } */
+
+  onPausePlayerPressed() {
+    return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
+            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
+        ? pausePlayer
+        : startPlayer;
   }
 
   void pausePlayer() async {

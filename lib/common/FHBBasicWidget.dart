@@ -73,6 +73,11 @@ class FHBBasicWidget {
         ));
   }
 
+  void showInSnackBar(String value, GlobalKey<ScaffoldState> scaffoldstate) {
+    final snackBar = SnackBar(content: Text(value));
+    scaffoldstate.currentState.showSnackBar(snackBar);
+  }
+
   Widget getTextFieldForDate(
       BuildContext context,
       TextEditingController dateController,
@@ -150,6 +155,7 @@ class FHBBasicWidget {
             Uint8List.fromList(profilePicThumbnail.data),
             height: 50,
             width: 50,
+            fit: BoxFit.cover,
           )
         : Container(
             color: Colors.white,
@@ -222,7 +228,7 @@ class FHBBasicWidget {
       onTap: () async {
         await Navigator.of(context)
             .push(MaterialPageRoute(
-          builder: (context) => AudioRecordScreen(),
+          builder: (context) => AudioRecordScreen(fromVoice: false),
         ))
             .then((results) {
           if (results != null) {
@@ -241,24 +247,44 @@ class FHBBasicWidget {
   }
 
   Widget getAudioIconWithFile(
-      String audioPath,
-      bool containsAudio,
+      String audioPathMain,
+      bool containsAudioMain,
       Function(bool containsAudio, String audioPath) updateUI,
       BuildContext context,
       List<String> imagePath,
       Function(BuildContext context, List<String> imagePath)
           onPostDataToServer) {
-    return Column(
-      children: <Widget>[
-        new AudioWidget(audioPath, updateUI),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-        ),
-        getSaveButton(() {
-          onPostDataToServer(context, imagePath);
-        })
-      ],
-    );
+    return containsAudioMain
+        ? Column(
+            children: <Widget>[
+              new AudioWidget(audioPathMain, (containsAudio, audioPath) {
+                audioPathMain = audioPath;
+                containsAudioMain = containsAudio;
+
+                updateUI(containsAudioMain, audioPathMain);
+              }),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+              ),
+              getSaveButton(() {
+                onPostDataToServer(context, imagePath);
+              })
+            ],
+          )
+        : Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              getMicIcon(context, containsAudioMain, audioPathMain,
+                  (containsAudio, audioPath) {
+                audioPathMain = audioPath;
+                containsAudioMain = containsAudio;
+                updateUI(containsAudioMain, audioPathMain);
+              }),
+              getSaveButton(() {
+                onPostDataToServer(context, imagePath);
+              })
+            ],
+          );
   }
 
   Future<bool> exitApp(BuildContext context, Function logout) {

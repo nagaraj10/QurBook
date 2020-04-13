@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -194,17 +195,17 @@ class CommonDialogBox {
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strDateOfVisit),
                     /* Container(
-                            width: MediaQuery.of(context).size.width - 60,
-                            child: TextField(
-                              autofocus: false,
-                              onTap: () => _selectDate(context, dateOfVisit),
-                              controller: dateOfVisit,
-                              decoration: InputDecoration(
-                                  suffixIcon: new IconButton(
-                                icon: new Icon(Icons.calendar_today),
-                                onPressed: () => _selectDate(context, dateOfVisit),
-                              )),
-                            )),*/
+                        width: MediaQuery.of(context).size.width - 60,
+                        child: TextField(
+                          autofocus: false,
+                          onTap: () => _selectDate(context, dateOfVisit),
+                          controller: dateOfVisit,
+                          decoration: InputDecoration(
+                              suffixIcon: new IconButton(
+                            icon: new Icon(Icons.calendar_today),
+                            onPressed: () => _selectDate(context, dateOfVisit),
+                          )),
+                        )),*/
                     _showDateOfVisit(context, dateOfVisit),
                     SizedBox(
                       height: 15,
@@ -402,17 +403,17 @@ class CommonDialogBox {
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strDateOfVisit),
                     /*  Container(
-                            width: MediaQuery.of(context).size.width - 60,
-                            child: TextField(
-                              autofocus: false,
-                              onTap: () => _selectDate(context, dateOfVisit),
-                              controller: dateOfVisit,
-                              decoration: InputDecoration(
-                                  suffixIcon: new IconButton(
-                                icon: new Icon(Icons.calendar_today),
-                                onPressed: () => _selectDate(context, dateOfVisit),
-                              )),
-                            )),*/
+                        width: MediaQuery.of(context).size.width - 60,
+                        child: TextField(
+                          autofocus: false,
+                          onTap: () => _selectDate(context, dateOfVisit),
+                          controller: dateOfVisit,
+                          decoration: InputDecoration(
+                              suffixIcon: new IconButton(
+                            icon: new Icon(Icons.calendar_today),
+                            onPressed: () => _selectDate(context, dateOfVisit),
+                          )),
+                        )),*/
 
                     _showDateOfVisit(context, dateOfVisit),
                     SizedBox(
@@ -2133,15 +2134,15 @@ class CommonDialogBox {
         autofocus: false,
         readOnly: true,
         keyboardType: TextInputType.text,
-        //          focusNode: dateOfBirthFocus,
+//          focusNode: dateOfBirthFocus,
         textInputAction: TextInputAction.done,
         onSubmitted: (term) {
           dateOfBirthFocus.unfocus();
         },
         /* style: new TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.0,
-                    color: ColorUtils.blackcolor)*/
+                fontWeight: FontWeight.w500,
+                fontSize: 16.0,
+                color: ColorUtils.blackcolor)*/
         decoration: InputDecoration(
           suffixIcon: new IconButton(
             icon: new Icon(Icons.calendar_today),
@@ -2150,18 +2151,18 @@ class CommonDialogBox {
             },
           ),
           /*   labelText: CommonConstants.date_of_birth,
-                  hintText: CommonConstants.date_of_birth,
-                  labelStyle: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w400,
-                      color: ColorUtils.myFamilyGreyColor),
-                  hintStyle: TextStyle(
-                    fontSize: 14.0,
-                    color: ColorUtils.myFamilyGreyColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  border: new UnderlineInputBorder(
-                      borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),*/
+              hintText: CommonConstants.date_of_birth,
+              labelStyle: TextStyle(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.w400,
+                  color: ColorUtils.myFamilyGreyColor),
+              hintStyle: TextStyle(
+                fontSize: 14.0,
+                color: ColorUtils.myFamilyGreyColor,
+                fontWeight: FontWeight.w400,
+              ),
+              border: new UnderlineInputBorder(
+                  borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),*/
         ),
       )),
     );

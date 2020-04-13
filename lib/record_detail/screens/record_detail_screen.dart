@@ -1,7 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/AudioWidget.dart';
@@ -10,13 +14,14 @@ import 'package:myfhb/common/CommonDialogBox.dart';
 
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/record_detail/bloc/deleteRecordBloc.dart';
 import 'package:myfhb/record_detail/screens/record_info_card.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
+import 'package:myfhb/src/ui/imageSlider.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
@@ -24,7 +29,9 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:carousel_slider/carousel_slider.dart';
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:shimmer/shimmer.dart';
 
 class RecordDetailScreen extends StatefulWidget {
   final MediaMetaInfo data;
@@ -57,10 +64,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   int index = 0;
   int length = 0;
   List<dynamic> imagesPathMain = new List();
+  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
+  final Permission _storagePermission =
+      Platform.isAndroid ? Permission.storage : Permission.photos;
+  bool firsTym = true;
+
   @override
   void initState() {
     super.initState();
     PreferenceUtil.init();
+    _listenForPermissionStatus();
     _deleteRecordBloc = DeleteRecordBloc();
     _bookmarkRecordBloc = BookmarkRecordBloc();
     _isRecordBookmarked = widget.data.isBookmarked;
@@ -76,12 +89,17 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (checkIfMp3IsPresent(widget.data) != '') {
+      widget.data.metaInfo.hasVoiceNotes = true;
+    }
     return Scaffold(
         backgroundColor: const Color(fhbColors.bgColorContainer),
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
           title: AutoSizeText(
-            widget.data.metaInfo.fileName==null?widget.data.metaInfo.mediaTypeInfo.name:widget.data.metaInfo.fileName,
+            widget.data.metaInfo.fileName == null
+                ? widget.data.metaInfo.mediaTypeInfo.name
+                : widget.data.metaInfo.fileName,
             maxLines: 1,
             minFontSize: 12,
             maxFontSize: 16,
@@ -116,9 +134,18 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                Icon(
-                                  Icons.fullscreen,
-                                  color: Colors.white,
+                                IconButton(
+                                  //Todo need to add action for this icon
+                                  onPressed: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ImageSlider(
+                                                imageList: imagesPathMain,
+                                              ))),
+                                  icon: Icon(
+                                    Icons.fullscreen,
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 Text(
                                   '$index /$length',
@@ -132,76 +159,88 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     )),
                 Padding(
                   padding: EdgeInsets.all(10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      IconButton(
-                          icon: _isRecordBookmarked
-                              ? ImageIcon(
-                                  AssetImage(
-                                      'assets/icons/record_fav_active.png'),
+                  child: Builder(
+                    builder: (BuildContext contxt) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          IconButton(
+                              icon: _isRecordBookmarked
+                                  ? ImageIcon(
+                                      AssetImage(
+                                          'assets/icons/record_fav_active.png'),
                                       //TODO chnage theme
-                                  color: Color(new CommonUtil().getMyPrimaryColor()),
-                                )
-                              : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
-                                  color: Colors.black,
-                                ),
-                          onPressed: () {
-                            bookMarkRecord(widget.data);
-                          }),
-                      IconButton(
-                          icon: ImageIcon(
-                            AssetImage('assets/icons/record_switch.png'),
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            print('Profile Pressed');
-                            //getAllFamilyMembers();
-                            CommonUtil.showLoadingDialog(
-                                context, _keyLoader, 'Please Wait');
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                    )
+                                  : ImageIcon(
+                                      AssetImage('assets/icons/record_fav.png'),
+                                      color: Colors.black,
+                                    ),
+                              onPressed: () {
+                                bookMarkRecord(widget.data);
+                              }),
+                          IconButton(
+                              icon: ImageIcon(
+                                AssetImage('assets/icons/record_switch.png'),
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                print('Profile Pressed');
+                                //getAllFamilyMembers();
+                                CommonUtil.showLoadingDialog(
+                                    contxt, _keyLoader, 'Please Wait');
 
-                            if (_familyListBloc != null) {
-                              _familyListBloc = null;
-                              _familyListBloc = new FamilyListBloc();
-                            }
-                            _familyListBloc
-                                .getFamilyMembersList()
-                                .then((familyMembersList) {
-                                                          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                                if (_familyListBloc != null) {
+                                  _familyListBloc = null;
+                                  _familyListBloc = new FamilyListBloc();
+                                }
+                                _familyListBloc
+                                    .getFamilyMembersList()
+                                    .then((familyMembersList) {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
 
-                              getDialogBoxWithFamilyMember(
-                                  familyMembersList.response.data);
-                            });
-                          }),
-                      IconButton(
-                          icon: ImageIcon(
-                            AssetImage('assets/icons/record_edit.png'),
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            openAlertDialogBasedOnRecordDetails();
-                          }),
-                      IconButton(
-                          icon: ImageIcon(
-                            AssetImage('assets/icons/record_download.png'),
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            /* CommonUtil()
-                                                                                                                                                .writeToFile(widget.data.mediaMasterIds); */
-                            /*   CommonUtil().writeToFile(CommonUtil()
-                                                                                                                                                .getDocumentImageWidget(widget.data)); */
-                          }),
-                      IconButton(
-                          icon: ImageIcon(
-                            AssetImage('assets/icons/record_delete.png'),
-                            color: Colors.black,
-                          ),
-                          onPressed: () {
-                            deleteRecord(widget.data.id);
-                          })
-                    ],
+                                  getDialogBoxWithFamilyMember(
+                                      familyMembersList.response.data);
+                                });
+                              }),
+                          IconButton(
+                              icon: ImageIcon(
+                                AssetImage('assets/icons/record_edit.png'),
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                openAlertDialogBasedOnRecordDetails();
+                              }),
+                          IconButton(
+                              icon: ImageIcon(
+                                AssetImage('assets/icons/record_download.png'),
+                                color: Colors.black,
+                              ),
+                              onPressed: () async {
+                                requestPermission(_storagePermission)
+                                    .then((status) {
+                                  if (status == PermissionStatus.granted) {
+                                    saveImageToGallery(imagesPathMain, contxt);
+                                  } else {
+                                    print(
+                                        'storage permission has not been given by the user');
+                                  }
+                                });
+                              }),
+                          IconButton(
+                              icon: ImageIcon(
+                                AssetImage('assets/icons/record_delete.png'),
+                                color: Colors.black,
+                              ),
+                              onPressed: () {
+                                deleteRecord(widget.data.id);
+                              })
+                        ],
+                      );
+                    },
                   ),
                 ),
                 getCategoryInfo(widget.data.metaInfo),
@@ -215,12 +254,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     height: 60,
                     child: widget.data.metaInfo.hasVoiceNotes != null &&
                             widget.data.metaInfo.hasVoiceNotes
-                        ? SizedBox()
+                        ? showAudioWidgetIfVoiceNotesAvailable(widget.data)
                         : InkWell(
                             onTap: () {
                               Navigator.of(context)
                                   .push(MaterialPageRoute(
-                                builder: (context) => AudioRecordScreen(),
+                                builder: (context) => AudioRecordScreen(
+                                  fromVoice: false,
+                                ),
                               ))
                                   .then((results) {
                                 if (results != null) {
@@ -229,8 +270,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     audioPath = results['audioFile'];
                                     print('Audio Path' + audioPath);
                                     _healthReportListForUserBlock
-                                        .saveImage(audioPath,
-                                            widget.data.metaTypeId, '')
+                                        .saveImage(
+                                            audioPath, widget.data.id, '')
                                         .then((postImageResponse) {
                                       print('output audio mediaMaster' +
                                           postImageResponse
@@ -247,22 +288,55 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 Icon(
                                   Icons.mic,
                                   //TODO chnage theme
-                                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
                                 ),
                                 SizedBox(width: 10),
-                                Text(
-                                  'Add voice note',
-                                  style: TextStyle(
+                                Text('Add voice note',
+                                    style: TextStyle(
                                       fontSize: 14,
                                       //TODO chnage theme
-                                      color: Color(new CommonUtil().getMyPrimaryColor()),
-                                ))
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                    ))
                               ],
                             ),
                           ),
                   )
           ],
         ));
+  }
+
+  void _listenForPermissionStatus() async {
+    final status = await _storagePermission.status;
+    setState(() => _permissionStatus = status);
+  }
+
+  void saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
+    //check the storage permission for both android and ios!
+    Scaffold.of(contxt).showSnackBar(SnackBar(
+      content: Text('Download Started'),
+      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+    ));
+    //CommonUtil().networkUI(contxt, false);
+    if (imagesPathMain.length > 1) {
+      for (int i = 0; i < imagesPathMain.length; i++) {
+        await ImageGallerySaver.saveImage(imagesPathMain[i]);
+      }
+      Scaffold.of(contxt).showSnackBar(SnackBar(
+        content: Text('All Files are downloaded, view in Gallery'),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+      ));
+      //CommonUtil().networkUI(contxt, true);
+    } else {
+      await ImageGallerySaver.saveImage(imagesPathMain[0]).then((res) {
+        Scaffold.of(contxt).showSnackBar(SnackBar(
+          content: Text('File downloaded, view in Gallery'),
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        ));
+        return;
+      });
+    }
   }
 
   getCategoryInfo(MetaInfo metaInfo) {
@@ -295,22 +369,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
+      case 'Catcode011':
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metaInfo, widget.data.createdOn);
+        break;
 
-      /*   case 'Catcode006':
-                                                                                                                                                  return RecordInfoCard().getCardForMedicalRecord(widget.data.metaInfo);
-                                                                                                                                                  break;
-                                                                                                                                                case 'Catcode007':
-                                                                                                                                                  return RecordInfoCard().getCardForMedicalRecord(widget.data.metaInfo);
-                                                                                                                                                  break;
-                                                                                                                                                case 'Catcode008':
-                                                                                                                                                  return RecordInfoCard().getCardForMedicalRecord(widget.data.metaInfo);
-                                                                                                                                                  break;
-                                                                                                                                                case 'Catcode009':
-                                                                                                                                                  return RecordInfoCard().getCardForMedicalRecord(widget.data.metaInfo);
-                                                                                                                                                  break;
-                                                                                                                                                case 'Catcode010':
-                                                                                                                                                  return RecordInfoCard().getCardForMedicalRecord(widget.data.metaInfo);
-                                                                                                                                                  break; */
       default:
         return RecordInfoCard().getCardForPrescription(
             widget.data.metaInfo, widget.data.createdOn);
@@ -348,19 +411,21 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Widget getAudioIconWithFile() {
     return Container(
+        height: 60,
         child: Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: <Widget>[
-        new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
-          containsAudio = containsAudioClone;
-          audioPath = audioPathClone;
-          postAudioToServer(widget.data.id);
-        }),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-        ),
-      ],
-    ));
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
+              containsAudio = containsAudioClone;
+              audioPath = audioPathClone;
+              postAudioToServer(widget.data.id);
+            }),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+            ),
+          ],
+        ));
   }
 
   void deleteAudioFile() {
@@ -434,14 +499,23 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       hospitalData = widget.data.metaInfo.hospital.toJson();
     createdDateMethod();
 
-    print('pary categoryName' + categoryName);
     if (categoryName != Constants.STR_DEVICES) {
-      String date=widget.data.metaInfo.dateOfVisit!=null?widget.data.metaInfo.dateOfVisit:'';
+      String date = widget.data.metaInfo.dateOfVisit != null
+          ? widget.data.metaInfo.dateOfVisit
+          : '';
 
-      if(date!=''){
-
-        date=FHBUtils().getFormattedDateOnly(date);
+      /*   if (date != '') {
+        date = FHBUtils().getFormattedDateOnly(date);
       }
+ */
+      if (firsTym) {
+        firsTym = false;
+      } else {
+        if (date != '') {
+          date = FHBUtils().getFormattedDateOnly(date);
+        }
+      }
+
       switch (categoryName) {
         case Constants.STR_PRESCRIPTION:
           String fileName = widget.data.metaInfo.fileName;
@@ -455,9 +529,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            print('Audio Path delete' + containsAudio.toString());
-            print('Audio Path delete' + audioPath.toString());
-
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -465,9 +536,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('Audio Path DisplayPicture' + containsAudio.toString());
-            print('Audio Path DisplayPicture' + audioPath.toString());
-
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -486,9 +554,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                print('Audio Path delete' + containsAudio.toString());
-                print('Audio Path delete' + audioPath.toString());
-
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -496,9 +561,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               new List(),
               (containsAudio, audioPath) {
-                print('Audio Path DisplayPicture' + containsAudio.toString());
-                print('Audio Path DisplayPicture' + audioPath.toString());
-
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -551,7 +613,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   text: hospitalData != null ? hospitalData['name'] : ''),
               new TextEditingController(
                   text: doctorsData != null ? doctorsData['name'] : ''),
-              new TextEditingController(text: widget.data.metaInfo.dateOfVisit!=null?widget.data.metaInfo.dateOfVisit:''),
+              new TextEditingController(
+                  text: widget.data.metaInfo.dateOfVisit != null
+                      ? widget.data.metaInfo.dateOfVisit
+                      : ''),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
             print('Audio Path delete' + containsAudio.toString());
@@ -575,6 +640,37 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: fileName));
 
           break;
+        case Constants.STR_CLAIMSRECORD:
+          String fileName = widget.data.metaInfo.fileName;
+
+          new CommonDialogBox().getDialogBoxForBillsAndOthers(
+              context,
+              containsAudio,
+              audioPath,
+              (containsAudio, audioPath) {
+                print('Audio Path delete' + containsAudio.toString());
+                print('Audio Path delete' + audioPath.toString());
+
+                setState(() {
+                  audioPath = audioPath;
+                  containsAudio = containsAudio;
+                });
+              },
+              new List(),
+              (containsAudio, audioPath) {
+                print('Audio Path DisplayPicture' + containsAudio.toString());
+                print('Audio Path DisplayPicture' + audioPath.toString());
+
+                audioPath = audioPath;
+                containsAudio = containsAudio;
+
+                setState(() {});
+              },
+              widget.data,
+              true,
+              new TextEditingController(text: fileName));
+
+          break;
       }
     } else {
       deviceName = widget.data.metaInfo.mediaTypeInfo.name;
@@ -582,7 +678,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       PreferenceUtil.saveString(Constants.KEY_DEVICENAME, deviceName);
       switch (deviceName) {
         case Constants.STR_GLUCOMETER:
-          String glucoMeterValue = widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[0].value:'';
+          String glucoMeterValue = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[0].value
+              : '';
           String fileName = widget.data.metaInfo.fileName;
           List<bool> isSelected =
               widget.data.metaInfo.deviceReadings[1].unit == 'After'
@@ -614,8 +712,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           break;
 
         case Constants.STR_THERMOMETER:
-          String thermometerValue =
-             widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[0].value:'';
+          String thermometerValue = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[0].value
+              : '';
           String fileName = widget.data.metaInfo.fileName;
 
           new CommonDialogBox().getDialogBoxForTemperature(
@@ -642,7 +741,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: fileName));
           break;
         case Constants.STR_WEIGHING_SCALE:
-          String weightInKgs = widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[0].value:'';
+          String weightInKgs = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[0].value
+              : '';
           String fileName = widget.data.metaInfo.fileName;
 
           new CommonDialogBox().getDialogBoxForWeightingScale(
@@ -670,9 +771,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           break;
 
         case Constants.STR_PULSE_OXIMETER:
-          String oxygenSaturation =
-              widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[0].value:'';
-          String pulse = widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[1].value:'';
+          String oxygenSaturation = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[0].value
+              : '';
+          String pulse = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[1].value
+              : '';
           String fileName = widget.data.metaInfo.fileName;
 
           new CommonDialogBox().getDialogBoxForPulseOxidometer(
@@ -700,11 +804,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: fileName));
           break;
         case Constants.STR_BP_MONITOR:
-          String systolicPressure =
-              widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[0].value:'';
-          String diastolicPressure =
-              widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[1].value:'';
-          String pulse = widget.data.metaInfo.deviceReadings!=null?widget.data.metaInfo.deviceReadings[2].value:'';
+          String systolicPressure = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[0].value
+              : '';
+          String diastolicPressure = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[1].value
+              : '';
+          String pulse = widget.data.metaInfo.deviceReadings != null
+              ? widget.data.metaInfo.deviceReadings[2].value
+              : '';
           String fileName = widget.data.metaInfo.fileName;
 
           new CommonDialogBox().getDialogBoxForBPMonitor(
@@ -889,5 +997,91 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         }
       },
     );
+  }
+
+  Future<PermissionStatus> requestPermission(
+      Permission storagePermission) async {
+    final status = await storagePermission.request();
+
+    setState(() {
+      print(status);
+      _permissionStatus = status;
+    });
+
+    return status;
+  }
+
+  /*showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
+    if (data.metaInfo.hasVoiceNotes) {
+
+      String mediaMetaId= new CommonUtil().getMediaMasterIDForAudioFileType(data.mediaMasterIds);
+      getWidgetForPlayingAudioFromServer(mediaMetaId);
+      //getWidgetForPlayingAudioFromServer('5af2ee90-593e-4672-966d-a2871f70357a');
+    }
+  }*/
+
+  showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
+    if (data.metaInfo.hasVoiceNotes) {
+      String mediaMetaId = checkIfMp3IsPresent(data);
+      getWidgetForPlayingAudioFromServer(mediaMetaId);
+    }
+  }
+
+  String checkIfMp3IsPresent(MediaMetaInfo data) {
+    String mediaMetaId =
+        new CommonUtil().getMediaMasterIDForAudioFileType(data.mediaMasterIds);
+    return mediaMetaId;
+  }
+
+  Widget getWidgetForPlayingAudioFromServer(String mediaMetaId) {
+    return FutureBuilder(
+      future: _healthReportListForUserBlock.getDocumentImage(mediaMetaId),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          print('snapshot.data audio' + snapshot.data);
+          _downloadMedia(snapshot.data, context).then((file) {
+            audioPath = file.path;
+            getAudioIconWithFile();
+          });
+          return SizedBox();
+          /*return Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                color: Colors.black),
+
+            */ /*Image.memory(
+              snapshot.data,
+              width: 40,
+              height: 60,
+            ),*/ /*
+          );*/
+        } else {
+          print('your sanpshot has not data');
+          return SizedBox();
+          /* return new SizedBox(
+            width: 40.0,
+            height: 60.0,
+            child: Container(color: Colors.red,),
+            */ /*Shimmer.fromColors(
+                baseColor: Colors.grey[200],
+                highlightColor: Colors.grey[400],
+                child: Container(
+                    width: 50, height: 50, color: Colors.grey[200])),*/ /*
+          );*/
+        }
+
+        ///load until snapshot.hasData resolves to true
+      },
+    );
+  }
+
+  Future<File> _downloadMedia(List data, BuildContext context) async {
+    var path;
+    await FHBUtils.createFolderInAppDocDir('myFHB/Audio').then((filePath) {
+      path = '$filePath${widget.data.metaInfo.fileName}.mp3';
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text('Download Started')));
+      return new File(path).writeAsBytesSync(data);
+    });
   }
 }

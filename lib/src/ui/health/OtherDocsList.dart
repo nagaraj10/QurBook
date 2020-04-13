@@ -15,11 +15,17 @@ class OtherDocsList extends StatefulWidget {
   final Function callBackToRefresh;
   final String categoryName;
   final String categoryId;
+  final String categoryDescription;
 
   final Function(String, String) getDataForParticularLabel;
 
-  OtherDocsList(this.completeData, this.callBackToRefresh, this.categoryName,
-      this.categoryId, this.getDataForParticularLabel);
+  OtherDocsList(
+      this.completeData,
+      this.callBackToRefresh,
+      this.categoryName,
+      this.categoryId,
+      this.getDataForParticularLabel,
+      this.categoryDescription);
 
   @override
   _OtherDocsState createState() => _OtherDocsState();
@@ -50,8 +56,11 @@ class _OtherDocsState extends State<OtherDocsList> {
   Widget getWidgetToDisplayOtherDocsList(CompleteData completeData) {
     List<MediaMetaInfo> mediaMetaInfoObj = new List();
 
+    /*  mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+        completeData, CommonConstants.categoryDescriptionOthers); */
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
-        completeData, CommonConstants.categoryDescriptionOthers);
+        completeData, widget.categoryDescription);
+
     print('oothers ' + mediaMetaInfoObj.length.toString());
     return RefreshIndicator(
       key: _refreshIndicatorKey,
@@ -201,8 +210,9 @@ class _OtherDocsState extends State<OtherDocsList> {
                               ? ImageIcon(
                                   AssetImage(
                                       'assets/icons/record_fav_active.png'),
-                                      //TODO chnage theme
-                                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                                  //TODO chnage theme
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(

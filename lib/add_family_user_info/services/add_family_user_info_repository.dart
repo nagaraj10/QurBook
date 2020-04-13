@@ -55,7 +55,7 @@ class AddFamilyUserInfoRepository {
     return UpdateAddFamilyRelationInfo.fromJson(response);
   }
 
-  Future<UpdateAddFamilyInfo> updateSelfProfileInfo(
+    Future<UpdateAddFamilyInfo> updateSelfProfileInfo(
       String userID,
       String name,
       String phoneNo,
@@ -63,12 +63,15 @@ class AddFamilyUserInfoRepository {
       String gender,
       String bloodGroup,
       String dateOfBirth,
-      File profilePic) async {
+      File profilePic,
+      String firstName,
+      String middleName,
+      String lastName) async {
     String query = '';
 
-    query =
-        "generalInfo||gender=$gender|bloodGroup=$bloodGroup|dateOfBirth=$dateOfBirth|name=$name|email=$email";
-
+    query ="generalInfo||gender=$gender|bloodGroup=$bloodGroup|dateOfBirth=$dateOfBirth|name=$name|firstName=$firstName|middleName=$middleName|lastName=$lastName";
+    // query ="generalInfo||firstName=$firstName|middleName=$middleName|lastName=$lastName";
+   
     var response;
 
     if (profilePic != null) {
@@ -78,6 +81,7 @@ class AddFamilyUserInfoRepository {
       response = await _helper
           .updateFamilyUserProfile("userProfiles/$userID/?sections=${query}");
     }
+    print('respponse'+response.toString());
 
     return UpdateAddFamilyInfo.fromJson(response);
   }

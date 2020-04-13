@@ -13,6 +13,7 @@ class CommonConstants {
   static String categoryDescriptionWearable = 'Catcode008';
   static String categoryDescriptionFeedback = 'Catcode00';
   static String categoryDescriptionVoiceRecord = 'Catcode010';
+  static String categoryDescriptionClaimsRecord = 'Catcode011';
 
   static final String CAT_JSON_GLUCOMETER = "Catcode002_Typecode001";
   static final String CAT_JSON_BP_METER = "Catcode002_Typecode002";
@@ -45,7 +46,7 @@ class CommonConstants {
    * Following are the constants string used as hint text for the pop 
    * box that appears when a card is saved
    */
-  static String strMessage = 'Message';
+  //static String strMessage = 'Message';
   static String strDateOfVisit = 'Date of visit *';
   static String strHospitalName = 'Hospital Name *';
   static String strHospitalNameWithoutStar = 'Hospital Name ';

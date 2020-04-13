@@ -48,7 +48,7 @@ class _SuperMayaState extends State<SuperMaya> {
               ),
               //Icon(Icons.people),
               Text(
-                'Hi, Im super Maya your health assistance',
+                'Hi, Im Maya your health assistance.',
                 softWrap: true,
               ),
               SizedBox(
@@ -61,8 +61,10 @@ class _SuperMayaState extends State<SuperMaya> {
               //     onPressed: () => gettingReposnseFromNative())
 
               SizedBox(
-                width: 100,
+                width: 150,
+                height: 50,
                 child: RaisedGradientButton(
+                    borderRadius: 30,
                     child: Text(
                       'Start now',
                       style: TextStyle(color: Colors.white, fontSize: 16),
