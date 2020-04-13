@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:intro_slider/intro_slider.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/dashboard/dashboard_screen.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
 import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
+import 'package:myfhb/src/ui/IntroSlider.dart';
 import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
@@ -77,7 +78,7 @@ var routes = <String, WidgetBuilder>{
   "/my_family_detail_view_insurance": (BuildContext context) =>
       MyFamilyDetailView(arguments: ModalRoute.of(context).settings.arguments),
   "/add_reminders": (BuildContext context) => AddReminder(),
-  "/review_page": (BuildContext context) => MyReviewPage(),
+  "/intro_slider": (BuildContext context) => IntroSliderPage(),
 };
 
 Future<void> main() async {

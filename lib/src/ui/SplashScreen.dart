@@ -15,15 +15,22 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     PreferenceUtil.init();
     Future.delayed(const Duration(seconds: 2), () {
-      String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-      print('auth token : $authToken');
-      //PageNavigator.goToPermanent(context, '/sign_in_screen');
-      if (authToken != null) {
-        PageNavigator.goToPermanent(context, '/dashboard_screen');
-        //PageNavigator.goToPermanent(context, '/review_page');
+      var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
+      if (!isFirstTime) {
+        PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, 'true');
+        PageNavigator.goToPermanent(context, '/intro_slider');
       } else {
-        PageNavigator.goToPermanent(context, '/sign_in_screen');
+        String authToken =
+            PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        print('auth token : $authToken');
+        //PageNavigator.goToPermanent(context, '/sign_in_screen');
+        if (authToken != null) {
+          PageNavigator.goToPermanent(context, '/dashboard_screen');
+        } else {
+          PageNavigator.goToPermanent(context, '/sign_in_screen');
+        }
       }
+
       //setState(() {});
     });
   }

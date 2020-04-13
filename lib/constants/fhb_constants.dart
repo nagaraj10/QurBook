@@ -63,6 +63,7 @@ const String STR_VERIFY_USER =
 const String KEY_VOICE_ID = 'Category_ID_VOICE';
 const String STR_OTPMISMATCHED =
     'Requested operation forbidden. OTP Mismatched';
+const String KEY_INTRO_SLIDER = 'keyIntroSlider';
 
 const String KEY_PREFERRED_DOCTOR = 'prefered doctor';
 const String KEY_PREFERRED_HOSPITAL = 'prefered hospital';

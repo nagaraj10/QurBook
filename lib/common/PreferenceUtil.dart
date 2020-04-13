@@ -25,6 +25,10 @@ class PreferenceUtil {
     _prefsInstance = null;
   }
 
+  static bool isKeyValid(String key) {
+    return _prefsInstance.containsKey(key);
+  }
+
   static Future<bool> saveMediaData(
       String keyProfile, MediaData mediaData) async {
     print('profile data in shared preference : $mediaData');
@@ -79,7 +83,7 @@ class PreferenceUtil {
     return instance.setInt(key, value);
   }
 
-   static int getSavedTheme(String key) {
+  static int getSavedTheme(String key) {
     return _prefsInstance.getInt(key);
   }
 
@@ -174,13 +178,12 @@ class PreferenceUtil {
         json.decode(_prefsInstance.getString(keyPreferredLab)));
   }
 
-   static Future<bool> saveInt(String key, int value) async {
+  static Future<bool> saveInt(String key, int value) async {
     var instance = await _prefs;
     return instance.setInt(key, value);
   }
 
-   static int getIntValue(String key) {
+  static int getIntValue(String key) {
     return _prefsInstance.getInt(key);
   }
-
 }
