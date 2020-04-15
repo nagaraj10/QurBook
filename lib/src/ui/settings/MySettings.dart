@@ -19,7 +19,7 @@ class _MySettingsState extends State<MySettings> {
   @override
   void initState() {
     super.initState();
-    //PreferenceUtil.init();
+    PreferenceUtil.init();
     setState(() {
       _isdeviceRecognition =
           PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==

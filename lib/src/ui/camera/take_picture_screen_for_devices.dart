@@ -135,6 +135,9 @@ class TakePictureScreenForDevicesState
           isObjectDetecting == true ||
                   PreferenceUtil.getStringValue(
                           Constants.allowDeviceRecognition) ==
+                      null ||
+                  PreferenceUtil.getStringValue(
+                          Constants.allowDeviceRecognition) ==
                       'true'
               ? Camera(
                   widget.cameras,
