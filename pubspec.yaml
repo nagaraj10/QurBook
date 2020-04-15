@@ -106,6 +106,7 @@ flutter:
     - assets/providers/
     - assets/help_docs/
     - assets/video/
+    - assets/slide_icons/
     - assets/
 
   #  - images/a_dot_ham.jpeg
