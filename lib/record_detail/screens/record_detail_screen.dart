@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -11,7 +10,6 @@ import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
-
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
@@ -57,6 +55,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   String categoryName, createdDate;
   var doctorsData, hospitalData, labData;
+  bool isAudioDownload = false;
 
   String deviceName;
   CarouselSlider carouselSlider;
@@ -85,13 +84,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         new CommonUtil().getMetaMasterIdList(widget.data);
 
     _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
+    if (checkIfMp3IsPresent(widget.data) != '') {
+      widget.data.metaInfo.hasVoiceNotes = true;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (checkIfMp3IsPresent(widget.data) != '') {
-      widget.data.metaInfo.hasVoiceNotes = true;
-    }
     return Scaffold(
         backgroundColor: const Color(fhbColors.bgColorContainer),
         appBar: AppBar(
@@ -254,7 +253,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     height: 60,
                     child: widget.data.metaInfo.hasVoiceNotes != null &&
                             widget.data.metaInfo.hasVoiceNotes
-                        ? showAudioWidgetIfVoiceNotesAvailable(widget.data)
+                        ? isAudioDownload
+                            ? getAudioIconWithFile()
+                            : showProgressIndicator(widget.data)
                         : InkWell(
                             onTap: () {
                               Navigator.of(context)
@@ -409,7 +410,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     });
   }
 
-  Widget getAudioIconWithFile() {
+  Widget getAudioIconWithFile({String fpath}) {
+    var path = (fpath != null || fpath != '') ? fpath : audioPath;
+    print(
+        '----------- audio path at getAudioIconWithFile $audioPath-------------');
     return Container(
         height: 60,
         child: Column(
@@ -504,18 +508,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           ? widget.data.metaInfo.dateOfVisit
           : '';
 
-      /*   if (date != '') {
+      if (date != '') {
         date = FHBUtils().getFormattedDateOnly(date);
       }
- */
-      if (firsTym) {
-        firsTym = false;
-      } else {
-        if (date != '') {
-          date = FHBUtils().getFormattedDateOnly(date);
-        }
-      }
-
       switch (categoryName) {
         case Constants.STR_PRESCRIPTION:
           String fileName = widget.data.metaInfo.fileName;
@@ -1034,7 +1029,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Widget getWidgetForPlayingAudioFromServer(String mediaMetaId) {
-    return FutureBuilder(
+    _healthReportListForUserBlock.getDocumentImage(mediaMetaId).then((res) {
+      _downloadMedia(res, context);
+    });
+
+    /*  return FutureBuilder(
       future: _healthReportListForUserBlock.getDocumentImage(mediaMetaId),
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         if (snapshot.hasData) {
@@ -1072,16 +1071,27 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
         ///load until snapshot.hasData resolves to true
       },
-    );
+    ); */
   }
 
-  Future<File> _downloadMedia(List data, BuildContext context) async {
+  _downloadMedia(List data, BuildContext context) {
     var path;
-    await FHBUtils.createFolderInAppDocDir('myFHB/Audio').then((filePath) {
+    FHBUtils.createFolderInAppDocDir('myFHB/Audio').then((filePath) {
       path = '$filePath${widget.data.metaInfo.fileName}.mp3';
-      Scaffold.of(context)
-          .showSnackBar(SnackBar(content: Text('Download Started')));
-      return new File(path).writeAsBytesSync(data);
+
+//      Scaffold.of(context)
+//          .showSnackBar(SnackBar(content: Text('Download Started')));
+      new File(path).writeAsBytesSync(data);
+      containsAudio = true;
+      audioPath = path;
+      print('----------- audio path at download media $audioPath-------------');
+      isAudioDownload = true;
+      setState(() {});
     });
+  }
+
+  showProgressIndicator(MediaMetaInfo data) {
+    showAudioWidgetIfVoiceNotesAvailable(data);
+    return CircularProgressIndicator();
   }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:intro_slider/intro_slider.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -129,6 +128,7 @@ class _MyFHBState extends State<MyFHB> {
   static const platform = const MethodChannel('flutter.native/versioncode');
   String _responseFromNative = 'wait! Its loading';
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static const secure_platform = const MethodChannel('flutter.native/security');
 
   @override
   void initState() {
@@ -136,6 +136,7 @@ class _MyFHBState extends State<MyFHB> {
     super.initState();
     //notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     gettingResponseFromNative();
+    showSecurityWall();
   }
 
   @override
@@ -189,5 +190,11 @@ class _MyFHBState extends State<MyFHB> {
 
 //    Get.snackbar('From native code response:', _responseFromNative);
 //    print('From native code response:$_responseFromNative');
+  }
+
+  Future<void> showSecurityWall() async {
+    try {
+      await secure_platform.invokeMethod('secureMe');
+    } on PlatformException catch (e) {}
   }
 }

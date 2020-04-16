@@ -213,7 +213,7 @@ class FHBUtils {
 
   static Future<String> createFolderInAppDocDir(String folderName) async {
     //Get this App Document Directory
-    final Directory _appDocDir = await getApplicationDocumentsDirectory();
+    final Directory _appDocDir = await getExternalStorageDirectory();
     //App Document Directory + folder name
     final Directory _appDocDirFolder =
         Directory('${_appDocDir.path}/$folderName/');

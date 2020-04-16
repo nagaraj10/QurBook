@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -20,6 +19,7 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/global_search/model/GlobalSearch.dart' as globalSearch;
+import 'package:get/get.dart';
 
 class CommonUtil {
   List<MediaMetaInfo> getDataForParticularCategoryDescription(
@@ -696,11 +696,43 @@ class CommonUtil {
     return mediaMasterId;
   }
 
-  networkUI(BuildContext context, bool isOffline) {
-    Scaffold.of(context).showSnackBar(SnackBar(
-      content: customSnack(isOffline),
-      backgroundColor: isOffline ? Colors.green : Colors.red,
-    ));
+  networkUI() {
+    Get.bottomSheet(
+      builder: (_) {
+        return Container(
+          constraints: BoxConstraints(maxHeight: 120),
+          child: Card(
+            elevation: 10.0,
+            //margin: EdgeInsets.only(left: 3.0,right: 3.0),
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20.0),
+                    topLeft: Radius.circular(20.0))),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ImageIcon(
+                  AssetImage('assets/icons/wifi.png'),
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  size: 50.0,
+                ),
+                Text(
+                  'No internet connection',
+                  style: TextStyle(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                    fontSize: 16.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+    );
   }
 
   Widget customSnack(bool isOffline) {

@@ -27,12 +27,16 @@ import java.lang.reflect.GenericArrayType
 import java.util.*
 import java.util.jar.Manifest
 import kotlin.collections.ArrayList
+import android.content.Context.KEYGUARD_SERVICE
+import android.app.KeyguardManager
 
 class MainActivity : FlutterActivity() {
     private val VERSION_CODES_CHANNEL = "flutter.native/versioncode"
     private val VOICE_CHANNEL = "flutter.native/voiceIntent"
     private val TTS_CHANNEL = "flutter.native/textToSpeech"
+    private val SECURITY_CHANNEL = "flutter.native/security"
     private val REQ_CODE = 112
+    private val INTENT_AUTHENTICATE = 155
     private var voiceText = ""
     private var langSource: String? = null
     private var langDest: String? = null
@@ -45,6 +49,7 @@ class MainActivity : FlutterActivity() {
     var tts: TextToSpeech? = null
 
     private lateinit var _result: MethodChannel.Result
+    private lateinit var _securityResult: MethodChannel.Result
 
 
 
@@ -60,7 +65,16 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SECURITY_CHANNEL).setMethodCallHandler { call, result ->
+            if (call.method == "secureMe") {
+                //logics to show security mehods
+                _securityResult=result
+                secureMe();
 
+            } else {
+                result.notImplemented()
+            }
+        }
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VOICE_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "speakWithVoiceAssistant") {
@@ -116,6 +130,15 @@ class MainActivity : FlutterActivity() {
         })
     }
 
+     private fun secureMe(){
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            val km: KeyguardManager = getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
+            if (km.isKeyguardSecure()) {
+                val authIntent: Intent = km.createConfirmDeviceCredentialIntent("MyFHB", "Please Authorize to use the Application")
+                startActivityForResult(authIntent, INTENT_AUTHENTICATE)
+            }
+        }
+    }
 
     private fun textToSpeech(msg:String){
         tts!!.speak(msg, TextToSpeech.QUEUE_FLUSH, null)
@@ -159,6 +182,13 @@ class MainActivity : FlutterActivity() {
                     val finalWords = result[0].toString()
                     //Toast.makeText(applicationContext, "You said:\n$finalWords", Toast.LENGTH_LONG).show()
                     _result.success(finalWords)
+                }
+            }
+            INTENT_AUTHENTICATE -> {
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    _securityResult.success(true)
+                }else{
+                    _securityResult.success(false)
                 }
             }
         }

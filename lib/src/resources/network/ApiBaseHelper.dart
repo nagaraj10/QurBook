@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
@@ -28,6 +29,7 @@ class ApiBaseHelper {
           body: jsonData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -39,15 +41,12 @@ class ApiBaseHelper {
     };
 
     var responseJson;
-
-    print('url' + url);
-    print('otpVerifyData' + otpVerifyData);
     try {
       final response = await http.post(_baseUrl + url,
           body: otpVerifyData, headers: requestHeaders);
       responseJson = _returnResponse(response);
-      print('responseJson' + responseJson.toString());
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -61,14 +60,12 @@ class ApiBaseHelper {
 
     var responseJson;
 
-    print('url' + url);
-    print('AddFamilyOtpVerifyData' + otpVerifyData);
     try {
       final response = await http.post(_baseUrl + url,
           body: otpVerifyData, headers: requestHeaders);
       responseJson = _returnResponse(response);
-      print('responseJson' + responseJson.toString());
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -82,15 +79,12 @@ class ApiBaseHelper {
     };
 
     var responseJson;
-
-    print('url' + _baseUrl + url);
-    print('healthRecordData' + healthRecordData);
     try {
       final response = await http.post(_baseUrl + url,
           body: healthRecordData, headers: requestHeaders);
       responseJson = _returnResponse(response);
-      print('responseJson' + responseJson.toString());
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -104,14 +98,12 @@ class ApiBaseHelper {
 
     var responseJson;
 
-    print('url' + _baseUrl + url);
-    print('bookmarkData' + bookmarkData);
     try {
       final response = await http.post(_baseUrl + url,
           body: bookmarkData, headers: requestHeaders);
       responseJson = _returnResponse(response);
-      print('responseJson' + responseJson.toString());
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -128,8 +120,8 @@ class ApiBaseHelper {
       final response =
           await http.put(_baseUrl + url, body: '', headers: requestHeaders);
       responseJson = _returnResponse(response);
-      print(responseJson);
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -148,14 +140,13 @@ class ApiBaseHelper {
           body: jsonData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
   }
 
   Future<dynamic> getMedicalPreferencesList(String url) async {
-    print('authToken : ${authToken}');
-
     Map<String, String> requestHeaders = {
       'accept': 'application/json',
       'Authorization': authToken,
@@ -166,6 +157,7 @@ class ApiBaseHelper {
       final response = await http.get(_baseUrl + url, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -189,6 +181,7 @@ class ApiBaseHelper {
       final response = await http.get(_baseUrl + url, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -263,16 +256,12 @@ class ApiBaseHelper {
     };
 
     var responseJson;
-
-    print(_baseUrl + url);
     try {
       final response = await http.get(_baseUrl + url, headers: requestHeaders);
 
-      print('response' + response.toString());
       responseJson = _returnResponse(response);
-
-      print('responseJson' + responseJson.toString());
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -288,7 +277,6 @@ class ApiBaseHelper {
 
     var responseJson;
     try {
-      print(_baseUrl + url);
       final response = await http.get(_baseUrl + url, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -310,11 +298,9 @@ class ApiBaseHelper {
       final response =
           await http.get(_baseUrl + url + param, headers: requestHeaders);
 
-      print('response' + response.toString());
       responseJson = _returnResponse(response);
-
-      print('responseJson' + responseJson.toString());
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -333,6 +319,7 @@ class ApiBaseHelper {
       final response = await http.get(_baseUrl + url, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
+      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -359,27 +346,14 @@ class ApiBaseHelper {
   dynamic _returnResponse(http.Response response) {
     switch (response.statusCode) {
       case 200:
-        /* var responseJson = convert.jsonDecode(response.body.toString());
-        print(responseJson);
-        return responseJson; */
-
-        print(response.headers['content-type']);
-
         var responseJson;
         if (response.headers['content-type'] == 'image/jpg' ||
             response.headers['content-type'] == 'image/png' ||
             response.headers['content-type'] == 'image/*' ||
             response.headers['content-type'] == 'audio/mp3') {
-          /* String base64 = convert.base64Encode(response.bodyBytes);
-          responseJson = convert.base64Decode(base64);*/
-
-          print(response.headers['content-type']);
-          print(response.bodyBytes);
-
           responseJson = response.bodyBytes;
         } else {
           responseJson = convert.jsonDecode(response.body.toString());
-          print(responseJson);
         }
         return responseJson;
 
@@ -394,8 +368,6 @@ class ApiBaseHelper {
         var responseJson = convert.jsonDecode(response.body.toString());
 
         if (responseJson['message'] == Constants.STR_OTPMISMATCHED) {
-          print(responseJson['message']);
-          //Get.snackbar('Message', responseJson['message']);
           return responseJson;
         } else {
           PreferenceUtil.clearAllData().then((value) {
@@ -403,8 +375,6 @@ class ApiBaseHelper {
             Get.snackbar('Message', 'Logged into other Device');
           });
         }
-
-        //PageNavigator.goToPermanent(context, '/dashboard_screen');
         break;
 
       case 403:
@@ -429,7 +399,6 @@ class ApiBaseHelper {
       'Authorization': authToken,
     };
 
-    print(_baseUrl + url);
     var responseJson;
     var response;
     try {
@@ -437,10 +406,8 @@ class ApiBaseHelper {
           body: jsonBody, headers: requestHeaders);
 
       responseJson = _returnResponse(response);
-
-      print(_returnResponse(response));
-      // responseJson = response;
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
 
@@ -449,39 +416,49 @@ class ApiBaseHelper {
 
   Future<dynamic> saveImageToServerClone(String url, File file, String filePath,
       String metaID, String jsonBody) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var response;
+    try {
+      String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Dio dio = new Dio();
+      Dio dio = new Dio();
 
-    dio.options.headers['accept'] = 'application/json';
-    dio.options.headers['content-Type'] = 'multipart/form-data';
+      dio.options.headers['accept'] = 'application/json';
+      dio.options.headers['content-Type'] = 'multipart/form-data';
 
-    dio.options.headers["authorization"] = authToken;
-    String fileNoun = file.path.split('/').last;
+      dio.options.headers["authorization"] = authToken;
+      String fileNoun = file.path.split('/').last;
 
-    FormData formData = new FormData.fromMap({
-      "mediaMetaId": metaID,
-      "file": await MultipartFile.fromFile(file.path, filename: fileNoun)
-    });
-    var response = await dio.post(_baseUrl + url, data: formData);
+      FormData formData = new FormData.fromMap({
+        "mediaMetaId": metaID,
+        "file": await MultipartFile.fromFile(file.path, filename: fileNoun)
+      });
+      response = await dio.post(_baseUrl + url, data: formData);
 
-    print('content' + response.toString());
-
-    return response.data;
+      return response.data;
+    } on SocketException {
+      CommonUtil().networkUI();
+      throw FetchDataException('No Internet connection');
+    }
   }
 
   Future<dynamic> signUpPage(
       String url, Map<String, dynamic> mapForSignUp) async {
-    Dio dio = new Dio();
+    var response;
+    try {
+      Dio dio = new Dio();
 
-    dio.options.headers['accept'] = 'application/json';
-    dio.options.headers['content-Type'] = 'multipart/form-data';
-    FormData formData = new FormData.fromMap(mapForSignUp);
-    var response = await dio.post(_baseUrl + url, data: formData);
+      dio.options.headers['accept'] = 'application/json';
+      dio.options.headers['content-Type'] = 'multipart/form-data';
+      FormData formData = new FormData.fromMap(mapForSignUp);
+      response = await dio.post(_baseUrl + url, data: formData);
 
-    print('content' + response.toString());
+      return response.data;
+    } on SocketException {
+      CommonUtil().networkUI();
+      throw FetchDataException('No Internet connection');
+    }
 
-    return response.data;
+    //return (response!=null || response != '')?response.data:response;
   }
 
   Future<dynamic> addUserLinking(String url, String jsonData) async {
@@ -497,6 +474,7 @@ class ApiBaseHelper {
           body: jsonData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -515,6 +493,7 @@ class ApiBaseHelper {
           body: jsonData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -531,8 +510,8 @@ class ApiBaseHelper {
       final response =
           await http.put(_baseUrl + url, body: '', headers: requestHeaders);
       responseJson = _returnResponse(response);
-      print(responseJson);
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -550,8 +529,8 @@ class ApiBaseHelper {
       final response = await http.put(_baseUrl + url,
           body: jsonData, headers: requestHeaders);
       responseJson = _returnResponse(response);
-      print(responseJson);
     } on SocketException {
+      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -577,24 +556,29 @@ class ApiBaseHelper {
 
   Future<dynamic> saveImageToServerClone1(
       String url, File file, String jsonBody) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var response;
+    try {
+      String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Dio dio = new Dio();
+      Dio dio = new Dio();
 
-    dio.options.headers['accept'] = 'application/json';
-    dio.options.headers['content-Type'] = 'multipart/form-data';
+      dio.options.headers['accept'] = 'application/json';
+      dio.options.headers['content-Type'] = 'multipart/form-data';
 
-    dio.options.headers["authorization"] = authToken;
-    String fileNoun = file.path.split('/').last;
+      dio.options.headers["authorization"] = authToken;
+      String fileNoun = file.path.split('/').last;
 
-    FormData formData = new FormData.fromMap({
-      "profilePic": await MultipartFile.fromFile(file.path, filename: fileNoun)
-    });
-    var response = await dio.put(_baseUrl + url, data: formData);
+      FormData formData = new FormData.fromMap({
+        "profilePic":
+            await MultipartFile.fromFile(file.path, filename: fileNoun)
+      });
+      response = await dio.put(_baseUrl + url, data: formData);
 
-    print('content' + response.toString());
-
-    return response.data;
+      return response.data;
+    } on SocketException {
+      //CommonUtil().networkUI();
+      throw FetchDataException('No Internet connection');
+    }
   }
 
   Future<dynamic> moveMetaDataToOtherUser(String url, String jsonBody) async {
@@ -604,7 +588,6 @@ class ApiBaseHelper {
       'Authorization': authToken,
     };
 
-    print(_baseUrl + url);
     var responseJson;
     var response;
     try {
@@ -612,10 +595,8 @@ class ApiBaseHelper {
           body: jsonBody, headers: requestHeaders);
 
       responseJson = _returnResponse(response);
-
-      print(_returnResponse(response));
-      // responseJson = response;
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
 
@@ -631,7 +612,6 @@ class ApiBaseHelper {
       'Authorization': authToken,
     };
 
-    print(_baseUrl + url);
     var responseJson;
     var response;
     try {
@@ -639,10 +619,8 @@ class ApiBaseHelper {
           body: jsonBody, headers: requestHeaders);
 
       responseJson = _returnResponse(response);
-
-      print(_returnResponse(response));
-      // responseJson = response;
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
 
@@ -662,7 +640,6 @@ class ApiBaseHelper {
 
       var responseJson;
       try {
-        print(_baseUrl + url);
         final response = await http.get(_baseUrl + url + metaMasterIdList[i].id,
             headers: requestHeaders);
         responseJson = _returnResponse(response);
@@ -683,17 +660,14 @@ class ApiBaseHelper {
       'Authorization': authToken,
     };
 
-    print(_baseUrl + url);
     var responseJson;
     var response;
     try {
       response = await http.put(_baseUrl + url, headers: requestHeaders);
 
       responseJson = _returnResponse(response);
-
-      print(_returnResponse(response));
-      // responseJson = response;
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
 
@@ -713,11 +687,9 @@ class ApiBaseHelper {
       final response =
           await http.get(_baseUrl + url + param, headers: requestHeaders);
 
-      print('response' + response.toString());
       responseJson = _returnResponse(response);
-
-      print('responseJson' + responseJson.toString());
     } on SocketException {
+      CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -725,22 +697,26 @@ class ApiBaseHelper {
 
   Future<dynamic> saveImageAndGetDeviceInfo(String url, File file,
       String filePath, String metaID, String jsonBody) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var response;
+    try {
+      String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Dio dio = new Dio();
+      Dio dio = new Dio();
 
-    dio.options.headers['Content-Type'] = 'application/json';
-    dio.options.headers["Authorization"] = authToken;
-    String fileNoun = file.path.split('/').last;
+      dio.options.headers['Content-Type'] = 'application/json';
+      dio.options.headers["Authorization"] = authToken;
+      String fileNoun = file.path.split('/').last;
 
-    FormData formData = new FormData.fromMap({
-      "mediaMetaInfo": metaID,
-      "file": await MultipartFile.fromFile(file.path, filename: fileNoun)
-    });
-    var response = await dio.post(_baseUrl + url, data: formData);
+      FormData formData = new FormData.fromMap({
+        "mediaMetaInfo": metaID,
+        "file": await MultipartFile.fromFile(file.path, filename: fileNoun)
+      });
+      response = await dio.post(_baseUrl + url, data: formData);
 
-    print('content' + response.toString());
-
-    return response.data;
+      return response.data;
+    } on SocketException {
+      CommonUtil().networkUI();
+      throw FetchDataException('No Internet connection');
+    }
   }
 }

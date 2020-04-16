@@ -36,7 +36,6 @@ dependencies:
   path:
   gradient_bottom_navigation_bar: ^1.0.0+4
   flutter_svg: ^0.16.1
-  local_auth: ^0.6.1
   flutter_arc_speed_dial: ^1.0.2
   curved_navigation_bar: ^0.3.1
   shared_preferences: ^0.5.6
@@ -57,7 +56,6 @@ dependencies:
   multi_image_picker: ^4.6.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
   flutter_absolute_path: ^1.0.6
   provider: ^4.0.4
-  #sms_retriever:
   get: ^1.11.1
   tflite: 1.0.4
   sqflite:
