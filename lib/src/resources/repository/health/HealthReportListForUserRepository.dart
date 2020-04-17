@@ -88,7 +88,7 @@ class HealthReportListForUserRepository {
     signInData['mediaMetaId'] = metaID;
     signInData['destinationId'] = familyID;
     var jsonString = convert.jsonEncode(signInData);
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.moveMetaDataToOtherUser(
         "mediameta/" + userID + "/move", jsonString);

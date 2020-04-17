@@ -78,10 +78,8 @@ class AudioWidgetState extends State<AudioWidget> {
   Widget getAudioWidgetWithPlayer() {
     return Container(
       width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-          color: Colors.grey[300], borderRadius: BorderRadius.circular(5)),
+      color: Colors.grey[200],
       padding: EdgeInsets.all(5),
-      margin: EdgeInsets.only(right: 5, left: 5),
       child: Row(
         children: <Widget>[
           Expanded(
@@ -107,7 +105,7 @@ class AudioWidgetState extends State<AudioWidget> {
             ),
           ),
           Expanded(
-            flex: 6,
+            flex: 7,
             child: Container(
                 height: 30.0,
                 child: Slider(
@@ -122,31 +120,16 @@ class AudioWidgetState extends State<AudioWidget> {
                     divisions: maxDuration.toInt())),
           ),
           Expanded(
-            flex: 1,
-            child: Text(
+            flex: 2,
+            child: Center(
+                child: Text(
               this._playerTxt,
               style: TextStyle(
                 fontSize: 12.0,
                 color: Colors.black,
               ),
-            ),
+            )),
           ),
-          /*  Expanded(
-            flex: 1,
-            child: Container(
-              width: 56.0,
-              height: 50.0,
-              child: ClipOval(
-                child: FlatButton(
-                  onPressed: onStopPlayerPressed(),
-                  //disabledColor: Colors.white,
-                  padding: EdgeInsets.all(4.0),
-                  child: Icon(
-                      onStopPlayerPressed() != null ? Icons.stop : Icons.stop),
-                ),
-              ),
-            ),
-          ),*/
           Expanded(
               flex: 1,
               child: IconButton(
@@ -254,13 +237,6 @@ class AudioWidgetState extends State<AudioWidget> {
     }
   }
 
-  /*  onPausePlayerPressed() {
-    return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
-            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
-        ? pausePlayer
-        : null;
-  } */
-
   onPausePlayerPressed() {
     return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
             flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
@@ -308,8 +284,6 @@ class AudioWidgetState extends State<AudioWidget> {
     } catch (err) {
       print('error: $err');
     }
-    this.setState(() {
-      //this._isPlaying = false;
-    });
+    this.setState(() {});
   }
 }

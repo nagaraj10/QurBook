@@ -65,17 +65,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   List<int> fetchedProfileData;
 
-  List<String> bloodGroupArray = [
-    'A',
-    'B',
-    'O',
-    'AB',
+  /* 'AB',
     'A1',
     'A2',
     'A1B',
-    'A2B',
-    'Others/ Not Known'
-  ];
+    'A2B', */
+  List<String> bloodGroupArray = ['A', 'B', 'O', 'Others/ Not Known'];
 
   List<String> bloodRangeArray = ['+', '-', 'Others/ Not Known'];
 

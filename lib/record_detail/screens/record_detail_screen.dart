@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
@@ -27,7 +25,6 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:carousel_slider/carousel_slider.dart';
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -63,7 +60,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   int index = 0;
   int length = 0;
   List<dynamic> imagesPathMain = new List();
-  PermissionStatus _permissionStatus = PermissionStatus.undetermined;
+  PermissionStatus permissionStatus = PermissionStatus.undetermined;
   final Permission _storagePermission =
       Platform.isAndroid ? Permission.storage : Permission.photos;
   bool firsTym = true;
@@ -80,12 +77,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
 
-    List<MediaMasterIds> mediMasterId =
-        new CommonUtil().getMetaMasterIdList(widget.data);
+    if (widget.data.mediaMasterIds.length > 0) {
+      List<MediaMasterIds> mediMasterId =
+          new CommonUtil().getMetaMasterIdList(widget.data);
 
-    _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
-    if (checkIfMp3IsPresent(widget.data) != '') {
-      widget.data.metaInfo.hasVoiceNotes = true;
+      _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
+      if (checkIfMp3IsPresent(widget.data) != '') {
+        widget.data.metaInfo.hasVoiceNotes = true;
+      }
     }
   }
 
@@ -243,19 +242,21 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   ),
                 ),
                 getCategoryInfo(widget.data.metaInfo),
-                SizedBox(height: 60)
+                SizedBox(height: 80)
               ],
             ),
             containsAudio
                 ? getAudioIconWithFile()
                 : Container(
                     color: const Color(fhbColors.bgColorContainer),
-                    height: 60,
                     child: widget.data.metaInfo.hasVoiceNotes != null &&
                             widget.data.metaInfo.hasVoiceNotes
                         ? isAudioDownload
                             ? getAudioIconWithFile()
-                            : showProgressIndicator(widget.data)
+                            : Shimmer.fromColors(
+                                baseColor: Colors.grey[300],
+                                highlightColor: Colors.grey[200],
+                                child: showProgressIndicator(widget.data))
                         : InkWell(
                             onTap: () {
                               Navigator.of(context)
@@ -283,24 +284,27 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 }
                               });
                             },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Icon(
-                                  Icons.mic,
-                                  //TODO chnage theme
-                                  color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
-                                ),
-                                SizedBox(width: 10),
-                                Text('Add voice note',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      //TODO chnage theme
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                    ))
-                              ],
+                            child: Container(
+                              height: 60,
+                              color: Colors.white70,
+                              padding: EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.mic,
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text('Add voice note',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(new CommonUtil()
+                                            .getMyPrimaryColor()),
+                                      ))
+                                ],
+                              ),
                             ),
                           ),
                   )
@@ -310,7 +314,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   void _listenForPermissionStatus() async {
     final status = await _storagePermission.status;
-    setState(() => _permissionStatus = status);
+    setState(() => permissionStatus = status);
   }
 
   void saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
@@ -319,7 +323,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       content: Text('Download Started'),
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
     ));
-    //CommonUtil().networkUI(contxt, false);
+
     if (imagesPathMain.length > 1) {
       for (int i = 0; i < imagesPathMain.length; i++) {
         await ImageGallerySaver.saveImage(imagesPathMain[i]);
@@ -328,7 +332,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         content: Text('All Files are downloaded, view in Gallery'),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
       ));
-      //CommonUtil().networkUI(contxt, true);
     } else {
       await ImageGallerySaver.saveImage(imagesPathMain[0]).then((res) {
         Scaffold.of(contxt).showSnackBar(SnackBar(
@@ -415,21 +418,21 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     print(
         '----------- audio path at getAudioIconWithFile $audioPath-------------');
     return Container(
-        height: 60,
+        //height: 60,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
-              containsAudio = containsAudioClone;
-              audioPath = audioPathClone;
-              postAudioToServer(widget.data.id);
-            }),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-            ),
-          ],
-        ));
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
+          containsAudio = containsAudioClone;
+          audioPath = audioPathClone;
+          postAudioToServer(widget.data.id);
+        }),
+        /*  Padding(
+          padding: const EdgeInsets.all(8.0),
+        ), */
+      ],
+    ));
   }
 
   void deleteAudioFile() {
@@ -883,7 +886,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             Expanded(
               child: carouselSlider = CarouselSlider(
                 height: 400,
-                //width: MediaQuery.of(context).size.width,
                 initialPage: 0,
                 enlargeCenterPage: true,
                 reverse: false,
@@ -1000,7 +1002,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
     setState(() {
       print(status);
-      _permissionStatus = status;
+      permissionStatus = status;
     });
 
     return status;
@@ -1030,57 +1032,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Widget getWidgetForPlayingAudioFromServer(String mediaMetaId) {
     _healthReportListForUserBlock.getDocumentImage(mediaMetaId).then((res) {
-      _downloadMedia(res, context);
+      downloadMedia(res, context);
     });
-
-    /*  return FutureBuilder(
-      future: _healthReportListForUserBlock.getDocumentImage(mediaMetaId),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          print('snapshot.data audio' + snapshot.data);
-          _downloadMedia(snapshot.data, context).then((file) {
-            audioPath = file.path;
-            getAudioIconWithFile();
-          });
-          return SizedBox();
-          /*return Container(
-            decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                color: Colors.black),
-
-            */ /*Image.memory(
-              snapshot.data,
-              width: 40,
-              height: 60,
-            ),*/ /*
-          );*/
-        } else {
-          print('your sanpshot has not data');
-          return SizedBox();
-          /* return new SizedBox(
-            width: 40.0,
-            height: 60.0,
-            child: Container(color: Colors.red,),
-            */ /*Shimmer.fromColors(
-                baseColor: Colors.grey[200],
-                highlightColor: Colors.grey[400],
-                child: Container(
-                    width: 50, height: 50, color: Colors.grey[200])),*/ /*
-          );*/
-        }
-
-        ///load until snapshot.hasData resolves to true
-      },
-    ); */
   }
 
-  _downloadMedia(List data, BuildContext context) {
+  downloadMedia(List data, BuildContext context) {
     var path;
     FHBUtils.createFolderInAppDocDir('myFHB/Audio').then((filePath) {
       path = '$filePath${widget.data.metaInfo.fileName}.mp3';
-
-//      Scaffold.of(context)
-//          .showSnackBar(SnackBar(content: Text('Download Started')));
       new File(path).writeAsBytesSync(data);
       containsAudio = true;
       audioPath = path;
@@ -1092,6 +1051,5 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   showProgressIndicator(MediaMetaInfo data) {
     showAudioWidgetIfVoiceNotesAvailable(data);
-    return CircularProgressIndicator();
   }
 }
