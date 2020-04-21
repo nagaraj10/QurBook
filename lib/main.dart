@@ -29,6 +29,7 @@ import 'add_family_otp/screens/add_family_otp_screen.dart';
 import 'add_family_user_info/screens/add_family_user_info.dart';
 import 'add_providers/screens/add_providers_screen.dart';
 import 'common/CommonConstants.dart';
+import 'common/CommonUtil.dart';
 import 'confirm_location/screens/confirm_location_screen.dart';
 import 'my_family/screens/MyFamily.dart';
 import 'my_family_detail/screens/my_family_detail_screen.dart';
@@ -103,15 +104,6 @@ Future<void> main() async {
 
   await FHBUtils.instance.initPlatformState();
   await FHBUtils.instance.getDb();
-
-  /* PreferenceUtil.saveString(
-      Constants.KEY_USERID, 'ad5d2d37-4eaf-4d91-99e8-a07881d72649');
-
-  PreferenceUtil.saveString(
-      Constants.KEY_USERID_MAIN, 'ad5d2d37-4eaf-4d91-99e8-a07881d72649');
-  PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN,
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJhZDVkMmQzNy00ZWFmLTRkOTEtOTllOC1hMDc4ODFkNzI2NDkiLCJjb3VudHJ5Q29kZSI6Iis5MSIsInN1YmplY3QiOiI5ODQwOTcyMjc1Iiwic2Vzc2lvblJvbGVzIjoiNWQ1MzgwMjItNzJkZS00M2RkLWJkMTktZmJiMGRiYmJhMzkxIiwicm9sZUlkIjoiNWQ1MzgwMjItNzJkZS00M2RkLWJkMTktZmJiMGRiYmJhMzkxIiwic2Vzc2lvbkRhdGUiOjE1ODQwMjczMTEzMDIsImV4cGlyeURhdGUiOjE1ODQwMzA5MTEzMDIsImlhdCI6MTU4NDAyNzMxMSwiZXhwIjoxNTg3NjI3MzExLCJhdWQiOiJ0cmlkZW50QXBwIiwiaXNzIjoiRkhCIiwianRpIjoiMzE2MjhmODUtZWZmOS00ZmI0LTlkYzItZWQyN2UyNzU2Njc1In0.ntgo0u93ZNb2Rwmch1n8dsu2djDOWjpwJpUGo2HyUuU');
- */
 
   runApp(
     MyFHB(),

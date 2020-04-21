@@ -335,7 +335,7 @@ class DeviceReadings {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['parameter'] = this.parameter;
     data['unit'] = this.unit;
-    data['values'] = this.value;
+    data['value'] = this.value;
     return data;
   }
 }

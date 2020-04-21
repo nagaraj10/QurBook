@@ -72,13 +72,13 @@ class _MyRecordsState extends State<MyRecords> {
   @override
   void initState() {
     rebuildAllBlocks();
-    searchQuery = _searchQueryController.text;
+    searchQuery = _searchQueryController.text.toString();
     print('_searchQueryController.toString() ' + searchQuery);
     if (searchQuery != '') {
       _globalSearchBloc.searchBasedOnMediaType(
-          _searchQueryController.text == null
+          _searchQueryController.text.toString() == null
               ? ''
-              : _searchQueryController.text);
+              : _searchQueryController.text.toString());
     }
     super.initState();
 
@@ -182,7 +182,10 @@ class _MyRecordsState extends State<MyRecords> {
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               child: data.length == 0
-                                  ? Container()
+                                  ? Container(
+                                      /* child: Text('Unable To load Tabs',
+                          style: TextStyle(color: Colors.red)) */
+                                      )
                                   : TabBar(
                                       indicatorWeight: 4,
                                       isScrollable: true,
@@ -347,6 +350,10 @@ class _MyRecordsState extends State<MyRecords> {
       print('inside mediaBlock null');
       _mediaTypeBlock = new MediaTypeBlock();
       _mediaTypeBlock.getMediTypes();
+    }else{
+      _mediaTypeBlock=null;
+        _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock.getMediTypes();
     }
     return StreamBuilder<ApiResponse<MediaTypesResponse>>(
       stream: _mediaTypeBlock.mediaTypeStream,
@@ -501,8 +508,9 @@ class _MyRecordsState extends State<MyRecords> {
     List<Widget> tabWidgetList = new List();
     //tabWidgetList.add(SizedBox(height: 5));
 
-    if (!fromSearch)
-      PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
+    if(!fromSearch)
+
+    PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
 
     data.sort((a, b) {
       return a.categoryDescription
@@ -607,7 +615,7 @@ class _MyRecordsState extends State<MyRecords> {
                       });
                     });
                   } else if (editedValue == '') {
-                    searchQuery = '';
+                    searchQuery='';
                     setState(() {
                       fromSearch = false;
                     });
@@ -695,10 +703,10 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   Widget getResponseForSearchedMedia() {
-    /*  _globalSearchBloc = null;
-    _globalSearchBloc = new GlobalSearchBloc();*/
-    _globalSearchBloc.searchBasedOnMediaType(
-        (searchQuery == null && searchQuery == '') ? '' : searchQuery);
+     _globalSearchBloc = null;
+    _globalSearchBloc = new GlobalSearchBloc();
+    _globalSearchBloc
+        .searchBasedOnMediaType((searchQuery == null && searchQuery=='') ? '' : searchQuery);
 
     return StreamBuilder<ApiResponse<GlobalSearch>>(
       stream: _globalSearchBloc.globalSearchStream,
@@ -801,3 +809,4 @@ class _MyRecordsState extends State<MyRecords> {
     return filteredCategoryData;
   }
 }
+

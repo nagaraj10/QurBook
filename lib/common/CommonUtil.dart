@@ -164,17 +164,11 @@ class CommonUtil {
   String getMetaMasterId(MediaMetaInfo data) {
     List<MediaMasterIds> mediaMasterIdsList = new List();
     if (data.mediaMasterIds.length > 0) {
-      print('Getting into media masters');
       for (MediaMasterIds mediaMasterIds in data.mediaMasterIds) {
-        /* if (mediaMasterIds.fileType == "image/jpg" ||
-            mediaMasterIds.fileType == "image/png") {
-          mediaMasterIdsList.add(mediaMasterIds);
-        } */
         mediaMasterIdsList.add(mediaMasterIds);
       }
     } else {}
 
-    print('mediaMasterID' + mediaMasterIdsList[0].id);
     return mediaMasterIdsList.length > 0 ? mediaMasterIdsList[0].id : '0';
   }
 
