@@ -2,11 +2,15 @@ class SpeechModelResponse {
   String recipientId;
   String text;
 
-  SpeechModelResponse({this.recipientId, this.text});
+  SpeechModelResponse({
+    this.recipientId,
+    this.text,
+  });
 
   SpeechModelResponse.fromJson(Map<String, dynamic> json) {
     recipientId = json['recipient_id'];
     text = json['text'];
+    // imageUrl = json[''];
   }
 
   Map<String, dynamic> toJson() {

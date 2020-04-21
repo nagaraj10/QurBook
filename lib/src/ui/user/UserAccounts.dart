@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
@@ -29,6 +31,7 @@ class _UserAccountsState extends State<UserAccounts>
   TabController _sliverTabController;
   int selectedTab = 0;
   bool _isEditable = false;
+  File imageURIProfile;
 
   @override
   void initState() {
@@ -56,6 +59,12 @@ class _UserAccountsState extends State<UserAccounts>
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
     Sharedbyme sharedbyme = new CommonUtil().getProfileDetails();
+
+    String profilebanner =
+        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
+    if (profilebanner != null) {
+      imageURIProfile = File(profilebanner);
+    }
 
     return Scaffold(
       backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
@@ -109,34 +118,40 @@ class _UserAccountsState extends State<UserAccounts>
                       )
               ],
               flexibleSpace: FlexibleSpaceBar(
-                titlePadding: EdgeInsets.only(left: 40),
-                centerTitle: false,
-                title: Container(
-                  padding: EdgeInsets.all(10),
-                  color: Colors.transparent,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        height: 30,
-                        width: 30,
-                        child: ClipOval(
-                          child: FHBBasicWidget().getProfilePicWidget(myProfile
-                              .response.data.generalInfo.profilePicThumbnail),
+                  titlePadding: EdgeInsets.only(left: 40),
+                  centerTitle: false,
+                  title: Container(
+                    padding: EdgeInsets.all(10),
+                    color: Colors.transparent,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          height: 30,
+                          width: 30,
+                          child: ClipOval(
+                            child: FHBBasicWidget().getProfilePicWidget(
+                                myProfile.response.data.generalInfo
+                                    .profilePicThumbnail),
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 10),
-                      Text(myProfile.response.data.generalInfo.name,
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14.0,
-                              fontWeight: FontWeight.w400))
-                    ],
+                        SizedBox(width: 10),
+                        Text(myProfile.response.data.generalInfo.name,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14.0,
+                                fontWeight: FontWeight.w400))
+                      ],
+                    ),
                   ),
-                ),
-                background: CachedNetworkImage(
-                    imageUrl: Constants.BASEURL_COVERIMAGE, fit: BoxFit.cover),
-              ),
+                  /*  background: CachedNetworkImage(
+                    imageUrl: Constants.BASEURL_COVERIMAGE, fit: BoxFit.cover), */
+                  background: imageURIProfile != null
+                      ? Image.file(imageURIProfile,
+                          fit: BoxFit.cover, width: 100, height: 100)
+                      : CachedNetworkImage(
+                          imageUrl: Constants.BASEURL_COVERIMAGE,
+                          fit: BoxFit.cover)),
             ),
             SliverPersistentHeader(
               delegate: _SliverAppBarDelegate(

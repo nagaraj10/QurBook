@@ -1,5 +1,7 @@
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/model/Authentication/OTPEmailResponse.dart';
 import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
 import 'package:myfhb/src/model/Authentication/SignIn.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
@@ -8,6 +10,7 @@ import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'dart:convert' as convert;
 import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class AuthenticationRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -68,10 +71,10 @@ class AuthenticationRepository {
     }
     //ssfinal response;
     print(mapForSignUp.toString());
-    final response = await _helper.signUpPage("authentication/signup", mapForSignUp);
+    final response =
+        await _helper.signUpPage("authentication/signup", mapForSignUp);
     return SignUp.fromJson(response);
   }
-
 
   Future<AddFamilyOTPResponse> verifyAddFamilyOTP(String otpVerifyData) async {
     final response = await _helper.verifyAddFamilyOTP(
@@ -87,5 +90,13 @@ class AuthenticationRepository {
       }
     } catch (e) {}
     return SignOutResponse.fromJson(response);
+  }
+
+  Future<OTPEmailResponse> verifyOTPFromEmail(String verifyEmailOTP) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    final response = await _helper.verifyOTP(
+        "userProfiles/" + userID + "/verifyMail", verifyEmailOTP);
+    return OTPEmailResponse.fromJson(response);
   }
 }

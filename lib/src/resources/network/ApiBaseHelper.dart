@@ -35,7 +35,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> verifyOTP(String url, String otpVerifyData) async {
+/*   Future<dynamic> verifyOTP(String url, String otpVerifyData) async {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
     };
@@ -47,6 +47,27 @@ class ApiBaseHelper {
       responseJson = _returnResponse(response);
     } on SocketException {
       CommonUtil().networkUI();
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+ */
+
+  Future<dynamic> verifyOTP(String url, String otpVerifyData) async {
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+    };
+
+    var responseJson;
+
+    print('url' + url);
+    print('otpVerifyData' + otpVerifyData);
+    try {
+      final response = await http.post(_baseUrl + url,
+          body: otpVerifyData, headers: requestHeaders);
+      responseJson = _returnResponse(response);
+      print('responseJson' + responseJson.toString());
+    } on SocketException {
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -718,5 +739,27 @@ class ApiBaseHelper {
       CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
+  }
+
+  Future<dynamic> verifyEmail(String url) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    Map<String, String> requestHeaders = {
+      'accept': 'application/json',
+      'Authorization': authToken,
+    };
+
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrl + url, headers: requestHeaders);
+
+      print('response' + response.toString());
+      responseJson = _returnResponse(response);
+
+      print('responseJson' + responseJson.toString());
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
   }
 }

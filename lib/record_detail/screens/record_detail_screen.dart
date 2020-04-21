@@ -389,7 +389,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     mediaIds.add(id);
     _deleteRecordBloc.deleteRecord(mediaIds).then((deleteRecordResponse) {
       if (deleteRecordResponse.success) {
-        Navigator.of(context).pop();
+        _healthReportListForUserBlock.getHelthReportList().then((value) {
+          PreferenceUtil.saveCompleteData(
+              Constants.KEY_COMPLETE_DATA, value.response.data);
+          Navigator.of(context).pop();
+        });
       }
     });
   }
@@ -429,8 +433,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           postAudioToServer(widget.data.id);
         }),
         /*  Padding(
-          padding: const EdgeInsets.all(8.0),
-        ), */
+                                              padding: const EdgeInsets.all(8.0),
+                                            ), */
       ],
     ));
   }
@@ -443,39 +447,39 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   /* Future<Widget> getDialogBoxWithFamilyMember(FamilyData familyData) {
-    return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
-        familyData, context, _keyLoader, (context, value) {
-      /*PreferenceUtil.saveString(Constants.KEY_USERID, value).then((onValue) {
-                                                                Navigator.of(context).pop();
-                                                                Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                                                              });*/
-      print('user id of the family member' + value.toString());
-      print(widget.data.id);
-      Navigator.of(context).pop();
-      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-
-      _healthReportListForUserBlock
-          .switchDataToOtherUser(value, widget.data.id)
-          .then((moveMetaDataResponse) {
-        if (moveMetaDataResponse.success) {
-          print('moveMetaDataResponse.success' + moveMetaDataResponse.message);
-          Navigator.pop(context);
-          Navigator.pop(context);
-        } else {
-          Navigator.pop(context);
-          Navigator.pop(context);
-        }
-      });
-    });
-  } */
+                                        return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
+                                            familyData, context, _keyLoader, (context, value) {
+                                          /*PreferenceUtil.saveString(Constants.KEY_USERID, value).then((onValue) {
+                                                                                                    Navigator.of(context).pop();
+                                                                                                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                                                                                                  });*/
+                                          print('user id of the family member' + value.toString());
+                                          print(widget.data.id);
+                                          Navigator.of(context).pop();
+                                          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                                    
+                                          _healthReportListForUserBlock
+                                              .switchDataToOtherUser(value, widget.data.id)
+                                              .then((moveMetaDataResponse) {
+                                            if (moveMetaDataResponse.success) {
+                                              print('moveMetaDataResponse.success' + moveMetaDataResponse.message);
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            } else {
+                                              Navigator.pop(context);
+                                              Navigator.pop(context);
+                                            }
+                                          });
+                                        });
+                                      } */
 
   Future<Widget> getDialogBoxWithFamilyMember(FamilyData familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, _keyLoader, (context, userId, userName) {
       /*PreferenceUtil.saveString(Constants.KEY_USERID, value).then((onValue) {
-                                                                Navigator.of(context).pop();
-                                                                Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                                                              });*/
+                                                                                                    Navigator.of(context).pop();
+                                                                                                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+                                                                                                  });*/
       print('user id of the family member' + userId.toString());
       print(widget.data.id);
       Navigator.of(context).pop();
@@ -914,33 +918,33 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             ),
 
             /* SizedBox(
-              height: 10.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                OutlineButton(
-                  onPressed: goToPrevious,
-                  child: Text("<"),
-                ),
-                OutlineButton(
-                  onPressed: goToNext,
-                  child: Text(">"),
-                ),
-                SizedBox(
-                  width: 35,
-                ),
-                Container(
-                  width: 50.0,
-                  height: 30.0,
-                  child: Text('$index /' + imagesPath.length.toString()),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    //color: _current == index ? Colors.redAccent : Colors.green,
-                  ),
-                )
-              ],
-            ),*/
+                                                  height: 10.0,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    OutlineButton(
+                                                      onPressed: goToPrevious,
+                                                      child: Text("<"),
+                                                    ),
+                                                    OutlineButton(
+                                                      onPressed: goToNext,
+                                                      child: Text(">"),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 35,
+                                                    ),
+                                                    Container(
+                                                      width: 50.0,
+                                                      height: 30.0,
+                                                      child: Text('$index /' + imagesPath.length.toString()),
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        //color: _current == index ? Colors.redAccent : Colors.green,
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),*/
           ],
         ),
       );
@@ -1009,13 +1013,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   /*showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
-    if (data.metaInfo.hasVoiceNotes) {
-
-      String mediaMetaId= new CommonUtil().getMediaMasterIDForAudioFileType(data.mediaMasterIds);
-      getWidgetForPlayingAudioFromServer(mediaMetaId);
-      //getWidgetForPlayingAudioFromServer('5af2ee90-593e-4672-966d-a2871f70357a');
-    }
-  }*/
+                                        if (data.metaInfo.hasVoiceNotes) {
+                                    
+                                          String mediaMetaId= new CommonUtil().getMediaMasterIDForAudioFileType(data.mediaMasterIds);
+                                          getWidgetForPlayingAudioFromServer(mediaMetaId);
+                                          //getWidgetForPlayingAudioFromServer('5af2ee90-593e-4672-966d-a2871f70357a');
+                                        }
+                                      }*/
 
   showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
     if (data.metaInfo.hasVoiceNotes) {

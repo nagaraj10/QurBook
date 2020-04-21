@@ -40,7 +40,7 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         //backgroundColor: Colors.white,
-        //NOTE commented app bar 
+        //NOTE commented app bar
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: Container(),
@@ -55,7 +55,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   'Welcome',
                   textAlign: TextAlign.start,
                   style: TextStyle(
-                    //TODO chnage theme
+                      //TODO chnage theme
                       color: Color(new CommonUtil().getMyPrimaryColor()),
                       fontSize: 20,
                       fontWeight: FontWeight.w500),
@@ -230,15 +230,17 @@ class _SignInScreenState extends State<SignInScreen> {
                         },
                       ),
                     );
-                  else{
-                     PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
+                  else {
+                    PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
                         int.parse(countryCode));
                     PreferenceUtil.saveString(
+                            Constants.MOB_NUM, phoneTextController.text)
+                        .then((onValue) {});
+                    PreferenceUtil.saveString(
                         CommonConstants.KEY_COUNTRYNAME, _selected.name);
-                         moveToNext(
+                    moveToNext(
                         signInResponse, phoneTextController.text, countryCode);
                   }
-                   
                 });
               }),
         );
@@ -258,6 +260,7 @@ class _SignInScreenState extends State<SignInScreen> {
               enteredMobNumber: phoneNumber,
               selectedCountryCode: countryCode,
               fromSignIn: true,
+              forEmailVerify: false,
             );
           },
         ),

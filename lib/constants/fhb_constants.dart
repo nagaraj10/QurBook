@@ -28,6 +28,7 @@ const String KEY_AUTHTOKEN = 'authToken';
 const String KEY_FAMILYMEMBERID = 'familyMemberId';
 const String KEY_IDDOCSCATEGORYTYPE = 'idDocsCategoryType';
 const String KEY_MEDIADATA = 'mediaData';
+const String KEY_COMPLETE_DATA = 'complete_data';
 
 const String IS_CATEGORYNAME_DEVICES = 'Choose Devices';
 const String KEY_DEVICENAME = 'Device Name';
@@ -73,3 +74,15 @@ const String stop_detecting = 'StopDetecting';
 const String allowDeviceRecognition = 'allowDeviceRecognition';
 const String allowDigitRecognition = 'allowDigitRecognition';
 const String audioFileType = 'audio/mp3';
+
+const String MSG_VERIFYEMAIL_VERIFIED =
+    'Email is already verified by other user.';
+const String MSG_VERIFYEMAIL_SUCCESS =
+    'Verification code have been sent to the email';
+const String COUNTRY_CODE = 'CountryCode';
+const String MSG_EMAIL_OTP_VERIFIED = 'Verified';
+const String PROFILE_EMAIL = 'Email';
+const String KEY_PROFILE_BANNER = 'profileBanner';
+const String KEY_DASHBOARD_BANNER = 'dashboardBanner';
+const String MSG_NO_CAMERA_VOICERECORDS =
+    'No Camera Option Available for Voice Records';

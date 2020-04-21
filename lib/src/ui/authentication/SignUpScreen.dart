@@ -6,8 +6,8 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class SignUpScreen extends StatefulWidget {
   final String enteredMobNumber;
@@ -17,7 +17,8 @@ class SignUpScreen extends StatefulWidget {
   const SignUpScreen(
       {Key key,
       @required this.enteredMobNumber,
-      @required this.selectedCountryCode,@required this.selectedCountry})
+      @required this.selectedCountryCode,
+      @required this.selectedCountry})
       : super(key: key);
 
   @override
@@ -29,7 +30,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final double circleBorderWidth = 2.0;
 
   LoginBloc _loginBloc;
-  TextEditingController phoneNumber, name, email,firstName,middleName,lastName;
+  TextEditingController phoneNumber,
+      name,
+      email,
+      firstName,
+      middleName,
+      lastName;
   String strErrorMsg = '';
   String dropDownValue = 'Male';
   File imageURI;
@@ -42,10 +48,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         text: '+' + widget.selectedCountryCode + ' ' + widget.enteredMobNumber);
     name = new TextEditingController(text: '');
     email = new TextEditingController(text: '');
-        firstName = new TextEditingController(text: '');
+    firstName = new TextEditingController(text: '');
     middleName = new TextEditingController(text: '');
     lastName = new TextEditingController(text: '');
-
   }
 
   @override
@@ -218,7 +223,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         )));
   }
 
-
   Widget genderDropDown() {
     return DropdownButton<String>(
       isExpanded: true,
@@ -248,15 +252,42 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void createUser() {
     if (doValidation()) {
-     _loginBloc
-          .createUser('+' + widget.selectedCountryCode, widget.enteredMobNumber,
-              email.text, dropDownValue, firstName.text, '', '', '', imageURI,middleName.text,lastName.text)
-           .then((onValue) {
-
-              PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
+      _loginBloc
+          .createUser(
+              '+' + widget.selectedCountryCode,
+              widget.enteredMobNumber,
+              email.text,
+              dropDownValue,
+              firstName.text,
+              '',
+              '',
+              '',
+              imageURI,
+              middleName.text,
+              lastName.text)
+          .then((onValue) {
+        PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
             int.parse(widget.selectedCountryCode));
-               PreferenceUtil.saveString(
-                        CommonConstants.KEY_COUNTRYNAME, widget.selectedCountry);
+        PreferenceUtil.saveString(Constants.MOB_NUM, widget.enteredMobNumber)
+            .then((onValue) {
+          PreferenceUtil.saveString(
+                  Constants.COUNTRY_CODE, widget.selectedCountry)
+              .then((onValue) {});
+        });
+        PreferenceUtil.saveString(
+            CommonConstants.KEY_COUNTRYNAME, widget.selectedCountry);
+        /*   Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
+              return OtpVerifyScreen(
+                enteredMobNumber: widget.enteredMobNumber,
+                selectedCountryCode: widget.selectedCountryCode,
+                fromSignIn: false,
+              );
+            },
+          ),
+        ); */
+
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
@@ -264,6 +295,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 enteredMobNumber: widget.enteredMobNumber,
                 selectedCountryCode: widget.selectedCountryCode,
                 fromSignIn: false,
+                forEmailVerify: false,
               );
             },
           ),
@@ -279,7 +311,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
   }
 
-   bool doValidation() {
+  bool doValidation() {
     bool isValid = false;
 
     if (phoneNumber.text == '') {
@@ -288,13 +320,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } /*else if (name.text == '') {
       isValid = false;
       strErrorMsg = 'Enter Name';
-    }*/ else if (firstName.text == '') {
+    }*/
+    else if (firstName.text == '') {
       isValid = false;
       strErrorMsg = 'Enter First Name';
     } /*else if (middleName.text == '') {
       isValid = false;
       strErrorMsg = 'Enter Middle Name';
-    } */else if (lastName.text == '') {
+    } */
+    else if (lastName.text == '') {
       isValid = false;
       strErrorMsg = 'Enter LastName';
     } else {

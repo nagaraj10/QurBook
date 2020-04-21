@@ -395,7 +395,9 @@ class CommonUtil {
         phoneNumber: generalInfo.phoneNumber,
         createdOn: generalInfo.createdOn,
         profilePicThumbnail: profilePicThumbnail,
-        qualifiedFullName: qualifiedFullName);
+        qualifiedFullName: qualifiedFullName,
+        isEmailVerified: generalInfo.isEmailVerified,
+        isTempUser: generalInfo.isTempUser);
 
     return new familyMember.Sharedbyme(
         profileData: profileData, linkedData: linkedData);
@@ -754,5 +756,26 @@ class CommonUtil {
         ],
       ),
     );
+  }
+
+  String conCatenateBloodGroup(String bloodGroup) {
+    String bloodGroupClone = '';
+    if (bloodGroup != null && bloodGroup != '') {
+      var bloodGroupSplitName = bloodGroup.split('_');
+      if (bloodGroupSplitName.length > 1) {
+        bloodGroupClone = bloodGroupSplitName[0] + bloodGroupSplitName[1];
+      } else {
+        var bloodGroupSplitName = bloodGroup.split(' ');
+        if (bloodGroupSplitName.length > 1) {
+          bloodGroupClone = bloodGroupSplitName[0] + bloodGroupSplitName[1];
+        }
+      }
+    } else {}
+
+    if (bloodGroupClone.contains('ve')) {
+    } else {
+      bloodGroupClone = bloodGroupClone + 've';
+    }
+    return bloodGroupClone;
   }
 }

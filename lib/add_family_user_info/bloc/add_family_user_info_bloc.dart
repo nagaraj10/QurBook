@@ -8,6 +8,7 @@ import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
 
 class AddFamilyUserInfoBloc extends BaseBloc {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
@@ -48,13 +49,30 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   Stream<ApiResponse<UpdateAddFamilyRelationInfo>>
       get updateRelationshipStream => _updatedRelationShipController.stream;
 
+//5
+  StreamController _verifyEmailController;
+  StreamSink<ApiResponse<VerifyEmailResponse>> get verifyEmailSink =>
+      _verifyEmailController.sink;
+
+  Stream<ApiResponse<VerifyEmailResponse>> get verifyEmailStream =>
+      _verifyEmailController.stream;
+
   String userId;
 
-  String name, phoneNo, email, gender, bloodGroup, dateOfBirth, relationship,firstName,middleName,lastName;
+  String name,
+      phoneNo,
+      email,
+      gender,
+      bloodGroup,
+      dateOfBirth,
+      relationship,
+      firstName,
+      middleName,
+      lastName;
 
   String relationshipJsonString;
 
-  File profilePic;
+  File profilePic, profileBanner;
 
   @override
   void dispose() {
@@ -62,6 +80,10 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
     _relationshipListController.close();
     _myProfileController.close();
+    _userProfileController.close();
+    _updatedRelationShipController.close();
+    _verifyEmailController.close();
+
   }
 
   AddFamilyUserInfoBloc() {
@@ -77,6 +99,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
     _updatedRelationShipController =
         StreamController<ApiResponse<UpdateAddFamilyRelationInfo>>();
+    _verifyEmailController =
+        StreamController<ApiResponse<VerifyEmailResponse>>();
   }
 
   Future<RelationShipResponseList> getCustomRoles() async {
@@ -147,8 +171,18 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
     try {
       updateAddFamilyInfo =
-          await addFamilyUserInfoRepository.updateSelfProfileInfo(userId, name,
-              phoneNo, email, gender, bloodGroup, dateOfBirth, profilePic,firstName,middleName,lastName);
+          await addFamilyUserInfoRepository.updateSelfProfileInfo(
+              userId,
+              name,
+              phoneNo,
+              email,
+              gender,
+              bloodGroup,
+              dateOfBirth,
+              profilePic,
+              firstName,
+              middleName,
+              lastName);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));
@@ -156,5 +190,20 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     }
 
     return updateAddFamilyInfo;
+  }
+
+  Future<VerifyEmailResponse> verifyEmail() async {
+    verifyEmailSink.add(ApiResponse.loading('verify email'));
+    VerifyEmailResponse verifyEmailResponse;
+
+    try {
+      verifyEmailResponse = await addFamilyUserInfoRepository.verifyEmail();
+//      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
+    } catch (e) {
+      verifyEmailSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+
+    return verifyEmailResponse;
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:myfhb/src/model/Authentication/OTPEmailResponse.dart';
 import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/AuthenticationRepository.dart';
@@ -22,14 +23,22 @@ class OTPVerifyBloc with Validators implements BaseBloc {
   StreamSink<ApiResponse<OTPResponse>> get otpSink => _otpVerifyController.sink;
   Stream<ApiResponse<OTPResponse>> get otpStream => _otpVerifyController.stream;
 
+  StreamController _otpFromEmailController;
+  StreamSink<ApiResponse<OTPEmailResponse>> get otpFromEmailSink =>
+      _otpFromEmailController.sink;
+  Stream<ApiResponse<OTPEmailResponse>> get otpFromEmailStream =>
+      _otpFromEmailController.stream;
+
   OTPVerifyBloc() {
     _otpVerifyController = StreamController<ApiResponse<OTPResponse>>();
     _authenticationRepository = AuthenticationRepository();
+    _otpFromEmailController = StreamController<ApiResponse<OTPEmailResponse>>();
   }
 
   @override
   void dispose() {
     _otpVerifyController?.close();
+    _otpFromEmailController?.close();
   }
 
   Future<OTPResponse> verifyOtp(String enteredMobNumber,
@@ -79,6 +88,24 @@ class OTPVerifyBloc with Validators implements BaseBloc {
       print(e);
     }
     return otpResponse;
+  }
+
+  Future<OTPEmailResponse> verifyOTPFromEmail(String otp) async {
+    var verifyEmailOTP = {};
+    verifyEmailOTP['verificationCode'] = otp;
+
+    var jsonString = convert.jsonEncode(verifyEmailOTP);
+
+    otpFromEmailSink.add(ApiResponse.loading('verify otp'));
+    OTPEmailResponse otpEmailResponse;
+    try {
+      otpEmailResponse =
+          await _authenticationRepository.verifyOTPFromEmail(jsonString);
+    } catch (e) {
+      otpFromEmailSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+    return otpEmailResponse;
   }
 }
 

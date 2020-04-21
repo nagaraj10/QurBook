@@ -603,6 +603,7 @@ class CommonDialogBox {
     }
 
     setFileName(fileNameClone.text);
+    print('$categoryName in getDialogForIDDocs');
     if (modeOfSave) {
       loadMemoText(mediaMetaInfo.metaInfo.memoText != null
           ? mediaMetaInfo.metaInfo.memoText
@@ -1697,11 +1698,16 @@ class CommonDialogBox {
 
               print('I am here updateMediaResponse' +
                   updateMediaResponse.response.data.mediaMetaInfo.id);
-              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                  .pop();
+              _healthReportListForUserBlock.getHelthReportList().then((value) {
+                PreferenceUtil.saveCompleteData(
+                    Constants.KEY_COMPLETE_DATA, value.response.data);
 
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
+
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              });
             }
           });
         } else {
@@ -1767,21 +1773,36 @@ class CommonDialogBox {
               .then((postImageResponse) {
             print('output audio mediaMaster' +
                 postImageResponse.response.data.mediaMasterId);
+
+            _healthReportListForUserBlock.getHelthReportList().then((value) {
+              PreferenceUtil.saveCompleteData(
+                  Constants.KEY_COMPLETE_DATA, value.response.data);
+
+              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                  .pop();
+
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            });
+          });
+        } else if (k == imagePathMain.length - 1) {
+          _healthReportListForUserBlock.getHelthReportList().then((value) {
+            PreferenceUtil.saveCompleteData(
+                Constants.KEY_COMPLETE_DATA, value.response.data);
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
             Navigator.of(context).pop();
             Navigator.of(context).pop();
           });
-        } else if (k == imagePathMain.length - 1) {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
         } else if (k == imagePathMain.length && modeOfSave == true) {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          _healthReportListForUserBlock.getHelthReportList().then((value) {
+            PreferenceUtil.saveCompleteData(
+                Constants.KEY_COMPLETE_DATA, value.response.data);
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          });
         }
 
         k++;
@@ -1795,12 +1816,17 @@ class CommonDialogBox {
       _healthReportListForUserBlock
           .saveImage(audioPathMain, mediaMetaID, '')
           .then((postImageResponse) {
-        print('output audio mediaMaster' +
+        print('output audio mediaMaster saveAudioFile' +
             postImageResponse.response.data.mediaMasterId);
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        _healthReportListForUserBlock.getHelthReportList().then((value) {
+          PreferenceUtil.saveCompleteData(
+              Constants.KEY_COMPLETE_DATA, value.response.data);
 
-        Navigator.of(context).pop();
-        Navigator.of(context).pop();
+          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+          Navigator.of(context).pop();
+          Navigator.of(context).pop();
+        });
       });
     }
   }

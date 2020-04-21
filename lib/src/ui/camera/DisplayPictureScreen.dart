@@ -1889,10 +1889,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                         decoration: BoxDecoration(),
                         child: Container(
                           height: double.infinity,
-                          child: Image.file(
-                            File(imgUrl),
-                            fit: BoxFit.scaleDown,
-                          ),
+                          child: imgUrl.contains('pdf')
+                              ? Image.asset('assets/icons/attach.png')
+                              : Image.file(
+                                  File(imgUrl),
+                                  fit: BoxFit.scaleDown,
+                                ),
                         ));
                   },
                 );

@@ -4,6 +4,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class ImageSlider extends StatefulWidget {
   final List<dynamic> imageList;
@@ -27,17 +28,18 @@ class _ImageSliderState extends State<ImageSlider> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
-            Expanded(
-                flex: 1,
-                child: IconButton(
-                  icon: Icon(Icons.cancel),
-                  onPressed: () => Navigator.of(context).pop(),
-                  color: Colors.white,
-                )),
-            Expanded(
-              flex: 7,
-              child: _loadImage(widget.imageList),
+            Padding(
+              padding: EdgeInsets.only(top: 30, right: 10),
+              child: OutlineButton(
+                  child: Text('Close'),
+                  textColor: Colors.white70,
+                  borderSide: BorderSide(color: Colors.white70),
+                  onPressed: Navigator.of(context).pop),
             ),
+
+            Expanded(flex: 7, child: showPhotoView(widget.imageList)
+                //_loadImage(widget.imageList),
+                ),
             //Expanded(flex: 1,child: SizedBox(height: 5,)),
           ],
         ),
@@ -45,7 +47,7 @@ class _ImageSliderState extends State<ImageSlider> {
     );
   }
 
-  Widget _loadImage(List<dynamic> imagesPath) {
+  /*  Widget _loadImage(List<dynamic> imagesPath) {
     index = _current + 1;
     _current = 0;
     length = imagesPath.length;
@@ -53,9 +55,9 @@ class _ImageSliderState extends State<ImageSlider> {
       return Row(
         children: <Widget>[
           /* Expanded(
-            flex: 0,
-            child: IconButton(icon: Icon(Icons.chevron_left),onPressed: (){goToPrevious();},color: Colors.white,iconSize: 30.0,),
-          ),*/
+                        flex: 0,
+                        child: IconButton(icon: Icon(Icons.chevron_left),onPressed: (){goToPrevious();},color: Colors.white,iconSize: 30.0,),
+                      ),*/
           Expanded(
             flex: 1,
             child: CarouselSlider(
@@ -94,6 +96,8 @@ class _ImageSliderState extends State<ImageSlider> {
     }
   }
 
+  */
+
   goToPrevious() {
     carouselSlider.previousPage(
         duration: Duration(milliseconds: 300), curve: Curves.ease);
@@ -102,5 +106,36 @@ class _ImageSliderState extends State<ImageSlider> {
   goToNext() {
     carouselSlider.nextPage(
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
+  }
+
+  showPhotoView(List imageList) {
+    return Container(
+        child: PhotoViewGallery.builder(
+      scrollPhysics: const BouncingScrollPhysics(),
+      builder: (BuildContext context, int index) {
+        return PhotoViewGalleryPageOptions(
+            imageProvider: MemoryImage(imageList[index]),
+            initialScale: PhotoViewComputedScale.contained * 1.0,
+            minScale: PhotoViewComputedScale.contained * 1.0,
+            maxScale: PhotoViewComputedScale.contained * 2.0
+            //heroAttributes: HeroAttributes(tag: galleryItems[index].id),
+            );
+      },
+      itemCount: imageList.length,
+      loadingBuilder: (context, event) => Center(
+        child: Container(
+          width: 20.0,
+          height: 20.0,
+          child: CircularProgressIndicator(
+            value: event == null
+                ? 0
+                : event.cumulativeBytesLoaded / event.expectedTotalBytes,
+          ),
+        ),
+      ),
+      /*  backgroundDecoration: widget.backgroundDecoration,
+      pageController: widget.pageController,
+      onPageChanged: onPageChanged, */
+    ));
   }
 }

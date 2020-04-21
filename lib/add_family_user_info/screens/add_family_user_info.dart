@@ -19,6 +19,7 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 
 import '../../common/CommonConstants.dart';
 
@@ -65,12 +66,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   List<int> fetchedProfileData;
 
-  /* 'AB',
+  List<String> bloodGroupArray = [
+    'A',
+    'B',
+    'O',
+    'AB',
     'A1',
     'A2',
     'A1B',
-    'A2B', */
-  List<String> bloodGroupArray = ['A', 'B', 'O', 'Others/ Not Known'];
+    'A2B',
+    'Others/ Not Known'
+  ];
 
   List<String> bloodRangeArray = ['+', '-', 'Others/ Not Known'];
 
@@ -114,6 +120,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
       }
     });
+
+    String profilebanner =
+        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
+    if (profilebanner != null) {
+      MySliverAppBar.imageURIProfile = File(profilebanner);
+    }
 
     if (widget.arguments.fromClass == CommonConstants.my_family) {
       addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData
@@ -160,6 +172,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       updateProfile = true;
       addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData
           .id; //widget.arguments.addFamilyUserInfo.id;
+
+      print(widget.arguments.sharedbyme.profileData.isEmailVerified.toString() +
+          'Email verified');
 
       if (widget.arguments.sharedbyme.profileData.isVirtualUser) {
         MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
@@ -285,17 +300,23 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
       } else {
         var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
-        for (String bloodGroup in bloodGroupArray) {
+        if (bloodGroupSplitName.length > 1) {
+          for (String bloodGroup in bloodGroupArray) {
 //      var bloodgroupClone = bloodGroup.split(' ');
-          if (bloodGroupSplitName[0] == bloodGroup) {
-            selectedBloodGroup = bloodGroup;
-          }
+            if (bloodGroupSplitName[0] == bloodGroup) {
+              selectedBloodGroup = bloodGroup;
+            }
 
-          for (String bloodRange in bloodRangeArray) {
-            if (bloodGroupSplitName[1][0] == bloodRange) {
-              selectedBloodRange = bloodRange;
+            for (String bloodRange in bloodRangeArray) {
+              if (bloodGroupSplitName[1][0] == bloodRange) {
+                selectedBloodRange = bloodRange;
+              }
             }
           }
+        } else {
+          selectedBloodGroup=null;
+          selectedBloodRange=null;
+
         }
       }
     }
@@ -394,7 +415,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   Row(
                     children: <Widget>[getGenderDetails()],
                   ),
-                  Row(
+                   Row(
                     children: <Widget>[
                       getBloodGroupDetails(),
                       getBloodRangeDetails()
@@ -532,39 +553,68 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   Widget _showEmailAddTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
-        child: TextField(
-          cursorColor: Theme.of(context).primaryColor,
-          controller: emailController,
-          maxLines: 1,
-          enabled: widget.arguments.fromClass == CommonConstants.user_update
-              ? true
-              : false,
-          keyboardType: TextInputType.text,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            TextField(
+              cursorColor: Theme.of(context).primaryColor,
+              controller: emailController,
+              maxLines: 1,
+              enabled: widget.arguments.fromClass == CommonConstants.user_update
+                  ? true
+                  : false,
+              keyboardType: TextInputType.text,
 //          focusNode: emailFocus,
-          autofocus: false,
-          textInputAction: TextInputAction.done,
-          onSubmitted: (term) {
-            FocusScope.of(context).requestFocus(genderFocus);
-          },
-          style: new TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16.0,
-              color: ColorUtils.blackcolor),
-          decoration: InputDecoration(
-            labelText: CommonConstants.email_address_optional,
-            hintText: CommonConstants.email_address_optional,
-            labelStyle: TextStyle(
-                fontSize: 13.0,
-                fontWeight: FontWeight.w400,
-                color: ColorUtils.myFamilyGreyColor),
-            hintStyle: TextStyle(
-              fontSize: 14.0,
-              color: ColorUtils.myFamilyGreyColor,
-              fontWeight: FontWeight.w400,
+              autofocus: false,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (term) {
+                FocusScope.of(context).requestFocus(genderFocus);
+              },
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+              decoration: InputDecoration(
+                labelText: CommonConstants.email_address_optional,
+                hintText: CommonConstants.email_address_optional,
+                labelStyle: TextStyle(
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.myFamilyGreyColor),
+                hintStyle: TextStyle(
+                  fontSize: 14.0,
+                  color: ColorUtils.myFamilyGreyColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: new UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: ColorUtils.myFamilyGreyColor)),
+              ),
             ),
-            border: new UnderlineInputBorder(
-                borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          ),
+            widget.arguments.fromClass == CommonConstants.user_update
+                ? ((widget.arguments.sharedbyme.profileData.isEmailVerified ==
+                                null &&
+                            widget.arguments.sharedbyme.profileData.email !=
+                                '') ||
+                        (widget.arguments.sharedbyme.profileData
+                                    .isEmailVerified ==
+                                false &&
+                            widget.arguments.sharedbyme.profileData.email !=
+                                ''))
+                    ? GestureDetector(
+                        child: Text('Tap to verify Email address',
+                            style: TextStyle(
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w400,
+                                color: Color(
+                                    new CommonUtil().getMyPrimaryColor()))),
+                        onTap: () {
+                          verifyEmail();
+                        },
+                      )
+                    : Text('')
+                : Text('')
+          ],
         ));
   }
 
@@ -1041,6 +1091,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     addFamilyUserInfoBloc.middleName = middleNameController.text;
     addFamilyUserInfoBloc.lastName = lastNameController.text;
 
+    addFamilyUserInfoBloc.profileBanner = MySliverAppBar.imageURIProfile;
+
     if (widget.arguments.fromClass == CommonConstants.my_family) {
       addFamilyUserInfoBloc.relationship = selectedRelationShip.roleName;
       addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData.id;
@@ -1099,6 +1151,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       if (doValidation()) {
+        if (addFamilyUserInfoBloc.profileBanner != null) {
+          PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+              addFamilyUserInfoBloc.profileBanner.path);
+        }
         CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
 
         addFamilyUserInfoBloc.updateSelfProfile().then((value) {
@@ -1130,7 +1186,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       addFamilyUserInfoBloc.relationship = relationShipController.text;
 
       if (firstNameController.text.length > 0 &&
-          //emailController.text.length > 0 &&
+          emailController.text.length > 0 &&
           mobileNoController.text.length > 0 &&
           selectedGender.length > 0 &&
           dateOfBirthController.text.length > 0 &&
@@ -1315,21 +1371,62 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           ),
         ));
   }
+
+  void verifyEmail() {
+    addFamilyUserInfoBloc.verifyEmail().then((value) {
+      if (value.success &&
+          value.message.contains(Constants.MSG_VERIFYEMAIL_VERIFIED)) {
+      } else {
+        PreferenceUtil.saveString(
+            Constants.PROFILE_EMAIL, emailController.text);
+        print(PreferenceUtil.getStringValue(Constants.MOB_NUM) + " NUMBER");
+
+        Navigator.of(context)
+            .push(MaterialPageRoute(
+                builder: (context) => OtpVerifyScreen(
+                      enteredMobNumber:
+                          PreferenceUtil.getStringValue(Constants.MOB_NUM),
+                      selectedCountryCode: PreferenceUtil.getIntValue(
+                              CommonConstants.KEY_COUNTRYCODE)
+                          .toString(),
+                      fromSignIn: true,
+                      forEmailVerify: true,
+                    )))
+            .then((value) {
+          Navigator.popUntil(context, (Route<dynamic> route) {
+            bool shouldPop = false;
+            if (route.settings.name == '/user_accounts') {
+              // Hide Loading
+//                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+//                    .pop();
+              shouldPop = true;
+            }
+            return shouldPop;
+          });
+        });
+      }
+    });
+  }
 }
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;
   static File imageURI;
+  static File imageURIProfile;
+
   List<int> profileData;
+
+  bool imageSet = false;
 
   final AddFamilyUserInfoArguments arguments;
   final String fromClass;
 
-  MySliverAppBar(
-      {@required this.expandedHeight,
-      this.profileData,
-      this.fromClass,
-      this.arguments});
+  MySliverAppBar({
+    @required this.expandedHeight,
+    this.profileData,
+    this.fromClass,
+    this.arguments,
+  });
 
   @override
   Widget build(
@@ -1338,9 +1435,20 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
       fit: StackFit.expand,
       overflow: Overflow.visible,
       children: [
-        CachedNetworkImage(
+        InkWell(
+            onTap: () {
+              saveMediaDialog(context, false);
+            },
+            child: imageURIProfile != null
+                ? Image.file(imageURIProfile,
+                    fit: BoxFit.cover, width: 100, height: 100)
+                : Image.network(
+                    "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                    fit: BoxFit.cover,
+                  )),
+        /* CachedNetworkImage(
             imageUrl: Constants.BASEURL_COVERIMAGE, fit: BoxFit.cover),
-        /*  Image.network(
+          Image.network(
           "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
           fit: BoxFit.cover,
         ), */
@@ -1374,7 +1482,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
           left: 24, //MediaQuery.of(context).size.width / 4,
           child: InkWell(
               onTap: () {
-                saveMediaDialog(context);
+                saveMediaDialog(context, true);
               },
               child: Opacity(
                 opacity: (1 - shrinkOffset / expandedHeight),
@@ -1396,7 +1504,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
     );
   }
 
-  saveMediaDialog(BuildContext cont) {
+  saveMediaDialog(BuildContext cont, bool isProfileImage) {
     return showDialog<void>(
       context: cont,
       builder: (BuildContext context) {
@@ -1416,7 +1524,13 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                         var image =
                             ImagePicker.pickImage(source: ImageSource.gallery);
                         image.then((value) {
-                          imageURI = value;
+                          print('file Path' + value.path);
+                          if (isProfileImage) {
+                            imageURI = value;
+                          } else {
+                            imageURIProfile = value;
+                            imageSet = true;
+                          }
 
                           (cont as Element).markNeedsBuild();
                         });
@@ -1433,8 +1547,12 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                         var image =
                             ImagePicker.pickImage(source: ImageSource.camera);
                         image.then((value) {
-                          imageURI = value;
-
+                          if (isProfileImage)
+                            imageURI = value;
+                          else {
+                            imageURIProfile = value;
+                            imageSet = true;
+                          }
                           (cont as Element).markNeedsBuild();
                         });
                       },

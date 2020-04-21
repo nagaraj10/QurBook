@@ -170,13 +170,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
+      print('response from maya ' + jsonResponse.toString());
       List<dynamic> list = jsonResponse;
       SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
-      print(res.text);
       Conversation model = new Conversation(
           isMayaSaid: true,
           text: res.text,
-          imageUrl: 'http://placehold.it/120x120&text=image1',
+          imageUrl: '',
           name: prof.response.data.generalInfo.name);
       conversations.add(model);
       setState(() {});
@@ -222,7 +222,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 //          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Text(
-              "${c.name.toUpperCase()}",
+              c.name.toUpperCase(),
               style: Theme.of(context).textTheme.body1,
               softWrap: true,
             ),
@@ -247,7 +247,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                   ),
                 ),
                 child: Text(
-                  "${c.text}",
+                  c.text,
                   style: Theme.of(context).textTheme.body1.apply(
                         color: Colors.white,
                       ),
@@ -256,7 +256,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             ),
             //SizedBox(height: 15,),
             Text(
-              "${currentDate}",
+              currentDate,
               style:
                   Theme.of(context).textTheme.body1.apply(color: Colors.grey),
             ),
@@ -318,17 +318,36 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     bottomRight: Radius.circular(25),
                   ),
                 ),
-                child: Text(
-                  "${c.text}",
-                  style: Theme.of(context).textTheme.body1.apply(
-                        color: Colors.white,
-                      ),
+                child: Column(
+                  children: <Widget>[
+                    c.imageUrl != null
+                        ? Padding(
+                            child: Image.network(
+                              c.imageUrl,
+                              height:
+                                  (MediaQuery.of(context).size.width * .6) - 5,
+                              width:
+                                  (MediaQuery.of(context).size.width * .6) - 5,
+                              fit: BoxFit.cover,
+                            ),
+                            padding: EdgeInsets.all(10),
+                          )
+                        : SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
+                    Text(
+                      c.text,
+                      style: Theme.of(context).textTheme.body1.apply(
+                            color: Colors.white,
+                          ),
+                    )
+                  ],
                 ),
               ),
             ),
-            //SizedBox(height: 15,),
             Text(
-              "${currentDate}",
+              currentDate,
               style:
                   Theme.of(context).textTheme.body1.apply(color: Colors.grey),
             ),

@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
@@ -119,14 +120,16 @@ class PreferenceUtil {
   static List<CategoryData> getCategoryType() {
     List<CategoryData> categoryData = new List();
 
-    if (_prefsInstance == null) {}
-    json
-        .decode(_prefsInstance.getString(Constants.KEY_CATEGORYLIST))
-        .forEach((map) {
-      categoryData.add(new CategoryData.fromJson(map));
-    });
+    try {
+      if (_prefsInstance == null) {}
+      json
+          .decode(_prefsInstance.getString(Constants.KEY_CATEGORYLIST))
+          .forEach((map) {
+        categoryData.add(new CategoryData.fromJson(map));
+      });
 
-    return categoryData;
+      return categoryData;
+    } catch (e) {}
   }
 
   static Future<bool> clearAllData() async {
@@ -184,6 +187,25 @@ class PreferenceUtil {
   }
 
   static int getIntValue(String key) {
-    return _prefsInstance.getInt(key);
+    try {
+      return _prefsInstance.getInt(key);
+    } catch (e) {}
+  }
+
+  static Future<bool> saveCompleteData(
+      String keyCompletedData, CompleteData completeData) async {
+    print('profile data in shared preference : $completeData');
+    var instance = await _prefs;
+    String completeDataStr = json.encode(completeData);
+
+    return instance.setString(keyCompletedData, completeDataStr);
+  }
+
+  static CompleteData getCompleteData(String keyCompletedData) {
+    try {
+      if (_prefsInstance == null) {}
+      return CompleteData.fromJson(
+          json.decode(_prefsInstance.getString(keyCompletedData)));
+    } catch (e) {}
   }
 }

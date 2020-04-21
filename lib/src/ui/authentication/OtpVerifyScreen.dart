@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
@@ -8,17 +9,20 @@ import 'package:myfhb/src/blocs/Authentication/OTPVerifyBloc.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
   final String enteredMobNumber;
   final String selectedCountryCode;
   final bool fromSignIn;
+  final bool forEmailVerify;
 
   const OtpVerifyScreen(
       {Key key,
       @required this.enteredMobNumber,
       @required this.selectedCountryCode,
-      this.fromSignIn})
+      this.fromSignIn,
+      this.forEmailVerify})
       : super(key: key);
 
   @override
@@ -31,9 +35,12 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   TextEditingController controller3 = new TextEditingController();
   TextEditingController controller4 = new TextEditingController();
   TextEditingController currController = new TextEditingController();
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   OTPVerifyBloc _otpVerifyBloc;
+  AddFamilyUserInfoBloc addFamilyUserInfoBloc;
+
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+
   @override
   void dispose() {
     super.dispose();
@@ -50,6 +57,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     super.initState();
     currController = controller1;
     _otpVerifyBloc = OTPVerifyBloc();
+    addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
   }
 
   @override
@@ -94,18 +102,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
           alignment: Alignment.center,
-          /*  decoration: new BoxDecoration(
-            //color: Color.fromRGBO(0, 0, 0, 0.1),
-            border: new Border(
-                top: BorderSide.none,
-                left: BorderSide.none,
-                right: BorderSide.none,
-                bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                //width: 1.0,
-                //color: Colors.deepPurple.withOpacity(0.5)
-                ),
-            //borderRadius: new BorderRadius.circular(4.0)
-          ), */
           child: new TextField(
             //obscureText: true,
             inputFormatters: [
@@ -124,18 +120,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
           alignment: Alignment.center,
-          /* decoration: new BoxDecoration(
-            //color: Color.fromRGBO(0, 0, 0, 0.1),
-            border: new Border(
-                top: BorderSide.none,
-                left: BorderSide.none,
-                right: BorderSide.none,
-                bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                //width: 1.0,
-                //color: Colors.deepPurple.withOpacity(0.5)
-                ),
-            //borderRadius: new BorderRadius.circular(4.0)
-          ), */
           child: new TextField(
             //obscureText: true,
             inputFormatters: [
@@ -153,19 +137,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       Padding(
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
-          alignment: Alignment.center,
-          /*  decoration: new BoxDecoration(
-            //color: Color.fromRGBO(0, 0, 0, 0.1),
-            border: new Border(
-                top: BorderSide.none,
-                left: BorderSide.none,
-                right: BorderSide.none,
-                bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                //width: 1.0,
-                //color: Colors.deepPurple.withOpacity(0.5)
-                ),
-            //borderRadius: new BorderRadius.circular(4.0)
-          ), */
           child: new TextField(
             //obscureText: true,
             inputFormatters: [
@@ -188,28 +159,32 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     ];
 
     return Scaffold(
-        key: scaffold_state,
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          title: Text('Otp verification', style: TextStyle(fontSize: 18)),
+          title: Text('Otp Verification', style: TextStyle(fontSize: 18)),
           leading: IconButton(
               icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
                 Navigator.of(context).pop();
               }),
         ),
+        key: scaffold_state,
         body: Center(
             child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(top: 40),
-              child: Text(
-                'Please enter the otp received',
-                style: TextStyle(
-                    color: Colors.black38, fontWeight: FontWeight.w500),
-              ),
-            ),
+            !widget.forEmailVerify
+                ? Padding(
+                    padding: EdgeInsets.only(top: 40),
+                    child: Text(
+                      'Please enter the verification number',
+                      style: TextStyle(
+                          color: Colors.black38, fontWeight: FontWeight.w500),
+                    ),
+                  )
+                : Container(
+                    height: 20,
+                  ),
             Expanded(
               child: ImageIcon(
                 AssetImage('assets/icons/otp_icon.png'),
@@ -217,6 +192,35 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 color: Color(CommonUtil().getMyPrimaryColor()),
               ),
             ),
+            widget.forEmailVerify
+                ? Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Text(
+                          'Enter the OTP received at',
+                          style: TextStyle(
+                              color: Colors.black38,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Text(
+                          PreferenceUtil.getStringValue(
+                                      Constants.PROFILE_EMAIL) !=
+                                  null
+                              ? PreferenceUtil.getStringValue(
+                                  Constants.PROFILE_EMAIL)
+                              : '',
+                          style: TextStyle(
+                              color: Colors.black38,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(),
             Expanded(
                 flex: 2,
                 child: Column(
@@ -237,15 +241,19 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   ))),
                       SizedBox(height: 20),
                       Text(
-                        'Didn\'t receive the otp?',
+                        'Don' 't receive the otp?',
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       FlatButton(
                           onPressed: () {
-                            generateOtp(
-                                _otpVerifyBloc,
-                                widget.selectedCountryCode,
-                                widget.enteredMobNumber);
+                            if (widget.forEmailVerify) {
+                              verifyOTPFromEmai();
+                            } else {
+                              generateOtp(
+                                  _otpVerifyBloc,
+                                  widget.selectedCountryCode,
+                                  widget.enteredMobNumber);
+                            }
                           },
                           child: Text(
                             'Resend Code',
@@ -426,15 +434,27 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                       controller2.text +
                                       controller3.text +
                                       controller4.text;
-                                  _otpVerifyBloc
-                                      .verifyOtp(
-                                          widget.enteredMobNumber,
-                                          widget.selectedCountryCode,
-                                          otp,
-                                          widget.fromSignIn)
-                                      .then((otpResponse) {
-                                    checkOTPResponse(otpResponse);
-                                  });
+                                  if (widget.forEmailVerify) {
+                                    _otpVerifyBloc
+                                        .verifyOTPFromEmail(otp)
+                                        .then((value) {
+                                      if (value.success &&
+                                          value.message ==
+                                              Constants.MSG_EMAIL_OTP_VERIFIED)
+                                        Navigator.of(context);
+                                    });
+                                  } else {
+                                    _otpVerifyBloc
+                                        .verifyOtp(
+                                            widget.enteredMobNumber,
+                                            widget.selectedCountryCode,
+                                            otp,
+                                            widget.fromSignIn)
+                                        .then((otpResponse) {
+                                      checkOTPResponse(otpResponse);
+                                    });
+                                  }
+
                                   //matchOtp();
                                 },
                                 child: Icon(Icons.done,
@@ -736,12 +756,21 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     controller2.text +
                     controller3.text +
                     controller4.text;
-                _otpVerifyBloc
-                    .verifyOtp(widget.enteredMobNumber,
-                        widget.selectedCountryCode, otp, widget.fromSignIn)
-                    .then((otpResponse) {
-                  checkOTPResponse(otpResponse);
-                });
+
+                if (widget.forEmailVerify) {
+                  _otpVerifyBloc.verifyOTPFromEmail(otp).then((value) {
+                    if (value.success &&
+                        value.message == Constants.MSG_EMAIL_OTP_VERIFIED)
+                      Navigator.of(context);
+                  });
+                } else {
+                  _otpVerifyBloc
+                      .verifyOtp(widget.enteredMobNumber,
+                          widget.selectedCountryCode, otp, widget.fromSignIn)
+                      .then((otpResponse) {
+                    checkOTPResponse(otpResponse);
+                  });
+                }
               }),
         );
       },
@@ -835,7 +864,15 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
             PreferenceUtil.saveString(
                     Constants.MOB_NUM, otpResponse.response.phoneNumber)
                 .then((onValue) {
-              moveToDashboardScreen();
+              PreferenceUtil.saveString(
+                      Constants.COUNTRY_CODE, widget.selectedCountryCode)
+                  .then((onValue) {
+                PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
+                        int.parse(widget.selectedCountryCode))
+                    .then((value) {
+                  moveToDashboardScreen();
+                });
+              });
             });
           });
         });
@@ -845,42 +882,15 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
 
   void generateOtp(
       OTPVerifyBloc bloc, String selectedCountryCode, String enteredMobNumber) {
-    /*StreamBuilder(
-      stream: bloc.verifyOtp,
-      builder: (context, snapshot) {
-        return Container(
-          //padding: EdgeInsets.all(20),
-          constraints: BoxConstraints(maxWidth: 220),
-          child: RaisedGradientButton(
-              child: Text(
-                'NEXT',
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-              gradient: LinearGradient(
-                colors: <Color>[
-                  const Color(fhbColors.gradient1),
-                  const Color(fhbColors.gradient2)
-                ],
-              ),
-              onPressed: () {
-                bloc
-                    .submit(enteredMobNumber, selectedCountryCode)
-                    .then((signInResponse) {
-                  showDialog(
-                      context: context,
-                      child: new AlertDialog(
-                        title: new Text("MyFHB"),
-                        content: new Text(signInResponse.message),
-                      ));
-                });
-              }),
-        );
-      },
-    );*/
-
     bloc
         .generateOTP(widget.enteredMobNumber, widget.selectedCountryCode,
             widget.fromSignIn)
         .then((onValue) {});
+  }
+
+  void verifyOTPFromEmai() {
+    addFamilyUserInfoBloc.verifyEmail().then((value) {
+      new FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
+    });
   }
 }

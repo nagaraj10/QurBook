@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:image_picker/image_picker.dart';
@@ -142,7 +143,33 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           )),
                         ),
                         Expanded(
-                          child: Container(),
+                          child: Center(
+                            child: IconButton(
+                              icon: new ImageIcon(
+                                AssetImage('assets/icons/attach.png'),
+                                color: Colors.white,
+                                size: 32,
+                              ),
+                              onPressed: () async {
+                                // Take the Picture in a try / catch block. If anything goes wrong,
+                                // catch the error.
+
+                                if (isMultipleImages) {
+                                  await getFilePath();
+                                  callDisplayPictureScreen(context);
+                                } else {
+                                  try {
+                                    var image = await FilePicker.getFile();
+                                    imagePaths.add(image.path);
+                                    callDisplayPictureScreen(context);
+                                  } catch (e) {
+                                    // If an error occurs, log the error to the console.
+                                    print(e);
+                                  }
+                                }
+                              },
+                            ),
+                          ),
                         ),
                         Expanded(
                           child: Center(
@@ -247,7 +274,33 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           ),
                         ),
                         Expanded(
-                          child: Container(),
+                          child: Center(
+                            child: IconButton(
+                              icon: new ImageIcon(
+                                AssetImage('assets/icons/attach.png'),
+                                color: Colors.white,
+                                size: 32,
+                              ),
+                              onPressed: () async {
+                                // Take the Picture in a try / catch block. If anything goes wrong,
+                                // catch the error.
+
+                                if (isMultipleImages) {
+                                  await getFilePath();
+                                  callDisplayPictureScreen(context);
+                                } else {
+                                  try {
+                                    var image = await FilePicker.getFile();
+                                    imagePaths.add(image.path);
+                                    callDisplayPictureScreen(context);
+                                  } catch (e) {
+                                    // If an error occurs, log the error to the console.
+                                    print(e);
+                                  }
+                                }
+                              },
+                            ),
+                          ),
                         ),
                         Expanded(
                           child: Center(
@@ -435,5 +488,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     Navigator.of(context).push(OverlayCategoryDialog()).then((value) {
       initializeData();
     });
+  }
+
+  Future<void> getFilePath() async {
+    List<File> filePaths = await FilePicker.getMultiFile(fileExtension: 'pdf');
+
+    for (File file in filePaths) {
+      String filePath = await FlutterAbsolutePath.getAbsolutePath(file.path);
+      imagePaths.add(filePath);
+    }
   }
 }

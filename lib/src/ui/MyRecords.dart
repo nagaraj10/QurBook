@@ -20,6 +20,7 @@ import 'package:myfhb/src/model/TabModel.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
+import 'package:myfhb/src/ui/camera/TakePictureScreen.dart';
 import 'package:myfhb/src/ui/health/BillsList.dart';
 import 'package:myfhb/src/ui/health/DeviceListScreen.dart';
 import 'package:myfhb/src/ui/health/HealthReportListScreen.dart';
@@ -28,6 +29,7 @@ import 'package:myfhb/src/ui/health/LabReportListScreen.dart';
 import 'package:myfhb/src/ui/health/MedicalReportListScreen.dart';
 import 'package:myfhb/src/ui/health/OtherDocsList.dart';
 import 'package:myfhb/src/ui/health/VoiceRecordList.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
@@ -35,6 +37,7 @@ import '../../constants/fhb_constants.dart';
 
 export 'package:myfhb/common/CommonUtil.dart';
 export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/common/SwitchProfile.dart';
 
 class MyRecords extends StatefulWidget {
   @override
@@ -69,13 +72,13 @@ class _MyRecordsState extends State<MyRecords> {
   @override
   void initState() {
     rebuildAllBlocks();
-    searchQuery = _searchQueryController.text.toString();
+    searchQuery = _searchQueryController.text;
     print('_searchQueryController.toString() ' + searchQuery);
     if (searchQuery != '') {
       _globalSearchBloc.searchBasedOnMediaType(
-          _searchQueryController.text.toString() == null
+          _searchQueryController.text == null
               ? ''
-              : _searchQueryController.text.toString());
+              : _searchQueryController.text);
     }
     super.initState();
 
@@ -84,17 +87,10 @@ class _MyRecordsState extends State<MyRecords> {
 
   @override
   Widget build(BuildContext context) {
-    return getCompleteWidgetsClone();
+    return getCompleteWidgets();
   }
 
   Widget getCompleteWidgets() {
-    rebuildAllBlocks();
-    return fromSearch
-        ? getResponseForSearchedMedia()
-        : getResponseFromApiWidget();
-  }
-
-  Widget getCompleteWidgetsClone() {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -114,55 +110,65 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   Widget getResponseFromApiWidget() {
-    return StreamBuilder<ApiResponse<CategoryResponseList>>(
-      stream: _categoryListBlock.categoryListStream,
-      builder:
-          (context, AsyncSnapshot<ApiResponse<CategoryResponseList>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return Center(
-                  child: SizedBox(
-                child: CircularProgressIndicator(),
-                width: 30,
-                height: 30,
-              ));
-              break;
+    List<CategoryData> categoryDataFromPrefernce =
+        PreferenceUtil.getCategoryType();
+    if (categoryDataFromPrefernce != null &&
+        categoryDataFromPrefernce.length > 0)
+      return getMainWidgets(categoryDataFromPrefernce);
+    else
+      return StreamBuilder<ApiResponse<CategoryResponseList>>(
+        stream: _categoryListBlock.categoryListStream,
+        builder: (context,
+            AsyncSnapshot<ApiResponse<CategoryResponseList>> snapshot) {
+          if (snapshot.hasData) {
+            switch (snapshot.data.status) {
+              case Status.LOADING:
+                return Center(
+                    child: SizedBox(
+                  child: CircularProgressIndicator(
+                    backgroundColor:
+                        Color(new CommonUtil().getMyPrimaryColor()),
+                  ),
+                  width: 30,
+                  height: 30,
+                ));
+                break;
 
-            case Status.ERROR:
-              return Center(
-                  child: Text('Oops, something went wrong',
-                      style: TextStyle(color: Colors.red)));
-              break;
+              case Status.ERROR:
+                return Center(
+                    child: Text('Oops, something went wrong',
+                        style: TextStyle(color: Colors.red)));
+                break;
 
-            case Status.COMPLETED:
-              _categoryListBlock = null;
-              _categoryListBlock = new CategoryListBlock();
+              case Status.COMPLETED:
+                _categoryListBlock = null;
+                _categoryListBlock = new CategoryListBlock();
 
-              if (categoryDataList.length > 0) {
-                categoryDataList.clear();
-              }
+                if (categoryDataList.length > 0) {
+                  categoryDataList.clear();
+                }
 
-              categoryDataList.addAll(snapshot.data.data.response.data);
-              return getMainWidgets(categoryDataList);
-              break;
+                categoryDataList.addAll(snapshot.data.data.response.data);
+                return getMainWidgets(categoryDataList);
+                break;
+            }
+          } else {
+            return Container(
+              width: 100,
+              height: 100,
+            );
           }
-        } else {
-          return Container(
-            width: 100,
-            height: 100,
-          );
-        }
-      },
-    );
+        },
+      );
   }
 
   Widget getMainWidgets(List<CategoryData> data) {
     _categoryListBlock = null;
     _categoryListBlock = new CategoryListBlock();
 
+    List<CategoryData> categoryData = fliterCategories(data);
     return DefaultTabController(
-        length: data.length,
+        length: categoryData.length,
         child: Scaffold(
             appBar: AppBar(
                 elevation: 0,
@@ -176,17 +182,15 @@ class _MyRecordsState extends State<MyRecords> {
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               child: data.length == 0
-                                  ? Container(
-                                      /* child: Text('Unable To load Tabs',
-                          style: TextStyle(color: Colors.red)) */
-                                      )
+                                  ? Container()
                                   : TabBar(
                                       indicatorWeight: 4,
                                       isScrollable: true,
-                                      tabs: getAllTabsToDisplayInHeader(data),
+                                      tabs: getAllTabsToDisplayInHeader(
+                                          categoryData),
                                     ),
                             ))))),
-            body: getAllTabsToDisplayInBodyClone(data)));
+            body: getAllTabsToDisplayInBodyClone(categoryData)));
   }
 
   Widget getAllTabsToDisplayInBodyClone(List<CategoryData> data) {
@@ -217,19 +221,22 @@ class _MyRecordsState extends State<MyRecords> {
                     PreferenceUtil.saveString(
                             Constants.KEY_CATEGORYID, categoryID)
                         .then((value) {
-                      print('category name in my records:' + categoryName);
                       if (categoryName == STR_DEVICES) {
+                        PreferenceUtil.saveString(
+                            Constants.stop_detecting, 'NO');
                         PreferenceUtil.saveString(
                             Constants.stop_detecting, 'NO');
 
                         Navigator.pushNamed(
                                 context, '/take_picture_screen_for_devices')
                             .then((value) {
-                          rebuildAllBlocks();
-                          callBackToRefresh();
+                          //callBackToRefresh();
                         });
                       } else {
-                        PageNavigator.goTo(context, '/take_picture_screen');
+                        Navigator.pushNamed(context, '/take_picture_screen')
+                            .then((value) {
+                          //callBackToRefresh();
+                        });
                       }
                     });
                   });
@@ -273,49 +280,64 @@ class _MyRecordsState extends State<MyRecords> {
 
   Widget getAllTabsToDisplayInBody(List<CategoryData> data) {
     print('Inside getAllTabsToDisplayInBody');
-    if (_healthReportListForUserBlock == null) {
+    /* if (_healthReportListForUserBlock == null) {
       print('inside _healthReportListForUserBlock null');
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
       _healthReportListForUserBlock.getHelthReportList();
-    }
+    }*/
+
+    CompleteData completeDataFromPreference =
+        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return fromSearch
         ? getMediTypeForlabels(data, completeData)
-        : StreamBuilder<ApiResponse<UserHealthResponseList>>(
-            stream: _healthReportListForUserBlock.healthReportStream,
-            builder: (context,
-                AsyncSnapshot<ApiResponse<UserHealthResponseList>> snapshot) {
-              if (snapshot.hasData) {
-                switch (snapshot.data.status) {
-                  case Status.LOADING:
-                    return Scaffold(
-                      backgroundColor: Colors.white,
-                      body: Center(
-                          child: SizedBox(
-                        child: CircularProgressIndicator(),
-                        width: 30,
-                        height: 30,
-                      )),
-                    );
-                    break;
+        : completeDataFromPreference != null
+            ? getMediTypeForlabels(data, completeDataFromPreference)
+            : StreamBuilder<ApiResponse<UserHealthResponseList>>(
+                stream: _healthReportListForUserBlock.healthReportStream,
+                builder: (context,
+                    AsyncSnapshot<ApiResponse<UserHealthResponseList>>
+                        snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        return Scaffold(
+                          backgroundColor: Colors.white,
+                          body: Center(
+                              child: SizedBox(
+                            child: CircularProgressIndicator(
+                              backgroundColor:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                            ),
+                            width: 30,
+                            height: 30,
+                          )),
+                        );
+                        break;
 
-                  case Status.ERROR:
-                    return Center(
-                        child: Text('Oops, something went wrong',
-                            style: TextStyle(color: Colors.red)));
-                    break;
+                      case Status.ERROR:
+                        return Center(
+                            child: Text('Oops, something went wrong',
+                                style: TextStyle(color: Colors.red)));
+                        break;
 
-                  case Status.COMPLETED:
-                    _healthReportListForUserBlock = null;
-                    rebuildAllBlocks();
-                    return getMediTypeForlabels(
-                        data, snapshot.data.data.response.data);
-                    break;
-                }
-              } else {
-                return Container(height: 0, color: Colors.white);
-              }
-            },
-          );
+                      case Status.COMPLETED:
+                        _healthReportListForUserBlock = null;
+                        rebuildAllBlocks();
+                        if (!fromSearch) {
+                          PreferenceUtil.saveCompleteData(
+                              Constants.KEY_COMPLETE_DATA,
+                              snapshot.data.data.response.data);
+                        }
+
+                        return getMediTypeForlabels(
+                            data, snapshot.data.data.response.data);
+                        break;
+                    }
+                  } else {
+                    return Container(height: 0, color: Colors.white);
+                  }
+                },
+              );
   }
 
   Widget getMediTypeForlabels(
@@ -337,7 +359,10 @@ class _MyRecordsState extends State<MyRecords> {
                 backgroundColor: Colors.white,
                 body: Center(
                     child: SizedBox(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator(
+                    backgroundColor:
+                        Color(new CommonUtil().getMyPrimaryColor()),
+                  ),
                   width: 30,
                   height: 30,
                 )),
@@ -385,9 +410,10 @@ class _MyRecordsState extends State<MyRecords> {
 
     List<Widget> tabWidgetList = new List();
     //data.sort((a, b) => a.categoryName.compareTo(b.categoryName));
-
     for (CategoryData dataObj in data) {
-      if (dataObj.isDisplay) {
+      print(dataObj.categoryName + ' /// ' + dataObj.categoryDescription);
+      if (dataObj
+          .isDisplay /*&& dataObj.categoryName != Constants.STR_FEEDBACK*/) {
         if (dataObj.categoryDescription ==
             CommonConstants.categoryDescriptionPrescription) {
           tabWidgetList.add(new HealthReportListScreen(
@@ -451,7 +477,17 @@ class _MyRecordsState extends State<MyRecords> {
               dataObj.id,
               getDataForParticularLabel,
               CommonConstants.categoryDescriptionClaimsRecord));
-        } else {
+        }
+        /*  else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionWearable) {
+          tabWidgetList.add(new IDDocsList(completeData, callBackToRefresh,
+              categoryName, dataObj.id, getDataForParticularLabel));
+        } else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionFeedback) {
+          tabWidgetList.add(new IDDocsList(completeData, callBackToRefresh,
+              categoryName, dataObj.id, getDataForParticularLabel));
+        }  */
+        else {
           tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
         }
       }
@@ -465,7 +501,8 @@ class _MyRecordsState extends State<MyRecords> {
     List<Widget> tabWidgetList = new List();
     //tabWidgetList.add(SizedBox(height: 5));
 
-    PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
+    if (!fromSearch)
+      PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
 
     data.sort((a, b) {
       return a.categoryDescription
@@ -480,7 +517,8 @@ class _MyRecordsState extends State<MyRecords> {
     }); */
 
     for (CategoryData dataObj in data) {
-      if (dataObj.isActive) {
+      if (dataObj
+          .isDisplay /*&& dataObj.categoryName != Constants.STR_FEEDBACK*/) {
         tabWidgetList.add(Column(children: [
           Padding(padding: EdgeInsets.only(top: 10)),
           Image.network(
@@ -504,9 +542,7 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   void callBackToRefresh() {
-    setState(() {
-      print('setState of home Screen');
-    });
+    (context as Element).markNeedsBuild();
   }
 
   void getDataForParticularLabel(String category, String categoryId) {
@@ -571,6 +607,7 @@ class _MyRecordsState extends State<MyRecords> {
                       });
                     });
                   } else if (editedValue == '') {
+                    searchQuery = '';
                     setState(() {
                       fromSearch = false;
                     });
@@ -579,7 +616,9 @@ class _MyRecordsState extends State<MyRecords> {
               ),
             ),
           ),
-          _buildActions()
+          //_buildActions(),
+          new SwitchProfile()
+              .buildActions(context, _keyLoader, callBackToRefresh)
         ],
       ),
     );
@@ -656,10 +695,10 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   Widget getResponseForSearchedMedia() {
-    _globalSearchBloc = null;
-    _globalSearchBloc = new GlobalSearchBloc();
-    _globalSearchBloc
-        .searchBasedOnMediaType(searchQuery == null ? '' : searchQuery);
+    /*  _globalSearchBloc = null;
+    _globalSearchBloc = new GlobalSearchBloc();*/
+    _globalSearchBloc.searchBasedOnMediaType(
+        (searchQuery == null && searchQuery == '') ? '' : searchQuery);
 
     return StreamBuilder<ApiResponse<GlobalSearch>>(
       stream: _globalSearchBloc.globalSearchStream,
@@ -671,7 +710,9 @@ class _MyRecordsState extends State<MyRecords> {
             // rebuildBlockObject();
             return Center(
                 child: SizedBox(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+              ),
               width: 30,
               height: 30,
             ));
@@ -680,7 +721,7 @@ class _MyRecordsState extends State<MyRecords> {
 
           case Status.ERROR:
             // rebuildBlockObject();
-            return Text('Unable To load Tabs',
+            return Text(snapshot.data.message,
                 style: TextStyle(color: Colors.red));
             break;
 
@@ -725,6 +766,11 @@ class _MyRecordsState extends State<MyRecords> {
     if (_healthReportListForUserBlock == null) {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
       _healthReportListForUserBlock.getHelthReportList();
+    } else if (_healthReportListForUserBlock != null) {
+      _healthReportListForUserBlock = null;
+
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock.getHelthReportList();
     }
 
     if (_mediaTypeBlock == null) {
@@ -742,5 +788,16 @@ class _MyRecordsState extends State<MyRecords> {
     if (_globalSearchBloc == null) {
       _globalSearchBloc = new GlobalSearchBloc();
     }
+  }
+
+  List<CategoryData> fliterCategories(List<CategoryData> data) {
+    List<CategoryData> filteredCategoryData = new List();
+    for (CategoryData dataObj in data) {
+      if (dataObj
+          .isDisplay /*&& dataObj.categoryName != Constants.STR_FEEDBACK*/) {
+        filteredCategoryData.add(dataObj);
+      }
+    }
+    return filteredCategoryData;
   }
 }
