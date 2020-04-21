@@ -20,6 +20,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/global_search/model/GlobalSearch.dart' as globalSearch;
 import 'package:get/get.dart';
+import 'package:showcaseview/showcase.dart';
 
 class CommonUtil {
   List<MediaMetaInfo> getDataForParticularCategoryDescription(
@@ -696,6 +697,24 @@ class CommonUtil {
     }
 
     return mediaMasterId;
+  }
+
+  static customShowCase(
+    GlobalKey _key,
+    String desc,
+    Widget _child, {
+    String title,
+  }) {
+    return Showcase(
+      key: _key,
+      disableAnimation: true,
+      shapeBorder: CircleBorder(),
+      //showcaseBackgroundColor: Colors.transparent,
+      title: title != null ? title : '',
+      description: desc,
+      descTextStyle: TextStyle(color: Colors.black),
+      child: _child,
+    );
   }
 
   networkUI() {
