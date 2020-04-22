@@ -167,7 +167,7 @@ class _MySettingsState extends State<MySettings> {
                   height: 1,
                   color: Colors.grey[200],
                 ),
-                ListTile(
+                /*   ListTile(
                     leading: ImageIcon(
                       AssetImage('assets/settings/googlefit.png'),
                       //size: 30,
@@ -194,7 +194,7 @@ class _MySettingsState extends State<MySettings> {
                 Container(
                   height: 1,
                   color: Colors.grey[200],
-                ),
+                ), */
                 /*    ListTile(
                     leading: ImageIcon(
                       AssetImage('assets/settings/privacy.png'),

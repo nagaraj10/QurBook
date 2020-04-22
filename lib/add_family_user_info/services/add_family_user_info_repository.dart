@@ -20,76 +20,10 @@ class AddFamilyUserInfoRepository {
 
   Future<MyProfile> getMyProfileInfo(String userID) async {
     final response = await _helper.getProfileInfo(
-        "userProfiles/${userID}/?sections=generalInfo|isOriginalPicRequired=false");
+        "userProfiles/$userID/?sections=generalInfo|isOriginalPicRequired=false");
     return MyProfile.fromJson(response);
   }
 
-  /*  Future<UpdateAddFamilyInfo> updateUserProfileInfo(
-      String userID,
-      String name,
-      String phoneNo,
-      String email,
-      String gender,
-      String bloodGroup,
-      String dateOfBirth,
-      File profilePic) async {
-    String query = '';
-
-    query =
-        "generalInfo||gender=$gender|bloodGroup=$bloodGroup|dateOfBirth=$dateOfBirth";
-
-    var response;
-
-    if (profilePic != null) {
-      response = await _helper.saveImageToServerClone1(
-          "userProfiles/$userID/?sections=${query}", profilePic, '');
-    } else {
-      response = await _helper
-          .updateFamilyUserProfile("userProfiles/$userID/?sections=${query}");
-    }
-
-    return UpdateAddFamilyInfo.fromJson(response);
-  }
-
-  Future<UpdateAddFamilyRelationInfo> updateRelationShip(
-      String jsonString) async {
-    final response = await _helper.updateRelationShipUserInFamilyLinking(
-        "userLinking/", jsonString);
-    return UpdateAddFamilyRelationInfo.fromJson(response);
-  }
-
-  Future<UpdateAddFamilyInfo> updateSelfProfileInfo(
-      String userID,
-      String name,
-      String phoneNo,
-      String email,
-      String gender,
-      String bloodGroup,
-      String dateOfBirth,
-      File profilePic,
-      String firstName,
-      String middleName,
-      String lastName) async {
-    String query = '';
-
-    query =
-        "generalInfo||gender=$gender|bloodGroup=$bloodGroup|dateOfBirth=$dateOfBirth|name=$name|firstName=$firstName|middleName=$middleName|lastName=$lastName";
-    // query ="generalInfo||firstName=$firstName|middleName=$middleName|lastName=$lastName";
-
-    var response;
-
-    if (profilePic != null) {
-      response = await _helper.saveImageToServerClone1(
-          "userProfiles/$userID/?sections=${query}", profilePic, '');
-    } else {
-      response = await _helper
-          .updateFamilyUserProfile("userProfiles/$userID/?sections=${query}");
-    }
-    print('respponse' + response.toString());
-
-    return UpdateAddFamilyInfo.fromJson(response);
-  }
- */
   Future<UpdateAddFamilyInfo> updateUserProfileInfo(
       String userID,
       String name,

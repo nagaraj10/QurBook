@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
@@ -173,9 +172,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData
           .id; //widget.arguments.addFamilyUserInfo.id;
 
-      print(widget.arguments.sharedbyme.profileData.isEmailVerified.toString() +
-          'Email verified');
-
       if (widget.arguments.sharedbyme.profileData.isVirtualUser) {
         MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
         mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
@@ -236,9 +232,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
       }
     } else {
-      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo
-          .id; //widget.arguments.addFamilyUserInfo.id;
-
+      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
       addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
         myProfile = value;
 
@@ -314,9 +308,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             }
           }
         } else {
-          selectedBloodGroup=null;
-          selectedBloodRange=null;
-
+          selectedBloodGroup = null;
+          selectedBloodRange = null;
         }
       }
     }
@@ -415,7 +408,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   Row(
                     children: <Widget>[getGenderDetails()],
                   ),
-                   Row(
+                  Row(
                     children: <Widget>[
                       getBloodGroupDetails(),
                       getBloodRangeDetails()
@@ -1203,9 +1196,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             Navigator.popUntil(context, (Route<dynamic> route) {
               bool shouldPop = false;
               if (route.settings.name == '/user_accounts') {
-                // Hide Loading
-//                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-//                    .pop();
                 shouldPop = true;
               }
               return shouldPop;

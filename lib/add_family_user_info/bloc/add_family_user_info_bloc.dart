@@ -83,7 +83,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     _userProfileController.close();
     _updatedRelationShipController.close();
     _verifyEmailController.close();
-
   }
 
   AddFamilyUserInfoBloc() {
@@ -124,7 +123,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
     try {
       myProfile = await addFamilyUserInfoRepository.getMyProfileInfo(userId);
-//      myProfileSink.add(ApiResponse.completed(myProfile));
     } catch (e) {
       myProfileSink.add(ApiResponse.error(e.toString()));
     }
