@@ -10,7 +10,7 @@ class OTPEmailResponse {
     status = json['status'];
     success = json['success'];
     message = json['message'];
-    response = json['response'];
+    response = json['response'] != null ? json['response'] : null;
   }
 
   Map<String, dynamic> toJson() {
