@@ -350,50 +350,57 @@ class _MyRecordsState extends State<MyRecords> {
       print('inside mediaBlock null');
       _mediaTypeBlock = new MediaTypeBlock();
       _mediaTypeBlock.getMediTypes();
-    }else{
-      _mediaTypeBlock=null;
-        _mediaTypeBlock = new MediaTypeBlock();
+    } else {
+      _mediaTypeBlock = null;
+      _mediaTypeBlock = new MediaTypeBlock();
       _mediaTypeBlock.getMediTypes();
     }
-    return StreamBuilder<ApiResponse<MediaTypesResponse>>(
-      stream: _mediaTypeBlock.mediaTypeStream,
-      builder:
-          (context, AsyncSnapshot<ApiResponse<MediaTypesResponse>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return Scaffold(
-                backgroundColor: Colors.white,
-                body: Center(
-                    child: SizedBox(
-                  child: CircularProgressIndicator(
-                    backgroundColor:
-                        Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
-                  width: 30,
-                  height: 30,
-                )),
-              );
 
-              break;
+    List<MediaData> selectedMediaData = PreferenceUtil.getMediaType();
 
-            case Status.ERROR:
-              return Text('Unable To load Tabs',
-                  style: TextStyle(color: Colors.red));
-              break;
+    return selectedMediaData != null
+        ? getStackBody(data, completeData, selectedMediaData)
+        : StreamBuilder<ApiResponse<MediaTypesResponse>>(
+            stream: _mediaTypeBlock.mediaTypeStream,
+            builder: (context,
+                AsyncSnapshot<ApiResponse<MediaTypesResponse>> snapshot) {
+              if (snapshot.hasData) {
+                switch (snapshot.data.status) {
+                  case Status.LOADING:
+                    return Scaffold(
+                      backgroundColor: Colors.white,
+                      body: Center(
+                          child: SizedBox(
+                        child: CircularProgressIndicator(
+                          backgroundColor:
+                              Color(new CommonUtil().getMyPrimaryColor()),
+                        ),
+                        width: 30,
+                        height: 30,
+                      )),
+                    );
 
-            case Status.COMPLETED:
-              _mediaTypeBlock = null;
-              rebuildAllBlocks();
-              return getStackBody(
-                  data, completeData, snapshot.data.data.response.data);
-              break;
-          }
-        } else {
-          return getStackBody(data, completeData, null);
-        }
-      },
-    );
+                    break;
+
+                  case Status.ERROR:
+                    return Text('Unable To load Tabs',
+                        style: TextStyle(color: Colors.red));
+                    break;
+
+                  case Status.COMPLETED:
+                    _mediaTypeBlock = null;
+                    rebuildAllBlocks();
+                    PreferenceUtil.saveMediaType(Constants.KEY_METADATA,
+                        snapshot.data.data.response.data);
+                    return getStackBody(
+                        data, completeData, snapshot.data.data.response.data);
+                    break;
+                }
+              } else {
+                return getStackBody(data, completeData, null);
+              }
+            },
+          );
   }
 
   Widget getStackBody(List<CategoryData> data, CompleteData completeData,
@@ -508,9 +515,8 @@ class _MyRecordsState extends State<MyRecords> {
     List<Widget> tabWidgetList = new List();
     //tabWidgetList.add(SizedBox(height: 5));
 
-    if(!fromSearch)
-
-    PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
+    if (!fromSearch)
+      PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
 
     data.sort((a, b) {
       return a.categoryDescription
@@ -615,7 +621,7 @@ class _MyRecordsState extends State<MyRecords> {
                       });
                     });
                   } else if (editedValue == '') {
-                    searchQuery='';
+                    searchQuery = '';
                     setState(() {
                       fromSearch = false;
                     });
@@ -632,81 +638,11 @@ class _MyRecordsState extends State<MyRecords> {
     );
   }
 
-  Widget _buildActions() {
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-
-    return Padding(
-        padding: EdgeInsets.all(10),
-        child: InkWell(
-            onTap: () {
-              print('Profile Pressed');
-              //getAllFamilyMembers();
-              CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
-
-              if (_familyListBloc != null) {
-                _familyListBloc = null;
-                _familyListBloc = new FamilyListBloc();
-              }
-              _familyListBloc.getFamilyMembersList().then((familyMembersList) {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                    .pop();
-
-                getDialogBoxWithFamilyMemberScrap(
-                    familyMembersList.response.data);
-              });
-
-              //return new FamilyListDialog();
-            },
-            child: CircleAvatar(
-              radius: 15,
-              child: ClipOval(
-                  child: new FHBBasicWidget().getProfilePicWidget(
-                      myProfile.response.data.generalInfo.profilePicThumbnail)),
-            )));
-
-    //}
-
-    /*  return <Widget>[
-      IconButton(
-        icon: const Icon(Icons.search),
-        onPressed: _startSearch,
-      ),
-    ]; */
-  }
-
-  Future<Widget> getDialogBoxWithFamilyMemberScrap(FamilyData familyData) {
-    return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
-        familyData, context, _keyLoader, (context, userId, userName) {
-      PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
-        Navigator.of(context).pop();
-
-        getUserProfileData();
-      });
-    });
-  }
-
-  getUserProfileData() async {
-    CommonUtil.showLoadingDialog(context, _keyLoader, 'Relaoding');
-
-    _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
-      print('inside myrecprds' + profileData.toString());
-      PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
-          .then((value) {
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-        new CommonUtil()
-            .getMedicalPreference(callBackToRefresh: callBackToRefresh);
-      });
-
-      //Navigator.of(context).pop();
-      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-    });
-  }
-
   Widget getResponseForSearchedMedia() {
-     _globalSearchBloc = null;
+    _globalSearchBloc = null;
     _globalSearchBloc = new GlobalSearchBloc();
-    _globalSearchBloc
-        .searchBasedOnMediaType((searchQuery == null && searchQuery=='') ? '' : searchQuery);
+    _globalSearchBloc.searchBasedOnMediaType(
+        (searchQuery == null && searchQuery == '') ? '' : searchQuery);
 
     return StreamBuilder<ApiResponse<GlobalSearch>>(
       stream: _globalSearchBloc.globalSearchStream,
@@ -809,4 +745,3 @@ class _MyRecordsState extends State<MyRecords> {
     return filteredCategoryData;
   }
 }
-

@@ -157,16 +157,25 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     },
                   ),
                   ListTile(
-                      title: Row(
-                    children: <Widget>[
-                      ImageIcon(
-                        AssetImage('assets/navicons/feedback.png'),
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: 20),
-                      Text('Feedback'),
-                    ],
-                  )),
+                                        title: InkWell(
+                        child: Row(
+                      children: <Widget>[
+                        ImageIcon(
+                          AssetImage('assets/navicons/feedback.png'),
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 20),
+                        Text('Feedback'),
+                      ],
+                    )),
+                    onTap: () {
+                      Navigator.pushNamed(
+                                context, '/feedbacks')
+                            .then((value) {
+                          //callBackToRefresh();
+                        });
+                    },
+                  ),
                   InkWell(
                     child: ListTile(
                         title: Row(

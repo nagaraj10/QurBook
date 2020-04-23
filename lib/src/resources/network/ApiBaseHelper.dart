@@ -752,11 +752,8 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url, headers: requestHeaders);
-
-      print('response' + response.toString());
+      print('verify email response ' + response.toString());
       responseJson = _returnResponse(response);
-
-      print('responseJson' + responseJson.toString());
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }

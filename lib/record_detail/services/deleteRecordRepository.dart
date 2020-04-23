@@ -14,4 +14,12 @@ class DeleteRecordRepository {
         await _helper.deleteHealthRecord("mediameta/$userID/deletemeta/", json);
     return DeleteRecordResponse.fromJson(response);
   }
+
+  Future<DeleteRecordResponse> deleteRecordForMediaMasterIds(
+      String json) async {
+    //var jsonString = json.toString();
+    var response = await _helper.deleteHealthRecord(
+        "mediameta/$userID/deletemaster/", json);
+    return DeleteRecordResponse.fromJson(response);
+  }
 }

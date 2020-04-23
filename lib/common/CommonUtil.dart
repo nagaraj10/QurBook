@@ -693,7 +693,7 @@ class CommonUtil {
     return mediaMasterId;
   }
 
-  static customShowCase(
+  /*  static customShowCase(
     GlobalKey _key,
     String desc,
     Widget _child, {
@@ -708,6 +708,49 @@ class CommonUtil {
       description: desc,
       descTextStyle: TextStyle(color: Colors.black),
       child: _child,
+    );
+  } */
+
+  static customShowCase(GlobalKey _key, String desc, Widget _child,
+      {String title, BuildContext context}) {
+    return Showcase.withWidget(
+      key: _key,
+      disableAnimation: false,
+      shapeBorder: CircleBorder(),
+      title: 'MyFHB',
+      description: desc,
+      child: _child,
+      overlayColor: Colors.black,
+      overlayOpacity: 0.8,
+      height: 800.0,
+      width: 300.0,
+      container: Center(
+        //color: Colors.transparent,
+        child: Column(
+          children: <Widget>[
+            Text(
+              desc,
+              style: TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold),
+              maxLines: 2,
+              softWrap: true,
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+            Text(
+              desc,
+              style: TextStyle(
+                  fontSize: 10.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500),
+              softWrap: true,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -790,5 +833,16 @@ class CommonUtil {
       bloodGroupClone = bloodGroupClone + 've';
     }
     return bloodGroupClone;
+  }
+
+  String getIdForDescription(
+      List<CategoryData> categoryData, String categoryName) {
+    String categoryId;
+    for (CategoryData categoryDataObj in categoryData) {
+      if (categoryDataObj.categoryName == categoryName) {
+        categoryId = categoryDataObj.id;
+      }
+    }
+    return categoryId;
   }
 }

@@ -42,6 +42,24 @@ class DeleteRecordBloc with Validators implements BaseBloc {
     }
     return deleteRecordResponse;
   }
+
+  Future<DeleteRecordResponse> deleteRecordOnMediaMasterID(
+      List<String> recordId) async {
+    DeleteRecord deleteRecord = new DeleteRecord();
+    deleteRecord.mediaMasterIds = recordId;
+
+    var jsonString = convert.jsonEncode(deleteRecord);
+    delteRecordSink.add(ApiResponse.loading('deleting record'));
+    DeleteRecordResponse deleteRecordResponse;
+    try {
+      deleteRecordResponse = await _deleteRecordRepository
+          .deleteRecordForMediaMasterIds(jsonString);
+    } catch (e) {
+      delteRecordSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+    return deleteRecordResponse;
+  }
 }
 
 abstract class BaseBloc {

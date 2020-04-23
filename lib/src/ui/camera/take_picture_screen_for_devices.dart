@@ -183,7 +183,7 @@ class TakePictureScreenForDevicesState
                                           ? _recognitions.length > 0
                                               ? deviceNames(_recognitions[0]
                                                           ["detectedClass"]) !=
-                                                      "Others"
+                                                      "Choose Device"
                                                   ? deviceNames(_recognitions[0]
                                                       ["detectedClass"])
                                                   : deviceName
@@ -749,7 +749,7 @@ class TakePictureScreenForDevicesState
         device = "Pulse Oximeter";
         break;
       case "Others":
-        device = "Others";
+        device = "Choose Device";
         break;
       default:
         device = "Choose Device";

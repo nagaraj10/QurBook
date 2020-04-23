@@ -27,6 +27,8 @@ export 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+
 
 class RecordDetailScreen extends StatefulWidget {
   final MediaMetaInfo data;
@@ -65,6 +67,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       Platform.isAndroid ? Permission.storage : Permission.photos;
   bool firsTym = true;
 
+  String audioMediaId;
+
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -84,6 +90,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
       if (checkIfMp3IsPresent(widget.data) != '') {
         widget.data.metaInfo.hasVoiceNotes = true;
+      } else {
+        widget.data.metaInfo.hasVoiceNotes = false;
       }
     }
   }
@@ -92,6 +100,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: const Color(fhbColors.bgColorContainer),
+        key: scaffold_state,
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
           title: AutoSizeText(
@@ -278,6 +287,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                       print('output audio mediaMaster' +
                                           postImageResponse
                                               .response.data.mediaMasterId);
+
+                                      audioMediaId = postImageResponse
+                                          .response.data.mediaMasterId;
                                       setState(() {});
                                     });
                                   }
@@ -398,6 +410,23 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     });
   }
 
+  deleteMediRecord(String id) {
+    List<String> mediaIds = [];
+    mediaIds.add(id);
+    _deleteRecordBloc
+        .deleteRecordOnMediaMasterID(mediaIds)
+        .then((deleteRecordResponse) {
+      if (deleteRecordResponse.success) {
+        _healthReportListForUserBlock.getHelthReportList().then((value) {
+          PreferenceUtil.saveCompleteData(
+              Constants.KEY_COMPLETE_DATA, value.response.data);
+          widget.data.metaInfo.hasVoiceNotes = false;
+          setState(() {});
+        });
+      }
+    });
+  }
+
   bookMarkRecord(MediaMetaInfo data) {
     List<String> mediaIds = [];
     mediaIds.add(data.id);
@@ -413,6 +442,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         .then((bookmarkRecordResponse) {
       if (bookmarkRecordResponse.success) {
         setState(() {});
+
+        _healthReportListForUserBlock.getHelthReportList().then((value) {
+          PreferenceUtil.saveCompleteData(
+              Constants.KEY_COMPLETE_DATA, value.response.data);
+        });
       }
     });
   }
@@ -430,11 +464,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
           containsAudio = containsAudioClone;
           audioPath = audioPathClone;
-          postAudioToServer(widget.data.id);
+          print('Delete Media Meta');
+          deleteMediRecord(audioMediaId);
         }),
-        /*  Padding(
-                                              padding: const EdgeInsets.all(8.0),
-                                            ), */
       ],
     ));
   }
@@ -476,24 +508,33 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   Future<Widget> getDialogBoxWithFamilyMember(FamilyData familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, _keyLoader, (context, userId, userName) {
-      /*PreferenceUtil.saveString(Constants.KEY_USERID, value).then((onValue) {
-                                                                                                    Navigator.of(context).pop();
-                                                                                                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                                                                                                  });*/
       print('user id of the family member' + userId.toString());
       print(widget.data.id);
-      Navigator.of(context).pop();
+      //Navigator.of(context).pop();
 
       _healthReportListForUserBlock
           .switchDataToOtherUser(userId, widget.data.id)
           .then((moveMetaDataResponse) {
         if (moveMetaDataResponse.success) {
           print('moveMetaDataResponse.success' + moveMetaDataResponse.message);
-          Navigator.pop(context);
-          Navigator.pop(context);
+          _healthReportListForUserBlock.getHelthReportList().then((value) {
+            PreferenceUtil.saveCompleteData(
+                Constants.KEY_COMPLETE_DATA, value.response.data);
+            print('Saved data');
+
+             Future.delayed(const Duration(seconds: 2), () {
+                  new FHBBasicWidget()
+                .showInSnackBar(moveMetaDataResponse.message, scaffold_state);
+
+             });
+         
+            Navigator.pop(context);
+            Navigator.pop(context);
+          });
         } else {
           Navigator.pop(context);
-          Navigator.pop(context);
+          new FHBBasicWidget()
+              .showInSnackBar(moveMetaDataResponse.message, scaffold_state);
         }
       });
     });
@@ -858,10 +899,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           .then((postImageResponse) {
         print('output audio mediaMaster' +
             postImageResponse.response.data.mediaMasterId);
-        setState(() {});
-        Scaffold.of(context).showSnackBar(SnackBar(
-          content: Text(postImageResponse.message),
-        ));
+
+        _healthReportListForUserBlock.getHelthReportList().then((value) {
+          PreferenceUtil.saveCompleteData(
+              Constants.KEY_COMPLETE_DATA, value.response.data);
+          setState(() {});
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(postImageResponse.message),
+          ));
+        });
       });
     } else {
       setState(() {});
@@ -1023,20 +1069,24 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
     if (data.metaInfo.hasVoiceNotes) {
-      String mediaMetaId = checkIfMp3IsPresent(data);
-      getWidgetForPlayingAudioFromServer(mediaMetaId);
+      audioMediaId = checkIfMp3IsPresent(data);
+      print(audioMediaId + ' inside showAudioWidgetIfVoiceNotesAvailable');
+      getWidgetForPlayingAudioFromServer(audioMediaId);
     }
   }
 
   String checkIfMp3IsPresent(MediaMetaInfo data) {
-    String mediaMetaId =
+    String mediaMetaId = "";
+
+    mediaMetaId =
         new CommonUtil().getMediaMasterIDForAudioFileType(data.mediaMasterIds);
     return mediaMetaId;
   }
 
-  Widget getWidgetForPlayingAudioFromServer(String mediaMetaId) {
-    _healthReportListForUserBlock.getDocumentImage(mediaMetaId).then((res) {
-      downloadMedia(res, context);
+  Widget getWidgetForPlayingAudioFromServer(String audioMediaId) {
+    print('audioMediaId' + audioMediaId);
+    _healthReportListForUserBlock.getDocumentImage(audioMediaId).then((res) {
+      return downloadMedia(res, context);
     });
   }
 

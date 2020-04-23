@@ -31,6 +31,8 @@ import 'add_providers/screens/add_providers_screen.dart';
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
 import 'confirm_location/screens/confirm_location_screen.dart';
+import 'feedback/Feedbacks.dart';
+import 'feedback/FeedbacksSucess.dart';
 import 'my_family/screens/MyFamily.dart';
 import 'my_family_detail/screens/my_family_detail_screen.dart';
 
@@ -79,6 +81,8 @@ var routes = <String, WidgetBuilder>{
       MyFamilyDetailView(arguments: ModalRoute.of(context).settings.arguments),
   "/add_reminders": (BuildContext context) => AddReminder(),
   "/intro_slider": (BuildContext context) => IntroSliderPage(),
+  "/feedbacks": (BuildContext context) => Feedbacks(),
+  "/feedbacks_success": (BuildContext context) => FeedbackSuccess()
 };
 
 Future<void> main() async {

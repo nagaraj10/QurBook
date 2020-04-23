@@ -1,7 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -161,7 +163,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     return Scaffold(
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          title: Text('Otp Verification', style: TextStyle(fontSize: 18)),
+          title: Text('OTP Verification', style: TextStyle(fontSize: 18)),
           leading: IconButton(
               icon: Icon(Icons.arrow_back_ios),
               onPressed: () {
@@ -177,7 +179,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 ? Padding(
                     padding: EdgeInsets.only(top: 40),
                     child: Text(
-                      'Please enter the verification number',
+                      'Please enter the OTP received',
                       style: TextStyle(
                           color: Colors.black38, fontWeight: FontWeight.w500),
                     ),
@@ -185,13 +187,15 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 : Container(
                     height: 20,
                   ),
-            Expanded(
-              child: ImageIcon(
-                AssetImage('assets/icons/otp_icon.png'),
-                size: 70,
-                color: Color(CommonUtil().getMyPrimaryColor()),
-              ),
-            ),
+            widget.forEmailVerify || widget.fromSignIn
+                ? Expanded(
+                    child: ImageIcon(
+                      AssetImage('assets/icons/otp_icon.png'),
+                      size: 70,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                    ),
+                  )
+                : SizedBox(height: 0),
             widget.forEmailVerify
                 ? Column(
                     children: <Widget>[
@@ -220,7 +224,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                       ),
                     ],
                   )
-                : Container(),
+                : SizedBox(
+                    height: 0,
+                    width: 0,
+                  ),
             Expanded(
                 flex: 2,
                 child: Column(
@@ -241,7 +248,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                   ))),
                       SizedBox(height: 20),
                       Text(
-                        'Don' 't receive the otp?',
+                        'Didn' 't receive the OTP?',
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       FlatButton(
@@ -264,6 +271,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                           )),
                       SizedBox(height: 20)
                     ])),
+            !widget.fromSignIn && !widget.forEmailVerify
+                ? Expanded(child: acceptanceWidget())
+                : SizedBox(height: 0),
             Expanded(
                 flex: 3,
                 child: Container(
@@ -475,268 +485,268 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         ))
 
         /* Stack(
-                                                                children: <Widget>[
-                                                                  Container(child: Image.asset('assets/bg/login-bg.png')),
-                                                                  Center(
-                                                                    child: Container(
-                                                                      padding: EdgeInsets.all(5),
-                                                                      child: Center(
-                                                                        child: Column(
-                                                                            mainAxisAlignment: MainAxisAlignment.center,
                                                                             children: <Widget>[
-                                                                              Padding(
-                                                                                padding: EdgeInsets.all(20),
-                                                                                child: Text(
-                                                                                  Constants.OtpScreenText,
-                                                                                  style: TextStyle(fontSize: 12),
+                                                                              Container(child: Image.asset('assets/bg/login-bg.png')),
+                                                                              Center(
+                                                                                child: Container(
+                                                                                  padding: EdgeInsets.all(5),
+                                                                                  child: Center(
+                                                                                    child: Column(
+                                                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                                                        children: <Widget>[
+                                                                                          Padding(
+                                                                                            padding: EdgeInsets.all(20),
+                                                                                            child: Text(
+                                                                                              Constants.OtpScreenText,
+                                                                                              style: TextStyle(fontSize: 12),
+                                                                                            ),
+                                                                                          ),
+                                                                                          Text(
+                                                                                              '+${widget.selectedCountryCode} ${widget.enteredMobNumber}',
+                                                                                              style: TextStyle(
+                                                                                                  color: Colors.red,
+                                                                                                  fontWeight: FontWeight.bold,
+                                                                                                  fontSize: 14)),
+                                                                                          Flexible(
+                                                                                            child: Center(
+                                                                                              child: Column(children: <Widget>[
+                                                                                                GridView.count(
+                                                                                                    crossAxisCount: 6,
+                                                                                                    crossAxisSpacing: 20,
+                                                                                                    shrinkWrap: true,
+                                                                                                    primary: false,
+                                                                                                    scrollDirection: Axis.vertical,
+                                                                                                    children: List<Container>.generate(
+                                                                                                        6,
+                                                                                                        (int index) => Container(
+                                                                                                              child: widgetList[index],
+                                                                                                            ))),
+                                                                                              ]),
+                                                                                            ),
+                                                                                            flex: 20,
+                                                                                          ),
+                                                                                          Flexible(
+                                                                                            child: Column(
+                                                                                              mainAxisSize: MainAxisSize.max,
+                                                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                                                              children: <Widget>[
+                                                                                                new Container(
+                                                                                                  child: Padding(
+                                                                                                    padding: const EdgeInsets.only(
+                                                                                                        left: 8.0,
+                                                                                                        top: 8.0,
+                                                                                                        right: 8.0,
+                                                                                                        bottom: 0.0),
+                                                                                                    child: Row(
+                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                      mainAxisSize: MainAxisSize.min,
+                                                                                                      children: <Widget>[
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            inputTextToField("1");
+                                                                                                          },
+                                                                                                          child: Text("1",
+                                                                                                              style: TextStyle(
+                                                                                                                  fontSize: 22.0,
+                                                                                                                  fontWeight: FontWeight.w400),
+                                                                                                              textAlign: TextAlign.center),
+                                                                                                        ),
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            inputTextToField("2");
+                                                                                                          },
+                                                                                                          child: Text("2",
+                                                                                                              style: TextStyle(
+                                                                                                                  fontSize: 22.0,
+                                                                                                                  fontWeight: FontWeight.w400),
+                                                                                                              textAlign: TextAlign.center),
+                                                                                                        ),
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            inputTextToField("3");
+                                                                                                          },
+                                                                                                          child: Text("3",
+                                                                                                              style: TextStyle(
+                                                                                                                  fontSize: 22.0,
+                                                                                                                  fontWeight: FontWeight.w400,
+                                                                                                                  color: Colors.black),
+                                                                                                              textAlign: TextAlign.center),
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                                new Container(
+                                                                                                  child: Padding(
+                                                                                                    padding: const EdgeInsets.only(
+                                                                                                        left: 8.0,
+                                                                                                        top: 4.0,
+                                                                                                        right: 8.0,
+                                                                                                        bottom: 0.0),
+                                                                                                    child: Row(
+                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                      mainAxisSize: MainAxisSize.min,
+                                                                                                      children: <Widget>[
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            inputTextToField("4");
+                                                                                                          },
+                                                                                                          child: Text("4",
+                                                                                                              style: TextStyle(
+                                                                                                                  fontSize: 22.0,
+                                                                                                                  fontWeight: FontWeight.w400),
+                                                                                                              textAlign: TextAlign.center),
+                                                                                                        ),
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            inputTextToField("5");
+                                                                                                          },
+                                                                                                          child: Text("5",
+                                                                                                              style: TextStyle(
+                                                                                                                  fontSize: 22.0,
+                                                                                                                  fontWeight: FontWeight.w400),
+                                                                                                              textAlign: TextAlign.center),
+                                                                                                        ),
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            inputTextToField("6");
+                                                                                                          },
+                                                                                                          child: Text("6",
+                                                                                                              style: TextStyle(
+                                                                                                                  fontSize: 22.0,
+                                                                                                                  fontWeight: FontWeight.w400),
+                                                                                                              textAlign: TextAlign.center),
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                                new Container(
+                                                                                                  child: Padding(
+                                                                                                    padding: const EdgeInsets.only(
+                                                                                                        left: 8.0,
+                                                                                                        top: 4.0,
+                                                                                                        right: 8.0,
+                                                                                                        bottom: 0.0),
+                                                                                                    child: Row(
+                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                      mainAxisSize: MainAxisSize.min,
+                                                                                                      children: <Widget>[
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            inputTextToField("7");
+                                                                                                          },
+                                                                                                          child: Text("7",
+                                                                                                              style: TextStyle(
+                                                                                                                  fontSize: 22.0,
+                                                                                                                  fontWeight: FontWeight.w400),
+                                                                                                              textAlign: TextAlign.center),
+                                                                                                        ),
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            inputTextToField("8");
+                                                                                                          },
+                                                                                                          child: Text("8",
+                                                                                                              style: TextStyle(
+                                                                                                                  fontSize: 22.0,
+                                                                                                                  fontWeight: FontWeight.w400),
+                                                                                                              textAlign: TextAlign.center),
+                                                                                                        ),
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            inputTextToField("9");
+                                                                                                          },
+                                                                                                          child: Text("9",
+                                                                                                              style: TextStyle(
+                                                                                                                  fontSize: 22.0,
+                                                                                                                  fontWeight: FontWeight.w400),
+                                                                                                              textAlign: TextAlign.center),
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                                new Container(
+                                                                                                  child: Padding(
+                                                                                                    padding: const EdgeInsets.only(
+                                                                                                        left: 8.0,
+                                                                                                        top: 4.0,
+                                                                                                        right: 8.0,
+                                                                                                        bottom: 0.0),
+                                                                                                    child: Row(
+                                                                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                                                                      mainAxisSize: MainAxisSize.min,
+                                                                                                      children: <Widget>[
+                                                                                                        MaterialButton(
+                                                                                                            onPressed: () {
+                                                                                                              deleteText();
+                                                                                                            },
+                                                                                                            child: Icon(
+                                                                                                              Icons.backspace,
+                                                                                                              color: Colors.deepPurple,
+                                                                                                            )),
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            inputTextToField("0");
+                                                                                                          },
+                                                                                                          child: Text("0",
+                                                                                                              style: TextStyle(
+                                                                                                                  fontSize: 22.0,
+                                                                                                                  fontWeight: FontWeight.w400),
+                                                                                                              textAlign: TextAlign.center),
+                                                                                                        ),
+                                                                                                        //submitButton(_otpVerifyBloc)
+                                                                                                        MaterialButton(
+                                                                                                          onPressed: () {
+                                                                                                            String otp = controller1.text +
+                                                                                                                controller2.text +
+                                                                                                                controller3.text +
+                                                                                                                controller4.text;
+                                                                                                            _otpVerifyBloc
+                                                                                                                .verifyOtp(widget.enteredMobNumber,
+                                                                                                                    widget.selectedCountryCode, otp)
+                                                                                                                .then((otpResponse) {
+                                                                                                              checkOTPResponse(otpResponse);
+                                                                                                            });
+                                                                                                            //matchOtp();
+                                                                                                          },
+                                                                                                          child: Icon(Icons.done,
+                                                                                                              color: Colors.deepPurple),
+                                                                                                        ),
+                                                                                                      ],
+                                                                                                    ),
+                                                                                                  ),
+                                                                                                ),
+                                                                                              ],
+                                                                                            ),
+                                                                                            flex: 40,
+                                                                                          ),
+                                                                                        ]),
+                                                                                  ),
+                                                                                  constraints: BoxConstraints(
+                                                                                    maxHeight: 420,
+                                                                                  ),
+                                                                                  margin: EdgeInsets.only(left: 40, right: 40, top: 200),
+                                                                                  decoration: BoxDecoration(
+                                                                                    color: Colors.white,
+                                                                                    shape: BoxShape.rectangle,
+                                                                                    borderRadius: BorderRadius.circular(30),
+                                                                                    boxShadow: [
+                                                                                      BoxShadow(
+                                                                                        color: Colors.black12,
+                                                                                        blurRadius: 10.0, // soften the shadow
+                                                                                        spreadRadius: 5.0, //extend the shadow
+                                                                                        offset: Offset(
+                                                                                          0.0, // Move to right 10  horizontally
+                                                                                          5.0, // Move to bottom 5 Vertically
+                                                                                        ),
+                                                                                      )
+                                                                                    ],
+                                                                                  ),
                                                                                 ),
-                                                                              ),
-                                                                              Text(
-                                                                                  '+${widget.selectedCountryCode} ${widget.enteredMobNumber}',
-                                                                                  style: TextStyle(
-                                                                                      color: Colors.red,
-                                                                                      fontWeight: FontWeight.bold,
-                                                                                      fontSize: 14)),
-                                                                              Flexible(
-                                                                                child: Center(
-                                                                                  child: Column(children: <Widget>[
-                                                                                    GridView.count(
-                                                                                        crossAxisCount: 6,
-                                                                                        crossAxisSpacing: 20,
-                                                                                        shrinkWrap: true,
-                                                                                        primary: false,
-                                                                                        scrollDirection: Axis.vertical,
-                                                                                        children: List<Container>.generate(
-                                                                                            6,
-                                                                                            (int index) => Container(
-                                                                                                  child: widgetList[index],
-                                                                                                ))),
-                                                                                  ]),
-                                                                                ),
-                                                                                flex: 20,
-                                                                              ),
-                                                                              Flexible(
-                                                                                child: Column(
-                                                                                  mainAxisSize: MainAxisSize.max,
-                                                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                                                  children: <Widget>[
-                                                                                    new Container(
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.only(
-                                                                                            left: 8.0,
-                                                                                            top: 8.0,
-                                                                                            right: 8.0,
-                                                                                            bottom: 0.0),
-                                                                                        child: Row(
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          mainAxisSize: MainAxisSize.min,
-                                                                                          children: <Widget>[
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                inputTextToField("1");
-                                                                                              },
-                                                                                              child: Text("1",
-                                                                                                  style: TextStyle(
-                                                                                                      fontSize: 22.0,
-                                                                                                      fontWeight: FontWeight.w400),
-                                                                                                  textAlign: TextAlign.center),
-                                                                                            ),
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                inputTextToField("2");
-                                                                                              },
-                                                                                              child: Text("2",
-                                                                                                  style: TextStyle(
-                                                                                                      fontSize: 22.0,
-                                                                                                      fontWeight: FontWeight.w400),
-                                                                                                  textAlign: TextAlign.center),
-                                                                                            ),
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                inputTextToField("3");
-                                                                                              },
-                                                                                              child: Text("3",
-                                                                                                  style: TextStyle(
-                                                                                                      fontSize: 22.0,
-                                                                                                      fontWeight: FontWeight.w400,
-                                                                                                      color: Colors.black),
-                                                                                                  textAlign: TextAlign.center),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    new Container(
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.only(
-                                                                                            left: 8.0,
-                                                                                            top: 4.0,
-                                                                                            right: 8.0,
-                                                                                            bottom: 0.0),
-                                                                                        child: Row(
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          mainAxisSize: MainAxisSize.min,
-                                                                                          children: <Widget>[
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                inputTextToField("4");
-                                                                                              },
-                                                                                              child: Text("4",
-                                                                                                  style: TextStyle(
-                                                                                                      fontSize: 22.0,
-                                                                                                      fontWeight: FontWeight.w400),
-                                                                                                  textAlign: TextAlign.center),
-                                                                                            ),
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                inputTextToField("5");
-                                                                                              },
-                                                                                              child: Text("5",
-                                                                                                  style: TextStyle(
-                                                                                                      fontSize: 22.0,
-                                                                                                      fontWeight: FontWeight.w400),
-                                                                                                  textAlign: TextAlign.center),
-                                                                                            ),
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                inputTextToField("6");
-                                                                                              },
-                                                                                              child: Text("6",
-                                                                                                  style: TextStyle(
-                                                                                                      fontSize: 22.0,
-                                                                                                      fontWeight: FontWeight.w400),
-                                                                                                  textAlign: TextAlign.center),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    new Container(
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.only(
-                                                                                            left: 8.0,
-                                                                                            top: 4.0,
-                                                                                            right: 8.0,
-                                                                                            bottom: 0.0),
-                                                                                        child: Row(
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          mainAxisSize: MainAxisSize.min,
-                                                                                          children: <Widget>[
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                inputTextToField("7");
-                                                                                              },
-                                                                                              child: Text("7",
-                                                                                                  style: TextStyle(
-                                                                                                      fontSize: 22.0,
-                                                                                                      fontWeight: FontWeight.w400),
-                                                                                                  textAlign: TextAlign.center),
-                                                                                            ),
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                inputTextToField("8");
-                                                                                              },
-                                                                                              child: Text("8",
-                                                                                                  style: TextStyle(
-                                                                                                      fontSize: 22.0,
-                                                                                                      fontWeight: FontWeight.w400),
-                                                                                                  textAlign: TextAlign.center),
-                                                                                            ),
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                inputTextToField("9");
-                                                                                              },
-                                                                                              child: Text("9",
-                                                                                                  style: TextStyle(
-                                                                                                      fontSize: 22.0,
-                                                                                                      fontWeight: FontWeight.w400),
-                                                                                                  textAlign: TextAlign.center),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                    new Container(
-                                                                                      child: Padding(
-                                                                                        padding: const EdgeInsets.only(
-                                                                                            left: 8.0,
-                                                                                            top: 4.0,
-                                                                                            right: 8.0,
-                                                                                            bottom: 0.0),
-                                                                                        child: Row(
-                                                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                                                          mainAxisSize: MainAxisSize.min,
-                                                                                          children: <Widget>[
-                                                                                            MaterialButton(
-                                                                                                onPressed: () {
-                                                                                                  deleteText();
-                                                                                                },
-                                                                                                child: Icon(
-                                                                                                  Icons.backspace,
-                                                                                                  color: Colors.deepPurple,
-                                                                                                )),
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                inputTextToField("0");
-                                                                                              },
-                                                                                              child: Text("0",
-                                                                                                  style: TextStyle(
-                                                                                                      fontSize: 22.0,
-                                                                                                      fontWeight: FontWeight.w400),
-                                                                                                  textAlign: TextAlign.center),
-                                                                                            ),
-                                                                                            //submitButton(_otpVerifyBloc)
-                                                                                            MaterialButton(
-                                                                                              onPressed: () {
-                                                                                                String otp = controller1.text +
-                                                                                                    controller2.text +
-                                                                                                    controller3.text +
-                                                                                                    controller4.text;
-                                                                                                _otpVerifyBloc
-                                                                                                    .verifyOtp(widget.enteredMobNumber,
-                                                                                                        widget.selectedCountryCode, otp)
-                                                                                                    .then((otpResponse) {
-                                                                                                  checkOTPResponse(otpResponse);
-                                                                                                });
-                                                                                                //matchOtp();
-                                                                                              },
-                                                                                              child: Icon(Icons.done,
-                                                                                                  color: Colors.deepPurple),
-                                                                                            ),
-                                                                                          ],
-                                                                                        ),
-                                                                                      ),
-                                                                                    ),
-                                                                                  ],
-                                                                                ),
-                                                                                flex: 40,
-                                                                              ),
-                                                                            ]),
-                                                                      ),
-                                                                      constraints: BoxConstraints(
-                                                                        maxHeight: 420,
-                                                                      ),
-                                                                      margin: EdgeInsets.only(left: 40, right: 40, top: 200),
-                                                                      decoration: BoxDecoration(
-                                                                        color: Colors.white,
-                                                                        shape: BoxShape.rectangle,
-                                                                        borderRadius: BorderRadius.circular(30),
-                                                                        boxShadow: [
-                                                                          BoxShadow(
-                                                                            color: Colors.black12,
-                                                                            blurRadius: 10.0, // soften the shadow
-                                                                            spreadRadius: 5.0, //extend the shadow
-                                                                            offset: Offset(
-                                                                              0.0, // Move to right 10  horizontally
-                                                                              5.0, // Move to bottom 5 Vertically
-                                                                            ),
-                                                                          )
-                                                                        ],
-                                                                      ),
-                                                                    ),
-                                                                  )
-                                                                ],
-                                                              ), */
+                                                                              )
+                                                                            ],
+                                                                          ), */
         );
   }
 
@@ -892,5 +902,48 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     addFamilyUserInfoBloc.verifyEmail().then((value) {
       new FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
     });
+  }
+
+  acceptanceWidget() {
+    TextStyle defaultStyle =
+        TextStyle(color: Colors.black, fontFamily: 'Poppins', fontSize: 12);
+    TextStyle linkStyle = TextStyle(
+        color: Color(CommonUtil().getMyPrimaryColor()),
+        fontFamily: 'Poppins',
+        fontSize: 12);
+    return Padding(
+        padding: EdgeInsets.only(top: 10, bottom: 10, right: 40, left: 40),
+        child: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            style: defaultStyle,
+            children: <TextSpan>[
+              TextSpan(text: 'By completing Sign Up, you agree to our '),
+              TextSpan(
+                  text: 'Terms of Service',
+                  style: linkStyle,
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      openWebView(Constants.terms_of_service,
+                          'assets/help_docs/termsandconditions.html', true);
+                    }),
+              TextSpan(text: ' and '),
+              TextSpan(
+                  text: 'Privacy Policy',
+                  style: linkStyle,
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      openWebView(Constants.privacy_policy,
+                          'assets/help_docs/privacypolicy.html', true);
+                    }),
+            ],
+          ),
+        ));
+  }
+
+  void openWebView(String title, String url, bool isLocal) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (BuildContext context) => MyFhbWebView(
+            title: title, selectedUrl: url, isLocalAsset: isLocal)));
   }
 }

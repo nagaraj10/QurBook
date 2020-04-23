@@ -7,11 +7,11 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-
-class SwitchProfile{
+class SwitchProfile {
   FamilyListBloc _familyListBloc;
   MyProfileBloc _myProfileBloc;
 
@@ -19,10 +19,11 @@ class SwitchProfile{
   GlobalKey<State> keyLoader = new GlobalKey<State>();
   Function callBackToRefresh;
 
-   Widget buildActions(BuildContext _context,GlobalKey<State> _keyLoader,Function _callBackToRefresh) {
-  context=_context;
-  keyLoader=_keyLoader;
-  callBackToRefresh=_callBackToRefresh;
+  Widget buildActions(BuildContext _context, GlobalKey<State> _keyLoader,
+      Function _callBackToRefresh) {
+    context = _context;
+    keyLoader = _keyLoader;
+    callBackToRefresh = _callBackToRefresh;
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
 
     return Padding(
@@ -36,9 +37,8 @@ class SwitchProfile{
               if (_familyListBloc != null) {
                 _familyListBloc = null;
                 _familyListBloc = new FamilyListBloc();
-              }else{
-                                _familyListBloc = new FamilyListBloc();
-
+              } else {
+                _familyListBloc = new FamilyListBloc();
               }
               _familyListBloc.getFamilyMembersList().then((familyMembersList) {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
@@ -67,7 +67,7 @@ class SwitchProfile{
     ]; */
   }
 
-   Future<Widget> getDialogBoxWithFamilyMemberScrap(FamilyData familyData) {
+  Future<Widget> getDialogBoxWithFamilyMemberScrap(FamilyData familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, keyLoader, (context, userId, userName) {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
@@ -80,26 +80,32 @@ class SwitchProfile{
 
   getUserProfileData() async {
     CommonUtil.showLoadingDialog(context, keyLoader, 'Relaoding');
- if (_myProfileBloc != null) {
-                _myProfileBloc = null;
+    if (_myProfileBloc != null) {
+      _myProfileBloc = null;
       _myProfileBloc = new MyProfileBloc();
-              }else{
+    } else {
       _myProfileBloc = new MyProfileBloc();
+    }
+    HealthReportListForUserBlock _healthReportListForUserBlock =
+        new HealthReportListForUserBlock();
 
-              }
     _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
       print('inside myrecprds' + profileData.toString());
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
           .then((value) {
-        Navigator.of(keyLoader.currentContext, rootNavigator: true).pop();
-        new CommonUtil()
-            .getMedicalPreference(callBackToRefresh:callBackToRefresh);
-      });
+        _healthReportListForUserBlock.getHelthReportList().then((value) {
+          PreferenceUtil.saveCompleteData(
+                  Constants.KEY_COMPLETE_DATA, value.response.data)
+              .then((value) {
+            Navigator.of(keyLoader.currentContext, rootNavigator: true).pop();
+            new CommonUtil()
+                .getMedicalPreference(callBackToRefresh: callBackToRefresh);
+          });
+        });
 
-      //Navigator.of(context).pop();
-      //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        //Navigator.of(context).pop();
+        //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      });
     });
   }
-
-
 }

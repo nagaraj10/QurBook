@@ -11,7 +11,7 @@ class CommonConstants {
   static String categoryDescriptionIDDocs = 'Catcode006';
   static String categoryDescriptionOthers = 'Catcode007';
   static String categoryDescriptionWearable = 'Catcode008';
-  static String categoryDescriptionFeedback = 'Catcode00';
+  static String categoryDescriptionFeedback = 'Catcode009';
   static String categoryDescriptionVoiceRecord = 'Catcode010';
   static String categoryDescriptionClaimsRecord = 'Catcode011';
 
