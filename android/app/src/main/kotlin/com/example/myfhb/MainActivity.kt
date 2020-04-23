@@ -1,8 +1,6 @@
 package com.example.myfhb
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.speech.RecognizerIntent
@@ -27,11 +25,24 @@ import java.lang.reflect.GenericArrayType
 import java.util.*
 import java.util.jar.Manifest
 import kotlin.collections.ArrayList
+import android.R
+
+
 import android.content.Context.KEYGUARD_SERVICE
 import android.app.KeyguardManager
 
+import android.R.attr.data
+import android.content.*
+import android.os.Bundle
+import android.os.PersistableBundle
+import com.google.android.gms.auth.api.phone.SmsRetriever
+import com.google.android.gms.common.api.CommonStatusCodes
+import com.google.android.gms.common.api.Status
+
+
 class MainActivity : FlutterActivity() {
     private val VERSION_CODES_CHANNEL = "flutter.native/versioncode"
+    private val LISTEN4SMS = "flutter.native/listen4sms"
     private val VOICE_CHANNEL = "flutter.native/voiceIntent"
     private val TTS_CHANNEL = "flutter.native/textToSpeech"
     private val SECURITY_CHANNEL = "flutter.native/security"
@@ -50,11 +61,57 @@ class MainActivity : FlutterActivity() {
 
     private lateinit var _result: MethodChannel.Result
     private lateinit var _securityResult: MethodChannel.Result
+    //internal var smsBroadcastReceiver: SMSBroadcastReceiver? = null
 
+    private val smsBroadcastReceiver by lazy { SMSBroadcastReceiver() }
+    internal var TAG = this@MainActivity::class.toString()
+    private val SMS_CONSENT_REQUEST = 2  // Set to an unused request code
+
+//    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+//        super.onCreate(savedInstanceState, persistentState)
+//        registerReceiver(smsBroadcastReceiver,
+//                IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
+//    }
+
+   /* override fun onStop() {
+        super.onStop()
+        unregisterReceiver(smsBroadcastReceiver)
+    }*/
 
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine);
+
+        val appSignatureHelper = AppSignatureHelper(applicationContext)
+        appSignatureHelper.appSignatures;
+        Log.v("App signature fm native","${appSignatureHelper.appSignatures}");
+
+        val smsVerificationReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                if (SmsRetriever.SMS_RETRIEVED_ACTION == intent.action) {
+                    val extras = intent.extras
+                    val smsRetrieverStatus = extras?.get(SmsRetriever.EXTRA_STATUS) as Status
+
+                    when (smsRetrieverStatus.statusCode) {
+                        CommonStatusCodes.SUCCESS -> {
+                            // Get consent intent
+                            val consentIntent = extras.getParcelable<Intent>(SmsRetriever.EXTRA_CONSENT_INTENT)
+                            try {
+                                // Start activity to show consent dialog to user, activity must be started in
+                                // 5 minutes, otherwise you'll receive another TIMEOUT intent
+                                startActivityForResult(consentIntent, SMS_CONSENT_REQUEST)
+                            } catch (e: ActivityNotFoundException) {
+                                // Handle the exception ...
+                            }
+                        }
+                        CommonStatusCodes.TIMEOUT -> {
+                            // Time out occurred, handle the error.
+                        }
+                    }
+                }
+            }
+        }
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VERSION_CODES_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "getAppVersion") {
                 //logics to get version code
@@ -65,16 +122,29 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SECURITY_CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "secureMe") {
-                //logics to show security mehods
-                _securityResult=result
-                secureMe();
-
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, LISTEN4SMS).setMethodCallHandler { call, result ->
+            if (call.method == "listenForSMS") {
+                //logics to get version code
+//                val appVersion = getAppVersion();
+//                result.success(appVersion);
+                listenForSMS()
             } else {
                 result.notImplemented()
             }
         }
+
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SECURITY_CHANNEL).setMethodCallHandler { call, result ->
+            if (call.method == "secureMe") {
+                //logics to show security mehods
+                _securityResult=result
+                secureMe();
+            } else {
+                result.notImplemented()
+            }
+        }
+
+
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VOICE_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "speakWithVoiceAssistant") {
@@ -96,7 +166,8 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger,TTS_CHANNEL).setMethodCallHandler{ call, result ->
             if(call.method=="textToSpeech"){
                 val msg = call.argument<String>("message")
-                textToSpeech(msg!!)
+                val iscls = call.argument<Boolean>("isClose")
+                textToSpeech(msg!!,iscls!!)
             }else{
                 result.notImplemented()
             }
@@ -106,6 +177,9 @@ class MainActivity : FlutterActivity() {
 
 
     }
+
+
+
 
     private fun speakWithVoiceAssistant() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -130,20 +204,76 @@ class MainActivity : FlutterActivity() {
         })
     }
 
-     private fun secureMe(){
+    private fun listenForSMS(){
+        //Initialize the SmsRetriever client
+        val client = SmsRetriever.getClient(this)
+        //Start the SMS Retriever task
+        val task = client.startSmsRetriever()
+        task.addOnSuccessListener { aVoid ->
+            //if successfully started, then start the receiver.
+            //registerReceiver(smsBroadcastReceiver, IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
+
+            Toast.makeText(this@MainActivity,"Listener started", Toast.LENGTH_SHORT).show()
+
+            val otpListener = object : SMSBroadcastReceiver.OTPListener {
+                override fun onOTPReceived(otp: String) {
+                    //customCodeInput.setText(otp)
+                    Toast.makeText(this@MainActivity, otp , Toast.LENGTH_LONG).show()
+                }
+
+                override fun onOTPTimeOut() {
+                    Toast.makeText(this@MainActivity,"TimeOut", Toast.LENGTH_SHORT).show()
+                }
+            }
+            smsBroadcastReceiver.injectOTPListener(otpListener)
+            registerReceiver(smsBroadcastReceiver, IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
+        }
+
+
+        task.addOnFailureListener {
+            Toast.makeText(this@MainActivity,"Problem to start listener", Toast.LENGTH_SHORT).show()
+        }
+
+    }
+
+
+   /* private fun listenForSMS(receiver: BroadcastReceiver){
+
+
+        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+        registerReceiver(receiver, intentFilter, SmsRetriever.SEND_PERMISSION,null)
+
+    }*/
+
+
+    private fun secureMe(){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             val km: KeyguardManager = getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure()) {
                 val authIntent: Intent = km.createConfirmDeviceCredentialIntent("MyFHB", "Please Authorize to use the Application")
                 startActivityForResult(authIntent, INTENT_AUTHENTICATE)
+            }else{
+                _securityResult.success(1004)
+                return
             }
+        }else{
+            _securityResult.success(1000)
+            return
         }
     }
 
-    private fun textToSpeech(msg:String){
-        tts!!.speak(msg, TextToSpeech.QUEUE_FLUSH, null)
-    }
 
+    private fun textToSpeech(msg:String,isClose:Boolean):TextToSpeech{
+        tts!!.setSpeechRate(0.8f)
+        if(isClose){
+            tts!!.shutdown()
+        }else{
+            tts!!.speak(msg, TextToSpeech.QUEUE_FLUSH, null,
+                    null)
+        }
+        return tts!!
+        //return tts!!.isSpeaking
+    }
 
     private fun getAppVersion(): String {
         val versionCode: Int = BuildConfig.VERSION_CODE
@@ -155,9 +285,6 @@ class MainActivity : FlutterActivity() {
     private fun requestPermissionFromUSer(){
         ActivityCompat.requestPermissions(this,arrayOf(android.Manifest.permission.RECORD_AUDIO),REQ_CODE)
     }
-
-
-
 
     fun GetSrcTargetLanguages() {
         langSource = "en_US"
@@ -186,11 +313,27 @@ class MainActivity : FlutterActivity() {
             }
             INTENT_AUTHENTICATE -> {
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    _securityResult.success(true)
+                    _securityResult.success(1002)
                 }else{
-                    _securityResult.success(false)
+                    _securityResult.success(1003)
                 }
             }
+            /*SMS_CONSENT_REQUEST ->
+                // Obtain the phone number from the result
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    // Get SMS message content
+                    val message = data.getStringExtra(SmsRetriever.EXTRA_SMS_MESSAGE)
+                    // Extract one-time code from the message and complete verification
+                    // `message` contains the entire text of the SMS message, so you will need
+                    // to parse the string.
+                    Log.v("my current message otp:",message)
+                    //val oneTimeCode = parseOneTimeCode(message) // define this function
+
+                    // send one time code to the server
+                } else {
+                    // Consent denied. User can type OTC manually.
+                }*/
+
         }
     }
 

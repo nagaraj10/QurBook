@@ -17,6 +17,7 @@ import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'dart:convert';
 
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 
 class Feedbacks extends StatefulWidget {
   Function refresh;
@@ -45,156 +46,6 @@ class _FeedbacksState extends State<Feedbacks> {
 
   HealthReportListForUserBlock _healthReportListForUserBlock =
       new HealthReportListForUserBlock();
-
-  /* @override
-  Widget build(BuildContext context) {
-    print('Inside build of feedback');
-    return Scaffold(
-        appBar: AppBar(title: Text('Feedbacks')),
-        body: Column(
-          children: <Widget>[
-            Container(
-                color: Color(new CommonUtil().getMyPrimaryColor()),
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height / 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      height: 40,
-                    ),
-                    IconButton(
-                      icon: new ImageIcon(
-                        AssetImage('assets/icons/reviewer-male.png'),
-                        color: Colors.white,
-                        size: 32,
-                      ),
-                      onPressed: () {},
-                    ),
-                    Container(
-                      child: Text('I m inside container'),
-                      color: Color(new CommonUtil().getMyPrimaryColor()),
-                    ),
-                  ],
-                )),
-            Container(
-              height: 40,
-            ),
-            Container(
-              child: Text('Feedback'),
-            ),
-            Divider(),
-            Container(
-              height: 40,
-            ),
-            Container(
-              child: Text('Attach'),
-            ),
-            /* Column(
-              children: <Widget>[
-                IconButton(
-                  icon: new ImageIcon(
-                    AssetImage('assets/icons/attach.png'),
-                    color: Colors.white,
-                    size: 32,
-                  ),
-                  onPressed: () async {
-                    // Take the Picture in a try / catch block. If anything goes wrong,
-                    // catch the error.
-
-                    await loadAssets();
-                    //callDisplayPictureScreen(context);
-                    setState(() {});
-                  },
-                ),
-                resultList.length > 0
-                    ? showListViiewBuilder()
-                    : Container()
-              ],
-            )*/
-            Column(
-              children: <Widget>[
-                Center(child: Text('Error:')),
-                RaisedButton(
-                  child: Text("Pick images"),
-                  onPressed: loadAssets,
-                ),
-                Expanded(
-                  child: buildGridView(),
-                )
-              ],
-            ),
-          ],
-        ));
-       
-    return new MaterialApp(
-        home: new Scaffold(
-            appBar: new AppBar(
-              title: const Text('Plugin example app'),
-            ),
-            body: Expanded(child:Container(
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height / 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              height: 40,
-                            ),
-                            IconButton(
-                              icon: new ImageIcon(
-                                AssetImage('assets/icons/reviewer-male.png'),
-                                color: Colors.white,
-                                size: 32,
-                              ),
-                              onPressed: () {},
-                            ),
-                            Container(
-                              child: Text('I m inside container'),
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                            ),
-                          ],
-                        )),
-                    Container(
-                      height: 10,
-                    ),
-                    Container(
-                      child: Text('Feedback'),
-                    ),
-                    Divider(),
-                    Container(
-                      height: 10,
-                    ),
-                    Container(
-                      child: Text('Attach'),
-                    ),
-                    Center(child: Text('Error: $_error')),
-                    IconButton(
-                      icon: new ImageIcon(
-                        AssetImage('assets/icons/attach.png'),
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                        size: 32,
-                      ),
-                      onPressed: loadAssets,
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: buildGridView(),
-                    )
-                  ],
-                ),
-              ),
-            ))));
-  } */
 
   Future<void> loadAssets() async {
     String error = 'No Error Dectected';
@@ -232,12 +83,6 @@ class _FeedbacksState extends State<Feedbacks> {
       images = resultList;
       _error = error;
     });
-
-    /*  for (Asset asset in resultList) {
-                                        String filePath =
-                                            await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-                                        imagePaths.add(filePath);
-                                      }*/
   }
 
   Widget showListViiewBuilder() {
@@ -296,80 +141,104 @@ class _FeedbacksState extends State<Feedbacks> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Feedbacks"),
-      ),
+      /*  appBar: AppBar(
+        //flexibleSpace: GradientAppBar(),
+        backgroundColor: Color(CommonUtil().getMyGredientColor()),
+        leading: Container(),
+        title: Text('Feedback'),
+        centerTitle: true,
+        elevation: 0,
+      ), */
       body: Container(
         child: SingleChildScrollView(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                  color: Color(new CommonUtil().getMyPrimaryColor()),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 4,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        height: 40,
-                      ),
-                      IconButton(
-                        icon: new ImageIcon(
-                          AssetImage('assets/icons/reviewer-male.png'),
-                          color: Colors.white,
-                          size: 32,
+                  color: Color(CommonUtil().getMyGredientColor()),
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          height: 60,
                         ),
-                        onPressed: () {},
-                      ),
-                      Container(
-                        child: Text('I m inside container'),
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                      ),
-                    ],
+                        Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Image.asset('assets/launcher/myfhb.png',
+                              width: 100, height: 100),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text('Feedback',
+                                style: TextStyle(
+                                    fontSize: 24, color: Colors.white))),
+                        Padding(
+                          padding: EdgeInsets.only(left: 20),
+                          child: Text(
+                            'We would like to hear from you on your experience with MyFHB',
+                            softWrap: true,
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                        ),
+                      ],
+                    ),
                   )),
               Container(
                 height: 10,
               ),
-              Container(
-                child: Text('Feedback'),
-              ),
-              Divider(),
-              Container(
-                height: 10,
-              ),
-              Container(
-                child: Text('Record'),
-              ),
-              containsAudioMain
-                  ? new AudioWidget(audioPathMain, (containsAudio, audioPath) {
-                      audioPathMain = audioPath;
-                      containsAudioMain = containsAudio;
+              Padding(
+                padding: EdgeInsets.only(left: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      child: Text('Feedback'),
+                    ),
+                    Divider(),
+                    Container(
+                      height: 10,
+                    ),
+                    Container(
+                      child: Text('Add Voice'),
+                    ),
+                    containsAudioMain
+                        ? new AudioWidget(audioPathMain,
+                            (containsAudio, audioPath) {
+                            audioPathMain = audioPath;
+                            containsAudioMain = containsAudio;
 
-                      setState(() {});
-                    })
-                  : fhbBasicWidget
-                      .getMicIcon(context, containsAudioMain, audioPathMain,
-                          (containsAudio, audioPath) {
-                      audioPathMain = audioPath;
-                      containsAudioMain = containsAudio;
-                      setState(() {});
-                    }),
-              Container(
-                child: Text('Attach'),
-              ),
-              Center(child: Text('Error: $_error')),
-              IconButton(
-                icon: new ImageIcon(
-                  AssetImage('assets/icons/attach.png'),
-                  color: Color(new CommonUtil().getMyPrimaryColor()),
-                  size: 32,
+                            setState(() {});
+                          })
+                        : fhbBasicWidget.getMicIcon(
+                            context, containsAudioMain, audioPathMain,
+                            (containsAudio, audioPath) {
+                            audioPathMain = audioPath;
+                            containsAudioMain = containsAudio;
+                            setState(() {});
+                          }),
+                    Container(
+                      child: Text('Attach Image'),
+                    ),
+                    //Center(child: Text('Error: $_error')),
+                    IconButton(
+                      icon: new ImageIcon(
+                        AssetImage('assets/icons/attach.png'),
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                        size: 32,
+                      ),
+                      onPressed: loadAssets,
+                    ),
+                    buildGridView(),
+                  ],
                 ),
-                onPressed: loadAssets,
               ),
-              buildGridView(),
               fhbBasicWidget.getSaveButton(() {
                 onPostDataToServer(context, imagePaths);
-              })
+              }),
+              SizedBox(height: 20)
             ],
           ),
         ),

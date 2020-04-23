@@ -5,14 +5,15 @@ class Conversation{
     String text;
     String imageUrl;
     String name;
-
-    Conversation({@required this.isMayaSaid,@required this.text,@required this.imageUrl,@required this.name});
+    String timeStamp;
+    Conversation({@required this.isMayaSaid,@required this.text,this.imageUrl,@required this.name,this.timeStamp});
 
     Conversation.fromJson(Map<String,dynamic> json){
         isMayaSaid = json['isMayaSaid'];
         text = json['text'];
         imageUrl = json['imageUrl'];
         name = json['name'];
+        timeStamp = json['timeStamp'];
     }
 
 
@@ -22,6 +23,7 @@ class Conversation{
       data['text']=this.text;
       data['imageUrl']=this.imageUrl;
       data['name']=this.name;
+      data['timeStamp']=this.timeStamp;
       return data;
     }
 

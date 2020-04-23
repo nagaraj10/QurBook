@@ -150,6 +150,10 @@ class _MyFHBState extends State<MyFHB> {
 
     flutterLocalNotificationsPlugin.initialize(platform,
         onSelectNotification: notificationAction);
+    return baseWidget();
+  }
+
+  Widget baseWidget() {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
@@ -190,7 +194,16 @@ class _MyFHBState extends State<MyFHB> {
 
   Future<void> showSecurityWall() async {
     try {
-      await secure_platform.invokeMethod('secureMe');
-    } on PlatformException catch (e) {}
+      final int RESULT_CODE = await secure_platform.invokeMethod('secureMe');
+      switch (RESULT_CODE) {
+        case 1003:
+          //todo authorized unsuccessfull
+          SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop');
+          break;
+      }
+    } on PlatformException catch (e, s) {
+      print(e.message);
+      print(s);
+    }
   }
 }

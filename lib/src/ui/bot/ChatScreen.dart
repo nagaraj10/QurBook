@@ -9,9 +9,9 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert' as convert;
-import 'package:intl/intl.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 
 // ignore: must_be_immutable
@@ -48,28 +48,49 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     PreferenceUtil.init();
     _controller = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this, value: 0.1);
-
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
-    //myUUID=uuid.v1();
+    startMayaAutomatically();
+  }
+
+  startMayaAutomatically() {
+    sendToMaya('Hi Maya');
+    var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
+    Conversation model = new Conversation(
+      isMayaSaid: false,
+      text: 'Hi Maya',
+      name: prof.response.data.generalInfo.name,
+      timeStamp: date,
+    );
+    conversations.add(model);
+    setState(() {});
+    chatData(conversations.reversed.toList());
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _controller.dispose();
+    stopTTSEngine();
     super.dispose();
+  }
+
+  stopTTSEngine() async {
+    await tts_platform.invokeMethod(
+        'textToSpeech', {"message": "", "isClose": true}).then((res) {
+      print('speech to text implement');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     Timer(Duration(milliseconds: 1000),
         () => controller.jumpTo(controller.position.maxScrollExtent));
+
+    //conversations.reversed;
     return Scaffold(
       appBar: AppBar(
         title: Text('Maya'),
@@ -123,14 +144,18 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           .invokeMethod('speakWithVoiceAssistant')
           .then((response) {
         sendToMaya(response);
+        var date =
+            new FHBUtils().getFormattedDateString(DateTime.now().toString());
         Conversation model = new Conversation(
-            isMayaSaid: false,
-            text: response,
-            imageUrl: 'http://placehold.it/120x120&text=image1',
-            name: prof.response.data.generalInfo.name);
+          isMayaSaid: false,
+          text: response,
+          name: prof.response.data.generalInfo.name,
+          timeStamp: date,
+        );
         conversations.add(model);
-        setState(() {});
-        chatData(conversations);
+        setState(() {
+          chatData(conversations.reversed);
+        });
       });
     } on PlatformException catch (e) {
       //res = 'failed to get the voice data due to${e.message}';
@@ -173,18 +198,23 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       print('response from maya ' + jsonResponse.toString());
       List<dynamic> list = jsonResponse;
       SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
+      print(res.text);
+      var date =
+          new FHBUtils().getFormattedDateString(DateTime.now().toString());
       Conversation model = new Conversation(
-          isMayaSaid: true,
-          text: res.text,
-          imageUrl: '',
-          name: prof.response.data.generalInfo.name);
+        isMayaSaid: true,
+        text: res.text,
+        name: prof.response.data.generalInfo.name,
+        imageUrl: res.imageURL,
+        timeStamp: date,
+      );
       conversations.add(model);
       setState(() {});
       chatData(conversations);
       print('current length of ${conversations.length}');
-      await tts_platform
-          .invokeMethod('textToSpeech', {"message": res.text}).then((res) {
-        print('speech to text implement');
+      await tts_platform.invokeMethod(
+          'textToSpeech', {"message": res.text, "isClose": false}).then((res) {
+        print('print tts obj $res');
       });
       return jsonResponse;
     } else {
@@ -211,8 +241,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   Widget senderLayout(Conversation c, BuildContext context) {
-    var currentDate =
-        new DateFormat("dd-MM-yyyy hh:mm:ss").format(DateTime.now());
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -256,7 +284,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             ),
             //SizedBox(height: 15,),
             Text(
-              currentDate,
+              "${c.timeStamp}",
               style:
                   Theme.of(context).textTheme.body1.apply(color: Colors.grey),
             ),
@@ -273,8 +301,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   Widget receiverLayout(Conversation c, BuildContext context) {
-    var currentDate =
-        new DateFormat("dd-MM-yyyy hh:mm:ss").format(DateTime.now());
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,7 +373,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               ),
             ),
             Text(
-              currentDate,
+              "${c.timeStamp}",
               style:
                   Theme.of(context).textTheme.body1.apply(color: Colors.grey),
             ),
