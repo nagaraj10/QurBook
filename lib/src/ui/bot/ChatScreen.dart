@@ -68,7 +68,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
     conversations.add(model);
     setState(() {});
-    chatData(conversations.reversed.toList());
+    chatData(conversations);
   }
 
   @override
@@ -227,10 +227,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       return _pleaseWait();
     } else {
       return Container(
+          padding: EdgeInsets.only(bottom: 50),
           color: Colors.white70,
           child: ListView.builder(
               controller: controller,
-              reverse: true,
+              reverse: false,
               itemCount: con.length,
               itemBuilder: (BuildContext ctxt, int index) => Padding(
                   padding: EdgeInsets.only(top: 20.0, bottom: 20.0),
