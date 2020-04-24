@@ -18,7 +18,7 @@ class _IntroSliderState extends State<IntroSliderPage> {
 
     pages.add(
       new Slide(
-        title: "Go paperless",
+        title: "Click ''n'' Store",
         styleTitle: TextStyle(
           color: Colors.black,
           fontSize: 24.0,

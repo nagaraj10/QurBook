@@ -465,13 +465,13 @@ class CommonUtil {
   int getMyPrimaryColor() {
     return PreferenceUtil.getSavedTheme('pri_color') != null
         ? PreferenceUtil.getSavedTheme('pri_color')
-        : 0xff3da0a6;
+        : 0xff5e1fe0;
   }
 
   int getMyGredientColor() {
     return PreferenceUtil.getSavedTheme('gre_color') != null
         ? PreferenceUtil.getSavedTheme('gre_color')
-        : 0xff66dca0;
+        : 0xff753aec;
   }
 
   List<CategoryData> getAllCategoryList(List<globalSearch.Data> data) {

@@ -5,19 +5,18 @@ import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/feedback/FeedbacksSucess.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'dart:convert';
-
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 
 class Feedbacks extends StatefulWidget {
   Function refresh;
@@ -123,32 +122,39 @@ class _FeedbacksState extends State<Feedbacks> {
   }
 
   Widget buildGridView() {
-    return Container(
-        height: 150,
-        child: GridView.count(
-          crossAxisCount: 3,
-          children: List.generate(images.length, (index) {
-            Asset asset = images[index];
-            return AssetThumb(
-              asset: asset,
-              width: 300,
-              height: 300,
-            );
-          }),
-        ));
+    return images.length != 0
+        ? Container(
+            height: 150,
+            child: GridView.count(
+              crossAxisCount: 1,
+              scrollDirection: Axis.horizontal,
+              children: List.generate(images.length, (index) {
+                Asset asset = images[index];
+                return Padding(
+                  padding: EdgeInsets.all(5),
+                  child: AssetThumb(
+                    asset: asset,
+                    width: 100,
+                    height: 100,
+                  ),
+                );
+              }),
+            ))
+        : SizedBox(height: 0);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*  appBar: AppBar(
-        //flexibleSpace: GradientAppBar(),
+      appBar: AppBar(
         backgroundColor: Color(CommonUtil().getMyGredientColor()),
-        leading: Container(),
-        title: Text('Feedback'),
-        centerTitle: true,
+        leading: IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.of(context).pop()),
+        title: Text(''),
+        centerTitle: false,
         elevation: 0,
-      ), */
+      ),
       body: Container(
         child: SingleChildScrollView(
           child: Column(
@@ -162,9 +168,9 @@ class _FeedbacksState extends State<Feedbacks> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Container(
+                        /*  Container(
                           height: 60,
-                        ),
+                        ), */
                         Padding(
                           padding: EdgeInsets.all(10),
                           child: Image.asset('assets/launcher/myfhb.png',
@@ -202,7 +208,33 @@ class _FeedbacksState extends State<Feedbacks> {
                       height: 10,
                     ),
                     Container(
+                      child: Text('Attach Image'),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      height: 80,
+                      width: 80,
+                      color: ColorUtils.greycolor,
+                      child: IconButton(
+                        icon: new ImageIcon(
+                          AssetImage('assets/icons/attach.png'),
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          size: 32,
+                        ),
+                        onPressed: loadAssets,
+                      ),
+                    ),
+                    buildGridView(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Container(
                       child: Text('Add Voice'),
+                    ),
+                    SizedBox(
+                      height: 10,
                     ),
                     containsAudioMain
                         ? new AudioWidget(audioPathMain,
@@ -212,33 +244,32 @@ class _FeedbacksState extends State<Feedbacks> {
 
                             setState(() {});
                           })
-                        : fhbBasicWidget.getMicIcon(
-                            context, containsAudioMain, audioPathMain,
-                            (containsAudio, audioPath) {
-                            audioPathMain = audioPath;
-                            containsAudioMain = containsAudio;
-                            setState(() {});
-                          }),
-                    Container(
-                      child: Text('Attach Image'),
-                    ),
-                    //Center(child: Text('Error: $_error')),
-                    IconButton(
-                      icon: new ImageIcon(
-                        AssetImage('assets/icons/attach.png'),
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                        size: 32,
-                      ),
-                      onPressed: loadAssets,
-                    ),
-                    buildGridView(),
+                        : Container(
+                            height: 80,
+                            width: 80,
+                            color: ColorUtils.greycolor,
+                            child: fhbBasicWidget.getMicIcon(
+                                context, containsAudioMain, audioPathMain,
+                                (containsAudio, audioPath) {
+                              audioPathMain = audioPath;
+                              containsAudioMain = containsAudio;
+                              setState(() {});
+                            })),
                   ],
                 ),
               ),
-              fhbBasicWidget.getSaveButton(() {
-                onPostDataToServer(context, imagePaths);
-              }),
-              SizedBox(height: 20)
+              Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 20),
+                    fhbBasicWidget.getSaveButton(() {
+                      onPostDataToServer(context, imagePaths);
+                    }),
+                    SizedBox(height: 20)
+                  ],
+                ),
+              )
             ],
           ),
         ),
@@ -348,7 +379,8 @@ class _FeedbacksState extends State<Feedbacks> {
               print('Sucess 1');
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
-              PageNavigator.goToPermanent(context, '/feedbacks_success');
+              //PageNavigator.goTo(context, '/feedbacks_success');
+              callFeedBackSuccess(context);
             });
           });
         } else if (k == imagePaths.length - 1) {
@@ -358,7 +390,8 @@ class _FeedbacksState extends State<Feedbacks> {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
             print('Sucess 2');
 
-            PageNavigator.goToPermanent(context, '/feedbacks_success');
+            callFeedBackSuccess(context);
+            //PageNavigator.goTo(context, '/feedbacks_success');
           });
         } else if (k == imagePaths.length) {
           _healthReportListForUserBlock.getHelthReportList().then((value) {
@@ -367,13 +400,23 @@ class _FeedbacksState extends State<Feedbacks> {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
             print('Sucess 3');
 
-            PageNavigator.goToPermanent(context, '/feedbacks_success');
+            //PageNavigator.goTo(context, '/feedbacks_success');
+            callFeedBackSuccess(context);
           });
         }
 
         k++;
       });
     }
+  }
+
+  void callFeedBackSuccess(BuildContext context) {
+    Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => new FeedbackSuccess()),
+    ).then((value) {
+      setState(() {});
+    });
   }
 
   void saveAudioFile(
@@ -391,7 +434,7 @@ class _FeedbacksState extends State<Feedbacks> {
 
           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-          PageNavigator.goToPermanent(context, '/feedbacks_success');
+          PageNavigator.goTo(context, '/feedbacks_success');
         });
       });
     }

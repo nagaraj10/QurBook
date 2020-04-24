@@ -33,19 +33,21 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   ];
 
   List<int> myThemes = [
+    0xff5e1fe0,
     0xff00b4d5,
     0xff4d9bc1,
     0xff3da0a6,
     0xfff6679f,
-    0xff7a72c7,
+    //0xff7a72c7,
   ];
 
   List<int> myGradient = [
+    0xff753aec,
     0xff02e0d3,
     0xff779af6,
     0xff66dca0,
     0xffff727c,
-    0xff828bea,
+    //0xff828bea,
   ];
 
   String selectedMaya = PreferenceUtil.getStringValue('maya_asset') != null
@@ -54,11 +56,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   int selectedPrimaryColor = PreferenceUtil.getSavedTheme('pri_color') != null
       ? PreferenceUtil.getSavedTheme('pri_color')
-      : 0xff3da0a6;
+      : 0xff5e1fe0;
 
   int selectedGradientColor = PreferenceUtil.getSavedTheme('gre_color') != null
       ? PreferenceUtil.getSavedTheme('gre_color')
-      : 0xff66dca0;
+      : 0xff753aec;
 
   @override
   Widget build(BuildContext context) {
@@ -157,7 +159,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     },
                   ),
                   ListTile(
-                                        title: InkWell(
+                    title: InkWell(
                         child: Row(
                       children: <Widget>[
                         ImageIcon(
@@ -169,11 +171,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ],
                     )),
                     onTap: () {
-                      Navigator.pushNamed(
-                                context, '/feedbacks')
-                            .then((value) {
-                          //callBackToRefresh();
-                        });
+                      Navigator.pushNamed(context, '/feedbacks')
+                          .then((value) {});
                     },
                   ),
                   InkWell(

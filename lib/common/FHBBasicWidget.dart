@@ -216,11 +216,8 @@ class FHBBasicWidget {
           child: CircleAvatar(
             //backgroundColor: Colors.transparent,
             backgroundColor: ColorUtils.greycolor,
-            child: Icon(
-              Icons.mic,
-              size: 40,
-              color: Colors.black,
-            ),
+            child: Icon(Icons.mic,
+                size: 40, color: Color(CommonUtil().getMyPrimaryColor())),
             radius: 30.0,
           ),
         ),
