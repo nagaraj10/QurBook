@@ -3,6 +3,7 @@ import 'package:intro_slider/intro_slider.dart';
 import 'package:intro_slider/slide_object.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class IntroSliderPage extends StatefulWidget {
   @override
@@ -11,154 +12,28 @@ class IntroSliderPage extends StatefulWidget {
 
 class _IntroSliderState extends State<IntroSliderPage> {
   List<Slide> pages = new List<Slide>();
+  List<String> slideIcons = [
+    'assets/slide_icons/slide1.png',
+    'assets/slide_icons/slide2.png',
+    'assets/slide_icons/slide3.png',
+    'assets/slide_icons/slide4.png',
+    'assets/slide_icons/slide5.png'
+  ];
 
   @override
   void initState() {
     super.initState();
 
-    pages.add(
-      new Slide(
-        title: "Click ''n'' Store",
-        styleTitle: TextStyle(
-          color: Colors.black,
-          fontSize: 24.0,
-        ),
-        description:
-            "A secure place to store all your family\n health records digitally. Easier to retrieve,\n your mediacal records are avaiable anytime,\n anywhere!",
-        styleDescription: TextStyle(
-          color: Colors.black,
-          fontSize: 16.0,
-        ),
-        pathImage: "assets/slide_icons/slide_paper.png",
-        heightImage: 150,
-        widthImage: 150,
-        foregroundImageFit: BoxFit.scaleDown,
-        colorBegin: Colors.white,
-        colorEnd: Colors.white,
-        directionColorBegin: Alignment.topRight,
-        directionColorEnd: Alignment.bottomLeft,
-      ),
-    );
-
-    pages.add(
-      new Slide(
-        title: "Sharing is Caring",
-        styleTitle: TextStyle(
-          color: Colors.black,
-          fontSize: 24.0,
-        ),
-        description:
-            "You can share and receive personal health\n records between hospitals, clinics and labs.\n No more carring big files with all your\n health record printouts!",
-        styleDescription: TextStyle(
-          color: Colors.black,
-          fontSize: 16.0,
-        ),
-        pathImage: "assets/slide_icons/slide_share.png",
-        heightImage: 150,
-        widthImage: 150,
-        foregroundImageFit: BoxFit.scaleDown,
-        colorBegin: Colors.white,
-        colorEnd: Colors.white,
-        directionColorBegin: Alignment.topRight,
-        directionColorEnd: Alignment.bottomLeft,
-      ),
-    );
-
-    pages.add(
-      new Slide(
-        title: "Click'n'go",
-        styleTitle: TextStyle(
-          color: Colors.black,
-          fontSize: 24.0,
-        ),
-        description:
-            "Just click a photo of your medical device\n readings. we will digitize the values using our\n SMART AI",
-        styleDescription: TextStyle(
-          color: Colors.black,
-          fontSize: 16.0,
-        ),
-        pathImage: "assets/slide_icons/slide_touch.png",
-        heightImage: 150,
-        widthImage: 150,
-        foregroundImageFit: BoxFit.scaleDown,
-        colorBegin: Colors.white,
-        colorEnd: Colors.white,
-        directionColorBegin: Alignment.topRight,
-        directionColorEnd: Alignment.bottomLeft,
-      ),
-    );
-
-    pages.add(
-      new Slide(
-        title: "Meet AI Maya",
-        styleTitle: TextStyle(
-          color: Colors.black,
-          fontSize: 24.0,
-        ),
-        description:
-            "Just say \"Talk to Super Maya\" and start\n your voice chat with the world\'s 1st\n conversational AI health assistant to get \nvital insights of your health. you don\'t want to miss this!",
-        styleDescription: TextStyle(
-          color: Colors.black,
-          fontSize: 16.0,
-        ),
-        pathImage: "assets/slide_icons/slide_maya.png",
-        heightImage: 150,
-        widthImage: 150,
-        foregroundImageFit: BoxFit.scaleDown,
-        colorBegin: Colors.white,
-        colorEnd: Colors.white,
-        directionColorBegin: Alignment.topRight,
-        directionColorEnd: Alignment.bottomLeft,
-      ),
-    );
-
-    pages.add(
-      new Slide(
-        title: "Sync",
-        styleTitle: TextStyle(
-          color: Colors.black,
-          fontSize: 24.0,
-        ),
-        description:
-            "Google Fit ready !!. Synchronize all your\n Google device data and track your activities",
-        styleDescription: TextStyle(
-          color: Colors.black,
-          fontSize: 16.0,
-        ),
-        pathImage: "assets/slide_icons/slide_sync.png",
-        heightImage: 150,
-        widthImage: 150,
-        foregroundImageFit: BoxFit.scaleDown,
-        colorBegin: Colors.white,
-        colorEnd: Colors.white,
-        directionColorBegin: Alignment.topRight,
-        directionColorEnd: Alignment.bottomLeft,
-      ),
-    );
-
-    pages.add(
-      new Slide(
-        title: "Good Health. \nHappy Family !!",
-        maxLineTitle: 2,
-        styleTitle: TextStyle(
-          color: Colors.black,
-          fontSize: 24.0,
-        ),
-        description: "You are good to go. Let\'s get started",
-        styleDescription: TextStyle(
-          color: Colors.black,
-          fontSize: 16.0,
-        ),
-        pathImage: "assets/slide_icons/slide_fhb.png",
-        heightImage: 150,
-        widthImage: 150,
-        foregroundImageFit: BoxFit.scaleDown,
-        colorBegin: Colors.white,
-        colorEnd: Colors.white,
-        directionColorBegin: Alignment.topRight,
-        directionColorEnd: Alignment.bottomLeft,
-      ),
-    );
+    pages.add(slideContent(
+        Constants.INTRO_SLIDE_TITLE_1, Constants.INTRO_SLIDE_DESC_1, 1));
+    pages.add(slideContent(
+        Constants.INTRO_SLIDE_TITLE_2, Constants.INTRO_SLIDE_DESC_2, 2));
+    pages.add(slideContent(
+        Constants.INTRO_SLIDE_TITLE_3, Constants.INTRO_SLIDE_DESC_3, 3));
+    pages.add(slideContent(
+        Constants.INTRO_SLIDE_TITLE_4, Constants.INTRO_SLIDE_DESC_4, 4));
+    pages.add(slideContent(
+        Constants.INTRO_SLIDE_TITLE_5, Constants.INTRO_SLIDE_DESC_5, 5));
   }
 
   void onDonePress() {
@@ -217,6 +92,29 @@ class _IntroSliderState extends State<IntroSliderPage> {
       // Show or hide status bar
       shouldHideStatusBar: false,
       backgroundColorAllSlides: Colors.transparent,
+    );
+  }
+
+  slideContent(String titleString, String descString, int index) {
+    return Slide(
+      title: titleString,
+      styleTitle: TextStyle(
+        color: Colors.black,
+        fontSize: 24.0,
+      ),
+      description: descString,
+      styleDescription: TextStyle(
+        color: Colors.black,
+        fontSize: 16.0,
+      ),
+      pathImage: slideIcons[index - 1],
+      heightImage: 150,
+      widthImage: 150,
+      foregroundImageFit: BoxFit.scaleDown,
+      colorBegin: Colors.white,
+      colorEnd: Colors.white,
+      directionColorBegin: Alignment.topRight,
+      directionColorEnd: Alignment.bottomLeft,
     );
   }
 }

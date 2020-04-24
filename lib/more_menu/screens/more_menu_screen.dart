@@ -284,7 +284,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             Theme(
               data: theme,
               child: ExpansionTile(
-                  title: Text('Themes',
+                  title: Text('Color palette',
                       style: TextStyle(
                           fontWeight: FontWeight.w500, color: Colors.black)),
                   children: <Widget>[

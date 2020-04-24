@@ -87,3 +87,19 @@ const String KEY_PROFILE_BANNER = 'profileBanner';
 const String KEY_DASHBOARD_BANNER = 'dashboardBanner';
 const String MSG_NO_CAMERA_VOICERECORDS =
     'No Camera Option Available for Voice Records';
+
+const String INTRO_SLIDE_TITLE_1 = 'Click ‘n’ Store';
+const String INTRO_SLIDE_DESC_1 =
+    ' You are just a click away from a healthy family! Start capturing medical records and readings at the touch of a button. ';
+const String INTRO_SLIDE_TITLE_2 = 'Quick ‘n’ Safe';
+const String INTRO_SLIDE_DESC_2 =
+    'Go paperless! Save your Family Health records in a secured digital vault.  ';
+const String INTRO_SLIDE_TITLE_3 = 'Tap ‘n’ Talk';
+const String INTRO_SLIDE_DESC_3 =
+    'Maya, an intelligent virtual health assistant, with conversational capabilities, sets up pill reminders, doctor appointments, among other smart tasks. ';
+const String INTRO_SLIDE_TITLE_4 = 'List ‘n’ Tag';
+const String INTRO_SLIDE_DESC_4 =
+    'Build your healthcare network! List and Tag your care providers. ';
+const String INTRO_SLIDE_TITLE_5 = 'Share ‘n’ Care ';
+const String INTRO_SLIDE_DESC_5 =
+    'Easily share your medical records within the Healthcare ecosystem.';
