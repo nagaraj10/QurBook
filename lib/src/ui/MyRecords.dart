@@ -32,6 +32,7 @@ import 'package:myfhb/src/ui/health/VoiceRecordList.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:showcaseview/showcase_widget.dart';
 
 import '../../constants/fhb_constants.dart';
 
@@ -70,6 +71,10 @@ class _MyRecordsState extends State<MyRecords> {
   CompleteData completeData;
   List<MediaData> mediaData = new List();
 
+  final GlobalKey _cameraKey = GlobalKey();
+  final GlobalKey _voiceKey = GlobalKey();
+  BuildContext _myContext;
+
   @override
   void initState() {
     rebuildAllBlocks();
@@ -84,11 +89,27 @@ class _MyRecordsState extends State<MyRecords> {
     super.initState();
 
     PreferenceUtil.init();
+
+    var isFirstTime =
+        PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_HOMESCREEN);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(
+          Duration(milliseconds: 200),
+          () => isFirstTime
+              ? null
+              : ShowCaseWidget.of(_myContext)
+                  .startShowCase([_cameraKey, _voiceKey]));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return getCompleteWidgets();
+    return ShowCaseWidget(onFinish: () {
+      PreferenceUtil.saveString(Constants.KEY_SHOWCASE_HOMESCREEN, 'true');
+    }, builder: Builder(builder: (context) {
+      _myContext = context;
+      return getCompleteWidgets();
+    }));
   }
 
   Widget getCompleteWidgets() {
@@ -215,76 +236,87 @@ class _MyRecordsState extends State<MyRecords> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
-            IconButton(
-              icon: Icon(
-                Icons.camera_alt,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                if (categoryName == Constants.STR_VOICERECORDS) {
-                  new FHBBasicWidget().showInSnackBar(
-                      Constants.MSG_NO_CAMERA_VOICERECORDS, scaffold_state);
-                } else {
-                  PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
-                      .then((onValue) {
-                    PreferenceUtil.saveString(
-                            Constants.KEY_CATEGORYNAME, categoryName)
-                        .then((onValue) {
-                      PreferenceUtil.saveString(
-                              Constants.KEY_CATEGORYID, categoryID)
-                          .then((value) {
-                        if (categoryName == STR_DEVICES) {
+            FHBBasicWidget.customShowCase(
+                _cameraKey,
+                Constants.CAMERA_DESC,
+                IconButton(
+                  icon: Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    if (categoryName == Constants.STR_VOICERECORDS) {
+                      new FHBBasicWidget().showInSnackBar(
+                          Constants.MSG_NO_CAMERA_VOICERECORDS, scaffold_state);
+                    } else {
+                      PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
+                          .then((onValue) {
+                        PreferenceUtil.saveString(
+                                Constants.KEY_CATEGORYNAME, categoryName)
+                            .then((onValue) {
                           PreferenceUtil.saveString(
-                              Constants.stop_detecting, 'NO');
-                          PreferenceUtil.saveString(
-                              Constants.stop_detecting, 'NO');
+                                  Constants.KEY_CATEGORYID, categoryID)
+                              .then((value) {
+                            if (categoryName == STR_DEVICES) {
+                              PreferenceUtil.saveString(
+                                  Constants.stop_detecting, 'NO');
+                              PreferenceUtil.saveString(
+                                  Constants.stop_detecting, 'NO');
 
-                          Navigator.pushNamed(
-                                  context, '/take_picture_screen_for_devices')
-                              .then((value) {
-                            //callBackToRefresh();
+                              Navigator.pushNamed(context,
+                                      '/take_picture_screen_for_devices')
+                                  .then((value) {
+                                //callBackToRefresh();
+                              });
+                            } else {
+                              Navigator.pushNamed(
+                                      context, '/take_picture_screen')
+                                  .then((value) {
+                                //callBackToRefresh();
+                              });
+                            }
                           });
-                        } else {
-                          Navigator.pushNamed(context, '/take_picture_screen')
-                              .then((value) {
-                            //callBackToRefresh();
-                          });
-                        }
+                        });
                       });
-                    });
-                  });
-                }
-              },
-            ),
+                    }
+                  },
+                ),
+                Constants.CAMERA_TITLE),
             Container(
               width: 20,
               height: 1,
               color: Colors.white,
             ),
-            IconButton(
-              icon: Icon(
-                Icons.mic,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                //sliverBarHeight = 50;
-                PreferenceUtil.saveString(
-                        Constants.KEY_CATEGORYNAME, Constants.STR_VOICERECORDS)
-                    .then((value) {
-                  PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
-                          PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID))
-                      .then((value) {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(
-                          builder: (context) => AudioRecordScreen(
-                            fromVoice: true,
-                          ),
-                        ))
-                        .then((results) {});
-                  });
-                });
-              },
-            )
+            FHBBasicWidget.customShowCase(
+                _voiceKey,
+                Constants.VOICE_DESC,
+                IconButton(
+                  icon: Icon(
+                    Icons.mic,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    //sliverBarHeight = 50;
+                    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME,
+                            Constants.STR_VOICERECORDS)
+                        .then((value) {
+                      PreferenceUtil.saveString(
+                              Constants.KEY_CATEGORYID,
+                              PreferenceUtil.getStringValue(
+                                  Constants.KEY_VOICE_ID))
+                          .then((value) {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                              builder: (context) => AudioRecordScreen(
+                                fromVoice: true,
+                              ),
+                            ))
+                            .then((results) {});
+                      });
+                    });
+                  },
+                ),
+                Constants.VOICE_TITLE)
           ],
         ),
       )

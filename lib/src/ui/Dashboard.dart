@@ -37,7 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       Future.delayed(
           Duration(milliseconds: 200),
           () => isFirstTime
-              ? print('This is not first time')
+              ? null
               : ShowCaseWidget.of(_myContext)
                   .startShowCase([_showMaya, _provider, _records, _family]));
     });

@@ -106,3 +106,23 @@ const String INTRO_SLIDE_TITLE_5 = 'Share ‘n’ Care ';
 const String INTRO_SLIDE_DESC_5 =
     'Easily share your medical records within the Healthcare ecosystem.';
 const String KEY_SHOWCASE_DASHBOARD = 'KEY_SHOWCASE_DASHBOARD';
+const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
+const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
+const String KEY_SHOWCASE_MAYA = 'KEY_SHOWCASE_MAYA';
+
+const String CAMERA_DESC = 'Start capturing health records right away!';
+const String CAMERA_TITLE = 'Camera';
+const String VOICE_DESC = 'You can tape your voice note as well';
+const String VOICE_TITLE = 'Voice Record';
+const String GALLERY_DESC =
+    'And those health records from gallery, you can import them!';
+const String GALLERY_TITLE = 'Gallery';
+const String ATTACH_DESC =
+    'You can pick health records from phone file storage as well';
+const String ATTACH_TITLE = 'Attachments';
+const String MULTI_IMG_DESC =
+    'You can also switch from single to multiple capture and vice versa';
+const String MULTI_IMG_TITLE = 'Multiple Images';
+const String SWITCH_CATEGORY_DESC =
+    'You can switch categories even while you capture health records';
+const String SWITCH_CATEGORY_TITLE = 'Switch Category';

@@ -7,6 +7,7 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'ChatScreen.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class SuperMaya extends StatefulWidget {
   @override
@@ -21,15 +22,23 @@ class _SuperMayaState extends State<SuperMaya> {
   void initState() {
     super.initState();
     PreferenceUtil.init();
+
+    var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MAYA);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(Duration(milliseconds: 200),
-          () => ShowCaseWidget.of(_myContext).startShowCase([_micKey]));
+      Future.delayed(
+          Duration(milliseconds: 200),
+          () => isFirstTime
+              ? null
+              : ShowCaseWidget.of(_myContext).startShowCase([_micKey]));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return ShowCaseWidget(
+      onFinish: () {
+        PreferenceUtil.saveString(Constants.KEY_SHOWCASE_MAYA, 'true');
+      },
       builder: Builder(
         builder: (context) {
           _myContext = context;
