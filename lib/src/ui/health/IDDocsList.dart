@@ -153,7 +153,7 @@ class _IDDocsListState extends State<IDDocsList> {
                     mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                         : Constants.BASERURL +
-                            mediaMetaInfoObj.metaInfo.mediaTypeInfo.logo,
+                            mediaMetaInfoObj.metaInfo.categoryInfo.logo,
                     height: 25,
                     width: 25,
                     color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -233,8 +233,9 @@ class _IDDocsListState extends State<IDDocsList> {
                               ? ImageIcon(
                                   AssetImage(
                                       'assets/icons/record_fav_active.png'),
-                                      //TODO chnage theme
-                                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                                  //TODO chnage theme
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(

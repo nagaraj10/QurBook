@@ -237,8 +237,9 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                               ? ImageIcon(
                                   AssetImage(
                                       'assets/icons/record_fav_active.png'),
-                                      //TODO chnage theme
-                                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                                  //TODO chnage theme
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(

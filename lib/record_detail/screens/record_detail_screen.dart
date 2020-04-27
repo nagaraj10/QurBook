@@ -29,7 +29,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 
-
 class RecordDetailScreen extends StatefulWidget {
   final MediaMetaInfo data;
 
@@ -66,6 +65,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   final Permission _storagePermission =
       Platform.isAndroid ? Permission.storage : Permission.photos;
   bool firsTym = true;
+  bool ispdfPresent = false;
 
   String audioMediaId;
 
@@ -83,7 +83,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
 
-    if (widget.data.mediaMasterIds.length > 0) {
+    /* if (widget.data.mediaMasterIds.length > 0) {
       List<MediaMasterIds> mediMasterId =
           new CommonUtil().getMetaMasterIdList(widget.data);
 
@@ -93,6 +93,25 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       } else {
         widget.data.metaInfo.hasVoiceNotes = false;
       }
+    } */
+
+    List<MediaMasterIds> mediMasterId =
+        new CommonUtil().getMetaMasterIdList(widget.data);
+
+    if (checkIfMp3IsPresent(widget.data) != '') {
+      widget.data.metaInfo.hasVoiceNotes = true;
+      showAudioWidgetIfVoiceNotesAvailable(widget.data);
+    }
+
+    if (new CommonUtil()
+            .getMediaMasterIDForPdfType(widget.data.mediaMasterIds)
+            .length >
+        0) {
+      ispdfPresent = true;
+    } else {
+      ispdfPresent = false;
+      if (mediMasterId.length > 0)
+        _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
     }
   }
 
@@ -131,9 +150,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             flex: 7,
                             child: Padding(
                                 padding: EdgeInsets.all(10),
-                                child: imagesPathMain.length > 0
+                                child: (imagesPathMain.length > 0 &&
+                                        imagesPathMain != null)
                                     ? getCarousalImage(imagesPathMain)
-                                    : getDocumentImageWidgetClone())),
+                                    : (widget.data.metaInfo.mediaTypeInfo
+                                                    .name ==
+                                                Constants.STR_VOICE_NOTES ||
+                                            ispdfPresent == true)
+                                        ? getCarousalImage(null)
+                                        : getDocumentImageWidgetClone())),
                         Expanded(
                           flex: 1,
                           child: Padding(
@@ -290,7 +315,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
                                       audioMediaId = postImageResponse
                                           .response.data.mediaMasterId;
-                                      setState(() {});
+
+                                      _healthReportListForUserBlock
+                                          .getHelthReportList()
+                                          .then((value) {
+                                        PreferenceUtil.saveCompleteData(
+                                            Constants.KEY_COMPLETE_DATA,
+                                            value.response.data);
+                                        setState(() {});
+                                      });
+                                      //setState(() {});
                                     });
                                   }
                                 }
@@ -382,6 +416,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             .getCardForIDDocs(widget.data.metaInfo, widget.data.createdOn);
         break;
       case 'Catcode007':
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metaInfo, widget.data.createdOn);
+        break;
+      case 'Catcode010':
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
@@ -522,12 +560,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 Constants.KEY_COMPLETE_DATA, value.response.data);
             print('Saved data');
 
-             Future.delayed(const Duration(seconds: 2), () {
-                  new FHBBasicWidget()
-                .showInSnackBar(moveMetaDataResponse.message, scaffold_state);
+            Future.delayed(const Duration(seconds: 2), () {
+              new FHBBasicWidget()
+                  .showInSnackBar(moveMetaDataResponse.message, scaffold_state);
+            });
 
-             });
-         
             Navigator.pop(context);
             Navigator.pop(context);
           });
@@ -922,81 +959,101 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Widget getCarousalImage(List<dynamic> imagesPath) {
     print('inside not clone');
-
-    index = _current + 1;
-    _current = 0;
-    length = imagesPath.length;
-
-    if (imagesPath.length > 0) {
-      return Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: carouselSlider = CarouselSlider(
-                height: 400,
-                initialPage: 0,
-                enlargeCenterPage: true,
-                reverse: false,
-                enableInfiniteScroll: false,
-                pauseAutoPlayOnTouch: Duration(seconds: 10),
-                scrollDirection: Axis.horizontal,
-                onPageChanged: (index) {
-                  setState(() {
-                    _current = index;
-                  });
-                },
-                items: imagesPath.map((imgUrl) {
-                  return Builder(
-                    builder: (BuildContext context) {
-                      return Container(
-                        height: double.infinity,
-                        child: Image.memory(
-                          Uint8List.fromList(imgUrl),
-                          fit: BoxFit.fill,
-                        ),
-                      );
-                    },
-                  );
-                }).toList(),
-              ),
-            ),
-
-            /* SizedBox(
-                                                  height: 10.0,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    OutlineButton(
-                                                      onPressed: goToPrevious,
-                                                      child: Text("<"),
-                                                    ),
-                                                    OutlineButton(
-                                                      onPressed: goToNext,
-                                                      child: Text(">"),
-                                                    ),
-                                                    SizedBox(
-                                                      width: 35,
-                                                    ),
-                                                    Container(
-                                                      width: 50.0,
-                                                      height: 30.0,
-                                                      child: Text('$index /' + imagesPath.length.toString()),
-                                                      decoration: BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        //color: _current == index ? Colors.redAccent : Colors.green,
-                                                      ),
-                                                    )
-                                                  ],
-                                                ),*/
-          ],
-        ),
-      );
-    } else {
-      return Container();
+    if (imagesPath != null && imagesPath.length > 0) {
+      index = _current + 1;
+      _current = 0;
+      length = imagesPath.length;
     }
+    return Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          widget.data.metaInfo.mediaTypeInfo.name != Constants.STR_VOICE_NOTES
+              ? (imagesPath != null && imagesPath.length > 0)
+                  ? Expanded(
+                      child: carouselSlider = CarouselSlider(
+                        height: 400,
+                        //width: MediaQuery.of(context).size.width,
+                        initialPage: 0,
+                        enlargeCenterPage: true,
+                        reverse: false,
+                        enableInfiniteScroll: false,
+                        pauseAutoPlayOnTouch: Duration(seconds: 10),
+                        scrollDirection: Axis.horizontal,
+                        onPageChanged: (index) {
+                          setState(() {
+                            _current = index;
+                          });
+                        },
+                        items: imagesPath.map((imgUrl) {
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                height: double.infinity,
+                                child: Image.memory(
+                                  Uint8List.fromList(imgUrl),
+                                  fit: BoxFit.fill,
+                                ),
+                              );
+                            },
+                          );
+                        }).toList(),
+                      ),
+                    )
+                  : ispdfPresent
+                      ? Container(
+                          //height: double.infinity,
+                          child: Image.asset('assets/icons/attach.png'),
+                        )
+                      : Container(
+                          //height: double.infinity,
+                          child: Icon(
+                            Icons.mic,
+                            //TODO chnage theme
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                          ),
+                        )
+              : Container(
+                  //height: double.infinity,
+                  child: Icon(
+                    Icons.mic,
+                    //TODO chnage theme
+                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                  ),
+                ),
+
+          /* SizedBox(
+              height: 10.0,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                OutlineB//utton(
+                  onPressed: goToPrevious,
+                  child: Text("<"),
+                ),
+                OutlineButton(
+                  onPressed: goToNext,
+                  child: Text(">"),
+                ),
+                SizedBox(
+                  width: 35,
+                ),
+                Container(
+                  width: 50.0,
+                  height: 30.0,
+                  child: Text('$index /' + imagesPath.length.toString()),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    //color: _current == index ? Colors.redAccent : Colors.green,
+                  ),
+                )
+              ],
+            ),*/
+        ],
+      ),
+    );
   }
 
   goToPrevious() {

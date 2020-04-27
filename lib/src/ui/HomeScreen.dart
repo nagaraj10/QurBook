@@ -5,9 +5,12 @@ import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/notifications/myfhb_notifications.dart';
 import 'package:myfhb/schedules/my_schedules.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 
 //import 'bot/SuperMaya_sample.dart';
 
@@ -33,7 +36,6 @@ class _HomeScreenState extends State<HomeScreen> {
     MyRecords(),
     MySchedule(),
     SuperMaya(),
-    //SuperMayaSample(),
     MyFhbNotifications(),
     MoreMenuScreen()
   ];

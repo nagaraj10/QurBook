@@ -5,6 +5,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/DashSeparator.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class RecordInfoCard {
   Widget getCardForPrescription(MetaInfo metaInfo, String createdDate) {
@@ -28,14 +29,13 @@ class RecordInfoCard {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.grey[200],
-                  /* backgroundImage: metaInfo.doctor != null
-                      ? getDoctorProfileImageWidget(metaInfo)
-                      : null, */
-                ),
-                //getDoctorProfileImageWidget(metaInfo),
+                ClipOval(
+                    child: metaInfo.doctor != null
+                        ? getDoctorProfileImageWidget(metaInfo)
+                        : Container(
+                            width: 50,
+                            height: 50,
+                            color: Color(fhbColors.bgColorContainer))),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
@@ -59,8 +59,6 @@ class RecordInfoCard {
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(fontSize: 13),
-                                //wrapWords: true,
-                                //maxLines: 2,
                               )
                             //Text('')
                             : SizedBox(height: 0),

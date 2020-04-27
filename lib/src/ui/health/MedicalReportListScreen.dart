@@ -119,9 +119,19 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                                 width: 50,
                               )
                             : Container(
-                                height: 50,
-                                width: 50,
-                                color: const Color(fhbColors.bgColorContainer),
+                                padding: EdgeInsets.all(10),
+                                child: Image.network(
+                                  Constants.BASERURL +
+                                      data.metaInfo.categoryInfo.logo,
+                                  height: 30,
+                                  width: 30,
+                                  color: Color(
+                                    CommonUtil().getMyPrimaryColor(),
+                                  ),
+                                ),
+                                color: const Color(
+                                  fhbColors.bgColorContainer,
+                                ),
                               )
                         : Container(
                             height: 50,
@@ -179,8 +189,9 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                               ? ImageIcon(
                                   AssetImage(
                                       'assets/icons/record_fav_active.png'),
-                                      //TODO chnage theme
-                                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                                  //TODO chnage theme
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(

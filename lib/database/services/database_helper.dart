@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io' as io;
 
 import 'package:myfhb/database/model/CountryMetrics.dart';
+import 'package:myfhb/database/model/UnitsMesurement.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -32,6 +33,29 @@ class DatabaseHelper {
     // When creating the db, create the table
     await db.execute(
         "CREATE TABLE CountryMetrics(countryCode INTEGER PRIMARY KEY, name TEXT, bpSPUnit TEXT, bpDPUnit TEXT,bpPulseUnit TEXT, glucometerUnit TEXT, poOxySatUnit TEXT,poPulseUnit TEXT, tempUnit TEXT, weightUnit TEXT)");
+
+    //create a table for validation of units diplaying in devices card
+    await db.execute(
+        "CREATE TABLE UnitsTable (id INTEGER PRIMARY KEY, units TEXT,minValue INTEGER,maxValue INTEGER)");
+  }
+
+  Future<int> saveUnitMeasurements(UnitsMesurements unitsMesurements) async {
+    var dbClient = await db;
+    int res = await dbClient.insert("UnitsTable", unitsMesurements.toMap());
+    return res;
+  }
+
+  Future<UnitsMesurements> getMeasurementsBasedOnUnits(
+      String unitsMeasure) async {
+    var dbClient = await db;
+
+    // var results = await dbClient.rawQuery('SELECT * FROM UnitsTable WHERE units = $unitsMeasure');
+    var results = await dbClient
+        .rawQuery('SELECT * FROM UnitsTable WHERE units=? ', [unitsMeasure]);
+
+    if (results.length > 0) {
+      return new UnitsMesurements.map(results.first);
+    }
   }
 
   Future<int> saveCountryMetrics(CountryMetrics countryMetrics) async {
@@ -72,7 +96,8 @@ class DatabaseHelper {
 
   Future<CountryMetrics> getCustomer(int id) async {
     var dbClient = await db;
-    String countryName= PreferenceUtil.getStringValue(CommonConstants.KEY_COUNTRYNAME);
+    String countryName =
+        PreferenceUtil.getStringValue(CommonConstants.KEY_COUNTRYNAME);
 
     var results = await dbClient
         .rawQuery('SELECT * FROM CountryMetrics WHERE countryCode = $id');
@@ -81,8 +106,8 @@ class DatabaseHelper {
       return new CountryMetrics.map(results.first);
     }
 
-    return new CountryMetrics(id,countryName,'p/min', 'mmHg', 'p/min', 'mg/dL',
-        '%spo2', 'PR bpm', 'F', 'kg');
+    return new CountryMetrics(id, countryName, 'p/min', 'mmHg', 'p/min',
+        'mg/dL', '%spo2', 'PR bpm', 'F', 'kg');
   }
 
   Future<int> deleteCountryMetrics(CountryMetrics user) async {
@@ -98,5 +123,29 @@ class DatabaseHelper {
     int res = await dbClient.update("CountryMetrics", user.toMap(),
         where: "countryCode = ?", whereArgs: <int>[user.countryCode]);
     return res > 0 ? true : false;
+  }
+
+  Future<int> getDBLengthUnit() async {
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT * FROM UnitsTable');
+
+    return list.length;
+  }
+
+  Future<List<UnitsMesurements>> getUnitsMeasurement() async {
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT * FROM UnitsTable');
+    List<UnitsMesurements> unitsList = new List();
+    for (int i = 0; i < list.length; i++) {
+      var unitObj = new UnitsMesurements(
+        list[i]["countryCode"],
+        list[i]["name"],
+        list[i]["bpSPUnit"],
+        list[i]["bpDPUnit"],
+      );
+      unitsList.add(unitObj);
+    }
+    print(unitsList.length);
+    return unitsList;
   }
 }

@@ -1,8 +1,8 @@
 import 'package:myfhb/database/model/CountryMetrics.dart';
 import 'package:myfhb/database/services/database_helper.dart';
 
-class CountryBlock{
-var db = new DatabaseHelper();
+class CountryBlock {
+  var db = new DatabaseHelper();
   CountryBlock();
   delete(CountryMetrics countryMetrics) {
     var db = new DatabaseHelper();
@@ -12,7 +12,4 @@ var db = new DatabaseHelper();
   Future<List<CountryMetrics>> getCountryMetrics() {
     return db.getCountryMetrics();
   }
-
 }
-
-

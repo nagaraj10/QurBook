@@ -55,6 +55,15 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   DateTime dateTime = DateTime.now();
 
+  String errForbpSp = '',
+      errFForbpDp = '',
+      errForbpPulse = '',
+      errGluco = '',
+      errWeight = '',
+      errTemp = '',
+      errPoPulse = '',
+      errPoOs = '';
+
   String categoryName, categoryNameClone;
   String categoryID;
   bool firstTym = false;
@@ -1090,7 +1099,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                   context,
                   CommonConstants.strValue,
                   CommonConstants.strGlucometerValue,
-                  deviceController),
+                  deviceController, (errorValue) {
+                setState(() {
+                  errGluco = errorValue;
+                });
+              }, errGluco, CommonConstants.strGlucometerValue),
               SizedBox(
                 height: 15,
               ),
@@ -1177,10 +1190,18 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               height: 15,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strTemperature,
-                CommonConstants.strTemperatureValue,
-                deviceController),
+              context,
+              CommonConstants.strTemperature,
+              CommonConstants.strTemperatureValue,
+              deviceController,
+              (errorValue) {
+                setState(() {
+                  errTemp = errorValue;
+                });
+              },
+              errTemp,
+              CommonConstants.strTemperatureValue,
+            ),
             SizedBox(
               height: 15,
             ),
@@ -1230,10 +1251,18 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               height: 15,
             ),
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strWeight,
-                CommonConstants.strWeightValue,
-                deviceController),
+              context,
+              CommonConstants.strWeight,
+              CommonConstants.strWeightValue,
+              deviceController,
+              (errorValue) {
+                setState(() {
+                  errWeight = errorValue;
+                });
+              },
+              errWeight,
+              CommonConstants.strWeightValue,
+            ),
             SizedBox(
               height: 15,
             ),
@@ -1286,12 +1315,23 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 context,
                 CommonConstants.strOxygenSaturation,
                 CommonConstants.strOxygenValue,
-                deviceController),
+                deviceController, (errorValue) {
+              setState(() {
+                errPoOs = errorValue;
+              });
+            }, errPoOs, '%spo2'),
             SizedBox(
               height: 15,
             ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(context,
-                CommonConstants.strPulse, CommonConstants.strPulseValue, pulse),
+            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                context,
+                CommonConstants.strPulse,
+                CommonConstants.strPulseValue,
+                pulse, (errorValue) {
+              setState(() {
+                errPoPulse = errorValue;
+              });
+            }, errPoPulse, 'pulse'),
             SizedBox(
               height: 15,
             ),
@@ -1344,7 +1384,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 context,
                 CommonConstants.strSystolicPressure,
                 CommonConstants.strSysPulseValue,
-                deviceController),
+                deviceController, (errorValue) {
+              setState(() {
+                errForbpSp = errorValue;
+              });
+            }, errForbpSp, 'mmHg'),
             SizedBox(
               height: 15,
             ),
@@ -1352,7 +1396,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 context,
                 CommonConstants.strDiastolicPressure,
                 CommonConstants.strPressureValue,
-                diaStolicPressure),
+                diaStolicPressure, (errorValue) {
+              setState(() {
+                errFForbpDp = errorValue;
+              });
+            }, errFForbpDp, 'dp'),
             SizedBox(
               height: 15,
             ),
@@ -1360,7 +1408,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 context,
                 CommonConstants.strPulse,
                 CommonConstants.strSysPulseValue,
-                pulse),
+                pulse, (errorValue) {
+              setState(() {
+                errForbpPulse = errorValue;
+              });
+            }, errForbpPulse, 'pulse'),
             SizedBox(
               height: 15,
             ),

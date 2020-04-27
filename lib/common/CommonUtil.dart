@@ -319,14 +319,24 @@ class CommonUtil {
       print('Getting into media masters');
       for (MediaMasterIds mediaMasterIds in data.mediaMasterIds) {
         if (mediaMasterIds.fileType == "image/jpg" ||
-            mediaMasterIds.fileType == "image/png") {
+            mediaMasterIds.fileType == "image/png")
           mediaMasterIdsList.add(mediaMasterIds);
-        }
       }
     } else {}
 
-    print('mediaMasterID' + mediaMasterIdsList[0].id);
     return mediaMasterIdsList.length > 0 ? mediaMasterIdsList : new List();
+  }
+
+  String getMediaMasterIDForPdfType(List<MediaMasterIds> mediaMasterIdsList) {
+    String mediaMasterId = '';
+
+    for (MediaMasterIds mediaMasterIdsObj in mediaMasterIdsList) {
+      if (mediaMasterIdsObj.fileType == 'application/pdf') {
+        mediaMasterId = mediaMasterIdsObj.id;
+      }
+    }
+
+    return mediaMasterId;
   }
 
   bookMarkRecord(MediaMetaInfo data, Function _refresh) {
@@ -722,32 +732,50 @@ class CommonUtil {
       child: _child,
       overlayColor: Colors.black,
       overlayOpacity: 0.8,
-      height: 800.0,
-      width: 300.0,
-      container: Center(
-        //color: Colors.transparent,
-        child: Column(
+      height: double.infinity,
+      width: double.infinity,
+      container: Container(
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        child: Row(
           children: <Widget>[
-            Text(
-              desc,
-              style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold),
-              maxLines: 2,
-              softWrap: true,
+            Image.asset(
+              'assets/maya/maya_us.png',
+              height: 80,
+              width: 80,
             ),
-            SizedBox(
-              height: 20.0,
-            ),
-            Text(
-              desc,
-              style: TextStyle(
-                  fontSize: 10.0,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500),
-              softWrap: true,
-            ),
+            SizedBox(width: 20),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: Text(
+                    desc,
+                    style: TextStyle(
+                        fontSize: 20.0,
+                        color: Color(CommonUtil().getMyPrimaryColor()),
+                        fontFamily: 'Poppins'),
+                    maxLines: 2,
+                    softWrap: true,
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
+                Text(
+                  desc,
+                  style: TextStyle(
+                      fontSize: 12,
+                      color: Color(CommonUtil().getMyPrimaryColor()),
+                      fontFamily: 'Poppins'),
+                  softWrap: true,
+                ),
+              ],
+            )
           ],
         ),
       ),

@@ -415,6 +415,10 @@ class _FeedbacksState extends State<Feedbacks> {
       context,
       new MaterialPageRoute(builder: (context) => new FeedbackSuccess()),
     ).then((value) {
+      imagePaths.clear();
+      images.clear();
+      audioPathMain = '';
+      containsAudioMain = false;
       setState(() {});
     });
   }

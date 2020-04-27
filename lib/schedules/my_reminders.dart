@@ -96,7 +96,7 @@ class _MyRemindersState extends State<MyReminders> {
                                     CircleAvatar(
                                       radius: 25,
                                       backgroundColor:
-                                          _randomColor.randomColor(),
+                                          Color(fhbColors.bgColorContainer),
                                       child: Center(
                                         child: Column(
                                           mainAxisAlignment:
@@ -110,10 +110,10 @@ class _MyRemindersState extends State<MyReminders> {
                                               child: Text(
                                                 dateArr[1],
                                                 style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 20.0,
-                                                    fontWeight:
-                                                        FontWeight.bold),
+                                                  color: Color(CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                                  fontSize: 20.0,
+                                                ),
                                               ),
                                             ),
                                             Padding(
@@ -121,7 +121,8 @@ class _MyRemindersState extends State<MyReminders> {
                                               child: Text(
                                                 dateArr[0],
                                                 style: TextStyle(
-                                                    color: Colors.white,
+                                                    color: Color(CommonUtil()
+                                                        .getMyGredientColor()),
                                                     fontSize: 12.0,
                                                     fontWeight:
                                                         FontWeight.normal),
@@ -131,11 +132,12 @@ class _MyRemindersState extends State<MyReminders> {
                                         ),
                                       ),
                                     ),
+                                    SizedBox(height: 5),
                                     Text(
                                       '${dateArr[2]} ${dateArr[3]}',
                                       style: TextStyle(
                                           fontSize: 12,
-                                          fontWeight: FontWeight.bold),
+                                          color: Colors.grey[400]),
                                     ),
                                   ],
                                 ),
@@ -147,16 +149,18 @@ class _MyRemindersState extends State<MyReminders> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      model.title,
+                                      toBeginningOfSentenceCase(
+                                          model.title.toLowerCase()),
                                       style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold),
+                                        fontSize: 18,
+                                      ),
                                     ),
                                     SizedBox(
                                       height: 5.0,
                                     ),
                                     Text(
-                                      model.notes,
+                                      toBeginningOfSentenceCase(
+                                          model.notes.toLowerCase()),
                                       style: TextStyle(
                                           fontSize: 12,
                                           fontWeight: FontWeight.normal),

@@ -33,6 +33,15 @@ class CommonDialogBox {
   TextEditingController memoController = new TextEditingController();
   TextEditingController diaStolicPressure = new TextEditingController();
 
+  String errForbpSp = '',
+      errFForbpDp = '',
+      errForbpPulse = '',
+      errGluco = '',
+      errWeight = '',
+      errTemp = '',
+      errPoPulse = '',
+      errPoOs = '';
+
   String validationMsg;
   List<bool> isSelected;
   String selectedID;
@@ -812,7 +821,11 @@ class CommonDialogBox {
                   context,
                   CommonConstants.strValue,
                   commonConstants.glucometerUNIT,
-                  deviceController),
+                  deviceController, (errorValue) {
+                setState(() {
+                  errGluco = errorValue;
+                });
+              }, errGluco, commonConstants.glucometerUNIT),
               SizedBox(
                 height: 15,
               ),
@@ -971,7 +984,11 @@ class CommonDialogBox {
                 context,
                 CommonConstants.strTemperature,
                 commonConstants.tempUNIT,
-                deviceController),
+                deviceController, (errorValue) {
+              setState(() {
+                errTemp = errorValue;
+              });
+            }, errTemp, commonConstants.tempUNIT),
             SizedBox(
               height: 15,
             ),
@@ -1118,7 +1135,11 @@ class CommonDialogBox {
                 context,
                 CommonConstants.strWeight,
                 commonConstants.weightUNIT,
-                deviceController),
+                deviceController, (errorValue) {
+              setState(() {
+                errWeight = errorValue;
+              });
+            }, errWeight, commonConstants.weightUNIT),
             SizedBox(
               height: 15,
             ),
@@ -1241,12 +1262,23 @@ class CommonDialogBox {
                 context,
                 CommonConstants.strOxygenSaturation,
                 commonConstants.poOxySatUNIT,
-                deviceController),
+                deviceController, (errorValue) {
+              setState(() {
+                errPoOs = errorValue;
+              });
+            }, errPoOs, "%spo2"),
             SizedBox(
               height: 15,
             ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(context,
-                CommonConstants.strPulse, commonConstants.poPulseUNIT, pulse),
+            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                context,
+                CommonConstants.strPulse,
+                commonConstants.poPulseUNIT,
+                pulse, (errorValue) {
+              setState(() {
+                errPoPulse = errorValue;
+              });
+            }, errPoPulse, "pulse"),
             SizedBox(
               height: 15,
             ),
@@ -1370,7 +1402,11 @@ class CommonDialogBox {
                 context,
                 CommonConstants.strSystolicPressure,
                 commonConstants.bpSPUNIT,
-                deviceController),
+                deviceController, (errorValue) {
+              setState(() {
+                errForbpSp = errorValue;
+              });
+            }, errForbpSp, "mmHg"),
             SizedBox(
               height: 15,
             ),
@@ -1378,12 +1414,23 @@ class CommonDialogBox {
                 context,
                 CommonConstants.strDiastolicPressure,
                 commonConstants.bpDPUNIT,
-                diaStolicPressure),
+                diaStolicPressure, (errorValue) {
+              setState(() {
+                errFForbpDp = errorValue;
+              });
+            }, errFForbpDp, "dp"),
             SizedBox(
               height: 15,
             ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(context,
-                CommonConstants.strPulse, commonConstants.bpPulseUNIT, pulse),
+            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
+                context,
+                CommonConstants.strPulse,
+                commonConstants.bpPulseUNIT,
+                pulse, (errorValue) {
+              setState(() {
+                errForbpPulse = errorValue;
+              });
+            }, errForbpPulse, 'pulse'),
             SizedBox(
               height: 15,
             ),
@@ -1782,7 +1829,7 @@ class CommonDialogBox {
                   .pop();
 
               Navigator.of(context).pop();
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
             });
           });
         } else if (k == imagePathMain.length - 1) {
@@ -1792,7 +1839,7 @@ class CommonDialogBox {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
             Navigator.of(context).pop();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(true);
           });
         } else if (k == imagePathMain.length && modeOfSave == true) {
           _healthReportListForUserBlock.getHelthReportList().then((value) {
@@ -1801,7 +1848,7 @@ class CommonDialogBox {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
             Navigator.of(context).pop();
-            Navigator.of(context).pop();
+            Navigator.of(context).pop(true);
           });
         }
 
@@ -1825,7 +1872,7 @@ class CommonDialogBox {
           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
           Navigator.of(context).pop();
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
         });
       });
     }

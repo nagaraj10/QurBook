@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flashlight/flashlight.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:image_picker/image_picker.dart';
@@ -9,6 +10,7 @@ import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'CropAndRotateScreen.dart';
 import 'DisplayPictureScreen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -44,9 +46,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   String categoryID;
   BuildContext _context;
 
+  bool isFlash = false;
+  bool _hasFlashlight = false;
+
   @override
   void initState() {
     super.initState();
+
+    initFlashlight();
 
     // To display the current output from the Camera,
     // create a CameraController.
@@ -63,6 +70,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     initializeData();
   }
 
+  initFlashlight() async {
+    bool hasFlash = await Flashlight.hasFlashlight;
+    //print("Device has flash ? $hasFlash");
+    setState(() {
+      _hasFlashlight = hasFlash;
+    });
+  }
+
   @override
   void dispose() {
     // Dispose of the controller when the widget is disposed.
@@ -74,7 +89,23 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     _context = context;
     return Scaffold(
-        appBar: AppBar(title: getWidgetForTitle(context)),
+        appBar: AppBar(
+          title: getWidgetForTitle(context),
+          actions: <Widget>[
+            IconButton(
+                icon: isFlash ? Icon(Icons.flash_off) : Icon(Icons.flash_on),
+                onPressed: () {
+                  isFlash ? Flashlight.lightOff() : Flashlight.lightOn();
+                  setState(() {
+                    if (isFlash) {
+                      isFlash = false;
+                    } else {
+                      isFlash = true;
+                    }
+                  });
+                })
+          ],
+        ),
 
         //appBar: AppBar(title: Text('Take a picture')),
         // Wait until the controller is initialized before displaying the
@@ -220,7 +251,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                             size: 40,
                           ),
                           onPressed: () {
-                            Navigator.push(
+                            /*   Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) =>
@@ -228,6 +259,21 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                               ),
                             ).then((value) {
                               Navigator.pop(context);
+                            }); */
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    CropAndRotateScreen(imagePath: imagePaths),
+                              ),
+                            ).then((value) {
+                              print(
+                                  '+++++++++++$value+++++++++TakePictureScreen');
+                              //Navigator.pop(context);
+                              if (value) {
+                                Navigator.of(context).pop(true);
+                              }
                             });
                           },
                         ))),
@@ -449,7 +495,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     }
   }
 
-  void callDisplayPictureScreen(BuildContext context) {
+  /*  void callDisplayPictureScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -457,6 +503,22 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       ),
     ).then((value) {
       Navigator.pop(context);
+    });
+  } */
+
+  void callDisplayPictureScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CropAndRotateScreen(imagePath: imagePaths),
+      ),
+    ).then((value) {
+      print(
+          '+++++++++++$value+++++++++TakePictureScreen callDisplayPictureScreen');
+
+      if (value) {
+        Navigator.of(context).pop(true);
+      }
     });
   }
 

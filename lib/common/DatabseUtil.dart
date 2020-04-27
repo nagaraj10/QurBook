@@ -1,4 +1,5 @@
 import 'package:myfhb/database/model/CountryMetrics.dart';
+import 'package:myfhb/database/model/UnitsMesurement.dart';
 import 'package:myfhb/database/services/database_helper.dart';
 
 class DatabaseUtil {
@@ -233,9 +234,42 @@ class DatabaseUtil {
         countryMetrics.name);
   }
 
+  static void insertUnitsForDevices() async {
+    var db = new DatabaseHelper();
+
+    var faren = new UnitsMesurements(1, "F", 90, 110);
+    await db.saveUnitMeasurements(faren);
+
+    var thermo = new UnitsMesurements(2, "C", 35, 42);
+    await db.saveUnitMeasurements(thermo);
+
+    var gluco = new UnitsMesurements(3, "mg/dl", 20, 600);
+    await db.saveUnitMeasurements(gluco);
+    var bp = new UnitsMesurements(4, "mmHg", 20, 280);
+    await db.saveUnitMeasurements(bp);
+    var pul = new UnitsMesurements(5, "%spo2", 35, 100);
+    await db.saveUnitMeasurements(pul);
+    var pr = new UnitsMesurements(6, "PR bpm", 30, 250);
+    await db.saveUnitMeasurements(pr);
+    var kg = new UnitsMesurements(7, "kg", 0, 250);
+    await db.saveUnitMeasurements(kg);
+    var gram = new UnitsMesurements(8, "g", 0, 25000);
+    await db.saveUnitMeasurements(gram);
+    var dp = new UnitsMesurements(9, "dp", 60, 140);
+    await db.saveUnitMeasurements(dp);
+    var pulse = new UnitsMesurements(10, "pulse", 60, 100);
+    await db.saveUnitMeasurements(pulse);
+  }
+
   static Future<int> getDBLength() async {
     var db = new DatabaseHelper();
     int length = await db.getDBLength();
+    return length;
+  }
+
+  static Future<int> getDBLengthUnit() async {
+    var db = new DatabaseHelper();
+    int length = await db.getDBLengthUnit();
     return length;
   }
 }

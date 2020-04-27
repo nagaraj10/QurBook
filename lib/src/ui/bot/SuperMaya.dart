@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -76,32 +77,33 @@ class _SuperMayaState extends State<SuperMaya> {
                     SizedBox(
                         width: 150,
                         height: 50,
-                        child: CommonUtil.customShowCase(
-                          _micKey,
-                          'Tap to record',
-                          RaisedGradientButton(
-                              borderRadius: 30,
-                              child: Text(
-                                'Start now',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
-                              gradient: LinearGradient(
-                                colors: <Color>[
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                                  Color(new CommonUtil().getMyGredientColor()),
-                                ],
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) {
-                                      return ChatScreen();
-                                    },
-                                  ),
-                                );
-                              }),
-                        )),
+                        child: FHBBasicWidget.customShowCase(
+                            _micKey,
+                            'Call me up. This invokes your Maya!',
+                            RaisedGradientButton(
+                                borderRadius: 30,
+                                child: Text(
+                                  'Start now',
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                ),
+                                gradient: LinearGradient(
+                                  colors: <Color>[
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    Color(
+                                        new CommonUtil().getMyGredientColor()),
+                                  ],
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return ChatScreen();
+                                      },
+                                    ),
+                                  );
+                                }),
+                            'Maya')),
                   ],
                 ),
               ));

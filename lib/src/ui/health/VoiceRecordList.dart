@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -78,23 +79,34 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   }
 
   getCardWidgetForVoiceRecords(MediaMetaInfo mediaMetaInfoObj, int i) {
-    return Container(
-        padding: EdgeInsets.all(10.0),
-        margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(fhbColors.cardShadowColor),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 0, // has the effect of extending the shadow
-            )
-          ],
-        ),
-        child: Row(
-          children: <Widget>[
-            /*   Expanded(
+    return InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RecordDetailScreen(
+                data: mediaMetaInfoObj,
+              ),
+            ),
+          );
+        },
+        child: Container(
+            padding: EdgeInsets.all(10.0),
+            margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(fhbColors.cardShadowColor),
+                  blurRadius: 16, // has the effect of softening the shadow
+                  spreadRadius: 0, // has the effect of extending the shadow
+                )
+              ],
+            ),
+            child: Row(
+              children: <Widget>[
+                /*   Expanded(
               flex: 1,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -129,56 +141,52 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
               ),
             ),
              */
-            CircleAvatar(
-              radius: 25,
-              backgroundColor: const Color(fhbColors.bgColorContainer),
-              child: mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
-                  ? Image.network(
-                      mediaMetaInfoObj.metaInfo.mediaTypeInfo.url,
+                CircleAvatar(
+                    radius: 25,
+                    backgroundColor: const Color(fhbColors.bgColorContainer),
+                    child: Image.network(
+                      mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                          ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
+                          : Constants.BASERURL +
+                              mediaMetaInfoObj.metaInfo.categoryInfo.logo,
                       height: 25,
                       width: 25,
-                      color:  Color(new CommonUtil().getMyPrimaryColor()),
-                    )
-                  : Icon(
-                      Icons.mic,
-                      size: 25,
-                      color:  Color(new CommonUtil().getMyPrimaryColor()),
-                    ),
-            ),
-            SizedBox(width: 20),
-            Expanded(
-              flex: 6,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  SizedBox(height: 10.0),
-                  Text(
-                    mediaMetaInfoObj.metaInfo.fileName != null
-                        ? mediaMetaInfoObj.metaInfo.fileName
-                        : '',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                    ),
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
+                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                    )),
+                SizedBox(width: 20),
+                Expanded(
+                  flex: 6,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 10.0),
+                      Text(
+                        mediaMetaInfoObj.metaInfo.fileName != null
+                            ? mediaMetaInfoObj.metaInfo.fileName
+                            : '',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                        ),
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      //SizedBox(height: 10),
+                      Text(
+                        new FHBUtils()
+                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
+                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                      )
+                    ],
                   ),
-                  //SizedBox(height: 10),
-                  Text(
-                    new FHBUtils()
-                        .getFormattedDateString(mediaMetaInfoObj.createdOn),
-                    style: TextStyle(color: Colors.grey[400], fontSize: 12),
-                  )
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  /*  Icon(
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      /*  Icon(
                     Icons.more_horiz,
                     color: Colors.grey,
                     size: 20,
@@ -186,35 +194,37 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                   SizedBox(
                     height: 10,
                   ), */
-                  IconButton(
-                      icon: mediaMetaInfoObj.isBookmarked
-                          ? ImageIcon(
-                              AssetImage('assets/icons/record_fav_active.png'),
-                              //TODO change theme
-                              color: Color(new CommonUtil().getMyPrimaryColor()),
-                              size: 20,
-                            )
-                          : ImageIcon(
-                              AssetImage('assets/icons/record_fav.png'),
-                              color: Colors.black,
-                              size: 20,
-                            ),
-                      onPressed: () {
-                        new CommonUtil()
-                            .bookMarkRecord(mediaMetaInfoObj, _refresh);
-                      }),
+                      IconButton(
+                          icon: mediaMetaInfoObj.isBookmarked
+                              ? ImageIcon(
+                                  AssetImage(
+                                      'assets/icons/record_fav_active.png'),
+                                  //TODO change theme
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
+                                  size: 20,
+                                )
+                              : ImageIcon(
+                                  AssetImage('assets/icons/record_fav.png'),
+                                  color: Colors.black,
+                                  size: 20,
+                                ),
+                          onPressed: () {
+                            new CommonUtil()
+                                .bookMarkRecord(mediaMetaInfoObj, _refresh);
+                          }),
 
-                  /*  mediaMetaInfoObj.metaInfo.hasVoiceNotes
+                      /*  mediaMetaInfoObj.metaInfo.hasVoiceNotes
                       ? Icon(
                           Icons.mic,
                           color: Colors.black54,
                         )
                       : Container() */
-                ],
-              ),
-            ),
-          ],
-        ));
+                    ],
+                  ),
+                ),
+              ],
+            )));
   }
 
   getDocumentImagegetDocumentImageWidget(MediaMetaInfo data) {

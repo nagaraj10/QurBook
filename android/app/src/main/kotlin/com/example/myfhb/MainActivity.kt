@@ -35,6 +35,7 @@ import android.R.attr.data
 import android.content.*
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.speech.tts.UtteranceProgressListener
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
@@ -61,6 +62,7 @@ class MainActivity : FlutterActivity() {
 
     private lateinit var _result: MethodChannel.Result
     private lateinit var _securityResult: MethodChannel.Result
+    private lateinit var _TTSResult: MethodChannel.Result
     //internal var smsBroadcastReceiver: SMSBroadcastReceiver? = null
 
     private val smsBroadcastReceiver by lazy { SMSBroadcastReceiver() }
@@ -81,6 +83,15 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         GeneratedPluginRegistrant.registerWith(flutterEngine);
+
+        tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
+            if (status != TextToSpeech.ERROR) {
+                tts!!.language = Locale("en_US")
+            }
+
+        })
+
+
 
         val appSignatureHelper = AppSignatureHelper(applicationContext)
         appSignatureHelper.appSignatures;
@@ -111,6 +122,7 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
+
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VERSION_CODES_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "getAppVersion") {
@@ -164,6 +176,7 @@ class MainActivity : FlutterActivity() {
         }
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger,TTS_CHANNEL).setMethodCallHandler{ call, result ->
+            _TTSResult=result
             if(call.method=="textToSpeech"){
                 val msg = call.argument<String>("message")
                 val iscls = call.argument<Boolean>("isClose")
@@ -171,7 +184,6 @@ class MainActivity : FlutterActivity() {
             }else{
                 result.notImplemented()
             }
-            
 
         }
 
@@ -197,11 +209,11 @@ class MainActivity : FlutterActivity() {
             //         Toast.LENGTH_SHORT).show()
             //CalledFromListen = false
         }
-        tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
+       /* tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
             if (status != TextToSpeech.ERROR) {
                 tts!!.language = Locale(langDest)
             }
-        })
+        })*/
     }
 
     private fun listenForSMS(){
@@ -263,16 +275,39 @@ class MainActivity : FlutterActivity() {
     }
 
 
-    private fun textToSpeech(msg:String,isClose:Boolean):TextToSpeech{
-        tts!!.setSpeechRate(0.8f)
+    private fun textToSpeech(msg:String,isClose:Boolean){
+        /*if(tts!=null){
+
+        }else{
+            return false;
+        }*/
+        tts!!.setSpeechRate(0.9f)
         if(isClose){
-            tts!!.shutdown()
+            tts!!.stop()
         }else{
             tts!!.speak(msg, TextToSpeech.QUEUE_FLUSH, null,
-                    null)
+                    TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID)
         }
-        return tts!!
-        //return tts!!.isSpeaking
+
+        tts!!.setOnUtteranceProgressListener(object : UtteranceProgressListener(){
+            override fun onDone(p0: String?) {
+                //Toast.makeText(context,"listening Done",Toast.LENGTH_LONG).show()
+                Log.d("Message","listening Done")
+                runOnUiThread(Runnable { _TTSResult.success(true) })
+
+            }
+
+            override fun onError(p0: String?) {
+                Log.d("Message","listening Error")
+                _TTSResult.success(false)
+            }
+
+            override fun onStart(p0: String?) {
+                Log.d("Message","listening start")
+            }
+
+        })
+
     }
 
     private fun getAppVersion(): String {

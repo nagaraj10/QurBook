@@ -1,5 +1,6 @@
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/database/model/CountryMetrics.dart';
+import 'package:myfhb/database/model/UnitsMesurement.dart';
 import 'package:myfhb/database/services/database_helper.dart';
 
 class CommonConstants {
@@ -113,6 +114,8 @@ class CommonConstants {
   static String strPressureValue = 'mmHg';
   static String strSysPulseValue = 'p/min';
 
+  static String strErrorStringForDevices = 'Value should be between';
+
   static String strDoctorsEmpty = 'Please Enter Doctors Name';
   static String strFileEmpty = 'Please Enter File Name';
   static String strLabEmpty = 'Please Enter Lab Name';
@@ -200,6 +203,7 @@ class CommonConstants {
 
   static final CommonConstants _instance = new CommonConstants.internal();
   static CountryMetrics countryMetrics;
+  static UnitsMesurements unitsMeasurements;
 
   factory CommonConstants() => _instance;
 
@@ -217,6 +221,21 @@ class CommonConstants {
         PreferenceUtil.getIntValue(CommonConstants.KEY_COUNTRYCODE));
 
     return countryMetrics;
+  }
+
+  Future<UnitsMesurements> getValuesForUnit(String units) async {
+    var db = new DatabaseHelper();
+
+    unitsMeasurements = await db.getMeasurementsBasedOnUnits(units);
+
+    print('unitsMeasurements for ' +
+        units +
+        "  max" +
+        unitsMeasurements.maxValue.toString() +
+        ' min' +
+        unitsMeasurements.minValue.toString());
+
+    return unitsMeasurements;
   }
 
   String get bpSPUNIT => countryMetrics.bpSPUnit;

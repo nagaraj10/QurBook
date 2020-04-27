@@ -34,19 +34,19 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   List<int> myThemes = [
     0xff5e1fe0,
-    0xff00b4d5,
-    0xff4d9bc1,
-    0xff3da0a6,
-    0xfff6679f,
+    0xffcf4791,
+    0xff0483df,
+    0xff118c94,
+    0xff17a597,
     //0xff7a72c7,
   ];
 
   List<int> myGradient = [
     0xff753aec,
-    0xff02e0d3,
-    0xff779af6,
-    0xff66dca0,
-    0xffff727c,
+    0xfffab273,
+    0xff01bbd4,
+    0xff0cbcb6,
+    0xff84ce6b,
     //0xff828bea,
   ];
 

@@ -123,7 +123,9 @@ class _MyAppointmentState extends State<MyAppointment> {
                           children: <Widget>[
                             CircleAvatar(
                               radius: 25,
-                              backgroundColor: _randomColor.randomColor(),
+                              backgroundColor:
+                                  Color(fhbColors.bgColorContainer),
+                              //_randomColor.randomColor(),
 //                                  Color(new CommonUtil().getMyPrimaryColor()),
 
                               child: Center(
@@ -160,9 +162,10 @@ class _MyAppointmentState extends State<MyAppointment> {
                                         child: Text(
                                           model.dName[0].toUpperCase(),
                                           style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20.0,
-                                              fontWeight: FontWeight.bold),
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor()),
+                                            fontSize: 24.0,
+                                          ),
                                         ),
                                       )
                                     ]),
@@ -207,7 +210,8 @@ class _MyAppointmentState extends State<MyAppointment> {
                                     Container(
                                       width: 1,
                                       height: 30,
-                                      color: Colors.grey,
+                                      color: Color(
+                                          CommonUtil().getMyGredientColor()),
                                     ),
                                     SizedBox(width: 10),
                                     InkWell(
@@ -218,7 +222,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                       child: Icon(
                                         Icons.delete,
                                         size: 20,
-                                        color: Colors.red,
+                                        color: Colors.redAccent,
                                       ),
                                     ),
                                   ],

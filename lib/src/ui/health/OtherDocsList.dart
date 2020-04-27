@@ -157,7 +157,7 @@ class _OtherDocsState extends State<OtherDocsList> {
                     mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                         : Constants.BASERURL +
-                            mediaMetaInfoObj.metaInfo.mediaTypeInfo.logo,
+                            mediaMetaInfoObj.metaInfo.categoryInfo.logo,
                     height: 25,
                     width: 25,
                     color: Color(new CommonUtil().getMyPrimaryColor()),

@@ -62,6 +62,7 @@ class _MyRecordsState extends State<MyRecords> {
   MyProfileBloc _myProfileBloc;
 
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   GlobalSearchBloc _globalSearchBloc;
   bool fromSearch = false;
@@ -92,6 +93,7 @@ class _MyRecordsState extends State<MyRecords> {
 
   Widget getCompleteWidgets() {
     return Scaffold(
+      key: scaffold_state,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -166,6 +168,9 @@ class _MyRecordsState extends State<MyRecords> {
     _categoryListBlock = null;
     _categoryListBlock = new CategoryListBlock();
 
+    if (!fromSearch)
+      PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
+
     List<CategoryData> categoryData = fliterCategories(data);
     return DefaultTabController(
         length: categoryData.length,
@@ -216,34 +221,39 @@ class _MyRecordsState extends State<MyRecords> {
                 color: Colors.white,
               ),
               onPressed: () {
-                PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
-                    .then((onValue) {
-                  PreferenceUtil.saveString(
-                          Constants.KEY_CATEGORYNAME, categoryName)
+                if (categoryName == Constants.STR_VOICERECORDS) {
+                  new FHBBasicWidget().showInSnackBar(
+                      Constants.MSG_NO_CAMERA_VOICERECORDS, scaffold_state);
+                } else {
+                  PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
                       .then((onValue) {
                     PreferenceUtil.saveString(
-                            Constants.KEY_CATEGORYID, categoryID)
-                        .then((value) {
-                      if (categoryName == STR_DEVICES) {
-                        PreferenceUtil.saveString(
-                            Constants.stop_detecting, 'NO');
-                        PreferenceUtil.saveString(
-                            Constants.stop_detecting, 'NO');
+                            Constants.KEY_CATEGORYNAME, categoryName)
+                        .then((onValue) {
+                      PreferenceUtil.saveString(
+                              Constants.KEY_CATEGORYID, categoryID)
+                          .then((value) {
+                        if (categoryName == STR_DEVICES) {
+                          PreferenceUtil.saveString(
+                              Constants.stop_detecting, 'NO');
+                          PreferenceUtil.saveString(
+                              Constants.stop_detecting, 'NO');
 
-                        Navigator.pushNamed(
-                                context, '/take_picture_screen_for_devices')
-                            .then((value) {
-                          //callBackToRefresh();
-                        });
-                      } else {
-                        Navigator.pushNamed(context, '/take_picture_screen')
-                            .then((value) {
-                          //callBackToRefresh();
-                        });
-                      }
+                          Navigator.pushNamed(
+                                  context, '/take_picture_screen_for_devices')
+                              .then((value) {
+                            //callBackToRefresh();
+                          });
+                        } else {
+                          Navigator.pushNamed(context, '/take_picture_screen')
+                              .then((value) {
+                            //callBackToRefresh();
+                          });
+                        }
+                      });
                     });
                   });
-                });
+                }
               },
             ),
             Container(
@@ -515,9 +525,6 @@ class _MyRecordsState extends State<MyRecords> {
     List<Widget> tabWidgetList = new List();
     //tabWidgetList.add(SizedBox(height: 5));
 
-    if (!fromSearch)
-      PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
-
     data.sort((a, b) {
       return a.categoryDescription
           .toLowerCase()
@@ -737,8 +744,9 @@ class _MyRecordsState extends State<MyRecords> {
   List<CategoryData> fliterCategories(List<CategoryData> data) {
     List<CategoryData> filteredCategoryData = new List();
     for (CategoryData dataObj in data) {
-      if (dataObj
-          .isDisplay /*&& dataObj.categoryName != Constants.STR_FEEDBACK*/) {
+      if (dataObj.isDisplay &&
+          dataObj.categoryName != Constants.STR_FEEDBACK &&
+          dataObj.categoryName != Constants.STR_CLAIMSRECORD) {
         filteredCategoryData.add(dataObj);
       }
     }

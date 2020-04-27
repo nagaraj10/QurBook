@@ -77,14 +77,10 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
     _refreshIndicatorKey.currentState?.show(atTop: false);
     await Future.delayed(Duration(seconds: 2));
     widget.callBackToRefresh();
-
-    //network call and setState so that view will render the new values
-    print("refresh");
-
-    //_healthReportListForUserBlock.getHelthReportList();
   }
 
   Widget getCardWidgetForLabReport(MediaMetaInfo mediaMetaInfo, int position) {
+    //print('logo url ' + mediaMetaInfo.metaInfo.laboratory.logoThumbnail);
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -124,7 +120,17 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                       : Container(
                           width: 50,
                           height: 50,
-                          color: const Color(fhbColors.bgColorContainer),
+                          padding: EdgeInsets.all(10),
+                          child: Image.network(
+                            Constants.BASERURL +
+                                mediaMetaInfo.metaInfo.categoryInfo.logo,
+                            color: Color(
+                              CommonUtil().getMyPrimaryColor(),
+                            ),
+                          ),
+                          color: const Color(
+                            fhbColors.bgColorContainer,
+                          ),
                         )),
               SizedBox(width: 20),
               Expanded(
@@ -156,9 +162,6 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                           fontWeight: FontWeight.w200,
                           fontSize: 12),
                     )
-                    /*  Text(mediaMetaInfo.metaInfo.fileName != null
-                      ? mediaMetaInfo.metaInfo.fileName
-                      : ''), */
                   ],
                 ),
               ),
@@ -168,20 +171,13 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    /*  Icon(Icons.more_horiz, color: Colors.grey, size: 20),
-                    SizedBox(height: 20), */
                     IconButton(
-                        /* icon: ImageIcon(
-                            AssetImage('assets/icons/record_fav.png'),
-                            color:
-                                mediaMetaInfo.isBookmarked ? Colors.red : Colors.black,
-                          ), */
                         icon: mediaMetaInfo.isBookmarked
                             ? ImageIcon(
                                 AssetImage(
                                     'assets/icons/record_fav_active.png'),
-                                    //TODO chnage theme
-                                color: Color(new CommonUtil().getMyPrimaryColor()),
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
                                 size: 20,
                               )
                             : ImageIcon(

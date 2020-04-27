@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/bot/ConversationModel.dart';
 import 'package:myfhb/src/model/bot/SpeechModelResponse.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
@@ -10,6 +11,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:convert' as convert;
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -38,6 +40,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   static MyProfile prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE);
   var user_name = prof.response.data.generalInfo.name;
   List<Conversation> conversations = new List();
+  var isMayaSpeaks = false;
+  var isEndOfConv = false;
 
   AnimationController _controller;
 
@@ -58,7 +62,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   startMayaAutomatically() {
-    sendToMaya('Hi Maya');
+    Future.delayed(Duration(seconds: 1), () {
+      sendToMaya('Hi Maya');
+    });
+
     var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
     Conversation model = new Conversation(
       isMayaSaid: false,
@@ -81,7 +88,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   stopTTSEngine() async {
     await tts_platform.invokeMethod(
         'textToSpeech', {"message": "", "isClose": true}).then((res) {
-      print('speech to text implement');
+      //print('speech to text implement');
     });
   }
 
@@ -93,6 +100,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     //conversations.reversed;
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
         title: Text('Maya'),
         leading: IconButton(
             icon: Icon(
@@ -167,7 +175,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     String mayaUrl = 'https://ai.vsolgmi.com/ai/api/rasa/';
     String uuidString = uuid;
 
-    print(uuidString);
+    // /print(uuidString);
 
     var reqJson = {};
     reqJson["sender"] = user_id;
@@ -190,15 +198,20 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       headers: requestHeaders,
     );
 
-    print(response.toString());
+    /*  print(response.toString());
     print(response.statusCode);
-
+ */
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      print('response from maya ' + jsonResponse.toString());
+      //print('response from maya ' + jsonResponse.toString());
       List<dynamic> list = jsonResponse;
       SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
-      print(res.text);
+      //print('before env value $isEndOfConv');
+      setState(() {
+        isEndOfConv = res.endOfConv;
+      });
+      /*   print('before env value $isEndOfConv');
+      print(res.text); */
       var date =
           new FHBUtils().getFormattedDateString(DateTime.now().toString());
       Conversation model = new Conversation(
@@ -211,10 +224,14 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       conversations.add(model);
       setState(() {});
       chatData(conversations);
-      print('current length of ${conversations.length}');
+      //print('current length of ${conversations.length}');
       await tts_platform.invokeMethod(
           'textToSpeech', {"message": res.text, "isClose": false}).then((res) {
-        print('print tts obj $res');
+        if (!isEndOfConv) {
+          gettingReposnseFromNative();
+        } else {
+          refreshData();
+        }
       });
       return jsonResponse;
     } else {
@@ -347,6 +364,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 ),
                 child: Column(
                   children: <Widget>[
+                    Text(
+                      c.text,
+                      style: Theme.of(context).textTheme.body1.apply(
+                            color: Colors.white,
+                          ),
+                    ),
                     c.imageUrl != null
                         ? Padding(
                             child: Image.network(
@@ -362,13 +385,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         : SizedBox(
                             height: 0,
                             width: 0,
-                          ),
-                    Text(
-                      c.text,
-                      style: Theme.of(context).textTheme.body1.apply(
-                            color: Colors.white,
-                          ),
-                    )
+                          )
                   ],
                 ),
               ),
@@ -383,5 +400,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         SizedBox(width: 20),
       ],
     );
+  }
+
+  void refreshData() {
+    var _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock.getHelthReportList().then((value) {
+      PreferenceUtil.saveCompleteData(
+          constants.KEY_COMPLETE_DATA, value.response.data);
+    });
   }
 }

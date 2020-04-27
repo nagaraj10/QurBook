@@ -19,6 +19,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
 
+import 'CropAndRotateScreen.dart';
 import 'DisplayPictureScreen.dart';
 
 class TakePictureScreenForDevices extends StatefulWidget {
@@ -374,7 +375,7 @@ class TakePictureScreenForDevicesState
                                   size: 40,
                                 ),
                                 onPressed: () {
-                                  Navigator.push(
+                                  /*  Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) =>
@@ -383,6 +384,21 @@ class TakePictureScreenForDevicesState
                                     ),
                                   ).then((value) {
                                     Navigator.pop(context);
+                                  }); */
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CropAndRotateScreen(
+                                          imagePath: imagePaths),
+                                    ),
+                                  ).then((value) {
+                                    print(
+                                        '+++++++++++$value+++++++++TakePictureScreen');
+                                    //Navigator.pop(context);
+                                    if (value) {
+                                      Navigator.of(context).pop(true);
+                                    }
                                   });
                                 },
                               ))),
@@ -593,7 +609,7 @@ class TakePictureScreenForDevicesState
     }
   }
 
-  void callDisplayPictureScreen(BuildContext context) {
+  /*  void callDisplayPictureScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -601,6 +617,22 @@ class TakePictureScreenForDevicesState
       ),
     ).then((value) {
       Navigator.pop(context);
+    });
+  } */
+
+  void callDisplayPictureScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CropAndRotateScreen(imagePath: imagePaths),
+      ),
+    ).then((value) {
+      print(
+          '+++++++++++$value+++++++++TakePictureScreen callDisplayPictureScreen');
+
+      if (value) {
+        Navigator.of(context).pop(true);
+      }
     });
   }
 

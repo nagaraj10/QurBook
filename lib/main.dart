@@ -106,9 +106,17 @@ Future<void> main() async {
     }
   });
 
+  DatabaseUtil.getDBLengthUnit().then((length) {
+    if (length > 0) {
+    } else {
+      DatabaseUtil.insertUnitsForDevices();
+    }
+  });
+
   await FHBUtils.instance.initPlatformState();
   await FHBUtils.instance.getDb();
 
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
     MyFHB(),
   );

@@ -48,6 +48,8 @@ const String STR_IDDOCS = 'ID Docs';
 const String STR_OTHERS = 'Others';
 const String STR_VOICERECORDS = 'Voice Records';
 const String STR_CLAIMSRECORD = 'Claim Records';
+const String STR_FEEDBACK = 'Feedback';
+const String STR_VOICE_NOTES = 'Voice Notes';
 
 const String KEY_USERID_MAIN = 'mainUserUD';
 const String KEY_PROFILE_MAIN = 'profileMain';
@@ -103,3 +105,4 @@ const String INTRO_SLIDE_DESC_4 =
 const String INTRO_SLIDE_TITLE_5 = 'Share ‘n’ Care ';
 const String INTRO_SLIDE_DESC_5 =
     'Easily share your medical records within the Healthcare ecosystem.';
+const String KEY_SHOWCASE_DASHBOARD = 'KEY_SHOWCASE_DASHBOARD';
