@@ -114,7 +114,7 @@ class CommonConstants {
   static String strPressureValue = 'mmHg';
   static String strSysPulseValue = 'p/min';
 
-  static String strErrorStringForDevices = 'Value should be between';
+  static String strErrorStringForDevices = 'Normal reading ranges between';
 
   static String strDoctorsEmpty = 'Please Enter Doctors Name';
   static String strFileEmpty = 'Please Enter File Name';

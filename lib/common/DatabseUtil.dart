@@ -243,7 +243,7 @@ class DatabaseUtil {
     var thermo = new UnitsMesurements(2, "C", 35, 42);
     await db.saveUnitMeasurements(thermo);
 
-    var gluco = new UnitsMesurements(3, "mg/dl", 20, 600);
+    var gluco = new UnitsMesurements(3, "mgdl", 20, 600);
     await db.saveUnitMeasurements(gluco);
     var bp = new UnitsMesurements(4, "mmHg", 20, 280);
     await db.saveUnitMeasurements(bp);

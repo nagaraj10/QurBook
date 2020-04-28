@@ -43,9 +43,6 @@ var routes = <String, WidgetBuilder>{
   "/splashscreen": (BuildContext context) => SplashScreen(),
   "/sign_in_screen": (BuildContext context) => SignInScreen(),
   "/dashboard_screen": (BuildContext context) => DashboardScreen(),
-  /* "/home_screen": (BuildContext context) => HomeScreen(
-        bottomindex: 0,
-      ), */
   "/home_screen": (BuildContext context) =>
       HomeScreen(arguments: ModalRoute.of(context).settings.arguments),
   "/user_accounts": (BuildContext context) =>

@@ -72,6 +72,7 @@ dependencies:
   showcaseview:
   flashlight: ^0.1.1
   image_cropper:
+  android_intent: ^0.3.7+1
 
 dev_dependencies:
   flutter_test:

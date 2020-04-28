@@ -244,8 +244,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
         builder: (context) => DisplayPictureScreen(imagePath: widget.imagePath),
       ),
     ).then((value) {
-      print(
-          '+++++++++++$value+++++++++TakePictureScreen callDisplayPictureScreen');
+      categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
       if (value) {
         Navigator.of(context).pop(true);

@@ -375,17 +375,6 @@ class TakePictureScreenForDevicesState
                                   size: 40,
                                 ),
                                 onPressed: () {
-                                  /*  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          DisplayPictureScreen(
-                                              imagePath: imagePaths),
-                                    ),
-                                  ).then((value) {
-                                    Navigator.pop(context);
-                                  }); */
-
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
@@ -393,9 +382,9 @@ class TakePictureScreenForDevicesState
                                           imagePath: imagePaths),
                                     ),
                                   ).then((value) {
-                                    print(
-                                        '+++++++++++$value+++++++++TakePictureScreen');
-                                    //Navigator.pop(context);
+                                    categoryName =
+                                        PreferenceUtil.getStringValue(
+                                            Constants.KEY_CATEGORYNAME);
                                     if (value) {
                                       Navigator.of(context).pop(true);
                                     }
@@ -412,7 +401,7 @@ class TakePictureScreenForDevicesState
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Expanded(
+                              /*  Expanded(
                                 child: Center(
                                   child: IconButton(
                                     icon: Icon(
@@ -445,9 +434,10 @@ class TakePictureScreenForDevicesState
                                   ),
                                 ),
                               ),
-                              Expanded(
+                               */
+                             /*  Expanded(
                                 child: Container(),
-                              ),
+                              ), */
                               Expanded(
                                 child: Center(
                                   child: IconButton(
@@ -502,7 +492,7 @@ class TakePictureScreenForDevicesState
                                   ),
                                 ),
                               ),
-                              Expanded(
+                              /*  Expanded(
                                 child: Center(
                                   child: Column(
                                     children: <Widget>[
@@ -569,6 +559,7 @@ class TakePictureScreenForDevicesState
                                   ),
                                 ),
                               ),
+                             */
                             ],
                           ),
                         ))
@@ -627,8 +618,7 @@ class TakePictureScreenForDevicesState
         builder: (context) => CropAndRotateScreen(imagePath: imagePaths),
       ),
     ).then((value) {
-      print(
-          '+++++++++++$value+++++++++TakePictureScreen callDisplayPictureScreen');
+      categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
       if (value) {
         Navigator.of(context).pop(true);

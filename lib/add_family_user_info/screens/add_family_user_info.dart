@@ -1431,34 +1431,16 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
             child: imageURIProfile != null
                 ? Image.file(imageURIProfile,
                     fit: BoxFit.cover, width: 100, height: 100)
-                : Image.network(
-                    "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                    fit: BoxFit.cover,
+                : Container(
+                    color: Color(new CommonUtil().getMyPrimaryColor()),
                   )),
-        /* CachedNetworkImage(
-            imageUrl: Constants.BASEURL_COVERIMAGE, fit: BoxFit.cover),
-          Image.network(
-          "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-          fit: BoxFit.cover,
-        ), */
-
         Positioned(
           left: 25,
           top: 25,
           child: Opacity(
             opacity: shrinkOffset / expandedHeight,
             child: ClipOval(
-              child:
-                  /*  Image.network(
-              "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-              fit: BoxFit.cover, 
-                  CachedNetworkImage(
-                imageUrl: Constants.BASEURL_COVERIMAGE,
-                fit: BoxFit.cover,
-                width: 50,
-                height: 50,
-              )*/
-                  Container(
+              child: Container(
                 color: Colors.white,
                 height: 50,
                 width: 50,

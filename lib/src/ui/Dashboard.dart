@@ -273,7 +273,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Navigator.pushNamed(
       context,
       '/home_screen',
-      arguments: HomeScreenArguments(selectedIndex: i),
+      arguments: HomeScreenArguments(selectedIndex: 1),
     ).then((value) {});
   }
 

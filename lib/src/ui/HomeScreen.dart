@@ -5,14 +5,9 @@ import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/notifications/myfhb_notifications.dart';
 import 'package:myfhb/schedules/my_schedules.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
-import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
-import 'package:myfhb/src/ui/user/UserAccounts.dart';
-
-//import 'bot/SuperMaya_sample.dart';
 
 class HomeScreen extends StatefulWidget {
   static _HomeScreenState of(BuildContext context) =>
@@ -33,10 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   var _widgetOptions = [
-    MyRecords(),
-    MySchedule(),
-    SuperMaya(),
     MyFhbNotifications(),
+    MyRecords(),
+    SuperMaya(),
+    MySchedule(),
     MoreMenuScreen()
   ];
 
@@ -71,9 +66,13 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _myFunc(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
+    if (index == 0) {
+      Navigator.of(context).pop();
+    } else {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
   }
 }
 
@@ -91,7 +90,6 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       color: Colors.transparent,
       padding: EdgeInsets.only(top: 20),
@@ -106,7 +104,8 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ImageIcon(
-                      AssetImage('assets/navicons/records.png'),
+                      AssetImage('assets/navicons/home.png'),
+                      size: 20,
                       color: widget.selectedPageIndex == 0
                           ? Colors.white
                           : Colors.black,
@@ -118,7 +117,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                             width: 0,
                           )
                         : Text(
-                            'My Records',
+                            'Home',
                             style: TextStyle(fontSize: 10),
                           )
                   ],
@@ -129,11 +128,11 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ImageIcon(
-                      AssetImage('assets/navicons/schedule.png'),
+                      AssetImage('assets/navicons/records.png'),
                       color: widget.selectedPageIndex == 1
                           ? Colors.white
                           : Colors.black,
-                      size: 22,
+                      //size: 22,
                     ),
                     widget.selectedPageIndex == 1
                         ? Container(
@@ -141,7 +140,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                             width: 0,
                           )
                         : Text(
-                            'Schedules',
+                            'My Records',
                             style: TextStyle(fontSize: 10),
                           )
                   ],
@@ -175,11 +174,11 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ImageIcon(
-                      AssetImage('assets/navicons/notifications.png'),
+                      AssetImage('assets/navicons/schedule.png'),
                       color: widget.selectedPageIndex == 3
                           ? Colors.white
                           : Colors.black,
-                      //size: 22,
+                      size: 22,
                     ),
                     widget.selectedPageIndex == 3
                         ? Container(
@@ -187,7 +186,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                             width: 0,
                           )
                         : Text(
-                            'Notifications',
+                            'Schedules',
                             style: TextStyle(fontSize: 10),
                           )
                   ],

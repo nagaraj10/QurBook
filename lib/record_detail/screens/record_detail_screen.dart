@@ -755,172 +755,178 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     } else {
       deviceName = widget.data.metaInfo.mediaTypeInfo.name;
       print('pary deviceName' + deviceName);
-      PreferenceUtil.saveString(Constants.KEY_DEVICENAME, deviceName);
-      switch (deviceName) {
-        case Constants.STR_GLUCOMETER:
-          String glucoMeterValue = widget.data.metaInfo.deviceReadings != null
-              ? widget.data.metaInfo.deviceReadings[0].value
-              : '';
-          String fileName = widget.data.metaInfo.fileName;
-          List<bool> isSelected =
-              widget.data.metaInfo.deviceReadings[1].unit == 'After'
-                  ? [false, true]
-                  : [true, false];
-          new CommonDialogBox().getDialogBoxForGlucometer(
-              context,
-              deviceName,
-              containsAudio,
-              audioPath,
-              (containsAudio, audioPath) {
-                setState(() {
+      PreferenceUtil.saveString(Constants.KEY_DEVICENAME, deviceName)
+          .then((value) {
+        switch (deviceName) {
+          case Constants.STR_GLUCOMETER:
+            String glucoMeterValue = widget.data.metaInfo.deviceReadings != null
+                ? widget.data.metaInfo.deviceReadings[0].value
+                : '';
+            String fileName = widget.data.metaInfo.fileName;
+            List<bool> isSelected =
+                widget.data.metaInfo.deviceReadings[1].unit == 'After'
+                    ? [false, true]
+                    : [true, false];
+            new CommonDialogBox().getDialogBoxForGlucometer(
+                context,
+                deviceName,
+                containsAudio,
+                audioPath,
+                (containsAudio, audioPath) {
+                  setState(() {
+                    audioPath = audioPath;
+                    containsAudio = containsAudio;
+                  });
+                },
+                new List(),
+                (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
-                });
-              },
-              new List(),
-              (containsAudio, audioPath) {
-                audioPath = audioPath;
-                containsAudio = containsAudio;
 
-                setState(() {});
-              },
-              widget.data,
-              true,
-              new TextEditingController(text: glucoMeterValue),
-              isSelected,
-              new TextEditingController(text: fileName));
-          break;
+                  setState(() {});
+                },
+                widget.data,
+                true,
+                new TextEditingController(text: glucoMeterValue),
+                isSelected,
+                new TextEditingController(text: fileName));
+            break;
 
-        case Constants.STR_THERMOMETER:
-          String thermometerValue = widget.data.metaInfo.deviceReadings != null
-              ? widget.data.metaInfo.deviceReadings[0].value
-              : '';
-          String fileName = widget.data.metaInfo.fileName;
+          case Constants.STR_THERMOMETER:
+            String thermometerValue =
+                widget.data.metaInfo.deviceReadings != null
+                    ? widget.data.metaInfo.deviceReadings[0].value
+                    : '';
+            String fileName = widget.data.metaInfo.fileName;
 
-          new CommonDialogBox().getDialogBoxForTemperature(
-              context,
-              deviceName,
-              containsAudio,
-              audioPath,
-              (containsAudio, audioPath) {
-                setState(() {
+            new CommonDialogBox().getDialogBoxForTemperature(
+                context,
+                deviceName,
+                containsAudio,
+                audioPath,
+                (containsAudio, audioPath) {
+                  setState(() {
+                    audioPath = audioPath;
+                    containsAudio = containsAudio;
+                  });
+                },
+                new List(),
+                (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
-                });
-              },
-              new List(),
-              (containsAudio, audioPath) {
-                audioPath = audioPath;
-                containsAudio = containsAudio;
 
-                setState(() {});
-              },
-              widget.data,
-              true,
-              new TextEditingController(text: thermometerValue),
-              new TextEditingController(text: fileName));
-          break;
-        case Constants.STR_WEIGHING_SCALE:
-          String weightInKgs = widget.data.metaInfo.deviceReadings != null
-              ? widget.data.metaInfo.deviceReadings[0].value
-              : '';
-          String fileName = widget.data.metaInfo.fileName;
+                  setState(() {});
+                },
+                widget.data,
+                true,
+                new TextEditingController(text: thermometerValue),
+                new TextEditingController(text: fileName));
+            break;
+          case Constants.STR_WEIGHING_SCALE:
+            String weightInKgs = widget.data.metaInfo.deviceReadings != null
+                ? widget.data.metaInfo.deviceReadings[0].value
+                : '';
+            String fileName = widget.data.metaInfo.fileName;
 
-          new CommonDialogBox().getDialogBoxForWeightingScale(
-              context,
-              deviceName,
-              containsAudio,
-              audioPath,
-              (containsAudio, audioPath) {
-                setState(() {
+            new CommonDialogBox().getDialogBoxForWeightingScale(
+                context,
+                deviceName,
+                containsAudio,
+                audioPath,
+                (containsAudio, audioPath) {
+                  setState(() {
+                    audioPath = audioPath;
+                    containsAudio = containsAudio;
+                  });
+                },
+                new List(),
+                (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
-                });
-              },
-              new List(),
-              (containsAudio, audioPath) {
-                audioPath = audioPath;
-                containsAudio = containsAudio;
 
-                setState(() {});
-              },
-              widget.data,
-              true,
-              new TextEditingController(text: weightInKgs),
-              new TextEditingController(text: fileName));
-          break;
+                  setState(() {});
+                },
+                widget.data,
+                true,
+                new TextEditingController(text: weightInKgs),
+                new TextEditingController(text: fileName));
+            break;
 
-        case Constants.STR_PULSE_OXIMETER:
-          String oxygenSaturation = widget.data.metaInfo.deviceReadings != null
-              ? widget.data.metaInfo.deviceReadings[0].value
-              : '';
-          String pulse = widget.data.metaInfo.deviceReadings != null
-              ? widget.data.metaInfo.deviceReadings[1].value
-              : '';
-          String fileName = widget.data.metaInfo.fileName;
+          case Constants.STR_PULSE_OXIMETER:
+            String oxygenSaturation =
+                widget.data.metaInfo.deviceReadings != null
+                    ? widget.data.metaInfo.deviceReadings[0].value
+                    : '';
+            String pulse = widget.data.metaInfo.deviceReadings != null
+                ? widget.data.metaInfo.deviceReadings[1].value
+                : '';
+            String fileName = widget.data.metaInfo.fileName;
 
-          new CommonDialogBox().getDialogBoxForPulseOxidometer(
-              context,
-              deviceName,
-              containsAudio,
-              audioPath,
-              (containsAudio, audioPath) {
-                setState(() {
+            new CommonDialogBox().getDialogBoxForPulseOxidometer(
+                context,
+                deviceName,
+                containsAudio,
+                audioPath,
+                (containsAudio, audioPath) {
+                  setState(() {
+                    audioPath = audioPath;
+                    containsAudio = containsAudio;
+                  });
+                },
+                new List(),
+                (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
-                });
-              },
-              new List(),
-              (containsAudio, audioPath) {
-                audioPath = audioPath;
-                containsAudio = containsAudio;
 
-                setState(() {});
-              },
-              widget.data,
-              true,
-              new TextEditingController(text: oxygenSaturation),
-              new TextEditingController(text: pulse),
-              new TextEditingController(text: fileName));
-          break;
-        case Constants.STR_BP_MONITOR:
-          String systolicPressure = widget.data.metaInfo.deviceReadings != null
-              ? widget.data.metaInfo.deviceReadings[0].value
-              : '';
-          String diastolicPressure = widget.data.metaInfo.deviceReadings != null
-              ? widget.data.metaInfo.deviceReadings[1].value
-              : '';
-          String pulse = widget.data.metaInfo.deviceReadings != null
-              ? widget.data.metaInfo.deviceReadings[2].value
-              : '';
-          String fileName = widget.data.metaInfo.fileName;
+                  setState(() {});
+                },
+                widget.data,
+                true,
+                new TextEditingController(text: oxygenSaturation),
+                new TextEditingController(text: pulse),
+                new TextEditingController(text: fileName));
+            break;
+          case Constants.STR_BP_MONITOR:
+            String systolicPressure =
+                widget.data.metaInfo.deviceReadings != null
+                    ? widget.data.metaInfo.deviceReadings[0].value
+                    : '';
+            String diastolicPressure =
+                widget.data.metaInfo.deviceReadings != null
+                    ? widget.data.metaInfo.deviceReadings[1].value
+                    : '';
+            String pulse = widget.data.metaInfo.deviceReadings != null
+                ? widget.data.metaInfo.deviceReadings[2].value
+                : '';
+            String fileName = widget.data.metaInfo.fileName;
 
-          new CommonDialogBox().getDialogBoxForBPMonitor(
-              context,
-              deviceName,
-              containsAudio,
-              audioPath,
-              (containsAudio, audioPath) {
-                setState(() {
+            new CommonDialogBox().getDialogBoxForBPMonitor(
+                context,
+                deviceName,
+                containsAudio,
+                audioPath,
+                (containsAudio, audioPath) {
+                  setState(() {
+                    audioPath = audioPath;
+                    containsAudio = containsAudio;
+                  });
+                },
+                new List(),
+                (containsAudio, audioPath) {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
-                });
-              },
-              new List(),
-              (containsAudio, audioPath) {
-                audioPath = audioPath;
-                containsAudio = containsAudio;
 
-                setState(() {});
-              },
-              widget.data,
-              true,
-              new TextEditingController(text: systolicPressure),
-              new TextEditingController(text: pulse),
-              new TextEditingController(text: diastolicPressure),
-              new TextEditingController(text: fileName));
-          break;
-      }
+                  setState(() {});
+                },
+                widget.data,
+                true,
+                new TextEditingController(text: systolicPressure),
+                new TextEditingController(text: pulse),
+                new TextEditingController(text: diastolicPressure),
+                new TextEditingController(text: fileName));
+            break;
+        }
+      });
     }
   }
 
@@ -1003,25 +1009,18 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                     )
                   : ispdfPresent
                       ? Container(
-                          //height: double.infinity,
-                          child: Image.asset('assets/icons/attach.png'),
+                          child: ImageIcon(
+                              AssetImage('assets/icons/attach.png'),
+                              color: Colors.white),
                         )
                       : Container(
-                          //height: double.infinity,
                           child: Icon(
                             Icons.mic,
-                            //TODO chnage theme
                             color: Color(new CommonUtil().getMyPrimaryColor()),
                           ),
                         )
               : Container(
-                  //height: double.infinity,
-                  child: Icon(
-                    Icons.mic,
-                    //TODO chnage theme
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
-                ),
+                  child: Icon(Icons.mic, size: 60, color: Colors.white)),
 
           /* SizedBox(
               height: 10.0,

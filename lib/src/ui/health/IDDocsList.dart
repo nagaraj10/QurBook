@@ -34,11 +34,6 @@ class _IDDocsListState extends State<IDDocsList> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName);
-    PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId);
-
-    print(PreferenceUtil.getStringValue(
-        Constants.KEY_CATEGORYNAME + ' preference FHB'));
     widget.getDataForParticularLabel(widget.categoryName, widget.categoryId);
     PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName);
     PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId);

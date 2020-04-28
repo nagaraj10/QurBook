@@ -114,6 +114,8 @@ class AddProvidersState extends State<AddProviders> {
     // TODO: implement initState
     super.initState();
 
+    //checkGPS();
+
     addProvidersBloc = AddProvidersBloc();
     updateProvidersBloc = UpdateProvidersBloc();
 
@@ -122,7 +124,7 @@ class AddProvidersState extends State<AddProviders> {
 
     _myProfileBloc = new MyProfileBloc();
 
-//    getCurrentLocation();
+    //    getCurrentLocation();
 
     buildUI();
   }
@@ -131,25 +133,25 @@ class AddProvidersState extends State<AddProviders> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-//      appBar: AppBar(
-//        leading: IconButton(
-//          icon: Icon(
-//            Icons.arrow_back_ios,
-//            size: 20,
-//          ),
-//          onPressed: () {
-//            Navigator.of(context).pop();
-//          },
-//        ),
-//        title: Text(
-//          CommonConstants.add_providers,
-//          style: TextStyle(
-//            fontWeight: FontWeight.w400,
-//            color: Colors.white,
-//            fontSize: 18,
-//          ),
-//        ),
-//      ),
+      //      appBar: AppBar(
+      //        leading: IconButton(
+      //          icon: Icon(
+      //            Icons.arrow_back_ios,
+      //            size: 20,
+      //          ),
+      //          onPressed: () {
+      //            Navigator.of(context).pop();
+      //          },
+      //        ),
+      //        title: Text(
+      //          CommonConstants.add_providers,
+      //          style: TextStyle(
+      //            fontWeight: FontWeight.w400,
+      //            color: Colors.white,
+      //            fontSize: 18,
+      //          ),
+      //        ),
+      //      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         child: SingleChildScrollView(
@@ -301,10 +303,10 @@ class AddProvidersState extends State<AddProviders> {
                     Row(
                       children: <Widget>[
                         IgnorePointer(
-//                            ignoring: widget.arguments.fromClass ==
-//                                    CommonConstants.myProviders
-//                                ? true
-//                                : false,
+                            //                            ignoring: widget.arguments.fromClass ==
+                            //                                    CommonConstants.myProviders
+                            //                                ? true
+                            //                                : false,
                             ignoring: false,
                             child: Switch(
                               value: isPreferred,
@@ -326,8 +328,8 @@ class AddProvidersState extends State<AddProviders> {
                       ],
                     ),
                     Visibility(
-//                      visible: widget.arguments.fromClass ==
-//                              CommonConstants.myProviders ? false : true,
+                      //                      visible: widget.arguments.fromClass ==
+                      //                              CommonConstants.myProviders ? false : true,
                       visible: true,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -422,11 +424,11 @@ class AddProvidersState extends State<AddProviders> {
         doctorController.text = widget.arguments.doctorsModel.name;
         isPreferred = widget.arguments.doctorsModel.isDefault;
         myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
-//
-//        latitude = double.parse(widget.doctorsModel.latitude);
-//        longtiude = double.parse(widget.doctorsModel.longitude);
-//
-//        center = LatLng(latitude, longtiude);
+        //
+        //        latitude = double.parse(widget.doctorsModel.latitude);
+        //        longtiude = double.parse(widget.doctorsModel.longitude);
+        //
+        //        center = LatLng(latitude, longtiude);
 
         addressLine1 = widget.arguments.doctorsModel.addressLine1;
         addressLine2 = widget.arguments.doctorsModel.addressLine2;
@@ -620,8 +622,8 @@ class AddProvidersState extends State<AddProviders> {
         ));
   }
 
-//  new FHBBasicWidget()
-//      .getDefaultProfileImage()
+  //  new FHBBasicWidget()
+  //      .getDefaultProfileImage()
 
   Widget _ShowDoctorTextField() {
     return Padding(
@@ -648,9 +650,9 @@ class AddProvidersState extends State<AddProviders> {
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Theme.of(context).primaryColor),
             ),
-//            focusedBorder: UnderlineInputBorder(
-//              borderSide: BorderSide(color: ColorUtils.greencolor),
-//            ),
+            //            focusedBorder: UnderlineInputBorder(
+            //              borderSide: BorderSide(color: ColorUtils.greencolor),
+            //            ),
             labelText: widget.arguments.searchKeyWord,
             labelStyle: TextStyle(
                 fontSize: 16.0,
@@ -814,7 +816,7 @@ class AddProvidersState extends State<AddProviders> {
           if (!snapshot.hasData) return Container();
 
           if (snapshot.data.status == Status.COMPLETED) {
-//            Navigator.pop(context, 1);
+            //            Navigator.pop(context, 1);
             Navigator.popUntil(context, (Route<dynamic> route) {
               bool shouldPop = false;
               if (route.settings.name == '/user_accounts') {
@@ -1079,6 +1081,12 @@ class AddProvidersState extends State<AddProviders> {
       });
     });
   }
+
+  /* void checkGPS() async {
+    if (!Geolocator().isLocationServiceEnabled) {
+      // showDialog(context: );
+    }
+  } */
 
 //@override
 //Widget build(BuildContext context) {

@@ -95,7 +95,7 @@ class AuthenticationRepository {
   Future<OTPEmailResponse> verifyOTPFromEmail(String verifyEmailOTP) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    final response = await _helper.verifyOTP(
+    final response = await _helper.verifyOTPFromEmail(
         "userProfiles/" + userID + "/verifyMail", verifyEmailOTP);
     return OTPEmailResponse.fromJson(response);
   }

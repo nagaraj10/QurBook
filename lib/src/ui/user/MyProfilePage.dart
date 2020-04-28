@@ -167,6 +167,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
               ? data.generalInfo.qualifiedFullName.middleName
               : '';
       lastName.text = data.generalInfo.qualifiedFullName.lastName;
+    } else {
+      firstName.text = data.generalInfo.name;
+      middleName.text = '';
+      lastName.text = '';
     }
 
     return Container(

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
+import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -450,8 +451,13 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                         .then((value) {
                                       if (value.success &&
                                           value.message ==
-                                              Constants.MSG_EMAIL_OTP_VERIFIED)
-                                        Navigator.of(context);
+                                              Constants
+                                                  .MSG_EMAIL_OTP_VERIFIED) {
+                                                    updateProfile();
+                                      } else {
+                                        new FHBBasicWidget().showInSnackBar(
+                                            value.message, scaffold_state);
+                                      }
                                     });
                                   } else {
                                     _otpVerifyBloc
@@ -770,8 +776,11 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 if (widget.forEmailVerify) {
                   _otpVerifyBloc.verifyOTPFromEmail(otp).then((value) {
                     if (value.success &&
-                        value.message == Constants.MSG_EMAIL_OTP_VERIFIED)
-                      Navigator.of(context);
+                        value.message == Constants.MSG_EMAIL_OTP_VERIFIED) {
+updateProfile();                    } else {
+                      new FHBBasicWidget()
+                          .showInSnackBar(value.message, scaffold_state);
+                    }
                   });
                 } else {
                   _otpVerifyBloc
@@ -946,4 +955,21 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         builder: (BuildContext context) => MyFhbWebView(
             title: title, selectedUrl: url, isLocalAsset: isLocal)));
   }
+
+  void updateProfile(){
+
+     MyProfileBloc _myProfileBloc = new MyProfileBloc();
+
+    _myProfileBloc
+        .getMyProfileData(Constants.KEY_USERID_MAIN)
+        .then((profileData) {
+      print('Inside getUserProfileData' + profileData.toString());
+      PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
+          .then((value) {
+                                                    Navigator.of(context).pop();
+
+             });
+    });
+  }
 }
+

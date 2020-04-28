@@ -1,5 +1,5 @@
 class OTPEmailResponse {
-  String status;
+  int status;
   bool success;
   String message;
   String response;

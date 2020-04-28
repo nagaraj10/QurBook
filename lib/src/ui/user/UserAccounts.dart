@@ -144,14 +144,12 @@ class _UserAccountsState extends State<UserAccounts>
                       ],
                     ),
                   ),
-                  /*  background: CachedNetworkImage(
-                    imageUrl: Constants.BASEURL_COVERIMAGE, fit: BoxFit.cover), */
                   background: imageURIProfile != null
                       ? Image.file(imageURIProfile,
                           fit: BoxFit.cover, width: 100, height: 100)
-                      : CachedNetworkImage(
-                          imageUrl: Constants.BASEURL_COVERIMAGE,
-                          fit: BoxFit.cover)),
+                      : Container(
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                        )),
             ),
             SliverPersistentHeader(
               delegate: _SliverAppBarDelegate(

@@ -399,11 +399,17 @@ class ApiBaseHelper {
         break;
 
       case 403:
-        PreferenceUtil.clearAllData().then((value) {
-          Get.offAll(SignInScreen());
-          Get.snackbar('Message', 'Logged into other Device');
-        });
-        throw UnauthorisedException(response.body.toString());
+        var responseJson = convert.jsonDecode(response.body.toString());
+        if (responseJson['message'] == Constants.STR_OTPMISMATCHEDFOREMAIL) {
+          return responseJson;
+        } else {
+          PreferenceUtil.clearAllData().then((value) {
+            Get.offAll(SignInScreen());
+            Get.snackbar('Message', 'Logged into other Device');
+          });
+        }
+        break;
+
       case 500:
       default:
         throw FetchDataException(
@@ -756,6 +762,29 @@ class ApiBaseHelper {
       print('response' + response.toString());
       responseJson = _returnResponse(response);
 
+      print('responseJson' + responseJson.toString());
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> verifyOTPFromEmail(String url, String otpVerifyData) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Authorization': authToken,
+    };
+
+    var responseJson;
+
+    print('url' + url);
+    print('otpVerifyData' + otpVerifyData);
+    try {
+      final response = await http.post(_baseUrl + url,
+          body: otpVerifyData, headers: requestHeaders);
+      responseJson = _returnResponse(response);
       print('responseJson' + responseJson.toString());
     } on SocketException {
       throw FetchDataException('No Internet connection');

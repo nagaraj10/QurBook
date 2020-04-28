@@ -500,8 +500,8 @@ class CommonDialogBox {
     modeOfSave = modeOfSaveClone;
     imagePathMain.addAll(imagePath);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metaInfo.memoText != null
-          ? mediaMetaInfo.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
+          ? mediaMetaInfoClone.metaInfo.memoText
           : '');
     } else {
       memoController.text = '';
@@ -601,7 +601,6 @@ class CommonDialogBox {
     if (mediaMetaInfoClone != null) {
       if (mediaMetaInfoClone != null) {
         metaInfoId = mediaMetaInfoClone.id;
-        print(metaInfoId + ' metaInfoId');
       }
     }
     modeOfSave = modeOfSaveClone;
@@ -614,8 +613,8 @@ class CommonDialogBox {
     setFileName(fileNameClone.text);
     print('$categoryName in getDialogForIDDocs');
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metaInfo.memoText != null
-          ? mediaMetaInfo.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
+          ? mediaMetaInfoClone.metaInfo.memoText
           : '');
     } else {
       memoController.text = '';
@@ -779,8 +778,8 @@ class CommonDialogBox {
     isSelected = isSelectedClone;
     setFileName(fileNameClone.text);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metaInfo.memoText != null
-          ? mediaMetaInfo.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
+          ? mediaMetaInfoClone.metaInfo.memoText
           : '');
     } else {
       memoController.text = '';
@@ -825,7 +824,7 @@ class CommonDialogBox {
                 setState(() {
                   errGluco = errorValue;
                 });
-              }, errGluco, commonConstants.glucometerUNIT),
+              }, errGluco, 'mgdl'),
               SizedBox(
                 height: 15,
               ),
@@ -944,8 +943,8 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
     setFileName(fileNameClone.text);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metaInfo.memoText != null
-          ? mediaMetaInfo.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
+          ? mediaMetaInfoClone.metaInfo.memoText
           : '');
     } else {
       memoController.text = '';
@@ -1095,8 +1094,8 @@ class CommonDialogBox {
     setFileName(fileNameClone.text);
 
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metaInfo.memoText != null
-          ? mediaMetaInfo.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
+          ? mediaMetaInfoClone.metaInfo.memoText
           : '');
     } else {
       memoController.text = '';
@@ -1222,8 +1221,8 @@ class CommonDialogBox {
 
     setFileName(fileNameClone.text);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metaInfo.memoText != null
-          ? mediaMetaInfo.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
+          ? mediaMetaInfoClone.metaInfo.memoText
           : '');
     } else {
       memoController.text = '';
@@ -1362,8 +1361,8 @@ class CommonDialogBox {
     diaStolicPressure.text = diastolicPressureClone.text;
     setFileName(fileNameClone.text);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metaInfo.memoText != null
-          ? mediaMetaInfo.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
+          ? mediaMetaInfoClone.metaInfo.memoText
           : '');
     } else {
       memoController.text = '';

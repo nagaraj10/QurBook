@@ -280,6 +280,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       imagePath: imagePaths),
                                 ),
                               ).then((value) {
+                                categoryName = PreferenceUtil.getStringValue(
+                                    Constants.KEY_CATEGORYNAME);
                                 if (value) {
                                   Navigator.of(context).pop(true);
                                 }
@@ -541,9 +543,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         builder: (context) => CropAndRotateScreen(imagePath: imagePaths),
       ),
     ).then((value) {
-      print(
-          '+++++++++++$value+++++++++TakePictureScreen callDisplayPictureScreen');
-
+      categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
       if (value) {
         Navigator.of(context).pop(true);
       }

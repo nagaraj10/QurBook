@@ -109,6 +109,7 @@ const String KEY_SHOWCASE_DASHBOARD = 'KEY_SHOWCASE_DASHBOARD';
 const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
 const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
 const String KEY_SHOWCASE_MAYA = 'KEY_SHOWCASE_MAYA';
+const String STR_OTPMISMATCHEDFOREMAIL = 'Verification Code Mismatched';
 
 const String CAMERA_DESC = 'Start capturing health records right away!';
 const String CAMERA_TITLE = 'Camera';
