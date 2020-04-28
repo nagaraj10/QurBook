@@ -156,7 +156,9 @@ class _MyFamilyState extends State<MyFamily> {
             case Status.LOADING:
               familyWidget = Center(
                   child: SizedBox(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                ),
                 width: 30,
                 height: 30,
               ));

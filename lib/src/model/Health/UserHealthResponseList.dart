@@ -162,25 +162,24 @@ class MetaInfo {
   Laboratory laboratory;
   Hospital hospital;
   String dateOfExpiry;
-  //MediaTypeInfo idType;
+  String idType;
 
-  MetaInfo({
-    this.categoryInfo,
-    this.dateOfVisit,
-    this.deviceReadings,
-    this.doctor,
-    this.fileName,
-    this.hasVoiceNotes,
-    this.isDraft,
-    this.mediaTypeInfo,
-    this.memoText,
-    this.memoTextRaw,
-    this.sourceName,
-    this.laboratory,
-    this.hospital,
-    this.dateOfExpiry,
-    //this.idType
-  });
+  MetaInfo(
+      {this.categoryInfo,
+      this.dateOfVisit,
+      this.deviceReadings,
+      this.doctor,
+      this.fileName,
+      this.hasVoiceNotes,
+      this.isDraft,
+      this.mediaTypeInfo,
+      this.memoText,
+      this.memoTextRaw,
+      this.sourceName,
+      this.laboratory,
+      this.hospital,
+      this.dateOfExpiry,
+      this.idType});
 
   MetaInfo.fromJson(Map<String, dynamic> json) {
     categoryInfo = json['categoryInfo'] != null
@@ -211,9 +210,7 @@ class MetaInfo {
         ? new Hospital.fromJson(json['hospital'])
         : null;
     dateOfExpiry = json['dateOfExpiry'];
-    /* idType = json['idType'] != null
-        ? new MediaTypeInfo.fromJson(json['idType'])
-        : null; */
+    idType = json['idType'] != null ? json['idType'] : "";
   }
 
   Map<String, dynamic> toJson() {
@@ -245,9 +242,9 @@ class MetaInfo {
       data['hospital'] = this.hospital.toJson();
     }
     data['dateOfExpiry'] = this.dateOfExpiry;
-    /*  if (this.idType != null) {
-      data['idType'] = this.idType.toJson();
-    } */
+    if (this.idType != null) {
+      data['idType'] = this.idType;
+    }
     return data;
   }
 }

@@ -42,18 +42,18 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
     _healthReportListForUserBlock.getHelthReportList();
-    widget.getDataForParticularLabel(widget.categoryName, widget.categoryId);
-    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName);
-    PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId);
-
     _bookmarkRecordBloc = BookmarkRecordBloc();
 
     PreferenceUtil.init();
-
+    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
+        .then((value) {
+      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
+          .then((value) {
+        widget.getDataForParticularLabel(
+            widget.categoryName, widget.categoryId);
+      });
+    });
     super.initState();
-
-    /* WidgetsBinding.instance
-        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show()); */
   }
 
   @override

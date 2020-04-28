@@ -3,6 +3,7 @@ import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
@@ -111,10 +112,9 @@ class AddProvidersState extends State<AddProviders> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
-    //checkGPS();
+    _checkGps();
 
     addProvidersBloc = AddProvidersBloc();
     updateProvidersBloc = UpdateProvidersBloc();
@@ -1360,4 +1360,32 @@ class AddProvidersState extends State<AddProviders> {
 //      ),
 //    ),
 //  );
+
+  Future _checkGps() async {
+    if (!(await Geolocator().isLocationServiceEnabled())) {
+      if (Theme.of(context).platform == TargetPlatform.android) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Can't get gurrent location"),
+              content:
+                  const Text('Please make sure you enable GPS and try again'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('Ok'),
+                  onPressed: () {
+                    final AndroidIntent intent = AndroidIntent(
+                        action: 'android.settings.LOCATION_SOURCE_SETTINGS');
+                    intent.launch();
+                    Navigator.of(context, rootNavigator: true).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+  }
 }

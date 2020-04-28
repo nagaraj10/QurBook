@@ -35,11 +35,15 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    /*  WidgetsBinding.instance
-        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show()); */
-    widget.getDataForParticularLabel(widget.categoryName, widget.categoryId);
-    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName);
-    PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId);
+    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
+        .then((value) {
+      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
+          .then((value) {
+        widget.getDataForParticularLabel(
+            widget.categoryName, widget.categoryId);
+      });
+    });
+
     super.initState();
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
@@ -22,7 +23,9 @@ class MyProvidersStreamData extends StatelessWidget {
             case Status.LOADING:
               return Center(
                   child: SizedBox(
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator(
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                ),
                 width: 30,
                 height: 30,
               ));

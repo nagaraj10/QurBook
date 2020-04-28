@@ -26,6 +26,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey _provider = GlobalKey();
   final GlobalKey _records = GlobalKey();
   final GlobalKey _family = GlobalKey();
+  final GlobalKey _coverImage = GlobalKey();
   File imageURIProfile;
 
   @override
@@ -38,8 +39,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Duration(milliseconds: 200),
           () => isFirstTime
               ? null
-              : ShowCaseWidget.of(_myContext)
-                  .startShowCase([_showMaya, _provider, _records, _family]));
+              : ShowCaseWidget.of(_myContext).startShowCase(
+                  [_showMaya, _provider, _records, _family, _coverImage]));
     });
     _myProfileBloc = new MyProfileBloc();
     getUserProfileData();
@@ -203,7 +204,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       ],
                                     ),
                                     onTap: () {
-                                      moveToNextScreen(0);
+                                      moveToNextScreen(1);
                                     },
                                   )),
                               Positioned(
@@ -246,20 +247,46 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             ],
                           ))),
                       Container(
-                          margin: EdgeInsets.only(
-                            top: 20,
-                          ),
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                            icon: Icon(
-                              Icons.more_vert,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                            onPressed: () {
-                              saveMediaDialog(context, false);
-                            },
-                          )),
+                        margin: EdgeInsets.only(
+                          top: 20,
+                        ),
+                        alignment: Alignment.topRight,
+                        child: imageURIProfile != null
+                            ? IconButton(
+                                icon: Icon(
+                                  Icons.more_vert,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                                onPressed: () {
+                                  saveMediaDialog(context, false);
+                                },
+                              )
+                            : Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    FHBBasicWidget.customShowCase(
+                                        _coverImage,
+                                        'Can add your family cover picture',
+                                        IconButton(
+                                            icon: Icon(
+                                              Icons.camera_alt,
+                                              color: Colors.white,
+                                            ),
+                                            onPressed: () {
+                                              saveMediaDialog(context, false);
+                                            }),
+                                        'Family Picture'),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      'Add your family cover picture',
+                                      style: TextStyle(color: Colors.white),
+                                    )
+                                  ],
+                                ),
+                              ),
+                      )
                     ],
                   )),
             ],
@@ -273,7 +300,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     Navigator.pushNamed(
       context,
       '/home_screen',
-      arguments: HomeScreenArguments(selectedIndex: 1),
+      arguments: HomeScreenArguments(selectedIndex: i),
     ).then((value) {});
   }
 

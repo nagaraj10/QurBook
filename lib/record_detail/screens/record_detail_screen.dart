@@ -751,6 +751,61 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: fileName));
 
           break;
+        case Constants.STR_IDDOCS:
+          String fileName = widget.data.metaInfo.fileName;
+
+          new CommonDialogBox().getDialogForIDDocs(
+              context,
+              containsAudio,
+              audioPath,
+              (containsAudio, audioPath) {
+                print('Audio Path delete' + containsAudio.toString());
+                print('Audio Path delete' + audioPath.toString());
+
+                setState(() {
+                  audioPath = audioPath;
+                  containsAudio = containsAudio;
+                });
+              },
+              new List(),
+              (containsAudio, audioPath) {
+                audioPath = audioPath;
+                containsAudio = containsAudio;
+
+                setState(() {});
+              },
+              widget.data,
+              true,
+              new TextEditingController(text: fileName),
+              new TextEditingController(text: date),
+              widget.data.metaInfo.idType);
+          break;
+
+        case Constants.STR_OTHERS:
+          String fileName = widget.data.metaInfo.fileName;
+
+          new CommonDialogBox().getDialogBoxForBillsAndOthers(
+              context,
+              containsAudio,
+              audioPath,
+              (containsAudio, audioPath) {
+                setState(() {
+                  audioPath = audioPath;
+                  containsAudio = containsAudio;
+                });
+              },
+              new List(),
+              (containsAudio, audioPath) {
+                audioPath = audioPath;
+                containsAudio = containsAudio;
+
+                setState(() {});
+              },
+              widget.data,
+              true,
+              new TextEditingController(text: fileName));
+
+          break;
       }
     } else {
       deviceName = widget.data.metaInfo.mediaTypeInfo.name;
