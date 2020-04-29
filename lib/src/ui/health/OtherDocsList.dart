@@ -77,7 +77,16 @@ class _OtherDocsState extends State<OtherDocsList> {
                 itemCount: mediaMetaInfoObj.length,
               ))
           : Container(
-              child: Center(child: Text('No Data Available')),
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: Text(
+                    Constants.NO_DATA_OTHERS,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
+                ),
+              ),
               color: const Color(fhbColors.bgColorContainer),
             ),
     );

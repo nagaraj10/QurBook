@@ -168,48 +168,51 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   Widget _showPageData(Sharedbyme sharedbyme) {
-//    _pageController.animateToPage(_currentPage);
-//    _pageController.jumpToPage(_currentPage);
-
-    nameController = TextEditingController();
+    nameController = TextEditingController(text: '');
     nameFocus = FocusNode();
 
-    firstNameController = TextEditingController();
+    firstNameController = TextEditingController(text: '');
     firstNameFocus = FocusNode();
 
-    middleNameController = TextEditingController();
+    middleNameController = TextEditingController(text: '');
     middleNameFocus = FocusNode();
 
-    lastNameController = TextEditingController();
+    lastNameController = TextEditingController(text: '');
     lastNameFocus = FocusNode();
 
-    mobileNoController = TextEditingController();
+    mobileNoController = TextEditingController(text: '');
     mobileNoFocus = FocusNode();
 
-    emailController = TextEditingController();
+    emailController = TextEditingController(text: '');
     emailFocus = FocusNode();
 
-    dateOfBirthController = TextEditingController();
+    dateOfBirthController = TextEditingController(text: '');
     dateOfBirthFocus = FocusNode();
 
-    genderController = TextEditingController();
+    genderController = TextEditingController(text: '');
     genderFocus = FocusNode();
 
-    bloodGroupController = TextEditingController();
+    bloodGroupController = TextEditingController(text: '');
     bloodGroupFocus = FocusNode();
 
-    bloodRangeController = TextEditingController();
+    bloodRangeController = TextEditingController(text: '');
     bloodRangeFocus = FocusNode();
 
-    relationShipController = TextEditingController();
+    relationShipController = TextEditingController(text: '');
     relationShipFocus = FocusNode();
 
-    firstNameController.text = toBeginningOfSentenceCase(
-        sharedbyme.profileData.qualifiedFullName.firstName.toLowerCase());
-    middleNameController.text =
-        sharedbyme.profileData.qualifiedFullName.middleName;
-    lastNameController.text = toBeginningOfSentenceCase(
-        sharedbyme.profileData.qualifiedFullName.lastName.toLowerCase());
+    if (sharedbyme.profileData.qualifiedFullName != null) {
+      firstNameController.text =
+          sharedbyme.profileData.qualifiedFullName.firstName;
+      middleNameController.text =
+          sharedbyme.profileData.qualifiedFullName.middleName;
+      lastNameController.text =
+          sharedbyme.profileData.qualifiedFullName.lastName;
+    } else {
+      firstNameController.text = sharedbyme.profileData.name;
+      middleNameController.text = '';
+      lastNameController.text = '';
+    }
 
     if (sharedbyme.profileData.isVirtualUser) {
       MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);

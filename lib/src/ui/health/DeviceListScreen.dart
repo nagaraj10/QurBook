@@ -72,7 +72,14 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
             : Container(
                 color: const Color(fhbColors.bgColorContainer),
                 child: Center(
-                  child: Text('No Data Available'),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: Text(
+                      Constants.NO_DATA_DEVICES,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontFamily: 'Poppins'),
+                    ),
+                  ),
                 ),
               ));
   }

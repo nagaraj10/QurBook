@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class MyReminders extends StatefulWidget {
   static _MyRemindersState of(BuildContext context) =>
@@ -53,161 +54,181 @@ class _MyRemindersState extends State<MyReminders> {
                 onPressed: () {
                   PageNavigator.goTo(context, '/add_reminders');
                 },
-
-                //TODO chnage theme
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
-              body: new ListView.builder(
-                  itemCount: detailsList.length,
-                  itemBuilder: (BuildContext ctxt, int index) {
-                    ReminderModel model = reverseDetailsList[index];
-                    var tempDate = DateFormat('E d MMM, yyyy')
-                        .format(DateTime.parse(model.date));
-                    var dateArr = tempDate.split(" ");
-                    return GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddReminder(
-                                    model: model,
-                                  ))),
-                      child: Container(
-                          padding: EdgeInsets.all(10),
-                          margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(fhbColors.cardShadowColor),
-                                blurRadius:
-                                    16, // has the effect of softening the shadow
-                                spreadRadius:
-                                    0.0, // has the effect of extending the shadow
-                              )
-                            ],
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    CircleAvatar(
-                                      radius: 25,
-                                      backgroundColor:
-                                          Color(fhbColors.bgColorContainer),
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            SizedBox(
-                                              height: 1,
-                                            ),
-                                            Padding(
-                                              padding: EdgeInsets.all(2.0),
-                                              child: Text(
-                                                dateArr[1],
-                                                style: TextStyle(
-                                                  color: Color(CommonUtil()
-                                                      .getMyPrimaryColor()),
-                                                  fontSize: 20.0,
+              body: detailsList.length > 0
+                  ? new ListView.builder(
+                      itemCount: detailsList.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        ReminderModel model = reverseDetailsList[index];
+                        var tempDate = DateFormat('E d MMM, yyyy')
+                            .format(DateTime.parse(model.date));
+                        var dateArr = tempDate.split(" ");
+                        return GestureDetector(
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AddReminder(
+                                        model: model,
+                                      ))),
+                          child: Container(
+                              padding: EdgeInsets.all(10),
+                              margin:
+                                  EdgeInsets.only(left: 10, right: 10, top: 10),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color:
+                                        const Color(fhbColors.cardShadowColor),
+                                    blurRadius:
+                                        16, // has the effect of softening the shadow
+                                    spreadRadius:
+                                        0.0, // has the effect of extending the shadow
+                                  )
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 3,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        CircleAvatar(
+                                          radius: 25,
+                                          backgroundColor:
+                                              Color(fhbColors.bgColorContainer),
+                                          child: Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                SizedBox(
+                                                  height: 1,
                                                 ),
-                                              ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(2.0),
+                                                  child: Text(
+                                                    dateArr[1],
+                                                    style: TextStyle(
+                                                      color: Color(CommonUtil()
+                                                          .getMyPrimaryColor()),
+                                                      fontSize: 20.0,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.all(2.0),
+                                                  child: Text(
+                                                    dateArr[0],
+                                                    style: TextStyle(
+                                                        color: Color(CommonUtil()
+                                                            .getMyGredientColor()),
+                                                        fontSize: 12.0,
+                                                        fontWeight:
+                                                            FontWeight.normal),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.all(2.0),
-                                              child: Text(
-                                                dateArr[0],
-                                                style: TextStyle(
-                                                    color: Color(CommonUtil()
-                                                        .getMyGredientColor()),
-                                                    fontSize: 12.0,
-                                                    fontWeight:
-                                                        FontWeight.normal),
-                                              ),
-                                            ),
-                                          ],
+                                          ),
                                         ),
-                                      ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          '${dateArr[2]} ${dateArr[3]}',
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[400]),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      '${dateArr[2]} ${dateArr[3]}',
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey[400]),
+                                  ),
+                                  Expanded(
+                                    flex: 8,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          toBeginningOfSentenceCase(
+                                              model.title.toLowerCase()),
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          height: 5.0,
+                                        ),
+                                        Text(
+                                          toBeginningOfSentenceCase(
+                                              model.notes.toLowerCase()),
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 8,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text(
-                                      toBeginningOfSentenceCase(
-                                          model.title.toLowerCase()),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                      ),
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.notifications_none,
+                                          color: Colors.black,
+                                        ),
+                                        Text(
+                                          model.interval,
+                                          style: TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.grey[400]),
+                                        ),
+                                        SizedBox(
+                                          height: 3,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            FHBUtils()
+                                                .delete('reminders', model.id);
+                                            setState(() {});
+                                          },
+                                          child: Icon(
+                                            Icons.delete_outline,
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    SizedBox(
-                                      height: 5.0,
-                                    ),
-                                    Text(
-                                      toBeginningOfSentenceCase(
-                                          model.notes.toLowerCase()),
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Expanded(
-                                flex: 3,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.notifications_none,
-                                      color: Colors.black,
-                                    ),
-                                    Text(
-                                      model.interval,
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey[400]),
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        FHBUtils()
-                                            .delete('reminders', model.id);
-                                        setState(() {});
-                                      },
-                                      child: Icon(
-                                        Icons.delete_outline,
-                                        color: Colors.red,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          )),
-                    );
-                  }),
+                                  ),
+                                ],
+                              )),
+                        );
+                      })
+                  : Container(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 40, right: 40),
+                          child: Text(
+                            Constants.NO_DATA_SCHEDULES,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: 'Poppins'),
+                          ),
+                        ),
+                      ),
+                      color: Color(fhbColors.bgColorContainer),
+                    ),
             ),
           );
         }

@@ -207,13 +207,23 @@ class _MyFamilyState extends State<MyFamily> {
                 ))
             : Container(
                 child: Center(
-                  child: Text('No Data Available'),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: Text(
+                      Constants.NO_DATA_FAMIY,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
                 color: Color(fhbColors.bgColorContainer),
               )
         : Container(
             child: Center(
-              child: Text('No Data Available'),
+              child: Padding(
+                padding: EdgeInsets.only(left: 40, right: 40),
+                child:
+                    Text(Constants.NO_DATA_FAMIY, textAlign: TextAlign.center),
+              ),
             ),
             color: Color(fhbColors.bgColorContainer),
           );

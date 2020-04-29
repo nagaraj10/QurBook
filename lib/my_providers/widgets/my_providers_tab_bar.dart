@@ -4,7 +4,8 @@ import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/screens/my_providers_doctors_list.dart';
 import 'package:myfhb/my_providers/screens/my_providers_hospitals_list.dart';
 import 'package:myfhb/my_providers/screens/my_providers_labs_list.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class MyProvidersTabBar extends StatefulWidget {
   MyProvidersData data;
@@ -44,44 +45,61 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return TabBarView(
       controller: widget.tabController,
       children: [
         doctorsModel.length > 0
             ? Container(
-                color: ColorUtils.greycolor,
+                color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersDoctorsList(
                     doctorsModel: doctorsModel,
                     providersBloc: widget.providersBloc))
             : Container(
                 child: Center(
-                  child: Text('No Data Available'),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: Text(
+                      Constants.NO_DATA_DOCTOR,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
-                color: Colors.grey[300],
+                color: Color(fhbColors.bgColorContainer),
               ),
         hospitalsModel.length > 0
             ? Container(
-                color: ColorUtils.greycolor,
+                color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersHospitalsList(
                     hospitalsModel: hospitalsModel,
                     providersBloc: widget.providersBloc))
             : Container(
                 child: Center(
-                  child: Text('No Data Available'),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: Text(
+                      Constants.NO_DATA_HOSPITAL,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
-                color: Colors.grey[300],
+                color: Color(fhbColors.bgColorContainer),
               ),
         labsModel.length > 0
             ? Container(
-                color: ColorUtils.greycolor,
+                color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersLabsList(
                     labsModel: labsModel, providersBloc: widget.providersBloc))
             : Container(
                 child: Center(
-                  child: Text('No Data Available'),
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 40, right: 40),
+                    child: Text(
+                      Constants.NO_DATA_LAB,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                 ),
-                color: Colors.grey[300],
+                color: Color(fhbColors.bgColorContainer),
               ),
       ],
     );

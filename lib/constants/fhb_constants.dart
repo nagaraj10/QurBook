@@ -129,3 +129,42 @@ const String SWITCH_CATEGORY_DESC =
     'You can switch categories even while you capture health records';
 const String SWITCH_CATEGORY_TITLE = 'Switch Category';
 const String KEY_CATEGORYLIST_VISIBLE = 'categoryListDisplay';
+const String MAYA_TITLE = 'Maya';
+const String MAYA_DESC =
+    'Hey, this is Maya, your personalized health assistant.';
+const String PROVIDERS_DESC = 'You can manage all your healthcare providers';
+const String PROVIDERS_TITLE = 'My Providers';
+const String FAMILY_DESC = 'Also, view your family member profiles';
+const String FAMILY_TITLE = 'My Family';
+const String RECORDS_DESC = 'You can get to view all your health records';
+const String RECORDS_TITLE = 'My Records';
+
+const String NO_DATA_DASHBOARD =
+    'Personalize the environment. Upload your favorite cover image..';
+const String NO_DATA_DOCTOR =
+    'Hey, Doctor' 's directory looks empty !! \n Add them now.';
+const String NO_DATA_HOSPITAL =
+    'Hello, Hospital listing looks empty !! \n Add it now.';
+const String NO_DATA_LAB =
+    'Hey, You may need Labs contact coordinates !! \n Add it now.';
+const String NO_DATA_FAMIY = 'Looks like you haven'
+    't added your family members. Add them right away.';
+
+const String NO_DATA_SCHEDULES =
+    'Never miss any schedule. \n Add it to your calendar and get notified.';
+const String NO_DATA_PRESCRIPTION =
+    'Click the camera icon or upload from gallery to add prescription';
+const String NO_DATA_DEVICES =
+    'Start capturing device readings. Just click them or talk to Maya..';
+const String NO_DATA_LAB_REPORT =
+    'Click the camera icon or upload from gallery to add lab reports';
+const String NO_DATA_MEDICAL_REPORT = 'Oops !! Looks like you haven'
+    't added any medical reports. Just add them right away..';
+const String NO_DATA_BILLS =
+    'Have medical bills in your wallet?? Upload them now and go paperless !!';
+const String NO_ID_DOCS =
+    'Click the camera icon or upload ID document from gallery';
+const String NO_VOICE_RECRODS =
+    'Start adding voice notes !! Press the Mic icon..';
+const String NO_DATA_OTHERS =
+    'Click the camera icon to add any medical documents';

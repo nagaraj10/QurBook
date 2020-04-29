@@ -62,7 +62,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
-      child: (mediaMetaInfoObj != null)
+      child: mediaMetaInfoObj.length > 0
           ? Container(
               color: const Color(fhbColors.bgColorContainer),
               child: ListView.builder(
@@ -72,7 +72,14 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
               ))
           : Container(
               child: Center(
-                child: Text('No Data Available'),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: Text(
+                    Constants.NO_DATA_LAB,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
+                ),
               ),
               color: const Color(fhbColors.bgColorContainer),
             ),

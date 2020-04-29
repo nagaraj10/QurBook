@@ -68,7 +68,14 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
               ))
           : Container(
               child: Center(
-                child: Text('No Data Available'),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: Text(
+                    Constants.NO_VOICE_RECRODS,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
+                ),
               ),
               color: const Color(fhbColors.bgColorContainer),
             ),

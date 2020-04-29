@@ -71,7 +71,14 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
               ))
           : Container(
               child: Center(
-                child: Text('No Data Available'),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: Text(
+                    Constants.NO_DATA_MEDICAL_REPORT,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
+                ),
               ),
               color: const Color(fhbColors.bgColorContainer),
             ),

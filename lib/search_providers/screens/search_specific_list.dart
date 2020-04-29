@@ -421,14 +421,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   getAllDatasInHospitalList(List<HospitalData> data) {
-    print('returned ' + data.length.toString());
-    print('returned ' + data.length.toString());
-
-    print('In hopsital response');
-
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
+      color: Color(CommonUtil().getMyPrimaryColor()),
       child: data != null
           ? Container(
               color: Color(fhbColors.bgColorContainer),
@@ -456,14 +452,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getAllDatasInLabsList(List<LabData> data) {
-    print('In Labs response');
-
-    print('returned ' + data.length.toString());
-    print('returned ' + data.length.toString());
-
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
+      color: Color(CommonUtil().getMyPrimaryColor()),
       child: data != null
           ? Container(
               color: Color(fhbColors.bgColorContainer),

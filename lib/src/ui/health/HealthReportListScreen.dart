@@ -112,14 +112,20 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
           ? Container(
               color: const Color(fhbColors.bgColorContainer),
               child: ListView.builder(
-                //shrinkWrap: true,
                 itemBuilder: (c, i) =>
                     getCardWidgetForPrescription(mediaMetaInfoObj[i], i),
                 itemCount: mediaMetaInfoObj.length,
               ))
           : Container(
               child: Center(
-                child: Text('No Data Available'),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: Text(
+                    Constants.NO_DATA_PRESCRIPTION,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
+                ),
               ),
               color: const Color(fhbColors.bgColorContainer),
             ),
@@ -203,9 +209,6 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                             fontWeight: FontWeight.w200,
                             fontSize: 12),
                       )
-                      /*  Text(mediaMetaInfo.metaInfo.fileName != null
-                      ? mediaMetaInfo.metaInfo.fileName
-                      : ''), */
                     ],
                   ),
                 ),

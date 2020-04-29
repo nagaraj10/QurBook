@@ -75,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Stack(
                     children: <Widget>[
                       Container(
-                        color: Colors.black.withOpacity(0.5),
+                        color: Colors.black.withOpacity(0.1),
                       ),
                       CustomPaint(
                           painter: ShapesPainter(),
@@ -106,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                           backgroundColor: Colors.transparent,
                                           child: FHBBasicWidget.customShowCase(
                                               _showMaya,
-                                              'Hi, I am Maya your health assistance',
+                                              Constants.MAYA_DESC,
                                               Image.asset(
                                                 PreferenceUtil.getStringValue(
                                                             'maya_asset') !=
@@ -119,7 +119,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 height: 60,
                                                 width: 60,
                                               ),
-                                              'Maya'),
+                                              Constants.MAYA_TITLE),
                                           radius: 30.0,
                                         ),
                                       ),
@@ -139,7 +139,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         children: <Widget>[
                                           FHBBasicWidget.customShowCase(
                                               _provider,
-                                              'Can able to manage all your health providers here',
+                                              Constants.PROVIDERS_DESC,
                                               Padding(
                                                 padding: EdgeInsets.all(10.0),
                                                 child: Image.asset(
@@ -149,7 +149,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   color: Colors.white,
                                                 ),
                                               ),
-                                              'My Providers'),
+                                              Constants.PROVIDERS_TITLE),
                                           SizedBox(
                                             height: 5,
                                           ),
@@ -181,7 +181,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       children: <Widget>[
                                         FHBBasicWidget.customShowCase(
                                             _records,
-                                            'All your health records can be access from here',
+                                            Constants.RECORDS_DESC,
                                             Padding(
                                               padding: EdgeInsets.all(10.0),
                                               child: Image.asset(
@@ -191,7 +191,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 width: 25,
                                               ),
                                             ),
-                                            'My Records'),
+                                            Constants.RECORDS_TITLE),
                                         SizedBox(
                                           height: 5,
                                         ),
@@ -215,7 +215,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     children: <Widget>[
                                       FHBBasicWidget.customShowCase(
                                           _family,
-                                          'Manage all your family member profiles here',
+                                          Constants.FAMILY_DESC,
                                           Padding(
                                             padding: EdgeInsets.all(10.0),
                                             child: Image.asset(
@@ -225,7 +225,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               color: Colors.white,
                                             ),
                                           ),
-                                          'My family'),
+                                          Constants.FAMILY_TITLE),
                                       SizedBox(
                                         height: 5,
                                       ),
@@ -269,19 +269,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     FHBBasicWidget.customShowCase(
                                         _coverImage,
                                         'Can add your family cover picture',
-                                        IconButton(
-                                            icon: Icon(
-                                              Icons.camera_alt,
-                                              color: Colors.white,
-                                            ),
-                                            onPressed: () {
-                                              saveMediaDialog(context, false);
-                                            }),
+                                        Container(
+                                            height: 60,
+                                            width: 60,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(30),
+                                                gradient:
+                                                    LinearGradient(colors: [
+                                                  Color(CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                                  Color(CommonUtil()
+                                                      .getMyGredientColor())
+                                                ])),
+                                            child: IconButton(
+                                                icon: Icon(
+                                                  Icons.camera_alt,
+                                                  color: Colors.white,
+                                                ),
+                                                onPressed: () {
+                                                  saveMediaDialog(
+                                                      context, false);
+                                                })),
                                         'Family Picture'),
-                                    SizedBox(height: 10),
-                                    Text(
-                                      'Add your family cover picture',
-                                      style: TextStyle(color: Colors.white),
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: 10, left: 40, right: 40),
+                                      child: Text(
+                                        Constants.NO_DATA_DASHBOARD,
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor()),
+                                            fontSize: 13,
+                                            fontFamily: 'Poppins'),
+                                      ),
                                     )
                                   ],
                                 ),

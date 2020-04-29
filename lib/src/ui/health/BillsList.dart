@@ -70,7 +70,14 @@ class _BillsListState extends State<BillsList> {
               ))
           : Container(
               child: Center(
-                child: Text('No Data Available'),
+                child: Padding(
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: Text(
+                    Constants.NO_DATA_BILLS,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
+                ),
               ),
               color: const Color(fhbColors.bgColorContainer),
             ),

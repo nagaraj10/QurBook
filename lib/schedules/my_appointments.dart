@@ -8,6 +8,7 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:random_color/random_color.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class MyAppointment extends StatefulWidget {
   static _MyAppointmentState of(BuildContext context) =>
@@ -96,41 +97,44 @@ class _MyAppointmentState extends State<MyAppointment> {
                 },
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
-              body: new ListView.builder(
-                  itemCount: detailsList.length,
-                  itemBuilder: (BuildContext ctxt, int index) {
-                    AppointmentModel model = reverseDetailsList[index];
-                    return Container(
-                        padding: EdgeInsets.all(10),
-                        margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(fhbColors.cardShadowColor),
-                              blurRadius:
-                                  16, // has the effect of softening the shadow
-                              spreadRadius:
-                                  0.0, // has the effect of extending the shadow
-                            )
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            CircleAvatar(
-                              radius: 25,
-                              backgroundColor:
-                                  Color(fhbColors.bgColorContainer),
-                              //_randomColor.randomColor(),
+              body: detailsList.length > 0
+                  ? new ListView.builder(
+                      itemCount: detailsList.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        AppointmentModel model = reverseDetailsList[index];
+                        return Container(
+                            padding: EdgeInsets.all(10),
+                            margin:
+                                EdgeInsets.only(left: 10, right: 10, top: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(fhbColors.cardShadowColor),
+                                  blurRadius:
+                                      16, // has the effect of softening the shadow
+                                  spreadRadius:
+                                      0.0, // has the effect of extending the shadow
+                                )
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                CircleAvatar(
+                                  radius: 25,
+                                  backgroundColor:
+                                      Color(fhbColors.bgColorContainer),
+                                  //_randomColor.randomColor(),
 //                                  Color(new CommonUtil().getMyPrimaryColor()),
 
-                              child: Center(
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      /*Padding(
+                                  child: Center(
+                                    child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          /*Padding(
                                         padding: EdgeInsets.zero,
                                         child: Text(
                                           */ /*new FHBUtils().convertMonthFromString(
@@ -155,125 +159,99 @@ class _MyAppointmentState extends State<MyAppointment> {
                                               fontSize: 18),
                                         ),
                                       )*/
-                                      Padding(
-                                        padding: EdgeInsets.all(2),
-                                        child: Text(
-                                          model.dName[0].toUpperCase(),
+                                          Padding(
+                                            padding: EdgeInsets.all(2),
+                                            child: Text(
+                                              model.dName[0].toUpperCase(),
+                                              style: TextStyle(
+                                                color: Color(CommonUtil()
+                                                    .getMyPrimaryColor()),
+                                                fontSize: 24.0,
+                                              ),
+                                            ),
+                                          )
+                                        ]),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                Expanded(
+                                  flex: 6,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                          toBeginningOfSentenceCase(
+                                              model.hName),
                                           style: TextStyle(
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor()),
-                                            fontSize: 24.0,
+                                              fontWeight: FontWeight.w500,
+                                              color: Colors.black)),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Dr. ' +
+                                            toBeginningOfSentenceCase(
+                                                model.dName),
+                                        style: TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.grey,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        toBeginningOfSentenceCase(FHBUtils()
+                                            .getFormattedDateString(
+                                                model.appDate)),
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey[400]),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                Expanded(
+                                    flex: 1,
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          width: 1,
+                                          height: 30,
+                                          color: Color(CommonUtil()
+                                              .getMyGredientColor()),
+                                        ),
+                                        SizedBox(width: 10),
+                                        InkWell(
+                                          onTap: () {
+                                            FHBUtils()
+                                                .deleteAppointment(model.id);
+                                            setState(() {});
+                                          },
+                                          child: Icon(
+                                            Icons.delete,
+                                            size: 20,
+                                            color: Colors.redAccent,
                                           ),
                                         ),
-                                      )
-                                    ]),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Expanded(
-                              flex: 6,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(toBeginningOfSentenceCase(model.hName),
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: Colors.black)),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    'Dr. ' +
-                                        toBeginningOfSentenceCase(model.dName),
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: Colors.grey,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  SizedBox(height: 5),
-                                  Text(
-                                    toBeginningOfSentenceCase(FHBUtils()
-                                        .getFormattedDateString(model.appDate)),
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.grey[400]),
-                                  )
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                                flex: 1,
-                                child: Row(
-                                  children: <Widget>[
-                                    Container(
-                                      width: 1,
-                                      height: 30,
-                                      color: Color(
-                                          CommonUtil().getMyGredientColor()),
-                                    ),
-                                    SizedBox(width: 10),
-                                    InkWell(
-                                      onTap: () {
-                                        FHBUtils().deleteAppointment(model.id);
-                                        setState(() {});
-                                      },
-                                      child: Icon(
-                                        Icons.delete,
-                                        size: 20,
-                                        color: Colors.redAccent,
-                                      ),
-                                    ),
-                                  ],
-                                ))
-                          ],
-                        ));
-                    /*  return Card(
-                      child: ListTile(
-                        leading: Icon(Icons.ac_unit),
-                        title: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Expanded(child: Text('Name of Hospital:')),
-                                Expanded(
-                                    child: Text('' +
-                                        reverseDetailsList[index]['nameHos'])),
+                                      ],
+                                    ))
                               ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Expanded(child: Text("Docxtor's Name:")),
-                                Expanded(
-                                    child: Text('' +
-                                        reverseDetailsList[index]['nameDoc'])),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Expanded(child: Text('Date:')),
-                                Expanded(
-                                    child: Text('' +
-                                        reverseDetailsList[index]['date'])),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Expanded(child: Text('Reason:')),
-                                Expanded(
-                                    child: Text('' +
-                                        reverseDetailsList[index]['reason'])),
-                              ],
-                            ),
-                          ],
+                            ));
+                      })
+                  : Container(
+                      child: Center(
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 40, right: 40),
+                          child: Text(
+                            Constants.NO_DATA_SCHEDULES,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontFamily: 'Poppins'),
+                          ),
                         ),
                       ),
-                    ); */
-                  }),
+                      color: Color(fhbColors.bgColorContainer),
+                    ),
             ),
           );
         }
