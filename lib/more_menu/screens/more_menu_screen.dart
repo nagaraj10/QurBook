@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -93,7 +94,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      myProfile.response.data.generalInfo.name,
+                      myProfile.response.data.generalInfo.name != null
+                          ? toBeginningOfSentenceCase(
+                              myProfile.response.data.generalInfo.name)
+                          : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     Text(

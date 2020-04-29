@@ -1,3 +1,4 @@
+import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
@@ -29,6 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     super.initState();
     _loginBloc = LoginBloc();
+    //getDeviceLocale();
   }
 
   @override
@@ -73,19 +75,18 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
 
               /*    Padding(
-                padding: EdgeInsets.all(10),
-                child: Text(
-                  'Enter your mobile number',
-                  style: TextStyle(
-                      color: Colors.black38, fontWeight: FontWeight.w500),
-                ),
-              ), */
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      'Enter your mobile number',
+                      style: TextStyle(
+                          color: Colors.black38, fontWeight: FontWeight.w500),
+                    ),
+                  ), */
               Padding(
                 padding: EdgeInsets.all(20),
                 child: ImageIcon(
                   AssetImage('assets/icons/otp_icon.png'),
                   size: 70,
-                  //TODO chnage theme
                   color: Color(new CommonUtil().getMyPrimaryColor()),
                 ),
               ),
@@ -131,25 +132,25 @@ class _SignInScreenState extends State<SignInScreen> {
                           child: mobileNumberField(
                               _loginBloc, phoneTextController)),
                       /* Container(
-                        //margin: EdgeInsets.only(left: 30, right: 30),
-                        width: 1,
-                        height: 20,
-                        color: Colors.grey.withOpacity(0.5),
-                      ), */
+                            //margin: EdgeInsets.only(left: 30, right: 30),
+                            width: 1,
+                            height: 20,
+                            color: Colors.grey.withOpacity(0.5),
+                          ), */
                     ],
                   ),
                 ),
               ),
               SizedBox(height: 20),
               /*  InkWell(
-                child: Container(
-                  child: Text('New Member? Sign Up'),
-                  padding: EdgeInsets.all(10),
-                ),
-                onTap: () {
-                  PageNavigator.goTo(context, '/sign_up_screen');
-                },
-              ), */
+                    child: Container(
+                      child: Text('New Member? Sign Up'),
+                      padding: EdgeInsets.all(10),
+                    ),
+                    onTap: () {
+                      PageNavigator.goTo(context, '/sign_up_screen');
+                    },
+                  ), */
               SizedBox(height: 20),
               submitButton(
                   _loginBloc, _selected.dialingCode, phoneTextController),
@@ -269,4 +270,12 @@ class _SignInScreenState extends State<SignInScreen> {
       new FHBBasicWidget().getSnackBarWidget(context, signIn.message);
     }
   }
+
+  /*  void getDeviceLocale() async {
+    String locale = await Devicelocale.currentLocale;
+    List localeList = locale.split('_');
+    _selected = Country.localeList[1];
+    print(localeList[1]);
+    print('device locale' + locale);
+  } */
 }

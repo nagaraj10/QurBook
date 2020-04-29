@@ -453,7 +453,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                           value.message ==
                                               Constants
                                                   .MSG_EMAIL_OTP_VERIFIED) {
-                                                    updateProfile();
+                                        updateProfile();
                                       } else {
                                         new FHBBasicWidget().showInSnackBar(
                                             value.message, scaffold_state);
@@ -777,7 +777,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   _otpVerifyBloc.verifyOTPFromEmail(otp).then((value) {
                     if (value.success &&
                         value.message == Constants.MSG_EMAIL_OTP_VERIFIED) {
-updateProfile();                    } else {
+                      updateProfile();
+                    } else {
                       new FHBBasicWidget()
                           .showInSnackBar(value.message, scaffold_state);
                     }
@@ -870,7 +871,8 @@ updateProfile();                    } else {
 
   void checkOTPResponse(OTPResponse otpResponse) {
     if (otpResponse.message == Constants.STR_OTPMISMATCHED) {
-      new FHBBasicWidget().showInSnackBar(otpResponse.message, scaffold_state);
+      new FHBBasicWidget()
+          .showInSnackBar(Constants.STR_OTPMISMATCHED_STRING, scaffold_state);
     } else {
       PreferenceUtil.saveString(
               Constants.KEY_USERID_MAIN, otpResponse.response.id)
@@ -956,9 +958,8 @@ updateProfile();                    } else {
             title: title, selectedUrl: url, isLocalAsset: isLocal)));
   }
 
-  void updateProfile(){
-
-     MyProfileBloc _myProfileBloc = new MyProfileBloc();
+  void updateProfile() {
+    MyProfileBloc _myProfileBloc = new MyProfileBloc();
 
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
@@ -966,10 +967,8 @@ updateProfile();                    } else {
       print('Inside getUserProfileData' + profileData.toString());
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
           .then((value) {
-                                                    Navigator.of(context).pop();
-
-             });
+        Navigator.of(context).pop();
+      });
     });
   }
 }
-

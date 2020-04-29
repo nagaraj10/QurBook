@@ -81,24 +81,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
-  List<String> bloodGroupArray = [
-    'A',
-    'B',
-    'O',
-    'AB',
-    'A1',
-    'A2',
-    'A1B',
-    'A2B',
-    'Others/ Not Known'
-  ];
+  List<String> bloodGroupArray = ['A', 'B', 'O', 'Others/ Not Known'];
 
   List<String> bloodRangeArray = ['+', '-', 'Others/ Not Known'];
 
   String selectedBloodGroup;
   String selectedBloodRange;
 
-  List<String> genderArray = ['male', 'female', 'others'];
+  List<String> genderArray = ['Male', 'Female', 'Others'];
   String selectedGender;
 
   @override
@@ -214,12 +204,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipController = TextEditingController();
     relationShipFocus = FocusNode();
 
-//    nameController.text = sharedbyme.linkedData.nickName;
-    firstNameController.text =
-        sharedbyme.profileData.qualifiedFullName.firstName;
+    firstNameController.text = toBeginningOfSentenceCase(
+        sharedbyme.profileData.qualifiedFullName.firstName.toLowerCase());
     middleNameController.text =
         sharedbyme.profileData.qualifiedFullName.middleName;
-    lastNameController.text = sharedbyme.profileData.qualifiedFullName.lastName;
+    lastNameController.text = toBeginningOfSentenceCase(
+        sharedbyme.profileData.qualifiedFullName.lastName.toLowerCase());
 
     if (sharedbyme.profileData.isVirtualUser) {
       MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
@@ -238,7 +228,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.profileData.gender != null) {
-      genderController.text = sharedbyme.profileData.gender;
+      genderController.text = toBeginningOfSentenceCase(
+          sharedbyme.profileData.gender.toLowerCase());
     }
 
     if (sharedbyme.linkedData.roleName != null) {
@@ -1058,7 +1049,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               child: DropdownButton(
                 isExpanded: true,
                 hint: Text(CommonConstants.gender),
-                value: selectedGender,
+                value: selectedGender != null
+                    ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
+                    : selectedGender,
                 items: genderArray.map((eachGender) {
                   return DropdownMenuItem(
                     child: new Text(eachGender,

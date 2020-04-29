@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -136,11 +137,17 @@ class _UserAccountsState extends State<UserAccounts>
                           ),
                         ),
                         SizedBox(width: 10),
-                        Text(myProfile.response.data.generalInfo.name,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400))
+                        Text(
+                          myProfile.response.data.generalInfo.name != null
+                              ? toBeginningOfSentenceCase(
+                                  myProfile.response.data.generalInfo.name)
+                              : '',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w400),
+                          overflow: TextOverflow.fade,
+                        )
                       ],
                     ),
                   ),

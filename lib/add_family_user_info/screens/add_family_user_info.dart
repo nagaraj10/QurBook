@@ -917,7 +917,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               child: DropdownButton(
                 isExpanded: true,
                 hint: Text(CommonConstants.gender),
-                value: toBeginningOfSentenceCase(selectedGender.toLowerCase()),
+                value: selectedGender.toLowerCase() != null
+                    ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
+                    : selectedGender,
                 items: genderArray.map((eachGender) {
                   return DropdownMenuItem(
                     child: new Text(eachGender,
