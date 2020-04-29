@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
@@ -150,13 +151,17 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                     children: <Widget>[
                       data.metaInfo.hospital != null
                           ? Text(
-                              data.metaInfo.hospital.name,
+                              data.metaInfo.hospital.name != null
+                                  ? toBeginningOfSentenceCase(
+                                      data.metaInfo.hospital.name)
+                                  : '',
                               style: TextStyle(fontWeight: FontWeight.w500),
                             )
                           : Text(''),
                       Text(
                         data.metaInfo.doctor != null
-                            ? data.metaInfo.doctor.name
+                            ? toBeginningOfSentenceCase(
+                                data.metaInfo.doctor.name)
                             : '',
                         style: TextStyle(color: Colors.grey),
                       ),

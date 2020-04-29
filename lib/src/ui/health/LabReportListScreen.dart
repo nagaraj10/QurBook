@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
@@ -145,14 +146,18 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      mediaMetaInfo.metaInfo.laboratory.name,
+                      mediaMetaInfo.metaInfo.laboratory.name != null
+                          ? toBeginningOfSentenceCase(
+                              mediaMetaInfo.metaInfo.laboratory.name)
+                          : '',
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     Text(
                       mediaMetaInfo.metaInfo.doctor != null
-                          ? mediaMetaInfo.metaInfo.doctor.name
+                          ? toBeginningOfSentenceCase(
+                              mediaMetaInfo.metaInfo.doctor.name)
                           : '',
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,

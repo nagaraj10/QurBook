@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -176,7 +177,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        data.metaInfo.doctor.name,
+                        toBeginningOfSentenceCase(data.metaInfo.doctor.name),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontWeight: FontWeight.w500),
@@ -186,7 +187,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                               data.metaInfo.hospital != null ? true : false,
                           child: Text(
                             data.metaInfo.hospital != null
-                                ? data.metaInfo.hospital.name
+                                ? toBeginningOfSentenceCase(
+                                    data.metaInfo.hospital.name)
                                 : '',
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,

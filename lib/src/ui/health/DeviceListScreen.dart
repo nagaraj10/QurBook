@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
@@ -196,7 +197,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     children: <Widget>[
                       Text(
                         data.metaInfo.mediaTypeInfo.name != null
-                            ? data.metaInfo.mediaTypeInfo.name
+                            ? toBeginningOfSentenceCase(
+                                data.metaInfo.mediaTypeInfo.name)
                             : '',
                         style: TextStyle(fontWeight: FontWeight.w500),
                         softWrap: false,

@@ -124,8 +124,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           flexibleSpace: GradientAppBar(),
           title: AutoSizeText(
             widget.data.metaInfo.fileName == null
-                ? widget.data.metaInfo.mediaTypeInfo.name
-                : widget.data.metaInfo.fileName,
+                ? toBeginningOfSentenceCase(
+                    widget.data.metaInfo.mediaTypeInfo.name)
+                : toBeginningOfSentenceCase(widget.data.metaInfo.fileName),
             maxLines: 1,
             minFontSize: 12,
             maxFontSize: 16,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -44,7 +45,7 @@ class RecordInfoCard {
                       children: <Widget>[
                         metaInfo.doctor.name != null
                             ? Text(
-                                metaInfo.doctor.name,
+                                toBeginningOfSentenceCase(metaInfo.doctor.name),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 14),
                                 softWrap: false,
@@ -55,7 +56,8 @@ class RecordInfoCard {
                               ),
                         metaInfo.hospital != null
                             ? Text(
-                                metaInfo.hospital.name,
+                                toBeginningOfSentenceCase(
+                                    metaInfo.hospital.name),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(fontSize: 13),
@@ -66,22 +68,25 @@ class RecordInfoCard {
                           'Date of visit: ' + metaInfo.dateOfVisit,
                           style: TextStyle(fontSize: 11),
                         ),
-                        /* Row(
-                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text('Date of visit: ' + metaInfo.dateOfVisit),
-                            Text(metaInfo.dateOfVisit)
-                          ],
-                        ), */
                       ],
                     ),
                   ),
                 )
               ],
             ),
-            /*  SizedBox(
-              height: 20,
-            ), */
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: metaInfo.memoText != null
+                  ? Text(
+                      toBeginningOfSentenceCase(metaInfo.memoText),
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 12),
+                    )
+                  : Text(''),
+            ),
             SizedBox(
               height: 20,
             ),
@@ -126,7 +131,8 @@ class RecordInfoCard {
                       children: <Widget>[
                         metaInfo.hospital.name != null
                             ? Text(
-                                metaInfo.hospital.name,
+                                toBeginningOfSentenceCase(
+                                    metaInfo.hospital.name),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 14),
                                 softWrap: false,
@@ -137,7 +143,7 @@ class RecordInfoCard {
                               ),
                         metaInfo.doctor != null
                             ? Text(
-                                metaInfo.doctor.name,
+                                toBeginningOfSentenceCase(metaInfo.doctor.name),
                                 style: TextStyle(fontSize: 13),
                               )
                             : SizedBox(height: 0),
@@ -150,6 +156,19 @@ class RecordInfoCard {
                   ),
                 )
               ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: metaInfo.memoText != null
+                  ? Text(
+                      toBeginningOfSentenceCase(metaInfo.memoText),
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 12),
+                    )
+                  : Text(''),
             ),
             SizedBox(
               height: 20,
@@ -195,7 +214,8 @@ class RecordInfoCard {
                       children: <Widget>[
                         metaInfo.laboratory.name != null
                             ? Text(
-                                metaInfo.laboratory.name,
+                                toBeginningOfSentenceCase(
+                                    metaInfo.laboratory.name),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 14),
                                 softWrap: false,
@@ -206,16 +226,10 @@ class RecordInfoCard {
                               ),
                         metaInfo.doctor != null
                             ? Text(
-                                metaInfo.doctor.name,
+                                toBeginningOfSentenceCase(metaInfo.doctor.name),
                                 style: TextStyle(fontSize: 13),
                               )
                             : SizedBox(height: 0),
-                        /* metaInfo.memoText != null
-                            ? Text(
-                                metaInfo.memoText,
-                                style: TextStyle(fontSize: 13),
-                              )
-                            : SizedBox(height: 0), */
                         Text(
                           'Date of visit: ' + metaInfo.dateOfVisit,
                           style: TextStyle(fontSize: 11),
@@ -225,6 +239,19 @@ class RecordInfoCard {
                   ),
                 )
               ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: metaInfo.memoText != null
+                  ? Text(
+                      toBeginningOfSentenceCase(metaInfo.memoText),
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 12),
+                    )
+                  : Text(''),
             ),
             SizedBox(
               height: 20,
@@ -256,6 +283,12 @@ class RecordInfoCard {
               metaInfo.mediaTypeInfo.name,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
+            metaInfo.memoText != null
+                ? Text(
+                    toBeginningOfSentenceCase(metaInfo.memoText),
+                    style: TextStyle(fontSize: 12),
+                  )
+                : Text(''),
             SizedBox(
               height: 10,
             ),
@@ -298,6 +331,9 @@ class RecordInfoCard {
             metaInfo.fileName,
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
+          metaInfo.memoText != null
+              ? Text(toBeginningOfSentenceCase(metaInfo.memoText))
+              : Text(''),
           SizedBox(
             height: 10,
           ),
