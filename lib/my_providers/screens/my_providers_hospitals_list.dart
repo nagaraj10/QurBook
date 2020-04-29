@@ -1,5 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -73,22 +74,22 @@ class MyProvidersHospitalsList extends StatelessWidget {
                     Expanded(
                       flex: 6,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(height: 10),
+                          //SizedBox(height: 10),
                           AutoSizeText(
                             eachHospitalModel.name != null
-                                ? eachHospitalModel.name
+                                ? toBeginningOfSentenceCase(
+                                    eachHospitalModel.name)
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 14.0,
                               fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.start,
                           ),
-                          SizedBox(height: 5),
                           AutoSizeText(
                             eachHospitalModel.addressLine1 != null
                                 ? eachHospitalModel.addressLine1
@@ -97,7 +98,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
                                     : '',
                             maxLines: 1,
                             style: TextStyle(
-                                fontSize: 14.0,
+                                fontSize: 13.0,
                                 fontWeight: FontWeight.w400,
                                 color: ColorUtils.lightgraycolor),
                           ),
@@ -108,8 +109,8 @@ class MyProvidersHospitalsList extends StatelessWidget {
                         flex: 1,
                         child: Container(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               /*  InkWell(
                                 child: Icon(
@@ -119,7 +120,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
                                 ),
                                 onTap: () {},
                               ), */
-                              SizedBox(height: 20),
+                              //SizedBox(height: 20),
                               InkWell(
                                   child: eachHospitalModel.isDefault == true
                                       ? ImageIcon(

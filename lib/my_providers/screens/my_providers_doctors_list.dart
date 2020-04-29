@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -144,54 +145,69 @@ class MyProvidersDoctorsList extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     ClipOval(
-                      child: eachDoctorModel.profilePic != null
-                          ? Image.memory(
-                              Uint8List.fromList(
-                                  eachDoctorModel.profilePic.data),
-                              height: 50,
-                              width: 50,
-                              fit: BoxFit.cover,
-                            )
-                          : Image.asset(
+                        child: eachDoctorModel.profilePic != null
+                            ? Image.memory(
+                                Uint8List.fromList(
+                                    eachDoctorModel.profilePic.data),
+                                height: 50,
+                                width: 50,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                width: 50,
+                                height: 50,
+                                padding: EdgeInsets.all(12),
+                                child: ImageIcon(
+                                    AssetImage('assets/icons/stetho.png'),
+                                    size: 20,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                                color: Color(fhbColors.bgColorContainer))
+
+                        /* Image.asset(
                               ImageUrlUtils.avatarImg,
                               height: 50,
                               width: 50,
                               fit: BoxFit.cover,
-                            ),
-                    ),
+                            ), */
+                        ),
                     SizedBox(
                       width: 20,
                     ),
                     Expanded(
                       flex: 6,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(height: 10),
+                          //SizedBox(height: 10),
                           AutoSizeText(
                             eachDoctorModel.name != null
-                                ? eachDoctorModel.name
+                                ? toBeginningOfSentenceCase(
+                                    eachDoctorModel.name)
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
-                              fontSize: 16.0,
+                              fontSize: 14.0,
                               fontWeight: FontWeight.w500,
                             ),
                             textAlign: TextAlign.start,
                           ),
-                          SizedBox(height: 5),
-                          AutoSizeText(
-                            eachDoctorModel.specialization != null
-                                ? eachDoctorModel.specialization
-                                : '',
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontSize: 14.0,
-                                fontWeight: FontWeight.w400,
-                                color: ColorUtils.lightgraycolor),
-                            textAlign: TextAlign.start,
-                          ),
+                          //SizedBox(height: 5),
+                          eachDoctorModel.specialization != null
+                              ? AutoSizeText(
+                                  eachDoctorModel.specialization != null
+                                      ? toBeginningOfSentenceCase(
+                                          eachDoctorModel.specialization)
+                                      : '',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorUtils.lightgraycolor),
+                                  textAlign: TextAlign.start,
+                                )
+                              : SizedBox(height: 0, width: 0),
                         ],
                       ),
                     ),
@@ -200,17 +216,8 @@ class MyProvidersDoctorsList extends StatelessWidget {
                         child: Container(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              /*  InkWell(
-                                child: Icon(
-                                  Icons.more_horiz,
-                                  size: 22,
-                                  color: Colors.grey,
-                                ),
-                                onTap: () {},
-                              ), */
-                              SizedBox(height: 20),
                               InkWell(
                                   child: eachDoctorModel.isDefault == true
                                       ? ImageIcon(

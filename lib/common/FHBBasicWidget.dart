@@ -322,21 +322,32 @@ class FHBBasicWidget {
     return showDialog(
           context: context,
           child: AlertDialog(
-            title: Text('Confirm'),
-            content: Text('Are you sure you want to exit from MyFhb?'),
+            title: Text(
+              'Logout',
+              style: TextStyle(
+                  fontSize: 16, color: Color(CommonUtil().getMyPrimaryColor())),
+            ),
+            content: Text(
+              'Stay Healthy.. See you Soon',
+              style: TextStyle(fontSize: 14),
+            ),
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
                   //print("you choose no");
                   Navigator.of(context).pop(false);
                 },
-                child: Text('Cancel'),
+                child: Text('Cancel',
+                    style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()))),
               ),
               FlatButton(
                 onPressed: () {
                   logout();
                 },
-                child: Text('Yes'),
+                child: Text('Yes',
+                    style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()))),
               ),
             ],
           ),
@@ -366,8 +377,8 @@ class FHBBasicWidget {
             child: new Stack(
               children: <Widget>[
                 Container(
-                  height: 90.0,
-                  width: 300,
+                  height: 110.0,
+                  width: 320,
                   margin: new EdgeInsets.only(left: 40.0),
                   child: Padding(
                       padding: EdgeInsets.only(left: 40, right: 10),
@@ -378,7 +389,7 @@ class FHBBasicWidget {
                           Text(
                             title,
                             textAlign: TextAlign.start,
-                            style: TextStyle(color: Colors.white, fontSize: 18),
+                            style: TextStyle(color: Colors.white, fontSize: 16),
                             softWrap: true,
                           ),
                           SizedBox(height: 5),
@@ -386,7 +397,7 @@ class FHBBasicWidget {
                             desc,
                             textAlign: TextAlign.start,
                             style:
-                                TextStyle(color: Colors.white60, fontSize: 14),
+                                TextStyle(color: Colors.white60, fontSize: 13),
                             softWrap: true,
                           ),
                         ],

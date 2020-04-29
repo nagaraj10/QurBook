@@ -396,7 +396,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       onRefresh: _refresh,
       child: data != null
           ? Container(
-              color: Colors.grey[300],
+              color: Color(fhbColors.bgColorContainer),
               child: ListView.builder(
                 itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
@@ -415,7 +415,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               child: Center(
                 child: Text('No Data Available'),
               ),
-              color: Colors.grey[300],
+              color: Color(fhbColors.bgColorContainer),
             ),
     );
   }
@@ -431,7 +431,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       onRefresh: _refresh,
       child: data != null
           ? Container(
-              color: Colors.grey[300],
+              color: Color(fhbColors.bgColorContainer),
               child: ListView.builder(
                 itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
@@ -450,7 +450,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               child: Center(
                 child: Text('No Data Available'),
               ),
-              color: Colors.grey[300],
+              color: Color(fhbColors.bgColorContainer),
             ),
     );
   }
@@ -466,7 +466,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       onRefresh: _refresh,
       child: data != null
           ? Container(
-              color: Colors.grey[300],
+              color: Color(fhbColors.bgColorContainer),
               child: ListView.builder(
                 itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
@@ -485,7 +485,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               child: Center(
                 child: Text('No Data Available'),
               ),
-              color: Colors.grey[300],
+              color: Color(fhbColors.bgColorContainer),
             ),
     );
   }
@@ -494,33 +494,44 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       String logo, Data data, HospitalData hospitalData, LabData labData) {
     return GestureDetector(
         child: Padding(
-            padding: new EdgeInsets.only(top: 0, bottom: 0),
+            padding:
+                new EdgeInsets.only(top: 0, bottom: 4, left: 10, right: 10),
             child: Container(
                 padding: EdgeInsets.only(bottom: 2.0),
                 margin: EdgeInsets.all(0),
-                color: Colors.white,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)),
                 child: Row(children: <Widget>[
                   SizedBox(
                     width: 10,
                   ),
                   ClipOval(
+                      child: Container(
+                    height: 50,
+                    width: 50,
+                    color: Color(fhbColors.bgColorContainer),
                     child:
                         widget.arguments.searchWord == CommonConstants.doctors
                             ? getDoctorProfileImageWidget(id)
                             : getHospitalLogoImage(logo),
-                  ),
-                  SizedBox(width: 20),
+                  )),
+                  SizedBox(width: 10),
                   Expanded(
                       flex: 5,
-                      child: getDataToView(
-                          widget.arguments.searchWord == CommonConstants.doctors
-                              ? data.name
-                              : widget.arguments.searchWord ==
-                                      CommonConstants.hospitals
-                                  ? hospitalData.name
-                                  : labData.name,
-                          address,
-                          id))
+                      child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: getDataToView(
+                            widget.arguments.searchWord ==
+                                    CommonConstants.doctors
+                                ? data.name
+                                : widget.arguments.searchWord ==
+                                        CommonConstants.hospitals
+                                    ? hospitalData.name
+                                    : labData.name,
+                            address,
+                            id),
+                      ))
                 ]))),
         onTap: () {
           if (widget.toPreviousScreen) {
@@ -567,23 +578,27 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   getDataToView(String name, String address, String id) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Container(
-          child: Text(name != null ? name : '',
-              style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w500,
-                  color: ColorUtils.blackcolor)),
-          padding: EdgeInsets.all(10),
+        Text(
+          name != null ? name : '',
+          style: TextStyle(
+              fontSize: 14.0,
+              fontWeight: FontWeight.w500,
+              color: ColorUtils.blackcolor),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
         ),
-        Container(
-          child: Text(address != null ? address : '',
-              style: TextStyle(
-                  fontSize: 14.0,
-                  fontWeight: FontWeight.w400,
-                  color: ColorUtils.lightgraycolor)),
-          padding: EdgeInsets.all(10),
-        )
+        SizedBox(height: 10),
+        Text(
+          address != null ? address : '',
+          style: TextStyle(
+              fontSize: 13.0,
+              fontWeight: FontWeight.w400,
+              color: ColorUtils.lightgraycolor),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
       ],
     );
   }

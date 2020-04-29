@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_address/models/AddAddressArguments.dart';
 import 'package:myfhb/add_providers/bloc/add_providers_bloc.dart';
 import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
@@ -421,7 +422,8 @@ class AddProvidersState extends State<AddProviders> {
       }
     } else {
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-        doctorController.text = widget.arguments.doctorsModel.name;
+        doctorController.text =
+            toBeginningOfSentenceCase(widget.arguments.doctorsModel.name);
         isPreferred = widget.arguments.doctorsModel.isDefault;
         myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
         //
@@ -433,7 +435,8 @@ class AddProvidersState extends State<AddProviders> {
         addressLine1 = widget.arguments.doctorsModel.addressLine1;
         addressLine2 = widget.arguments.doctorsModel.addressLine2;
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
-        doctorController.text = widget.arguments.hospitalsModel.name;
+        doctorController.text =
+            toBeginningOfSentenceCase(widget.arguments.hospitalsModel.name);
         isPreferred = widget.arguments.hospitalsModel.isDefault;
         myprovidersPreferred = widget.arguments.hospitalsModel.isDefault;
 
@@ -449,7 +452,8 @@ class AddProvidersState extends State<AddProviders> {
         addressLine1 = widget.arguments.hospitalsModel.addressLine1;
         addressLine2 = widget.arguments.hospitalsModel.addressLine2;
       } else {
-        doctorController.text = widget.arguments.labsModel.name;
+        doctorController.text =
+            toBeginningOfSentenceCase(widget.arguments.labsModel.name);
         isPreferred = widget.arguments.labsModel.isDefault;
         myprovidersPreferred = widget.arguments.labsModel.isDefault;
 
@@ -519,8 +523,8 @@ class AddProvidersState extends State<AddProviders> {
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
-    print(
-        ' ${address.locality}, ${address.adminArea},${address.subLocality}, ${address.subAdminArea},${address.addressLine}, ${address.featureName},${address.thoroughfare}, ${address.subThoroughfare}');
+
+    return address;
   }
 
   Future addMarker() async {
@@ -593,11 +597,14 @@ class AddProvidersState extends State<AddProviders> {
             child: Row(
               children: [
                 ClipOval(
-                  child: selectedProfile == null
-                      ? FHBBasicWidget().getProfilePicWidget(myProfile
-                          .response.data.generalInfo.profilePicThumbnail)
-                      : FHBBasicWidget().getProfilePicWidget(selectedProfile
-                          .response.data.generalInfo.profilePicThumbnail),
+                  child: Container(
+                      height: 30,
+                      width: 30,
+                      child: selectedProfile == null
+                          ? FHBBasicWidget().getProfilePicWidget(myProfile
+                              .response.data.generalInfo.profilePicThumbnail)
+                          : FHBBasicWidget().getProfilePicWidget(selectedProfile
+                              .response.data.generalInfo.profilePicThumbnail)),
                 ),
                 SizedBox(width: 5),
                 Container(
@@ -1368,12 +1375,21 @@ class AddProvidersState extends State<AddProviders> {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
-              title: Text("Can't get gurrent location"),
-              content:
-                  const Text('Please make sure you enable GPS and try again'),
+              title: Text(
+                "Location",
+                style: TextStyle(
+                    fontSize: 16,
+                    color: Color(CommonUtil().getMyPrimaryColor())),
+              ),
+              content: const Text(
+                  'Please make sure your location service is enabled'),
               actions: <Widget>[
                 FlatButton(
-                  child: Text('Ok'),
+                  child: Text(
+                    'OK',
+                    style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor())),
+                  ),
                   onPressed: () {
                     final AndroidIntent intent = AndroidIntent(
                         action: 'android.settings.LOCATION_SOURCE_SETTINGS');
