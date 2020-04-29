@@ -56,6 +56,7 @@ class _MyRecordsState extends State<MyRecords> {
   String searchQuery = "Search query";
   String categoryName;
   String categoryID;
+  CategoryData categoryDataObjClone = new CategoryData();
 
   // MediaData mediaData;
 
@@ -94,7 +95,7 @@ class _MyRecordsState extends State<MyRecords> {
         PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_HOMESCREEN);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(
-          Duration(milliseconds: 200),
+          Duration(milliseconds: 1000),
           () => isFirstTime
               ? null
               : ShowCaseWidget.of(_myContext)
@@ -188,11 +189,25 @@ class _MyRecordsState extends State<MyRecords> {
   Widget getMainWidgets(List<CategoryData> data) {
     _categoryListBlock = null;
     _categoryListBlock = new CategoryListBlock();
-
-    if (!fromSearch)
+    List<CategoryData> categoryData = new List();
+    if (!fromSearch) {
       PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
 
-    List<CategoryData> categoryData = fliterCategories(data);
+      List<CategoryData> categoryDataFromPrefernce =
+          PreferenceUtil.getCategoryTypeDisplay();
+      if (categoryDataFromPrefernce != null &&
+          categoryDataFromPrefernce.length > 0) {
+        categoryData.addAll(categoryDataFromPrefernce);
+      } else {
+        categoryData = fliterCategories(data);
+        categoryData.add(categoryDataObjClone);
+      }
+      PreferenceUtil.saveCategoryList(
+          Constants.KEY_CATEGORYLIST_VISIBLE, categoryData);
+    } else {
+      categoryData.addAll(data);
+    }
+
     return DefaultTabController(
         length: categoryData.length,
         child: Scaffold(
@@ -557,11 +572,11 @@ class _MyRecordsState extends State<MyRecords> {
     List<Widget> tabWidgetList = new List();
     //tabWidgetList.add(SizedBox(height: 5));
 
-    data.sort((a, b) {
+    /*  data.sort((a, b) {
       return a.categoryDescription
           .toLowerCase()
           .compareTo(b.categoryDescription.toLowerCase());
-    });
+    }); */
 
     /* data.sort((a, b) {
       return a.categoryDescription
@@ -782,6 +797,24 @@ class _MyRecordsState extends State<MyRecords> {
         filteredCategoryData.add(dataObj);
       }
     }
+
+    int i = 0;
+    for (CategoryData categoryDataObj in filteredCategoryData) {
+      if (categoryDataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionOthers) {
+        categoryDataObjClone = categoryDataObj;
+        filteredCategoryData.removeAt(i);
+        break;
+      }
+      i++;
+    }
+
+    filteredCategoryData.sort((a, b) {
+      return a.categoryDescription
+          .toLowerCase()
+          .compareTo(b.categoryDescription.toLowerCase());
+    });
+
     return filteredCategoryData;
   }
 }

@@ -199,38 +199,43 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
               //color: _current == index ? Colors.redAccent : Colors.green,
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-                onPressed: goToPrevious,
+          Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [
+              Color(CommonUtil().getMyPrimaryColor()),
+              Color(CommonUtil().getMyGredientColor())
+            ])),
+            child: Padding(
+              padding: EdgeInsets.all(5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.arrow_back_ios, color: Colors.white),
+                    onPressed: goToPrevious,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.crop, color: Colors.white),
+                    onPressed: () {
+                      cropImage(currentImagePath);
+                      //_cropImage(true);
+                    },
+                  ),
+                  index == widget.imagePath.length
+                      ? IconButton(
+                          onPressed: () {
+                            callDisplayPictureScreen(context);
+                          },
+                          icon: Icon(Icons.check, color: Colors.white),
+                        )
+                      : IconButton(
+                          onPressed: goToNext,
+                          icon: Icon(Icons.arrow_forward_ios,
+                              color: Colors.white),
+                        ),
+                ],
               ),
-              IconButton(
-                icon: Icon(Icons.crop, color: Colors.white),
-                onPressed: () {
-                  cropImage(currentImagePath);
-                  //_cropImage(true);
-                },
-              ),
-              IconButton(
-                icon: Icon(Icons.rotate_90_degrees_ccw, color: Colors.white),
-                onPressed: () {
-                  //editorKeyList[_current].currentState.flip();
-                },
-              ),
-              index == widget.imagePath.length
-                  ? IconButton(
-                      onPressed: () {
-                        callDisplayPictureScreen(context);
-                      },
-                      icon: Icon(Icons.check, color: Colors.white),
-                    )
-                  : IconButton(
-                      onPressed: goToNext,
-                      icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                    ),
-            ],
+            ),
           ),
         ],
       ),

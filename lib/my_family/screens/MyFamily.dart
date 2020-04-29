@@ -137,10 +137,15 @@ class _MyFamilyState extends State<MyFamily> {
      */
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: () {
-              saveMediaDialog(context);
-            }),
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            saveMediaDialog(context);
+          },
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        ),
         body: getAllFamilyMembers());
   }
 
@@ -204,13 +209,13 @@ class _MyFamilyState extends State<MyFamily> {
                 child: Center(
                   child: Text('No Data Available'),
                 ),
-                color: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Color(fhbColors.bgColorContainer),
               )
         : Container(
             child: Center(
               child: Text('No Data Available'),
             ),
-            color: Color(new CommonUtil().getMyPrimaryColor()),
+            color: Color(fhbColors.bgColorContainer),
           );
   }
 

@@ -435,7 +435,7 @@ class TakePictureScreenForDevicesState
                                 ),
                               ),
                                */
-                             /*  Expanded(
+                              /*  Expanded(
                                 child: Container(),
                               ), */
                               Expanded(

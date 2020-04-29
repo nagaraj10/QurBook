@@ -45,12 +45,15 @@ class _MyRemindersState extends State<MyReminders> {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             home: new Scaffold(
-              floatingActionButton: FloatingActionButton.extended(
+              floatingActionButton: FloatingActionButton(
+                child: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
                 onPressed: () {
                   PageNavigator.goTo(context, '/add_reminders');
                 },
-                label: Text('Add'),
-                icon: Icon(Icons.add),
+
                 //TODO chnage theme
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),

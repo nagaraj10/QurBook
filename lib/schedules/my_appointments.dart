@@ -78,7 +78,8 @@ class _MyAppointmentState extends State<MyAppointment> {
             //onGenerateRoute: Router.createRoute,
             home: new Scaffold(
               //appBar: _buildBar(context),
-              floatingActionButton: FloatingActionButton.extended(
+              floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.add, color: Colors.white),
                 onPressed: () {
                   // Add your onPressed code here!
                   //customDialog("New appointment", "Save", context, "Save");
@@ -93,9 +94,6 @@ class _MyAppointmentState extends State<MyAppointment> {
                             actionText: 'Save');
                       });
                 },
-                label: Text('Add'),
-                icon: Icon(Icons.add),
-                //TODO chnage theme
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
               body: new ListView.builder(

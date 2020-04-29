@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/widgets/my_providers_appbar.dart';
 import 'package:myfhb/my_providers/widgets/my_providers_stream_data.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class MyProvider extends StatefulWidget {
   @override
@@ -37,7 +39,11 @@ class _MyProviderState extends State<MyProvider>
     return Scaffold(
       appBar: MyProvidersAppBar(tabController: _tabController),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         onPressed: () {
           switch (_activeTabIndex) {
             case 0:
@@ -75,6 +81,7 @@ class _MyProviderState extends State<MyProvider>
         },
       ),
       body: Container(
+        color: Color(fhbColors.bgColorContainer),
         child: MyProvidersStreamData(
             providersBloc: _providersBloc, tabController: _tabController),
       ),

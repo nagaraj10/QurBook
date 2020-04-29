@@ -208,4 +208,19 @@ class PreferenceUtil {
           json.decode(_prefsInstance.getString(keyCompletedData)));
     } catch (e) {}
   }
+
+  static List<CategoryData> getCategoryTypeDisplay() {
+    List<CategoryData> categoryData = new List();
+
+    try {
+      if (_prefsInstance == null) {}
+      json
+          .decode(_prefsInstance.getString(Constants.KEY_CATEGORYLIST_VISIBLE))
+          .forEach((map) {
+        categoryData.add(new CategoryData.fromJson(map));
+      });
+
+      return categoryData;
+    } catch (e) {}
+  }
 }

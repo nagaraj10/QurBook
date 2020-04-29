@@ -92,7 +92,7 @@ Future<void> main() async {
   listOfCameras = cameras;
 
   // Get a specific camera from the list of available cameras.
-  firstCamera = cameras.first;
+  firstCamera = cameras[0];
 
   await PreferenceUtil.init();
 

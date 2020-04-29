@@ -64,8 +64,7 @@ const String STR_VERIFY_USER =
     'Please complete your Sign Up process, by generating and verifying the OTP';
 
 const String KEY_VOICE_ID = 'Category_ID_VOICE';
-const String STR_OTPMISMATCHED =
-    'Requested operation forbidden. OTP Mismatched';
+const String STR_OTPMISMATCHED = 'OTP Mismatched';
 const String KEY_INTRO_SLIDER = 'keyIntroSlider';
 const String STR_FEEDBACKS = 'Feedback';
 
@@ -127,3 +126,4 @@ const String MULTI_IMG_TITLE = 'Multiple Images';
 const String SWITCH_CATEGORY_DESC =
     'You can switch categories even while you capture health records';
 const String SWITCH_CATEGORY_TITLE = 'Switch Category';
+const String KEY_CATEGORYLIST_VISIBLE = 'categoryListDisplay';

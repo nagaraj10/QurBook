@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -30,19 +31,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
-  List<String> bloodGroupArray = [
-    'A',
-    'B',
-    'O',
-    'AB',
-    'A1',
-    'A2',
-    'A1B',
-    'A2B',
-    'Others/ Not Known'
-  ];
+  List<String> bloodGroupArray = ['A', 'B', 'O', 'Others/ Not Known'];
 
-  List<String> bloodRangeArray = ['+', '-', 'Others/ Not Known'];
+  List<String> bloodRangeArray = ['+ ve', '- ve', 'Others/ Not Known'];
 
   @override
   void initState() {
@@ -78,7 +69,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
       if (bloodGroupSplitName.length > 1) {
         for (String bloodGroup in bloodGroupArray) {
-//      var bloodgroupClone = bloodGroup.split(' ');
           if (bloodGroupSplitName[0] == bloodGroup) {
             bloodGroupController.text = bloodGroup;
           }
@@ -93,7 +83,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
         var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
         if (bloodGroupSplitName.length > 1) {
           for (String bloodGroup in bloodGroupArray) {
-//      var bloodgroupClone = bloodGroup.split(' ');
             if (bloodGroupSplitName[0] == bloodGroup) {
               bloodGroupController.text = bloodGroup;
             }
@@ -112,53 +101,27 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  /*  Widget getProfileDetail() {
-    Widget profileWidget;
-    return StreamBuilder<ApiResponse<MyProfile>>(
-      stream: _myProfileBloc.myProfileInfoStream,
-      builder: (context, AsyncSnapshot<ApiResponse<MyProfile>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              profileWidget = Center(
-                  child: SizedBox(
-                child: CircularProgressIndicator(),
-                width: 30,
-                height: 30,
-              ));
-              break;
-
-            case Status.ERROR:
-              profileWidget = Center(
-                  child: Text('Oops, something went wrong',
-                      style: TextStyle(color: Colors.red)));
-              break;
-
-            case Status.COMPLETED:
-              profileWidget =
-                  getProfileWidget(snapshot.data.data.response.data);
-              //getMyFamilyMembers(snapshot.data.data.response.data);
-              break;
-          }
-        } else {
-          profileWidget = Container(
-            width: 100,
-            height: 100,
-          );
-        }
-        return profileWidget;
-      },
-    );
-  } */
-
   Widget getProfileWidget(MyProfileData data) {
-    mobile.text = data.generalInfo.phoneNumber;
-    name.text = data.generalInfo.name;
-    email.text = data.generalInfo.email;
-    gender.text = data.generalInfo.gender;
-    renameBloodGroup(data.generalInfo.bloodGroup);
-    dob.text = data.generalInfo.dateOfBirth;
-
+    if (data.generalInfo.phoneNumber != null) {
+      mobile.text = data.generalInfo.phoneNumber;
+    }
+    if (data.generalInfo.name != null) {
+      name.text =
+          toBeginningOfSentenceCase(data.generalInfo.name.toLowerCase());
+    }
+    if (data.generalInfo.email != null) {
+      email.text = data.generalInfo.email;
+    }
+    if (data.generalInfo.gender != null) {
+      gender.text =
+          toBeginningOfSentenceCase(data.generalInfo.gender.toLowerCase());
+    }
+    if (data.generalInfo.bloodGroup != null) {
+      renameBloodGroup(data.generalInfo.bloodGroup);
+    }
+    if (data.generalInfo.dateOfBirth != null) {
+      dob.text = data.generalInfo.dateOfBirth;
+    }
     if (data.generalInfo.qualifiedFullName != null) {
       firstName.text = data.generalInfo.qualifiedFullName.firstName;
       middleName.text =
@@ -168,7 +131,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
               : '';
       lastName.text = data.generalInfo.qualifiedFullName.lastName;
     } else {
-      firstName.text = data.generalInfo.name;
+      firstName.text =
+          data.generalInfo.name != null ? data.generalInfo.name : '';
       middleName.text = '';
       lastName.text = '';
     }

@@ -256,6 +256,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             PreferenceUtil.saveString(
                                 'maya_asset', mayaAssets[index]);
                             selectedMaya = mayaAssets[index];
+                            HomeScreen.of(context).refresh();
                             setState(() {});
                           },
                           child: Card(
@@ -290,37 +291,40 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   children: <Widget>[
                     ListTile(
                         title: Container(
-                            padding: EdgeInsets.only(top: 10, bottom: 10),
-                            height: 80,
+                            //padding: EdgeInsets.only(top: 10, bottom: 10),
+                            height: 60,
                             child: ListView.builder(
                               scrollDirection: Axis.horizontal,
                               itemCount: myThemes.length,
                               itemBuilder: (context, index) => GestureDetector(
                                 onTap: () {
-                                  //TODO logic for adding the item into sharedprefernces
                                   PreferenceUtil.saveTheme(
                                       'pri_color', myThemes[index]);
                                   PreferenceUtil.saveTheme(
                                       'gre_color', myGradient[index]);
                                   selectedPrimaryColor = myThemes[index];
-                                  print('you selected the index of $index');
                                   HomeScreen.of(context).refresh();
-
                                   setState(() {});
                                 },
-                                //NOTE need to copy this  one
-                                child: CircleAvatar(
-                                  backgroundColor: Color(myThemes[index]),
-                                  radius: 40,
-                                  child: myThemes[index] == selectedPrimaryColor
-                                      ? Icon(
-                                          Icons.check,
-                                          color: index > 3
-                                              ? Colors.black
-                                              : Colors.white,
-                                        )
-                                      : SizedBox(),
-                                ),
+                                child: Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          gradient: LinearGradient(colors: [
+                                            Color(myThemes[index]),
+                                            Color(myGradient[index])
+                                          ])),
+                                      height: 50,
+                                      width: 50,
+                                      child: myThemes[index] ==
+                                              selectedPrimaryColor
+                                          ? Icon(
+                                              Icons.check,
+                                              color: Colors.white,
+                                            )
+                                          : SizedBox(),
+                                    )),
                               ),
                             ))),
                   ]),

@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -65,24 +66,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   List<int> fetchedProfileData;
 
-  List<String> bloodGroupArray = [
-    'A',
-    'B',
-    'O',
-    'AB',
-    'A1',
-    'A2',
-    'A1B',
-    'A2B',
-    'Others/ Not Known'
-  ];
+  List<String> bloodGroupArray = ['A', 'B', 'O', 'Others/ Not Known'];
 
-  List<String> bloodRangeArray = ['+', '-', 'Others/ Not Known'];
+  List<String> bloodRangeArray = ['+ ve', '- ve', 'Others/ Not Known'];
 
   String selectedBloodGroup;
   String selectedBloodRange;
 
-  List<String> genderArray = ['male', 'female', 'others'];
+  List<String> genderArray = ['Male', 'Female', 'Others'];
   String selectedGender;
 
   bool updateProfile = false;
@@ -926,7 +917,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               child: DropdownButton(
                 isExpanded: true,
                 hint: Text(CommonConstants.gender),
-                value: selectedGender,
+                value: toBeginningOfSentenceCase(selectedGender.toLowerCase()),
                 items: genderArray.map((eachGender) {
                   return DropdownMenuItem(
                     child: new Text(eachGender,
@@ -1070,7 +1061,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void _saveBtnTapped() {
     addFamilyUserInfoBloc.name = firstNameController.text;
     addFamilyUserInfoBloc.email = emailController.text;
-    addFamilyUserInfoBloc.gender = selectedGender;
+    addFamilyUserInfoBloc.gender =
+        toBeginningOfSentenceCase(selectedGender.toLowerCase());
+    print('selected gender' + addFamilyUserInfoBloc.gender);
     addFamilyUserInfoBloc.dateOfBirth = dateOfBirthController.text;
 
     if (selectedBloodGroup != null && selectedBloodRange != null) {

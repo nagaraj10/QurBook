@@ -104,54 +104,59 @@ class OverlayCategoryDialog extends ModalRoute<void> {
   List<Widget> getWidgetsFordevices(BuildContext context) {
     List<Widget> categoryWidgetList = new List();
 
-    List<CategoryData> catgoryDataList = PreferenceUtil.getCategoryType();
+    List<CategoryData> catgoryDataList =
+        PreferenceUtil.getCategoryTypeDisplay();
 
     for (int i = 0; i < catgoryDataList.length; i++) {
-      categoryWidgetList.add(InkWell(
-        child: Column(
-          children: <Widget>[
-            GestureDetector(
-              child: SizedBox(
-                width: 25,
-                height: 25,
-                child: CachedNetworkImage(
-                  imageUrl: Constants.BASERURL + catgoryDataList[i].logo,
-                  color: Colors.white70,
-                  placeholder: (context, url) =>
-                      new CircularProgressIndicator(),
-                  errorWidget: (context, url, error) => new Icon(Icons.error),
-                ),
-              ),
-              onTap: () {
-                callBackPage(catgoryDataList[i].categoryName, context,catgoryDataList[i].id);
-              },
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 5),
-            ),
-            Container(
-                padding: const EdgeInsets.all(8),
-                child: Center(
-                  child: Text(
-                    catgoryDataList[i].categoryName,
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+      categoryWidgetList.add(
+        InkWell(
+          child: Column(
+            children: <Widget>[
+              GestureDetector(
+                child: SizedBox(
+                  width: 25,
+                  height: 25,
+                  child: CachedNetworkImage(
+                    imageUrl: Constants.BASERURL + catgoryDataList[i].logo,
+                    color: Colors.white70,
+                    placeholder: (context, url) =>
+                        new CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => new Icon(Icons.error),
                   ),
-                )),
-          ],
+                ),
+                onTap: () {
+                  callBackPage(catgoryDataList[i].categoryName, context,
+                      catgoryDataList[i].id);
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 5),
+              ),
+              Container(
+                  padding: const EdgeInsets.all(8),
+                  child: Center(
+                    child: Text(
+                      catgoryDataList[i].categoryName,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  )),
+            ],
+          ),
+          onTap: () {
+            callBackPage(catgoryDataList[i].categoryName, context,
+                catgoryDataList[i].id);
+          },
         ),
-        onTap: () {
-          callBackPage(catgoryDataList[i].categoryName, context,catgoryDataList[i].id);
-        },
-      ),);
+      );
     }
     print('categoryWidgetList' + categoryWidgetList.length.toString());
 
     return categoryWidgetList;
   }
 
-  callBackPage(String categoryName, BuildContext context,String categoryID) {
+  callBackPage(String categoryName, BuildContext context, String categoryID) {
     PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
         .then((onValue) {
       PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
