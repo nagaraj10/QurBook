@@ -288,7 +288,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 ])),
                                             child: IconButton(
                                                 icon: Icon(
-                                                  Icons.camera_alt,
+                                                  Icons.add_a_photo,
                                                   color: Colors.white,
                                                 ),
                                                 onPressed: () {

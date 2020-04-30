@@ -12,7 +12,8 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/ui/IntroSlider.dart';
-import 'package:myfhb/src/ui/MyRecords.dart';
+//import 'package:myfhb/src/ui/MyRecords.dart';
+import 'package:myfhb/src/ui/MyRecordClone.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
@@ -48,7 +49,7 @@ var routes = <String, WidgetBuilder>{
   "/user_accounts": (BuildContext context) =>
       UserAccounts(arguments: ModalRoute.of(context).settings.arguments),
   "/app_settings": (BuildContext context) => MySettings(),
-  "/my_records": (BuildContext context) => MyRecords(),
+  "/my_records": (BuildContext context) => MyRecordsClone(),
   "/my_family": (BuildContext context) => MyFamily(),
   "/my_providers": (BuildContext context) => MyProvider(),
   "/add_providers": (BuildContext context) =>
@@ -133,9 +134,7 @@ class _MyFHBState extends State<MyFHB> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    //notificationAppLaunchDetails = await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
     gettingResponseFromNative();
     showSecurityWall();
   }

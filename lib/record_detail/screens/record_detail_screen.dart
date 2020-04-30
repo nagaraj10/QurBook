@@ -8,6 +8,7 @@ import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
+import 'package:myfhb/common/PDFViewer.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
@@ -28,6 +29,7 @@ import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'dart:typed_data';
 
 class RecordDetailScreen extends StatefulWidget {
   final MediaMetaInfo data;
@@ -71,6 +73,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
+  var pdfFile;
+  List<MediaMasterIds> mediMasterId = new List();
   @override
   void initState() {
     super.initState();
@@ -95,24 +99,25 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       }
     } */
 
-    List<MediaMasterIds> mediMasterId =
-        new CommonUtil().getMetaMasterIdList(widget.data);
+    mediMasterId = new CommonUtil().getMetaMasterIdList(widget.data);
 
     if (checkIfMp3IsPresent(widget.data) != '') {
       widget.data.metaInfo.hasVoiceNotes = true;
       showAudioWidgetIfVoiceNotesAvailable(widget.data);
     }
 
-    if (new CommonUtil()
-            .getMediaMasterIDForPdfType(widget.data.mediaMasterIds)
-            .length >
-        0) {
+    String getMediaMasterIDForPdfTypeStr = new CommonUtil()
+        .getMediaMasterIDForPdfTypeStr(widget.data.mediaMasterIds);
+    if (getMediaMasterIDForPdfTypeStr != null &&
+        getMediaMasterIDForPdfTypeStr.length > 0) {
       ispdfPresent = true;
+      getPdfFileData(getMediaMasterIDForPdfTypeStr);
     } else {
       ispdfPresent = false;
-      if (mediMasterId.length > 0)
-        _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
     }
+
+    if (mediMasterId.length > 0)
+      _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
   }
 
   @override
@@ -1064,11 +1069,22 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                       ),
                     )
                   : ispdfPresent
-                      ? Container(
-                          child: ImageIcon(
-                              AssetImage('assets/icons/attach.png'),
-                              color: Colors.white),
-                        )
+                      ? pdfFile == null
+                          ? Container(child: CircularProgressIndicator())
+                          : Container(
+                              child: IconButton(
+                                icon: ImageIcon(
+                                    AssetImage('assets/icons/attach.png'),
+                                    color: Colors.white),
+                                onPressed: () {
+                                  print('pdf is pressed');
+
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => PDFViewer(pdfFile),
+                                  ));
+                                },
+                              ),
+                            )
                       : Container(
                           child: Icon(
                             Icons.mic,
@@ -1123,6 +1139,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Widget getDocumentImageWidgetClone() {
     print('inside clone');
+
+    if (_healthReportListForUserBlock != null) {
+      _healthReportListForUserBlock = null;
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    } else {
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    }
+
+    _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
+
     return StreamBuilder<ApiResponse<List<dynamic>>>(
       stream: _healthReportListForUserBlock.imageListStream,
       builder: (context, AsyncSnapshot<ApiResponse<List<dynamic>>> snapshot) {
@@ -1144,7 +1170,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               break;
 
             case Status.COMPLETED:
+              /* if (ispdfPresent) {
+                pdfFile = snapshot.data.data;
+              } else {*/
               imagesPathMain.addAll(snapshot.data.data);
+              /* }*/
               return getCarousalImage(snapshot.data.data);
               break;
           }
@@ -1197,6 +1227,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Widget getWidgetForPlayingAudioFromServer(String audioMediaId) {
     print('audioMediaId' + audioMediaId);
+    if (_healthReportListForUserBlock != null) {
+      _healthReportListForUserBlock = null;
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    } else {
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    }
     _healthReportListForUserBlock.getDocumentImage(audioMediaId).then((res) {
       return downloadMedia(res, context);
     });
@@ -1217,5 +1253,19 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   showProgressIndicator(MediaMetaInfo data) {
     showAudioWidgetIfVoiceNotesAvailable(data);
+  }
+
+  void getPdfFileData(String pdfFileMediaId) {
+    if (_healthReportListForUserBlock != null) {
+      _healthReportListForUserBlock = null;
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    } else {
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    }
+    _healthReportListForUserBlock.getDocumentImage(pdfFileMediaId).then((res) {
+      print('inside getPDFFIleData');
+      pdfFile = res;
+      setState(() {});
+    });
   }
 }

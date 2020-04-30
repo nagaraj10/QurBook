@@ -9,6 +9,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
@@ -112,6 +113,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       _cameraScreenContext = context;
       return Scaffold(
           appBar: AppBar(
+            flexibleSpace: GradientAppBar(),
             title: getWidgetForTitle(context),
             actions: <Widget>[
               IconButton(
@@ -212,7 +214,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     callDisplayPictureScreen(context);
                                   } else {
                                     try {
-                                      var image = await FilePicker.getFile();
+                                      var image = await FilePicker.getFile(
+                                          type: FileType.custom,
+                                          allowedExtensions: ['pdf']);
                                       imagePaths.add(image.path);
                                       callDisplayPictureScreen(context);
                                     } catch (e) {
@@ -581,7 +585,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<void> getFilePath() async {
-    List<File> filePaths = await FilePicker.getMultiFile(fileExtension: 'pdf');
+    List<File> filePaths = await FilePicker.getMultiFile(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
 
     for (File file in filePaths) {
       String filePath = await FlutterAbsolutePath.getAbsolutePath(file.path);

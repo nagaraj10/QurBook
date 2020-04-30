@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'ChatScreen.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -18,8 +18,9 @@ class SuperMaya extends StatefulWidget {
 class _SuperMayaState extends State<SuperMaya> {
   final GlobalKey _micKey = GlobalKey();
   BuildContext _myContext;
-  static const voice_platform =
-      const MethodChannel('flutter.native/voiceIntent');
+
+  PermissionStatus permissionStatus = PermissionStatus.undetermined;
+  final Permission _micpermission = Permission.microphone;
 
   @override
   void initState() {
@@ -34,8 +35,20 @@ class _SuperMayaState extends State<SuperMaya> {
               ? null
               : ShowCaseWidget.of(_myContext).startShowCase([_micKey]));
     });
+  }
 
-    //checkForVoicePermission();
+  void _listenForPermissionStatus() async {
+    final status = await _micpermission.status;
+    setState(() => permissionStatus = status);
+  }
+
+  Future<PermissionStatus> requestPermission(Permission micPermission) async {
+    final status = await micPermission.request();
+    setState(() {
+      print(status);
+      permissionStatus = status;
+    });
+    return status;
   }
 
   @override
@@ -76,24 +89,18 @@ class _SuperMayaState extends State<SuperMaya> {
                     ),
                     //Icon(Icons.people),
                     Text(
-                      'Hi, Im Maya your health assistance.',
+                      'Hi, I am Maya your health assistance.',
                       softWrap: true,
                     ),
                     SizedBox(
                       height: 30,
                     ),
-
-                    // IconButton(
-                    //     icon: Icon(Icons.mic),
-                    //     iconSize: 50.0,
-                    //     onPressed: () => gettingReposnseFromNative())
-
                     SizedBox(
                         width: 150,
                         height: 50,
                         child: FHBBasicWidget.customShowCase(
                             _micKey,
-                            'Call me up. This invokes your Maya!',
+                            'Tap me and invoke. Lets converse',
                             RaisedGradientButton(
                                 borderRadius: 30,
                                 child: Text(
@@ -109,13 +116,21 @@ class _SuperMayaState extends State<SuperMaya> {
                                   ],
                                 ),
                                 onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return ChatScreen();
-                                      },
-                                    ),
-                                  );
+                                  requestPermission(_micpermission)
+                                      .then((status) {
+                                    if (status == PermissionStatus.granted) {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) {
+                                            return ChatScreen();
+                                          },
+                                        ),
+                                      );
+                                    } else {
+                                      print(
+                                          'Mic permission has not been given by the user');
+                                    }
+                                  });
                                 }),
                             'Maya')),
                   ],

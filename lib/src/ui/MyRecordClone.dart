@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/src/model/TabModel.dart';
+import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -40,12 +42,12 @@ export 'package:myfhb/common/CommonUtil.dart';
 export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 
-class MyRecords extends StatefulWidget {
+class MyRecordsClone extends StatefulWidget {
   @override
-  _MyRecordsState createState() => _MyRecordsState();
+  _MyRecordsCloneState createState() => _MyRecordsCloneState();
 }
 
-class _MyRecordsState extends State<MyRecords> {
+class _MyRecordsCloneState extends State<MyRecordsClone> {
   // final String _baseUrl = 'https://healthbook.vsolgmi.com/hb/api/v2/';
   List<TabModel> tabModelList = new List();
   CategoryListBlock _categoryListBlock;
@@ -56,7 +58,6 @@ class _MyRecordsState extends State<MyRecords> {
   String searchQuery = "Search query";
   String categoryName;
   String categoryID;
-  CategoryData categoryDataObjClone = new CategoryData();
 
   // MediaData mediaData;
 
@@ -64,7 +65,6 @@ class _MyRecordsState extends State<MyRecords> {
   MyProfileBloc _myProfileBloc;
 
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   GlobalSearchBloc _globalSearchBloc;
   bool fromSearch = false;
@@ -72,15 +72,18 @@ class _MyRecordsState extends State<MyRecords> {
   CompleteData completeData;
   List<MediaData> mediaData = new List();
 
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  int initPosition = 0;
+
   final GlobalKey _cameraKey = GlobalKey();
   final GlobalKey _voiceKey = GlobalKey();
   BuildContext _myContext;
+  CategoryData categoryDataObjClone = new CategoryData();
 
   @override
   void initState() {
     rebuildAllBlocks();
     searchQuery = _searchQueryController.text.toString();
-    print('_searchQueryController.toString() ' + searchQuery);
     if (searchQuery != '') {
       _globalSearchBloc.searchBasedOnMediaType(
           _searchQueryController.text.toString() == null
@@ -131,6 +134,88 @@ class _MyRecordsState extends State<MyRecords> {
           ? getResponseForSearchedMedia()
           : getResponseFromApiWidget(),
     );
+  }
+
+  Widget getResponseForSearchedMedia() {
+    _globalSearchBloc = null;
+    _globalSearchBloc = new GlobalSearchBloc();
+    _globalSearchBloc.searchBasedOnMediaType(
+        (searchQuery == null && searchQuery == '') ? '' : searchQuery);
+
+    return PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null
+        ? getMainWidgets(PreferenceUtil.getCategoryTypeDisplay(
+            Constants.KEY_SEARCHED_CATEGORY))
+        : StreamBuilder<ApiResponse<GlobalSearch>>(
+            stream: _globalSearchBloc.globalSearchStream,
+            builder:
+                (context, AsyncSnapshot<ApiResponse<GlobalSearch>> snapshot) {
+              if (!snapshot.hasData) return Container();
+
+              switch (snapshot.data.status) {
+                case Status.LOADING:
+                  // rebuildBlockObject();
+                  return Center(
+                      child: SizedBox(
+                    child: CircularProgressIndicator(
+                      backgroundColor:
+                          Color(new CommonUtil().getMyPrimaryColor()),
+                    ),
+                    width: 30,
+                    height: 30,
+                  ));
+
+                  break;
+
+                case Status.ERROR:
+                  // rebuildBlockObject();
+                  return Text(snapshot.data.message,
+                      style: TextStyle(color: Colors.red));
+                  break;
+
+                case Status.COMPLETED:
+                  _categoryListBlock = null;
+                  rebuildAllBlocks();
+                  return snapshot.data.data.response.count == 0
+                      ? getEmptyCard()
+                      : Container(
+                          child: getWidgetForSearchedMedia(
+                              snapshot.data.data.response.data),
+                        );
+                  break;
+              }
+            },
+          );
+  }
+
+  getEmptyCard() {
+    return Container();
+  }
+
+  Widget getWidgetForSearchedMedia(List<Data> data) {
+    List<CategoryData> categoryDataList;
+    if (PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null) {
+      PreferenceUtil.saveCategoryList(Constants.KEY_SEARCHED_CATEGORY, null)
+          .then((value) {
+        PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, null)
+            .then((value) {
+          categoryDataList = new CommonUtil().getAllCategoryList(data);
+          completeData = new CommonUtil().getMediaTypeInfo(data);
+          PreferenceUtil.saveCompleteData(
+              Constants.KEY_SEARCHED_LIST, completeData);
+          PreferenceUtil.saveCategoryList(
+              Constants.KEY_SEARCHED_CATEGORY, categoryDataList);
+        });
+      });
+    } else {
+      categoryDataList = new CommonUtil().getAllCategoryList(data);
+      completeData = new CommonUtil().getMediaTypeInfo(data);
+      PreferenceUtil.saveCompleteData(
+          Constants.KEY_SEARCHED_LIST, completeData);
+      PreferenceUtil.saveCategoryList(
+          Constants.KEY_SEARCHED_CATEGORY, categoryDataList);
+    }
+
+    return getMainWidgets(categoryDataList);
   }
 
   Widget getResponseFromApiWidget() {
@@ -198,48 +283,410 @@ class _MyRecordsState extends State<MyRecords> {
               Constants.KEY_CATEGORYLIST_VISIBLE);
       if (categoryDataFromPrefernce != null &&
           categoryDataFromPrefernce.length > 0) {
-        categoryData.addAll(categoryDataFromPrefernce);
+        categoryData = fliterCategories(categoryDataFromPrefernce);
+
+        categoryData.add(categoryDataObjClone);
+
+        //categoryData.addAll(categoryDataFromPrefernce);
       } else {
         categoryData = fliterCategories(data);
         categoryData.add(categoryDataObjClone);
       }
       PreferenceUtil.saveCategoryList(
           Constants.KEY_CATEGORYLIST_VISIBLE, categoryData);
+      completeData =
+          PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     } else {
       categoryData.addAll(data);
+
+      if (PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null) {
+        completeData =
+            PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST);
+      }
+    }
+    return CustomTabView(
+      initPosition: initPosition,
+      itemCount: categoryData.length,
+      fromSearch: fromSearch,
+      // tabBuilder: (context, index) => Tab(text: data[index]),
+      //pageBuilder: (context, index) => Center(child: Text(data[index])),
+      onPositionChange: (index) {
+        try {
+          initPosition = index;
+
+          getDataForParticularLabel(categoryData.elementAt(index).categoryName,
+              categoryData.elementAt(index).id);
+
+          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
+              .then((value) {
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+                .then((value) {});
+          });
+        } catch (e) {}
+      },
+      onScroll: (position) {
+        // print('$position');
+        try {
+          initPosition = position.toInt();
+          getDataForParticularLabel(
+              categoryData.elementAt(position.toInt()).categoryName,
+              categoryData.elementAt(position.toInt()).id);
+
+          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
+              .then((value) {
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+                .then((value) {});
+          });
+        } catch (e) {}
+      },
+      categoryData: categoryData,
+      cameraKey: _cameraKey,
+      voiceKey: _voiceKey,
+      scaffold_state: scaffold_state,
+      completeData: completeData,
+    );
+  }
+
+  Widget _buildSearchField() {
+    return Padding(
+      padding: EdgeInsets.only(top: 10, right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              constraints: BoxConstraints(maxHeight: 40),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              child: TextField(
+                controller: _searchQueryController,
+                autofocus: false,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(2),
+                  hintText: "Search your records",
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.black54,
+                  ),
+                  suffixIcon: Visibility(
+                    visible:
+                        _searchQueryController.text.length >= 3 ? true : false,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.black54,
+                      ),
+                      onPressed: () {
+                        _searchQueryController.clear();
+                        PreferenceUtil.saveCompleteData(
+                                Constants.KEY_SEARCHED_LIST, null)
+                            .then((value) {
+                          setState(() {
+                            fromSearch = false;
+                          });
+                        });
+                      },
+                    ),
+                  ),
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.black45, fontSize: 12),
+                ),
+                style: TextStyle(color: Colors.black54, fontSize: 16.0),
+                onChanged: (editedValue) {
+                  _globalSearchBloc = null;
+                  _globalSearchBloc = new GlobalSearchBloc();
+                  if (editedValue != '' && editedValue.length > 3) {
+                    PreferenceUtil.saveCompleteData(
+                            Constants.KEY_SEARCHED_LIST, null)
+                        .then((value) {
+                      searchQuery = editedValue;
+                      _globalSearchBloc
+                          .searchBasedOnMediaType(searchQuery)
+                          .then((globalSearchResponse) {
+                        setState(() {
+                          fromSearch = true;
+                        });
+                      });
+                    });
+                  } else if (editedValue == '') {
+                    PreferenceUtil.saveCompleteData(
+                            Constants.KEY_SEARCHED_LIST, null)
+                        .then((value) {
+                      searchQuery = '';
+                      setState(() {
+                        fromSearch = false;
+                      });
+                    });
+                  }
+                },
+              ),
+            ),
+          ),
+          //_buildActions(),
+          new SwitchProfile()
+              .buildActions(context, _keyLoader, callBackToRefresh)
+        ],
+      ),
+    );
+  }
+
+  void callBackToRefresh() {
+    (context as Element).markNeedsBuild();
+  }
+
+  void rebuildAllBlocks() {
+    if (_categoryListBlock == null) {
+      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock.getCategoryList();
+    } else if (_categoryListBlock != null) {
+      _categoryListBlock = null;
+      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock.getCategoryList();
     }
 
-    return DefaultTabController(
-        length: categoryData.length,
-        child: Scaffold(
-            appBar: AppBar(
-                elevation: 0,
-                flexibleSpace: GradientAppBar(),
-                titleSpacing: 0,
-                bottom: PreferredSize(
-                    preferredSize: const Size.fromHeight(20.0),
-                    child: Container(
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width,
-                              child: data.length == 0
-                                  ? Container(
-                                      /* child: Text('Unable To load Tabs',
-                          style: TextStyle(color: Colors.red)) */
-                                      )
-                                  : TabBar(
-                                      indicatorWeight: 4,
-                                      isScrollable: true,
-                                      tabs: getAllTabsToDisplayInHeader(
-                                          categoryData),
-                                    ),
-                            ))))),
-            body: getAllTabsToDisplayInBodyClone(categoryData)));
+    if (_healthReportListForUserBlock == null) {
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock.getHelthReportList();
+    } else if (_healthReportListForUserBlock != null) {
+      _healthReportListForUserBlock = null;
+
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock.getHelthReportList();
+    }
+
+    if (_mediaTypeBlock == null) {
+      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock.getMediTypes();
+    }
+    if (_familyListBloc == null) {
+      _familyListBloc = new FamilyListBloc();
+      _familyListBloc.getFamilyMembersList();
+    }
+
+    if (_myProfileBloc == null) {
+      _myProfileBloc = new MyProfileBloc();
+    }
+    if (_globalSearchBloc == null) {
+      _globalSearchBloc = new GlobalSearchBloc();
+    }
+  }
+
+  List<CategoryData> fliterCategories(List<CategoryData> data) {
+    List<CategoryData> filteredCategoryData = new List();
+    for (CategoryData dataObj in data) {
+      if (dataObj.isDisplay &&
+          dataObj.categoryName != Constants.STR_FEEDBACK &&
+          dataObj.categoryName != Constants.STR_CLAIMSRECORD) {
+        filteredCategoryData.add(dataObj);
+      }
+    }
+
+    int i = 0;
+    for (CategoryData categoryDataObj in filteredCategoryData) {
+      if (categoryDataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionOthers) {
+        categoryDataObjClone = categoryDataObj;
+        filteredCategoryData.removeAt(i);
+        break;
+      }
+      i++;
+    }
+
+    filteredCategoryData.sort((a, b) {
+      return a.categoryDescription
+          .toLowerCase()
+          .compareTo(b.categoryDescription.toLowerCase());
+    });
+
+    return filteredCategoryData;
+  }
+
+  void getDataForParticularLabel(String category, String categoryId) {
+    categoryName = category;
+    categoryID = categoryId;
+  }
+}
+
+/// Implementation
+
+class CustomTabView extends StatefulWidget {
+  final int itemCount;
+  final IndexedWidgetBuilder tabBuilder;
+  final IndexedWidgetBuilder pageBuilder;
+  final Widget stub;
+  final ValueChanged<int> onPositionChange;
+  final ValueChanged<double> onScroll;
+  final int initPosition;
+  List<CategoryData> categoryData;
+
+  GlobalKey cameraKey;
+  GlobalKey voiceKey;
+  GlobalKey<ScaffoldState> scaffold_state;
+  bool fromSearch;
+  CompleteData completeData;
+
+  CustomTabView(
+      {@required this.itemCount,
+      this.tabBuilder,
+      this.pageBuilder,
+      this.stub,
+      this.onPositionChange,
+      this.onScroll,
+      this.initPosition,
+      this.categoryData,
+      this.cameraKey,
+      this.voiceKey,
+      this.scaffold_state,
+      this.fromSearch,
+      this.completeData});
+
+  @override
+  _CustomTabsState createState() => _CustomTabsState();
+}
+
+class _CustomTabsState extends State<CustomTabView>
+    with TickerProviderStateMixin {
+  TabController controller;
+  int _currentCount;
+  int _currentPosition;
+
+  List<TabModel> tabModelList = new List();
+  CategoryListBlock _categoryListBlock;
+  HealthReportListForUserBlock _healthReportListForUserBlock;
+  MediaTypeBlock _mediaTypeBlock;
+  TextEditingController _searchQueryController = TextEditingController();
+  bool _isSearching = false;
+  String searchQuery = "Search query";
+  String categoryName = '';
+  String categoryID = '';
+
+  // MediaData mediaData;
+
+  FamilyListBloc _familyListBloc;
+  MyProfileBloc _myProfileBloc;
+
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+
+  GlobalSearchBloc _globalSearchBloc;
+  List<CategoryData> categoryDataList = new List();
+  List<MediaData> mediaData = new List();
+
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    if (widget.fromSearch) {
+      _currentPosition = 0;
+    } else {
+      _currentPosition = widget.initPosition ?? 0;
+    }
+
+    controller = TabController(
+      length: widget.itemCount,
+      vsync: this,
+      initialIndex: _currentPosition,
+    );
+    controller.addListener(onPositionChange);
+    controller.animation.addListener(onScroll);
+    _currentCount = widget.itemCount;
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(CustomTabView oldWidget) {
+    if (_currentCount != widget.itemCount) {
+      controller.animation.removeListener(onScroll);
+      controller.removeListener(onPositionChange);
+      controller.dispose();
+
+      if (widget.initPosition != null) {
+        _currentPosition = widget.initPosition;
+      }
+
+      if (_currentPosition > widget.itemCount - 1) {
+        _currentPosition = widget.itemCount - 1;
+        _currentPosition = _currentPosition < 0 ? 0 : _currentPosition;
+        if (widget.onPositionChange is ValueChanged<int>) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              widget.onPositionChange(_currentPosition);
+            }
+          });
+        }
+      }
+
+      _currentCount = widget.itemCount;
+      setState(() {
+        controller = TabController(
+          length: widget.itemCount,
+          vsync: this,
+          initialIndex: _currentPosition,
+        );
+        controller.addListener(onPositionChange);
+        controller.animation.addListener(onScroll);
+      });
+    } else if (widget.initPosition != null) {
+      controller.animateTo(widget.initPosition);
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    controller.animation.removeListener(onScroll);
+    controller.removeListener(onPositionChange);
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.itemCount < 1) return widget.stub ?? Container();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Container(
+          // alignment: Alignment.center,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: <Color>[
+                Color(new CommonUtil().getMyPrimaryColor()),
+                Color(new CommonUtil().getMyGredientColor())
+              ],
+                  stops: [
+                0.3,
+                1.0
+              ])),
+          child: TabBar(
+            indicatorWeight: 4,
+            isScrollable: true,
+            controller: controller,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
+            indicator: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.white,
+                  width: 2,
+                ),
+              ),
+            ),
+            tabs: getAllTabsToDisplayInHeader(widget.categoryData),
+          ),
+        ),
+        Expanded(
+          child: getAllTabsToDisplayInBodyClone(widget.categoryData),
+        ),
+      ],
+    );
   }
 
   Widget getAllTabsToDisplayInBodyClone(List<CategoryData> data) {
-    print('Inside getAllTabsToDisplayInBodyClone');
+    rebuildAllBlocks();
 
     return Stack(alignment: Alignment.bottomRight, children: <Widget>[
       getAllTabsToDisplayInBody(data),
@@ -253,7 +700,7 @@ class _MyRecordsState extends State<MyRecords> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             FHBBasicWidget.customShowCase(
-                _cameraKey,
+                widget.cameraKey,
                 Constants.CAMERA_DESC,
                 IconButton(
                   icon: Icon(
@@ -261,9 +708,16 @@ class _MyRecordsState extends State<MyRecords> {
                     color: Colors.white,
                   ),
                   onPressed: () {
+                    categoryName = widget.categoryData
+                        .elementAt(_currentPosition)
+                        .categoryName;
+                    categoryID =
+                        widget.categoryData.elementAt(_currentPosition).id;
+
                     if (categoryName == Constants.STR_VOICERECORDS) {
                       new FHBBasicWidget().showInSnackBar(
-                          Constants.MSG_NO_CAMERA_VOICERECORDS, scaffold_state);
+                          Constants.MSG_NO_CAMERA_VOICERECORDS,
+                          widget.scaffold_state);
                     } else {
                       PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
                           .then((onValue) {
@@ -304,7 +758,7 @@ class _MyRecordsState extends State<MyRecords> {
               color: Colors.white,
             ),
             FHBBasicWidget.customShowCase(
-                _voiceKey,
+                widget.voiceKey,
                 Constants.VOICE_DESC,
                 IconButton(
                   icon: Icon(
@@ -340,17 +794,10 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   Widget getAllTabsToDisplayInBody(List<CategoryData> data) {
-    print('Inside getAllTabsToDisplayInBody');
-    /* if (_healthReportListForUserBlock == null) {
-      print('inside _healthReportListForUserBlock null');
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportList();
-    }*/
-
     CompleteData completeDataFromPreference =
         PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
-    return fromSearch
-        ? getMediTypeForlabels(data, completeData)
+    return widget.fromSearch
+        ? getMediTypeForlabels(data, widget.completeData)
         : completeDataFromPreference != null
             ? getMediTypeForlabels(data, completeDataFromPreference)
             : StreamBuilder<ApiResponse<UserHealthResponseList>>(
@@ -384,7 +831,7 @@ class _MyRecordsState extends State<MyRecords> {
                       case Status.COMPLETED:
                         _healthReportListForUserBlock = null;
                         rebuildAllBlocks();
-                        if (!fromSearch) {
+                        if (!widget.fromSearch) {
                           PreferenceUtil.saveCompleteData(
                               Constants.KEY_COMPLETE_DATA,
                               snapshot.data.data.response.data);
@@ -401,11 +848,46 @@ class _MyRecordsState extends State<MyRecords> {
               );
   }
 
+  void rebuildAllBlocks() {
+    if (_categoryListBlock == null) {
+      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock.getCategoryList();
+    } else if (_categoryListBlock != null) {
+      _categoryListBlock = null;
+      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock.getCategoryList();
+    }
+
+    if (_healthReportListForUserBlock == null) {
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock.getHelthReportList();
+    } else if (_healthReportListForUserBlock != null) {
+      _healthReportListForUserBlock = null;
+
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock.getHelthReportList();
+    }
+
+    if (_mediaTypeBlock == null) {
+      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock.getMediTypes();
+    }
+    if (_familyListBloc == null) {
+      _familyListBloc = new FamilyListBloc();
+      _familyListBloc.getFamilyMembersList();
+    }
+
+    if (_myProfileBloc == null) {
+      _myProfileBloc = new MyProfileBloc();
+    }
+    if (_globalSearchBloc == null) {
+      _globalSearchBloc = new GlobalSearchBloc();
+    }
+  }
+
   Widget getMediTypeForlabels(
       List<CategoryData> data, CompleteData completeData) {
-    print('Inside getMediTypeForlabels');
     if (_mediaTypeBlock == null) {
-      print('inside mediaBlock null');
       _mediaTypeBlock = new MediaTypeBlock();
       _mediaTypeBlock.getMediTypes();
     } else {
@@ -463,7 +945,6 @@ class _MyRecordsState extends State<MyRecords> {
 
   Widget getStackBody(List<CategoryData> data, CompleteData completeData,
       List<MediaData> mediaData) {
-    print('Inside getStackbody');
     if (mediaData == null) {
       return Container();
     }
@@ -471,19 +952,27 @@ class _MyRecordsState extends State<MyRecords> {
       alignment: Alignment.bottomRight,
       children: <Widget>[
         TabBarView(
-            children: _getAllDataForTheTabs(data, completeData, mediaData)),
+          children: _getAllDataForTheTabs(data, completeData, mediaData),
+          controller: controller,
+        ),
       ],
     );
   }
 
+  void callBackToRefresh() {
+    (context as Element).markNeedsBuild();
+  }
+
+  void getDataForParticularLabel(String category, String categoryId) {
+    categoryName = category;
+    categoryID = categoryId;
+  }
+
   List<Widget> _getAllDataForTheTabs(List<CategoryData> data,
       CompleteData completeData, List<MediaData> mediaData) {
-    print('inside _getAllDataForTheTabs');
-
     List<Widget> tabWidgetList = new List();
     //data.sort((a, b) => a.categoryName.compareTo(b.categoryName));
     for (CategoryData dataObj in data) {
-      print(dataObj.categoryName + ' /// ' + dataObj.categoryDescription);
       if (dataObj
           .isDisplay /*&& dataObj.categoryName != Constants.STR_FEEDBACK*/) {
         if (dataObj.categoryDescription ==
@@ -567,17 +1056,51 @@ class _MyRecordsState extends State<MyRecords> {
     return tabWidgetList;
   }
 
-  List<Widget> getAllTabsToDisplayInHeader(List<CategoryData> data) {
-    print('Inside getAllTabsToDisplayInHeader');
+  onPositionChange() {
+    if (!controller.indexIsChanging) {
+      _currentPosition = controller.index;
+      if (widget.onPositionChange is ValueChanged<int>) {
+        widget.onPositionChange(_currentPosition);
 
+        /* getDataForParticularLabel(
+            categoryDataList.elementAt(_currentPosition).categoryName,
+            categoryDataList.elementAt(_currentPosition).id);*/
+        try {
+          _currentPosition = controller.index;
+
+          categoryName =
+              categoryDataList.elementAt(_currentPosition).categoryName;
+          categoryID = categoryDataList.elementAt(_currentPosition).id;
+        } catch (e) {}
+      }
+    }
+  }
+
+  onScroll() {
+    if (widget.onScroll is ValueChanged<double>) {
+      widget.onScroll(controller.animation.value);
+
+      try {
+        _currentPosition = controller.animation.value.toInt();
+
+        categoryName = categoryDataList
+            .elementAt(controller.animation.value.toInt())
+            .categoryName;
+        categoryID =
+            categoryDataList.elementAt(controller.animation.value.toInt()).id;
+      } catch (e) {}
+    }
+  }
+
+  List<Widget> getAllTabsToDisplayInHeader(List<CategoryData> data) {
     List<Widget> tabWidgetList = new List();
     //tabWidgetList.add(SizedBox(height: 5));
 
-    /*  data.sort((a, b) {
+    data.sort((a, b) {
       return a.categoryDescription
           .toLowerCase()
           .compareTo(b.categoryDescription.toLowerCase());
-    }); */
+    });
 
     /* data.sort((a, b) {
       return a.categoryDescription
@@ -608,214 +1131,5 @@ class _MyRecordsState extends State<MyRecords> {
     }
 
     return tabWidgetList;
-  }
-
-  void callBackToRefresh() {
-    (context as Element).markNeedsBuild();
-  }
-
-  void getDataForParticularLabel(String category, String categoryId) {
-    categoryName = category;
-    categoryID = categoryId;
-
-    print(categoryName + ' parvathi ' + categoryID);
-  }
-
-  Widget _buildSearchField() {
-    print('inside buildsearchFields');
-    return Padding(
-      padding: EdgeInsets.only(top: 10, right: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              constraints: BoxConstraints(maxHeight: 40),
-              decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
-              child: TextField(
-                controller: _searchQueryController,
-                autofocus: false,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(2),
-                  hintText: "Search your records",
-                  prefixIcon: Icon(
-                    Icons.search,
-                    color: Colors.black54,
-                  ),
-                  suffixIcon: Visibility(
-                    visible:
-                        _searchQueryController.text.length >= 3 ? true : false,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.clear,
-                        color: Colors.black54,
-                      ),
-                      onPressed: () {
-                        _searchQueryController.clear();
-                        setState(() {
-                          fromSearch = false;
-                        });
-                      },
-                    ),
-                  ),
-                  border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.black45, fontSize: 12),
-                ),
-                style: TextStyle(color: Colors.black54, fontSize: 16.0),
-                onChanged: (editedValue) {
-                  _globalSearchBloc = null;
-                  _globalSearchBloc = new GlobalSearchBloc();
-                  if (editedValue != '' && editedValue.length > 3) {
-                    searchQuery = editedValue;
-                    _globalSearchBloc
-                        .searchBasedOnMediaType(searchQuery)
-                        .then((globalSearchResponse) {
-                      setState(() {
-                        fromSearch = true;
-                      });
-                    });
-                  } else if (editedValue == '') {
-                    searchQuery = '';
-                    setState(() {
-                      fromSearch = false;
-                    });
-                  }
-                },
-              ),
-            ),
-          ),
-          //_buildActions(),
-          new SwitchProfile()
-              .buildActions(context, _keyLoader, callBackToRefresh)
-        ],
-      ),
-    );
-  }
-
-  Widget getResponseForSearchedMedia() {
-    _globalSearchBloc = null;
-    _globalSearchBloc = new GlobalSearchBloc();
-    _globalSearchBloc.searchBasedOnMediaType(
-        (searchQuery == null && searchQuery == '') ? '' : searchQuery);
-
-    return StreamBuilder<ApiResponse<GlobalSearch>>(
-      stream: _globalSearchBloc.globalSearchStream,
-      builder: (context, AsyncSnapshot<ApiResponse<GlobalSearch>> snapshot) {
-        if (!snapshot.hasData) return Container();
-
-        switch (snapshot.data.status) {
-          case Status.LOADING:
-            // rebuildBlockObject();
-            return Center(
-                child: SizedBox(
-              child: CircularProgressIndicator(
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
-              ),
-              width: 30,
-              height: 30,
-            ));
-
-            break;
-
-          case Status.ERROR:
-            // rebuildBlockObject();
-            return Text(snapshot.data.message,
-                style: TextStyle(color: Colors.red));
-            break;
-
-          case Status.COMPLETED:
-            _categoryListBlock = null;
-            rebuildAllBlocks();
-            return snapshot.data.data.response.count == 0
-                ? getEmptyCard()
-                : Container(
-                    child: getWidgetForSearchedMedia(
-                        snapshot.data.data.response.data),
-                  );
-            break;
-        }
-      },
-    );
-  }
-
-  getEmptyCard() {
-    return Container();
-  }
-
-  Widget getWidgetForSearchedMedia(List<Data> data) {
-    List<CategoryData> categoryDataList =
-        new CommonUtil().getAllCategoryList(data);
-
-    completeData = new CommonUtil().getMediaTypeInfo(data);
-
-    return getMainWidgets(categoryDataList);
-  }
-
-  void rebuildAllBlocks() {
-    if (_categoryListBlock == null) {
-      _categoryListBlock = new CategoryListBlock();
-      _categoryListBlock.getCategoryList();
-    } else if (_categoryListBlock != null) {
-      _categoryListBlock = null;
-      _categoryListBlock = new CategoryListBlock();
-      _categoryListBlock.getCategoryList();
-    }
-
-    if (_healthReportListForUserBlock == null) {
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportList();
-    } else if (_healthReportListForUserBlock != null) {
-      _healthReportListForUserBlock = null;
-
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportList();
-    }
-
-    if (_mediaTypeBlock == null) {
-      _mediaTypeBlock = new MediaTypeBlock();
-      _mediaTypeBlock.getMediTypes();
-    }
-    if (_familyListBloc == null) {
-      _familyListBloc = new FamilyListBloc();
-      _familyListBloc.getFamilyMembersList();
-    }
-
-    if (_myProfileBloc == null) {
-      _myProfileBloc = new MyProfileBloc();
-    }
-    if (_globalSearchBloc == null) {
-      _globalSearchBloc = new GlobalSearchBloc();
-    }
-  }
-
-  List<CategoryData> fliterCategories(List<CategoryData> data) {
-    List<CategoryData> filteredCategoryData = new List();
-    for (CategoryData dataObj in data) {
-      if (dataObj.isDisplay &&
-          dataObj.categoryName != Constants.STR_FEEDBACK &&
-          dataObj.categoryName != Constants.STR_CLAIMSRECORD) {
-        filteredCategoryData.add(dataObj);
-      }
-    }
-
-    int i = 0;
-    for (CategoryData categoryDataObj in filteredCategoryData) {
-      if (categoryDataObj.categoryDescription ==
-          CommonConstants.categoryDescriptionOthers) {
-        categoryDataObjClone = categoryDataObj;
-        filteredCategoryData.removeAt(i);
-        break;
-      }
-      i++;
-    }
-
-    filteredCategoryData.sort((a, b) {
-      return a.categoryDescription
-          .toLowerCase()
-          .compareTo(b.categoryDescription.toLowerCase());
-    });
-
-    return filteredCategoryData;
   }
 }

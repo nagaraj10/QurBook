@@ -209,14 +209,12 @@ class PreferenceUtil {
     } catch (e) {}
   }
 
-  static List<CategoryData> getCategoryTypeDisplay() {
+  static List<CategoryData> getCategoryTypeDisplay(String key) {
     List<CategoryData> categoryData = new List();
 
     try {
       if (_prefsInstance == null) {}
-      json
-          .decode(_prefsInstance.getString(Constants.KEY_CATEGORYLIST_VISIBLE))
-          .forEach((map) {
+      json.decode(_prefsInstance.getString(key)).forEach((map) {
         categoryData.add(new CategoryData.fromJson(map));
       });
 

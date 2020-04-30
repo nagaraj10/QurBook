@@ -36,14 +36,14 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
+    /*  PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
         .then((value) {
       PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
           .then((value) {
         widget.getDataForParticularLabel(
             widget.categoryName, widget.categoryId);
       });
-    });
+    }); */
 
     super.initState();
   }
@@ -160,7 +160,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   child: Image.network(
                     data.metaInfo.mediaTypeInfo.url != null
                         ? data.metaInfo.mediaTypeInfo.url
-                        : Constants.BASERURL + data.metaInfo.mediaTypeInfo.logo,
+                        : Constants.BASERURL + data.metaInfo.categoryInfo.logo,
                     height: 25,
                     width: 25,
                     color: Color(new CommonUtil().getMyPrimaryColor()),

@@ -203,7 +203,8 @@ class FHBBasicWidget {
           decoration: InputDecoration(
               hintText: hintTextValue,
               suffixText: suffixTextValue,
-              errorText: errorValue == '' ? null : errorValue),
+              errorText: errorValue == '' ? null : errorValue,
+              errorMaxLines: 2),
           keyboardType: TextInputType.number,
           onChanged: (value) {
             var number = int.parse(value);

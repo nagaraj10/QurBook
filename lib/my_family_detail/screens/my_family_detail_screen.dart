@@ -81,7 +81,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
-  List<String> bloodGroupArray = ['A', 'B', 'O', 'Others/ Not Known'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/ Not Known'];
 
   List<String> bloodRangeArray = ['+', '-', 'Others/ Not Known'];
 
@@ -745,8 +745,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   fontSize: 16.0,
                   color: ColorUtils.blackcolor),
               decoration: InputDecoration(
-                labelText: CommonConstants.blood_group,
-                hintText: CommonConstants.blood_group,
+                labelText: 'Rh type',
+                hintText: 'Rh type',
                 labelStyle: TextStyle(
                     fontSize: 13.0,
                     fontWeight: FontWeight.w400,

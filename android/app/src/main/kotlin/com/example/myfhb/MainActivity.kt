@@ -161,6 +161,9 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VOICE_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "speakWithVoiceAssistant") {
                 _result=result
+                speakWithVoiceAssistant()
+
+                /*
                 val rec_Permisson = ContextCompat.checkSelfPermission(this,android.Manifest.permission.RECORD_AUDIO)
                 if(rec_Permisson==PackageManager.PERMISSION_GRANTED && tts?.isSpeaking()!=true){
                     speakWithVoiceAssistant()
@@ -169,6 +172,7 @@ class MainActivity : FlutterActivity() {
                     Log.i("RECORD_PERMISSION","we cant record without your permission.")
                     requestPermissionFromUSer()
                 }
+                */
 
             } else {
                 result.notImplemented()

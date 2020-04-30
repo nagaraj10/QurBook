@@ -261,9 +261,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           controller: bloodRangeController,
                           enabled: false,
                           decoration: InputDecoration(
-                              hintText: 'Blood Range',
+                              hintText: 'Rh type',
                               hintStyle: TextStyle(fontSize: 12),
-                              labelText: 'Blood Range'),
+                              labelText: 'Rh type'),
                         ),
                       )),
                 ],

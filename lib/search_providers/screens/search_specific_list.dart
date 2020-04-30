@@ -310,7 +310,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   Widget getEmptyCard() {
     return value.length > 0
-        ? Container(
+        ? SingleChildScrollView(
+            child: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
             child: Center(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -341,7 +344,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ],
             )),
             color: Colors.white,
-          )
+          ))
         : Container();
   }
 

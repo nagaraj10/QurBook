@@ -104,8 +104,8 @@ class OverlayCategoryDialog extends ModalRoute<void> {
   List<Widget> getWidgetsFordevices(BuildContext context) {
     List<Widget> categoryWidgetList = new List();
 
-    List<CategoryData> catgoryDataList =
-        PreferenceUtil.getCategoryTypeDisplay();
+    List<CategoryData> catgoryDataList = PreferenceUtil.getCategoryTypeDisplay(
+        Constants.KEY_CATEGORYLIST_VISIBLE);
 
     for (int i = 0; i < catgoryDataList.length; i++) {
       categoryWidgetList.add(

@@ -5,7 +5,8 @@ import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/notifications/myfhb_notifications.dart';
 import 'package:myfhb/schedules/my_schedules.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/ui/MyRecords.dart';
+//import 'package:myfhb/src/ui/MyRecords.dart';
+import 'package:myfhb/src/ui/MyRecordClone.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   var _widgetOptions = [
     MyFhbNotifications(),
-    MyRecords(),
+    MyRecordsClone(),
     SuperMaya(),
     MySchedule(),
     MoreMenuScreen()

@@ -66,7 +66,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   List<int> fetchedProfileData;
 
-  List<String> bloodGroupArray = ['A', 'B', 'O', 'Others/ Not Known'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/ Not Known'];
 
   List<String> bloodRangeArray = ['+ ve', '- ve', 'Others/ Not Known'];
 
@@ -1217,7 +1217,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       strErrorMsg = 'Select Gender';
     } else if (dateOfBirthController.text.length == 0) {
       isValid = false;
-      strErrorMsg = 'Select dob';
+      strErrorMsg = 'Select DOB';
     } else {
       isValid = true;
     }
@@ -1225,7 +1225,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (selectedBloodGroup != null) {
       if (selectedBloodRange == null) {
         isValid = false;
-        strErrorMsg = 'Select Blood Range';
+        strErrorMsg = 'Select Rh type';
       } else {
         addFamilyUserInfoBloc.bloodGroup =
             selectedBloodGroup + '_' + selectedBloodRange;

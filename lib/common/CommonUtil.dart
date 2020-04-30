@@ -327,8 +327,22 @@ class CommonUtil {
     return mediaMasterIdsList.length > 0 ? mediaMasterIdsList : new List();
   }
 
-  String getMediaMasterIDForPdfType(List<MediaMasterIds> mediaMasterIdsList) {
-    String mediaMasterId = '';
+  MediaMasterIds getMediaMasterIDForPdfType(
+      List<MediaMasterIds> mediaMasterIdsList) {
+    MediaMasterIds mediaMasterId = new MediaMasterIds();
+
+    for (MediaMasterIds mediaMasterIdsObj in mediaMasterIdsList) {
+      if (mediaMasterIdsObj.fileType == 'application/pdf') {
+        mediaMasterId = mediaMasterIdsObj;
+      }
+    }
+
+    return mediaMasterId;
+  }
+
+  String getMediaMasterIDForPdfTypeStr(
+      List<MediaMasterIds> mediaMasterIdsList) {
+    String mediaMasterId;
 
     for (MediaMasterIds mediaMasterIdsObj in mediaMasterIdsList) {
       if (mediaMasterIdsObj.fileType == 'application/pdf') {
@@ -350,12 +364,20 @@ class CommonUtil {
     } else {
       _isRecordBookmarked = true;
     }
+    HealthReportListForUserBlock _healthReportListForUserBlock =
+        new HealthReportListForUserBlock();
     _bookmarkRecordBloc
         .bookMarcRecord(mediaIds, _isRecordBookmarked)
         .then((bookmarkRecordResponse) {
-      if (bookmarkRecordResponse.success) {
-        _refresh();
-      }
+      _healthReportListForUserBlock.getHelthReportList().then((value) {
+        PreferenceUtil.saveCompleteData(
+                Constants.KEY_COMPLETE_DATA, value.response.data)
+            .then((value) {
+          if (bookmarkRecordResponse.success) {
+            _refresh();
+          }
+        });
+      });
     });
   }
 

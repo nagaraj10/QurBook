@@ -36,14 +36,14 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
+    /*  PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
         .then((value) {
       PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
           .then((value) {
         widget.getDataForParticularLabel(
             widget.categoryName, widget.categoryId);
       });
-    });
+    }); */
 
     super.initState();
   }
