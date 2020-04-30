@@ -165,6 +165,6 @@ const String NO_DATA_BILLS =
 const String NO_ID_DOCS =
     'Click the camera icon or upload ID document from gallery';
 const String NO_VOICE_RECRODS =
-    'Start adding voice notes !! Press the Mic icon..';
+    'Start adding voice records !! Press the Mic icon..';
 const String NO_DATA_OTHERS =
     'Click the camera icon to add any medical documents';

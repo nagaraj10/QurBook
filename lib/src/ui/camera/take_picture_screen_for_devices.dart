@@ -326,7 +326,7 @@ class TakePictureScreenForDevicesState
                                       size: 40,
                                     ),
                                     onPressed: () async {
-                                      if (deviceName == 'Choose Devices') {
+                                      if (deviceName == 'Choose Device') {
                                         // Alert
                                         Alert.displayAlertPlain(context,
                                             title: "Devices",
@@ -447,12 +447,12 @@ class TakePictureScreenForDevicesState
                                       size: 40,
                                     ),
                                     onPressed: () async {
-                                      if (deviceName == 'Choose Devices') {
+                                      if (deviceName == 'Choose Device') {
                                         // Alert
                                         Alert.displayAlertPlain(context,
                                             title: "Devices",
                                             content:
-                                                'Please choose the devices');
+                                                'Please choose the device');
                                       } else {
                                         // Take the Picture in a try / catch block. If anything goes wrong,
                                         // catch the error.
