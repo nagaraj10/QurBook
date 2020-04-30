@@ -60,7 +60,7 @@ dependencies:
   tflite:
   sqflite:
   devicelocale: ^0.2.2 
-  flutter_local_notifications:
+  flutter_local_notifications: ^1.4.2
   random_color:
   image_gallery_saver:
   permission_handler: ^5.0.0+hotfix.3

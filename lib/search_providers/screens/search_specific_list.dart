@@ -116,6 +116,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               color: Colors.white,
               child: TextField(
                 controller: _textFieldController,
+                autofocus: true,
                 onChanged: (editedValue) {
                   value = editedValue;
                   widget.arguments.searchWord == CommonConstants.doctors
@@ -193,8 +194,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.ERROR:
             rebuildBlockObject();
-            return Text('Unable To load Tabs',
-                style: TextStyle(color: Colors.red));
+            return Text('', style: TextStyle(color: Colors.red));
             break;
 
           case Status.COMPLETED:

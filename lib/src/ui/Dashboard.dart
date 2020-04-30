@@ -102,26 +102,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         color: Colors.transparent,
                                         shadowColor: Colors.transparent,
                                         shape: CircleBorder(),
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.transparent,
-                                          child: FHBBasicWidget.customShowCase(
-                                              _showMaya,
-                                              Constants.MAYA_DESC,
-                                              Image.asset(
-                                                PreferenceUtil.getStringValue(
-                                                            'maya_asset') !=
-                                                        null
-                                                    ? PreferenceUtil
-                                                            .getStringValue(
-                                                                'maya_asset') +
-                                                        '_main.png'
-                                                    : 'assets/maya/maya_us.png',
-                                                height: 60,
-                                                width: 60,
+                                        child: FHBBasicWidget.customShowCase(
+                                            _showMaya,
+                                            Constants.MAYA_DESC,
+                                            CircleAvatar(
+                                              backgroundColor:
+                                                  Colors.transparent,
+                                              child: Padding(
+                                                padding: EdgeInsets.all(5),
+                                                child: Image.asset(
+                                                  PreferenceUtil.getStringValue(
+                                                              'maya_asset') !=
+                                                          null
+                                                      ? PreferenceUtil
+                                                              .getStringValue(
+                                                                  'maya_asset') +
+                                                          '_main.png'
+                                                      : 'assets/maya/maya_us.png',
+                                                  height: 60,
+                                                  width: 60,
+                                                ),
                                               ),
-                                              Constants.MAYA_TITLE),
-                                          radius: 30.0,
-                                        ),
+                                              radius: 30.0,
+                                            ),
+                                            Constants.MAYA_TITLE),
                                       ),
                                       shape: BoxShape.circle,
                                       animate: true,
@@ -268,7 +272,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   children: <Widget>[
                                     FHBBasicWidget.customShowCase(
                                         _coverImage,
-                                        'Can add your family cover picture',
+                                        Constants.COVER_IMG_DESC,
                                         Container(
                                             height: 60,
                                             width: 60,
@@ -291,7 +295,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   saveMediaDialog(
                                                       context, false);
                                                 })),
-                                        'Family Picture'),
+                                        Constants.COVER_IMG_TITLE),
                                     Padding(
                                       padding: EdgeInsets.only(
                                           top: 10, left: 40, right: 40),

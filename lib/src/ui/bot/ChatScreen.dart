@@ -61,7 +61,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     startMayaAutomatically();
   }
 
-  startMayaAutomatically() {
+  startMayaAutomatically() async {
     Future.delayed(Duration(seconds: 1), () {
       sendToMaya('Hi Maya');
     });

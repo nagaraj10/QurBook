@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -17,6 +18,8 @@ class SuperMaya extends StatefulWidget {
 class _SuperMayaState extends State<SuperMaya> {
   final GlobalKey _micKey = GlobalKey();
   BuildContext _myContext;
+  static const voice_platform =
+      const MethodChannel('flutter.native/voiceIntent');
 
   @override
   void initState() {
@@ -31,6 +34,8 @@ class _SuperMayaState extends State<SuperMaya> {
               ? null
               : ShowCaseWidget.of(_myContext).startShowCase([_micKey]));
     });
+
+    //checkForVoicePermission();
   }
 
   @override
@@ -120,4 +125,10 @@ class _SuperMayaState extends State<SuperMaya> {
       ),
     );
   }
+
+  /*  void checkForVoicePermission() async {
+    try {
+      await voice_platform.invokeMethod('speakWithVoiceAssistant');
+    } on PlatformException catch (e) {}
+  } */
 }

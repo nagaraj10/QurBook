@@ -168,3 +168,6 @@ const String NO_VOICE_RECRODS =
     'Start adding voice records !! Press the Mic icon..';
 const String NO_DATA_OTHERS =
     'Click the camera icon to add any medical documents';
+
+const String COVER_IMG_DESC = 'Can add your family cover picture';
+const String COVER_IMG_TITLE = 'Family Picture';

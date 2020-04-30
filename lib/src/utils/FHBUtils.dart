@@ -88,7 +88,7 @@ class FHBUtils {
       formattedDate = DateFormat('yyyy MMM dd, hh:mm')
           .format(DateTime.parse(strDate).toLocal());
     } else {
-      formattedDate = DateFormat('dd MMM yyyy, hh:mm')
+      formattedDate = DateFormat('dd MMM yyyy, hh:mm aa')
           .format(DateTime.parse(strDate).toLocal());
     }
     return formattedDate;
