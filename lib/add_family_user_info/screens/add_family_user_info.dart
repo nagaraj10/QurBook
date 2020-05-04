@@ -131,12 +131,27 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         emailController.text = widget.arguments.sharedbyme.profileData.email;
       }
 
-      firstNameController.text =
-          widget.arguments.sharedbyme.profileData.qualifiedFullName.firstName;
-      middleNameController.text =
-          widget.arguments.sharedbyme.profileData.qualifiedFullName.middleName;
-      lastNameController.text =
-          widget.arguments.sharedbyme.profileData.qualifiedFullName.lastName;
+      if (widget.arguments.sharedbyme.profileData.qualifiedFullName != null) {
+        firstNameController.text = widget.arguments.sharedbyme.profileData
+                    .qualifiedFullName.firstName !=
+                null
+            ? widget
+                .arguments.sharedbyme.profileData.qualifiedFullName.firstName
+            : '';
+        middleNameController.text = widget.arguments.sharedbyme.profileData
+                    .qualifiedFullName.middleName !=
+                null
+            ? widget
+                .arguments.sharedbyme.profileData.qualifiedFullName.middleName
+            : '';
+        lastNameController.text = widget.arguments.sharedbyme.profileData
+                    .qualifiedFullName.lastName !=
+                null
+            ? widget.arguments.sharedbyme.profileData.qualifiedFullName.lastName
+            : '';
+      } else {
+        firstNameController.text = '';
+      }
 
       if (widget.arguments.sharedbyme.profileData.bloodGroup != null &&
           widget.arguments.sharedbyme.profileData.bloodGroup != "null") {
@@ -269,39 +284,43 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     print('selectedBloodGroupClone renameBloodGroup' + selectedBloodGroupClone);
     if (selectedBloodGroupClone != null) {
       var bloodGroupSplitName = selectedBloodGroupClone.split('_');
-
-      if (bloodGroupSplitName.length > 1) {
-        for (String bloodGroup in bloodGroupArray) {
-//      var bloodgroupClone = bloodGroup.split(' ');
-          if (bloodGroupSplitName[0] == bloodGroup) {
-            selectedBloodGroup = bloodGroup;
-          }
-        }
-
-        for (String bloodRange in bloodRangeArray) {
-          if (bloodGroupSplitName[1] == bloodRange) {
-            selectedBloodRange = bloodRange;
-          }
-        }
-      } else {
-        var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
+      try {
         if (bloodGroupSplitName.length > 1) {
           for (String bloodGroup in bloodGroupArray) {
 //      var bloodgroupClone = bloodGroup.split(' ');
             if (bloodGroupSplitName[0] == bloodGroup) {
               selectedBloodGroup = bloodGroup;
             }
+          }
 
-            for (String bloodRange in bloodRangeArray) {
-              if (bloodGroupSplitName[1][0] == bloodRange) {
-                selectedBloodRange = bloodRange;
-              }
+          for (String bloodRange in bloodRangeArray) {
+            if (bloodGroupSplitName[1] == bloodRange) {
+              selectedBloodRange = bloodRange;
             }
           }
         } else {
-          selectedBloodGroup = null;
-          selectedBloodRange = null;
+          var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
+          if (bloodGroupSplitName.length > 1) {
+            for (String bloodGroup in bloodGroupArray) {
+//      var bloodgroupClone = bloodGroup.split(' ');
+              if (bloodGroupSplitName[0] == bloodGroup) {
+                selectedBloodGroup = bloodGroup;
+              }
+
+              for (String bloodRange in bloodRangeArray) {
+                if (bloodGroupSplitName[1][0] == bloodRange) {
+                  selectedBloodRange = bloodRange;
+                }
+              }
+            }
+          } else {
+            selectedBloodGroup = null;
+            selectedBloodRange = null;
+          }
         }
+      } catch (e) {
+        selectedBloodGroup = null;
+        selectedBloodRange = null;
       }
     }
   }

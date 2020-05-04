@@ -83,7 +83,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/ Not Known'];
 
-  List<String> bloodRangeArray = ['+', '-', 'Others/ Not Known'];
+  List<String> bloodRangeArray = ['+ ve', '- ve', 'Others/ Not Known'];
 
   String selectedBloodGroup;
   String selectedBloodRange;
@@ -93,7 +93,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     setState(() {
@@ -255,10 +254,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fit: StackFit.expand,
                 overflow: Overflow.visible,
                 children: [
-                  /* Image.network(
-                    "https://images.pexels.com/photos/396547/pexels-photo-396547.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                    fit: BoxFit.fill,
-                  ) */
                   CachedNetworkImage(
                       imageUrl: Constants.BASEURL_COVERIMAGE,
                       fit: BoxFit.cover),
@@ -266,9 +261,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                       top: expandedHeight - 50,
                       left: 24, //MediaQuery.of(context).size.width / 4,
                       child: InkWell(
-                          onTap: () {
-//                  saveMediaDialog(context);
-                          },
+                          onTap: () {},
                           child: Opacity(
                               opacity: 1,
                               child: ClipOval(
@@ -305,7 +298,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               )),
           SizedBox(height: 50),
           _showMobileNoTextField(),
-//          _showNameTextField(),
           _showFirstNameTextField(),
           _showMiddleNameTextField(),
           _showLastNameTextField(),
@@ -360,30 +352,51 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   void renameBloodGroup(String selectedBloodGroupClone) {
-    var bloodGroupSplitName = selectedBloodGroupClone.split('_');
+    print('selectedBloodGroupClone renameBloodGroup' + selectedBloodGroupClone);
+    if (selectedBloodGroupClone != null) {
+      var bloodGroupSplitName = selectedBloodGroupClone.split('_');
 
-    for (String bloodGroup in bloodGroupArray) {
+      try {
+        if (bloodGroupSplitName.length > 1) {
+          for (String bloodGroup in bloodGroupArray) {
 //      var bloodgroupClone = bloodGroup.split(' ');
-      if (bloodGroupSplitName[0] == bloodGroup) {
-        bloodGroupController.text = bloodGroup;
-      }
-    }
+            if (bloodGroupSplitName[0] == bloodGroup) {
+              selectedBloodGroup = bloodGroup;
+              bloodGroupController.text = selectedBloodGroup;
+            }
+          }
 
-    for (String bloodRange in bloodRangeArray) {
-//      var eachBloodGroup;
+          for (String bloodRange in bloodRangeArray) {
+            if (bloodGroupSplitName[1] == bloodRange) {
+              selectedBloodRange = bloodRange;
+              bloodRangeController.text = selectedBloodRange;
+            }
+          }
+        } else {
+          var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
+          if (bloodGroupSplitName.length > 1) {
+            for (String bloodGroup in bloodGroupArray) {
+//      var bloodgroupClone = bloodGroup.split(' ');
+              if (bloodGroupSplitName[0] == bloodGroup) {
+                selectedBloodGroup = bloodGroup;
+                bloodGroupController.text = selectedBloodGroup;
+              }
 
-//      if (bloodGroupSplitName.length > 2) {
-//        eachBloodGroup = bloodGroupSplitName[1] +
-//            " " +
-//            bloodGroupSplitName[2] +
-//            " " +
-//            bloodGroupSplitName[3];
-//      } else {
-//        eachBloodGroup = bloodGroupSplitName[1];
-//      }
-
-      if (bloodGroupSplitName[1] == bloodRange) {
-        bloodRangeController.text = bloodRange;
+              for (String bloodRange in bloodRangeArray) {
+                if (bloodGroupSplitName[1][0] == bloodRange) {
+                  selectedBloodRange = bloodRange;
+                  bloodRangeController.text = selectedBloodRange;
+                }
+              }
+            }
+          } else {
+            selectedBloodGroup = null;
+            selectedBloodRange = null;
+          }
+        }
+      } catch (e) {
+        selectedBloodGroup = null;
+        selectedBloodRange = null;
       }
     }
   }
@@ -412,11 +425,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             labelText: CommonConstants.mobile_number,
             hintText: CommonConstants.mobile_number,
             labelStyle: TextStyle(
-                fontSize: 13.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 12.0,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -449,11 +462,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             labelText: CommonConstants.name,
             hintText: CommonConstants.name,
             labelStyle: TextStyle(
-                fontSize: 13.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 12.0,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -485,11 +498,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             labelText: CommonConstants.firstName,
             hintText: CommonConstants.firstName,
             labelStyle: TextStyle(
-                fontSize: 13.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 12.0,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -521,11 +534,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             labelText: CommonConstants.middleName,
             hintText: CommonConstants.middleName,
             labelStyle: TextStyle(
-                fontSize: 13.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 12.0,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -557,11 +570,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             labelText: CommonConstants.lastName,
             hintText: CommonConstants.lastName,
             labelStyle: TextStyle(
-                fontSize: 13.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 12.0,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -594,11 +607,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             labelText: CommonConstants.relationship,
             hintText: CommonConstants.relationship,
             labelStyle: TextStyle(
-                fontSize: 13.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 12.0,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -632,11 +645,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             labelText: CommonConstants.email_address_optional,
             hintText: CommonConstants.email_address_optional,
             labelStyle: TextStyle(
-                fontSize: 13.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 12.0,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -669,11 +682,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             labelText: CommonConstants.gender,
             hintText: CommonConstants.gender,
             labelStyle: TextStyle(
-                fontSize: 13.0,
+                fontSize: 12.0,
                 fontWeight: FontWeight.w400,
                 color: ColorUtils.myFamilyGreyColor),
             hintStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 12.0,
               color: ColorUtils.myFamilyGreyColor,
               fontWeight: FontWeight.w400,
             ),
@@ -708,11 +721,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 labelText: CommonConstants.blood_group,
                 hintText: CommonConstants.blood_group,
                 labelStyle: TextStyle(
-                    fontSize: 13.0,
+                    fontSize: 12.0,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.myFamilyGreyColor),
                 hintStyle: TextStyle(
-                  fontSize: 14.0,
+                  fontSize: 12.0,
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
@@ -748,11 +761,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 labelText: 'Rh type',
                 hintText: 'Rh type',
                 labelStyle: TextStyle(
-                    fontSize: 13.0,
+                    fontSize: 12.0,
                     fontWeight: FontWeight.w400,
                     color: ColorUtils.myFamilyGreyColor),
                 hintStyle: TextStyle(
-                  fontSize: 14.0,
+                  fontSize: 12.0,
                   color: ColorUtils.myFamilyGreyColor,
                   fontWeight: FontWeight.w400,
                 ),
@@ -800,7 +813,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   fontWeight: FontWeight.w400,
                   color: ColorUtils.myFamilyGreyColor),
               hintStyle: TextStyle(
-                fontSize: 14.0,
+                fontSize: 12.0,
                 color: ColorUtils.myFamilyGreyColor,
                 fontWeight: FontWeight.w400,
               ),

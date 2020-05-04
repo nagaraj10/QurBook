@@ -75,7 +75,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(left: 40, right: 40),
                   child: Text(
-                    Constants.NO_DATA_LAB,
+                    Constants.NO_DATA_LAB_REPORT,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontFamily: 'Poppins'),
                   ),
