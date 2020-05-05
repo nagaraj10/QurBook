@@ -32,13 +32,18 @@ class AddFamilyUserInfoRepository {
       String gender,
       String bloodGroup,
       String dateOfBirth,
-      File profilePic) async {
+      File profilePic,
+      String firstName,
+      String middleName,
+      String lastName) async {
     String query = '';
 
     query =
-        "generalInfo||gender=$gender|bloodGroup=$bloodGroup|dateOfBirth=$dateOfBirth";
+        "generalInfo||gender=$gender|bloodGroup=$bloodGroup|dateOfBirth=$dateOfBirth|name=$name|firstName=$firstName|middleName=$middleName|lastName=$lastName|email=$email";
 
     var response;
+
+    print('add familyUser $query');
 
     if (profilePic != null) {
       response = await _helper.saveImageToServerClone1(

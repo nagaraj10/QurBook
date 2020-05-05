@@ -50,37 +50,42 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   }
 
   Widget getFamilyMemberList() {
-    return StreamBuilder<ApiResponse<FamilyMembersList>>(
-      stream: _familyListBloc.familyMemberListStream,
-      builder:
-          (context, AsyncSnapshot<ApiResponse<FamilyMembersList>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
-              break;
+    return PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
+        ? getDialogBoxWithFamilyMember(
+            PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
+        : StreamBuilder<ApiResponse<FamilyMembersList>>(
+            stream: _familyListBloc.familyMemberListStream,
+            builder: (context,
+                AsyncSnapshot<ApiResponse<FamilyMembersList>> snapshot) {
+              if (snapshot.hasData) {
+                switch (snapshot.data.status) {
+                  case Status.LOADING:
+                    CommonUtil.showLoadingDialog(
+                        context, _keyLoader, 'Please Wait');
+                    break;
 
-            case Status.ERROR:
-              return Center(
-                  child: Text('Oops, something went wrong',
-                      style: TextStyle(color: Colors.red)));
-              break;
+                  case Status.ERROR:
+                    return Center(
+                        child: Text('Oops, something went wrong',
+                            style: TextStyle(color: Colors.red)));
+                    break;
 
-            case Status.COMPLETED:
-              getDialogBoxWithFamilyMember(snapshot.data.data.response.data)
-                  .then((widget) {
-                return widget;
-              });
-              break;
-          }
-        } else {
-          return Container(
-            width: 100,
-            height: 100,
+                  case Status.COMPLETED:
+                    getDialogBoxWithFamilyMember(
+                            snapshot.data.data.response.data)
+                        .then((widget) {
+                      return widget;
+                    });
+                    break;
+                }
+              } else {
+                return Container(
+                  width: 100,
+                  height: 100,
+                );
+              }
+            },
           );
-        }
-      },
-    );
   }
 
   Future<Widget> getDialogBoxWithFamilyMember(FamilyData data) async {

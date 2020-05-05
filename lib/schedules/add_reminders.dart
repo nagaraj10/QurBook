@@ -1,5 +1,4 @@
 import 'dart:core';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
@@ -72,6 +71,7 @@ class _AddReminderState extends State<AddReminder> {
   List<String> selectedInterval = ['Day', 'Week', 'Month'];
   bool _isTitleEmpty = false;
   bool _isNoteEmpty = false;
+  bool _isTimeAfter = true;
 
   int intervalIndex = 0;
 
@@ -150,6 +150,7 @@ class _AddReminderState extends State<AddReminder> {
                             OutlineButton(
                               onPressed: () {
                                 _selectTime(context);
+                                //setState(() {});
                               },
                               child: Row(
                                 children: <Widget>[
@@ -163,10 +164,20 @@ class _AddReminderState extends State<AddReminder> {
                                   )
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 10),
+                        Align(
+                            alignment: Alignment.centerRight,
+                            child: Opacity(
+                              opacity: _isTimeAfter ? 0.0 : 1.0,
+                              child: Text(
+                                'wrong time picked',
+                                style: TextStyle(
+                                    color: Colors.red[500], fontSize: 14.0),
+                              ),
+                            )),
                         Text('Repeated interval'),
                         SizedBox(height: 10),
                         Center(
@@ -273,19 +284,35 @@ class _AddReminderState extends State<AddReminder> {
 
   Future<Null> _selectTime(BuildContext context) async {
     final TimeOfDay pickedTime = await showTimePicker(
-        context: context,
-        initialTime: selectedTime,
-        builder: (BuildContext context, Widget child) {
-          return MediaQuery(
-            data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
-            child: child,
-          );
-        });
+      context: context,
+      initialTime: selectedTime,
+      builder: (BuildContext context, Widget child) {
+        return MediaQuery(
+          data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: false),
+          child: child,
+        );
+      },
+    );
 
+    print('291------$_isTimeAfter');
     if (pickedTime != null && pickedTime != selectedTime)
       setState(() {
         selectedTime = pickedTime;
       });
+
+    if (FHBUtils().checkTime(selectedTime)) {
+      setState(() {
+        _isTimeAfter = true;
+      });
+      print('299------$_isTimeAfter');
+      //_isTimeAfter=true;
+    } else {
+      setState(() {
+        _isTimeAfter = false;
+      });
+      print('303------$_isTimeAfter');
+      //_isTimeAfter=false;
+    }
   }
 
   void setReminder() async {
@@ -300,6 +327,8 @@ class _AddReminderState extends State<AddReminder> {
             ? _isNoteEmpty = true
             : _isNoteEmpty = false;
       });
+    } else if (!_isTimeAfter) {
+      //do nothing
     } else {
       ReminderModel model = new ReminderModel(
           title: tileContoller.text,

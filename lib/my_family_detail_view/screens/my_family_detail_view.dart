@@ -48,6 +48,11 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
       categoryData = value.response.data;
       PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, categoryData);
     });
+
+    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.profileData.id;
+
+    PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID,
+        widget.arguments.sharedbyme.profileData.id);
   }
 
   void _setActiveTabIndex() {
@@ -127,9 +132,6 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   Widget getHealthReportToDisplayInBody() {
     myFamilyDetailViewBloc = new MyFamilyDetailViewBloc();
     myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.profileData.id;
-
-    PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID,
-        widget.arguments.sharedbyme.profileData.id);
 
     myFamilyDetailViewBloc.getHelthReportList();
 

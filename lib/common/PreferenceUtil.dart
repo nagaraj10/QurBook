@@ -1,5 +1,6 @@
 import 'dart:core';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
@@ -219,6 +220,30 @@ class PreferenceUtil {
       });
 
       return categoryData;
+    } catch (e) {}
+  }
+
+  //save family data to preference
+
+  static Future<bool> saveFamilyData(
+      String keyFamily, FamilyData familyData) async {
+    var instance = await _prefs;
+
+    try {
+      String family = json.encode(familyData);
+
+      return instance.setString(keyFamily, family);
+    } catch (e) {
+      return instance.setString(keyFamily, null);
+    }
+  }
+
+  static FamilyData getFamilyData(String keyFamily) {
+    try {
+      if (_prefsInstance == null) {}
+
+      return FamilyData.fromJson(
+          json.decode(_prefsInstance.getString(keyFamily)));
     } catch (e) {}
   }
 }

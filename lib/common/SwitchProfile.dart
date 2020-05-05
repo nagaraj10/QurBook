@@ -40,13 +40,22 @@ class SwitchProfile {
               } else {
                 _familyListBloc = new FamilyListBloc();
               }
-              _familyListBloc.getFamilyMembersList().then((familyMembersList) {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                    .pop();
 
-                getDialogBoxWithFamilyMemberScrap(
-                    familyMembersList.response.data);
-              });
+              PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
+                  ? getDialogBoxWithFamilyMemberScrap(
+                      PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
+                  : _familyListBloc
+                      .getFamilyMembersList()
+                      .then((familyMembersList) {
+                      PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
+                          familyMembersList.response.data);
+                      Navigator.of(_keyLoader.currentContext,
+                              rootNavigator: true)
+                          .pop();
+
+                      getDialogBoxWithFamilyMemberScrap(
+                          familyMembersList.response.data);
+                    });
 
               //return new FamilyListDialog();
             },
@@ -71,6 +80,22 @@ class SwitchProfile {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, keyLoader, (context, userId, userName) {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
+        print('user id of family inside switch profile $userId');
+        if (PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME) ==
+            Constants.STR_IDDOCS) {
+          if (PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID) !=
+                  null &&
+              PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID)
+                      .length >
+                  0) {
+            PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, userId);
+          } else {
+            PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
+          }
+        } else {
+          PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
+        }
+
         Navigator.of(context).pop();
 
         getUserProfileData();

@@ -341,4 +341,39 @@ class FHBUtils {
       }
     });
   }
+
+  bool checkTime(TimeOfDay picktime) {
+    var pickedTime = formatTimeOfDay(picktime);
+    var currentTime = DateFormat.jm().format(DateTime.now());
+    var arr = currentTime.split(':');
+    var hour = int.parse(arr[0]);
+    var temp = arr[1].split(' ');
+    var mins = int.parse(temp[0]);
+    var ampm = temp[1];
+
+    var arr1 = pickedTime.split(':');
+    var phour = int.parse(arr1[0]);
+    var temp1 = arr1[1].split(' ');
+    var pmins = int.parse(temp1[0]);
+    var p_ampm = temp1[1];
+
+    if (phour < hour) {
+      if (p_ampm == ampm) {
+        return false;
+      } else {
+        return true;
+      }
+      //return false;
+    } else if (phour == hour) {
+      if (pmins < mins) {
+        return false;
+      } else if (p_ampm != ampm) {
+        return true;
+      } else {
+        return true;
+      }
+    } else {
+      return true;
+    }
+  }
 }

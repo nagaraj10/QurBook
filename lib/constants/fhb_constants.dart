@@ -60,7 +60,7 @@ const String KEY_SEARCHED_CATEGORY = 'searchedCategory';
 const String terms_of_service = 'Terms of service';
 const String privacy_policy = 'Privacy policy';
 const String help_support = 'Help and support';
-const String STR_MSG_SIGNUP = 'Please signup then try again';
+const String STR_MSG_SIGNUP = 'Please signup and then try again';
 const String STR_VERIFY_OTP =
     'Please complete your registration process, by generating and verifying the OTP';
 const String STR_VERIFY_USER =
@@ -173,3 +173,7 @@ const String NO_DATA_OTHERS =
 
 const String COVER_IMG_DESC = 'Tap to add your favorite cover image';
 const String COVER_IMG_TITLE = 'Cover Image';
+
+//Prefrence key for family and provider
+const String KEY_FAMILYMEMBER = 'familymember';
+const String KEY_PROVIDER = 'provider';

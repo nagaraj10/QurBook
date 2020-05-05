@@ -81,9 +81,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/ Not Known'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/Not Known'];
 
-  List<String> bloodRangeArray = ['+ ve', '- ve', 'Others/ Not Known'];
+  List<String> bloodRangeArray = ['+ve', '-ve', 'Others/Not Known'];
 
   String selectedBloodGroup;
   String selectedBloodRange;

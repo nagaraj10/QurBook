@@ -233,9 +233,6 @@ class ProfileData {
     data['countryCode'] = this.countryCode;
     data['isEmailVerified'] = this.isEmailVerified;
     data['status'] = this.status;
-    if (this.qualifiedFullName != null) {
-      data['qualifiedFullName'] = this.qualifiedFullName.toJson();
-    }
     return data;
   }
 }
@@ -304,7 +301,6 @@ class FamilyMemberData {
   String countryCode;
   bool isEmailVerified;
   String status;
-  QualifiedFullName qualifiedFullName;
 
   FamilyMemberData(
       {this.id,
@@ -324,8 +320,7 @@ class FamilyMemberData {
       this.isTokenRefresh,
       this.countryCode,
       this.isEmailVerified,
-      this.status,
-      this.qualifiedFullName});
+      this.status});
 
   FamilyMemberData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -348,9 +343,6 @@ class FamilyMemberData {
     countryCode = json['countryCode'];
     isEmailVerified = json['isEmailVerified'];
     status = json['status'];
-    qualifiedFullName = json['qualifiedFullName'] != null
-        ? new QualifiedFullName.fromJson(json['qualifiedFullName'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -375,9 +367,6 @@ class FamilyMemberData {
     data['countryCode'] = this.countryCode;
     data['isEmailVerified'] = this.isEmailVerified;
     data['status'] = this.status;
-    if (this.qualifiedFullName != null) {
-      data['qualifiedFullName'] = this.qualifiedFullName.toJson();
-    }
     return data;
   }
 }
@@ -415,13 +404,5 @@ class QualifiedFullName {
     lastName = json['lastName'];
     firstName = json['firstName'];
     middleName = json['middleName'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['lastName'] = this.lastName;
-    data['firstName'] = this.firstName;
-    data['middleName'] = this.middleName;
-    return data;
   }
 }

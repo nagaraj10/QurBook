@@ -31,9 +31,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/ Not Known'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/Not Known'];
 
-  List<String> bloodRangeArray = ['+ ve', '- ve', 'Others/ Not Known'];
+  List<String> bloodRangeArray = ['+ve', '-ve', 'Others/Not Known'];
 
   @override
   void initState() {

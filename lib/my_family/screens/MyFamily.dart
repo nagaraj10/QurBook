@@ -152,43 +152,50 @@ class _MyFamilyState extends State<MyFamily> {
   Widget getAllFamilyMembers() {
     Widget familyWidget;
 
-    return StreamBuilder<ApiResponse<FamilyMembersList>>(
-      stream: _familyListBloc.familyMemberListStream,
-      builder:
-          (context, AsyncSnapshot<ApiResponse<FamilyMembersList>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              familyWidget = Center(
-                  child: SizedBox(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                ),
-                width: 30,
-                height: 30,
-              ));
-              break;
+    return PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
+        ? getMyFamilyMembers(
+            PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
+        : StreamBuilder<ApiResponse<FamilyMembersList>>(
+            stream: _familyListBloc.familyMemberListStream,
+            builder: (context,
+                AsyncSnapshot<ApiResponse<FamilyMembersList>> snapshot) {
+              if (snapshot.hasData) {
+                switch (snapshot.data.status) {
+                  case Status.LOADING:
+                    familyWidget = Center(
+                        child: SizedBox(
+                      child: CircularProgressIndicator(
+                        backgroundColor:
+                            Color(CommonUtil().getMyPrimaryColor()),
+                      ),
+                      width: 30,
+                      height: 30,
+                    ));
+                    break;
 
-            case Status.ERROR:
-              familyWidget = Center(
-                  child: Text('Oops, something went wrong',
-                      style: TextStyle(color: Colors.red)));
-              break;
+                  case Status.ERROR:
+                    familyWidget = Center(
+                        child: Text('Oops, something went wrong',
+                            style: TextStyle(color: Colors.red)));
+                    break;
 
-            case Status.COMPLETED:
-              familyWidget =
-                  getMyFamilyMembers(snapshot.data.data.response.data);
-              break;
-          }
-        } else {
-          familyWidget = Container(
-            width: 100,
-            height: 100,
+                  case Status.COMPLETED:
+                    PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
+                        snapshot.data.data.response.data);
+
+                    familyWidget =
+                        getMyFamilyMembers(snapshot.data.data.response.data);
+                    break;
+                }
+              } else {
+                familyWidget = Container(
+                  width: 100,
+                  height: 100,
+                );
+              }
+              return familyWidget;
+            },
           );
-        }
-        return familyWidget;
-      },
-    );
   }
 
   Widget getMyFamilyMembers(FamilyData data) {
@@ -383,7 +390,16 @@ class _MyFamilyState extends State<MyFamily> {
                                 if (userLinking.status == 200 &&
                                     userLinking.success) {
                                   // Reload
-                                  _familyListBloc.getFamilyMembersList();
+                                  _familyListBloc
+                                      .getFamilyMembersList()
+                                      .then((value) {
+                                    PreferenceUtil.saveFamilyData(
+                                            Constants.KEY_FAMILYMEMBER,
+                                            value.response.data)
+                                        .then((value) {
+                                      setState(() {});
+                                    });
+                                  });
                                 }
                               });
                             }, onPressedCancel: () {

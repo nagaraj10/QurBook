@@ -12,6 +12,7 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
@@ -66,9 +67,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   List<int> fetchedProfileData;
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/ Not Known'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/Not Known'];
 
-  List<String> bloodRangeArray = ['+ ve', '- ve', 'Others/ Not Known'];
+  List<String> bloodRangeArray = ['+ve', '-ve', 'Others/Not Known'];
 
   String selectedBloodGroup;
   String selectedBloodRange;
@@ -1088,6 +1089,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     addFamilyUserInfoBloc.dateOfBirth = dateOfBirthController.text;
 
     if (selectedBloodGroup != null && selectedBloodRange != null) {
+      print(' addfamilyuser selectedBloodGroup $selectedBloodGroup');
+      print('addfamilyuser selectedBloodRange $selectedBloodRange');
       addFamilyUserInfoBloc.bloodGroup =
           selectedBloodGroup + '_' + selectedBloodRange;
     }
@@ -1099,6 +1102,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     addFamilyUserInfoBloc.lastName = lastNameController.text;
 
     addFamilyUserInfoBloc.profileBanner = MySliverAppBar.imageURIProfile;
+
+    FamilyListBloc _familyListBloc = new FamilyListBloc();
 
     if (widget.arguments.fromClass == CommonConstants.my_family) {
       addFamilyUserInfoBloc.relationship = selectedRelationShip.roleName;
@@ -1138,15 +1143,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             // 2
             addFamilyUserInfoBloc.updateUserProfile().then((value) {
               if (value.success && value.status == 200) {
-                MySliverAppBar.imageURI = null;
-                fetchedProfileData = null;
+                _familyListBloc.getFamilyMembersList().then((value) {
+                  PreferenceUtil.saveFamilyData(
+                          Constants.KEY_FAMILYMEMBER, value.response.data)
+                      .then((value) {
+                    MySliverAppBar.imageURI = null;
+                    fetchedProfileData = null;
 
-                Navigator.popUntil(context, (Route<dynamic> route) {
-                  bool shouldPop = false;
-                  if (route.settings.name == '/user_accounts') {
-                    shouldPop = true;
-                  }
-                  return shouldPop;
+                    Navigator.popUntil(context, (Route<dynamic> route) {
+                      bool shouldPop = false;
+                      if (route.settings.name == '/user_accounts') {
+                        shouldPop = true;
+                      }
+                      return shouldPop;
+                    });
+                  });
                 });
               }
             });
@@ -1203,15 +1214,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         addFamilyUserInfoBloc.updateUserProfile().then((value) {
           if (value.success && value.status == 200) {
-            MySliverAppBar.imageURI = null;
-            fetchedProfileData = null;
+            _familyListBloc.getFamilyMembersList().then((value) {
+              PreferenceUtil.saveFamilyData(
+                      Constants.KEY_FAMILYMEMBER, value.response.data)
+                  .then((value) {
+                MySliverAppBar.imageURI = null;
+                fetchedProfileData = null;
 
-            Navigator.popUntil(context, (Route<dynamic> route) {
-              bool shouldPop = false;
-              if (route.settings.name == '/user_accounts') {
-                shouldPop = true;
-              }
-              return shouldPop;
+                Navigator.popUntil(context, (Route<dynamic> route) {
+                  bool shouldPop = false;
+                  if (route.settings.name == '/user_accounts') {
+                    shouldPop = true;
+                  }
+                  return shouldPop;
+                });
+              });
             });
           }
         });

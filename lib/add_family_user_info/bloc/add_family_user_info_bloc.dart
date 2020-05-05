@@ -136,8 +136,18 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 
     try {
       updateAddFamilyInfo =
-          await addFamilyUserInfoRepository.updateUserProfileInfo(userId, name,
-              phoneNo, email, gender, bloodGroup, dateOfBirth, profilePic);
+          await addFamilyUserInfoRepository.updateUserProfileInfo(
+              userId,
+              name,
+              phoneNo,
+              email,
+              gender,
+              bloodGroup,
+              dateOfBirth,
+              profilePic,
+              firstName,
+              middleName,
+              lastName);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));
