@@ -168,8 +168,15 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
 
                 case Status.ERROR:
                   // rebuildBlockObject();
-                  return Text(snapshot.data.message,
-                      style: TextStyle(color: Colors.red));
+                
+                  return FHBBasicWidget.getRefreshContainerButton(
+                      snapshot.data.message, () {
+                    setState(() {});
+                  });
+                  /* return Center(
+                    child: Text('Oops, something went wrong',
+                        style: TextStyle(color: Colors.red)));*/
+                  break;
                   break;
 
                 case Status.COMPLETED:
@@ -203,7 +210,7 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
     return getMainWidgets(categoryDataList);
   }
 
-  /* Widget getWidgetForSearchedMedia(List<Data> data) {
+  /*Widget getWidgetForSearchedMedia(List<Data> data) {
     List<CategoryData> categoryDataList;
     if (PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null) {
       PreferenceUtil.saveCategoryList(Constants.KEY_SEARCHED_CATEGORY, null)
@@ -213,21 +220,27 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
           categoryDataList = new CommonUtil().getAllCategoryList(data);
           completeData = new CommonUtil().getMediaTypeInfo(data);
           PreferenceUtil.saveCompleteData(
-              Constants.KEY_SEARCHED_LIST, completeData);
-          PreferenceUtil.saveCategoryList(
-              Constants.KEY_SEARCHED_CATEGORY, categoryDataList);
+                  Constants.KEY_SEARCHED_LIST, completeData)
+              .then((value) {
+            PreferenceUtil.saveCategoryList(
+                    Constants.KEY_SEARCHED_CATEGORY, categoryDataList)
+                .then((value) {
+            });
+          });
         });
       });
     } else {
       categoryDataList = new CommonUtil().getAllCategoryList(data);
       completeData = new CommonUtil().getMediaTypeInfo(data);
-      PreferenceUtil.saveCompleteData(
-          Constants.KEY_SEARCHED_LIST, completeData);
-      PreferenceUtil.saveCategoryList(
-          Constants.KEY_SEARCHED_CATEGORY, categoryDataList);
-    } 
-
-    return getMainWidgets(categoryDataList);
+      PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, completeData)
+          .then((value) {
+        PreferenceUtil.saveCategoryList(
+                Constants.KEY_SEARCHED_CATEGORY, categoryDataList)
+            .then((value) {
+          return getMainWidgets(categoryDataList);
+        });
+      });
+    }
   }*/
 
   Widget getResponseFromApiWidget() {
@@ -256,9 +269,13 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
                 break;
 
               case Status.ERROR:
-                return Center(
+                return FHBBasicWidget.getRefreshContainerButton(
+                    snapshot.data.message, () {
+                  setState(() {});
+                });
+                /* return Center(
                     child: Text('Oops, something went wrong',
-                        style: TextStyle(color: Colors.red)));
+                        style: TextStyle(color: Colors.red)));*/
                 break;
 
               case Status.COMPLETED:
@@ -316,7 +333,6 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
             PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST);
       }
     }
-
     return CustomTabView(
       initPosition: initPosition,
       itemCount: categoryData.length,
@@ -656,6 +672,7 @@ class _CustomTabsState extends State<CustomTabView>
   @override
   Widget build(BuildContext context) {
     if (widget.itemCount < 1) return widget.stub ?? Container();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -835,9 +852,13 @@ class _CustomTabsState extends State<CustomTabView>
                         break;
 
                       case Status.ERROR:
-                        return Center(
-                            child: Text('Oops, something went wrong',
-                                style: TextStyle(color: Colors.red)));
+                        return FHBBasicWidget.getRefreshContainerButton(
+                            snapshot.data.message, () {
+                          setState(() {});
+                        });
+                        /* return Center(
+                    child: Text('Oops, something went wrong',
+                        style: TextStyle(color: Colors.red)));*/
                         break;
 
                       case Status.COMPLETED:

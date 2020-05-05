@@ -6,9 +6,13 @@ import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/src/blocs/Authentication/OTPVerifyBloc.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'dart:convert' as convert;
 
 class AddFamilyOTPScreen extends StatefulWidget {
   AddFamilyOTPArguments arguments;
@@ -29,6 +33,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
   TextEditingController currController = new TextEditingController();
 
   AddFamilyOTPBloc _addFamilyOTPBloc;
+
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   @override
   void dispose() {
@@ -189,6 +195,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
           flexibleSpace: GradientAppBar(),
           title: Text('Otp Verification', style: TextStyle(fontSize: 18)),
         ),
+        key: scaffold_state,
         body: Center(
             child: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
@@ -245,7 +252,10 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       FlatButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            generateOtp(widget.arguments.selectedCountryCode,
+                                widget.arguments.enteredMobNumber);
+                          },
                           child: Text(
                             'Resend Code',
                             style: TextStyle(
@@ -468,32 +478,32 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         )));
   }
 
-//  Widget submitButton(OTPVerifyBloc _otpVerifyBloc) {
-//    return StreamBuilder(
-//      stream: _otpVerifyBloc.submitCheck,
-//      builder: (context, snapshot) {
-//        return Container(
-//          padding: EdgeInsets.all(20),
-//          constraints: BoxConstraints(minWidth: 220, maxWidth: double.infinity),
-//          child: MaterialButton(
-//              child: Icon(Icons.done, color: Colors.deepPurple),
-//              onPressed: //snapshot.hasData ? bloc.submit : null,
-//                  () {
-//                String otp = controller1.text +
-//                    controller2.text +
-//                    controller3.text +
-//                    controller4.text;
-//                _otpVerifyBloc
-//                    .verifyOtp(widget.arguments.enteredMobNumber,
-//                        widget.arguments.selectedCountryCode, otp)
-//                    .then((otpResponse) {
-//                  checkOTPResponse(otpResponse);
-//                });
-//              }),
-//        );
-//      },
-//    );
-//  }
+  //  Widget submitButton(OTPVerifyBloc _otpVerifyBloc) {
+  //    return StreamBuilder(
+  //      stream: _otpVerifyBloc.submitCheck,
+  //      builder: (context, snapshot) {
+  //        return Container(
+  //          padding: EdgeInsets.all(20),
+  //          constraints: BoxConstraints(minWidth: 220, maxWidth: double.infinity),
+  //          child: MaterialButton(
+  //              child: Icon(Icons.done, color: Colors.deepPurple),
+  //              onPressed: //snapshot.hasData ? bloc.submit : null,
+  //                  () {
+  //                String otp = controller1.text +
+  //                    controller2.text +
+  //                    controller3.text +
+  //                    controller4.text;
+  //                _otpVerifyBloc
+  //                    .verifyOtp(widget.arguments.enteredMobNumber,
+  //                        widget.arguments.selectedCountryCode, otp)
+  //                    .then((otpResponse) {
+  //                  checkOTPResponse(otpResponse);
+  //                });
+  //              }),
+  //        );
+  //      },
+  //    );
+  //  }
 
   void inputTextToField(String str) {
     //Edit first textField
@@ -571,18 +581,64 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         content: "Your family member has been added successfully",
         onPressedConfirm: () {
           Navigator.pushNamed(context, '/add_family_user_info',
-              arguments: AddFamilyUserInfoArguments(
-                  enteredFirstName: widget.arguments.enteredFirstName,
-                  enteredMiddleName: widget.arguments.enteredMiddleName,
-                  enteredLastName: widget.arguments.enteredLastName,
-                  relationShip: widget.arguments.relationShip,
-                  isPrimaryNoSelected: widget.arguments.isPrimaryNoSelected,
-                  addFamilyUserInfo: addFamilyOTPResponse.response.data));
+                  arguments: AddFamilyUserInfoArguments(
+                      enteredFirstName: widget.arguments.enteredFirstName,
+                      enteredMiddleName: widget.arguments.enteredMiddleName,
+                      enteredLastName: widget.arguments.enteredLastName,
+                      relationShip: widget.arguments.relationShip,
+                      isPrimaryNoSelected: widget.arguments.isPrimaryNoSelected,
+                      addFamilyUserInfo: addFamilyOTPResponse.response.data))
+              .then((value) {
+            // Navigator.of(context).pop();
+            //Navigator.of(context).pop(true);
+          });
         },
       );
     } else {
       Alert.displayAlertPlain(context,
           title: "Error", content: addFamilyOTPResponse.message);
+    }
+  }
+
+  void generateOtp(String selectedCountryCode, String enteredMobNumber) {
+    FamilyListBloc _familyListBloc = new FamilyListBloc();
+
+    var signInData = {};
+    signInData['countryCode'] = "+" + selectedCountryCode;
+    signInData['phoneNumber'] = enteredMobNumber;
+    signInData['isPrimaryUser'] = widget.arguments.isPrimaryNoSelected;
+    signInData['firstName'] = widget.arguments.enteredFirstName;
+    signInData['middleName'] = widget.arguments.enteredMiddleName.length > 0
+        ? widget.arguments.enteredMiddleName
+        : '';
+    signInData['lastName'] = widget.arguments.enteredLastName;
+    signInData['relation'] = widget.arguments.relationShip.id;
+
+    var jsonString = convert.jsonEncode(signInData);
+
+    if (widget.arguments.isPrimaryNoSelected) {
+      _familyListBloc
+          .postUserLinkingForPrimaryNo(jsonString)
+          .then((addFamilyOTPResponse) {
+        if (addFamilyOTPResponse.success &&
+            addFamilyOTPResponse.status == 200) {
+          new FHBBasicWidget()
+              .showInSnackBar(addFamilyOTPResponse.message, scaffold_state);
+        } else {
+          new FHBBasicWidget()
+              .showInSnackBar(addFamilyOTPResponse.message, scaffold_state);
+        }
+      });
+    } else {
+      _familyListBloc.postUserLinking(jsonString).then((userLinking) {
+        if (userLinking.success && userLinking.status == 200) {
+          new FHBBasicWidget()
+              .showInSnackBar(userLinking.message, scaffold_state);
+        } else {
+          new FHBBasicWidget()
+              .showInSnackBar(userLinking.message, scaffold_state);
+        }
+      });
     }
   }
 }

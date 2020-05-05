@@ -178,6 +178,18 @@ class CommonConstants {
   static String preferred_providers_descrip =
       "Do you want to ser this as preferred. Previous preferred will be updated";
 
+  static String all_fields_mandatory = 'Please fill all Mandatory fields';
+
+  static String mobile_numberWithStar = "Mobile Number*";
+  static String relationshipWithStar = "Relationship*";
+  static String genderWithStar = "Gender*";
+  static String blood_groupWithStar = "Blood Group*";
+  static String blood_rangeWithStar = "RH Type*";
+  static String date_of_birthWithStar = "Date of Birth*";
+  static String firstNameWithStar = "FirstName*";
+  static String middleNameWithStar = "MiddleName*";
+  static String lastNameWithStar = "LastName*";
+
   //===========================================//
 
   static String strOperationSignUp = 'signUp';

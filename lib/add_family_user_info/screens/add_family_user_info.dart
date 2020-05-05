@@ -67,9 +67,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   List<int> fetchedProfileData;
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/Not Known'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/ Not Known'];
 
-  List<String> bloodRangeArray = ['+ve', '-ve', 'Others/Not Known'];
+  List<String> bloodRangeArray = ['+ve', '-ve', 'Others/ Not Known'];
 
   String selectedBloodGroup;
   String selectedBloodRange;
@@ -153,7 +153,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else {
         firstNameController.text = '';
       }
-
       if (widget.arguments.sharedbyme.profileData.bloodGroup != null &&
           widget.arguments.sharedbyme.profileData.bloodGroup != "null") {
         selectedBloodGroup = widget.arguments.sharedbyme.profileData.bloodGroup;
@@ -260,10 +259,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         relationShipController.text = widget.arguments.relationShip.roleName;
 
-        selectedBloodGroup = value.response.data.generalInfo.bloodGroup == null
-            ? null
-            : value.response.data.generalInfo.bloodGroup;
+        if (value.response.data.generalInfo.bloodGroup != null &&
+            value.response.data.generalInfo.bloodGroup != "null") {
+          selectedBloodGroup = value.response.data.generalInfo.bloodGroup;
 
+          renameBloodGroup(selectedBloodGroup);
+        } else {
+          selectedBloodGroup = null;
+          selectedBloodRange = null;
+        }
         selectedGender = value.response.data.generalInfo.gender == null
             ? null
             : value.response.data.generalInfo.gender;
@@ -328,6 +332,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   getUserProfileData() async {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
+    FamilyListBloc _familyListBloc = new FamilyListBloc();
 
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
@@ -335,14 +340,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       print('Inside getUserProfileData' + profileData.toString());
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
           .then((value) {
-        Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        _familyListBloc.getFamilyMembersList().then((value) {
+          PreferenceUtil.saveFamilyData(
+                  Constants.KEY_FAMILYMEMBER, value.response.data)
+              .then((value) {
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-        Navigator.popUntil(context, (Route<dynamic> route) {
-          bool shouldPop = false;
-          if (route.settings.name == '/user_accounts') {
-            shouldPop = true;
-          }
-          return shouldPop;
+            Navigator.popUntil(context, (Route<dynamic> route) {
+              bool shouldPop = false;
+              if (route.settings.name == '/user_accounts') {
+                shouldPop = true;
+              }
+              return shouldPop;
+            });
+          });
         });
       });
     });
@@ -410,7 +421,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                 getRelationshipDetails(relationShipResponseList)
                               ],
                             )
-                          : Container()
+                          : getAllCustomRoles()
                       : widget.arguments.fromClass ==
                               CommonConstants.user_update
                           ? new Container()
@@ -457,7 +468,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               fontSize: 16.0,
               color: ColorUtils.blackcolor),
           decoration: InputDecoration(
-            labelText: CommonConstants.mobile_number,
+            labelText: CommonConstants.mobile_numberWithStar,
             hintText: CommonConstants.mobile_number,
             labelStyle: TextStyle(
                 fontSize: 13.0,
@@ -723,7 +734,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   _selectDate(context);
                 },
               ),
-              labelText: CommonConstants.date_of_birth,
+              labelText: CommonConstants.date_of_birthWithStar,
               hintText: CommonConstants.date_of_birth,
               labelStyle: TextStyle(
                   fontSize: 12.0,
@@ -835,8 +846,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             width: 100,
             height: 100,
           );
-          return familyWidget;
         }
+
+        return familyWidget;
       },
     );
   }
@@ -878,7 +890,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               width: MediaQuery.of(context).size.width / 2 - 40,
               child: DropdownButton(
                 isExpanded: true,
-                hint: Text(CommonConstants.blood_group),
+                hint: Text(CommonConstants.blood_groupWithStar),
                 value: selectedBloodGroup,
                 items: bloodGroupArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
@@ -907,7 +919,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               width: MediaQuery.of(context).size.width / 2 - 40,
               child: DropdownButton(
                 isExpanded: true,
-                hint: Text(CommonConstants.blood_range),
+                hint: Text(CommonConstants.blood_rangeWithStar),
                 value: selectedBloodRange,
                 items: bloodRangeArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
@@ -929,6 +941,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget getGenderDetails() {
+    print('selectedGender getGenderDetails $selectedGender');
     return StatefulBuilder(builder: (context, setState) {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -936,9 +949,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               width: MediaQuery.of(context).size.width - 40,
               child: DropdownButton(
                 isExpanded: true,
-                hint: Text(CommonConstants.gender),
-                value: selectedGender.toLowerCase() != null
-                    ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
+                hint: Text(CommonConstants.genderWithStar),
+                value: selectedGender != null
+                    ? selectedGender.toLowerCase() != null
+                        ? toBeginningOfSentenceCase(
+                            selectedGender.toLowerCase())
+                        : selectedGender
                     : selectedGender,
                 items: genderArray.map((eachGender) {
                   return DropdownMenuItem(
@@ -1111,15 +1127,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       addFamilyUserInfoBloc.phoneNo =
           widget.arguments.sharedbyme.profileData.phoneNumber;
 
-      if (firstNameController.text.length > 0 &&
-          lastNameController.text.length > 0 &&
-          //emailController.text.length > 0 &&
-          mobileNoController.text.length > 0 &&
-          selectedGender.length > 0 &&
-          dateOfBirthController.text.length > 0 &&
-          selectedBloodGroup.length > 0 &&
-          selectedBloodRange.length > 0 &&
-          selectedRelationShip.roleName.length > 0) {
+      if (doValidation()) {
         CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
 
         var signInData = {};
@@ -1165,7 +1173,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
       } else {
         Alert.displayAlertPlain(context,
-            title: "Error", content: CommonConstants.all_fields);
+            title: "Error", content: CommonConstants.all_fields_mandatory);
       }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       if (doValidation()) {
@@ -1203,13 +1211,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
       addFamilyUserInfoBloc.relationship = relationShipController.text;
 
-      if (firstNameController.text.length > 0 &&
-          mobileNoController.text.length > 0 &&
-          selectedGender.length > 0 &&
-          dateOfBirthController.text.length > 0 &&
-          selectedBloodGroup.length > 0 &&
-          selectedBloodRange.length > 0 &&
-          relationShipController.text.length > 0) {
+      if (doValidation()) {
         CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
 
         addFamilyUserInfoBloc.updateUserProfile().then((value) {
@@ -1234,7 +1236,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
       } else {
         Alert.displayAlertPlain(context,
-            title: "Error", content: CommonConstants.all_fields);
+            title: "Error", content: CommonConstants.all_fields_mandatory);
       }
     }
   }
@@ -1266,6 +1268,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         addFamilyUserInfoBloc.bloodGroup =
             selectedBloodGroup + '_' + selectedBloodRange;
       }
+    } else {
+      isValid = false;
+      strErrorMsg = 'Select Blood group';
     }
 
     return isValid;
@@ -1297,7 +1302,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               fontSize: 16.0,
               color: ColorUtils.blackcolor),
           decoration: InputDecoration(
-            labelText: CommonConstants.firstName,
+            labelText: CommonConstants.firstNameWithStar,
             hintText: CommonConstants.firstName,
             labelStyle: TextStyle(
                 fontSize: 13.0,
@@ -1375,7 +1380,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               fontSize: 16.0,
               color: ColorUtils.blackcolor),
           decoration: InputDecoration(
-            labelText: CommonConstants.lastName,
+            labelText: CommonConstants.lastNameWithStar,
             hintText: CommonConstants.lastName,
             labelStyle: TextStyle(
                 fontSize: 13.0,

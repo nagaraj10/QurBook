@@ -335,19 +335,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
-      print('Inside dashboard' + profileData.toString());
-      PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
-          .then((value) {
-        try {
-          if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
-              PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
-          } else {
+      if (profileData != null &&
+          profileData.status == 200 &&
+          profileData.success) {
+        print('Inside dashboard' + profileData.toString());
+        PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
+            .then((value) {
+          try {
+            if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
+            } else {
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE, profileData);
+            }
+          } catch (e) {
             PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
           }
-        } catch (e) {
-          PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
-        }
-      });
+        });
+      }
     });
 
     DatabaseUtil.getCountryMetrics(

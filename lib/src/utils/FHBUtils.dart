@@ -342,6 +342,14 @@ class FHBUtils {
     });
   }
 
+  bool checkdate(DateTime pickedDate) {
+    var currentDate = DateTime.now();
+    pickedDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day);
+    final dateDifference = currentDate.difference(pickedDate).isNegative;
+    //print('date difference count $dateDifference');
+    return dateDifference;
+  }
+
   bool checkTime(TimeOfDay picktime) {
     var pickedTime = formatTimeOfDay(picktime);
     var currentTime = DateFormat.jm().format(DateTime.now());
@@ -357,23 +365,25 @@ class FHBUtils {
     var pmins = int.parse(temp1[0]);
     var p_ampm = temp1[1];
 
-    if (phour < hour) {
-      if (p_ampm == ampm) {
+    if (phour > hour) {
+      if (p_ampm != ampm) {
         return false;
-      } else {
-        return true;
       }
-      //return false;
+      return true;
     } else if (phour == hour) {
-      if (pmins < mins) {
-        return false;
-      } else if (p_ampm != ampm) {
+      if (pmins > mins) {
         return true;
+      } else if (pmins == mins) {
+        if (p_ampm != ampm) {
+          return false;
+        } else {
+          return false;
+        }
       } else {
-        return true;
+        return false;
       }
     } else {
-      return true;
+      return false;
     }
   }
 }

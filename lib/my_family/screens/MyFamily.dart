@@ -9,6 +9,7 @@ import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
@@ -174,9 +175,10 @@ class _MyFamilyState extends State<MyFamily> {
                     break;
 
                   case Status.ERROR:
-                    familyWidget = Center(
-                        child: Text('Oops, something went wrong',
-                            style: TextStyle(color: Colors.red)));
+                    familyWidget = FHBBasicWidget.getRefreshContainerButton(
+                        snapshot.data.message, () {
+                      setState(() {});
+                    });
                     break;
 
                   case Status.COMPLETED:
@@ -377,6 +379,9 @@ class _MyFamilyState extends State<MyFamily> {
                                 onPressedConfirm: () {
                               Navigator.pop(context);
 
+                              CommonUtil.showLoadingDialog(
+                                  context, _keyLoader, 'Please Wait');
+
                               var deLinkingData = {};
                               deLinkingData['relatedTo'] = data.profileData.id;
                               deLinkingData['relationshipType'] =
@@ -393,13 +398,26 @@ class _MyFamilyState extends State<MyFamily> {
                                   _familyListBloc
                                       .getFamilyMembersList()
                                       .then((value) {
-                                    PreferenceUtil.saveFamilyData(
-                                            Constants.KEY_FAMILYMEMBER,
-                                            value.response.data)
-                                        .then((value) {
-                                      setState(() {});
-                                    });
+                                    if (value.status == 200 && value.success) {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      PreferenceUtil.saveFamilyData(
+                                              Constants.KEY_FAMILYMEMBER,
+                                              value.response.data)
+                                          .then((value) {
+                                        setState(() {});
+                                      });
+                                    } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                    }
                                   });
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
                                 }
                               });
                             }, onPressedCancel: () {
@@ -437,6 +455,11 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   saveMediaDialog(BuildContext context) {
+    firstNameController.text = '';
+    middleNameController.text = '';
+    lastNameController.text = '';
+    isPrimaryNoSelected = false;
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -615,7 +638,7 @@ class _MyFamilyState extends State<MyFamily> {
           flex: 8,
           child: DropdownButton(
             isExpanded: true,
-            hint: Text(CommonConstants.relationship),
+            hint: Text(CommonConstants.relationshipWithStar),
             value: selectedRelationShip,
             items: data.relationShipAry.map((relationShipDetail) {
               return DropdownMenuItem(
@@ -657,7 +680,7 @@ class _MyFamilyState extends State<MyFamily> {
 //              onPressed: () => searchController.clear(),
 //              icon: Icon(Icons.clear, color: ColorUtils.lightgraycolor),
 //            ),
-            hintText: CommonConstants.mobile_number,
+            hintText: CommonConstants.mobile_numberWithStar,
             labelStyle: TextStyle(
                 fontSize: 12.0,
                 fontWeight: FontWeight.w400,
@@ -723,7 +746,7 @@ class _MyFamilyState extends State<MyFamily> {
           fontSize: 16.0,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
-        labelText: CommonConstants.firstName,
+        labelText: CommonConstants.firstNameWithStar,
         hintText: CommonConstants.firstName,
         labelStyle: TextStyle(
             fontSize: 13.0,
@@ -791,7 +814,7 @@ class _MyFamilyState extends State<MyFamily> {
           fontSize: 16.0,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
-        labelText: CommonConstants.lastName,
+        labelText: CommonConstants.lastNameWithStar,
         hintText: CommonConstants.lastName,
         labelStyle: TextStyle(
             fontSize: 13.0,
@@ -850,6 +873,8 @@ class _MyFamilyState extends State<MyFamily> {
         firstNameController.text.length > 0 &&
         lastNameController.text.length > 0 &&
         selectedRelationShip != null) {
+      CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+
       var signInData = {};
       signInData['countryCode'] = "+" + _selected.dialingCode;
       signInData['phoneNumber'] = mobileNoController.text;
@@ -868,24 +893,45 @@ class _MyFamilyState extends State<MyFamily> {
             .then((addFamilyOTPResponse) {
           if (addFamilyOTPResponse.success &&
               addFamilyOTPResponse.status == 200) {
-            Navigator.pushNamed(context, '/add_family_user_info',
-                    arguments: AddFamilyUserInfoArguments(
-                        enteredFirstName: firstNameController.text,
-                        enteredMiddleName: middleNameController.text,
-                        enteredLastName: lastNameController.text,
-                        relationShip: selectedRelationShip,
-                        isPrimaryNoSelected: isPrimaryNoSelected,
-                        addFamilyUserInfo: addFamilyOTPResponse.response.data))
-                .then((value) {
-              mobileNoController.text = '';
-              nameController.text = '';
-              isPrimaryNoSelected = false;
-              selectedRelationShip = null;
+            _familyListBloc.getFamilyMembersList().then((value) {
+              if (value.status == 200 && value.success) {
+                PreferenceUtil.saveFamilyData(
+                        Constants.KEY_FAMILYMEMBER, value.response.data)
+                    .then((value) {
+                  Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                      .pop();
 
-              _familyListBloc.getFamilyMembersList();
+                  Navigator.pushNamed(context, '/add_family_user_info',
+                          arguments: AddFamilyUserInfoArguments(
+                              enteredFirstName: firstNameController.text,
+                              enteredMiddleName: middleNameController.text,
+                              enteredLastName: lastNameController.text,
+                              relationShip: selectedRelationShip,
+                              isPrimaryNoSelected: isPrimaryNoSelected,
+                              addFamilyUserInfo:
+                                  addFamilyOTPResponse.response.data))
+                      .then((value) {
+                    print('value $value in primary yes');
+
+                    //Navigator.of(context).pop();
+                    mobileNoController.text = '';
+                    nameController.text = '';
+                    isPrimaryNoSelected = false;
+                    selectedRelationShip = null;
+
+                    _familyListBloc.getFamilyMembersList();
+                  });
+                });
+              } else {
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
+                Alert.displayAlertPlain(context,
+                    title: "Error", content: value.message);
+              }
             });
-            ;
           } else {
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
             Alert.displayAlertPlain(context,
                 title: "Error", content: addFamilyOTPResponse.message);
           }
@@ -893,32 +939,50 @@ class _MyFamilyState extends State<MyFamily> {
       } else {
         _familyListBloc.postUserLinking(jsonString).then((userLinking) {
           if (userLinking.success && userLinking.status == 200) {
-            Navigator.pushNamed(
-              context,
-              '/add_family_otp_screen',
-              arguments: AddFamilyOTPArguments(
-                  enteredMobNumber: mobileNoController.text,
-                  enteredFirstName: firstNameController.text,
-                  enteredMiddleName: middleNameController.text,
-                  enteredLastName: lastNameController.text,
-                  selectedCountryCode: _selected.dialingCode,
-                  relationShip: selectedRelationShip,
-                  isPrimaryNoSelected: isPrimaryNoSelected),
-            ).then((value) {
-              mobileNoController.text = '';
-              nameController.text = '';
-              isPrimaryNoSelected = false;
-              selectedRelationShip = null;
+            _familyListBloc.getFamilyMembersList().then((value) {
+              if (value.status == 200 && value.success) {
+                PreferenceUtil.saveFamilyData(
+                        Constants.KEY_FAMILYMEMBER, value.response.data)
+                    .then((value) {
+                  Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                      .pop();
 
-              _familyListBloc.getFamilyMembersList();
+                  Navigator.pushNamed(
+                    context,
+                    '/add_family_otp_screen',
+                    arguments: AddFamilyOTPArguments(
+                        enteredMobNumber: mobileNoController.text,
+                        enteredFirstName: firstNameController.text,
+                        enteredMiddleName: middleNameController.text,
+                        enteredLastName: lastNameController.text,
+                        selectedCountryCode: _selected.dialingCode,
+                        relationShip: selectedRelationShip,
+                        isPrimaryNoSelected: isPrimaryNoSelected),
+                  ).then((value) {
+                    mobileNoController.text = '';
+                    nameController.text = '';
+                    isPrimaryNoSelected = false;
+                    selectedRelationShip = null;
+
+                    _familyListBloc.getFamilyMembersList();
+                  });
+                });
+              } else {
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
+              }
             });
           } else {
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
             Alert.displayAlertPlain(context,
                 title: "Error", content: userLinking.message);
           }
         });
       }
     } else {
+      // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
       Alert.displayAlertPlain(context,
           title: "Error", content: CommonConstants.all_fields);
     }

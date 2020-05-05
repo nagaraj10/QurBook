@@ -10,6 +10,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:showcaseview/showcase.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 import 'CommonConstants.dart';
 
@@ -481,5 +482,34 @@ class FHBBasicWidget {
         ),
       ), */
         );
+  }
+
+  static Widget getRefreshContainerButton(
+      String errorMsg, Function onRefreshPressed) {
+    return Container(
+      color: Color(fhbColors.bgColorContainer),
+      padding: EdgeInsets.only(left: 20, right: 20),
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(errorMsg,
+              style: TextStyle(
+                fontSize: 13,
+              )),
+          /*  FlatButton(
+              onPressed: () {
+                onRefreshPressed();
+              },
+              child: Text(
+                'Refresh',
+                style: TextStyle(
+                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                    fontWeight: FontWeight.w600),
+              )),
+        */
+        ],
+      ),
+    );
   }
 }
