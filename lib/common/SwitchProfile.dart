@@ -30,10 +30,6 @@ class SwitchProfile {
         padding: EdgeInsets.all(10),
         child: InkWell(
             onTap: () {
-              print('Profile Pressed');
-              //getAllFamilyMembers();
-              CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
-
               if (_familyListBloc != null) {
                 _familyListBloc = null;
                 _familyListBloc = new FamilyListBloc();
