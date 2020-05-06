@@ -245,6 +245,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       dateOfBirthController.text = list[0];
     }
 
+    String profilebanner =
+        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
+    //print('profilebanner $profilebanner');
+
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -254,9 +258,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 fit: StackFit.expand,
                 overflow: Overflow.visible,
                 children: [
-                  CachedNetworkImage(
-                      imageUrl: Constants.BASEURL_COVERIMAGE,
-                      fit: BoxFit.cover),
+                  profilebanner != null
+                      ? Image.file(File(profilebanner),
+                          fit: BoxFit.cover, width: 100, height: 100)
+                      : Container(
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                        ),
                   Positioned(
                       top: expandedHeight - 50,
                       left: 24, //MediaQuery.of(context).size.width / 4,

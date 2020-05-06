@@ -459,7 +459,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         width: 100,
         height: 40.0,
         decoration: new BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
           border: Border.all(color: Colors.white),
           boxShadow: <BoxShadow>[
@@ -2029,11 +2029,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       _healthReportListForUserBlock
           .saveDeviceImage(widget.imagePath[i], params.toString(), '')
           .then((postImageResponse) {
-        // Hide Alert
         _scaffoldKey.currentState.hideCurrentSnackBar();
 
-        print('output audio mediaMaster' +
-            postImageResponse.response.data.mediaMasterId);
+        //print('post image response' + postImageResponse.message);
+        //displayDevicesList(deviceName, null);
 
         if (skipTapped == false) {
           displayDevicesList(deviceName, postImageResponse);

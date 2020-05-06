@@ -75,22 +75,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       Padding(
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
-            //width: 10,
             alignment: Alignment.center,
-            /*   decoration: new BoxDecoration(
-              //color: Color.fromRGBO(0, 0, 0, 0.1),
-              border: new Border(
-                  top: BorderSide.none,
-                  left: BorderSide.none,
-                  right: BorderSide.none,
-                  bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                  //width: 1.0,
-                  //color: Colors.deepPurple.withOpacity(0.5)
-                  ),
-              //borderRadius: new BorderRadius.circular(4.0)
-            ), */
             child: new TextField(
-              //obscureText: true,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(1),
               ],
@@ -140,6 +126,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       Padding(
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
+          alignment: Alignment.center,
           child: new TextField(
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
@@ -171,8 +158,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
             }),
       ),
       key: scaffold_state,
-      body: Container(
-          child: Column(
+      body: Column(
         children: <Widget>[
           !widget.forEmailVerify
               ? Padding(
@@ -184,7 +170,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                   ),
                 )
               : Container(
-                  height: 20,
+                  height: 10,
                 ),
           widget.forEmailVerify || widget.fromSignIn
               ? Expanded(
@@ -227,55 +213,51 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 ),
           Expanded(
               flex: 2,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    GridView.count(
-                        crossAxisCount: 6,
-                        crossAxisSpacing: 10,
-                        shrinkWrap: true,
-                        primary: false,
-                        scrollDirection: Axis.vertical,
-                        children: List<Container>.generate(
-                            6,
-                            (int index) => Container(
-                                  constraints: BoxConstraints(maxWidth: 20),
-                                  child: widgetList[index],
-                                ))),
-                    SizedBox(height: 20),
-                    Text(
-                      'Didn\'t receive the OTP?',
-                      style: TextStyle(fontSize: 11, color: Colors.grey),
-                    ),
-                    FlatButton(
-                        onPressed: () {
-                          if (widget.forEmailVerify) {
-                            verifyOTPFromEmai();
-                          } else {
-                            generateOtp(
-                                _otpVerifyBloc,
-                                widget.selectedCountryCode,
-                                widget.enteredMobNumber);
-                          }
-                        },
-                        child: Text(
-                          'Resend Code',
-                          style: TextStyle(
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                              fontWeight: FontWeight.w600),
-                        )),
-                    SizedBox(height: 20)
-                  ])),
+              child: ListView(children: <Widget>[
+                GridView.count(
+                    crossAxisCount: 6,
+                    crossAxisSpacing: 10,
+                    shrinkWrap: true,
+                    primary: false,
+                    scrollDirection: Axis.vertical,
+                    children: List<Container>.generate(
+                        6,
+                        (int index) => Container(
+                              constraints: BoxConstraints(maxWidth: 20),
+                              child: widgetList[index],
+                            ))),
+                SizedBox(height: 20),
+                Text(
+                  'Didn\'t receive the OTP?',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey,
+                  ),
+                ),
+                FlatButton(
+                    onPressed: () {
+                      if (widget.forEmailVerify) {
+                        verifyOTPFromEmai();
+                      } else {
+                        generateOtp(_otpVerifyBloc, widget.selectedCountryCode,
+                            widget.enteredMobNumber);
+                      }
+                    },
+                    child: Text(
+                      'Resend Code',
+                      style: TextStyle(
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          fontWeight: FontWeight.w600),
+                    )),
+                SizedBox(height: 20)
+              ])),
           !widget.fromSignIn && !widget.forEmailVerify
               ? Expanded(child: acceptanceWidget())
               : SizedBox(height: 0),
           Expanded(
               flex: 3,
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                color: Colors.grey.withOpacity(0.1),
+              child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -483,7 +465,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               //flex: 40,
               ),
         ],
-      )),
+      ),
     );
   }
 

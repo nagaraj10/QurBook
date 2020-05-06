@@ -330,7 +330,7 @@ class FHBBasicWidget {
                   fontSize: 16, color: Color(CommonUtil().getMyPrimaryColor())),
             ),
             content: Text(
-              'Stay Healthy.. See you Soon',
+              'Stay Healthy.. See you Soon. \nMaya will be waiting to serve you.',
               style: TextStyle(fontSize: 14),
             ),
             actions: <Widget>[

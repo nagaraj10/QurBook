@@ -154,8 +154,7 @@ class CommonConstants {
   static String verify_otp = "Verify OTP";
   static String add_family_otp = "Add Family OTP";
 
-  static String delink_alert =
-      "Are you sure you want to De-Link the family member?";
+  static String delink_alert = "Are you sure you want to Remove/De-Link?";
   static String my_family = 'MyFamily';
   static String user_update = 'Profile Update';
 

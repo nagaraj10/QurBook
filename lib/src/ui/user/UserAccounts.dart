@@ -89,7 +89,10 @@ class _UserAccountsState extends State<UserAccounts>
               actions: <Widget>[
                 selectedTab == 0
                     ? IconButton(
-                        icon: _isEditable ? Icon(Icons.save) : Icon(Icons.edit),
+                        icon: _isEditable
+                            ? Visibility(
+                                visible: false, child: Icon(Icons.save))
+                            : Icon(Icons.edit),
                         onPressed: () {
                           setState(() {
                             if (_isEditable) {

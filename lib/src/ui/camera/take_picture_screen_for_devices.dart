@@ -264,11 +264,14 @@ class TakePictureScreenForDevicesState
                                       MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
-                                    Text(
-                                        'We find the device is ${deviceNames(_recognitions[0]["detectedClass"])}',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.w400)),
+                                    SizedBox(width: 10),
+                                    Flexible(
+                                      child: Text(
+                                          'We find the device is ${deviceNames(_recognitions[0]["detectedClass"])}',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w400)),
+                                    ),
                                     _showConfirmButton(context)
                                   ]))
                   : isThumbnails

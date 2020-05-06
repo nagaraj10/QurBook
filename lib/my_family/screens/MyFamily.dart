@@ -665,6 +665,7 @@ class _MyFamilyState extends State<MyFamily> {
           cursorColor: Theme.of(context).primaryColor,
           controller: mobileNoController,
           maxLines: 1,
+          enabled: isPrimaryNoSelected ? false : true,
           keyboardType: TextInputType.text,
           focusNode: mobileNoFocus,
           textInputAction: TextInputAction.done,

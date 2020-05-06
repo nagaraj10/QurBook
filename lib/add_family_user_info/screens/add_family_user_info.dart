@@ -1128,6 +1128,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           widget.arguments.sharedbyme.profileData.phoneNumber;
 
       if (doValidation()) {
+        if (addFamilyUserInfoBloc.profileBanner != null) {
+          PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+              addFamilyUserInfoBloc.profileBanner.path);
+        }
         CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
 
         var signInData = {};
@@ -1181,6 +1185,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
               addFamilyUserInfoBloc.profileBanner.path);
         }
+        if (addFamilyUserInfoBloc.profileBanner != null) {
+          PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+              addFamilyUserInfoBloc.profileBanner.path);
+        }
         CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
 
         addFamilyUserInfoBloc.updateSelfProfile().then((value) {
@@ -1212,6 +1220,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       addFamilyUserInfoBloc.relationship = relationShipController.text;
 
       if (doValidation()) {
+        if (addFamilyUserInfoBloc.profileBanner != null) {
+          PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+              addFamilyUserInfoBloc.profileBanner.path);
+        }
         CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
 
         addFamilyUserInfoBloc.updateUserProfile().then((value) {

@@ -105,10 +105,10 @@ const String INTRO_SLIDE_DESC_3 =
     'Maya, an intelligent virtual health assistant, with conversational capabilities, sets up pill reminders, doctor appointments, among other smart tasks. ';
 const String INTRO_SLIDE_TITLE_4 = 'List ‘n’ Tag';
 const String INTRO_SLIDE_DESC_4 =
-    'Build your healthcare network! List and Tag your care providers. ';
+    'Add your doctors and get personalized private consultations.';
 const String INTRO_SLIDE_TITLE_5 = 'Share ‘n’ Care ';
 const String INTRO_SLIDE_DESC_5 =
-    'Easily share your medical records within the Healthcare ecosystem.';
+    'Securily and Privately share your medical records with your family,  doctors and caregivers';
 const String KEY_SHOWCASE_DASHBOARD = 'KEY_SHOWCASE_DASHBOARD';
 const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
 const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
@@ -117,7 +117,7 @@ const String STR_OTPMISMATCHEDFOREMAIL = 'Verification Code Mismatched';
 
 const String CAMERA_DESC = 'Start capturing health records right away!';
 const String CAMERA_TITLE = 'Camera';
-const String VOICE_DESC = 'You can tape your records note as well';
+const String VOICE_DESC = 'Add personal voice notes to your records';
 const String VOICE_TITLE = 'Voice Record';
 const String GALLERY_DESC =
     'And those health records from gallery, you can import them!';
@@ -133,7 +133,8 @@ const String SWITCH_CATEGORY_DESC =
 const String SWITCH_CATEGORY_TITLE = 'Switch Category';
 const String KEY_CATEGORYLIST_VISIBLE = 'categoryListDisplay';
 const String MAYA_TITLE = 'Maya';
-const String MAYA_DESC = 'Hey, I am Maya, your personalized health assistant.';
+const String MAYA_DESC =
+    'Hey there! I am Maya, your personalized voice based health assistant.';
 const String PROVIDERS_DESC = 'Manage all your healthcare providers from here';
 const String PROVIDERS_TITLE = 'My Providers';
 const String FAMILY_DESC = 'View and manage your family members profile';
@@ -155,23 +156,22 @@ const String NO_DATA_FAMIY = 'Looks like you haven'
 const String NO_DATA_SCHEDULES =
     'Never miss any schedule. \n Add it to your calendar and get notified.';
 const String NO_DATA_PRESCRIPTION =
-    'Click the camera icon or upload from gallery to add prescription';
+    'Don\'t want to type? Take a picture or upload from gallery to add prescriptions.';
 const String NO_DATA_DEVICES =
-    'Start capturing device readings. \n Just click them or talk to Maya..';
-const String NO_DATA_LAB_REPORT =
-    'Click the camera icon or upload from gallery to add lab reports';
-const String NO_DATA_MEDICAL_REPORT = 'Oops !! Looks like you haven'
-    't added any medical reports. \n Just add them right away..';
+    'Click \'n\' go (or) tell \"Maya\" and it will recorded for you.';
+const String NO_DATA_LAB_REPORT = 'upload your report or click \'n\' go';
+const String NO_DATA_MEDICAL_REPORT =
+    'Sure! Upload your medical reports or click \'n\' go';
 const String NO_DATA_BILLS =
     'Have medical bills in your wallet?? \n Upload them now and go paperless !!';
 const String NO_ID_DOCS =
     'Click the camera icon or upload ID document from gallery';
 const String NO_VOICE_RECRODS =
-    'Start adding voice records !! \n Press the Mic icon..';
+    'Just add personal voice notes to your medical records.';
 const String NO_DATA_OTHERS =
-    'Click the camera icon to add any medical documents';
+    'Ofcourse! add files here to store any other medical records';
 
-const String COVER_IMG_DESC = 'Tap to add your favorite cover image';
+const String COVER_IMG_DESC = 'Add style. Tap here to add your favorite DP.';
 const String COVER_IMG_TITLE = 'Cover Image';
 
 //Prefrence key for family and provider
