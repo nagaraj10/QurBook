@@ -248,7 +248,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                   ))),
                       SizedBox(height: 20),
                       Text(
-                        'Don' 't receive the OTP?',
+                        'Didn\'t receive the OTP?',
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                       FlatButton(

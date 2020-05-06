@@ -400,7 +400,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           break;
       }
     } else {
-      print(deviceName + " Paaaaaaaaaaaaaaaaaaru");
+      //print(deviceName + " Paaaaaaaaaaaaaaaaaaru");
 
       var digitRecog = true;
       //      displayDevicesList(deviceName);

@@ -83,8 +83,7 @@ class MyFamilyDetailViewInsuranceState
               children: <Widget>[
                 CircleAvatar(
                   radius: 25,
-                  backgroundColor:
-                      const Color(fhbColors.circleAvatarBackground),
+                  backgroundColor: const Color(fhbColors.bgColorContainer),
                   child: Image.network(
                     mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
@@ -92,7 +91,7 @@ class MyFamilyDetailViewInsuranceState
                             mediaMetaInfoObj.metaInfo.mediaTypeInfo.logo,
                     height: 20,
                     width: 20,
-                    color: Colors.white,
+                    color: Color(CommonUtil().getMyPrimaryColor()),
                   ),
                 ),
                 SizedBox(
@@ -140,19 +139,20 @@ class MyFamilyDetailViewInsuranceState
                 Expanded(
                   flex: 1,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Icon(Icons.more_horiz, color: Colors.grey, size: 20),
-                      SizedBox(height: 20),
                       mediaMetaInfoObj.isBookmarked
-                          ? Icon(
-                              Icons.bookmark,
-                              color: Colors.red,
+                          ? ImageIcon(
+                              AssetImage('assets/icons/record_fav_active.png'),
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                              size: 20,
                             )
-                          : Icon(
-                              Icons.bookmark_border,
-                              color: Colors.grey,
+                          : ImageIcon(
+                              AssetImage('assets/icons/record_fav.png'),
+                              color: Colors.black,
+                              size: 20,
                             ),
                       /*  mediaMetaInfoObj.metaInfo.hasVoiceNotes
                       ? Icon(

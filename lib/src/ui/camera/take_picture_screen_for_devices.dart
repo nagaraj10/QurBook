@@ -15,6 +15,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/devices_tensorflow/widgets/camera.dart';
 import 'package:myfhb/src/utils/alert.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
@@ -130,7 +131,10 @@ class TakePictureScreenForDevicesState
     Size screen = MediaQuery.of(context).size;
 
     return Scaffold(
-        appBar: AppBar(title: getWidgetForTitle(context)),
+        appBar: AppBar(
+          title: getWidgetForTitle(context),
+          flexibleSpace: GradientAppBar(),
+        ),
         body: SafeArea(
             child: Stack(children: <Widget>[
           isObjectDetecting == true ||
@@ -670,7 +674,7 @@ class TakePictureScreenForDevicesState
         width: 100,
         height: 40.0,
         decoration: new BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
           border: Border.all(color: Colors.white),
           boxShadow: <BoxShadow>[
@@ -714,7 +718,7 @@ class TakePictureScreenForDevicesState
         width: 100,
         height: 40.0,
         decoration: new BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Color(CommonUtil().getMyPrimaryColor()),
           borderRadius: new BorderRadius.all(Radius.circular(25.0)),
           border: Border.all(color: Colors.white),
           boxShadow: <BoxShadow>[
