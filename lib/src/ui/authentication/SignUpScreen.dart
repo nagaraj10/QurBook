@@ -305,7 +305,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       showDialog(
           context: context,
           child: new AlertDialog(
-            title: new Text("MyFHB"),
+            title: new Text("myFHB"),
             content: new Text(strErrorMsg),
           ));
     }

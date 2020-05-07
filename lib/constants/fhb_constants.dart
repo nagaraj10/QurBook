@@ -3,7 +3,7 @@ library fhb_constants;
 const String BASERURL = 'https://healthbook.vsolgmi.com/hb/api/v3/';
 const String BASEURL_COVERIMAGE =
     'https://images.pexels.com/photos/443356/pexels-photo-443356.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940';
-const String APP_NAME = 'MyFHB';
+const String APP_NAME = 'myFHB';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
 const String SignInOtpText = 'We will send you an one time password';
@@ -103,7 +103,7 @@ const String INTRO_SLIDE_DESC_2 =
 const String INTRO_SLIDE_TITLE_3 = 'Tap ‘n’ Talk';
 const String INTRO_SLIDE_DESC_3 =
     'Maya, an intelligent virtual health assistant, with conversational capabilities, sets up pill reminders, doctor appointments, among other smart tasks. ';
-const String INTRO_SLIDE_TITLE_4 = 'List ‘n’ Tag';
+const String INTRO_SLIDE_TITLE_4 = 'Add ‘n’ Tag';
 const String INTRO_SLIDE_DESC_4 =
     'Add your doctors and get personalized private consultations.';
 const String INTRO_SLIDE_TITLE_5 = 'Share ‘n’ Care ';
@@ -114,6 +114,7 @@ const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
 const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
 const String KEY_SHOWCASE_MAYA = 'KEY_SHOWCASE_MAYA';
 const String STR_OTPMISMATCHEDFOREMAIL = 'Verification Code Mismatched';
+const String KEY_SHOWCASE_SWITCH_PROFILE = 'KEY_SHOWCASE_SWITCH_PROFILE';
 
 const String CAMERA_DESC = 'Start capturing health records right away!';
 const String CAMERA_TITLE = 'Camera';
@@ -151,17 +152,17 @@ const String NO_DATA_HOSPITAL =
 const String NO_DATA_LAB =
     'Hey, You may need Labs contact coordinates !! \n Add it now.';
 const String NO_DATA_FAMIY = 'Looks like you haven'
-    't added your family members. Add them right away.';
+    't added your family members. \n Add them right away.';
 
 const String NO_DATA_SCHEDULES =
     'Never miss any schedule. \n Add it to your calendar and get notified.';
 const String NO_DATA_PRESCRIPTION =
-    'Don\'t want to type? Take a picture or upload from gallery to add prescriptions.';
+    'Don\'t want to type? \n Take a picture or upload from gallery to add prescriptions.';
 const String NO_DATA_DEVICES =
-    'Click \'n\' go (or) tell \"Maya\" and it will recorded for you.';
-const String NO_DATA_LAB_REPORT = 'upload your report or click \'n\' go';
+    'Click \'n\' go (or) tell \"Maya\" and it will record for you.';
+const String NO_DATA_LAB_REPORT = 'Upload your report or click \'n\' go';
 const String NO_DATA_MEDICAL_REPORT =
-    'Sure! Upload your medical reports or click \'n\' go';
+    'Sure! Upload your medical reports \n or click \'n\' go';
 const String NO_DATA_BILLS =
     'Have medical bills in your wallet?? \n Upload them now and go paperless !!';
 const String NO_ID_DOCS =
@@ -169,9 +170,8 @@ const String NO_ID_DOCS =
 const String NO_VOICE_RECRODS =
     'Just add personal voice notes to your medical records.';
 const String NO_DATA_OTHERS =
-    'Ofcourse! add files here to store any other medical records';
-
-const String COVER_IMG_DESC = 'Add style. Tap here to add your favorite DP.';
+    'Ofcourse! Add files here to store any other medical records';
+const String COVER_IMG_DESC = 'Add style. \nTap here to add your favorite DP.';
 const String COVER_IMG_TITLE = 'Cover Image';
 
 //Prefrence key for family and provider

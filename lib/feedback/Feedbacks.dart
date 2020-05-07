@@ -43,6 +43,8 @@ class _FeedbacksState extends State<Feedbacks> {
   CategoryData categoryDataObj = new CategoryData();
   MediaData mediaDataObj = new MediaData();
 
+  final feedbackController = TextEditingController();
+  FocusNode feedbackFocus = FocusNode();
   HealthReportListForUserBlock _healthReportListForUserBlock =
       new HealthReportListForUserBlock();
 
@@ -200,9 +202,11 @@ class _FeedbacksState extends State<Feedbacks> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Container(
+                    /*  Container(
                       child: Text('Feedback'),
-                    ),
+                    ),*/
+
+                    _showFeedbacktextFiled(),
                     Divider(),
                     Container(
                       height: 10,
@@ -303,7 +307,7 @@ class _FeedbacksState extends State<Feedbacks> {
         categoryID, metaDataFromSharedPrefernce, Constants.STR_FEEDBACKS);
 
     postMediaData["mediaTypeInfo"] = mediaDataObj.toJson();
-
+    postMediaData['feedback'] = feedbackController.text;
     postMediaData["memoText"] = '';
 
     postMediaData["isDraft"] = false;
@@ -415,6 +419,7 @@ class _FeedbacksState extends State<Feedbacks> {
       context,
       new MaterialPageRoute(builder: (context) => new FeedbackSuccess()),
     ).then((value) {
+      feedbackController.text = '';
       imagePaths.clear();
       images.clear();
       audioPathMain = '';
@@ -442,5 +447,41 @@ class _FeedbacksState extends State<Feedbacks> {
         });
       });
     }
+  }
+
+  Widget _showFeedbacktextFiled() {
+    return TextField(
+      cursorColor: Theme.of(context).primaryColor,
+      controller: feedbackController,
+      maxLines: 1,
+      keyboardType: TextInputType.text,
+      focusNode: feedbackFocus,
+      textInputAction: TextInputAction.done,
+      onSubmitted: (term) {
+        feedbackFocus.unfocus();
+      },
+      style: new TextStyle(
+          fontWeight: FontWeight.w500,
+          fontSize: 16.0,
+          color: ColorUtils.blackcolor),
+      decoration: InputDecoration(
+//            suffixIcon: IconButton(
+//              onPressed: () => searchController.clear(),
+//              icon: Icon(Icons.clear, color: ColorUtils.lightgraycolor),
+//            ),
+        hintText: 'Feedback',
+        labelStyle: TextStyle(
+            fontSize: 12.0,
+            fontWeight: FontWeight.w400,
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 14.0,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: new UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
+    );
   }
 }

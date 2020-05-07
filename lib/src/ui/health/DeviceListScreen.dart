@@ -73,7 +73,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                 color: const Color(fhbColors.bgColorContainer),
                 child: Center(
                   child: Padding(
-                    padding: EdgeInsets.only(left: 40, right: 40),
+                    padding: EdgeInsets.only(left: 20, right: 20),
                     child: Text(
                       Constants.NO_DATA_DEVICES,
                       textAlign: TextAlign.center,

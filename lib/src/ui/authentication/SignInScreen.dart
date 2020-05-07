@@ -66,7 +66,7 @@ class _SignInScreenState extends State<SignInScreen> {
               Padding(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  'get started with MyFHB',
+                  'Get started with myFHB',
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 14,
