@@ -205,9 +205,11 @@ class _FeedbacksState extends State<Feedbacks> {
                     /*  Container(
                       child: Text('Feedback'),
                     ),*/
-
-                    _showFeedbacktextFiled(),
-                    Divider(),
+                    Padding(
+                      padding: EdgeInsets.only(right: 20),
+                      child: _showFeedbacktextFiled(),
+                    ),
+                    //Divider(),
                     Container(
                       height: 10,
                     ),
@@ -451,7 +453,7 @@ class _FeedbacksState extends State<Feedbacks> {
 
   Widget _showFeedbacktextFiled() {
     return TextField(
-      cursorColor: Theme.of(context).primaryColor,
+      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
       controller: feedbackController,
       maxLines: 1,
       keyboardType: TextInputType.text,
@@ -469,19 +471,21 @@ class _FeedbacksState extends State<Feedbacks> {
 //              onPressed: () => searchController.clear(),
 //              icon: Icon(Icons.clear, color: ColorUtils.lightgraycolor),
 //            ),
-        hintText: 'Feedback',
-        labelStyle: TextStyle(
-            fontSize: 12.0,
+          hintText: 'Feedback',
+          labelStyle: TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.w400,
+              color: ColorUtils.myFamilyGreyColor),
+          hintStyle: TextStyle(
+            fontSize: 14.0,
+            color: ColorUtils.myFamilyGreyColor,
             fontWeight: FontWeight.w400,
-            color: ColorUtils.myFamilyGreyColor),
-        hintStyle: TextStyle(
-          fontSize: 14.0,
-          color: ColorUtils.myFamilyGreyColor,
-          fontWeight: FontWeight.w400,
-        ),
-        border: new UnderlineInputBorder(
-            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-      ),
+          ),
+          border: new UnderlineInputBorder(
+              borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+          focusedBorder: new UnderlineInputBorder(
+              borderSide:
+                  BorderSide(color: Color(CommonUtil().getMyPrimaryColor())))),
     );
   }
 }

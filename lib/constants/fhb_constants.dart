@@ -135,7 +135,7 @@ const String SWITCH_CATEGORY_TITLE = 'Switch Category';
 const String KEY_CATEGORYLIST_VISIBLE = 'categoryListDisplay';
 const String MAYA_TITLE = 'Maya';
 const String MAYA_DESC =
-    'Hey there! I am Maya, your personalized voice based health assistant.';
+    'Hey there\! I am Maya, Your personalized voice based health assistant';
 const String PROVIDERS_DESC = 'Manage all your healthcare providers from here';
 const String PROVIDERS_TITLE = 'My Providers';
 const String FAMILY_DESC = 'View and manage your family members profile';

@@ -134,43 +134,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         children: <Widget>[
           Column(
             children: <Widget>[
-              /* Padding(
-                          padding: EdgeInsets.all(5),
-                        ), */
-              //              categoryName == CommonConstants.strDevice
-              //                  ? Container(
-              //                      //width: 120,
-              //                      margin: EdgeInsets.all(10),
-              //                      constraints: BoxConstraints(maxWidth: 220),
-              //                      child: GestureDetector(
-              //                        child: DottedBorder(
-              //                          color: Color(new CommonUtil().getMyPrimaryColor()),
-              //                          dashPattern: [9, 5],
-              //                          child: Container(
-              //                              padding: EdgeInsets.all(5),
-              //                              decoration: BoxDecoration(),
-              //                              alignment: Alignment.center,
-              //                              child: AutoSizeText(
-              //                                deviceName,
-              //                                maxFontSize: 14,
-              //                                minFontSize: 10,
-              //                                textAlign: TextAlign.center,
-              //                                style: TextStyle(
-              //                                  //TODO chnage theme
-              //                                    color:Color(new CommonUtil().getThemeColor()),
-              //                                    fontSize: 14,
-              //                                    fontWeight: FontWeight.w500),
-              //                              )),
-              //                        ),
-              //                        onTap: () {
-              //                          _showOverlay(context);
-              //                        },
-              //                      ),
-              //                    )
-              //                  : Container(),
-              //              /*  Padding(
-              //                padding: EdgeInsets.all(10),
-              //              ), */
               Expanded(
                 child: getCarousalImage(),
               ),
@@ -212,13 +175,13 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   saveMediaDialog(
       BuildContext context, String categoryName, String deviceName) {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-    print('pary categoryName' + categoryName);
+    //print('pary categoryName' + categoryName);
 
     audioPath = '';
     containsAudio = false;
     try {
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
-      print('pary deviceName' + deviceName);
+      //print('pary deviceName' + deviceName);
       setFileName();
     } catch (e) {
       print(e);

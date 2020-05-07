@@ -39,6 +39,8 @@ import android.speech.tts.UtteranceProgressListener
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
+import android.view.WindowManager
+import android.view.WindowManager.LayoutParams
 
 
 class MainActivity : FlutterActivity() {
@@ -68,6 +70,11 @@ class MainActivity : FlutterActivity() {
     private val smsBroadcastReceiver by lazy { SMSBroadcastReceiver() }
     internal var TAG = this@MainActivity::class.toString()
     private val SMS_CONSENT_REQUEST = 2  // Set to an unused request code
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+    }
 
 //    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
 //        super.onCreate(savedInstanceState, persistentState)
@@ -266,7 +273,7 @@ class MainActivity : FlutterActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             val km: KeyguardManager = getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure()) {
-                val authIntent: Intent = km.createConfirmDeviceCredentialIntent("MyFHB", "Please Authorize to use the Application")
+                val authIntent: Intent = km.createConfirmDeviceCredentialIntent("myFHB", "Please Authorize to use the Application")
                 startActivityForResult(authIntent, INTENT_AUTHENTICATE)
             }else{
                 _securityResult.success(1004)
