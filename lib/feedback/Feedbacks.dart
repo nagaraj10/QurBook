@@ -186,7 +186,7 @@ class _FeedbacksState extends State<Feedbacks> {
                         Padding(
                           padding: EdgeInsets.only(left: 20),
                           child: Text(
-                            'We would like to hear from you on your experience with MyFHB',
+                            'We would like to hear from you on your experience with myFHB',
                             softWrap: true,
                             style: TextStyle(color: Colors.white70),
                           ),
@@ -205,11 +205,9 @@ class _FeedbacksState extends State<Feedbacks> {
                     /*  Container(
                       child: Text('Feedback'),
                     ),*/
-                    Padding(
-                      padding: EdgeInsets.only(right: 20),
-                      child: _showFeedbacktextFiled(),
-                    ),
-                    //Divider(),
+
+                    _showFeedbacktextFiled(),
+                    Divider(),
                     Container(
                       height: 10,
                     ),
@@ -328,7 +326,7 @@ class _FeedbacksState extends State<Feedbacks> {
 
     print('params' + params.toString());
 
-    if (imagePaths != null) {
+    if (imagePaths != null && imagePaths.length > 0) {
       _healthReportListForUserBlock
           .submit(params.toString())
           .then((savedMetaDataResponse) {
@@ -359,60 +357,69 @@ class _FeedbacksState extends State<Feedbacks> {
     print('I am here ' + mediaMetaID);
     print('I am here audioPath' + audioPathMain);
     int k = 0;
-    for (int i = 0; i < imagePaths.length; i++) {
-      _healthReportListForUserBlock
-          .saveImage(imagePaths[i], mediaMetaID, '')
-          .then((postImageResponse) {
-        print('output image mediaMaster images' +
-            postImageResponse.response.data.mediaMasterId);
 
-        print('the value of k' +
-            k.toString() +
-            ' value of length' +
-            imagePaths.length.toString());
-        if ((audioPathMain != '' && k == imagePaths.length) ||
-            (audioPathMain != '' && k == imagePaths.length - 1)) {
-          _healthReportListForUserBlock
-              .saveImage(audioPathMain, mediaMetaID, '')
-              .then((postImageResponse) {
-            print('output audio mediaMaster' +
-                postImageResponse.response.data.mediaMasterId);
+    if (imagePaths != null && imagePaths.length > 0) {
+      for (int i = 0; i < imagePaths.length; i++) {
+        _healthReportListForUserBlock
+            .saveImage(imagePaths[i], mediaMetaID, '')
+            .then((postImageResponse) {
+          print('output image mediaMaster images' +
+              postImageResponse.response.data.mediaMasterId);
 
+          print('the value of k' +
+              k.toString() +
+              ' value of length' +
+              imagePaths.length.toString());
+          if ((audioPathMain != '' && k == imagePaths.length) ||
+              (audioPathMain != '' && k == imagePaths.length - 1)) {
+            _healthReportListForUserBlock
+                .saveImage(audioPathMain, mediaMetaID, '')
+                .then((postImageResponse) {
+              print('output audio mediaMaster' +
+                  postImageResponse.response.data.mediaMasterId);
+
+              _healthReportListForUserBlock.getHelthReportList().then((value) {
+                PreferenceUtil.saveCompleteData(
+                    Constants.KEY_COMPLETE_DATA, value.response.data);
+
+                print('Sucess 1');
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
+                //PageNavigator.goTo(context, '/feedbacks_success');
+                callFeedBackSuccess(context);
+              });
+            });
+          } else if (k == imagePaths.length - 1) {
             _healthReportListForUserBlock.getHelthReportList().then((value) {
               PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value.response.data);
-
-              print('Sucess 1');
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
+              print('Sucess 2');
+
+              callFeedBackSuccess(context);
+              //PageNavigator.goTo(context, '/feedbacks_success');
+            });
+          } else if (k == imagePaths.length) {
+            _healthReportListForUserBlock.getHelthReportList().then((value) {
+              PreferenceUtil.saveCompleteData(
+                  Constants.KEY_COMPLETE_DATA, value.response.data);
+              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                  .pop();
+              print('Sucess 3');
+
               //PageNavigator.goTo(context, '/feedbacks_success');
               callFeedBackSuccess(context);
             });
-          });
-        } else if (k == imagePaths.length - 1) {
-          _healthReportListForUserBlock.getHelthReportList().then((value) {
-            PreferenceUtil.saveCompleteData(
-                Constants.KEY_COMPLETE_DATA, value.response.data);
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-            print('Sucess 2');
+          }
 
-            callFeedBackSuccess(context);
-            //PageNavigator.goTo(context, '/feedbacks_success');
-          });
-        } else if (k == imagePaths.length) {
-          _healthReportListForUserBlock.getHelthReportList().then((value) {
-            PreferenceUtil.saveCompleteData(
-                Constants.KEY_COMPLETE_DATA, value.response.data);
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-            print('Sucess 3');
+          k++;
+        });
+      }
+    } else {
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-            //PageNavigator.goTo(context, '/feedbacks_success');
-            callFeedBackSuccess(context);
-          });
-        }
-
-        k++;
-      });
+      callFeedBackSuccess(context);
     }
   }
 
@@ -445,15 +452,19 @@ class _FeedbacksState extends State<Feedbacks> {
 
           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-          PageNavigator.goTo(context, '/feedbacks_success');
+          callFeedBackSuccess(context);
         });
       });
+    } else {
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+      callFeedBackSuccess(context);
     }
   }
 
   Widget _showFeedbacktextFiled() {
     return TextField(
-      cursorColor: Color(CommonUtil().getMyPrimaryColor()),
+      cursorColor: Theme.of(context).primaryColor,
       controller: feedbackController,
       maxLines: 1,
       keyboardType: TextInputType.text,
@@ -471,21 +482,19 @@ class _FeedbacksState extends State<Feedbacks> {
 //              onPressed: () => searchController.clear(),
 //              icon: Icon(Icons.clear, color: ColorUtils.lightgraycolor),
 //            ),
-          hintText: 'Feedback',
-          labelStyle: TextStyle(
-              fontSize: 12.0,
-              fontWeight: FontWeight.w400,
-              color: ColorUtils.myFamilyGreyColor),
-          hintStyle: TextStyle(
-            fontSize: 14.0,
-            color: ColorUtils.myFamilyGreyColor,
+        hintText: 'Feedback',
+        labelStyle: TextStyle(
+            fontSize: 12.0,
             fontWeight: FontWeight.w400,
-          ),
-          border: new UnderlineInputBorder(
-              borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
-          focusedBorder: new UnderlineInputBorder(
-              borderSide:
-                  BorderSide(color: Color(CommonUtil().getMyPrimaryColor())))),
+            color: ColorUtils.myFamilyGreyColor),
+        hintStyle: TextStyle(
+          fontSize: 14.0,
+          color: ColorUtils.myFamilyGreyColor,
+          fontWeight: FontWeight.w400,
+        ),
+        border: new UnderlineInputBorder(
+            borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
+      ),
     );
   }
 }

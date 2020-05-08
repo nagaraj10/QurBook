@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -174,7 +175,14 @@ class FamilyListView {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    sharedByMe[index].linkedData.nickName,
+                                    sharedByMe[index].linkedData.nickName !=
+                                            null
+                                        ? toBeginningOfSentenceCase(
+                                            sharedByMe[index]
+                                                .linkedData
+                                                .nickName
+                                                .toLowerCase())
+                                        : '',
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -182,7 +190,14 @@ class FamilyListView {
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
-                                    sharedByMe[index].linkedData.roleName,
+                                    sharedByMe[index].linkedData.roleName !=
+                                            null
+                                        ? toBeginningOfSentenceCase(
+                                            sharedByMe[index]
+                                                .linkedData
+                                                .roleName
+                                                .toLowerCase())
+                                        : '',
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(fontSize: 10),

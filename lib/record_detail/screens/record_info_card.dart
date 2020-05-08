@@ -405,7 +405,10 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
             children: <Widget>[
               Expanded(
                 flex: 6,
-                child: Text(deviceReadings[i].parameter),
+                child: Text(deviceReadings[i].parameter != null
+                    ? toBeginningOfSentenceCase(
+                        deviceReadings[i].parameter.toLowerCase())
+                    : ''),
               ),
               Expanded(
                 flex: 2,

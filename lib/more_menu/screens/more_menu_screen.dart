@@ -39,7 +39,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     0xff0483df,
     0xff118c94,
     0xff17a597,
-    //0xff7a72c7,
   ];
 
   List<int> myGradient = [
@@ -48,7 +47,6 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     0xff01bbd4,
     0xff0cbcb6,
     0xff84ce6b,
-    //0xff828bea,
   ];
 
   String selectedMaya = PreferenceUtil.getStringValue('maya_asset') != null

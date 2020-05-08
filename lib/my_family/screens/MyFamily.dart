@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_country_picker/country.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_arguments.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -326,9 +327,14 @@ class _MyFamilyState extends State<MyFamily> {
                   children: <Widget>[
                     Text(
                       position == 0
-                          ? myProfile.response.data.generalInfo.name
+                          ? myProfile.response.data.generalInfo.name != null
+                              ? toBeginningOfSentenceCase(myProfile
+                                  .response.data.generalInfo.name
+                                  .toLowerCase())
+                              : ''
                           : data.linkedData.nickName != null
-                              ? data.linkedData.nickName
+                              ? toBeginningOfSentenceCase(
+                                  data.linkedData.nickName.toLowerCase())
                               : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                       softWrap: false,

@@ -117,7 +117,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                       ? PreferenceUtil
                                                               .getStringValue(
                                                                   'maya_asset') +
-                                                          '_main.png'
+                                                          '.png'
                                                       : 'assets/maya/maya_us_main.png',
                                                   height: 60,
                                                   width: 60,

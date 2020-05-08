@@ -80,8 +80,7 @@ class _SuperMayaState extends State<SuperMaya> {
                   children: <Widget>[
                     Image.asset(
                       PreferenceUtil.getStringValue('maya_asset') != null
-                          ? PreferenceUtil.getStringValue('maya_asset') +
-                              '_main.png'
+                          ? PreferenceUtil.getStringValue('maya_asset') + '.png'
                           : 'assets/maya/maya_us_main.png',
                       height: 160,
                       width: 160,
