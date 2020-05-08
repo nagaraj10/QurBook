@@ -291,7 +291,22 @@ class _MyFamilyState extends State<MyFamily> {
                         width: 60,
                       )
                     : data.profileData.profilePicThumbnail == null
-                        ? Container(width: 60, height: 60)
+                        ? Container(
+                            width: 60,
+                            height: 60,
+                            color: Color(fhbColors.bgColorContainer),
+                            child: Center(
+                              child: Text(
+                                data.linkedData.nickName != null
+                                    ? data.linkedData.nickName[0].toUpperCase()
+                                    : '',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            ),
+                          )
                         : Image.memory(
                             Uint8List.fromList(
                                 data.profileData.profilePicThumbnail.data),
@@ -406,6 +421,7 @@ class _MyFamilyState extends State<MyFamily> {
                                               Constants.KEY_FAMILYMEMBER,
                                               value.response.data)
                                           .then((value) {
+                                        rebuildFamilyBlock();
                                         setState(() {});
                                       });
                                     } else {
@@ -919,7 +935,7 @@ class _MyFamilyState extends State<MyFamily> {
                     nameController.text = '';
                     isPrimaryNoSelected = false;
                     selectedRelationShip = null;
-
+                    rebuildFamilyBlock();
                     _familyListBloc.getFamilyMembersList();
                   });
                 });
@@ -964,7 +980,7 @@ class _MyFamilyState extends State<MyFamily> {
                     nameController.text = '';
                     isPrimaryNoSelected = false;
                     selectedRelationShip = null;
-
+                    rebuildFamilyBlock();
                     _familyListBloc.getFamilyMembersList();
                   });
                 });
@@ -987,5 +1003,10 @@ class _MyFamilyState extends State<MyFamily> {
       Alert.displayAlertPlain(context,
           title: "Error", content: CommonConstants.all_fields);
     }
+  }
+
+  rebuildFamilyBlock() {
+    _familyListBloc = null;
+    _familyListBloc = new FamilyListBloc();
   }
 }

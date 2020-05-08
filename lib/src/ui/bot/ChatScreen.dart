@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:loading/indicator/ball_pulse_indicator.dart';
+import 'package:loading/loading.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
@@ -225,14 +227,17 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       setState(() {});
       chatData(conversations);
       //print('current length of ${conversations.length}');
-      await tts_platform.invokeMethod(
-          'textToSpeech', {"message": res.text, "isClose": false}).then((res) {
-        if (!isEndOfConv) {
-          gettingReposnseFromNative();
-        } else {
-          refreshData();
-        }
-      });
+      Future.delayed(
+          Duration(seconds: 4),
+          () => tts_platform.invokeMethod('textToSpeech',
+                  {"message": res.text, "isClose": false}).then((res) {
+                if (!isEndOfConv) {
+                  gettingReposnseFromNative();
+                } else {
+                  refreshData();
+                }
+              }));
+
       return jsonResponse;
     } else {
       print('server issue');
@@ -327,7 +332,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           child: Image.asset(
             PreferenceUtil.getStringValue('maya_asset') != null
                 ? PreferenceUtil.getStringValue('maya_asset') + '.png'
-                : 'assets/maya/maya_us.png',
+                : 'assets/maya/maya_us_main.png',
             height: 32,
             width: 32,
           ),
@@ -362,31 +367,16 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                     bottomRight: Radius.circular(25),
                   ),
                 ),
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      c.text,
-                      style: Theme.of(context).textTheme.body1.apply(
-                            color: Colors.white,
-                          ),
-                    ),
-                    c.imageUrl != null
-                        ? Padding(
-                            child: Image.network(
-                              c.imageUrl,
-                              height:
-                                  (MediaQuery.of(context).size.width * .6) - 5,
-                              width:
-                                  (MediaQuery.of(context).size.width * .6) - 5,
-                              fit: BoxFit.cover,
-                            ),
-                            padding: EdgeInsets.all(10),
-                          )
-                        : SizedBox(
-                            height: 0,
-                            width: 0,
-                          )
-                  ],
+                child: FutureBuilder(
+                  future: mayaData(c, context),
+                  builder: (BuildContext context, snapshot) {
+                    return snapshot.hasData
+                        ? snapshot.data
+                        : Loading(
+                            indicator: BallPulseIndicator(),
+                            size: 20.0,
+                            color: Colors.white);
+                  },
                 ),
               ),
             ),
@@ -399,6 +389,36 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         ),
         SizedBox(width: 20),
       ],
+    );
+  }
+
+  Future<Widget> mayaData(Conversation c, BuildContext context) {
+    return Future.delayed(
+      Duration(seconds: 3),
+      () => Column(
+        children: <Widget>[
+          Text(
+            c.text,
+            style: Theme.of(context).textTheme.body1.apply(
+                  color: Colors.white,
+                ),
+          ),
+          c.imageUrl != null
+              ? Padding(
+                  child: Image.network(
+                    c.imageUrl,
+                    height: (MediaQuery.of(context).size.width * .6) - 5,
+                    width: (MediaQuery.of(context).size.width * .6) - 5,
+                    fit: BoxFit.cover,
+                  ),
+                  padding: EdgeInsets.all(10),
+                )
+              : SizedBox(
+                  height: 0,
+                  width: 0,
+                )
+        ],
+      ),
     );
   }
 

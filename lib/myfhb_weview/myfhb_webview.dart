@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
@@ -21,6 +22,7 @@ class MyFhbWebView extends StatefulWidget {
 
 class _MyFhbWebViewState extends State<MyFhbWebView> {
   WebViewController _controller;
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -37,15 +39,30 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
           ),
           title: Text(widget.title),
         ),
-        body: WebView(
-          initialUrl: widget.selectedUrl,
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller = webViewController;
-            widget.isLocalAsset
-                ? _loadHtmlFromAssets(widget.selectedUrl)
-                : _controller.loadUrl(widget.selectedUrl);
-          },
+        body: Stack(
+          children: <Widget>[
+            WebView(
+              initialUrl: widget.selectedUrl,
+              javascriptMode: JavascriptMode.unrestricted,
+              onWebViewCreated: (WebViewController webViewController) {
+                _controller = webViewController;
+                widget.isLocalAsset
+                    ? _loadHtmlFromAssets(widget.selectedUrl)
+                    : _controller.loadUrl(widget.selectedUrl);
+              },
+              onPageFinished: (_) {
+                setState(() {
+                  isLoading = false;
+                });
+              },
+            ),
+            isLoading
+                ? Center(
+                    child: CircularProgressIndicator(
+                    backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                  ))
+                : Container(),
+          ],
         ));
   }
 

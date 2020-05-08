@@ -1480,7 +1480,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                 ? Image.file(imageURIProfile,
                     fit: BoxFit.cover, width: 100, height: 100)
                 : Container(
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                    color: Colors.black.withOpacity(0.2),
                   )),
         Positioned(
           left: 25,

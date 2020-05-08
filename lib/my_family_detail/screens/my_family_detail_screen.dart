@@ -253,6 +253,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       child: Column(
         children: <Widget>[
           Container(
+              color: Color(CommonUtil().getMyPrimaryColor()),
               height: expandedHeight,
               child: Stack(
                 fit: StackFit.expand,
@@ -262,7 +263,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                       ? Image.file(File(profilebanner),
                           fit: BoxFit.cover, width: 100, height: 100)
                       : Container(
-                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          color: Colors.black.withOpacity(0.2),
                         ),
                   Positioned(
                       top: expandedHeight - 50,

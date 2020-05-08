@@ -154,7 +154,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                     Image.asset(
                       PreferenceUtil.getStringValue('maya_asset') != null
                           ? PreferenceUtil.getStringValue('maya_asset') + '.png'
-                          : 'assets/maya/maya_us.png',
+                          : 'assets/maya/maya_us_main.png',
                       height: 32,
                       width: 32,
                     ),

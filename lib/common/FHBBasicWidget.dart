@@ -398,8 +398,7 @@ class FHBBasicWidget {
                           Text(
                             desc,
                             textAlign: TextAlign.start,
-                            style:
-                                TextStyle(color: Colors.white60, fontSize: 13),
+                            style: TextStyle(color: Colors.white, fontSize: 13),
                             softWrap: true,
                           ),
                         ],
@@ -426,7 +425,7 @@ class FHBBasicWidget {
                   padding: EdgeInsets.all(4),
                   alignment: FractionalOffset.centerLeft,
                   child: new Image(
-                    image: new AssetImage('assets/maya/maya_us.png'),
+                    image: new AssetImage('assets/maya/maya_us_main.png'),
                     height: 80.0,
                     width: 80.0,
                   ),

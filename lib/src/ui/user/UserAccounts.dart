@@ -158,7 +158,7 @@ class _UserAccountsState extends State<UserAccounts>
                       ? Image.file(imageURIProfile,
                           fit: BoxFit.cover, width: 100, height: 100)
                       : Container(
-                          color: Color(new CommonUtil().getMyGredientColor()),
+                          color: Colors.black.withOpacity(0.2),
                         )),
             ),
             SliverPersistentHeader(

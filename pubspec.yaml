@@ -74,6 +74,7 @@ dependencies:
   image_cropper:
   android_intent: ^0.3.7+1
   pdf_render: ^0.57.2
+  loading: ^1.0.2
 
 dev_dependencies:
   flutter_test:

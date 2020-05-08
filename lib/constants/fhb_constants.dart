@@ -157,9 +157,9 @@ const String NO_DATA_FAMIY = 'Looks like you haven'
 const String NO_DATA_SCHEDULES =
     'Never miss any schedule. \n Add it to your calendar and get notified.';
 const String NO_DATA_PRESCRIPTION =
-    'Don\'t want to type? \n Take a picture or upload from gallery to add prescriptions.';
+    'Don\'t want to type? \n Take a picture or upload from gallery \nto add prescriptions.';
 const String NO_DATA_DEVICES =
-    'Click \'n\' go (or) tell \"Maya\" and it will record for you.';
+    'Click \'n\' go (or) tell \"Maya\" \nand it will record for you.';
 const String NO_DATA_LAB_REPORT = 'Upload your report or click \'n\' go';
 const String NO_DATA_MEDICAL_REPORT =
     'Sure! Upload your medical reports \n or click \'n\' go';
@@ -168,7 +168,7 @@ const String NO_DATA_BILLS =
 const String NO_ID_DOCS =
     'Click the camera icon or upload ID document from gallery';
 const String NO_VOICE_RECRODS =
-    'Just add personal voice notes to your medical records.';
+    'Just add personal voice notes \nto your medical records.';
 const String NO_DATA_OTHERS =
     'Ofcourse! Add files here to store any other medical records';
 const String COVER_IMG_DESC = 'Add style. \nTap here to add your favorite DP.';

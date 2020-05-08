@@ -27,7 +27,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
   List<String> mayaAssets = [
-    'assets/maya/maya_us',
+    'assets/maya/maya_us_main',
     'assets/maya/maya_india',
     'assets/maya/maya_africa',
     'assets/maya/maya_arab',
@@ -53,7 +53,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   String selectedMaya = PreferenceUtil.getStringValue('maya_asset') != null
       ? PreferenceUtil.getStringValue('maya_asset')
-      : 'assets/maya/maya_us.png';
+      : 'assets/maya/maya_us_main.png';
 
   int selectedPrimaryColor = PreferenceUtil.getSavedTheme('pri_color') != null
       ? PreferenceUtil.getSavedTheme('pri_color')

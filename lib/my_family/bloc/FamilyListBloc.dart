@@ -56,8 +56,10 @@ class FamilyListBloc implements BaseBloc {
   @override
   void dispose() {
     _familyListController?.close();
-
-    _relationshipListController.close();
+    _relationshipListController?.close();
+    _userDeLinkingController?.close();
+    _userLinkingController?.close();
+    _userLinkingForPrimaryNoController?.close();
   }
 
   FamilyListBloc() {

@@ -112,8 +112,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           new Container(
             //margin: EdgeInsets.all(5),
             child: Container(
-              margin: EdgeInsets.all(10),
-              color: Colors.white,
+              margin: EdgeInsets.only(left: 10, right: 10, bottom: 5),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
               child: TextField(
                 controller: _textFieldController,
                 autofocus: true,

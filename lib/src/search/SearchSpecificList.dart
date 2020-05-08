@@ -93,7 +93,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             //margin: EdgeInsets.all(5),
             child: Container(
               margin: EdgeInsets.all(10),
-              color: Colors.white,
+              decoration: BoxDecoration(
+                  color: Colors.red, borderRadius: BorderRadius.circular(30)),
               child: TextField(
                 controller: _textFieldController,
                 onChanged: (editedValue) {

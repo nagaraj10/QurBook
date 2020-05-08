@@ -118,7 +118,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                               .getStringValue(
                                                                   'maya_asset') +
                                                           '_main.png'
-                                                      : 'assets/maya/maya_us.png',
+                                                      : 'assets/maya/maya_us_main.png',
                                                   height: 60,
                                                   width: 60,
                                                 ),
