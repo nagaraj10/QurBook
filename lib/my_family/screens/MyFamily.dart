@@ -284,13 +284,20 @@ class _MyFamilyState extends State<MyFamily> {
             children: <Widget>[
               ClipOval(
                 child: position == 0
-                    ? Image.memory(
-                        Uint8List.fromList(myProfile.response.data.generalInfo
-                            .profilePicThumbnail.data),
-                        fit: BoxFit.cover,
-                        height: 60,
-                        width: 60,
-                      )
+                    ? myProfile.response.data.generalInfo != null
+                        ? Image.memory(
+                            Uint8List.fromList(myProfile.response.data
+                                .generalInfo.profilePicThumbnail.data),
+                            fit: BoxFit.cover,
+                            height: 60,
+                            width: 60,
+                          )
+                        : Container(
+                            width: 50,
+                            height: 50,
+                            color: Color(
+                              fhbColors.bgColorContainer,
+                            ))
                     : data.profileData.profilePicThumbnail == null
                         ? Container(
                             width: 60,

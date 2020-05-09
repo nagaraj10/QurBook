@@ -186,7 +186,7 @@ class _FeedbacksState extends State<Feedbacks> {
                         Padding(
                           padding: EdgeInsets.only(left: 20),
                           child: Text(
-                            'We would like to hear from you on your experience with myFHB',
+                            'We would like to hear from you on your experience with MyFHB',
                             softWrap: true,
                             style: TextStyle(color: Colors.white70),
                           ),

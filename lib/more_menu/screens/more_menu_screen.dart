@@ -28,9 +28,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   List<String> mayaAssets = [
     'assets/maya/maya_us_main',
-    'assets/maya/maya_india',
-    'assets/maya/maya_africa',
-    'assets/maya/maya_arab',
+    'assets/maya/maya_india_main',
+    'assets/maya/maya_africa_main',
+    'assets/maya/maya_arab_main',
   ];
 
   List<int> myThemes = [
