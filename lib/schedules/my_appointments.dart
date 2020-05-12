@@ -79,13 +79,11 @@ class _MyAppointmentState extends State<MyAppointment> {
             //onGenerateRoute: Router.createRoute,
             home: new Scaffold(
               //appBar: _buildBar(context),
-              floatingActionButton: FloatingActionButton.extended(
+              floatingActionButton: FloatingActionButton(
                 onPressed: () {
                   PageNavigator.goTo(context, '/add_appointments');
                 },
-                label: Text('Add'),
-                icon: Icon(Icons.add),
-                //TODO chnage theme
+                child: Icon(Icons.add),
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
               body: detailsList.length > 0

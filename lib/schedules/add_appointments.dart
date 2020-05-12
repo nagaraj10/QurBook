@@ -233,7 +233,6 @@ class _AddAppointmentState extends State<AddAppointments> {
               ),
               RaisedGradientButton(
                 gradient: LinearGradient(colors: [
-                  //TODO chnage theme
                   Color(new CommonUtil().getMyPrimaryColor()),
                   Color(new CommonUtil().getMyGredientColor()),
                 ]),
