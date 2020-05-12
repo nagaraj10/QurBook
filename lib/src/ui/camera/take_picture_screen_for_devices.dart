@@ -340,6 +340,7 @@ class TakePictureScreenForDevicesState
                                             content:
                                                 'Please choose the devices');
                                       } else {
+                                        //imagePaths.removeLast();
                                         // Take the Picture in a try / catch block. If anything goes wrong,
                                         // catch the error.
                                         try {
@@ -358,7 +359,9 @@ class TakePictureScreenForDevicesState
 
                                           // Attempt to take a picture and log where it's been saved.
                                           await _controller.takePicture(path);
+
                                           imagePaths.add(path);
+
                                           setState(() {});
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
@@ -487,6 +490,7 @@ class TakePictureScreenForDevicesState
                                             setState(() {});
                                           } else {
                                             // If the picture was taken, display it on a new screen.
+                                            imagePaths.clear();
                                             imagePaths.add(path);
                                             callDisplayPictureScreen(context);
                                           }
@@ -603,6 +607,7 @@ class TakePictureScreenForDevicesState
     for (Asset asset in resultList) {
       String filePath =
           await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
+      imagePaths.clear();
       imagePaths.add(filePath);
     }
   }
