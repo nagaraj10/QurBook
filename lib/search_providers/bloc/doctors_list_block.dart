@@ -39,4 +39,19 @@ class DoctorsListBlock implements BaseBloc {
       print(e);
     }
   }
+
+  Future<DoctorsListResponse> getDoctorObjUsingId(String doctorsId) async {
+    DoctorsListResponse doctorsListResponse;
+    doctorsListSink.add(ApiResponse.loading('Signing in user'));
+    try {
+      doctorsListResponse =
+          await _doctorsListRepository.getDoctorUsingId(doctorsId);
+      doctorsListSink.add(ApiResponse.completed(doctorsListResponse));
+    } catch (e) {
+      doctorsListSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+
+    return doctorsListResponse;
+  }
 }

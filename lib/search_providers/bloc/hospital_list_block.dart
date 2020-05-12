@@ -41,4 +41,20 @@ class HospitalListBlock implements BaseBloc {
       print(e);
     }
   }
+
+  Future<HospitalListResponse> getHospitalObjectusingId(
+      String hospitalId) async {
+    HospitalListResponse hospitalListResponse;
+    hospitalListSink.add(ApiResponse.loading('Signing in user'));
+    try {
+      hospitalListResponse =
+          await _hospitalListRepository.gethopitalFromId(hospitalId);
+      hospitalListSink.add(ApiResponse.completed(hospitalListResponse));
+    } catch (e) {
+      hospitalListSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+
+    return hospitalListResponse;
+  }
 }

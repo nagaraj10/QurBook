@@ -136,9 +136,18 @@ class AudioWidgetState extends State<AudioWidget> {
                   icon: Icon(Icons.delete, size: 20, color: Colors.red[600]),
                   onPressed: () {
                     widget.audioFile = '';
-                    setState(() {
-                      widget.deleteAudioFile(false, widget.audioFile);
-                    });
+
+                    if (flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
+                        flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED) {
+                      flutterSound.stopPlayer();
+                      setState(() {
+                        widget.deleteAudioFile(false, widget.audioFile);
+                      });
+                    } else {
+                      setState(() {
+                        widget.deleteAudioFile(false, widget.audioFile);
+                      });
+                    }
                   }))
         ],
         mainAxisAlignment: MainAxisAlignment.center,

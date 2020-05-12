@@ -36,4 +36,17 @@ class LabsListBlock implements BaseBloc {
       print(e);
     }
   }
+
+  Future<LabsListResponse> getLabsListUsingID(String labId) async {
+    LabsListResponse labsListResponse;
+    labListSink.add(ApiResponse.loading('Signing in user'));
+    try {
+      labsListResponse = await _labsListRepository.getLabsFromId(labId);
+      labListSink.add(ApiResponse.completed(labsListResponse));
+    } catch (e) {
+      labListSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+    return labsListResponse;
+  }
 }

@@ -144,12 +144,41 @@ class FamilyListView {
                                               .linkedData
                                               .nickName ==
                                           'Self'
-                                      ? new FHBBasicWidget()
-                                          .getProfilePicWidget(myProfile
-                                              .response
-                                              .data
-                                              .generalInfo
-                                              .profilePicThumbnail)
+                                      ? myProfile.response.data.generalInfo
+                                                  .profilePicThumbnail !=
+                                              null
+                                          ? new FHBBasicWidget()
+                                              .getProfilePicWidget(myProfile
+                                                  .response
+                                                  .data
+                                                  .generalInfo
+                                                  .profilePicThumbnail)
+                                          : Container(
+                                              height: 50,
+                                              width: 50,
+                                              child: Center(
+                                                  child: Text(
+                                                      myProfile
+                                                                  .response
+                                                                  .data
+                                                                  .generalInfo
+                                                                  .qualifiedFullName !=
+                                                              null
+                                                          ? myProfile
+                                                              .response
+                                                              .data
+                                                              .generalInfo
+                                                              .qualifiedFullName
+                                                              .firstName[0]
+                                                              .toUpperCase()
+                                                          : '',
+                                                      style: TextStyle(
+                                                          color: Color(CommonUtil()
+                                                              .getMyPrimaryColor()),
+                                                          fontSize: 22))),
+                                              color: const Color(
+                                                  fhbColors.bgColorContainer),
+                                            )
                                       : sharedByMe[index]
                                                   .profileData
                                                   .profilePicThumbnail !=
@@ -167,6 +196,25 @@ class FamilyListView {
                                           : Container(
                                               height: 50,
                                               width: 50,
+                                              child: Center(
+                                                child: Text(
+                                                  sharedByMe[index]
+                                                              .profileData
+                                                              .qualifiedFullName
+                                                              .firstName !=
+                                                          null
+                                                      ? sharedByMe[index]
+                                                          .profileData
+                                                          .qualifiedFullName
+                                                          .firstName[0]
+                                                          .toUpperCase()
+                                                      : '',
+                                                  style: TextStyle(
+                                                      color: Color(CommonUtil()
+                                                          .getMyPrimaryColor()),
+                                                      fontSize: 22),
+                                                ),
+                                              ),
                                               color: const Color(
                                                   fhbColors.bgColorContainer),
                                             )),

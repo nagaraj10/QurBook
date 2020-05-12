@@ -68,11 +68,6 @@ class MyProvidersDoctorsList extends StatelessWidget {
                                 width: 50,
                                 height: 50,
                                 padding: EdgeInsets.all(12),
-                                child: ImageIcon(
-                                    AssetImage('assets/icons/stetho.png'),
-                                    size: 20,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
                                 color: Color(fhbColors.bgColorContainer))),
                     SizedBox(
                       width: 20,
@@ -83,6 +78,7 @@ class MyProvidersDoctorsList extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          SizedBox(height: 5),
                           AutoSizeText(
                             eachDoctorModel.name != null
                                 ? toBeginningOfSentenceCase(
@@ -95,7 +91,7 @@ class MyProvidersDoctorsList extends StatelessWidget {
                             ),
                             textAlign: TextAlign.start,
                           ),
-                          //SizedBox(height: 5),
+                          SizedBox(height: 5),
                           eachDoctorModel.specialization != null
                               ? AutoSizeText(
                                   eachDoctorModel.specialization != null
@@ -110,6 +106,7 @@ class MyProvidersDoctorsList extends StatelessWidget {
                                   textAlign: TextAlign.start,
                                 )
                               : SizedBox(height: 0, width: 0),
+                          SizedBox(height: 5),
                         ],
                       ),
                     ),

@@ -430,7 +430,7 @@ class CommonUtil {
         profileData: profileData, linkedData: linkedData);
   }
 
-  void getMedicalPreference({Function callBackToRefresh}) {
+/*   void getMedicalPreference({Function callBackToRefresh}) {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
     _myProfileBloc
         .getCompleteProfileData(Constants.KEY_USERID)
@@ -476,6 +476,86 @@ class CommonUtil {
         } else {
           PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
         }
+        callBackToRefresh();
+      } else {
+        PreferenceUtil.savePrefereDoctors(Constants.KEY_PREFERRED_DOCTOR, null);
+        PreferenceUtil.savePrefereHospital(
+            Constants.KEY_PREFERRED_HOSPITAL, null);
+
+        PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
+        callBackToRefresh();
+      }
+    });
+  }
+
+  */
+
+  void getMedicalPreference({Function callBackToRefresh}) async {
+    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+    _myProfileBloc
+        .getCompleteProfileData(Constants.KEY_USERID)
+        .then((profileCompleteData) {
+      if (profileCompleteData.response.data.medicalPreferences != null) {
+        MedicalPreferences medicalPreferences =
+            profileCompleteData.response.data.medicalPreferences;
+
+        PreferenceUtil.savePrefereDoctors(Constants.KEY_PREFERRED_DOCTOR, null);
+
+        if (medicalPreferences.preferences.doctorIds != null &&
+            medicalPreferences.preferences.doctorIds.length > 0) {
+          medicalPreferences.preferences.doctorIds.sort(
+              (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+
+          for (DoctorIds doctorIds
+              in medicalPreferences.preferences.doctorIds) {
+            if (doctorIds.isDefault) {
+              PreferenceUtil.savePrefereDoctors(
+                  Constants.KEY_PREFERRED_DOCTOR, doctorIds);
+            }
+          }
+        } else {
+          PreferenceUtil.savePrefereDoctors(
+              Constants.KEY_PREFERRED_DOCTOR, null);
+        }
+
+        if (medicalPreferences.preferences.hospitalIds != null &&
+            medicalPreferences.preferences.hospitalIds.length > 0) {
+          PreferenceUtil.savePrefereHospital(
+              Constants.KEY_PREFERRED_HOSPITAL, null);
+          medicalPreferences.preferences.hospitalIds.sort(
+              (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+
+          for (HospitalIds hospitalIds
+              in medicalPreferences.preferences.hospitalIds) {
+            if (hospitalIds.isDefault) {
+              PreferenceUtil.savePrefereHospital(
+                  Constants.KEY_PREFERRED_HOSPITAL, hospitalIds);
+            }
+          }
+        } else {
+          PreferenceUtil.savePrefereHospital(
+              Constants.KEY_PREFERRED_HOSPITAL, null);
+        }
+
+        PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
+
+        if (medicalPreferences.preferences.laboratoryIds != null &&
+            medicalPreferences.preferences.laboratoryIds.length > 0) {
+          medicalPreferences.preferences.laboratoryIds.sort(
+              (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+
+          for (LaboratoryIds laboratoryIds
+              in medicalPreferences.preferences.laboratoryIds) {
+            if (laboratoryIds.isDefault) {
+              PreferenceUtil.savePreferedLab(
+                  Constants.KEY_PREFERRED_LAB, laboratoryIds);
+            }
+          }
+        } else {
+          PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
+        }
+
+        // PreferenceUtil.saveCompleteProfileData(Constants.KEY_COMPLETE_PROFILEDATA,profileCompleteData);
         callBackToRefresh();
       } else {
         PreferenceUtil.savePrefereDoctors(Constants.KEY_PREFERRED_DOCTOR, null);

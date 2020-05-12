@@ -508,7 +508,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
           containsAudio = containsAudioClone;
           audioPath = audioPathClone;
-          print('Delete Media Meta');
+          // print('Delete Media Meta');
           deleteMediRecord(audioMediaId);
         }),
       ],
@@ -1077,8 +1077,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     AssetImage('assets/icons/attach.png'),
                                     color: Colors.white),
                                 onPressed: () {
-                                  print('pdf is pressed');
-
+                                  //print('pdf is pressed');
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PDFViewer(pdfFile),
                                   ));
@@ -1138,7 +1137,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Widget getDocumentImageWidgetClone() {
-    print('inside clone');
+    //print('inside clone');
 
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;

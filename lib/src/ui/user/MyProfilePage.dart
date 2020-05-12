@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -18,6 +19,7 @@ class MyProfilePage extends StatefulWidget {
 class _MyProfilePageState extends State<MyProfilePage> {
   //MyProfileBloc _myProfileBloc;
 
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
   var mobile = TextEditingController();
   var name = TextEditingController();
   var email = TextEditingController();
@@ -47,7 +49,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return getProfileDetailClone();
+    return Scaffold(key: scaffold_state, body: getProfileDetailClone());
   }
 
   Widget getProfileDetailClone() {
@@ -55,7 +57,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    print('profile data :${myProfile.response.data}');
+    //print('profile data :${myProfile.response.data}');
 
     profileWidget = getProfileWidget(myProfile.response.data);
 
@@ -290,6 +292,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     addFamilyUserInfoBloc.verifyEmail().then((value) {
       if (value.success &&
           value.message.contains(Constants.MSG_VERIFYEMAIL_VERIFIED)) {
+        new FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
       } else {
         PreferenceUtil.saveString(Constants.PROFILE_EMAIL, email.text);
         print(PreferenceUtil.getStringValue(Constants.MOB_NUM) + " NUMBER");

@@ -10,4 +10,9 @@ class DoctorsListRepository {
         "doctors/search?sortBy=name.asc&offset=0&limit=10&keyword=", param);
     return DoctorsListResponse.fromJson(response);
   }
+
+  Future<DoctorsListResponse> getDoctorUsingId(String doctorsId) async {
+    final response = await _helper.getDoctorsFromId("doctors/", doctorsId);
+    return DoctorsListResponse.fromJson(response);
+  }
 }

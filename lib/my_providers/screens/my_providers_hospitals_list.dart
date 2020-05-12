@@ -62,12 +62,11 @@ class MyProvidersHospitalsList extends StatelessWidget {
                                 width: 50,
                                 fit: BoxFit.cover,
                               )
-                            : Image.asset(
-                                'assets/launcher/myfhb.png',
-                                height: 50,
+                            : Container(
                                 width: 50,
-                                fit: BoxFit.cover,
-                              )),
+                                height: 50,
+                                padding: EdgeInsets.all(12),
+                                color: Color(fhbColors.bgColorContainer))),
                     SizedBox(
                       width: 20,
                     ),
@@ -77,7 +76,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          //SizedBox(height: 10),
+                          SizedBox(height: 5),
                           AutoSizeText(
                             eachHospitalModel.name != null
                                 ? toBeginningOfSentenceCase(
@@ -90,6 +89,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
                             ),
                             textAlign: TextAlign.start,
                           ),
+                          SizedBox(height: 5),
                           AutoSizeText(
                             eachHospitalModel.addressLine1 != null
                                 ? eachHospitalModel.addressLine1
@@ -102,6 +102,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                                 color: ColorUtils.lightgraycolor),
                           ),
+                          SizedBox(height: 5),
                         ],
                       ),
                     ),

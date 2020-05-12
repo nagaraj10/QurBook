@@ -35,6 +35,7 @@ class CommonConstants {
   static final String CAT_JSON_HOSPITAL = "Catcode006_Typecode001";
 
   static String appVersion = 'default app version';
+  static String serach_specific_list = 'Search Specific List';
 
   /**
    * KeyWords tp save prefernce values,error dipslay 

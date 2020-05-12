@@ -62,12 +62,11 @@ class MyProvidersLabsList extends StatelessWidget {
                                 width: 50,
                                 fit: BoxFit.cover,
                               )
-                            : Image.asset(
-                                'assets/launcher/myfhb.png',
-                                height: 50,
+                            : Container(
                                 width: 50,
-                                fit: BoxFit.cover,
-                              )),
+                                height: 50,
+                                padding: EdgeInsets.all(12),
+                                color: Color(fhbColors.bgColorContainer))),
                     SizedBox(
                       width: 20,
                     ),
@@ -77,7 +76,7 @@ class MyProvidersLabsList extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          //SizedBox(height: 10),
+                          SizedBox(height: 5),
                           AutoSizeText(
                             eachLabModel.name != null
                                 ? toBeginningOfSentenceCase(eachLabModel.name)
@@ -89,7 +88,7 @@ class MyProvidersLabsList extends StatelessWidget {
                             ),
                             textAlign: TextAlign.start,
                           ),
-                          //SizedBox(height: 5),
+                          SizedBox(height: 5),
                           AutoSizeText(
                             eachLabModel.addressLine1 != null
                                 ? eachLabModel.addressLine1
@@ -102,6 +101,7 @@ class MyProvidersLabsList extends StatelessWidget {
                                 fontWeight: FontWeight.w400,
                                 color: ColorUtils.lightgraycolor),
                           ),
+                          SizedBox(height: 5),
                         ],
                       ),
                     ),

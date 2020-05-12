@@ -322,8 +322,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              _showViewInsuranceButton(sharedbyme),
-              _showViewHospitalButton(sharedbyme)
+              Expanded(
+                flex: 1,
+                child: _showViewInsuranceButton(sharedbyme),
+              ),
+              Expanded(
+                flex: 1,
+                child: _showViewHospitalButton(sharedbyme),
+              )
             ],
           ),
           SizedBox(height: 20),
@@ -872,9 +878,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       ),
     );
 
-    return new Padding(
+    return viewInsuranceButtonWithGesture;
+
+    /* return new Padding(
         padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
-        child: viewInsuranceButtonWithGesture);
+        child: viewInsuranceButtonWithGesture);*/
   }
 
   Widget _showViewHospitalButton(Sharedbyme sharedbyme) {
@@ -917,9 +925,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       ),
     );
 
-    return new Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
-        child: viewHospitalButtonWithGesture);
+    return viewHospitalButtonWithGesture;
   }
 
   Widget getAllCustomRoles() {

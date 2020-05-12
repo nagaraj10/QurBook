@@ -217,6 +217,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     .then((signInResponse) {
                   print('paru' + signInResponse.toString());
                   if (signInResponse.message == Constants.STR_MSG_SIGNUP ||
+                      signInResponse.message == Constants.STR_MSG_SIGNUP1 ||
                       signInResponse.message == Constants.STR_VERIFY_OTP ||
                       signInResponse.message == Constants.STR_VERIFY_USER)
                     //PageNavigator.goTo(context, '/sign_up_screen');

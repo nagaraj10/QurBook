@@ -39,8 +39,6 @@ import android.speech.tts.UtteranceProgressListener
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import android.view.WindowManager
-import android.view.WindowManager.LayoutParams
 
 
 class MainActivity : FlutterActivity() {
@@ -70,11 +68,6 @@ class MainActivity : FlutterActivity() {
     private val smsBroadcastReceiver by lazy { SMSBroadcastReceiver() }
     internal var TAG = this@MainActivity::class.toString()
     private val SMS_CONSENT_REQUEST = 2  // Set to an unused request code
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-    }
 
 //    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
 //        super.onCreate(savedInstanceState, persistentState)
@@ -168,18 +161,15 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VOICE_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == "speakWithVoiceAssistant") {
                 _result=result
+//                val rec_Permisson = ContextCompat.checkSelfPermission(this,android.Manifest.permission.RECORD_AUDIO)
+////                if(rec_Permisson==PackageManager.PERMISSION_GRANTED && tts?.isSpeaking()!=true){
+////                    speakWithVoiceAssistant()
+////                    //result.success(voiceText)
+////                }else{
+////                    Log.i("RECORD_PERMISSION","we cant record without your permission.")
+////                    requestPermissionFromUSer()
+////                }
                 speakWithVoiceAssistant()
-
-                /*
-                val rec_Permisson = ContextCompat.checkSelfPermission(this,android.Manifest.permission.RECORD_AUDIO)
-                if(rec_Permisson==PackageManager.PERMISSION_GRANTED && tts?.isSpeaking()!=true){
-                    speakWithVoiceAssistant()
-                    //result.success(voiceText)
-                }else{
-                    Log.i("RECORD_PERMISSION","we cant record without your permission.")
-                    requestPermissionFromUSer()
-                }
-                */
 
             } else {
                 result.notImplemented()
@@ -195,14 +185,8 @@ class MainActivity : FlutterActivity() {
             }else{
                 result.notImplemented()
             }
-
         }
-
-
     }
-
-
-
 
     private fun speakWithVoiceAssistant() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -212,6 +196,7 @@ class MainActivity : FlutterActivity() {
         GetSrcTargetLanguages()
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en_US")
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Need to speak")
+        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
         try {
             startActivityForResult(intent, REQ_CODE)
         } catch (a: ActivityNotFoundException) {
@@ -273,7 +258,7 @@ class MainActivity : FlutterActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             val km: KeyguardManager = getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure()) {
-                val authIntent: Intent = km.createConfirmDeviceCredentialIntent("myFHB", "Please Authorize to use the Application")
+                val authIntent: Intent = km.createConfirmDeviceCredentialIntent("MyFHB", "Please Authorize to use the Application")
                 startActivityForResult(authIntent, INTENT_AUTHENTICATE)
             }else{
                 _securityResult.success(1004)
@@ -292,7 +277,7 @@ class MainActivity : FlutterActivity() {
         }else{
             return false;
         }*/
-        tts!!.setSpeechRate(0.9f)
+        tts!!.setSpeechRate(1.0f)
         if(isClose){
             tts!!.stop()
         }else{
@@ -304,16 +289,17 @@ class MainActivity : FlutterActivity() {
             override fun onDone(p0: String?) {
                 //Toast.makeText(context,"listening Done",Toast.LENGTH_LONG).show()
                 Log.d("Message","listening Done")
-                runOnUiThread(Runnable { _TTSResult.success(true) })
+                runOnUiThread(Runnable { _TTSResult.success(1) })
 
             }
 
             override fun onError(p0: String?) {
                 Log.d("Message","listening Error")
-                _TTSResult.success(false)
+                //runOnUiThread(Runnable { _TTSResult.success(-1) })
             }
 
             override fun onStart(p0: String?) {
+                //runOnUiThread(Runnable { _TTSResult.success(0) })
                 Log.d("Message","listening start")
             }
 

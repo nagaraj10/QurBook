@@ -42,7 +42,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   static MyProfile prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE);
   var user_name = prof.response.data.generalInfo.name;
   List<Conversation> conversations = new List();
-  var isMayaSpeaks = false;
+  var isMayaSpeaks = -1;
   var isEndOfConv = false;
 
   AnimationController _controller;
@@ -63,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     startMayaAutomatically();
   }
 
-  startMayaAutomatically() async {
+  startMayaAutomatically() {
     Future.delayed(Duration(seconds: 1), () {
       sendToMaya('Hi Maya');
     });
@@ -113,7 +113,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       ),
       body: chatData(conversations),
       floatingActionButton: FloatingActionButton(
-        onPressed: gettingReposnseFromNative,
+        onPressed: () {
+          if (isMayaSpeaks <= 0) {
+            stopTTSEngine();
+          }
+          gettingReposnseFromNative();
+        },
         //onPressed: dummyConversation,
         child: Icon(
           Icons.mic,
@@ -148,7 +153,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   Future<void> gettingReposnseFromNative() async {
-    //String res='';
     try {
       await voice_platform
           .invokeMethod('speakWithVoiceAssistant')
@@ -207,38 +211,49 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       var jsonResponse = convert.jsonDecode(response.body);
       //print('response from maya ' + jsonResponse.toString());
       List<dynamic> list = jsonResponse;
-      SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
-      //print('before env value $isEndOfConv');
-      setState(() {
-        isEndOfConv = res.endOfConv;
-      });
-      /*   print('before env value $isEndOfConv');
+      if (list.length > 0) {
+        SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
+        //print('before env value $isEndOfConv');
+        setState(() {
+          isEndOfConv = res.endOfConv;
+        });
+        /*   print('before env value $isEndOfConv');
       print(res.text); */
-      var date =
-          new FHBUtils().getFormattedDateString(DateTime.now().toString());
-      Conversation model = new Conversation(
-        isMayaSaid: true,
-        text: res.text,
-        name: prof.response.data.generalInfo.name,
-        imageUrl: res.imageURL,
-        timeStamp: date,
-      );
-      conversations.add(model);
-      setState(() {});
-      chatData(conversations);
-      //print('current length of ${conversations.length}');
-      Future.delayed(
-          Duration(seconds: 4),
-          () => tts_platform.invokeMethod('textToSpeech',
-                  {"message": res.text, "isClose": false}).then((res) {
-                if (!isEndOfConv) {
-                  gettingReposnseFromNative();
-                } else {
-                  refreshData();
-                }
-              }));
-
-      return jsonResponse;
+        var date =
+            new FHBUtils().getFormattedDateString(DateTime.now().toString());
+        Conversation model = new Conversation(
+          isMayaSaid: true,
+          text: res.text,
+          name: prof.response.data.generalInfo.name,
+          imageUrl: res.imageURL,
+          timeStamp: date,
+        );
+        conversations.add(model);
+        setState(() {
+          isMayaSpeaks = 0;
+        });
+        chatData(conversations);
+        //print('current length of ${conversations.length}');
+        Future.delayed(
+            Duration(seconds: 4),
+            () => tts_platform.invokeMethod('textToSpeech',
+                    {"message": res.text, "isClose": false}).then((res) {
+                  print('is maya currently speaking value is $res');
+                  if (res == 1) {
+                    setState(() {
+                      isMayaSpeaks = 1;
+                    });
+                  }
+                  if (!isEndOfConv) {
+                    gettingReposnseFromNative();
+                  } else {
+                    refreshData();
+                  }
+                }));
+        return jsonResponse;
+      } else {
+        print('reposnse null');
+      }
     } else {
       print('server issue');
     }
@@ -323,6 +338,90 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
   }
 
+  /*Widget receiverLayout(Conversation c, BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CircleAvatar(
+          child: Image.asset(
+            PreferenceUtil.getStringValue('maya_asset') != null
+                ? PreferenceUtil.getStringValue('maya_asset') + '.png'
+                : 'assets/maya/maya_us.png',
+            height: 32,
+            width: 32,
+          ),
+          radius: 30,
+          backgroundColor: Colors.white,
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "MAYA",
+              style: Theme.of(context).textTheme.body1,
+              softWrap: true,
+            ),
+            Card(
+              color: Colors.transparent,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(25),
+                      bottomLeft: Radius.circular(25),
+                      bottomRight: Radius.circular(25))),
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * .6,
+                ),
+                padding: const EdgeInsets.all(15.0),
+                decoration: BoxDecoration(
+                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(25),
+                    bottomLeft: Radius.circular(25),
+                    bottomRight: Radius.circular(25),
+                  ),
+                ),
+                child: Column(
+                  children: <Widget>[
+                    Text(
+                      c.text,
+                      style: Theme.of(context).textTheme.body1.apply(
+                            color: Colors.white,
+                          ),
+                    ),
+                    c.imageUrl != null
+                        ? Padding(
+                            child: Image.network(
+                              c.imageUrl,
+                              height:
+                                  (MediaQuery.of(context).size.width * .6) - 5,
+                              width:
+                                  (MediaQuery.of(context).size.width * .6) - 5,
+                              fit: BoxFit.cover,
+                            ),
+                            padding: EdgeInsets.all(10),
+                          )
+                        : SizedBox(
+                            height: 0,
+                            width: 0,
+                          )
+                  ],
+                ),
+              ),
+            ),
+            Text(
+              "${c.timeStamp}",
+              style:
+                  Theme.of(context).textTheme.body1.apply(color: Colors.grey),
+            ),
+          ],
+        ),
+        SizedBox(width: 20),
+      ],
+    );
+  }*/
+
   Widget receiverLayout(Conversation c, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -332,7 +431,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           child: Image.asset(
             PreferenceUtil.getStringValue('maya_asset') != null
                 ? PreferenceUtil.getStringValue('maya_asset') + '.png'
-                : 'assets/maya/maya_us_main.png',
+                : 'assets/maya/maya_us.png',
             height: 32,
             width: 32,
           ),

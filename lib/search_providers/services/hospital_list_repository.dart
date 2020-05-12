@@ -10,4 +10,10 @@ class HospitalListRepository {
         param);
     return HospitalListResponse.fromJson(response);
   }
+
+  Future<HospitalListResponse> gethopitalFromId(String labId) async {
+    final response =
+        await _helper.getHospitalAndLabUsingId("hospitals/", labId);
+    return HospitalListResponse.fromJson(response);
+  }
 }

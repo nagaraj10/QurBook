@@ -88,7 +88,7 @@ class _SuperMayaState extends State<SuperMaya> {
                     ),
                     //Icon(Icons.people),
                     Text(
-                      'Hi, I am Maya your health assistance.',
+                      'Hi, I am Maya your voice health assistant.',
                       softWrap: true,
                     ),
                     SizedBox(

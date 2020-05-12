@@ -163,7 +163,7 @@ class FHBBasicWidget {
             fit: BoxFit.cover,
           )
         : Container(
-            color: Colors.white,
+            color: Color(fhbColors.bgColorContainer),
             height: 50,
             width: 50,
           );

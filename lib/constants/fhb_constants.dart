@@ -29,16 +29,13 @@ const String KEY_FAMILYMEMBERID = 'familyMemberId';
 const String KEY_IDDOCSCATEGORYTYPE = 'idDocsCategoryType';
 const String KEY_MEDIADATA = 'mediaData';
 const String KEY_COMPLETE_DATA = 'complete_data';
-
 const String IS_CATEGORYNAME_DEVICES = 'Choose Devices';
 const String KEY_DEVICENAME = 'Device Name';
-
 const String STR_GLUCOMETER = 'Glucometer';
 const String STR_THERMOMETER = 'Thermometer';
 const String STR_BP_MONITOR = 'BP Monitor';
 const String STR_WEIGHING_SCALE = 'Weighing Scale';
 const String STR_PULSE_OXIMETER = 'Pulse Oximeter';
-
 const String STR_PRESCRIPTION = 'Prescription';
 const String STR_DEVICES = 'Devices';
 const String STR_LABREPORT = 'Lab Report';
@@ -50,29 +47,25 @@ const String STR_VOICERECORDS = 'Voice Records';
 const String STR_CLAIMSRECORD = 'Claim Records';
 const String STR_FEEDBACK = 'Feedback';
 const String STR_VOICE_NOTES = 'Voice Notes';
-
 const String KEY_USERID_MAIN = 'mainUserUD';
 const String KEY_PROFILE_MAIN = 'profileMain';
-
 const String KEY_SEARCHED_LIST = 'searchedList';
 const String KEY_SEARCHED_CATEGORY = 'searchedCategory';
-
 const String terms_of_service = 'Terms of service';
 const String privacy_policy = 'Privacy policy';
 const String help_support = 'Help and support';
 const String STR_MSG_SIGNUP = 'Please signup and then try again';
+const String STR_MSG_SIGNUP1 = 'Please signup then try again';
 const String STR_VERIFY_OTP =
     'Please complete your registration process, by generating and verifying the OTP';
 const String STR_VERIFY_USER =
     'Please complete your Sign Up process, by generating and verifying the OTP';
-
 const String KEY_VOICE_ID = 'Category_ID_VOICE';
 const String STR_OTPMISMATCHED =
     'Requested operation forbidden. OTP Mismatched';
 const String STR_OTPMISMATCHED_STRING = 'OTP Mismatched';
 const String KEY_INTRO_SLIDER = 'keyIntroSlider';
 const String STR_FEEDBACKS = 'Feedback';
-
 const String KEY_PREFERRED_DOCTOR = 'prefered doctor';
 const String KEY_PREFERRED_HOSPITAL = 'prefered hospital';
 const String KEY_PREFERRED_LAB = 'prefered lab';
@@ -81,7 +74,6 @@ const String stop_detecting = 'StopDetecting';
 const String allowDeviceRecognition = 'allowDeviceRecognition';
 const String allowDigitRecognition = 'allowDigitRecognition';
 const String audioFileType = 'audio/mp3';
-
 const String MSG_VERIFYEMAIL_VERIFIED =
     'Email is already verified by other user.';
 const String MSG_VERIFYEMAIL_SUCCESS =
@@ -93,7 +85,6 @@ const String KEY_PROFILE_BANNER = 'profileBanner';
 const String KEY_DASHBOARD_BANNER = 'dashboardBanner';
 const String MSG_NO_CAMERA_VOICERECORDS =
     'No Camera Option Available for Voice Records';
-
 const String INTRO_SLIDE_TITLE_1 = 'Click ‘n’ Store';
 const String INTRO_SLIDE_DESC_1 =
     ' You are just a click away from a healthy family! Start capturing medical records and readings at the touch of a button. ';
@@ -115,7 +106,6 @@ const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
 const String KEY_SHOWCASE_MAYA = 'KEY_SHOWCASE_MAYA';
 const String STR_OTPMISMATCHEDFOREMAIL = 'Verification Code Mismatched';
 const String KEY_SHOWCASE_SWITCH_PROFILE = 'KEY_SHOWCASE_SWITCH_PROFILE';
-
 const String CAMERA_DESC = 'Start capturing health records right away!';
 const String CAMERA_TITLE = 'Camera';
 const String VOICE_DESC = 'Add personal voice notes to your records';
@@ -142,7 +132,6 @@ const String FAMILY_DESC = 'View and manage your family members profile';
 const String FAMILY_TITLE = 'My Family';
 const String RECORDS_DESC = 'You can get to view all your health records';
 const String RECORDS_TITLE = 'My Records';
-
 const String NO_DATA_DASHBOARD =
     'Personalize the environment. \n Upload your favorite cover image..';
 const String NO_DATA_DOCTOR =
@@ -153,7 +142,6 @@ const String NO_DATA_LAB =
     'Hey, You may need Labs contact coordinates !! \n Add it now.';
 const String NO_DATA_FAMIY = 'Looks like you haven'
     't added your family members. \n Add them right away.';
-
 const String NO_DATA_SCHEDULES =
     'Never miss any schedule. \n Add it to your calendar and get notified.';
 const String NO_DATA_PRESCRIPTION =

@@ -8,6 +8,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
+import 'package:myfhb/schedules/add_appointments.dart';
 import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
@@ -78,6 +79,7 @@ var routes = <String, WidgetBuilder>{
   "/my_family_detail_view_insurance": (BuildContext context) =>
       MyFamilyDetailView(arguments: ModalRoute.of(context).settings.arguments),
   "/add_reminders": (BuildContext context) => AddReminder(),
+  "/add_appointments": (BuildContext context) => AddAppointments(),
   "/intro_slider": (BuildContext context) => IntroSliderPage(),
   "/feedbacks": (BuildContext context) => Feedbacks(),
   "/feedbacks_success": (BuildContext context) => FeedbackSuccess()

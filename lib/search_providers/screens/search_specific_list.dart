@@ -173,7 +173,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getResponseFromApiWidgetForDoctors() {
-    print('In Docotors response');
+    //print('In Docotors response');
 
     return StreamBuilder<ApiResponse<DoctorsListResponse>>(
       stream: _doctorsListBlock.doctorsStream,
@@ -673,7 +673,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     }
   }
 
-  void _addBtnTapped() {
+  /*  void _addBtnTapped() {
     Navigator.pushNamed(context, '/add_providers',
         arguments: AddProvidersArguments(
             searchText: value,
@@ -685,5 +685,49 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         : CommonConstants.labs,
             hasData: false));
     //  );
+  } */
+
+  void _addBtnTapped() {
+    Navigator.pushNamed(context, '/add_providers',
+            arguments: AddProvidersArguments(
+                searchText: value,
+                fromClass: CommonConstants.serach_specific_list,
+                searchKeyWord: widget.arguments.searchWord ==
+                        CommonConstants.doctors
+                    ? CommonConstants.doctors
+                    : widget.arguments.searchWord == CommonConstants.hospitals
+                        ? CommonConstants.hospitals
+                        : CommonConstants.labs,
+                hasData: false))
+        .then((results) {
+      if (results != null) {
+        widget.arguments.searchWord == CommonConstants.doctors
+            ? passDoctorsValueSample(results, context)
+            : widget.arguments.searchWord == CommonConstants.hospitals
+                ? passHospitalValueSample(results, context)
+                : passLaboratoryValueSample(results, context);
+      }
+    });
+    //  );
+  }
+
+  passDoctorsValueSample(dynamic results, BuildContext context) {
+    Data jsonDecodeForDoctor = results['doctor'];
+
+    passDoctorsValue(jsonDecodeForDoctor, context);
+  }
+
+  passHospitalValueSample(dynamic results, BuildContext context) {
+    HospitalData jsonDecodeForDoctor = results['hospital'];
+
+    passHospitalValue(jsonDecodeForDoctor, context);
+  }
+
+  passLaboratoryValueSample(dynamic results, BuildContext context) {
+    print('Sample doctors pass');
+    LabData jsonDecodeForDoctor = results['laborartory'];
+
+    print(jsonDecodeForDoctor.name + 'hello');
+    passLaboratoryValue(jsonDecodeForDoctor, context);
   }
 }

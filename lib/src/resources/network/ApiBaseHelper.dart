@@ -791,4 +791,49 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  Future<dynamic> getDoctorsFromId(String url, String param) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    Map<String, String> requestHeaders = {
+      'accept': 'application/json',
+      'Authorization': authToken,
+    };
+
+    print(_baseUrl + url + param);
+    var responseJson;
+    try {
+      final response =
+          await http.get(_baseUrl + url + param, headers: requestHeaders);
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      //CommonUtil().networkUI();
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getHospitalAndLabUsingId(String url, String param) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    Map<String, String> requestHeaders = {
+      'accept': 'application/json',
+      'Authorization': authToken,
+    };
+
+    var responseJson;
+    try {
+      final response =
+          await http.get(_baseUrl + url + param, headers: requestHeaders);
+
+      responseJson = _returnResponse(response);
+      print(_baseUrl + url + param);
+      print(responseJson);
+    } on SocketException {
+      //CommonUtil().networkUI();
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
 }

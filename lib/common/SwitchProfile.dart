@@ -10,6 +10,7 @@ import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class SwitchProfile {
   FamilyListBloc _familyListBloc;
@@ -58,8 +59,29 @@ class SwitchProfile {
             child: CircleAvatar(
               radius: 15,
               child: ClipOval(
-                  child: new FHBBasicWidget().getProfilePicWidget(
-                      myProfile.response.data.generalInfo.profilePicThumbnail)),
+                  child: myProfile
+                              .response.data.generalInfo.profilePicThumbnail !=
+                          null
+                      ? new FHBBasicWidget().getProfilePicWidget(myProfile
+                          .response.data.generalInfo.profilePicThumbnail)
+                      : Container(
+                          height: 50,
+                          width: 50,
+                          color: Color(fhbColors.bgColorContainer),
+                          child: Center(
+                            child: Text(
+                              myProfile.response.data.generalInfo
+                                          .qualifiedFullName.firstName !=
+                                      null
+                                  ? myProfile.response.data.generalInfo
+                                      .qualifiedFullName.firstName[0]
+                                      .toUpperCase()
+                                  : '',
+                              style: TextStyle(
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor())),
+                            ),
+                          ))),
             )));
 
     //}

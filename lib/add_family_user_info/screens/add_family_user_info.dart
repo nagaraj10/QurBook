@@ -10,6 +10,7 @@ import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
@@ -36,6 +37,7 @@ class AddFamilyUserInfoScreen extends StatefulWidget {
 }
 
 class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
   final mobileNoController = TextEditingController();
   FocusNode mobileNoFocus = FocusNode();
 
@@ -384,6 +386,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffold_state,
       body: Material(
           child: SafeArea(
         child: CustomScrollView(
@@ -1413,6 +1416,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     addFamilyUserInfoBloc.verifyEmail().then((value) {
       if (value.success &&
           value.message.contains(Constants.MSG_VERIFYEMAIL_VERIFIED)) {
+        new FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
       } else {
         PreferenceUtil.saveString(
             Constants.PROFILE_EMAIL, emailController.text);

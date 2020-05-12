@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/src/model/AppointmentModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:intl/intl.dart';
@@ -79,22 +79,13 @@ class _MyAppointmentState extends State<MyAppointment> {
             //onGenerateRoute: Router.createRoute,
             home: new Scaffold(
               //appBar: _buildBar(context),
-              floatingActionButton: FloatingActionButton(
-                child: Icon(Icons.add, color: Colors.white),
+              floatingActionButton: FloatingActionButton.extended(
                 onPressed: () {
-                  // Add your onPressed code here!
-                  //customDialog("New appointment", "Save", context, "Save");
-                  showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (BuildContext contxt) {
-                        return _MyCustomAlertDialog(
-                            title: 'New appointment',
-                            subtitle: 'Save',
-                            context: context,
-                            actionText: 'Save');
-                      });
+                  PageNavigator.goTo(context, '/add_appointments');
                 },
+                label: Text('Add'),
+                icon: Icon(Icons.add),
+                //TODO chnage theme
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
               body: detailsList.length > 0
@@ -238,6 +229,52 @@ class _MyAppointmentState extends State<MyAppointment> {
                                     ))
                               ],
                             ));
+                        /*  return Card(
+                      child: ListTile(
+                        leading: Icon(Icons.ac_unit),
+                        title: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Expanded(child: Text('Name of Hospital:')),
+                                Expanded(
+                                    child: Text('' +
+                                        reverseDetailsList[index]['nameHos'])),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Expanded(child: Text("Docxtor's Name:")),
+                                Expanded(
+                                    child: Text('' +
+                                        reverseDetailsList[index]['nameDoc'])),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Expanded(child: Text('Date:')),
+                                Expanded(
+                                    child: Text('' +
+                                        reverseDetailsList[index]['date'])),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: <Widget>[
+                                Expanded(child: Text('Reason:')),
+                                Expanded(
+                                    child: Text('' +
+                                        reverseDetailsList[index]['reason'])),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ); */
                       })
                   : Container(
                       child: Center(
@@ -301,209 +338,5 @@ class _MyAppointmentState extends State<MyAppointment> {
     reverseDetailsList = detailsList.reversed.toList();
     print(reverseDetailsList.toString());
     return detailsList;
-  }
-}
-
-class _MyCustomAlertDialog extends StatefulWidget {
-  final String title;
-  final String subtitle;
-  final BuildContext context;
-  final String actionText;
-  _MyCustomAlertDialog({
-    this.title,
-    this.subtitle,
-    this.context,
-    this.actionText,
-  });
-
-  @override
-  _MyCustomAlertDialogState createState() => _MyCustomAlertDialogState();
-}
-
-class _MyCustomAlertDialogState extends State<_MyCustomAlertDialog> {
-  TextEditingController nameHos = new TextEditingController();
-  TextEditingController nameDoc = new TextEditingController();
-  TextEditingController reason = new TextEditingController();
-  TextEditingController date = new TextEditingController();
-  bool _isHosEmpty = false;
-  bool _isDocEmpty = false;
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime.now().subtract(Duration(days: 1)),
-        lastDate: new DateTime(2100));
-
-    //DateFormat('yyyy-MM-dd – kk:mm').format(now)
-    //date.text = new DateFormat('dd MMM yyyy').format(picked).toString();
-    date.text = new FHBUtils().getFormattedDateOnly(picked.toString());
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final TimeOfDay picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    date.text = date.text +
-        " " +
-        picked.hour.toString() +
-        ":" +
-        picked.minute.toString();
-
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)
-          // BorderRadius.all(Radius.circular(UIHelper.BorderRadiusSmall)),
-          ),
-      content: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Container(
-            constraints: BoxConstraints(minWidth: 320),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        widget.title,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.close),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 7.0,
-                ),
-                new TextFormField(
-                  controller: nameHos,
-                  decoration: InputDecoration(
-                    //icon: const Icon(Icons.person),
-                    labelText: 'Hospital Name',
-                    errorText:
-                        _isHosEmpty ? 'Hospital name can\'t be empty' : null,
-                  ),
-                ),
-                new TextFormField(
-                  controller: nameDoc,
-                  decoration: InputDecoration(
-                    //icon: const Icon(Icons.person),
-                    labelText: "Doctor's Name",
-
-                    errorText:
-                        _isDocEmpty ? 'Doctor name can\'t be empty' : null,
-                  ),
-                ),
-                InkWell(
-                  child: new TextFormField(
-                    controller: date,
-                    decoration: const InputDecoration(
-                      suffixIcon:
-                          Icon(Icons.calendar_today, color: Colors.black),
-                      //icon: const Icon(Icons.calendar_today),
-                      labelText: 'Appointment Date',
-                    ),
-                    enabled: false,
-                    keyboardType: TextInputType.datetime,
-                  ),
-                  onTap: () async {
-                    await _selectDate(context);
-                    await _selectTime(context);
-                  },
-                ),
-                new TextFormField(
-                  controller: reason,
-                  decoration: const InputDecoration(
-                    //icon: const Icon(Icons.person),
-                    labelText: 'Reason',
-                  ),
-                ),
-                SizedBox(
-                  height: 20.0,
-                ),
-                Center(
-                  child: SizedBox(
-                    height: 37,
-                    width: 150,
-                    child: RaisedGradientButton(
-                      borderRadius: 30,
-                      gradient: LinearGradient(
-                        colors: <Color>[
-                          //TODO chnage theme
-                          Color(new CommonUtil().getMyPrimaryColor()),
-                          Color(new CommonUtil().getMyGredientColor()),
-                        ],
-                      ),
-                      //color: Colors.blue,
-                      child: Text(
-                        widget.actionText,
-                        style: TextStyle(
-                          //fontSize: UIHelper.FontRegular,
-                          color: Colors.white,
-                          //fontFamily: 'Poppins',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      onPressed: () async {
-                        if (nameHos.text.isEmpty || nameDoc.text.isEmpty) {
-                          setState(() {
-                            nameHos.text.isEmpty
-                                ? _isHosEmpty = true
-                                : _isHosEmpty = false;
-                            nameDoc.text.isEmpty
-                                ? _isDocEmpty = true
-                                : _isDocEmpty = false;
-                          });
-
-                          setState(() {});
-                          return false;
-                        } else {
-                          /*Map<String, dynamic> items = {};
-                      items['nameHos'] = nameHos.text;
-                      items['nameDoc'] = nameDoc.text;
-                      items['date'] = DateTime.now().toString();
-                      items['reason'] = reason.text;*/
-                          AppointmentModel model = new AppointmentModel(
-                              id: DateTime.now()
-                                  .millisecondsSinceEpoch
-                                  .toString(),
-                              hName: nameHos.text,
-                              dName: nameDoc.text,
-                              appDate: DateTime.now().toString(),
-                              reason: reason.text);
-
-                          await FHBUtils()
-                              .createNewAppointment(model)
-                              .then((_) {
-                            Navigator.of(context).pop();
-                            MyAppointment.of(widget.context).refresh();
-                          });
-                          return true;
-                        }
-                      },
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20)
-              ],
-            ),
-          )),
-    );
   }
 }

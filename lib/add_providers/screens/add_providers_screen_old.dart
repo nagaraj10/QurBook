@@ -28,6 +28,8 @@ import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
+import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
+import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
 import 'package:myfhb/search_providers/models/doctors_list_response.dart';
 import 'package:myfhb/search_providers/models/hospital_list_response.dart';
 import 'package:myfhb/search_providers/models/labs_list_response.dart';
@@ -36,8 +38,6 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
-import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
 
 class AddProviders extends StatefulWidget {
   Data data;
@@ -107,16 +107,16 @@ class AddProvidersState extends State<AddProviders> {
   FamilyListBloc _familyListBloc;
   MyProfileBloc _myProfileBloc;
 
+  DoctorsListBlock _doctorsListBlock;
+  HospitalListBlock _hospitalListBlock;
+  LabsListBlock _labsListBlock;
+
   Address address;
 
   MyProfile selectedProfile;
   String selectedFamilyMemberName;
 
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-
-  DoctorsListBlock _doctorsListBlock;
-  HospitalListBlock _hospitalListBlock;
-  LabsListBlock _labsListBlock;
 
   @override
   void initState() {
@@ -136,14 +136,11 @@ class AddProvidersState extends State<AddProviders> {
     _hospitalListBlock = new HospitalListBlock();
     _labsListBlock = new LabsListBlock();
 
-    //    getCurrentLocation();
-
     buildUI();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       //      appBar: AppBar(
       //        leading: IconButton(
@@ -761,32 +758,23 @@ class AddProvidersState extends State<AddProviders> {
         stream: addProvidersBloc.doctorsStream,
         builder: (context,
             AsyncSnapshot<ApiResponse<AddDoctorsProvidersId>> snapshot) {
-          if (!snapshot.hasData) return Container();
+          if (!snapshot.hasData)
+            return Container(
+              height: 0,
+              width: 0,
+            );
 
           if (snapshot.data.status == Status.COMPLETED) {
             updateProvidersBloc.isPreferred = isPreferred;
             updateProvidersBloc.providerId =
                 snapshot.data.data.response.data.id;
-
-            print(updateProvidersBloc.isPreferred.toString() + ' isPreferred');
             updateProvidersBloc.updateDoctorsIdWithUserDetails();
 
             new CommonUtil().getMedicalPreference();
 
-            print('doctors ID' + snapshot.data.data.response.data.id);
-
-            /*if (widget.arguments.fromClass ==
-                CommonConstants.serach_specific_list) {
-              _doctorsListBlock
-                  .getDoctorObjUsingId(snapshot.data.data.response.data.id)
-                  .then((doctorsListResponse) {
-                //Navigator.of(context).pop({'doctor': doctorsListResponse.response.data[0]});
-              });
-            } else {*/
-            return Container();
-            // }
+            return Container(height: 0, width: 0);
           } else {
-            return Container();
+            return Container(height: 0, width: 0);
           }
         });
   }
@@ -796,24 +784,19 @@ class AddProvidersState extends State<AddProviders> {
         stream: addProvidersBloc.hospitalsStream,
         builder: (context,
             AsyncSnapshot<ApiResponse<AddHospitalsProvidersId>> snapshot) {
-          if (!snapshot.hasData) return Container();
+          if (!snapshot.hasData) return Container(height: 0, width: 0);
 
           if (snapshot.data.status == Status.COMPLETED) {
             updateProvidersBloc.isPreferred = isPreferred;
             updateProvidersBloc.providerId =
                 snapshot.data.data.response.data.id;
-
-            print(updateProvidersBloc.isPreferred.toString() + ' isPreferred');
-
             updateProvidersBloc.updateHospitalsIdWithUserDetails();
 
             new CommonUtil().getMedicalPreference();
 
-            print('hospital ID' + snapshot.data.data.response.data.id);
-
-            return Container();
+            return Container(height: 0, width: 0);
           } else {
-            return Container();
+            return Container(height: 0, width: 0);
           }
         });
   }
@@ -823,7 +806,7 @@ class AddProvidersState extends State<AddProviders> {
         stream: addProvidersBloc.labsStream,
         builder:
             (context, AsyncSnapshot<ApiResponse<AddLabsProvidersId>> snapshot) {
-          if (!snapshot.hasData) return Container();
+          if (!snapshot.hasData) return Container(height: 0, width: 0);
 
           if (snapshot.data.status == Status.COMPLETED) {
             updateProvidersBloc.isPreferred = isPreferred;
@@ -831,15 +814,14 @@ class AddProvidersState extends State<AddProviders> {
                 snapshot.data.data.response.data.id;
             updateProvidersBloc.updateLabsIdWithUserDetails();
 
-            print(updateProvidersBloc.isPreferred.toString() + ' isPreferred');
-
-            print('lab ID' + snapshot.data.data.response.data.id);
-
             new CommonUtil().getMedicalPreference();
 
-            return Container();
+            return Container(
+              height: 0,
+              width: 0,
+            );
           } else {
-            return Container();
+            return Container(height: 0, width: 0);
           }
         });
   }
@@ -853,7 +835,7 @@ class AddProvidersState extends State<AddProviders> {
                 : updateProvidersBloc.labsStream,
         builder:
             (context, AsyncSnapshot<ApiResponse<UpdateProvidersId>> snapshot) {
-          if (!snapshot.hasData) return Container();
+          if (!snapshot.hasData) return Container(height: 0, width: 0);
 
           if (snapshot.data.status == Status.COMPLETED) {
             if (widget.arguments.fromClass ==
@@ -889,6 +871,7 @@ class AddProvidersState extends State<AddProviders> {
                             'laborartory': lablistResponse.response.data[0]
                           });
                         });
+              return Container(height: 0, width: 0);
             } else {
               //            Navigator.pop(context, 1);
               Navigator.popUntil(context, (Route<dynamic> route) {
@@ -898,14 +881,48 @@ class AddProvidersState extends State<AddProviders> {
                 }
                 return shouldPop;
               });
-              return Container();
+              return Container(
+                height: 0,
+                width: 0,
+              );
             }
+          } else {
+            return Container(
+              height: 0,
+              width: 0,
+            );
+          }
+        });
+  }
+
+  /*  Widget callUpdateProvidersStreamBuilder(UpdateProvidersBloc bloc) {
+    return StreamBuilder(
+        stream: widget.arguments.searchKeyWord == CommonConstants.doctors
+            ? updateProvidersBloc.doctorsStream
+            : widget.arguments.searchKeyWord == CommonConstants.hospitals
+                ? updateProvidersBloc.hospitalsStream
+                : updateProvidersBloc.labsStream,
+        builder:
+            (context, AsyncSnapshot<ApiResponse<UpdateProvidersId>> snapshot) {
+          if (!snapshot.hasData) return Container();
+
+          if (snapshot.data.status == Status.COMPLETED) {
+            //            Navigator.pop(context, 1);
+            Navigator.popUntil(context, (Route<dynamic> route) {
+              bool shouldPop = false;
+              if (route.settings.name == '/user_accounts') {
+                shouldPop = true;
+              }
+              return shouldPop;
+            });
+            return Container();
           } else {
             return Container();
           }
         });
   }
 
+ */
   void _addBtnTapped() {
     if (widget.arguments.hasData ||
         widget.arguments.fromClass == CommonConstants.myProviders) {
@@ -1001,7 +1018,6 @@ class AddProvidersState extends State<AddProviders> {
         var jsonString = convert.jsonEncode(signInData);
 
         addProvidersBloc.doctorsJsonString = jsonString;
-
         addProvidersBloc.addDoctors();
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
         if (address == null || widget.arguments.placeDetail == null) {

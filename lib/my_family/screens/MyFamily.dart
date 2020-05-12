@@ -241,6 +241,265 @@ class _MyFamilyState extends State<MyFamily> {
 
   Widget getCardWidgetForUser(
       Sharedbyme data, int position, List<Sharedbyme> profilesSharedByMeAry) {
+    MyProfile myProfile;
+    try {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    } catch (e) {}
+
+    return InkWell(
+      onTap: () {
+        if (position != 0) {
+          Navigator.pushNamed(context, '/my_family_detail_screen',
+                  arguments: MyFamilyDetailArguments(
+                      profilesSharedByMe: profilesSharedByMeAry,
+                      currentPage: position - 1))
+              .then((value) {
+            _familyListBloc.getFamilyMembersList();
+          });
+        }
+//        Navigator.pushNamed(context, '/add_family_user_info',
+//                arguments: AddFamilyUserInfoArguments(
+//                    sharedbyme: data, fromClass: CommonConstants.my_family))
+//            .then((value) {
+//          _familyListBloc.getFamilyMembersList();
+//        });
+      },
+      child: Container(
+          padding: EdgeInsets.all(10.0),
+          margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFe3e2e2),
+                blurRadius: 16, // has the effect of softening the shadow
+                spreadRadius: 2.0, // has the effect of extending the shadow
+                offset: Offset(
+                  0.0, // horizontal, move right 10
+                  0.0, // vertical, move down 10
+                ),
+              )
+            ],
+          ),
+          child: Row(
+            children: <Widget>[
+              ClipOval(
+                child: position == 0
+                    ? myProfile.response.data.generalInfo.profilePicThumbnail ==
+                            null
+                        ? Container(
+                            width: 60,
+                            height: 60,
+                            color: Color(fhbColors.bgColorContainer),
+                            child: Center(
+                              child: Text(
+                                myProfile.response.data.generalInfo.name != null
+                                    ? myProfile
+                                        .response.data.generalInfo.name[0]
+                                        .toUpperCase()
+                                    : '',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            ),
+                          )
+                        : Image.memory(
+                            Uint8List.fromList(myProfile.response.data
+                                .generalInfo.profilePicThumbnail.data),
+                            fit: BoxFit.cover,
+                            width: 60,
+                            height: 60,
+                          )
+                    : data.profileData.profilePicThumbnail == null
+                        ? Container(
+                            width: 60,
+                            height: 60,
+                            color: Color(fhbColors.bgColorContainer),
+                            child: Center(
+                              child: Text(
+                                data.linkedData.nickName != null
+                                    ? data.linkedData.nickName[0].toUpperCase()
+                                    : '',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            ),
+                          )
+                        : Image.memory(
+                            Uint8List.fromList(
+                                data.profileData.profilePicThumbnail.data),
+                            fit: BoxFit.cover,
+                            width: 60,
+                            height: 60,
+                          ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                // flex: 4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      position == 0
+                          ? myProfile.response.data.generalInfo.name != null
+                              ? toBeginningOfSentenceCase(myProfile
+                                  .response.data.generalInfo.name
+                                  .toLowerCase())
+                              : ''
+                          : data.linkedData.nickName != null
+                              ? toBeginningOfSentenceCase(
+                                  data.linkedData.nickName.toLowerCase())
+                              : '',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 10.0),
+                    Text(
+                      position == 0
+                          ? myProfile.response.data.generalInfo.countryCode +
+                              "-" +
+                              myProfile.response.data.generalInfo.phoneNumber
+                          : data.profileData.isVirtualUser
+                              ? PreferenceUtil.getProfileData(
+                                          Constants.KEY_PROFILE)
+                                      .response
+                                      .data
+                                      .generalInfo
+                                      .countryCode +
+                                  "-" +
+                                  PreferenceUtil.getProfileData(
+                                          Constants.KEY_PROFILE)
+                                      .response
+                                      .data
+                                      .generalInfo
+                                      .phoneNumber
+                              : data.profileData.phoneNumber != null
+                                  ? data.profileData.countryCode +
+                                      "-" +
+                                      data.profileData.phoneNumber
+                                  : '',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: ColorUtils.greycolor1),
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 10.0),
+                    Text(
+                      position == 0
+                          ? 'Self'
+                          : data.linkedData.roleName != null
+                              ? data.linkedData.roleName
+                              : '',
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Color(new CommonUtil().getMyPrimaryColor())),
+                    ),
+                  ],
+                ),
+              ),
+              position != 0
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            Alert.displayConfirmProceed(context,
+                                title: "Delink",
+                                content: CommonConstants.delink_alert,
+                                onPressedConfirm: () {
+                              Navigator.pop(context);
+
+                              CommonUtil.showLoadingDialog(
+                                  context, _keyLoader, 'Please Wait');
+
+                              var deLinkingData = {};
+                              deLinkingData['relatedTo'] = data.profileData.id;
+                              deLinkingData['relationshipType'] =
+                                  'parentToChild';
+                              var jsonString =
+                                  convert.jsonEncode(deLinkingData);
+
+                              _familyListBloc
+                                  .postUserDeLinking(jsonString)
+                                  .then((userLinking) {
+                                if (userLinking.status == 200 &&
+                                    userLinking.success) {
+                                  // Reload
+                                  _familyListBloc
+                                      .getFamilyMembersList()
+                                      .then((value) {
+                                    if (value.status == 200 && value.success) {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                      PreferenceUtil.saveFamilyData(
+                                              Constants.KEY_FAMILYMEMBER,
+                                              value.response.data)
+                                          .then((value) {
+                                        rebuildFamilyBlock();
+                                        setState(() {});
+                                      });
+                                    } else {
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
+                                    }
+                                  });
+                                } else {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+                                }
+                              });
+                            }, onPressedCancel: () {
+                              Navigator.pop(context);
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(5.0),
+                            margin:
+                                EdgeInsets.only(left: 10, right: 10, top: 10),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()))),
+                            child: Text(
+                              'De-Link',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor())),
+                              softWrap: false,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                  : Container()
+            ],
+          )),
+    );
+  }
+
+  /*  Widget getCardWidgetForUser(
+      Sharedbyme data, int position, List<Sharedbyme> profilesSharedByMeAry) {
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
@@ -483,6 +742,7 @@ class _MyFamilyState extends State<MyFamily> {
     );
   }
 
+  */
   saveMediaDialog(BuildContext context) {
     firstNameController.text = '';
     middleNameController.text = '';
@@ -507,6 +767,16 @@ class _MyFamilyState extends State<MyFamily> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: <Widget>[
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                IconButton(
+                                    icon: Icon(Icons.close),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    })
+                              ],
+                            ),
                             Row(
                               children: <Widget>[
                                 CountryPicker(
