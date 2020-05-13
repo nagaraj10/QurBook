@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart'
     as familyMember;
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
@@ -974,5 +975,27 @@ class CommonUtil {
       }
     }
     return categoryId;
+  }
+
+  titleCase(str) {
+    var splitStr = str.toLowerCase().split(' ');
+    for (var i = 0; i < splitStr.length; i++) {
+      // You do not need to check if i is larger than splitStr length, as your for does that for you
+      // Assign it back to the array
+      if (splitStr[i].length > 0) {
+        splitStr[i] = splitStr[i][0].toUpperCase() + splitStr[i].substring(1);
+      }
+    }
+    // Directly return the joined string
+    print('**********' + splitStr.join(' '));
+    return splitStr.join(' ');
+  }
+
+  void getAllCustomRoles() {
+    FamilyListBloc _familyListBloc = new FamilyListBloc();
+
+    _familyListBloc.getCustomRoles().then((relationShipArray) {
+      PreferenceUtil.saveFamilyRelationShip('keyFamilyrel', relationShipArray);
+    });
   }
 }

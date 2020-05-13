@@ -16,6 +16,7 @@ import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
 class MyFamilyDetailScreen extends StatefulWidget {
@@ -81,9 +82,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/Not Known'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Unknown'];
 
-  List<String> bloodRangeArray = ['+ve', '-ve', 'Others/Not Known'];
+  List<String> bloodRangeArray = ['+ve', '-ve', 'Unknown'];
 
   String selectedBloodGroup;
   String selectedBloodRange;
@@ -239,10 +240,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.profileData.dateOfBirth != null) {
-      List<String> list = sharedbyme.profileData.dateOfBirth
-          .split("T"); //by space" " the string need to splited
+      /*  List<String> list = sharedbyme.profileData.dateOfBirth
+          .split("T"); */ //by space" " the string need to splited
 
-      dateOfBirthController.text = list[0];
+      dateOfBirthController.text = new FHBUtils()
+          .getFormattedDateOnlyNew(sharedbyme.profileData.dateOfBirth);
     }
 
     String profilebanner =

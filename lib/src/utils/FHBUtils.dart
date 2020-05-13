@@ -113,6 +113,25 @@ class FHBUtils {
     return formattedDate;
   }
 
+  String getFormattedDateOnlyNew(String strDate) {
+    String formattedDate;
+    try {
+      if (CURRENT_DATE_CODE == 'MDY') {
+        formattedDate =
+            DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate).toLocal());
+      } else if (CURRENT_DATE_CODE == 'YMD') {
+        formattedDate =
+            DateFormat('yyyy-MM-dd').format(DateTime.parse(strDate).toLocal());
+      } else {
+        formattedDate =
+            DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate).toLocal());
+      }
+    } catch (e) {
+      formattedDate = strDate;
+    }
+    return formattedDate;
+  }
+
   String getMonthDateYear(String strDate) {
     //print('----------------CURRENT INVOKING METHOD{getMonthDateYear}-------------------');
     String formattedDate;

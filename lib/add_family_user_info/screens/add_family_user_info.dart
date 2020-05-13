@@ -69,9 +69,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   List<int> fetchedProfileData;
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/ Not Known'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'UnKnown'];
 
-  List<String> bloodRangeArray = ['+ve', '-ve', 'Others/ Not Known'];
+  List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
 
   String selectedBloodGroup;
   String selectedBloodRange;
@@ -173,7 +173,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         List<String> list = widget.arguments.sharedbyme.profileData.dateOfBirth
             .split("T"); //by space" " the string need to splited
 
-        dateOfBirthController.text = list[0];
+        // dateOfBirthController.text = list[0];
+
+        dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
+            widget.arguments.sharedbyme.profileData.dateOfBirth);
       }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       updateProfile = true;
@@ -227,7 +230,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         List<String> list = widget.arguments.sharedbyme.profileData.dateOfBirth
             .split("T"); //by space" " the string need to splited
 
-        dateOfBirthController.text = list[0];
+        // dateOfBirthController.text = list[0];
+        dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
+            widget.arguments.sharedbyme.profileData.dateOfBirth);
       }
       if (firstTym) {
         firstTym = false;
@@ -273,8 +278,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         selectedGender = value.response.data.generalInfo.gender == null
             ? null
             : value.response.data.generalInfo.gender;
-        dateOfBirthController.text =
-            value.response.data.generalInfo.dateOfBirth;
+        // dateOfBirthController.text =    value.response.data.generalInfo.dateOfBirth;
+
+        dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
+            value.response.data.generalInfo.dateOfBirth);
 
         if (firstTym) {
           firstTym = false;

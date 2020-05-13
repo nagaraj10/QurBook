@@ -541,17 +541,20 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   } */
 
   void callDisplayPictureScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => CropAndRotateScreen(imagePath: imagePaths),
-      ),
-    ).then((value) {
-      categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-      if (value) {
-        Navigator.of(context).pop(true);
-      }
-    });
+    if (imagePaths.length > 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CropAndRotateScreen(imagePath: imagePaths),
+        ),
+      ).then((value) {
+        categoryName =
+            PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+        if (value) {
+          Navigator.of(context).pop(true);
+        }
+      });
+    }
   }
 
   getWidgetForTitle(BuildContext context) {

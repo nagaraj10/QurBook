@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
@@ -245,5 +246,29 @@ class PreferenceUtil {
       return FamilyData.fromJson(
           json.decode(_prefsInstance.getString(keyFamily)));
     } catch (e) {}
+  }
+
+  static Future<bool> saveFamilyRelationShip(
+      String keyFamilyrel, RelationShipResponseList familyData) async {
+    var instance = await _prefs;
+
+    try {
+      String family = json.encode(familyData);
+
+      return instance.setString(keyFamilyrel, family);
+    } catch (e) {
+      return instance.setString(keyFamilyrel, null);
+    }
+  }
+
+  static RelationShipResponseList getFamilyRelaton(String keyFamilyrel) {
+    try {
+      if (_prefsInstance == null) {}
+
+      return RelationShipResponseList.fromJson(
+          json.decode(_prefsInstance.getString(keyFamilyrel)));
+    } catch (e) {
+      return null;
+    }
   }
 }

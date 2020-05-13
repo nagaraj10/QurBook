@@ -45,7 +45,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _myProfileBloc = new MyProfileBloc();
     getUserProfileData();
     new CommonUtil().getMedicalPreference();
-
+    new CommonUtil().getAllCustomRoles();
     String profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_DASHBOARD_BANNER);
     if (profilebanner != null) {

@@ -54,6 +54,8 @@ class _MyFamilyState extends State<MyFamily> {
   bool isCalled = false;
   RelationShipResponseList relationShipResponseList;
 
+  bool firstTym=true;
+
   List<String> bloodGroupArray = [
     'A +ve',
     'A -ve',
@@ -154,7 +156,7 @@ class _MyFamilyState extends State<MyFamily> {
   Widget getAllFamilyMembers() {
     Widget familyWidget;
 
-    return PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
+    return firstTym?PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
         ? getMyFamilyMembers(
             PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
         : StreamBuilder<ApiResponse<FamilyMembersList>>(
@@ -183,6 +185,8 @@ class _MyFamilyState extends State<MyFamily> {
                     break;
 
                   case Status.COMPLETED:
+                    //rebuildFamilyBlock();
+                    firstTym=false;
                     PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
                         snapshot.data.data.response.data);
 
@@ -198,7 +202,8 @@ class _MyFamilyState extends State<MyFamily> {
               }
               return familyWidget;
             },
-          );
+          ):getMyFamilyMembers(
+            PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER));
   }
 
   Widget getMyFamilyMembers(FamilyData data) {
@@ -239,12 +244,27 @@ class _MyFamilyState extends State<MyFamily> {
           );
   }
 
+  String capitalize(String string) {
+    if (string == null) {
+      throw ArgumentError("string: $string");
+    }
+
+    if (string.isEmpty) {
+      return string;
+    }
+
+    return string[0].toUpperCase() + string.substring(1);
+  }
+
   Widget getCardWidgetForUser(
       Sharedbyme data, int position, List<Sharedbyme> profilesSharedByMeAry) {
     MyProfile myProfile;
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     } catch (e) {}
+
+    print('NNAAMMEE ' + capitalize(data.linkedData.nickName));
+    print('NNAAMMEE ' + new CommonUtil().titleCase(data.linkedData.nickName));
 
     return InkWell(
       onTap: () {
@@ -254,7 +274,10 @@ class _MyFamilyState extends State<MyFamily> {
                       profilesSharedByMe: profilesSharedByMeAry,
                       currentPage: position - 1))
               .then((value) {
-            _familyListBloc.getFamilyMembersList();
+            _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+              PreferenceUtil.saveFamilyData(
+                  Constants.KEY_FAMILYMEMBER, familyMembersList.response.data);
+            });
           });
         }
 //        Navigator.pushNamed(context, '/add_family_user_info',
@@ -350,13 +373,13 @@ class _MyFamilyState extends State<MyFamily> {
                     Text(
                       position == 0
                           ? myProfile.response.data.generalInfo.name != null
-                              ? toBeginningOfSentenceCase(myProfile
+                              ? new CommonUtil().titleCase(myProfile
                                   .response.data.generalInfo.name
                                   .toLowerCase())
                               : ''
                           : data.linkedData.nickName != null
-                              ? toBeginningOfSentenceCase(
-                                  data.linkedData.nickName.toLowerCase())
+                              ? new CommonUtil()
+                                  .titleCase(data.linkedData.nickName)
                               : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                       softWrap: false,
@@ -747,8 +770,11 @@ class _MyFamilyState extends State<MyFamily> {
     firstNameController.text = '';
     middleNameController.text = '';
     lastNameController.text = '';
+    mobileNoController.text = '';
     isPrimaryNoSelected = false;
+    selectedRelationShip = null;
 
+    rebuildFamilyBlock();
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
@@ -862,10 +888,13 @@ class _MyFamilyState extends State<MyFamily> {
                             SizedBox(height: 10),
                             Row(
                               children: <Widget>[
-                                isCalled == false
-                                    ? getAllCustomRoles()
-                                    : getRelationshipDetails(
-                                        relationShipResponseList)
+                                PreferenceUtil.getFamilyRelaton(
+                                            'keyFamilyrel') !=
+                                        null
+                                    ? getRelationshipDetails(
+                                        PreferenceUtil.getFamilyRelaton(
+                                            'keyFamilyrel'))
+                                    : getAllCustomRoles()
                               ],
                             ),
                             SizedBox(height: 20),
@@ -1201,6 +1230,7 @@ class _MyFamilyState extends State<MyFamily> {
                   Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                       .pop();
 
+                  Navigator.pop(context);
                   Navigator.pushNamed(context, '/add_family_user_info',
                           arguments: AddFamilyUserInfoArguments(
                               enteredFirstName: firstNameController.text,
@@ -1219,7 +1249,12 @@ class _MyFamilyState extends State<MyFamily> {
                     isPrimaryNoSelected = false;
                     selectedRelationShip = null;
                     rebuildFamilyBlock();
-                    _familyListBloc.getFamilyMembersList();
+                    _familyListBloc
+                        .getFamilyMembersList()
+                        .then((familyMembersList) {
+                      PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
+                          familyMembersList.response.data);
+                    });
                   });
                 });
               } else {
@@ -1247,6 +1282,8 @@ class _MyFamilyState extends State<MyFamily> {
                   Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                       .pop();
 
+                  Navigator.pop(context);
+
                   Navigator.pushNamed(
                     context,
                     '/add_family_otp_screen',
@@ -1264,7 +1301,12 @@ class _MyFamilyState extends State<MyFamily> {
                     isPrimaryNoSelected = false;
                     selectedRelationShip = null;
                     rebuildFamilyBlock();
-                    _familyListBloc.getFamilyMembersList();
+                    _familyListBloc
+                        .getFamilyMembersList()
+                        .then((familyMembersList) {
+                      PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
+                          familyMembersList.response.data);
+                    });
                   });
                 });
               } else {
@@ -1291,5 +1333,7 @@ class _MyFamilyState extends State<MyFamily> {
   rebuildFamilyBlock() {
     _familyListBloc = null;
     _familyListBloc = new FamilyListBloc();
+    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getCustomRoles();
   }
 }

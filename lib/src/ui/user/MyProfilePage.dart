@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -9,7 +8,6 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -33,9 +31,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Others/Not Known'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Unknown'];
 
-  List<String> bloodRangeArray = ['+ve', '-ve', 'Others/Not Known'];
+  List<String> bloodRangeArray = ['+ve', '-ve', 'Unknown'];
 
   @override
   void initState() {

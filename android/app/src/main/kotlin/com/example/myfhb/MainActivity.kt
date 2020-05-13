@@ -351,7 +351,7 @@ class MainActivity : FlutterActivity() {
                 }
             }
             INTENT_AUTHENTICATE -> {
-                if (resultCode == Activity.RESULT_OK && data != null) {
+                if (resultCode == Activity.RESULT_OK) {
                     _securityResult.success(1002)
                 }else{
                     _securityResult.success(1003)
