@@ -198,23 +198,23 @@ class _AddAppointmentState extends State<AddAppointments> {
       });
 
     if (FHBUtils().checkdate(selectedDate)) {
-      print('280------$_isTimeAfter');
+      //print('280------$_isTimeAfter');
       setState(() {
         _isTimeAfter = true;
       });
-      print('284------$_isTimeAfter');
+      //print('284------$_isTimeAfter');
     } else {
       if (FHBUtils().checkTime(selectedTime)) {
         setState(() {
           _isTimeAfter = true;
         });
-        print('288------$_isTimeAfter');
+        //print('288------$_isTimeAfter');
         //_isTimeAfter=true;
       } else {
         setState(() {
           _isTimeAfter = false;
         });
-        print('292------$_isTimeAfter');
+        //print('292------$_isTimeAfter');
         //_isTimeAfter=false;
       }
     }
@@ -232,7 +232,7 @@ class _AddAppointmentState extends State<AddAppointments> {
       },
     );
 
-    print('291------$_isTimeAfter');
+    //print('291------$_isTimeAfter');
     if (pickedTime != null && pickedTime != selectedTime)
       setState(() {
         selectedTime = pickedTime;
@@ -245,13 +245,13 @@ class _AddAppointmentState extends State<AddAppointments> {
         setState(() {
           _isTimeAfter = true;
         });
-        print('299------$_isTimeAfter');
+        //print('299------$_isTimeAfter');
         //_isTimeAfter=true;
       } else {
         setState(() {
           _isTimeAfter = false;
         });
-        print('303------$_isTimeAfter');
+        //print('303------$_isTimeAfter');
         //_isTimeAfter=false;
       }
     }

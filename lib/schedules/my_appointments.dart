@@ -190,7 +190,10 @@ class _MyAppointmentState extends State<MyAppointment> {
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        toBeginningOfSentenceCase(model.appDate+','+model.appTime),
+                                        toBeginningOfSentenceCase(
+                                            model.appDate +
+                                                ',' +
+                                                model.appTime),
                                         style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.grey[400]),
@@ -332,7 +335,7 @@ class _MyAppointmentState extends State<MyAppointment> {
 
     detailsList = await FHBUtils().getAllAppointments();
     reverseDetailsList = detailsList.reversed.toList();
-    print(reverseDetailsList.toString());
+    //print(reverseDetailsList.toString());
     return detailsList;
   }
 }
