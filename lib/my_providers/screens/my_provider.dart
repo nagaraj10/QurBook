@@ -50,6 +50,8 @@ class _MyProviderState extends State<MyProvider>
               Navigator.pushNamed(context, '/search_providers',
                   arguments: SearchArguments(
                     searchWord: CommonConstants.doctors,
+                    fromClass: 'add_providers',
+                
                   )).then((value) {
                 _providersBloc = new ProvidersBloc();
                 _providersBloc.getMedicalPreferencesList();
@@ -60,6 +62,8 @@ class _MyProviderState extends State<MyProvider>
               Navigator.pushNamed(context, '/search_providers',
                   arguments: SearchArguments(
                     searchWord: CommonConstants.hospitals,
+                      fromClass: 'add_providers',
+                    
                   )).then((value) {
                 _providersBloc = new ProvidersBloc();
                 _providersBloc.getMedicalPreferencesList();
@@ -70,7 +74,8 @@ class _MyProviderState extends State<MyProvider>
               Navigator.pushNamed(context, '/search_providers',
                   arguments: SearchArguments(
                     searchWord: CommonConstants.labs,
-                  )).then((value) {
+                      fromClass: 'add_providers',
+                     )).then((value) {
                 _providersBloc = new ProvidersBloc();
                 _providersBloc.getMedicalPreferencesList();
               });

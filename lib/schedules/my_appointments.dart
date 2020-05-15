@@ -190,9 +190,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                       ),
                                       SizedBox(height: 5),
                                       Text(
-                                        toBeginningOfSentenceCase(FHBUtils()
-                                            .getFormattedDateString(
-                                                model.appDate)),
+                                        toBeginningOfSentenceCase(model.appDate+','+model.appTime),
                                         style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.grey[400]),

@@ -161,73 +161,6 @@ class _AddAppointmentState extends State<AddAppointments> {
 //                                  : null
                           ),
                         ),
-                        /*Text('Repeated interval'),
-                        SizedBox(height: 10),*/
-                        /*Center(
-                          child: ToggleButtons(
-                            borderColor: Colors.black,
-                            //TODO chnage theme
-                            fillColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                            borderWidth: 1,
-                            selectedBorderColor: Colors.black,
-                            selectedColor: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                            children: <Widget>[
-                              Container(
-                                alignment: Alignment.center,
-                                constraints: BoxConstraints(
-                                    minWidth: 100, maxHeight: 40),
-                                //padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  'Daily',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                constraints: BoxConstraints(
-                                    minWidth: 100, maxHeight: 40),
-                                //padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  'Weekly',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.center,
-                                constraints: BoxConstraints(
-                                    minWidth: 100, maxHeight: 40),
-                                //padding: const EdgeInsets.all(4.0),
-                                child: Text(
-                                  'Monthly',
-                                  style: TextStyle(fontSize: 14),
-                                ),
-                              ),
-                            ],
-                            onPressed: (int index) {
-                              setState(() {
-                                for (int i = 0; i < isSelected.length; i++) {
-                                  isSelected[i] = i == index;
-                                }
-                                intervalIndex = index;
-                              });
-                            },
-                            isSelected: isSelected,
-                          ),
-                        ),*/
-
-                        /*  Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            OutlineButton(
-                                onPressed: () {}, child: Text('Daily')),
-                            OutlineButton(
-                                onPressed: () {}, child: Text('Weekly')),
-                            OutlineButton(
-                                onPressed: () {}, child: Text('Monthly'))
-                          ],
-                        ) */
                       ]),
                 ),
               ),
@@ -242,7 +175,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {
-                  setReminder();
+                  NewAppointment();
                   //Navigator.of(context).pop();
                 },
               )
@@ -324,7 +257,7 @@ class _AddAppointmentState extends State<AddAppointments> {
     }
   }
 
-  void setReminder() async {
+  void NewAppointment() async {
     //prefs = await SharedPreferences.getInstance();
     //TODO logic to check text field is empty or not
     if (hosContoller.text.isEmpty || docNameController.text.isEmpty) {
@@ -341,7 +274,8 @@ class _AddAppointmentState extends State<AddAppointments> {
           id: DateTime.now().millisecondsSinceEpoch.toString(),
           hName: hosContoller.text,
           dName: docNameController.text,
-          appDate: DateTime.now().toString(),
+          appDate: FHBUtils().getFormattedDateOnly(selectedDate.toString()),
+          appTime: FHBUtils().formatTimeOfDay(selectedTime),
           reason: reasonController.text);
 
       await FHBUtils().createNewAppointment(model).then((_) {

@@ -8,6 +8,7 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -120,7 +121,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
       renameBloodGroup(data.generalInfo.bloodGroup);
     }
     if (data.generalInfo.dateOfBirth != null) {
-      dob.text = data.generalInfo.dateOfBirth;
+      dob.text =
+          new FHBUtils().getFormattedDateOnlyNew(data.generalInfo.dateOfBirth);
     }
     if (data.generalInfo.qualifiedFullName != null) {
       firstName.text = data.generalInfo.qualifiedFullName.firstName;

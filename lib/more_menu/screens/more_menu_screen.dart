@@ -73,9 +73,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   icon: Icon(Icons.exit_to_app),
                   onPressed: () {
                     new FHBBasicWidget().exitApp(context, () {
-                      PreferenceUtil.clearAllData().then((value) {
-                        new CommonUtil().logout(moveToLoginPage);
-                      });
+                      new CommonUtil().logout(moveToLoginPage);
                     });
                   })
             ]),
@@ -343,6 +341,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   void moveToLoginPage(SignOutResponse signOutResponse) {
-    PageNavigator.goToPermanent(context, '/sign_in_screen');
+    PreferenceUtil.clearAllData().then((value) {
+      PageNavigator.goToPermanent(context, '/sign_in_screen');
+    });
   }
 }

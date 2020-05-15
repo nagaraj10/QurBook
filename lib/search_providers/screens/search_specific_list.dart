@@ -23,13 +23,12 @@ export '../models/hospital_list_response.dart';
 
 class SearchSpecificList extends StatefulWidget {
   SearchArguments arguments;
-  bool toPreviousScreen;
 
+  bool toPreviousScreen;
   SearchSpecificList({this.arguments, this.toPreviousScreen});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return SearchSpecificListState();
   }
 }
@@ -691,7 +690,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     Navigator.pushNamed(context, '/add_providers',
             arguments: AddProvidersArguments(
                 searchText: value,
-                fromClass: CommonConstants.serach_specific_list,
+                fromClass: widget.arguments.fromClass == 'add_providers'
+                    ? widget.arguments.fromClass
+                    : CommonConstants.serach_specific_list,
                 searchKeyWord: widget.arguments.searchWord ==
                         CommonConstants.doctors
                     ? CommonConstants.doctors

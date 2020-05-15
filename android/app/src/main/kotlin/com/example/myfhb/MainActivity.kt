@@ -182,7 +182,7 @@ class MainActivity : FlutterActivity() {
                 result.notImplemented()
             }
         }
-
+        
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger,TTS_CHANNEL).setMethodCallHandler{ call, result ->
             _TTSResult=result
             if(call.method=="textToSpeech"){

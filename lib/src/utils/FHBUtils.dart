@@ -82,10 +82,10 @@ class FHBUtils {
   String getFormattedDateString(String strDate) {
     String formattedDate;
     if (CURRENT_DATE_CODE == 'MDY') {
-      formattedDate = DateFormat('MMM dd yyyy, hh:mm')
+      formattedDate = DateFormat('MMM dd yyyy, hh:mm aa')
           .format(DateTime.parse(strDate).toLocal());
     } else if (CURRENT_DATE_CODE == 'YMD') {
-      formattedDate = DateFormat('yyyy MMM dd, hh:mm')
+      formattedDate = DateFormat('yyyy MMM dd, hh:mm aa')
           .format(DateTime.parse(strDate).toLocal());
     } else {
       formattedDate = DateFormat('dd MMM yyyy, hh:mm aa')
@@ -147,7 +147,8 @@ class FHBUtils {
   }
 
   String getFormattedTimeOnly(String strDate) {
-    String formattedDate = DateFormat('hh:mm').format(DateTime.parse(strDate));
+    String formattedDate =
+        DateFormat('hh:mm aa').format(DateTime.parse(strDate));
     return formattedDate;
   }
 
@@ -205,7 +206,7 @@ class FHBUtils {
 
   static void _createTable(Database db) async {
     await db.execute(
-      "CREATE TABLE appointments(id TEXT PRIMARY KEY, hosname TEXT, docname TEXT, appdate TEXT, reason TEXT)",
+      "CREATE TABLE appointments(id TEXT PRIMARY KEY, hosname TEXT, docname TEXT, appdate TEXT, apptime TEXT, reason TEXT)",
     );
     await db.execute(
       "CREATE TABLE reminders(id TEXT PRIMARY KEY, title TEXT, notes TEXT, date TEXT, time TEXT, interval TEXT)",
@@ -254,10 +255,8 @@ class FHBUtils {
   Future<List<AppointmentModel>> getAllAppointments() async {
     // Get a reference to the database.
     final Database db = await getDb();
-
     // Query the table for all The Appointments.
     final List<Map<String, dynamic>> maps = await db.query('appointments');
-
     // Convert the List<Map<String, dynamic> into a List<Appointment>.
     return List.generate(maps.length, (i) {
       return AppointmentModel(
@@ -265,6 +264,7 @@ class FHBUtils {
         hName: maps[i]['hosname'],
         dName: maps[i]['docname'],
         appDate: maps[i]['appdate'],
+        appTime: maps[i]['apptime'],
         reason: maps[i]['reason'],
       );
     });
@@ -332,10 +332,8 @@ class FHBUtils {
   ) async {
     // Get a reference to the database.
     final Database db = await getDb();
-
     // Query the table for all The Appointments.
     final List<Map<String, dynamic>> maps = await db.query(tableName);
-
     // Convert the List<Map<String, dynamic> into a List<Appointment>.
     return List.generate(maps.length, (i) {
       if (tableName == 'appointments') {
@@ -344,6 +342,7 @@ class FHBUtils {
           hName: maps[i]['hosname'],
           dName: maps[i]['docname'],
           appDate: maps[i]['appdate'],
+          appTime: maps[i]['apptime'],
           reason: maps[i]['reason'],
         );
       } else if (tableName == 'reminders') {

@@ -636,6 +636,8 @@ class CommonDialogBox {
           if (idType == mediaDataClone[0]) {
             selectedID = idType;
             selectedMediaData = mediaData;
+            PreferenceUtil.saveMediaData(
+                Constants.KEY_MEDIADATA, selectedMediaData);
           }
         }
       }
@@ -678,16 +680,19 @@ class CommonDialogBox {
             ),
             Container(
                 width: MediaQuery.of(context).size.width - 60,
-                child: TextField(
-                  autofocus: false,
-                  onTap: () => _selectDate(context, dateOfVisit),
-                  controller: dateOfVisit,
-                  decoration: InputDecoration(
-                      suffixIcon: new IconButton(
-                    icon: new Icon(Icons.calendar_today),
-                    onPressed: () => _selectDate(context, dateOfVisit),
-                  )),
-                )),
+                child: GestureDetector(
+                    onTap: () => _selectDate(context, dateOfVisit),
+                    child: TextField(
+                      autofocus: false,
+                      readOnly:
+                          true, //onTap: () => _selectDate(context, dateOfVisit),
+                      controller: dateOfVisit,
+                      decoration: InputDecoration(
+                          suffixIcon: new IconButton(
+                        icon: new Icon(Icons.calendar_today),
+                        onPressed: () => _selectDate(context, dateOfVisit),
+                      )),
+                    ))),
             SizedBox(
               height: 15,
             ),

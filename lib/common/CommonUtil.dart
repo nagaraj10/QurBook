@@ -293,7 +293,7 @@ class CommonUtil {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return new WillPopScope(
-              onWillPop: () async => false,
+              onWillPop: () async => true,
               child: SimpleDialog(
                   key: key,
                   backgroundColor: Colors.black54,

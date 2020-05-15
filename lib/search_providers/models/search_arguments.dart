@@ -1,5 +1,5 @@
 class SearchArguments {
   String searchWord;
-
-  SearchArguments({this.searchWord});
+  String fromClass;
+  SearchArguments({this.searchWord, this.fromClass});
 }

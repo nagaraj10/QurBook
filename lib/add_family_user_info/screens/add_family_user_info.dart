@@ -227,8 +227,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
 
       if (widget.arguments.sharedbyme.profileData.dateOfBirth != null) {
-        List<String> list = widget.arguments.sharedbyme.profileData.dateOfBirth
-            .split("T"); //by space" " the string need to splited
+        /*  List<String> list = widget.arguments.sharedbyme.profileData.dateOfBirth
+            .split("T"); //by space" " the string need to splited */
 
         // dateOfBirthController.text = list[0];
         dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
@@ -996,7 +996,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       setState(() {
         dateTime = picked ?? dateTime;
         dateOfBirthController.text =
-            FHBUtils().getFormattedDateOnly(dateTime.toString());
+            FHBUtils().getFormattedDateOnlyNew(dateTime.toString());
       });
     }
   }

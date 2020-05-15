@@ -3,13 +3,11 @@ import 'dart:convert' as convert;
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/add_address/models/AddAddressArguments.dart';
 import 'package:myfhb/add_providers/bloc/add_providers_bloc.dart';
 import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
@@ -27,7 +25,6 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
-import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
 import 'package:myfhb/search_providers/models/doctors_list_response.dart';
 import 'package:myfhb/search_providers/models/hospital_list_response.dart';
 import 'package:myfhb/search_providers/models/labs_list_response.dart';
@@ -38,6 +35,8 @@ import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
 import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
+import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class AddProviders extends StatefulWidget {
   Data data;
@@ -112,17 +111,16 @@ class AddProvidersState extends State<AddProviders> {
   MyProfile selectedProfile;
   String selectedFamilyMemberName;
 
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-
   DoctorsListBlock _doctorsListBlock;
   HospitalListBlock _hospitalListBlock;
   LabsListBlock _labsListBlock;
 
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-
-    _checkGps();
 
     addProvidersBloc = AddProvidersBloc();
     updateProvidersBloc = UpdateProvidersBloc();
@@ -131,12 +129,11 @@ class AddProvidersState extends State<AddProviders> {
     _familyListBloc.getFamilyMembersList();
 
     _myProfileBloc = new MyProfileBloc();
-
     _doctorsListBlock = new DoctorsListBlock();
     _hospitalListBlock = new HospitalListBlock();
     _labsListBlock = new LabsListBlock();
 
-    //    getCurrentLocation();
+//    getCurrentLocation();
 
     buildUI();
   }
@@ -145,25 +142,25 @@ class AddProvidersState extends State<AddProviders> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      //      appBar: AppBar(
-      //        leading: IconButton(
-      //          icon: Icon(
-      //            Icons.arrow_back_ios,
-      //            size: 20,
-      //          ),
-      //          onPressed: () {
-      //            Navigator.of(context).pop();
-      //          },
-      //        ),
-      //        title: Text(
-      //          CommonConstants.add_providers,
-      //          style: TextStyle(
-      //            fontWeight: FontWeight.w400,
-      //            color: Colors.white,
-      //            fontSize: 18,
-      //          ),
-      //        ),
-      //      ),
+//      appBar: AppBar(
+//        leading: IconButton(
+//          icon: Icon(
+//            Icons.arrow_back_ios,
+//            size: 20,
+//          ),
+//          onPressed: () {
+//            Navigator.of(context).pop();
+//          },
+//        ),
+//        title: Text(
+//          CommonConstants.add_providers,
+//          style: TextStyle(
+//            fontWeight: FontWeight.w400,
+//            color: Colors.white,
+//            fontSize: 18,
+//          ),
+//        ),
+//      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         child: SingleChildScrollView(
@@ -315,10 +312,10 @@ class AddProvidersState extends State<AddProviders> {
                     Row(
                       children: <Widget>[
                         IgnorePointer(
-                            //                            ignoring: widget.arguments.fromClass ==
-                            //                                    CommonConstants.myProviders
-                            //                                ? true
-                            //                                : false,
+//                            ignoring: widget.arguments.fromClass ==
+//                                    CommonConstants.myProviders
+//                                ? true
+//                                : false,
                             ignoring: false,
                             child: Switch(
                               value: isPreferred,
@@ -340,8 +337,8 @@ class AddProvidersState extends State<AddProviders> {
                       ],
                     ),
                     Visibility(
-                      //                      visible: widget.arguments.fromClass ==
-                      //                              CommonConstants.myProviders ? false : true,
+//                      visible: widget.arguments.fromClass ==
+//                              CommonConstants.myProviders ? false : true,
                       visible: true,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -433,21 +430,19 @@ class AddProvidersState extends State<AddProviders> {
       }
     } else {
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-        doctorController.text =
-            toBeginningOfSentenceCase(widget.arguments.doctorsModel.name);
+        doctorController.text = widget.arguments.doctorsModel.name;
         isPreferred = widget.arguments.doctorsModel.isDefault;
         myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
-        //
-        //        latitude = double.parse(widget.doctorsModel.latitude);
-        //        longtiude = double.parse(widget.doctorsModel.longitude);
-        //
-        //        center = LatLng(latitude, longtiude);
+//
+//        latitude = double.parse(widget.doctorsModel.latitude);
+//        longtiude = double.parse(widget.doctorsModel.longitude);
+//
+//        center = LatLng(latitude, longtiude);
 
         addressLine1 = widget.arguments.doctorsModel.addressLine1;
         addressLine2 = widget.arguments.doctorsModel.addressLine2;
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
-        doctorController.text =
-            toBeginningOfSentenceCase(widget.arguments.hospitalsModel.name);
+        doctorController.text = widget.arguments.hospitalsModel.name;
         isPreferred = widget.arguments.hospitalsModel.isDefault;
         myprovidersPreferred = widget.arguments.hospitalsModel.isDefault;
 
@@ -463,8 +458,7 @@ class AddProvidersState extends State<AddProviders> {
         addressLine1 = widget.arguments.hospitalsModel.addressLine1;
         addressLine2 = widget.arguments.hospitalsModel.addressLine2;
       } else {
-        doctorController.text =
-            toBeginningOfSentenceCase(widget.arguments.labsModel.name);
+        doctorController.text = widget.arguments.labsModel.name;
         isPreferred = widget.arguments.labsModel.isDefault;
         myprovidersPreferred = widget.arguments.labsModel.isDefault;
 
@@ -534,8 +528,8 @@ class AddProvidersState extends State<AddProviders> {
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
-
-    return address;
+    print(
+        ' ${address.locality}, ${address.adminArea},${address.subLocality}, ${address.subAdminArea},${address.addressLine}, ${address.featureName},${address.thoroughfare}, ${address.subThoroughfare}');
   }
 
   Future addMarker() async {
@@ -570,8 +564,7 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   Widget _showUser() {
-    MyProfile myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
 
     return InkWell(
         onTap: () {
@@ -608,14 +601,35 @@ class AddProvidersState extends State<AddProviders> {
             child: Row(
               children: [
                 ClipOval(
-                  child: Container(
-                      height: 30,
-                      width: 30,
-                      child: selectedProfile == null
-                          ? FHBBasicWidget().getProfilePicWidget(myProfile
-                              .response.data.generalInfo.profilePicThumbnail)
-                          : FHBBasicWidget().getProfilePicWidget(selectedProfile
-                              .response.data.generalInfo.profilePicThumbnail)),
+                  child: myProfile
+                              .response.data.generalInfo.profilePicThumbnail !=
+                          null
+                      ? FHBBasicWidget().getProfilePicWidget(myProfile
+                          .response.data.generalInfo.profilePicThumbnail)
+                      : Container(
+                          height: 30,
+                          width: 30,
+                          color: Color(fhbColors.bgColorContainer),
+                          child: Center(
+                            child: Text(
+                              selectedFamilyMemberName == null
+                                  ? myProfile.response.data.generalInfo.name[0]
+                                      .toUpperCase()
+                                  : selectedFamilyMemberName[0].toUpperCase(),
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor())),
+                            ),
+                          ),
+                        )
+
+                  /*selectedProfile == null
+                      ? FHBBasicWidget().getProfilePicWidget(myProfile
+                          .response.data.generalInfo.profilePicThumbnail)
+                      : FHBBasicWidget().getProfilePicWidget(selectedProfile
+                          .response.data.generalInfo.profilePicThumbnail)*/
+                  ,
                 ),
                 SizedBox(width: 5),
                 Container(
@@ -640,8 +654,8 @@ class AddProvidersState extends State<AddProviders> {
         ));
   }
 
-  //  new FHBBasicWidget()
-  //      .getDefaultProfileImage()
+//  new FHBBasicWidget()
+//      .getDefaultProfileImage()
 
   Widget _ShowDoctorTextField() {
     return Padding(
@@ -668,9 +682,9 @@ class AddProvidersState extends State<AddProviders> {
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Theme.of(context).primaryColor),
             ),
-            //            focusedBorder: UnderlineInputBorder(
-            //              borderSide: BorderSide(color: ColorUtils.greencolor),
-            //            ),
+//            focusedBorder: UnderlineInputBorder(
+//              borderSide: BorderSide(color: ColorUtils.greencolor),
+//            ),
             labelText: widget.arguments.searchKeyWord,
             labelStyle: TextStyle(
                 fontSize: 16.0,
@@ -767,24 +781,11 @@ class AddProvidersState extends State<AddProviders> {
             updateProvidersBloc.isPreferred = isPreferred;
             updateProvidersBloc.providerId =
                 snapshot.data.data.response.data.id;
-
-            print(updateProvidersBloc.isPreferred.toString() + ' isPreferred');
             updateProvidersBloc.updateDoctorsIdWithUserDetails();
 
             new CommonUtil().getMedicalPreference();
 
-            print('doctors ID' + snapshot.data.data.response.data.id);
-
-            /*if (widget.arguments.fromClass ==
-                CommonConstants.serach_specific_list) {
-              _doctorsListBlock
-                  .getDoctorObjUsingId(snapshot.data.data.response.data.id)
-                  .then((doctorsListResponse) {
-                //Navigator.of(context).pop({'doctor': doctorsListResponse.response.data[0]});
-              });
-            } else {*/
             return Container();
-            // }
           } else {
             return Container();
           }
@@ -802,14 +803,9 @@ class AddProvidersState extends State<AddProviders> {
             updateProvidersBloc.isPreferred = isPreferred;
             updateProvidersBloc.providerId =
                 snapshot.data.data.response.data.id;
-
-            print(updateProvidersBloc.isPreferred.toString() + ' isPreferred');
-
             updateProvidersBloc.updateHospitalsIdWithUserDetails();
 
             new CommonUtil().getMedicalPreference();
-
-            print('hospital ID' + snapshot.data.data.response.data.id);
 
             return Container();
           } else {
@@ -831,10 +827,6 @@ class AddProvidersState extends State<AddProviders> {
                 snapshot.data.data.response.data.id;
             updateProvidersBloc.updateLabsIdWithUserDetails();
 
-            print(updateProvidersBloc.isPreferred.toString() + ' isPreferred');
-
-            print('lab ID' + snapshot.data.data.response.data.id);
-
             new CommonUtil().getMedicalPreference();
 
             return Container();
@@ -844,7 +836,7 @@ class AddProvidersState extends State<AddProviders> {
         });
   }
 
-  Widget callUpdateProvidersStreamBuilder(UpdateProvidersBloc bloc) {
+/*  Widget callUpdateProvidersStreamBuilder(UpdateProvidersBloc bloc) {
     return StreamBuilder(
         stream: widget.arguments.searchKeyWord == CommonConstants.doctors
             ? updateProvidersBloc.doctorsStream
@@ -856,7 +848,9 @@ class AddProvidersState extends State<AddProviders> {
           if (!snapshot.hasData) return Container();
 
           if (snapshot.data.status == Status.COMPLETED) {
-            if (widget.arguments.fromClass ==
+//            Navigator.pop(context, 1);
+           
+             if (widget.arguments.fromClass ==
                 CommonConstants.serach_specific_list) {
               widget.arguments.searchKeyWord == CommonConstants.doctors
                   ? _doctorsListBlock
@@ -889,6 +883,73 @@ class AddProvidersState extends State<AddProviders> {
                             'laborartory': lablistResponse.response.data[0]
                           });
                         });
+                }else{
+                   Navigator.popUntil(context, (Route<dynamic> route) {
+              bool shouldPop = false;
+              if (route.settings.name == '/user_accounts') {
+                shouldPop = true;
+              }
+              return shouldPop;
+            });
+            return Container();
+
+                }
+          } else {
+            return Container();
+          }
+        });
+  }*/
+
+  Widget callUpdateProvidersStreamBuilder(UpdateProvidersBloc bloc) {
+    return StreamBuilder(
+        stream: widget.arguments.searchKeyWord == CommonConstants.doctors
+            ? updateProvidersBloc.doctorsStream
+            : widget.arguments.searchKeyWord == CommonConstants.hospitals
+                ? updateProvidersBloc.hospitalsStream
+                : updateProvidersBloc.labsStream,
+        builder:
+            (context, AsyncSnapshot<ApiResponse<UpdateProvidersId>> snapshot) {
+          if (!snapshot.hasData) return Container();
+
+          if (snapshot.data.status == Status.COMPLETED) {
+            if (widget.arguments.fromClass ==
+                CommonConstants.serach_specific_list) {
+              widget.arguments.searchKeyWord == CommonConstants.doctors
+                  ? _doctorsListBlock
+                      .getDoctorObjUsingId(bloc.providerId)
+                      .then((doctorsListResponse) {
+                      print('Doctors Update');
+                      print('doctorsListResponse ' +
+                          doctorsListResponse.response.data[0].name);
+                      Navigator.of(context).pop();
+
+                      Navigator.of(context).pop(
+                          {'doctor': doctorsListResponse.response.data[0]});
+                    })
+                  : widget.arguments.searchKeyWord == CommonConstants.hospitals
+                      ? _hospitalListBlock
+                          .getHospitalObjectusingId(bloc.providerId)
+                          .then((hospitalDataResponse) {
+                          print('hospital Update');
+                          print('hospitalDataResponse ' +
+                              hospitalDataResponse.response.data[0].name);
+                          Navigator.of(context).pop();
+
+                          Navigator.of(context).pop({
+                            'hospital': hospitalDataResponse.response.data[0]
+                          });
+                        })
+                      : _labsListBlock
+                          .getLabsListUsingID(bloc.providerId)
+                          .then((lablistResponse) {
+                          print('hospital Update');
+                          print('lablistResponse ' +
+                              lablistResponse.response.data[0].name);
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop({
+                            'laborartory': lablistResponse.response.data[0]
+                          });
+                        });
             } else {
               //            Navigator.pop(context, 1);
               Navigator.popUntil(context, (Route<dynamic> route) {
@@ -898,8 +959,8 @@ class AddProvidersState extends State<AddProviders> {
                 }
                 return shouldPop;
               });
-              return Container();
             }
+            return Container();
           } else {
             return Container();
           }
@@ -1001,7 +1062,6 @@ class AddProvidersState extends State<AddProviders> {
         var jsonString = convert.jsonEncode(signInData);
 
         addProvidersBloc.doctorsJsonString = jsonString;
-
         addProvidersBloc.addDoctors();
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
         if (address == null || widget.arguments.placeDetail == null) {
@@ -1123,15 +1183,12 @@ class AddProvidersState extends State<AddProviders> {
   Future<Widget> getDialogBoxWithFamilyMemberScrap(FamilyData familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, _keyLoader, (context, userId, userName) {
-      setState(() {
-        selectedFamilyMemberName = userName;
-      });
-
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
-        Navigator.of(context).pop();
+        //getUserProfileData();
+        Navigator.pop(context);
+        CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
 
-        getUserProfileData();
-        new CommonUtil().getMedicalPreference();
+        getUserProfileWithId();
       });
     });
   }
@@ -1158,11 +1215,23 @@ class AddProvidersState extends State<AddProviders> {
     });
   }
 
-  /* void checkGPS() async {
-    if (!Geolocator().isLocationServiceEnabled) {
-      // showDialog(context: );
-    }
-  } */
+  void getUserProfileWithId() {
+    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+
+    _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
+      print('Inside dashboard' + profileData.toString());
+      Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+      PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
+          .then((value) {
+        new CommonUtil().getMedicalPreference();
+
+        setState(() {
+          selectedFamilyMemberName = profileData.response.data.generalInfo.name;
+        });
+      });
+    });
+  }
 
 //@override
 //Widget build(BuildContext context) {
@@ -1436,41 +1505,4 @@ class AddProvidersState extends State<AddProviders> {
 //      ),
 //    ),
 //  );
-
-  Future _checkGps() async {
-    if (!(await Geolocator().isLocationServiceEnabled())) {
-      if (Theme.of(context).platform == TargetPlatform.android) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text(
-                "Location",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Color(CommonUtil().getMyPrimaryColor())),
-              ),
-              content: const Text(
-                  'Please make sure your location service is enabled'),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text(
-                    'OK',
-                    style: TextStyle(
-                        color: Color(CommonUtil().getMyPrimaryColor())),
-                  ),
-                  onPressed: () {
-                    final AndroidIntent intent = AndroidIntent(
-                        action: 'android.settings.LOCATION_SOURCE_SETTINGS');
-                    intent.launch();
-                    Navigator.of(context, rootNavigator: true).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }
-    }
-  }
 }
