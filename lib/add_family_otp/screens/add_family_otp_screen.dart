@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/bloc/add_family_otp_bloc.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_arguments.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
@@ -196,27 +197,26 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
           title: Text('Otp Verification', style: TextStyle(fontSize: 18)),
         ),
         key: scaffold_state,
-        body: Center(
-            child: Column(
+        body: Column(
           //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(top: 40),
               child: Text(
-                widget.arguments.enteredFirstName +
+                toBeginningOfSentenceCase(widget.arguments.enteredFirstName +
                     " " +
                     widget.arguments.enteredMiddleName +
                     " " +
-                    widget.arguments.enteredLastName,
+                    widget.arguments.enteredLastName),
                 style: TextStyle(
                     color: Color(new CommonUtil().getMyPrimaryColor()),
                     fontWeight: FontWeight.w500),
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 20),
+              padding: EdgeInsets.only(top: 10),
               child: Text(
-                'Please type the verification number',
+                'Please enter the received OTP',
                 style: TextStyle(
                     color: Colors.black38, fontWeight: FontWeight.w400),
               ),
@@ -224,15 +224,15 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             Expanded(
               child: Image.asset(
                 'assets/icons/otp_icon.png',
-                width: 80,
-                height: 80,
+                width: 70,
+                height: 70,
               ),
             ),
             Expanded(
                 flex: 2,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                child: ListView(
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    //crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       GridView.count(
                           crossAxisCount: 6,
@@ -249,7 +249,11 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                       SizedBox(height: 20),
                       Text(
                         'Didn\'t receive the OTP?',
-                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
                       FlatButton(
                           onPressed: () {
@@ -268,9 +272,9 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                     ])),
             Expanded(
                 flex: 3,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.grey.withOpacity(0.1),
+                child: SingleChildScrollView(
+                  //width: MediaQuery.of(context).size.width,
+                  //color: Colors.grey.withOpacity(0.1),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -475,7 +479,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                 //flex: 40,
                 ),
           ],
-        )));
+        ));
   }
 
   //  Widget submitButton(OTPVerifyBloc _otpVerifyBloc) {

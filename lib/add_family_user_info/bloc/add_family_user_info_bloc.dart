@@ -108,7 +108,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     try {
       relationShipResponseList =
           await addFamilyUserInfoRepository.getCustomRoles();
-//      relationShipListSink.add(ApiResponse.completed(relationShipResponseList));
     } catch (e) {
       relationShipListSink.add(ApiResponse.error(e.toString()));
       print(e);

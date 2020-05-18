@@ -656,7 +656,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
       new FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
     });
   }
-
+  
   acceptanceWidget() {
     TextStyle defaultStyle =
         TextStyle(color: Colors.black, fontFamily: 'Poppins', fontSize: 12);

@@ -410,19 +410,6 @@ class CommonDialogBox {
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strDateOfVisit),
-                    /*  Container(
-                            width: MediaQuery.of(context).size.width - 60,
-                            child: TextField(
-                              autofocus: false,
-                              onTap: () => _selectDate(context, dateOfVisit),
-                              controller: dateOfVisit,
-                              decoration: InputDecoration(
-                                  suffixIcon: new IconButton(
-                                icon: new Icon(Icons.calendar_today),
-                                onPressed: () => _selectDate(context, dateOfVisit),
-                              )),
-                            )),*/
-
                     _showDateOfVisit(context, dateOfVisit),
                     SizedBox(
                       height: 15,
