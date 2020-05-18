@@ -337,8 +337,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                print('Audio Path delete' + containsAudio.toString());
-                print('Audio Path delete' + audioPath.toString());
+                //print('Audio Path delete' + containsAudio.toString());
+                //print('Audio Path delete' + audioPath.toString());
 
                 setState(() {
                   audioPath = audioPath;
@@ -375,8 +375,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               : true;
 
       if (digitRecog) {
-        //      displayDevicesList(deviceName);
-
         skipTapped = false;
 
         readingDeviceDetails(deviceName);
@@ -455,8 +453,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     _scaffoldKey.currentState.hideCurrentSnackBar();
     displayDevicesList(deviceName, null);
     skipTapped = true;
-
-    //    displayDevicesList(device);
   }
 
   displayDevicesList(String device, DigitRecogResponse digitRecogResponse) {
@@ -665,27 +661,20 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
           print('doctor data' + doctorsData.toString());
           setState(() {
-            print('inside important setState');
-            //doctorsName = new TextEditingController(text: doctorsData['name']);
             doctorsName.text = doctorsData['name'];
           });
         } else if (results.containsKey('hospital')) {
-          print(' received HospitalValue');
-
           hospitalData = json.decode(results['hospital']);
-          print('hospital data' + hospitalData.toString());
-          //hospitalName = new TextEditingController(text: hospitalData['name']);
+
           hospitalName.text = hospitalData['name'];
         } else if (results.containsKey('laborartory')) {
           labData = json.decode(results['laborartory']);
-          print('hospital data' + hospitalData.toString());
-          //hospitalName = new TextEditingController(text: hospitalData['name']);
+
           labName.text = labData['name'];
         }
         setState(() {});
       }
     });
-    // Data docotorsData = new Data();
   }
 
   void onPostDataToServer() async {
@@ -695,8 +684,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
       postMainData["userId"] = userID;
-
       postMediaData["categoryInfo"] = categoryDataObj.toJson();
+
       List<MediaData> metaDataFromSharedPrefernce =
           PreferenceUtil.getMediaType();
 

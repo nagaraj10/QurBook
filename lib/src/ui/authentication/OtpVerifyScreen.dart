@@ -6,6 +6,7 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/Authentication/OTPResponse.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/blocs/Authentication/OTPVerifyBloc.dart';
@@ -33,11 +34,11 @@ class OtpVerifyScreen extends StatefulWidget {
 }
 
 class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
-  TextEditingController controller1 = new TextEditingController();
-  TextEditingController controller2 = new TextEditingController();
-  TextEditingController controller3 = new TextEditingController();
-  TextEditingController controller4 = new TextEditingController();
-  TextEditingController currController = new TextEditingController();
+  TextEditingController controller1 = new TextEditingController(text: '');
+  TextEditingController controller2 = new TextEditingController(text: '');
+  TextEditingController controller3 = new TextEditingController(text: '');
+  TextEditingController controller4 = new TextEditingController(text: '');
+  TextEditingController currController = new TextEditingController(text: '');
 
   OTPVerifyBloc _otpVerifyBloc;
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
@@ -237,12 +238,21 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 ),
                 FlatButton(
                     onPressed: () {
-                      if (widget.forEmailVerify) {
-                        verifyOTPFromEmai();
-                      } else {
-                        generateOtp(_otpVerifyBloc, widget.selectedCountryCode,
-                            widget.enteredMobNumber);
-                      }
+                      new FHBUtils().check().then((intenet) {
+                        if (intenet != null && intenet) {
+                          if (widget.forEmailVerify) {
+                            verifyOTPFromEmai();
+                          } else {
+                            generateOtp(
+                                _otpVerifyBloc,
+                                widget.selectedCountryCode,
+                                widget.enteredMobNumber);
+                          }
+                        } else {
+                          new FHBBasicWidget().showInSnackBar(
+                              Constants.STR_NO_CONNECTIVITY, scaffold_state);
+                        }
+                      });
                     },
                     child: Text(
                       'Resend Code',
@@ -419,35 +429,52 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             //submitButton(_otpVerifyBloc)
                             MaterialButton(
                               onPressed: () {
-                                String otp = controller1.text +
-                                    controller2.text +
-                                    controller3.text +
-                                    controller4.text;
-                                if (widget.forEmailVerify) {
-                                  _otpVerifyBloc
-                                      .verifyOTPFromEmail(otp)
-                                      .then((value) {
-                                    if (value.success &&
-                                        value.message ==
-                                            Constants.MSG_EMAIL_OTP_VERIFIED) {
-                                      updateProfile();
+                                if (controller1.text != '' &&
+                                    controller2.text != '' &&
+                                    controller3.text != '' &&
+                                    controller4.text != '') {
+                                  String otp = controller1.text +
+                                      controller2.text +
+                                      controller3.text +
+                                      controller4.text;
+
+                                  new FHBUtils().check().then((intenet) {
+                                    if (intenet != null && intenet) {
+                                      if (widget.forEmailVerify) {
+                                        _otpVerifyBloc
+                                            .verifyOTPFromEmail(otp)
+                                            .then((value) {
+                                          if (value.success &&
+                                              value.message ==
+                                                  Constants
+                                                      .MSG_EMAIL_OTP_VERIFIED) {
+                                            updateProfile();
+                                          } else {
+                                            new FHBBasicWidget().showInSnackBar(
+                                                value.message, scaffold_state);
+                                          }
+                                        });
+                                      } else {
+                                        _otpVerifyBloc
+                                            .verifyOtp(
+                                                widget.enteredMobNumber,
+                                                widget.selectedCountryCode,
+                                                otp,
+                                                widget.fromSignIn)
+                                            .then((otpResponse) {
+                                          checkOTPResponse(otpResponse);
+                                        });
+                                      }
                                     } else {
                                       new FHBBasicWidget().showInSnackBar(
-                                          value.message, scaffold_state);
+                                          Constants.STR_NO_CONNECTIVITY,
+                                          scaffold_state);
                                     }
                                   });
                                 } else {
-                                  _otpVerifyBloc
-                                      .verifyOtp(
-                                          widget.enteredMobNumber,
-                                          widget.selectedCountryCode,
-                                          otp,
-                                          widget.fromSignIn)
-                                      .then((otpResponse) {
-                                    checkOTPResponse(otpResponse);
-                                  });
+                                  new FHBBasicWidget().showInSnackBar(
+                                      Constants.STR_OTP_FIELD, scaffold_state);
                                 }
-
                                 //matchOtp();
                               },
                               child: Icon(Icons.done,
@@ -619,7 +646,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     bloc
         .generateOTP(widget.enteredMobNumber, widget.selectedCountryCode,
             widget.fromSignIn)
-        .then((onValue) {});
+        .then((onValue) {
+      new FHBBasicWidget().showInSnackBar(onValue.message, scaffold_state);
+    });
   }
 
   void verifyOTPFromEmai() {

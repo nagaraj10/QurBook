@@ -271,4 +271,24 @@ class PreferenceUtil {
       return null;
     }
   }
+
+  static Future<bool> saveRelationshipArray(
+      String familyRelation, List<RelationShip> relationShipAry) async {
+    var instance = await _prefs;
+
+    return instance.setString(familyRelation, json.encode(relationShipAry));
+  }
+
+  static List<RelationShip> getFamilyRelationship(String keyFamilyRelation) {
+    List<RelationShip> categoryData = new List();
+
+    try {
+      if (_prefsInstance == null) {}
+      json.decode(_prefsInstance.getString(keyFamilyRelation)).forEach((map) {
+        categoryData.add(new RelationShip.fromJson(map));
+      });
+
+      return categoryData;
+    } catch (e) {}
+  }
 }

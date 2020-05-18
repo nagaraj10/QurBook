@@ -165,3 +165,8 @@ const String COVER_IMG_TITLE = 'Cover Image';
 //Prefrence key for family and provider
 const String KEY_FAMILYMEMBER = 'familymember';
 const String KEY_PROVIDER = 'provider';
+
+const String STR_NO_CONNECTIVITY = 'No Internet connection';
+const String STR_OTP_FIELD = 'Please enter a valid OTP';
+const String STR_ERROR_LOADING_DATA = 'Unable To Load Data,Please Try Again';
+const String STR_ERROR_LOADING_IMAGE = 'Unable To Load Image,Please Try Again';

@@ -39,7 +39,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   var user_id = PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
   var auth_token = PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
-  static MyProfile prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE);
+  static MyProfile prof =
+      PreferenceUtil.getProfileData(constants.KEY_PROFILE_MAIN);
   var user_name = prof.response.data.generalInfo.name;
   List<Conversation> conversations = new List();
   var isMayaSpeaks = -1;
@@ -213,46 +214,48 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
 
     if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      //print('response from maya ' + jsonResponse.toString());
-      List<dynamic> list = jsonResponse;
-      if (list.length > 0) {
-        SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
-        //print('before env value $isEndOfConv');
-        setState(() {
-          isEndOfConv = res.endOfConv;
-        });
-        var date =
-            new FHBUtils().getFormattedDateString(DateTime.now().toString());
-        Conversation model = new Conversation(
-          isMayaSaid: true,
-          text: res.text,
-          name: prof.response.data.generalInfo.name,
-          imageUrl: res.imageURL,
-          timeStamp: date,
-        );
-        conversations.add(model);
-        isLoading = true;
-        chatData(conversations);
-        Future.delayed(Duration(seconds: 4), () {
-          isLoading = false;
-          isMayaSpeaks = 0;
-          if (!stopTTSNow) {
-            tts_platform.invokeMethod('textToSpeech',
-                {"message": res.text, "isClose": false}).then((res) {
-              //print('is maya currently speaking value is $res');
-              if (res == 1) {
-                isMayaSpeaks = 1;
-              }
-              if (!isEndOfConv && !isListening) {
-                gettingReposnseFromNative();
-              } else {
-                refreshData();
-              }
-            });
-          }
-        });
-        return jsonResponse;
+      if (response.body != null) {
+        var jsonResponse = convert.jsonDecode(response.body);
+        //print('response from maya ' + jsonResponse.toString());
+        List<dynamic> list = jsonResponse;
+        if (list.length > 0) {
+          SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
+          //print('before env value $isEndOfConv');
+          setState(() {
+            isEndOfConv = res.endOfConv;
+          });
+          var date =
+              new FHBUtils().getFormattedDateString(DateTime.now().toString());
+          Conversation model = new Conversation(
+            isMayaSaid: true,
+            text: res.text,
+            name: prof.response.data.generalInfo.name,
+            imageUrl: res.imageURL,
+            timeStamp: date,
+          );
+          conversations.add(model);
+          isLoading = true;
+          chatData(conversations);
+          Future.delayed(Duration(seconds: 4), () {
+            isLoading = false;
+            isMayaSpeaks = 0;
+            if (!stopTTSNow) {
+              tts_platform.invokeMethod('textToSpeech',
+                  {"message": res.text, "isClose": false}).then((res) {
+                //print('is maya currently speaking value is $res');
+                if (res == 1) {
+                  isMayaSpeaks = 1;
+                }
+                if (!isEndOfConv && !isListening) {
+                  gettingReposnseFromNative();
+                } else {
+                  refreshData();
+                }
+              });
+            }
+          });
+          return jsonResponse;
+        }
       }
     }
   }
@@ -328,9 +331,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         ),
         SizedBox(width: 20),
         ClipOval(
+            child: Container(
+          height: 40,
+          width: 40,
           child: FHBBasicWidget().getProfilePicWidget(
               myProfile.response.data.generalInfo.profilePicThumbnail),
-        ),
+        )),
         SizedBox(width: 20),
       ],
     );

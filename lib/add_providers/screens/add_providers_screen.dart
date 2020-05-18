@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_address/models/AddAddressArguments.dart';
 import 'package:myfhb/add_providers/bloc/add_providers_bloc.dart';
 import 'package:myfhb/add_providers/bloc/update_providers_bloc.dart';
@@ -375,11 +376,15 @@ class AddProvidersState extends State<AddProviders> {
     if (widget.arguments.fromClass != CommonConstants.myProviders) {
       if (widget.arguments.hasData) {
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-          doctorController.text = widget.arguments.data.name;
+          doctorController.text = widget.arguments.data.name != null
+              ? toBeginningOfSentenceCase(widget.arguments.data.name)
+              : '';
           isPreferred = widget.arguments.data.isUserDefined;
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
-          doctorController.text = widget.arguments.hospitalData.name;
+          doctorController.text = widget.arguments.hospitalData.name != null
+              ? toBeginningOfSentenceCase(widget.arguments.hospitalData.name)
+              : '';
           isPreferred = widget.arguments.hospitalData.isUserDefined;
 
           latitude = widget.arguments.hospitalData.latitude == null
@@ -394,7 +399,9 @@ class AddProvidersState extends State<AddProviders> {
           addressLine1 = widget.arguments.hospitalData.addressLine1;
           addressLine2 = widget.arguments.hospitalData.addressLine2;
         } else {
-          doctorController.text = widget.arguments.labData.name;
+          doctorController.text = widget.arguments.labData.name != null
+              ? toBeginningOfSentenceCase(widget.arguments.labData.name)
+              : '';
           isPreferred = widget.arguments.labData.isUserDefined;
 
           latitude = widget.arguments.labData.latitude == null
@@ -430,7 +437,9 @@ class AddProvidersState extends State<AddProviders> {
       }
     } else {
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-        doctorController.text = widget.arguments.doctorsModel.name;
+        doctorController.text = widget.arguments.doctorsModel.name != null
+            ? toBeginningOfSentenceCase(widget.arguments.doctorsModel.name)
+            : '';
         isPreferred = widget.arguments.doctorsModel.isDefault;
         myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
 //
@@ -442,7 +451,9 @@ class AddProvidersState extends State<AddProviders> {
         addressLine1 = widget.arguments.doctorsModel.addressLine1;
         addressLine2 = widget.arguments.doctorsModel.addressLine2;
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
-        doctorController.text = widget.arguments.hospitalsModel.name;
+        doctorController.text = widget.arguments.hospitalsModel.name != null
+            ? toBeginningOfSentenceCase(widget.arguments.hospitalsModel.name)
+            : '';
         isPreferred = widget.arguments.hospitalsModel.isDefault;
         myprovidersPreferred = widget.arguments.hospitalsModel.isDefault;
 
@@ -458,7 +469,9 @@ class AddProvidersState extends State<AddProviders> {
         addressLine1 = widget.arguments.hospitalsModel.addressLine1;
         addressLine2 = widget.arguments.hospitalsModel.addressLine2;
       } else {
-        doctorController.text = widget.arguments.labsModel.name;
+        doctorController.text = widget.arguments.labsModel.name != null
+            ? toBeginningOfSentenceCase(widget.arguments.labsModel.name)
+            : '';
         isPreferred = widget.arguments.labsModel.isDefault;
         myprovidersPreferred = widget.arguments.labsModel.isDefault;
 
@@ -589,62 +602,56 @@ class AddProvidersState extends State<AddProviders> {
           child: UnconstrainedBox(
               child: Container(
             padding: EdgeInsets.all(5.0),
-            height: 35,
+            //height: 35,
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 246, 246, 246),
               border: Border.all(
                 width: 0.7356,
                 color: Color.fromARGB(255, 239, 239, 239),
               ),
-              borderRadius: BorderRadius.all(Radius.circular(17.05128)),
+              borderRadius: BorderRadius.all(Radius.circular(50)),
             ),
             child: Row(
               children: [
                 ClipOval(
+                    child: Container(
+                  height: 30,
+                  width: 30,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(30),
+                    color: Colors.white,
+                  ),
                   child: myProfile
                               .response.data.generalInfo.profilePicThumbnail !=
                           null
-                      ? FHBBasicWidget().getProfilePicWidget(myProfile
+                      ? getProfilePicWidget(myProfile
                           .response.data.generalInfo.profilePicThumbnail)
-                      : Container(
-                          height: 30,
-                          width: 30,
-                          color: Color(fhbColors.bgColorContainer),
-                          child: Center(
-                            child: Text(
-                              selectedFamilyMemberName == null
-                                  ? myProfile.response.data.generalInfo.name[0]
-                                      .toUpperCase()
-                                  : selectedFamilyMemberName[0].toUpperCase(),
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor())),
-                            ),
+                      : Center(
+                          child: Text(
+                            selectedFamilyMemberName == null
+                                ? myProfile.response.data.generalInfo.name[0]
+                                    .toUpperCase()
+                                : selectedFamilyMemberName[0].toUpperCase(),
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Color(CommonUtil().getMyPrimaryColor())),
                           ),
-                        )
-
-                  /*selectedProfile == null
-                      ? FHBBasicWidget().getProfilePicWidget(myProfile
-                          .response.data.generalInfo.profilePicThumbnail)
-                      : FHBBasicWidget().getProfilePicWidget(selectedProfile
-                          .response.data.generalInfo.profilePicThumbnail)*/
-                  ,
-                ),
-                SizedBox(width: 5),
+                        ),
+                )),
+                SizedBox(width: 10),
                 Container(
                   margin: EdgeInsets.only(right: 10),
                   child: Text(
                     selectedFamilyMemberName == null
                         ? 'Self'
-                        : selectedFamilyMemberName,
+                        : toBeginningOfSentenceCase(selectedFamilyMemberName),
                     softWrap: true,
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: Color.fromARGB(255, 85, 92, 89),
-                      fontFamily: "Muli",
-                      fontWeight: FontWeight.w700,
-                      fontSize: 15,
+                      //fontFamily: "Muli",
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
                     ),
                   ),
                 ),
@@ -654,8 +661,8 @@ class AddProvidersState extends State<AddProviders> {
         ));
   }
 
-//  new FHBBasicWidget()
-//      .getDefaultProfileImage()
+  //  new FHBBasicWidget()
+  //      .getDefaultProfileImage()
 
   Widget _ShowDoctorTextField() {
     return Padding(
@@ -682,9 +689,9 @@ class AddProvidersState extends State<AddProviders> {
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Theme.of(context).primaryColor),
             ),
-//            focusedBorder: UnderlineInputBorder(
-//              borderSide: BorderSide(color: ColorUtils.greencolor),
-//            ),
+            //            focusedBorder: UnderlineInputBorder(
+            //              borderSide: BorderSide(color: ColorUtils.greencolor),
+            //            ),
             labelText: widget.arguments.searchKeyWord,
             labelStyle: TextStyle(
                 fontSize: 16.0,
@@ -836,69 +843,69 @@ class AddProvidersState extends State<AddProviders> {
         });
   }
 
-/*  Widget callUpdateProvidersStreamBuilder(UpdateProvidersBloc bloc) {
-    return StreamBuilder(
-        stream: widget.arguments.searchKeyWord == CommonConstants.doctors
-            ? updateProvidersBloc.doctorsStream
-            : widget.arguments.searchKeyWord == CommonConstants.hospitals
-                ? updateProvidersBloc.hospitalsStream
-                : updateProvidersBloc.labsStream,
-        builder:
-            (context, AsyncSnapshot<ApiResponse<UpdateProvidersId>> snapshot) {
-          if (!snapshot.hasData) return Container();
-
-          if (snapshot.data.status == Status.COMPLETED) {
-//            Navigator.pop(context, 1);
-           
-             if (widget.arguments.fromClass ==
-                CommonConstants.serach_specific_list) {
-              widget.arguments.searchKeyWord == CommonConstants.doctors
-                  ? _doctorsListBlock
-                      .getDoctorObjUsingId(bloc.providerId)
-                      .then((doctorsListResponse) {
-                      print('Doctors Update');
-                      print('doctorsListResponse ' +
-                          doctorsListResponse.response.data[0].name);
-                      Navigator.of(context).pop(
-                          {'doctor': doctorsListResponse.response.data[0]});
-                    })
-                  : widget.arguments.searchKeyWord == CommonConstants.hospitals
-                      ? _hospitalListBlock
-                          .getHospitalObjectusingId(bloc.providerId)
-                          .then((hospitalDataResponse) {
-                          print('hospital Update');
-                          print('hospitalDataResponse ' +
-                              hospitalDataResponse.response.data[0].name);
-                          Navigator.of(context).pop({
-                            'hospital': hospitalDataResponse.response.data[0]
-                          });
-                        })
-                      : _labsListBlock
-                          .getLabsListUsingID(bloc.providerId)
-                          .then((lablistResponse) {
-                          print('hospital Update');
-                          print('lablistResponse ' +
-                              lablistResponse.response.data[0].name);
-                          Navigator.of(context).pop({
-                            'laborartory': lablistResponse.response.data[0]
-                          });
-                        });
-                }else{
-                   Navigator.popUntil(context, (Route<dynamic> route) {
-              bool shouldPop = false;
-              if (route.settings.name == '/user_accounts') {
-                shouldPop = true;
-              }
-              return shouldPop;
-            });
-            return Container();
-
-                }
-          } else {
-            return Container();
-          }
-        });
-  }*/
+  /*  Widget callUpdateProvidersStreamBuilder(UpdateProvidersBloc bloc) {
+                          return StreamBuilder(
+                              stream: widget.arguments.searchKeyWord == CommonConstants.doctors
+                                  ? updateProvidersBloc.doctorsStream
+                                  : widget.arguments.searchKeyWord == CommonConstants.hospitals
+                                      ? updateProvidersBloc.hospitalsStream
+                                      : updateProvidersBloc.labsStream,
+                              builder:
+                                  (context, AsyncSnapshot<ApiResponse<UpdateProvidersId>> snapshot) {
+                                if (!snapshot.hasData) return Container();
+                      
+                                if (snapshot.data.status == Status.COMPLETED) {
+                      //            Navigator.pop(context, 1);
+                                 
+                                   if (widget.arguments.fromClass ==
+                                      CommonConstants.serach_specific_list) {
+                                    widget.arguments.searchKeyWord == CommonConstants.doctors
+                                        ? _doctorsListBlock
+                                            .getDoctorObjUsingId(bloc.providerId)
+                                            .then((doctorsListResponse) {
+                                            print('Doctors Update');
+                                            print('doctorsListResponse ' +
+                                                doctorsListResponse.response.data[0].name);
+                                            Navigator.of(context).pop(
+                                                {'doctor': doctorsListResponse.response.data[0]});
+                                          })
+                                        : widget.arguments.searchKeyWord == CommonConstants.hospitals
+                                            ? _hospitalListBlock
+                                                .getHospitalObjectusingId(bloc.providerId)
+                                                .then((hospitalDataResponse) {
+                                                print('hospital Update');
+                                                print('hospitalDataResponse ' +
+                                                    hospitalDataResponse.response.data[0].name);
+                                                Navigator.of(context).pop({
+                                                  'hospital': hospitalDataResponse.response.data[0]
+                                                });
+                                              })
+                                            : _labsListBlock
+                                                .getLabsListUsingID(bloc.providerId)
+                                                .then((lablistResponse) {
+                                                print('hospital Update');
+                                                print('lablistResponse ' +
+                                                    lablistResponse.response.data[0].name);
+                                                Navigator.of(context).pop({
+                                                  'laborartory': lablistResponse.response.data[0]
+                                                });
+                                              });
+                                      }else{
+                                         Navigator.popUntil(context, (Route<dynamic> route) {
+                                    bool shouldPop = false;
+                                    if (route.settings.name == '/user_accounts') {
+                                      shouldPop = true;
+                                    }
+                                    return shouldPop;
+                                  });
+                                  return Container();
+                      
+                                      }
+                                } else {
+                                  return Container();
+                                }
+                              });
+                        }*/
 
   Widget callUpdateProvidersStreamBuilder(UpdateProvidersBloc bloc) {
     return StreamBuilder(
@@ -1231,6 +1238,21 @@ class AddProvidersState extends State<AddProviders> {
         });
       });
     });
+  }
+
+  Widget getProfilePicWidget(ProfilePicThumbnailMain profilePicThumbnail) {
+    return profilePicThumbnail != null
+        ? Image.memory(
+            Uint8List.fromList(profilePicThumbnail.data),
+            height: 30,
+            width: 30,
+            fit: BoxFit.cover,
+          )
+        : Container(
+            color: Color(fhbColors.bgColorContainer),
+            height: 30,
+            width: 30,
+          );
   }
 
 //@override

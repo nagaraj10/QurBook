@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -8,7 +9,9 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -32,9 +35,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Unknown'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'UnKnown'];
 
-  List<String> bloodRangeArray = ['+ve', '-ve', 'Unknown'];
+  List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
 
   @override
   void initState() {
@@ -121,8 +124,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
       renameBloodGroup(data.generalInfo.bloodGroup);
     }
     if (data.generalInfo.dateOfBirth != null) {
-      dob.text =
-          new FHBUtils().getFormattedDateOnlyNew(data.generalInfo.dateOfBirth);
+      print(data.generalInfo.dateOfBirth);
+      dob.text = new FHBUtils().getFormattedDateOnlyNew(data.generalInfo.dateOfBirth);
+      print(dob.text);
     }
     if (data.generalInfo.qualifiedFullName != null) {
       firstName.text = data.generalInfo.qualifiedFullName.firstName;
@@ -221,7 +225,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
                                       color: Color(new CommonUtil()
                                           .getMyPrimaryColor())))),
                           onTap: () {
-                            verifyEmail();
+                            new FHBUtils().check().then((intenet) {
+                            if (intenet != null && intenet) {
+                              verifyEmail();
+                            } else {
+                              new FHBBasicWidget().showInSnackBar(
+                                  Constants.STR_NO_CONNECTIVITY,
+                                  scaffold_state);
+                            }
+                          });
                           },
                         )
                       : Text('')

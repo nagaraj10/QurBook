@@ -11,6 +11,7 @@ import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/src/utils/FHBUtils.dart';
 
 class SwitchProfile {
   FamilyListBloc _familyListBloc;
@@ -21,11 +22,17 @@ class SwitchProfile {
   Function callBackToRefresh;
 
   Widget buildActions(BuildContext _context, GlobalKey<State> _keyLoader,
-      Function _callBackToRefresh) {
+      Function _callBackToRefresh,
+      {GlobalKey<ScaffoldState> scaffold_state}) {
     context = _context;
     keyLoader = _keyLoader;
     callBackToRefresh = _callBackToRefresh;
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    MyProfile myProfile;
+    try {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    } catch (e) {
+      myProfile = null;
+    }
 
     return Padding(
         padding: EdgeInsets.all(10),
@@ -41,57 +48,52 @@ class SwitchProfile {
               PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
                   ? getDialogBoxWithFamilyMemberScrap(
                       PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
-                  : _familyListBloc
-                      .getFamilyMembersList()
-                      .then((familyMembersList) {
-                      PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
-                          familyMembersList.response.data);
-                      Navigator.of(_keyLoader.currentContext,
-                              rootNavigator: true)
-                          .pop();
-
-                      getDialogBoxWithFamilyMemberScrap(
-                          familyMembersList.response.data);
-                    });
+                  : checkInternet(_keyLoader, scaffold_state);
 
               //return new FamilyListDialog();
             },
             child: CircleAvatar(
               radius: 15,
               child: ClipOval(
-                  child: myProfile
-                              .response.data.generalInfo.profilePicThumbnail !=
-                          null
-                      ? new FHBBasicWidget().getProfilePicWidget(myProfile
-                          .response.data.generalInfo.profilePicThumbnail)
+                  child: myProfile != null
+                      ? myProfile.response.data.generalInfo
+                                  .profilePicThumbnail !=
+                              null
+                          ? new FHBBasicWidget().getProfilePicWidget(myProfile
+                              .response.data.generalInfo.profilePicThumbnail)
+                          : Container(
+                              height: 50,
+                              width: 50,
+                              color: Color(fhbColors.bgColorContainer),
+                              child: Center(
+                                child: Text(
+                                  myProfile.response.data.generalInfo
+                                              .qualifiedFullName.firstName !=
+                                          null
+                                      ? myProfile.response.data.generalInfo
+                                          .qualifiedFullName.firstName[0]
+                                          .toUpperCase()
+                                      : '',
+                                  style: TextStyle(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor())),
+                                ),
+                              ))
                       : Container(
                           height: 50,
                           width: 50,
                           color: Color(fhbColors.bgColorContainer),
-                          child: Center(
-                            child: Text(
-                              myProfile.response.data.generalInfo
-                                          .qualifiedFullName.firstName !=
-                                      null
-                                  ? myProfile.response.data.generalInfo
-                                      .qualifiedFullName.firstName[0]
-                                      .toUpperCase()
-                                  : '',
-                              style: TextStyle(
-                                  color:
-                                      Color(CommonUtil().getMyPrimaryColor())),
-                            ),
-                          ))),
+                        )),
             )));
 
     //}
 
     /*  return <Widget>[
-      IconButton(
-        icon: const Icon(Icons.search),
-        onPressed: _startSearch,
-      ),
-    ]; */
+                        IconButton(
+                          icon: const Icon(Icons.search),
+                          onPressed: _startSearch,
+                        ),
+                      ]; */
   }
 
   Future<Widget> getDialogBoxWithFamilyMemberScrap(FamilyData familyData) {
@@ -149,6 +151,28 @@ class SwitchProfile {
         //Navigator.of(context).pop();
         //Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
       });
+    });
+  }
+
+  checkInternet(
+      GlobalKey<State> _keyLoader, GlobalKey<ScaffoldState> scaffold_state) {
+    new FHBUtils().check().then((intenet) {
+      if (intenet != null && intenet) {
+        _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+          if (familyMembersList.response.data != null) {
+            PreferenceUtil.saveFamilyData(
+                Constants.KEY_FAMILYMEMBER, familyMembersList.response.data);
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            getDialogBoxWithFamilyMemberScrap(familyMembersList.response.data);
+          } else {
+            new FHBBasicWidget()
+                .showInSnackBar(Constants.NO_DATA_FAMIY, scaffold_state);
+          }
+        });
+      } else {
+        new FHBBasicWidget()
+            .showInSnackBar(Constants.STR_NO_CONNECTIVITY, scaffold_state);
+      }
     });
   }
 }

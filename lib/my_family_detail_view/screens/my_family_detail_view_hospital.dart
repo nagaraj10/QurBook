@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
@@ -24,7 +25,7 @@ class MyFamilyDetailViewHospitalState
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-
+    getCategoryPreference();
     return getWidgetToDisplayIDDocs(widget.completeData);
   }
 
@@ -142,7 +143,7 @@ class MyFamilyDetailViewHospitalState
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       /* Icon(Icons.more_horiz, color: Colors.grey, size: 20),
-                      SizedBox(height: 20), */
+                          SizedBox(height: 20), */
                       mediaMetaInfoObj.isBookmarked
                           ? ImageIcon(
                               AssetImage('assets/icons/record_fav_active.png'),
@@ -156,15 +157,30 @@ class MyFamilyDetailViewHospitalState
                               size: 20,
                             )
                       /*  mediaMetaInfoObj.metaInfo.hasVoiceNotes
-                      ? Icon(
-                          Icons.mic,
-                          color: Colors.black54,
-                        )
-                      : Container() */
+                          ? Icon(
+                              Icons.mic,
+                              color: Colors.black54,
+                            )
+                          : Container() */
                     ],
                   ),
                 ),
               ],
             )));
+  }
+
+  void getCategoryPreference() {
+    for (var e in PreferenceUtil.getCategoryType()) {
+      if (e.categoryDescription == CommonConstants.categoryDescriptionIDDocs) {
+        PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
+            .then((onValue) {
+          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, e.categoryName)
+              .then((onValue) {
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, e.id)
+                .then((value) {});
+          });
+        });
+      }
+    }
   }
 }

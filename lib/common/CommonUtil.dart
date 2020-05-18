@@ -8,6 +8,7 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart'
     as familyMember;
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
+import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
@@ -431,67 +432,7 @@ class CommonUtil {
         profileData: profileData, linkedData: linkedData);
   }
 
-/*   void getMedicalPreference({Function callBackToRefresh}) {
-    MyProfileBloc _myProfileBloc = new MyProfileBloc();
-    _myProfileBloc
-        .getCompleteProfileData(Constants.KEY_USERID)
-        .then((profileCompleteData) {
-      if (profileCompleteData.response.data.medicalPreferences != null) {
-        MedicalPreferences medicalPreferences =
-            profileCompleteData.response.data.medicalPreferences;
-
-        if (medicalPreferences.preferences.doctorIds != null &&
-            medicalPreferences.preferences.doctorIds.length > 0) {
-          medicalPreferences.preferences.doctorIds.sort(
-              (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
-          DoctorIds doctorIds = medicalPreferences.preferences.doctorIds[0];
-
-          PreferenceUtil.savePrefereDoctors(
-              Constants.KEY_PREFERRED_DOCTOR, doctorIds);
-        } else {
-          PreferenceUtil.savePrefereDoctors(
-              Constants.KEY_PREFERRED_DOCTOR, null);
-        }
-
-        if (medicalPreferences.preferences.hospitalIds != null &&
-            medicalPreferences.preferences.hospitalIds.length > 0) {
-          medicalPreferences.preferences.hospitalIds.sort(
-              (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
-          HospitalIds hospitalIds =
-              medicalPreferences.preferences.hospitalIds[0];
-          PreferenceUtil.savePrefereHospital(
-              Constants.KEY_PREFERRED_HOSPITAL, hospitalIds);
-        } else {
-          PreferenceUtil.savePrefereHospital(
-              Constants.KEY_PREFERRED_HOSPITAL, null);
-        }
-
-        if (medicalPreferences.preferences.laboratoryIds != null &&
-            medicalPreferences.preferences.laboratoryIds.length > 0) {
-          medicalPreferences.preferences.laboratoryIds.sort(
-              (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
-          LaboratoryIds laboratoryIds =
-              medicalPreferences.preferences.laboratoryIds[0];
-          PreferenceUtil.savePreferedLab(
-              Constants.KEY_PREFERRED_LAB, laboratoryIds);
-        } else {
-          PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
-        }
-        callBackToRefresh();
-      } else {
-        PreferenceUtil.savePrefereDoctors(Constants.KEY_PREFERRED_DOCTOR, null);
-        PreferenceUtil.savePrefereHospital(
-            Constants.KEY_PREFERRED_HOSPITAL, null);
-
-        PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
-        callBackToRefresh();
-      }
-    });
-  }
-
-  */
-
-  void getMedicalPreference({Function callBackToRefresh}) async {
+  /* void getMedicalPreference({Function callBackToRefresh}) async {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
     _myProfileBloc
         .getCompleteProfileData(Constants.KEY_USERID)
@@ -567,6 +508,88 @@ class CommonUtil {
         callBackToRefresh();
       }
     });
+  } */
+
+  Future<void> getMedicalPreference({Function callBackToRefresh}) async {
+    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+    try {
+      _myProfileBloc
+          .getCompleteProfileData(Constants.KEY_USERID)
+          .then((profileCompleteData) {
+        if (profileCompleteData.response.data.medicalPreferences != null) {
+          MedicalPreferences medicalPreferences =
+              profileCompleteData.response.data.medicalPreferences;
+
+          PreferenceUtil.savePrefereDoctors(
+              Constants.KEY_PREFERRED_DOCTOR, null);
+
+          if (medicalPreferences.preferences.doctorIds != null &&
+              medicalPreferences.preferences.doctorIds.length > 0) {
+            medicalPreferences.preferences.doctorIds.sort(
+                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+
+            for (DoctorIds doctorIds
+                in medicalPreferences.preferences.doctorIds) {
+              if (doctorIds.isDefault) {
+                PreferenceUtil.savePrefereDoctors(
+                    Constants.KEY_PREFERRED_DOCTOR, doctorIds);
+              }
+            }
+          } else {
+            PreferenceUtil.savePrefereDoctors(
+                Constants.KEY_PREFERRED_DOCTOR, null);
+          }
+
+          if (medicalPreferences.preferences.hospitalIds != null &&
+              medicalPreferences.preferences.hospitalIds.length > 0) {
+            PreferenceUtil.savePrefereHospital(
+                Constants.KEY_PREFERRED_HOSPITAL, null);
+            medicalPreferences.preferences.hospitalIds.sort(
+                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+
+            for (HospitalIds hospitalIds
+                in medicalPreferences.preferences.hospitalIds) {
+              if (hospitalIds.isDefault) {
+                PreferenceUtil.savePrefereHospital(
+                    Constants.KEY_PREFERRED_HOSPITAL, hospitalIds);
+              }
+            }
+          } else {
+            PreferenceUtil.savePrefereHospital(
+                Constants.KEY_PREFERRED_HOSPITAL, null);
+          }
+
+          PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
+
+          if (medicalPreferences.preferences.laboratoryIds != null &&
+              medicalPreferences.preferences.laboratoryIds.length > 0) {
+            medicalPreferences.preferences.laboratoryIds.sort(
+                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+
+            for (LaboratoryIds laboratoryIds
+                in medicalPreferences.preferences.laboratoryIds) {
+              if (laboratoryIds.isDefault) {
+                PreferenceUtil.savePreferedLab(
+                    Constants.KEY_PREFERRED_LAB, laboratoryIds);
+              }
+            }
+          } else {
+            PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
+          }
+
+          // PreferenceUtil.saveCompleteProfileData(Constants.KEY_COMPLETE_PROFILEDATA,profileCompleteData);
+          callBackToRefresh();
+        } else {
+          PreferenceUtil.savePrefereDoctors(
+              Constants.KEY_PREFERRED_DOCTOR, null);
+          PreferenceUtil.savePrefereHospital(
+              Constants.KEY_PREFERRED_HOSPITAL, null);
+
+          PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
+          callBackToRefresh();
+        }
+      });
+    } catch (e) {}
   }
 
   int getThemeColor() {
@@ -991,11 +1014,146 @@ class CommonUtil {
     return splitStr.join(' ');
   }
 
-  void getAllCustomRoles() {
+  /*  void getAllCustomRoles() {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
+    try {
+      if (PreferenceUtil.getFamilyRelationship('keyFamilyrel') != null) {
+        print('family relation data present');
+      } else {
+        _familyListBloc.getCustomRoles().then((relationShip) {
+          PreferenceUtil.saveRelationshipArray(
+              'keyFamilyrel', relationShip.relationShipAry);
+        });
+      }
+    } catch (e) {
+      _familyListBloc.getCustomRoles().then((relationShip) {
+        PreferenceUtil.saveRelationshipArray(
+            'keyFamilyrel', relationShip.relationShipAry);
+      });
+    }
+  }
+ */
 
-    _familyListBloc.getCustomRoles().then((relationShipArray) {
-      PreferenceUtil.saveFamilyRelationShip('keyFamilyrel', relationShipArray);
+  Future<void> getAllCustomRoles() async {
+    FamilyListBloc _familyListBloc = new FamilyListBloc();
+    try {
+      if (PreferenceUtil.getFamilyRelationship('keyFamilyrel') != null) {
+        print('family relation data present');
+      } else {
+        _familyListBloc.getCustomRoles().then((relationShip) {
+          PreferenceUtil.saveRelationshipArray(
+              'keyFamilyrel', relationShip.relationShipAry);
+        });
+      }
+    } catch (e) {
+      _familyListBloc.getCustomRoles().then((relationShip) {
+        PreferenceUtil.saveRelationshipArray(
+            'keyFamilyrel', relationShip.relationShipAry);
+      });
+    }
+  }
+
+  /*  Future<MyProfile> getUserProfileData() async {
+    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+
+    _myProfileBloc
+        .getMyProfileData(Constants.KEY_USERID_MAIN)
+        .then((profileData) {
+      if (profileData != null &&
+          profileData.status == 200 &&
+          profileData.success) {
+        print('Inside dashboard' + profileData.toString());
+        PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
+            .then((value) {
+          try {
+            if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
+            } else {
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE, profileData);
+            }
+          } catch (e) {
+            PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
+          }
+        });
+
+        return profileData;
+      }
     });
+  } */
+
+  Future<MyProfile> getUserProfileData() async {
+    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+
+    MyProfile myProfile = new MyProfile();
+
+    _myProfileBloc
+        .getMyProfileData(Constants.KEY_USERID_MAIN)
+        .then((profileData) {
+      if (profileData != null &&
+          profileData.status == 200 &&
+          profileData.success) {
+        print('Inside dashboard' + profileData.toString());
+        PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
+            .then((value) {
+          try {
+            if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
+            } else {
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE, profileData);
+            }
+          } catch (e) {
+            PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
+          }
+
+          myProfile = profileData;
+        });
+      }
+      return profileData;
+    });
+  }
+
+  /*  Future<MyProfile> getMyProfile() async {
+    if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
+      return PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    } else {
+      return await getUserProfileData();
+    }
+  } */
+
+  Future<MyProfile> getMyProfile() async {
+    if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
+      print('Profile present');
+      return PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    } else {
+      return await getUserProfileData();
+    }
+  }
+
+  /* void getMediaTypes() async {
+    MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+    try {
+      if (PreferenceUtil.getMediaType() != null) {
+        print('media data present');
+      } else {
+        _mediaTypeBlock.getMediTypes().then(() {});
+      }
+    } catch (e) {
+      _mediaTypeBlock.getMediTypes().then(() {});
+    }
+  } */
+
+  Future<void> getMediaTypes() async {
+    MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+    try {
+      if (PreferenceUtil.getMediaType() != null) {
+        print('media data present');
+      } else {
+        _mediaTypeBlock.getMediTypes().then(() {});
+      }
+    } catch (e) {
+      _mediaTypeBlock.getMediTypes().then(() {});
+    }
   }
 }

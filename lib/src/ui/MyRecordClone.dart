@@ -590,8 +590,6 @@ class _CustomTabsState extends State<CustomTabView>
   String categoryName = '';
   String categoryID = '';
 
-  // MediaData mediaData;
-
   FamilyListBloc _familyListBloc;
   MyProfileBloc _myProfileBloc;
 

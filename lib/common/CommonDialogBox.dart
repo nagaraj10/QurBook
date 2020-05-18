@@ -586,6 +586,185 @@ class CommonDialogBox {
         context: context, builder: (BuildContext context) => dialog);
   }
 
+  /*  Future<Widget> getDialogForIDDocs(
+      BuildContext context,
+      bool containsAudio,
+      String audioPath,
+      Function(bool, String) deleteAudioFunction,
+      List<String> imagePath,
+      Function(bool, String) updateAudioUI,
+      MediaMetaInfo mediaMetaInfoClone,
+      bool modeOfSaveClone,
+      TextEditingController fileNameClone,
+      TextEditingController dateOfVisitClone,
+      String idType) {
+    print('id types' + idType);
+    if (mediaMetaInfoClone != null) {
+      if (mediaMetaInfoClone != null) {
+        metaInfoId = mediaMetaInfoClone.id;
+      }
+    }
+    modeOfSave = modeOfSaveClone;
+    imagePathMain.addAll(imagePath);
+    dateOfVisit.text = dateOfVisitClone.text;
+    if (idType != '' && idType != null) {
+      selectedID = idType;
+    }
+
+    setFileName(fileNameClone.text);
+    //print('$categoryName in getDialogForIDDocs');
+    if (modeOfSave) {
+      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
+          ? mediaMetaInfoClone.metaInfo.memoText
+          : '');
+    } else {
+      memoController.text = '';
+    }
+
+    List<MediaData> mediaDataAry = [];
+
+    for (MediaData mediaData in PreferenceUtil.getMediaType()) {
+      var categorySplitAry = mediaData.description.split('_');
+      if (categorySplitAry[0] == CommonConstants.categoryDescriptionIDDocs) {
+        mediaDataAry.add(mediaData);
+      }
+    }
+
+    /*  for (MediaData mediaData in mediaDataAry) {
+      var mediaDataClone = mediaData.name.split(' ');
+      if (mediaDataClone.length > 0) {
+        if (idType != '' && idType != null) {
+          if (idType == mediaDataClone[0]) {
+            selectedID = idType;
+            selectedMediaData = mediaData;
+            PreferenceUtil.saveMediaData(
+                Constants.KEY_MEDIADATA, selectedMediaData);
+          }
+        }
+      }
+    } */
+
+    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
+      return new AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
+            IconButton(
+              icon: Icon(
+                Icons.close,
+                color: Colors.black54,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ),
+        content: SingleChildScrollView(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strFileName),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+            SizedBox(
+              height: 15,
+            ),
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strMemo),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
+            SizedBox(
+              height: 15,
+            ),
+            Container(
+                width: MediaQuery.of(context).size.width - 60,
+                child: GestureDetector(
+                    onTap: () => _selectDate(context, dateOfVisit),
+                    child: TextField(
+                      autofocus: false,
+                      readOnly:
+                          true, //onTap: () => _selectDate(context, dateOfVisit),
+                      controller: dateOfVisit,
+                      decoration: InputDecoration(
+                          suffixIcon: new IconButton(
+                        icon: new Icon(Icons.calendar_today),
+                        onPressed: () => _selectDate(context, dateOfVisit),
+                      )),
+                    ))),
+            SizedBox(
+              height: 15,
+            ),
+            new Center(
+              child: new DropdownButton(
+                hint: new Text("Select ID Type"),
+                value: selectedMediaData,
+                onChanged: (MediaData newValue) {
+                  setState(() {
+                    selectedMediaData = newValue;
+                    PreferenceUtil.saveMediaData(
+                        Constants.KEY_MEDIADATA, selectedMediaData);
+                  });
+                },
+                items: mediaDataAry.map((idType) {
+                  return DropdownMenuItem(
+                    child: new Text(
+                      idType.name,
+                      style: new TextStyle(color: Colors.black),
+                    ),
+                    value: idType,
+                  );
+                }).toList(),
+              ),
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            modeOfSave
+                ? fhbBasicWidget.getSaveButton(() {
+                    onPostDataToServer(context, imagePath);
+                  })
+                : containsAudioMain
+                    ? fhbBasicWidget.getAudioIconWithFile(
+                        audioPathMain,
+                        containsAudioMain,
+                        (containsAudio, audioPath) {
+                          audioPathMain = audioPath;
+                          containsAudioMain = containsAudio;
+                          updateAudioUI(containsAudioMain, audioPathMain);
+                          setState(() {});
+                        },
+                        context,
+                        imagePath,
+                        (context, imagePath) {
+                          onPostDataToServer(context, imagePath);
+                        })
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          fhbBasicWidget
+                              .getMicIcon(context, containsAudio, audioPath,
+                                  (containsAudio, audioPath) {
+                            audioPathMain = audioPath;
+                            containsAudioMain = containsAudio;
+                            updateAudioUI(containsAudioMain, audioPathMain);
+                          }),
+                          fhbBasicWidget.getSaveButton(() {
+                            onPostDataToServer(context, imagePath);
+                          })
+                        ],
+                      ),
+          ],
+        )),
+      );
+    });
+
+    return showDialog(context: context, builder: (context) => dialog);
+  }
+ */
+
   Future<Widget> getDialogForIDDocs(
       BuildContext context,
       bool containsAudio,
@@ -636,6 +815,7 @@ class CommonDialogBox {
           if (idType == mediaDataClone[0]) {
             selectedID = idType;
             selectedMediaData = mediaData;
+
             PreferenceUtil.saveMediaData(
                 Constants.KEY_MEDIADATA, selectedMediaData);
           }

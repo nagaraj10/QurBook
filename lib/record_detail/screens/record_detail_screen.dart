@@ -1164,7 +1164,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
             case Status.ERROR:
               return Center(
-                  child: Text('Oops, something went wrong',
+                  child: Text(Constants.STR_ERROR_LOADING_IMAGE,
                       style: TextStyle(color: Colors.red)));
               break;
 

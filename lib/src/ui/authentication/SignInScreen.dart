@@ -11,6 +11,7 @@ import 'package:myfhb/src/model/Authentication/SignIn.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 import 'package:myfhb/src/ui/authentication/SignUpScreen.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -25,6 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
   LoginBloc _loginBloc;
   var _selected = Country.IN;
   TextEditingController phoneTextController = new TextEditingController();
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -43,6 +45,7 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
         //backgroundColor: Colors.white,
         //NOTE commented app bar
+        key: scaffold_state,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           leading: Container(),
@@ -212,37 +215,45 @@ class _SignInScreenState extends State<SignInScreen> {
                 ],
               ),
               onPressed: () {
-                bloc
-                    .submit(phoneTextController.text, countryCode)
-                    .then((signInResponse) {
-                  print('paru' + signInResponse.toString());
-                  if (signInResponse.message == Constants.STR_MSG_SIGNUP ||
-                      signInResponse.message == Constants.STR_MSG_SIGNUP1 ||
-                      signInResponse.message == Constants.STR_VERIFY_OTP ||
-                      signInResponse.message == Constants.STR_VERIFY_USER)
-                    //PageNavigator.goTo(context, '/sign_up_screen');
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return SignUpScreen(
-                            enteredMobNumber: phoneTextController.text,
-                            selectedCountryCode: countryCode,
-                            selectedCountry: _selected.name,
-                          );
-                        },
-                      ),
-                    );
-                  else {
-                    PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
-                        int.parse(countryCode));
-                    PreferenceUtil.saveString(
-                            Constants.MOB_NUM, phoneTextController.text)
-                        .then((onValue) {});
-                    PreferenceUtil.saveString(
-                        CommonConstants.KEY_COUNTRYNAME, _selected.name);
-                    moveToNext(
-                        signInResponse, phoneTextController.text, countryCode);
+                new FHBUtils().check().then((intenet) {
+                  if (intenet != null && intenet) {
+                    bloc
+                        .submit(phoneTextController.text, countryCode)
+                        .then((signInResponse) {
+                      print('paru' + signInResponse.toString());
+                      if (signInResponse.message == Constants.STR_MSG_SIGNUP ||
+                          signInResponse.message == Constants.STR_MSG_SIGNUP1 ||
+                          signInResponse.message == Constants.STR_VERIFY_OTP ||
+                          signInResponse.message == Constants.STR_VERIFY_USER)
+                        //PageNavigator.goTo(context, '/sign_up_screen');
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return SignUpScreen(
+                                enteredMobNumber: phoneTextController.text,
+                                selectedCountryCode: countryCode,
+                                selectedCountry: _selected.name,
+                              );
+                            },
+                          ),
+                        );
+                      else {
+                        PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
+                            int.parse(countryCode));
+                        PreferenceUtil.saveString(
+                                Constants.MOB_NUM, phoneTextController.text)
+                            .then((onValue) {});
+                        PreferenceUtil.saveString(
+                            CommonConstants.KEY_COUNTRYNAME, _selected.name);
+                        moveToNext(signInResponse, phoneTextController.text,
+                            countryCode);
+                      }
+                    });
+                  } else {
+                    new FHBBasicWidget().showInSnackBar(
+                        Constants.STR_NO_CONNECTIVITY, scaffold_state);
                   }
+                  // No-Internet Case
                 });
               }),
         );

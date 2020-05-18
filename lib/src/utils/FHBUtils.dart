@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
@@ -91,6 +92,12 @@ class FHBUtils {
       formattedDate = DateFormat('dd MMM yyyy, hh:mm aa')
           .format(DateTime.parse(strDate).toLocal());
     }
+    return formattedDate;
+  }
+
+  String getFormattedDateForUser(String strDate) {
+    String formattedDate =
+        DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate));
     return formattedDate;
   }
 
@@ -403,5 +410,15 @@ class FHBUtils {
     } else {
       return false;
     }
+  }
+
+  Future<bool> check() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    }
+    return false;
   }
 }

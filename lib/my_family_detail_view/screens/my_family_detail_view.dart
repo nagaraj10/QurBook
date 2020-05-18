@@ -12,6 +12,9 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+
 
 class MyFamilyDetailView extends StatefulWidget {
   MyFamilyDetailViewArguments arguments;
@@ -31,6 +34,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   int activeTabIndex = 0;
   MyFamilyDetailViewBloc myFamilyDetailViewBloc;
   List<CategoryData> categoryData;
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -63,6 +67,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      key: scaffold_state,
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(
@@ -100,30 +105,47 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.add),
           onPressed: () {
-            if (activeTabIndex == 0) {
-              PreferenceUtil.saveString(Constants.KEY_IDDOCSCATEGORYTYPE,
-                  CommonConstants.CAT_JSON_INSURANCE);
-            } else {
-              PreferenceUtil.saveString(Constants.KEY_IDDOCSCATEGORYTYPE,
-                  CommonConstants.CAT_JSON_HOSPITAL);
-            }
+            new FHBUtils().check().then((intenet) {
+              if (intenet != null && intenet) {
+                if (activeTabIndex == 0) {
+                  PreferenceUtil.saveString(Constants.KEY_IDDOCSCATEGORYTYPE,
+                      CommonConstants.CAT_JSON_INSURANCE);
+                } else {
+                  PreferenceUtil.saveString(Constants.KEY_IDDOCSCATEGORYTYPE,
+                      CommonConstants.CAT_JSON_HOSPITAL);
+                }
 
-            for (var e in categoryData) {
-              if (e.categoryDescription ==
-                  CommonConstants.categoryDescriptionIDDocs) {
-                PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
-                    .then((onValue) {
-                  PreferenceUtil.saveString(
-                          Constants.KEY_CATEGORYNAME, e.categoryName)
-                      .then((onValue) {
-                    PreferenceUtil.saveString(Constants.KEY_CATEGORYID, e.id)
-                        .then((value) {
-                      PageNavigator.goTo(context, '/take_picture_screen');
+                for (var e in categoryData) {
+                  if (e.categoryDescription ==
+                      CommonConstants.categoryDescriptionIDDocs) {
+                    PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
+                        .then((onValue) {
+                      PreferenceUtil.saveString(
+                              Constants.KEY_CATEGORYNAME, e.categoryName)
+                          .then((onValue) {
+                        PreferenceUtil.saveString(
+                                Constants.KEY_CATEGORYID, e.id)
+                            .then((value) {
+                          //PageNavigator.goTo(context, '/take_picture_screen');
+                          PreferenceUtil.saveString(
+                                  Constants.KEY_FAMILYMEMBERID,
+                                  widget.arguments.sharedbyme.profileData.id)
+                              .then((value) {
+                            Navigator.pushNamed(context, '/take_picture_screen')
+                                .then((value) {
+                              myFamilyDetailViewBloc.getHelthReportList();
+                            });
+                          });
+                        });
+                      });
                     });
-                  });
-                });
+                  }
+                }
+              } else {
+                 new FHBBasicWidget().showInSnackBar(
+                              Constants.STR_NO_CONNECTIVITY, scaffold_state);
               }
-            }
+            });
           }),
       body: getHealthReportToDisplayInBody(),
     );
@@ -155,7 +177,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
             case Status.ERROR:
               return Center(
-                  child: Text('Oops, something went wrong',
+                  child: Text(Constants.STR_ERROR_LOADING_DATA,
                       style: TextStyle(color: Colors.red)));
               break;
 

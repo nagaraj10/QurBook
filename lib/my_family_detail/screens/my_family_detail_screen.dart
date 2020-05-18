@@ -82,9 +82,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'Unknown'];
+  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'UnKnown'];
 
-  List<String> bloodRangeArray = ['+ve', '-ve', 'Unknown'];
+  List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
 
   String selectedBloodGroup;
   String selectedBloodRange;
@@ -240,8 +240,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.profileData.dateOfBirth != null) {
-      /*  List<String> list = sharedbyme.profileData.dateOfBirth
-          .split("T"); */ //by space" " the string need to splited
+      List<String> list = sharedbyme.profileData.dateOfBirth
+          .split("T"); //by space" " the string need to splited
+      print('DOOOOB' + sharedbyme.profileData.dateOfBirth);
+      print('DOOOOB' +
+          new FHBUtils()
+              .getFormattedDateOnlyNew(sharedbyme.profileData.dateOfBirth));
+      // dateOfBirthController.text = list[0];
 
       dateOfBirthController.text = new FHBUtils()
           .getFormattedDateOnlyNew(sharedbyme.profileData.dateOfBirth);
@@ -950,7 +955,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
             case Status.ERROR:
               familyWidget = Center(
-                  child: Text('Oops, something went wrong',
+                  child: Text(Constants.STR_ERROR_LOADING_DATA,
                       style: TextStyle(color: Colors.red)));
               break;
 
