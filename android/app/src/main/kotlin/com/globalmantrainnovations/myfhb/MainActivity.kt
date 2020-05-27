@@ -1,4 +1,4 @@
-package com.example.myfhb
+package com.globalmantrainnovations.myfhb
 
 import android.app.Activity
 import android.content.pm.PackageManager

@@ -381,7 +381,7 @@ class _AddReminderState extends State<AddReminder> {
 
   void _triggerNotification(ReminderModel model) async {
     var androidPlatformChannelSpecifies = new AndroidNotificationDetails(
-        'com.example.myfhb', 'MYFHB', 'Health Record channel',
+        'com.globalmantrainnovations.myfhb', 'MYFHB', 'Health Record channel',
         importance: Importance.Max, priority: Priority.High);
     var iosPlatformChannelSpecifies = new IOSNotificationDetails();
     var platformChannelSpecifies = new NotificationDetails(

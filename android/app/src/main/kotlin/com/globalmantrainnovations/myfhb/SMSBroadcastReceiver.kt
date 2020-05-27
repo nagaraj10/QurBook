@@ -1,4 +1,4 @@
-package com.example.myfhb
+package com.globalmantrainnovations.myfhb
 
 import android.content.BroadcastReceiver
 import android.content.Context
