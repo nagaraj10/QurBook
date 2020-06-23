@@ -1,0 +1,18 @@
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+
+import '../models/doctors_list_response.dart';
+
+class DoctorsListRepository {
+  ApiBaseHelper _helper = ApiBaseHelper();
+
+  Future<DoctorsListResponse> getDoctorsListFromSearch(String param) async {
+    final response = await _helper.getDoctorsListFromSearch(
+        "doctors/search?sortBy=name.asc&offset=0&limit=10&keyword=", param);
+    return DoctorsListResponse.fromJson(response);
+  }
+
+  Future<DoctorsListResponse> getDoctorUsingId(String doctorsId) async {
+    final response = await _helper.getDoctorsFromId("doctors/", doctorsId);
+    return DoctorsListResponse.fromJson(response);
+  }
+}

@@ -1,0 +1,215 @@
+import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/common/DatabseUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
+import 'package:myfhb/my_providers/screens/my_provider.dart';
+import 'package:myfhb/schedules/add_appointments.dart';
+import 'package:myfhb/schedules/add_reminders.dart';
+import 'package:myfhb/search_providers/screens/search_specific_list.dart';
+import 'package:myfhb/src/ui/HomeScreen.dart';
+import 'package:myfhb/src/ui/IntroSlider.dart';
+//import 'package:myfhb/src/ui/MyRecords.dart';
+import 'package:myfhb/src/ui/MyRecordClone.dart';
+import 'package:myfhb/src/ui/SplashScreen.dart';
+import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
+import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
+import 'package:myfhb/src/ui/camera/TakePictureScreen.dart';
+import 'package:myfhb/src/ui/camera/take_picture_screen_for_devices.dart';
+import 'package:myfhb/src/ui/connectivity_bloc.dart';
+import 'package:myfhb/src/ui/dashboard.dart';
+import 'package:myfhb/src/ui/settings/MySettings.dart';
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:provider/provider.dart';
+import 'add_address/screens/add_address_screen.dart';
+import 'add_family_otp/screens/add_family_otp_screen.dart';
+import 'add_family_user_info/screens/add_family_user_info.dart';
+import 'add_providers/screens/add_providers_screen.dart';
+import 'common/CommonConstants.dart';
+import 'common/CommonUtil.dart';
+import 'confirm_location/screens/confirm_location_screen.dart';
+import 'feedback/Feedbacks.dart';
+import 'feedback/FeedbacksSucess.dart';
+import 'my_family/screens/MyFamily.dart';
+import 'my_family_detail/screens/my_family_detail_screen.dart';
+
+var firstCamera;
+List<CameraDescription> listOfCameras;
+
+var routes = <String, WidgetBuilder>{
+  "/splashscreen": (BuildContext context) => SplashScreen(),
+  "/sign_in_screen": (BuildContext context) => SignInScreen(),
+  "/dashboard_screen": (BuildContext context) => DashboardScreen(),
+  "/home_screen": (BuildContext context) =>
+      HomeScreen(arguments: ModalRoute.of(context).settings.arguments),
+  "/user_accounts": (BuildContext context) =>
+      UserAccounts(arguments: ModalRoute.of(context).settings.arguments),
+  "/app_settings": (BuildContext context) => MySettings(),
+  "/my_records": (BuildContext context) => MyRecordsClone(),
+  "/my_family": (BuildContext context) => MyFamily(),
+  "/my_providers": (BuildContext context) => MyProvider(),
+  "/add_providers": (BuildContext context) =>
+      AddProviders(arguments: ModalRoute.of(context).settings.arguments),
+  "/add_address": (BuildContext context) =>
+      AddAddressScreen(arguments: ModalRoute.of(context).settings.arguments),
+  "/search_providers": (BuildContext context) => SearchSpecificList(
+        arguments: ModalRoute.of(context).settings.arguments,
+        toPreviousScreen: false,
+      ),
+  "/take_picture_screen": (BuildContext context) => TakePictureScreen(
+        camera: firstCamera,
+      ),
+  "/take_picture_screen_for_devices": (BuildContext context) =>
+      TakePictureScreenForDevices(cameras: listOfCameras),
+  "/confirm_location": (BuildContext context) => ConfirmLocationScreen(
+      arguments: ModalRoute.of(context).settings.arguments),
+  "/audio_record_screen": (BuildContext context) => AudioRecordScreen(),
+  // "/sign_up_screen": (BuildContext context) => SignUpScreen(),
+  "/add_family_otp_screen": (BuildContext context) =>
+      AddFamilyOTPScreen(arguments: ModalRoute.of(context).settings.arguments),
+  "/add_family_user_info": (BuildContext context) => AddFamilyUserInfoScreen(
+      arguments: ModalRoute.of(context).settings.arguments),
+  "/my_family_detail_screen": (BuildContext context) => MyFamilyDetailScreen(
+      arguments: ModalRoute.of(context).settings.arguments),
+  "/my_family_detail_view_insurance": (BuildContext context) =>
+      MyFamilyDetailView(arguments: ModalRoute.of(context).settings.arguments),
+  "/add_reminders": (BuildContext context) => AddReminder(),
+  "/add_appointments": (BuildContext context) => AddAppointments(),
+  "/intro_slider": (BuildContext context) => IntroSliderPage(),
+  "/feedbacks": (BuildContext context) => Feedbacks(),
+  "/feedbacks_success": (BuildContext context) => FeedbackSuccess()
+};
+
+Future<void> main() async {
+  // Ensure that plugin services are initialized so that `availableCameras()`
+  // can be called before `runApp()`
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Obtain a list of the available cameras on the device.
+  final cameras = await availableCameras();
+  listOfCameras = cameras;
+
+  // Get a specific camera from the list of available cameras.
+  firstCamera = cameras[0];
+
+  await PreferenceUtil.init();
+
+  DatabaseUtil.getDBLength().then((length) {
+    if (length > 0) {
+    } else {
+      DatabaseUtil.insertCountryMetricsData();
+    }
+  });
+
+  DatabaseUtil.getDBLengthUnit().then((length) {
+    if (length > 0) {
+    } else {
+      DatabaseUtil.insertUnitsForDevices();
+    }
+  });
+
+  await FHBUtils.instance.initPlatformState();
+  await FHBUtils.instance.getDb();
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  runApp(
+    MyFHB(),
+  );
+}
+
+class MyFHB extends StatefulWidget {
+  @override
+  _MyFHBState createState() => _MyFHBState();
+}
+
+class _MyFHBState extends State<MyFHB> {
+  int myPrimaryColor = new CommonUtil().getMyPrimaryColor();
+  static const platform = const MethodChannel('flutter.native/versioncode');
+  String _responseFromNative = 'wait! Its loading';
+  final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  static const secure_platform = const MethodChannel('flutter.native/security');
+
+  @override
+  void initState() {
+    super.initState();
+    gettingResponseFromNative();
+    showSecurityWall();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var nsSettingsForAndroid =
+        new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var nsSettingsForIOS = new IOSInitializationSettings();
+    var platform =
+        new InitializationSettings(nsSettingsForAndroid, nsSettingsForIOS);
+
+    Future notificationAction(String payload) async {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => AddReminder()));
+    }
+
+    flutterLocalNotificationsPlugin.initialize(platform,
+        onSelectNotification: notificationAction);
+    return baseWidget();
+  }
+
+  Widget baseWidget() {
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(
+            create: (_) => ConnectivityBloc(),
+          )
+        ],
+        child: MaterialApp(
+          title: Constants.APP_NAME,
+          theme: ThemeData(
+            fontFamily: 'Poppins',
+            primaryColor: Color(myPrimaryColor),
+            accentColor: Colors.white,
+          ),
+          home: SplashScreen(),
+          routes: routes,
+          debugShowCheckedModeBanner: false,
+          navigatorKey: Get.key,
+        ));
+  }
+
+  Future<void> gettingResponseFromNative() async {
+    String res = '';
+    try {
+      final String result = await platform.invokeMethod('getAppVersion');
+      res = result;
+    } on PlatformException catch (e) {
+      res = "Failed to Invoke: '${e.message}'.";
+    }
+
+    setState(() {
+      _responseFromNative = res;
+      CommonConstants.appVersion = _responseFromNative;
+    });
+
+//    Get.snackbar('From native code response:', _responseFromNative);
+//    print('From native code response:$_responseFromNative');
+  }
+
+  Future<void> showSecurityWall() async {
+    try {
+      final int RESULT_CODE = await secure_platform.invokeMethod('secureMe');
+      switch (RESULT_CODE) {
+        case 1003:
+          //todo authorized unsuccessfull
+          SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop');
+          break;
+      }
+    } on PlatformException catch (e, s) {
+      print(e.message);
+      print(s);
+    }
+  }
+}

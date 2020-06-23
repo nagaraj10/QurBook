@@ -1,0 +1,232 @@
+import 'package:flutter/material.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/common/PreferenceUtil.dart';
+
+class BillsList extends StatefulWidget {
+  final CompleteData completeData;
+  final Function callBackToRefresh;
+
+  final String categoryName;
+  final String categoryId;
+
+  final Function(String, String) getDataForParticularLabel;
+
+  BillsList(this.completeData, this.callBackToRefresh, this.categoryName,
+      this.categoryId, this.getDataForParticularLabel);
+
+  @override
+  _BillsListState createState() => new _BillsListState();
+}
+
+class _BillsListState extends State<BillsList> {
+  HealthReportListForUserBlock _healthReportListForUserBlock;
+
+  GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      new GlobalKey<RefreshIndicatorState>();
+
+  @override
+  void initState() {
+    _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    /* PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
+        .then((value) {
+      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
+          .then((value) {
+        widget.getDataForParticularLabel(
+            widget.categoryName, widget.categoryId);
+      });
+    }); */
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return getWidgetToDisplayBillsList(widget.completeData);
+  }
+
+  Widget getWidgetToDisplayBillsList(CompleteData completeData) {
+    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+
+    mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
+        completeData, CommonConstants.categoryDescriptionBills);
+    return RefreshIndicator(
+      key: _refreshIndicatorKey,
+      onRefresh: _refresh,
+      child: mediaMetaInfoObj.length > 0
+          ? Container(
+              color: const Color(fhbColors.bgColorContainer),
+              child: ListView.builder(
+                itemBuilder: (c, i) =>
+                    getCardWidgetForBills(mediaMetaInfoObj[i], i),
+                itemCount: mediaMetaInfoObj.length,
+              ))
+          : Container(
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.only(left: 40, right: 40),
+                  child: Text(
+                    Constants.NO_DATA_BILLS,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontFamily: 'Poppins'),
+                  ),
+                ),
+              ),
+              color: const Color(fhbColors.bgColorContainer),
+            ),
+    );
+  }
+
+  Future<void> _refresh() async {
+    _refreshIndicatorKey.currentState?.show(atTop: false);
+    await Future.delayed(Duration(seconds: 2));
+
+    widget.callBackToRefresh();
+  }
+
+  getCardWidgetForBills(MediaMetaInfo mediaMetaInfoObj, int i) {
+    return InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RecordDetailScreen(
+                data: mediaMetaInfoObj,
+              ),
+            ),
+          );
+        },
+        child: Container(
+            padding: EdgeInsets.all(10.0),
+            margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(fhbColors.cardShadowColor),
+                  blurRadius: 16, // has the effect of softening the shadow
+                  spreadRadius: 0, // has the effect of extending the shadow
+                )
+              ],
+            ),
+            child: Row(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 25,
+                  backgroundColor: const Color(fhbColors.bgColorContainer),
+                  child: Image.network(
+                    mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                        ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
+                        : Constants.BASERURL +
+                            mediaMetaInfoObj.metaInfo.categoryInfo.logo,
+                    height: 25,
+                    width: 25,
+                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  flex: 6,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      //SizedBox(height: 10.0),
+                      Text(
+                        mediaMetaInfoObj.metaInfo.fileName != null
+                            ? mediaMetaInfoObj.metaInfo.fileName
+                            : '',
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        new FHBUtils()
+                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
+                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                      )
+                    ],
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      /* Icon(
+                    Icons.more_horiz,
+                    color: Colors.grey,
+                    size: 20,
+                  ), */
+                      //SizedBox(height: 10),
+                      IconButton(
+                          icon: mediaMetaInfoObj.isBookmarked
+                              ? ImageIcon(
+                                  AssetImage(
+                                      'assets/icons/record_fav_active.png'),
+                                  //TODO chnage theme
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
+                                  size: 20,
+                                )
+                              : ImageIcon(
+                                  AssetImage('assets/icons/record_fav.png'),
+                                  color: Colors.black,
+                                  size: 20,
+                                ),
+                          onPressed: () {
+                            new CommonUtil()
+                                .bookMarkRecord(mediaMetaInfoObj, _refresh);
+                          }),
+                      (mediaMetaInfoObj.metaInfo.hasVoiceNotes != null &&
+                              mediaMetaInfoObj.metaInfo.hasVoiceNotes)
+                          ? Icon(
+                              Icons.mic,
+                              color: Colors.black54,
+                            )
+                          : Container()
+                    ],
+                  ),
+                ),
+              ],
+            )));
+  }
+
+  getDocumentImageWidget(MediaMetaInfo data) {
+    return new FutureBuilder(
+      future: _healthReportListForUserBlock
+          .getDocumentImage(new CommonUtil().getMetaMasterId(data)),
+      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            width: 40,
+            height: 60,
+            child: Image.memory(snapshot.data),
+            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+          );
+        } else {
+          return new Shimmer.fromColors(
+              baseColor: Colors.grey[300],
+              highlightColor: Colors.grey[100],
+              child: Container(
+                width: 50,
+                height: 50,
+              ));
+        }
+
+        ///load until snapshot.hasData resolves to true
+      },
+    );
+  }
+}

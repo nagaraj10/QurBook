@@ -1,0 +1,1167 @@
+import 'package:flutter/material.dart';
+import 'package:myfhb/src/model/TabModel.dart';
+import 'package:flutter/material.dart';
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/global_search/bloc/GlobalSearchBloc.dart';
+import 'package:myfhb/global_search/model/GlobalSearch.dart';
+import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/screens/FamilyListView.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
+import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
+import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/src/model/TabModel.dart';
+import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
+import 'package:myfhb/src/ui/camera/TakePictureScreen.dart';
+import 'package:myfhb/src/ui/health/BillsList.dart';
+import 'package:myfhb/src/ui/health/DeviceListScreen.dart';
+import 'package:myfhb/src/ui/health/HealthReportListScreen.dart';
+import 'package:myfhb/src/ui/health/IDDocsList.dart';
+import 'package:myfhb/src/ui/health/LabReportListScreen.dart';
+import 'package:myfhb/src/ui/health/MedicalReportListScreen.dart';
+import 'package:myfhb/src/ui/health/OtherDocsList.dart';
+import 'package:myfhb/src/ui/health/VoiceRecordList.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:showcaseview/showcase_widget.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+
+import '../../constants/fhb_constants.dart';
+
+export 'package:myfhb/common/CommonUtil.dart';
+export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/common/SwitchProfile.dart';
+
+class MyRecordsClone extends StatefulWidget {
+  @override
+  _MyRecordsCloneState createState() => _MyRecordsCloneState();
+}
+
+class _MyRecordsCloneState extends State<MyRecordsClone> {
+  // final String _baseUrl = 'https://healthbook.vsolgmi.com/hb/api/v2/';
+  List<TabModel> tabModelList = new List();
+  CategoryListBlock _categoryListBlock;
+  HealthReportListForUserBlock _healthReportListForUserBlock;
+  MediaTypeBlock _mediaTypeBlock;
+  TextEditingController _searchQueryController = TextEditingController();
+  bool _isSearching = false;
+  String searchQuery = "Search query";
+  String categoryName;
+  String categoryID;
+
+  // MediaData mediaData;
+
+  FamilyListBloc _familyListBloc;
+  MyProfileBloc _myProfileBloc;
+
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+
+  GlobalSearchBloc _globalSearchBloc;
+  bool fromSearch = false;
+  List<CategoryData> categoryDataList = new List();
+  CompleteData completeData;
+  List<MediaData> mediaData = new List();
+
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  int initPosition = 0;
+
+  final GlobalKey _cameraKey = GlobalKey();
+  final GlobalKey _voiceKey = GlobalKey();
+  BuildContext _myContext;
+  CategoryData categoryDataObjClone = new CategoryData();
+
+  @override
+  void initState() {
+    rebuildAllBlocks();
+    searchQuery = _searchQueryController.text.toString();
+    if (searchQuery != '') {
+      _globalSearchBloc.searchBasedOnMediaType(
+          _searchQueryController.text.toString() == null
+              ? ''
+              : _searchQueryController.text.toString());
+    }
+    super.initState();
+
+    PreferenceUtil.init();
+
+    var isFirstTime =
+        PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_HOMESCREEN);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(
+          Duration(milliseconds: 1000),
+          () => isFirstTime
+              ? null
+              : ShowCaseWidget.of(_myContext)
+                  .startShowCase([_cameraKey, _voiceKey]));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ShowCaseWidget(onFinish: () {
+      PreferenceUtil.saveString(Constants.KEY_SHOWCASE_HOMESCREEN, 'true');
+    }, builder: Builder(builder: (context) {
+      _myContext = context;
+      return getCompleteWidgets();
+    }));
+  }
+
+  Widget getCompleteWidgets() {
+    return Scaffold(
+      key: scaffold_state,
+      appBar: AppBar(
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        flexibleSpace: GradientAppBar(),
+        leading: SizedBox(
+          width: 0,
+          height: 0,
+        ),
+        titleSpacing: 0,
+        title: _buildSearchField(),
+      ),
+      body: fromSearch
+          ? getResponseForSearchedMedia()
+          : getResponseFromApiWidget(),
+    );
+  }
+
+  Widget getResponseForSearchedMedia() {
+    _globalSearchBloc = null;
+    _globalSearchBloc = new GlobalSearchBloc();
+    _globalSearchBloc.searchBasedOnMediaType(
+        (searchQuery == null && searchQuery == '') ? '' : searchQuery);
+
+    return PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null
+        ? getMainWidgets(PreferenceUtil.getCategoryTypeDisplay(
+            Constants.KEY_SEARCHED_CATEGORY))
+        : StreamBuilder<ApiResponse<GlobalSearch>>(
+            stream: _globalSearchBloc.globalSearchStream,
+            builder:
+                (context, AsyncSnapshot<ApiResponse<GlobalSearch>> snapshot) {
+              if (!snapshot.hasData) return Container();
+
+              switch (snapshot.data.status) {
+                case Status.LOADING:
+                  // rebuildBlockObject();
+                  return Center(
+                      child: SizedBox(
+                    child: CircularProgressIndicator(
+                      backgroundColor:
+                          Color(new CommonUtil().getMyPrimaryColor()),
+                    ),
+                    width: 30,
+                    height: 30,
+                  ));
+
+                  break;
+
+                case Status.ERROR:
+                  // rebuildBlockObject();
+
+                  return FHBBasicWidget.getRefreshContainerButton(
+                      snapshot.data.message, () {
+                    setState(() {});
+                  });
+                  /* return Center(
+                    child: Text('Oops, something went wrong',
+                        style: TextStyle(color: Colors.red)));*/
+                  break;
+                  break;
+
+                case Status.COMPLETED:
+                  _categoryListBlock = null;
+                  rebuildAllBlocks();
+                  return snapshot.data.data.response.count == 0
+                      ? getEmptyCard()
+                      : Container(
+                          child: getWidgetForSearchedMedia(
+                              snapshot.data.data.response.data),
+                        );
+                  break;
+              }
+            },
+          );
+  }
+
+  getEmptyCard() {
+    return Container();
+  }
+
+  Widget getWidgetForSearchedMedia(List<Data> data) {
+    List<CategoryData> categoryDataList;
+
+    categoryDataList = new CommonUtil().getAllCategoryList(data);
+    completeData = new CommonUtil().getMediaTypeInfo(data);
+    PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, completeData);
+    PreferenceUtil.saveCategoryList(
+        Constants.KEY_SEARCHED_CATEGORY, categoryDataList);
+
+    return getMainWidgets(categoryDataList);
+  }
+
+  /*Widget getWidgetForSearchedMedia(List<Data> data) {
+    List<CategoryData> categoryDataList;
+    if (PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null) {
+      PreferenceUtil.saveCategoryList(Constants.KEY_SEARCHED_CATEGORY, null)
+          .then((value) {
+        PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, null)
+            .then((value) {
+          categoryDataList = new CommonUtil().getAllCategoryList(data);
+          completeData = new CommonUtil().getMediaTypeInfo(data);
+          PreferenceUtil.saveCompleteData(
+                  Constants.KEY_SEARCHED_LIST, completeData)
+              .then((value) {
+            PreferenceUtil.saveCategoryList(
+                    Constants.KEY_SEARCHED_CATEGORY, categoryDataList)
+                .then((value) {
+            });
+          });
+        });
+      });
+    } else {
+      categoryDataList = new CommonUtil().getAllCategoryList(data);
+      completeData = new CommonUtil().getMediaTypeInfo(data);
+      PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, completeData)
+          .then((value) {
+        PreferenceUtil.saveCategoryList(
+                Constants.KEY_SEARCHED_CATEGORY, categoryDataList)
+            .then((value) {
+          return getMainWidgets(categoryDataList);
+        });
+      });
+    }
+  }*/
+
+  Widget getResponseFromApiWidget() {
+    List<CategoryData> categoryDataFromPrefernce =
+        PreferenceUtil.getCategoryType();
+    if (categoryDataFromPrefernce != null &&
+        categoryDataFromPrefernce.length > 0)
+      return getMainWidgets(categoryDataFromPrefernce);
+    else
+      return StreamBuilder<ApiResponse<CategoryResponseList>>(
+        stream: _categoryListBlock.categoryListStream,
+        builder: (context,
+            AsyncSnapshot<ApiResponse<CategoryResponseList>> snapshot) {
+          if (snapshot.hasData) {
+            switch (snapshot.data.status) {
+              case Status.LOADING:
+                return Center(
+                    child: SizedBox(
+                  child: CircularProgressIndicator(
+                    backgroundColor:
+                        Color(new CommonUtil().getMyPrimaryColor()),
+                  ),
+                  width: 30,
+                  height: 30,
+                ));
+                break;
+
+              case Status.ERROR:
+                return FHBBasicWidget.getRefreshContainerButton(
+                    snapshot.data.message, () {
+                  setState(() {});
+                });
+                /* return Center(
+                    child: Text('Oops, something went wrong',
+                        style: TextStyle(color: Colors.red)));*/
+                break;
+
+              case Status.COMPLETED:
+                _categoryListBlock = null;
+                _categoryListBlock = new CategoryListBlock();
+
+                if (categoryDataList.length > 0) {
+                  categoryDataList.clear();
+                }
+
+                categoryDataList.addAll(snapshot.data.data.response.data);
+                return getMainWidgets(categoryDataList);
+                break;
+            }
+          } else {
+            return Container(
+              width: 100,
+              height: 100,
+            );
+          }
+        },
+      );
+  }
+
+  Widget getMainWidgets(List<CategoryData> data) {
+    _categoryListBlock = null;
+    _categoryListBlock = new CategoryListBlock();
+    List<CategoryData> categoryData = new List();
+    if (!fromSearch) {
+      PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
+
+      List<CategoryData> categoryDataFromPrefernce =
+          PreferenceUtil.getCategoryTypeDisplay(
+              Constants.KEY_CATEGORYLIST_VISIBLE);
+      if (categoryDataFromPrefernce != null &&
+          categoryDataFromPrefernce.length > 0) {
+        categoryData = fliterCategories(categoryDataFromPrefernce);
+
+        categoryData.add(categoryDataObjClone);
+
+        //categoryData.addAll(categoryDataFromPrefernce);
+      } else {
+        categoryData = fliterCategories(data);
+        categoryData.add(categoryDataObjClone);
+      }
+      PreferenceUtil.saveCategoryList(
+          Constants.KEY_CATEGORYLIST_VISIBLE, categoryData);
+      completeData =
+          PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
+    } else {
+      categoryData.addAll(data);
+
+      if (PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null) {
+        completeData =
+            PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST);
+      }
+    }
+    return CustomTabView(
+      initPosition: initPosition,
+      itemCount: categoryData.length,
+      fromSearch: fromSearch,
+      // tabBuilder: (context, index) => Tab(text: data[index]),
+      //pageBuilder: (context, index) => Center(child: Text(data[index])),
+      onPositionChange: (index) {
+        try {
+          initPosition = index;
+
+          getDataForParticularLabel(categoryData.elementAt(index).categoryName,
+              categoryData.elementAt(index).id);
+
+          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
+              .then((value) {
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+                .then((value) {});
+          });
+        } catch (e) {}
+      },
+      onScroll: (position) {
+        // print('$position');
+        try {
+          initPosition = position.toInt();
+          getDataForParticularLabel(
+              categoryData.elementAt(position.toInt()).categoryName,
+              categoryData.elementAt(position.toInt()).id);
+
+          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
+              .then((value) {
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+                .then((value) {});
+          });
+        } catch (e) {}
+      },
+      categoryData: categoryData,
+      cameraKey: _cameraKey,
+      voiceKey: _voiceKey,
+      scaffold_state: scaffold_state,
+      completeData: completeData,
+    );
+  }
+
+  Widget _buildSearchField() {
+    return Padding(
+      padding: EdgeInsets.only(top: 10, right: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              constraints: BoxConstraints(maxHeight: 40),
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              child: TextField(
+                controller: _searchQueryController,
+                autofocus: false,
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(2),
+                  hintText: "Search your records",
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.black54,
+                  ),
+                  suffixIcon: Visibility(
+                    visible:
+                        _searchQueryController.text.length >= 3 ? true : false,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.clear,
+                        color: Colors.black54,
+                      ),
+                      onPressed: () {
+                        _searchQueryController.clear();
+                        PreferenceUtil.saveCompleteData(
+                                Constants.KEY_SEARCHED_LIST, null)
+                            .then((value) {
+                          setState(() {
+                            fromSearch = false;
+                          });
+                        });
+                      },
+                    ),
+                  ),
+                  border: InputBorder.none,
+                  hintStyle: TextStyle(color: Colors.black45, fontSize: 12),
+                ),
+                style: TextStyle(color: Colors.black54, fontSize: 16.0),
+                onChanged: (editedValue) {
+                  _globalSearchBloc = null;
+                  _globalSearchBloc = new GlobalSearchBloc();
+                  if (editedValue != '' && editedValue.length > 3) {
+                    PreferenceUtil.saveCompleteData(
+                            Constants.KEY_SEARCHED_LIST, null)
+                        .then((value) {
+                      searchQuery = editedValue;
+                      _globalSearchBloc
+                          .searchBasedOnMediaType(searchQuery)
+                          .then((globalSearchResponse) {
+                        setState(() {
+                          fromSearch = true;
+                        });
+                      });
+                    });
+                  } else if (editedValue == '') {
+                    PreferenceUtil.saveCompleteData(
+                            Constants.KEY_SEARCHED_LIST, null)
+                        .then((value) {
+                      searchQuery = '';
+                      setState(() {
+                        fromSearch = false;
+                      });
+                    });
+                  }
+                },
+              ),
+            ),
+          ),
+          //_buildActions(),
+          new SwitchProfile()
+              .buildActions(context, _keyLoader, callBackToRefresh)
+        ],
+      ),
+    );
+  }
+
+  void callBackToRefresh() {
+    (context as Element).markNeedsBuild();
+  }
+
+  void rebuildAllBlocks() {
+    if (_categoryListBlock == null) {
+      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock.getCategoryList();
+    } else if (_categoryListBlock != null) {
+      _categoryListBlock = null;
+      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock.getCategoryList();
+    }
+
+    if (_healthReportListForUserBlock == null) {
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock.getHelthReportList();
+    } else if (_healthReportListForUserBlock != null) {
+      _healthReportListForUserBlock = null;
+
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock.getHelthReportList();
+    }
+
+    if (_mediaTypeBlock == null) {
+      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock.getMediTypes();
+    }
+    if (_familyListBloc == null) {
+      _familyListBloc = new FamilyListBloc();
+      _familyListBloc.getFamilyMembersList();
+    }
+
+    if (_myProfileBloc == null) {
+      _myProfileBloc = new MyProfileBloc();
+    }
+    if (_globalSearchBloc == null) {
+      _globalSearchBloc = new GlobalSearchBloc();
+    }
+  }
+
+  List<CategoryData> fliterCategories(List<CategoryData> data) {
+    List<CategoryData> filteredCategoryData = new List();
+    for (CategoryData dataObj in data) {
+      if (dataObj.isDisplay &&
+          dataObj.categoryName != Constants.STR_FEEDBACK &&
+          dataObj.categoryName != Constants.STR_CLAIMSRECORD) {
+        filteredCategoryData.add(dataObj);
+      }
+    }
+
+    int i = 0;
+    for (CategoryData categoryDataObj in filteredCategoryData) {
+      if (categoryDataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionOthers) {
+        categoryDataObjClone = categoryDataObj;
+        filteredCategoryData.removeAt(i);
+        break;
+      }
+      i++;
+    }
+
+    filteredCategoryData.sort((a, b) {
+      return a.categoryDescription
+          .toLowerCase()
+          .compareTo(b.categoryDescription.toLowerCase());
+    });
+
+    return filteredCategoryData;
+  }
+
+  void getDataForParticularLabel(String category, String categoryId) {
+    categoryName = category;
+    categoryID = categoryId;
+  }
+}
+
+/// Implementation
+
+class CustomTabView extends StatefulWidget {
+  final int itemCount;
+  final IndexedWidgetBuilder tabBuilder;
+  final IndexedWidgetBuilder pageBuilder;
+  final Widget stub;
+  final ValueChanged<int> onPositionChange;
+  final ValueChanged<double> onScroll;
+  final int initPosition;
+  List<CategoryData> categoryData;
+
+  GlobalKey cameraKey;
+  GlobalKey voiceKey;
+  GlobalKey<ScaffoldState> scaffold_state;
+  bool fromSearch;
+  CompleteData completeData;
+
+  CustomTabView(
+      {@required this.itemCount,
+      this.tabBuilder,
+      this.pageBuilder,
+      this.stub,
+      this.onPositionChange,
+      this.onScroll,
+      this.initPosition,
+      this.categoryData,
+      this.cameraKey,
+      this.voiceKey,
+      this.scaffold_state,
+      this.fromSearch,
+      this.completeData});
+
+  @override
+  _CustomTabsState createState() => _CustomTabsState();
+}
+
+class _CustomTabsState extends State<CustomTabView>
+    with TickerProviderStateMixin {
+  TabController controller;
+  int _currentCount;
+  int _currentPosition;
+
+  List<TabModel> tabModelList = new List();
+  CategoryListBlock _categoryListBlock;
+  HealthReportListForUserBlock _healthReportListForUserBlock;
+  MediaTypeBlock _mediaTypeBlock;
+  TextEditingController _searchQueryController = TextEditingController();
+  bool _isSearching = false;
+  String searchQuery = "Search query";
+  String categoryName = '';
+  String categoryID = '';
+
+  FamilyListBloc _familyListBloc;
+  MyProfileBloc _myProfileBloc;
+
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+
+  GlobalSearchBloc _globalSearchBloc;
+  List<CategoryData> categoryDataList = new List();
+  List<MediaData> mediaData = new List();
+
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    if (widget.fromSearch) {
+      _currentPosition = 0;
+    } else {
+      _currentPosition = widget.initPosition ?? 0;
+    }
+
+    controller = TabController(
+      length: widget.itemCount,
+      vsync: this,
+      initialIndex: _currentPosition,
+    );
+    controller.addListener(onPositionChange);
+    controller.animation.addListener(onScroll);
+    _currentCount = widget.itemCount;
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(CustomTabView oldWidget) {
+    if (_currentCount != widget.itemCount) {
+      controller.animation.removeListener(onScroll);
+      controller.removeListener(onPositionChange);
+      controller.dispose();
+
+      if (widget.initPosition != null) {
+        _currentPosition = widget.initPosition;
+      }
+
+      if (_currentPosition > widget.itemCount - 1) {
+        _currentPosition = widget.itemCount - 1;
+        _currentPosition = _currentPosition < 0 ? 0 : _currentPosition;
+        if (widget.onPositionChange is ValueChanged<int>) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) {
+              widget.onPositionChange(_currentPosition);
+            }
+          });
+        }
+      }
+
+      _currentCount = widget.itemCount;
+      setState(() {
+        controller = TabController(
+          length: widget.itemCount,
+          vsync: this,
+          initialIndex: _currentPosition,
+        );
+        controller.addListener(onPositionChange);
+        controller.animation.addListener(onScroll);
+      });
+    } else if (widget.initPosition != null) {
+      controller.animateTo(widget.initPosition);
+    }
+
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    controller.animation.removeListener(onScroll);
+    controller.removeListener(onPositionChange);
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.itemCount < 1) return widget.stub ?? Container();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Container(
+          // alignment: Alignment.center,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: <Color>[
+                Color(new CommonUtil().getMyPrimaryColor()),
+                Color(new CommonUtil().getMyGredientColor())
+              ],
+                  stops: [
+                0.3,
+                1.0
+              ])),
+          child: TabBar(
+            indicatorWeight: 4,
+            isScrollable: true,
+            controller: controller,
+            labelColor: Colors.white,
+            unselectedLabelColor: Colors.white70,
+            indicator: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Colors.white,
+                  width: 2,
+                ),
+              ),
+            ),
+            tabs: getAllTabsToDisplayInHeader(widget.categoryData),
+          ),
+        ),
+        Expanded(
+          child: getAllTabsToDisplayInBodyClone(widget.categoryData),
+        ),
+      ],
+    );
+  }
+
+  Widget getAllTabsToDisplayInBodyClone(List<CategoryData> data) {
+    rebuildAllBlocks();
+
+    return Stack(alignment: Alignment.bottomRight, children: <Widget>[
+      getAllTabsToDisplayInBody(data),
+      Container(
+        margin: EdgeInsets.only(right: 10, bottom: 10),
+        constraints: BoxConstraints(maxHeight: 100),
+        decoration: BoxDecoration(
+            color: Color(new CommonUtil().getMyPrimaryColor()),
+            borderRadius: BorderRadius.circular(30)),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            FHBBasicWidget.customShowCase(
+                widget.cameraKey,
+                Constants.CAMERA_DESC,
+                IconButton(
+                  icon: Icon(
+                    Icons.camera_alt,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    categoryName = widget.categoryData
+                        .elementAt(_currentPosition)
+                        .categoryName;
+                    categoryID =
+                        widget.categoryData.elementAt(_currentPosition).id;
+
+                    if (categoryName == Constants.STR_VOICERECORDS) {
+                      new FHBBasicWidget().showInSnackBar(
+                          Constants.MSG_NO_CAMERA_VOICERECORDS,
+                          widget.scaffold_state);
+                    } else {
+                      PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
+                          .then((onValue) {
+                        PreferenceUtil.saveString(
+                                Constants.KEY_CATEGORYNAME, categoryName)
+                            .then((onValue) {
+                          PreferenceUtil.saveString(
+                                  Constants.KEY_CATEGORYID, categoryID)
+                              .then((value) {
+                            if (categoryName == STR_DEVICES) {
+                              PreferenceUtil.saveString(
+                                  Constants.stop_detecting, 'NO');
+                              PreferenceUtil.saveString(
+                                  Constants.stop_detecting, 'NO');
+
+                              Navigator.pushNamed(context,
+                                      '/take_picture_screen_for_devices')
+                                  .then((value) {
+                                //callBackToRefresh();
+                              });
+                            } else {
+                              Navigator.pushNamed(
+                                      context, '/take_picture_screen')
+                                  .then((value) {
+                                //callBackToRefresh();
+                              });
+                            }
+                          });
+                        });
+                      });
+                    }
+                  },
+                ),
+                Constants.CAMERA_TITLE),
+            Container(
+              width: 20,
+              height: 1,
+              color: Colors.white,
+            ),
+            FHBBasicWidget.customShowCase(
+                widget.voiceKey,
+                Constants.VOICE_DESC,
+                IconButton(
+                  icon: Icon(
+                    Icons.mic,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    //sliverBarHeight = 50;
+                    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME,
+                            Constants.STR_VOICERECORDS)
+                        .then((value) {
+                      PreferenceUtil.saveString(
+                              Constants.KEY_CATEGORYID,
+                              PreferenceUtil.getStringValue(
+                                  Constants.KEY_VOICE_ID))
+                          .then((value) {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                              builder: (context) => AudioRecordScreen(
+                                fromVoice: true,
+                              ),
+                            ))
+                            .then((results) {});
+                      });
+                    });
+                  },
+                ),
+                Constants.VOICE_TITLE)
+          ],
+        ),
+      )
+    ]);
+  }
+
+  Widget getAllTabsToDisplayInBody(List<CategoryData> data) {
+    CompleteData completeDataFromPreference =
+        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
+    return widget.fromSearch
+        ? getMediTypeForlabels(data, widget.completeData)
+        : completeDataFromPreference != null
+            ? getMediTypeForlabels(data, completeDataFromPreference)
+            : StreamBuilder<ApiResponse<UserHealthResponseList>>(
+                stream: _healthReportListForUserBlock.healthReportStream,
+                builder: (context,
+                    AsyncSnapshot<ApiResponse<UserHealthResponseList>>
+                        snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        return Scaffold(
+                          backgroundColor: Colors.white,
+                          body: Center(
+                              child: SizedBox(
+                            child: CircularProgressIndicator(
+                              backgroundColor:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                            ),
+                            width: 30,
+                            height: 30,
+                          )),
+                        );
+                        break;
+
+                      case Status.ERROR:
+                        return FHBBasicWidget.getRefreshContainerButton(
+                            snapshot.data.message, () {
+                          setState(() {});
+                        });
+                        /* return Center(
+                    child: Text('Oops, something went wrong',
+                        style: TextStyle(color: Colors.red)));*/
+                        break;
+
+                      case Status.COMPLETED:
+                        _healthReportListForUserBlock = null;
+                        rebuildAllBlocks();
+                        if (!widget.fromSearch) {
+                          PreferenceUtil.saveCompleteData(
+                              Constants.KEY_COMPLETE_DATA,
+                              snapshot.data.data.response.data);
+                        }
+
+                        return getMediTypeForlabels(
+                            data, snapshot.data.data.response.data);
+                        break;
+                    }
+                  } else {
+                    return Container(height: 0, color: Colors.white);
+                  }
+                },
+              );
+  }
+
+  void rebuildAllBlocks() {
+    if (_categoryListBlock == null) {
+      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock.getCategoryList();
+    } else if (_categoryListBlock != null) {
+      _categoryListBlock = null;
+      _categoryListBlock = new CategoryListBlock();
+      _categoryListBlock.getCategoryList();
+    }
+
+    if (_healthReportListForUserBlock == null) {
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock.getHelthReportList();
+    } else if (_healthReportListForUserBlock != null) {
+      _healthReportListForUserBlock = null;
+
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+      _healthReportListForUserBlock.getHelthReportList();
+    }
+
+    if (_mediaTypeBlock == null) {
+      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock.getMediTypes();
+    }
+    if (_familyListBloc == null) {
+      _familyListBloc = new FamilyListBloc();
+      _familyListBloc.getFamilyMembersList();
+    }
+
+    if (_myProfileBloc == null) {
+      _myProfileBloc = new MyProfileBloc();
+    }
+    if (_globalSearchBloc == null) {
+      _globalSearchBloc = new GlobalSearchBloc();
+    }
+  }
+
+  Widget getMediTypeForlabels(
+      List<CategoryData> data, CompleteData completeData) {
+    if (_mediaTypeBlock == null) {
+      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock.getMediTypes();
+    } else {
+      _mediaTypeBlock = null;
+      _mediaTypeBlock = new MediaTypeBlock();
+      _mediaTypeBlock.getMediTypes();
+    }
+
+    List<MediaData> selectedMediaData = PreferenceUtil.getMediaType();
+
+    return selectedMediaData != null
+        ? getStackBody(data, completeData, selectedMediaData)
+        : StreamBuilder<ApiResponse<MediaTypesResponse>>(
+            stream: _mediaTypeBlock.mediaTypeStream,
+            builder: (context,
+                AsyncSnapshot<ApiResponse<MediaTypesResponse>> snapshot) {
+              if (snapshot.hasData) {
+                switch (snapshot.data.status) {
+                  case Status.LOADING:
+                    return Scaffold(
+                      backgroundColor: Colors.white,
+                      body: Center(
+                          child: SizedBox(
+                        child: CircularProgressIndicator(
+                          backgroundColor:
+                              Color(new CommonUtil().getMyPrimaryColor()),
+                        ),
+                        width: 30,
+                        height: 30,
+                      )),
+                    );
+
+                    break;
+
+                  case Status.ERROR:
+                    return Text('Unable To load Tabs',
+                        style: TextStyle(color: Colors.red));
+                    break;
+
+                  case Status.COMPLETED:
+                    _mediaTypeBlock = null;
+                    rebuildAllBlocks();
+                    PreferenceUtil.saveMediaType(Constants.KEY_METADATA,
+                        snapshot.data.data.response.data);
+                    return getStackBody(
+                        data, completeData, snapshot.data.data.response.data);
+                    break;
+                }
+              } else {
+                return getStackBody(data, completeData, null);
+              }
+            },
+          );
+  }
+
+  Widget getStackBody(List<CategoryData> data, CompleteData completeData,
+      List<MediaData> mediaData) {
+    if (mediaData == null) {
+      return Container();
+    }
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: <Widget>[
+        TabBarView(
+          children: _getAllDataForTheTabs(data, completeData, mediaData),
+          controller: controller,
+        ),
+      ],
+    );
+  }
+
+  void callBackToRefresh() {
+    (context as Element).markNeedsBuild();
+  }
+
+  void getDataForParticularLabel(String category, String categoryId) {
+    categoryName = category;
+    categoryID = categoryId;
+  }
+
+  List<Widget> _getAllDataForTheTabs(List<CategoryData> data,
+      CompleteData completeData, List<MediaData> mediaData) {
+    List<Widget> tabWidgetList = new List();
+    //data.sort((a, b) => a.categoryName.compareTo(b.categoryName));
+    for (CategoryData dataObj in data) {
+      if (dataObj
+          .isDisplay /*&& dataObj.categoryName != Constants.STR_FEEDBACK*/) {
+        if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionPrescription) {
+          tabWidgetList.add(new HealthReportListScreen(
+              completeData,
+              callBackToRefresh,
+              dataObj.categoryName,
+              dataObj.id,
+              getDataForParticularLabel));
+        } else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionDevice) {
+          tabWidgetList.add(new DeviceListScreen(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+          ));
+        } else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionLabReport) {
+          tabWidgetList.add(new LabReportListScreen(
+              completeData,
+              callBackToRefresh,
+              dataObj.categoryName,
+              dataObj.id,
+              getDataForParticularLabel));
+        } else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionMedicalReport) {
+          tabWidgetList.add(new MedicalReportListScreen(
+              completeData,
+              callBackToRefresh,
+              dataObj.categoryName,
+              dataObj.id,
+              getDataForParticularLabel));
+        } else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionBills) {
+          tabWidgetList.add(new BillsList(completeData, callBackToRefresh,
+              dataObj.categoryName, dataObj.id, getDataForParticularLabel));
+        } else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionIDDocs) {
+          tabWidgetList.add(new IDDocsList(completeData, callBackToRefresh,
+              dataObj.categoryName, dataObj.id, getDataForParticularLabel));
+        } else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionOthers) {
+          tabWidgetList.add(new OtherDocsList(
+              completeData,
+              callBackToRefresh,
+              dataObj.categoryName,
+              dataObj.id,
+              getDataForParticularLabel,
+              CommonConstants.categoryDescriptionOthers));
+        } else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionVoiceRecord) {
+          tabWidgetList.add(new VoiceRecordList(completeData, callBackToRefresh,
+              dataObj.categoryName, dataObj.id, getDataForParticularLabel));
+        } else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionClaimsRecord) {
+          tabWidgetList.add(new OtherDocsList(
+              completeData,
+              callBackToRefresh,
+              dataObj.categoryName,
+              dataObj.id,
+              getDataForParticularLabel,
+              CommonConstants.categoryDescriptionClaimsRecord));
+        }
+        /*  else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionWearable) {
+          tabWidgetList.add(new IDDocsList(completeData, callBackToRefresh,
+              categoryName, dataObj.id, getDataForParticularLabel));
+        } else if (dataObj.categoryDescription ==
+            CommonConstants.categoryDescriptionFeedback) {
+          tabWidgetList.add(new IDDocsList(completeData, callBackToRefresh,
+              categoryName, dataObj.id, getDataForParticularLabel));
+        }  */
+        else {
+          tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
+        }
+      }
+    }
+    return tabWidgetList;
+  }
+
+  onPositionChange() {
+    if (!controller.indexIsChanging) {
+      _currentPosition = controller.index;
+      if (widget.onPositionChange is ValueChanged<int>) {
+        widget.onPositionChange(_currentPosition);
+
+        /* getDataForParticularLabel(
+            categoryDataList.elementAt(_currentPosition).categoryName,
+            categoryDataList.elementAt(_currentPosition).id);*/
+        try {
+          _currentPosition = controller.index;
+
+          categoryName =
+              categoryDataList.elementAt(_currentPosition).categoryName;
+          categoryID = categoryDataList.elementAt(_currentPosition).id;
+        } catch (e) {}
+      }
+    }
+  }
+
+  onScroll() {
+    if (widget.onScroll is ValueChanged<double>) {
+      widget.onScroll(controller.animation.value);
+
+      try {
+        _currentPosition = controller.animation.value.toInt();
+
+        categoryName = categoryDataList
+            .elementAt(controller.animation.value.toInt())
+            .categoryName;
+        categoryID =
+            categoryDataList.elementAt(controller.animation.value.toInt()).id;
+      } catch (e) {}
+    }
+  }
+
+  List<Widget> getAllTabsToDisplayInHeader(List<CategoryData> data) {
+    List<Widget> tabWidgetList = new List();
+    //tabWidgetList.add(SizedBox(height: 5));
+
+    data.sort((a, b) {
+      return a.categoryDescription
+          .toLowerCase()
+          .compareTo(b.categoryDescription.toLowerCase());
+    });
+
+    /* data.sort((a, b) {
+      return a.categoryDescription
+          .toLowerCase()
+          .compareTo(b.categoryDescription.toLowerCase());
+    }); */
+
+    for (CategoryData dataObj in data) {
+      if (dataObj
+          .isDisplay /*&& dataObj.categoryName != Constants.STR_FEEDBACK*/) {
+        tabWidgetList.add(Column(children: [
+          Padding(padding: EdgeInsets.only(top: 10)),
+          Image.network(
+            Constants.BASERURL + dataObj.logo,
+            width: 20,
+            height: 20,
+            color: Colors.white,
+          ),
+          Padding(padding: EdgeInsets.only(top: 10)),
+          Container(
+              child: Text(
+            dataObj.categoryName,
+            style: TextStyle(fontSize: 12),
+          )),
+          Padding(padding: EdgeInsets.only(top: 10)),
+        ]));
+      }
+    }
+
+    return tabWidgetList;
+  }
+}

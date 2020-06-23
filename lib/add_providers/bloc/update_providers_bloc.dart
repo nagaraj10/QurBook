@@ -1,0 +1,105 @@
+import 'dart:async';
+
+import 'package:myfhb/add_providers/models/update_providers_id.dart';
+import 'package:myfhb/add_providers/services/update_providers_repository.dart';
+import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
+import 'package:myfhb/src/resources/network/ApiResponse.dart';
+
+class UpdateProvidersBloc implements BaseBloc {
+  UpdateProvidersRepository updateProvidersRepository;
+  String providerId;
+  bool isPreferred;
+
+  // 1
+  // Doctors
+  StreamController doctorsProvidersController;
+
+  StreamSink<ApiResponse<UpdateProvidersId>> get doctorsSink =>
+      doctorsProvidersController.sink;
+  Stream<ApiResponse<UpdateProvidersId>> get doctorsStream =>
+      doctorsProvidersController.stream;
+
+  // 2
+  // Hospitals
+  StreamController hospitalsProvidersController;
+
+  StreamSink<ApiResponse<UpdateProvidersId>> get hospitalsSink =>
+      hospitalsProvidersController.sink;
+  Stream<ApiResponse<UpdateProvidersId>> get hospitalsStream =>
+      hospitalsProvidersController.stream;
+
+  // 3
+  // Labs
+  StreamController labsProvidersController;
+
+  StreamSink<ApiResponse<UpdateProvidersId>> get labsSink =>
+      hospitalsProvidersController.sink;
+  Stream<ApiResponse<UpdateProvidersId>> get labsStream =>
+      hospitalsProvidersController.stream;
+
+  UpdateProvidersBloc() {
+    updateProvidersRepository = UpdateProvidersRepository();
+
+    // 1
+    // Doctors
+    doctorsProvidersController =
+        StreamController<ApiResponse<UpdateProvidersId>>();
+
+    // 2
+    // Hospitals
+    hospitalsProvidersController =
+        StreamController<ApiResponse<UpdateProvidersId>>();
+
+    // 3
+    // Labs
+    labsProvidersController =
+        StreamController<ApiResponse<UpdateProvidersId>>();
+  }
+
+  // 1
+  // Doctors
+  updateDoctorsIdWithUserDetails() async {
+    doctorsSink.add(ApiResponse.loading('Signing in user'));
+    try {
+      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+          .updateDoctorsIdWithUserDetails(providerId, isPreferred);
+      doctorsSink.add(ApiResponse.completed(updateProvidersId));
+    } catch (e) {
+      doctorsSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+  }
+
+  // 2
+  // Hospitals
+  updateHospitalsIdWithUserDetails() async {
+    hospitalsSink.add(ApiResponse.loading('Signing in user'));
+    try {
+      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+          .updateHospitalsIdWithUserDetails(providerId, isPreferred);
+      hospitalsSink.add(ApiResponse.completed(updateProvidersId));
+    } catch (e) {
+      hospitalsSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+  }
+
+  // 3
+  // Labs
+  updateLabsIdWithUserDetails() async {
+    labsSink.add(ApiResponse.loading('Signing in user'));
+    try {
+      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+          .updateLabsIdWithUserDetails(providerId, isPreferred);
+      labsSink.add(ApiResponse.completed(updateProvidersId));
+    } catch (e) {
+      labsSink.add(ApiResponse.error(e.toString()));
+      print(e);
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+  }
+}
