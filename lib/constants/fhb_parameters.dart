@@ -1,0 +1,25 @@
+library fhb_parmeters;
+
+const String strStatus='status';
+const String strSuccess='success';
+const String strMessage='message';
+const String strResponse='response';
+const String strData='data';
+const String strUserInfo='userInfo';
+const String strId='id';
+const String strEmail='email';
+const String strCountryCode='countryCode';
+const String strPhoneNumber='phoneNumber';
+const String strGender='gender';
+const String strName='name';
+const String strIstemper='isTempUser';
+const String strIsEmailVerified='isEmailVerified';
+const String strTransactionId='transactionId';
+const String strCreationTime='creationTime';
+const String strExpirationTime='expirationTime';
+const String strCount='count';
+const String strRoleName='roleName';
+const String strRoleDescription='roleDescription';
+const String strIsActive='isActive';
+const String strCreatedOn='createdOn';
+const String strLastModifiedOn='lastModifiedOn';
