@@ -1,0 +1,64 @@
+{
+  "units":[
+    {
+      "id": 1,
+      "units": "F",
+      "minValue": 90,
+      "maxValue": 110
+    },
+    {
+      "id": 2,
+      "units": "C",
+      "minValue": 35,
+      "maxValue": 42
+    },
+    {
+      "id": 3,
+      "units": "mgdl",
+      "minValue": 20,
+      "maxValue": 600
+    },
+    {
+      "id": 4,
+      "units": "mmHg",
+      "minValue": 20,
+      "maxValue": 280
+    },
+    {
+      "id": 5,
+      "units": "%spo2",
+      "minValue": 35,
+      "maxValue": 100
+    },
+    {
+      "id": 6,
+      "units": "PR bpm",
+      "minValue": 30,
+      "maxValue": 250
+    },
+    {
+      "id": 7,
+      "units": "kg",
+      "minValue": 0,
+      "maxValue": 250
+    },
+    {
+      "id": 8,
+      "units": "g",
+      "minValue": 0,
+      "maxValue": 25000
+    },
+    {
+      "id": 9,
+      "units": "dp",
+      "minValue": 60,
+      "maxValue": 140
+    },
+    {
+      "id": 10,
+      "units": "pluse",
+      "minValue": 60,
+      "maxValue": 100
+    }
+  ]
+}

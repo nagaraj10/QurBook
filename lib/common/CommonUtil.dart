@@ -17,6 +17,8 @@ import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/src/model/sceretLoader.dart';
+import 'package:myfhb/src/model/secretmodel.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
@@ -910,37 +912,36 @@ class CommonUtil {
 
   networkUI() {
     Get.bottomSheet(
-      builder: (_) {
-        return Container(
-          constraints: BoxConstraints(maxHeight: 120),
-          child: Card(
-            elevation: 10.0,
-            //margin: EdgeInsets.only(left: 3.0,right: 3.0),
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20.0),
-                    topLeft: Radius.circular(20.0))),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ImageIcon(
-                  AssetImage('assets/icons/wifi.png'),
+      Container(
+        constraints: BoxConstraints(maxHeight: 120),
+        child: Card(
+          elevation: 10.0,
+          //margin: EdgeInsets.only(left: 3.0,right: 3.0),
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20.0),
+                  topLeft: Radius.circular(20.0))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ImageIcon(
+                AssetImage('assets/icons/wifi.png'),
+                color: Color(CommonUtil().getMyPrimaryColor()),
+                size: 50.0,
+              ),
+              Text(
+                'No internet connection',
+                style: TextStyle(
                   color: Color(CommonUtil().getMyPrimaryColor()),
-                  size: 50.0,
+                  fontSize: 16.0,
                 ),
-                Text(
-                  'No internet connection',
-                  style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
-                    fontSize: 16.0,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
+
       backgroundColor: Colors.transparent,
       isDismissible: false,
       enableDrag: false,
@@ -1156,4 +1157,11 @@ class CommonUtil {
       _mediaTypeBlock.getMediTypes().then(() {});
     }
   }
+
+  static Future<dynamic> getResourceLoader(String key) async {
+    final Future<Secret> secret = SecretLoader(secretPath: "secrets.json").load(key);
+    var valueFromRes = await secret;
+    return valueFromRes.apiKey;
+  }
+
 }

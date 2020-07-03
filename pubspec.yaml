@@ -56,7 +56,7 @@ dependencies:
   multi_image_picker: ^4.6.1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
   flutter_absolute_path: ^1.0.6
   provider: ^4.0.4
-  get: ^1.11.1
+  get: ^2.14.1
   tflite: ^1.0.5
   sqflite:
   devicelocale: ^0.2.2 
@@ -112,6 +112,7 @@ flutter:
     - assets/video/
     - assets/slide_icons/
     - assets/
+    - secrets.json
 
   #  - images/a_dot_ham.jpeg
 
