@@ -36,6 +36,8 @@ import 'feedback/Feedbacks.dart';
 import 'feedback/FeedbacksSucess.dart';
 import 'my_family/screens/MyFamily.dart';
 import 'my_family_detail/screens/my_family_detail_screen.dart';
+import 'package:myfhb/src/model/secretmodel.dart';
+import 'package:myfhb/src/model/sceretLoader.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -197,6 +199,10 @@ class _MyFHBState extends State<MyFHB> {
 
   Future<void> showSecurityWall() async {
     try {
+      await CommonUtil.getResourceLoader('faq_url').then(
+              (value) => print("getResourceLoader: ${value}")
+              );
+
       final int RESULT_CODE = await secure_platform.invokeMethod('secureMe');
       switch (RESULT_CODE) {
         case 1003:
@@ -208,4 +214,5 @@ class _MyFHBState extends State<MyFHB> {
 
     }
   }
+  
 }

@@ -112,6 +112,7 @@ flutter:
     - assets/video/
     - assets/slide_icons/
     - assets/
+    - secrets.json
 
   #  - images/a_dot_ham.jpeg
 

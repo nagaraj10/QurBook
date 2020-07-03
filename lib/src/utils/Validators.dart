@@ -1,9 +1,9 @@
 import 'dart:async';
-
+import 'package:myfhb/constants/db_constants.dart' as DBConstant;
 mixin Validators {
   var mobileNumberValidator = StreamTransformer<String, String>.fromHandlers(
       handleData: (mobileNumber, sink) {
-    String patttern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
+    String patttern = DBConstant.PRO_PATTERN;
     RegExp regExp = new RegExp(patttern);
     if (!regExp.hasMatch(mobileNumber) && mobileNumber.length < 9) {
       sink.addError('Enter a valid mobile number');

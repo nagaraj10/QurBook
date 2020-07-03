@@ -36,6 +36,8 @@ import 'package:myfhb/src/model/user/DoctorIds.dart';
 import 'package:myfhb/src/model/user/GeneralInfo.dart';
 import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
+import 'package:myfhb/src/model/sceretLoader.dart';
+import 'package:myfhb/src/model/secretmodel.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
@@ -934,17 +936,10 @@ class CommonUtil {
                 ImageIcon(
                   AssetImage('assets/icons/wifi.png'),
                   color: Color(CommonUtil().getMyPrimaryColor()),
-                  size: 50.0,
+                  fontSize: 16.0,
                 ),
-                Text(
-                  'No internet connection',
-                  style: TextStyle(
-                    color: Color(CommonUtil().getMyPrimaryColor()),
-                    fontSize: 16.0,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
  
@@ -1105,4 +1100,10 @@ class CommonUtil {
   String checkIfStringIsEmpty(String value){
     return value!=null?value:'';
   }
+  static Future<dynamic> getResourceLoader(String key) async {
+    final Future<Secret> secret = SecretLoader(secretPath: "secrets.json").load(key);
+    var valueFromRes = await secret;
+    return valueFromRes.apiKey;
+  }
+
 }
