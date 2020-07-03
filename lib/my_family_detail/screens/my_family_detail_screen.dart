@@ -11,6 +11,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/RelationShip.dart';
+import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
@@ -240,21 +242,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.profileData.dateOfBirth != null) {
-      List<String> list = sharedbyme.profileData.dateOfBirth
-          .split("T"); //by space" " the string need to splited
-      print('DOOOOB' + sharedbyme.profileData.dateOfBirth);
-      print('DOOOOB' +
-          new FHBUtils()
-              .getFormattedDateOnlyNew(sharedbyme.profileData.dateOfBirth));
-      // dateOfBirthController.text = list[0];
-
+      
       dateOfBirthController.text = new FHBUtils()
           .getFormattedDateOnlyNew(sharedbyme.profileData.dateOfBirth);
     }
 
     String profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
-    //print('profilebanner $profilebanner');
 
     return SingleChildScrollView(
       child: Column(
@@ -373,7 +367,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   void renameBloodGroup(String selectedBloodGroupClone) {
-    print('selectedBloodGroupClone renameBloodGroup' + selectedBloodGroupClone);
     if (selectedBloodGroupClone != null) {
       var bloodGroupSplitName = selectedBloodGroupClone.split('_');
 

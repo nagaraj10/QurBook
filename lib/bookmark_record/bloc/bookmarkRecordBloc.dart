@@ -38,7 +38,7 @@ class BookmarkRecordBloc with Validators implements BaseBloc {
           await _bookmarkRepository.bookmarkRecordForIds(jsonString);
     } catch (e) {
       bookmarkSink.add(ApiResponse.error(e.toString()));
-      print(e);
+      
     }
     return bookmarkResponse;
   }

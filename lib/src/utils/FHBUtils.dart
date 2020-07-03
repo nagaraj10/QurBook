@@ -140,7 +140,6 @@ class FHBUtils {
   }
 
   String getMonthDateYear(String strDate) {
-    //print('----------------CURRENT INVOKING METHOD{getMonthDateYear}-------------------');
     String formattedDate;
     if (CURRENT_DATE_CODE == 'MDY') {
       formattedDate = DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate));
@@ -149,7 +148,6 @@ class FHBUtils {
     } else {
       formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate));
     }
-    //print('----------------MY DATE FORMAT$CURRENT_DATE_CODE-------------------');
     return formattedDate;
   }
 
@@ -173,9 +171,7 @@ class FHBUtils {
     // Platform messages may fail, so we use a try/catch PlatformException.
     /* try {
         languages = await Devicelocale.preferredLanguages;
-      print('preferred language $languages');
     } on PlatformException {
-      print("Error obtaining preferred languages");
     }*/
     try {
       await Devicelocale.currentLocale.then((val) {
@@ -185,7 +181,6 @@ class FHBUtils {
         }
       });
     } on PlatformException {
-      print("Error obtaining current locale");
     }
   }
 
@@ -226,7 +221,6 @@ class FHBUtils {
         .insert('appointments', appModel.toMap(),
             conflictAlgorithm: ConflictAlgorithm.replace)
         .then((res) {
-      print('--------------createNewAppointment result $res');
     });
   }
 
@@ -297,7 +291,6 @@ class FHBUtils {
         .insert(tableName, model.toMap(),
             conflictAlgorithm: ConflictAlgorithm.replace)
         .then((res) {
-      print('--------------inserted $res row into $tableName----------');
     });
   }
 
@@ -313,7 +306,6 @@ class FHBUtils {
       // Pass the Appointment's id as a whereArg to prevent SQL injection.
       whereArgs: [id],
     ).then((res) {
-      print('--------------deleted $res row into $tableName------------------');
     });
   }
 
@@ -330,7 +322,6 @@ class FHBUtils {
       // Pass the Dog's id as a whereArg to prevent SQL injection.
       whereArgs: [model.id],
     ).then((res) {
-      print('--------------updated $res row into $tableName------------------');
     });
   }
 
@@ -371,7 +362,6 @@ class FHBUtils {
     var currentDate = DateTime.now();
     pickedDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day);
     final dateDifference = currentDate.difference(pickedDate).isNegative;
-    //print('date difference count $dateDifference');
     return dateDifference;
   }
 

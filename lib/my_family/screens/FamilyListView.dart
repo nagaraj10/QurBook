@@ -7,7 +7,11 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/LinkedData.dart';
+import 'package:myfhb/my_family/models/ProfileData.dart';
+import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
@@ -24,7 +28,6 @@ class FamilyListView {
           onTextFieldtap) async {
     // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-    print('INSIDE DIALOG BOX CLASS');
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -65,7 +68,6 @@ class FamilyListView {
       Function(BuildContext context, String searchParam, String name)
           onTextFieldtap,
       GlobalKey<State> _keyLoader) {
-    print('INSIDE setupAlertDialoadContainer');
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
@@ -78,13 +80,11 @@ class FamilyListView {
       sharedByMe = new List();
       sharedByMe.add(
           new Sharedbyme(profileData: profileData, linkedData: linkedData));
-      print('inside setupAlertDialoadContainer single' +
-          sharedByMe.length.toString());
+
     } else {
       sharedByMe.insert(
           0, new Sharedbyme(profileData: profileData, linkedData: linkedData));
-      print('inside setupAlertDialoadContainer multiple' +
-          sharedByMe.length.toString());
+      
     }
     if (sharedByMe.length > 0) {
       return Container(
@@ -256,7 +256,7 @@ class FamilyListView {
                           ),
                         ),
                         onTap: () {
-                          print('String tap');
+                          
                           onTextFieldtap(
                               context,
                               sharedByMe[index].profileData.userId,

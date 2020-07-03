@@ -16,7 +16,6 @@ class GoogleMapServices {
     String url =
         '$baseUrl?input=$query&key=${GoogleApiKey.place_key}&type=$type&radius=500&language=en&components=country:IN&sessiontoken=$sessionToken';
 
-    print('Autocomplete(sessionToken): $sessionToken');
 
     final http.Response response = await http.get(url);
     final responseData = json.decode(response.body);
@@ -38,13 +37,11 @@ class GoogleMapServices {
     String url =
         '$baseUrl?key=${GoogleApiKey.place_key}&place_id=$placeId&language=ko&sessiontoken=$token';
 
-    print('Place Detail(sessionToken): $sessionToken');
     final http.Response response = await http.get(url);
     final responseData = json.decode(response.body);
     final result = responseData['result'];
 
     final PlaceDetail placeDetail = PlaceDetail.fromJson(result);
-    print(placeDetail.toMap());
 
     return placeDetail;
   }
@@ -57,7 +54,6 @@ class GoogleMapServices {
     final http.Response response = await http.get(url);
     final responseData = json.decode(response.body);
     final formattedAddr = responseData['results'][0]['formatted_address'];
-    print(formattedAddr);
 
     return formattedAddr;
   }

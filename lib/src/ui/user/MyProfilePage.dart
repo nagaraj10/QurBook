@@ -8,6 +8,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/src/model/user/MyProfileData.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
@@ -59,15 +60,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    //print('profile data :${myProfile.response.data}');
-
+   
     profileWidget = getProfileWidget(myProfile.response.data);
 
     return profileWidget;
   }
 
   void renameBloodGroup(String selectedBloodGroupClone) {
-    print('selectedBloodGroupClone renameBloodGroup' + selectedBloodGroupClone);
     if (selectedBloodGroupClone != null) {
       var bloodGroupSplitName = selectedBloodGroupClone.split('_');
 
@@ -124,9 +123,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
       renameBloodGroup(data.generalInfo.bloodGroup);
     }
     if (data.generalInfo.dateOfBirth != null) {
-      print(data.generalInfo.dateOfBirth);
+      
       dob.text = new FHBUtils().getFormattedDateOnlyNew(data.generalInfo.dateOfBirth);
-      print(dob.text);
     }
     if (data.generalInfo.qualifiedFullName != null) {
       firstName.text = data.generalInfo.qualifiedFullName.firstName;

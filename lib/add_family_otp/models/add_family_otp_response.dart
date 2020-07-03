@@ -1,3 +1,4 @@
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 class AddFamilyOTPResponse {
   int status;
   bool success;
@@ -8,24 +9,15 @@ class AddFamilyOTPResponse {
       {this.status, this.success, this.message, this.response});
 
   AddFamilyOTPResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
-    response = json['response'] != null
-        ? new Response.fromJson(json['response'])
+    status = json[parameters.strStatus];
+    success = json[parameters.strSuccess];
+    message = json[parameters.strMessage];
+    response = json[parameters.strResponse] != null
+        ? new Response.fromJson(json[parameters.strResponse])
         : null;
   }
 
-//  Map<String, dynamic> toJson() {
-//    final Map<String, dynamic> data = new Map<String, dynamic>();
-//    data['status'] = this.status;
-//    data['success'] = this.success;
-//    data['message'] = this.message;
-//    if (this.response != null) {
-//      data['response'] = this.response.toJson();
-//    }
-//    return data;
-//  }
+
 }
 
 class Response {
@@ -34,8 +26,8 @@ class Response {
   Response({this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null
-        ? new AddFamilyUserInfo.fromJson(json['data'])
+    data = json[parameters.strData] != null
+        ? new AddFamilyUserInfo.fromJson(json[parameters.strData])
         : null;
   }
 }
@@ -63,16 +55,16 @@ class AddFamilyUserInfo {
       this.transactionId});
 
   AddFamilyUserInfo.fromJson(Map<String, dynamic> json) {
-    Map<String, dynamic> userInfo = json['userInfo'];
+    Map<String, dynamic> userInfo = json[parameters.strUserInfo];
 
-    id = userInfo['id'];
-    email = userInfo['email'];
-    countryCode = userInfo['countryCode'];
-    phoneNumber = userInfo['phoneNumber'];
-    gender = userInfo['gender'];
-    name = userInfo['name'];
-    isTempUser = userInfo['isTempUser'];
-    isEmailVerified = userInfo['isEmailVerified'];
-    transactionId = json['transactionId'];
+    id = userInfo[parameters.strId];
+    email = userInfo[parameters.strEmail];
+    countryCode = userInfo[parameters.strCountryCode];
+    phoneNumber = userInfo[parameters.strPhoneNumber];
+    gender = userInfo[parameters.strGender];
+    name = userInfo[parameters.strName];
+    isTempUser = userInfo[parameters.strIstemper];
+    isEmailVerified = userInfo[parameters.strIsEmailVerified];
+    transactionId = json[parameters.strTransactionId];
   }
 }

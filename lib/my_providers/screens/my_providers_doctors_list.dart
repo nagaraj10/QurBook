@@ -26,7 +26,6 @@ class MyProvidersDoctorsList extends StatelessWidget {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
         DoctorsModel eachDoctorModel = doctorsModel[index];
-        print(index);
         return InkWell(
             onTap: () {
               Navigator.pushNamed(context, '/add_providers',

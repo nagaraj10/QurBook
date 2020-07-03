@@ -55,7 +55,6 @@ class LoginBloc with Validators implements BaseBloc {
       signIn = await _authenticationRepository.signInUser(jsonString);
     } catch (e) {
       signInSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return signIn;
   }
@@ -85,7 +84,6 @@ class LoginBloc with Validators implements BaseBloc {
           file,middleName,lastName);
     } catch (e) {
       signUpSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return signUp;
   }
@@ -96,7 +94,6 @@ class LoginBloc with Validators implements BaseBloc {
       signOutResponse = await _authenticationRepository.signOutUser();
     } catch (e) {
       signInSink.add(ApiResponse.error(e.toString()));
-      print('Exception PPPPP' + e.toString());
     }
 
     return signOutResponse;

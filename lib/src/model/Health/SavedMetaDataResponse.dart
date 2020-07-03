@@ -1,3 +1,5 @@
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 class SavedMetaDataResponse {
   int status;
   bool success;
@@ -8,21 +10,21 @@ class SavedMetaDataResponse {
       {this.status, this.success, this.message, this.response});
 
   SavedMetaDataResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
-    response = json['response'] != null
-        ? new Response.fromJson(json['response'])
+    status = json[parameters.strStatus];
+    success = json[parameters.strSuccess];
+    message = json[parameters.strMessage];
+    response = json[parameters.strResponse] != null
+        ? new Response.fromJson(json[parameters.strResponse])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['success'] = this.success;
-    data['message'] = this.message;
+   data[parameters.strStatus] = this.status;
+    data[parameters.strSuccess] = this.success;
+    data[parameters.strMessage] = this.message;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data[parameters.strResponse] = this.response.toJson();
     }
     return data;
   }
@@ -35,16 +37,16 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
+    count = json[parameters.strCount];
     data =
-        json['data'] != null ? new SavedMediaData.fromJson(json['data']) : null;
+        json[parameters.strData] != null ? new SavedMediaData.fromJson(json[parameters.strData]) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
+    data[parameters.strCount] = this.count;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data[parameters.strData] = this.data.toJson();
     }
     return data;
   }
@@ -56,12 +58,12 @@ class SavedMediaData {
   SavedMediaData({this.mediaMetaID});
 
   SavedMediaData.fromJson(Map<String, dynamic> json) {
-    mediaMetaID = json['mediaMetaID'];
+    mediaMetaID = json[parameters.strmediaMetaID];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['mediaMetaID'] = this.mediaMetaID;
+    data[parameters.strmediaMetaID] = this.mediaMetaID;
     return data;
   }
 }

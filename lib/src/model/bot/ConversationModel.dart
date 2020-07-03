@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Conversation{
     bool isMayaSaid;
@@ -9,21 +10,21 @@ class Conversation{
     Conversation({@required this.isMayaSaid,@required this.text,this.imageUrl,@required this.name,this.timeStamp});
 
     Conversation.fromJson(Map<String,dynamic> json){
-        isMayaSaid = json['isMayaSaid'];
-        text = json['text'];
-        imageUrl = json['imageUrl'];
-        name = json['name'];
-        timeStamp = json['timeStamp'];
+        isMayaSaid = json[parameters.strIsMayaSaid];
+        text = json[parameters.strText];
+        imageUrl = json[parameters.strImageUrl];
+        name = json[parameters.strName];
+        timeStamp = json[parameters.strTimeStamp];
     }
 
 
     Map<String,dynamic> toJson(){
       final Map<String,dynamic> data = new Map<String,dynamic>();
-      data['isMayaSaid'] = this.isMayaSaid;
-      data['text']=this.text;
-      data['imageUrl']=this.imageUrl;
-      data['name']=this.name;
-      data['timeStamp']=this.timeStamp;
+      data[parameters.strIsMayaSaid] = this.isMayaSaid;
+      data[parameters.strText]=this.text;
+      data[parameters.strImageUrl]=this.imageUrl;
+      data[parameters.strName]=this.name;
+      data[parameters.strTimeStamp]=this.timeStamp;
       return data;
     }
 

@@ -13,6 +13,9 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+
 
 class HealthReportListScreen extends StatefulWidget {
   final CompleteData completeData;
@@ -84,7 +87,6 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               break;
 
             case Status.COMPLETED:
-              //print(snapshot.data.message);
 
               return _getWidgetToDisplayHealthRecords(
                   snapshot.data.data.response.data);
@@ -460,7 +462,6 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {
-    //print(data.mediaMasterIds);
     if (data.mediaMasterIds.isNotEmpty) {
       return FutureBuilder(
         future: _healthReportListForUserBlock

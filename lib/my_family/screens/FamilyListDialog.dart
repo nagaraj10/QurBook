@@ -9,7 +9,11 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/LinkedData.dart';
+import 'package:myfhb/my_family/models/ProfileData.dart';
+import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 
@@ -89,7 +93,6 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   }
 
   Future<Widget> getDialogBoxWithFamilyMember(FamilyData data) async {
-    print('INSIDE DIALOG BOX CLASS');
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -144,7 +147,6 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   }
 
   Widget setupAlertDialoadContainer(List<Sharedbyme> sharedByMe) {
-    print('INSIDE setupAlertDialoadContainer');
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
@@ -156,13 +158,11 @@ class FamilyListDialogState extends State<FamilyListDialog> {
       sharedByMe = new List();
       sharedByMe.add(
           new Sharedbyme(profileData: profileData, linkedData: linkedData));
-      print(
-          'inside setupAlertDialoadContainer ' + sharedByMe.length.toString());
+      
     } else {
       sharedByMe.insert(
           0, new Sharedbyme(profileData: profileData, linkedData: linkedData));
-      print(
-          'inside setupAlertDialoadContainer ' + sharedByMe.length.toString());
+      
     }
     if (sharedByMe.length > 0) {
       return Container(
@@ -228,7 +228,6 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                         ),
                       ),
                       onTap: () {
-                        print('String tap');
                         PreferenceUtil.saveString(Constants.KEY_USERID,
                                 sharedByMe[index].profileData.id)
                             .then((onValue) {

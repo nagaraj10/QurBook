@@ -190,7 +190,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     String mayaUrl = 'https://ai.vsolgmi.com/ai/api/rasa/';
     String uuidString = uuid;
 
-    // /print(uuidString);
+    
 
     var reqJson = {};
     reqJson["sender"] = user_id;
@@ -216,11 +216,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     if (response.statusCode == 200) {
       if (response.body != null) {
         var jsonResponse = convert.jsonDecode(response.body);
-        //print('response from maya ' + jsonResponse.toString());
         List<dynamic> list = jsonResponse;
         if (list.length > 0) {
           SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
-          //print('before env value $isEndOfConv');
           setState(() {
             isEndOfConv = res.endOfConv;
           });
@@ -242,7 +240,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             if (!stopTTSNow) {
               tts_platform.invokeMethod('textToSpeech',
                   {"message": res.text, "isClose": false}).then((res) {
-                //print('is maya currently speaking value is $res');
                 if (res == 1) {
                   isMayaSpeaks = 1;
                 }

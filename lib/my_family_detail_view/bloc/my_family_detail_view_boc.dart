@@ -54,7 +54,6 @@ class MyFamilyDetailViewBloc implements BaseBloc {
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       healthReportListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 
@@ -68,7 +67,6 @@ class MyFamilyDetailViewBloc implements BaseBloc {
           await _healthReportListForUserRepository.getCategoryList();
     } catch (e) {
       categoryListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return categoryResponseList;

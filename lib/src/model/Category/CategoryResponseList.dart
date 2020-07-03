@@ -1,3 +1,6 @@
+import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 class CategoryResponseList {
   int status;
   bool success;
@@ -8,21 +11,21 @@ class CategoryResponseList {
       {this.status, this.success, this.message, this.response});
 
   CategoryResponseList.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
-    response = json['response'] != null
-        ? new Response.fromJson(json['response'])
+     status = json[parameters.strStatus];
+    success = json[parameters.strSuccess];
+    message = json[parameters.strMessage];
+    response = json[parameters.strResponse] != null
+        ? new Response.fromJson(json[parameters.strResponse])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['success'] = this.success;
-    data['message'] = this.message;
+   data[parameters.strStatus] = this.status;
+    data[parameters.strSuccess] = this.success;
+    data[parameters.strMessage] = this.message;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data[parameters.strResponse] = this.response.toJson();
     }
     return data;
   }
@@ -35,10 +38,10 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-    if (json['data'] != null) {
+    count = json[parameters.strCount];
+    if (json[parameters.strData] != null) {
       data = new List<CategoryData>();
-      json['data'].forEach((v) {
+      json[parameters.strData].forEach((v) {
         data.add(new CategoryData.fromJson(v));
       });
     }
@@ -46,71 +49,11 @@ class Response {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
+     data[parameters.strCount] = this.count;
     if (this.data != null) {
-      data['data'] = this.data.map((v) => v.toJson()).toList();
+      data[parameters.strData] = this.data.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
-class CategoryData {
-  String id;
-  String categoryName;
-  String categoryDescription;
-  String logo;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-  bool isDisplay;
-  bool isCreate;
-  bool isRead;
-  bool isEdit;
-  bool isDelete;
-
-  CategoryData(
-      {this.id,
-      this.categoryName,
-      this.categoryDescription,
-      this.logo,
-      this.isActive,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.isDisplay,
-      this.isCreate,
-      this.isRead,
-      this.isEdit,
-      this.isDelete});
-
-  CategoryData.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    categoryName = json['categoryName'];
-    categoryDescription = json['categoryDescription'];
-    logo = json['logo'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isDisplay = json['isDisplay'];
-    isCreate = json['isCreate'];
-    isRead = json['isRead'];
-    isEdit = json['isEdit'];
-    isDelete = json['isDelete'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['categoryName'] = this.categoryName;
-    data['categoryDescription'] = this.categoryDescription;
-    data['logo'] = this.logo;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    data['isDisplay'] = this.isDisplay;
-    data['isCreate'] = this.isCreate;
-    data['isRead'] = this.isRead;
-    data['isEdit'] = this.isEdit;
-    data['isDelete'] = this.isDelete;
-    return data;
-  }
-}

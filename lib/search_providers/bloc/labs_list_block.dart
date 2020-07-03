@@ -33,7 +33,7 @@ class LabsListBlock implements BaseBloc {
       labListSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
       labListSink.add(ApiResponse.error(e.toString()));
-      print(e);
+      
     }
   }
 
@@ -45,7 +45,6 @@ class LabsListBlock implements BaseBloc {
       labListSink.add(ApiResponse.completed(labsListResponse));
     } catch (e) {
       labListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return labsListResponse;
   }

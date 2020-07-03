@@ -14,6 +14,7 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
@@ -139,7 +140,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
 
     if (widget.arguments.fromClass == CommonConstants.my_family) {
-      print('*********' + widget.arguments.fromClass);
       addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData
           .id; //widget.arguments.addFamilyUserInfo.id;
 
@@ -193,7 +193,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             widget.arguments.sharedbyme.profileData.dateOfBirth);
       }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-      print('*****' + widget.arguments.fromClass);
       updateProfile = true;
       addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData
           .id; //widget.arguments.addFamilyUserInfo.id;
@@ -260,7 +259,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
       }
     } else {
-      print('************* others');
       addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
       addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
         myProfile = value;
@@ -311,7 +309,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   void renameBloodGroup(String selectedBloodGroupClone) {
-    print('selectedBloodGroupClone renameBloodGroup' + selectedBloodGroupClone);
     if (selectedBloodGroupClone != null) {
       var bloodGroupSplitName = selectedBloodGroupClone.split('_');
       try {
@@ -362,7 +359,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
-      print('Inside getUserProfileData' + profileData.toString());
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
           .then((value) {
         _familyListBloc.getFamilyMembersList().then((value) {
@@ -384,28 +380,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     });
   }
 
-  /*  getUserProfileData() async {
-            MyProfileBloc _myProfileBloc = new MyProfileBloc();
-        
-            _myProfileBloc
-                .getMyProfileData(Constants.KEY_USERID_MAIN)
-                .then((profileData) {
-              print('Inside dashboard' + profileData.toString());
-              PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
-                  .then((value) {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-        
-                Navigator.popUntil(context, (Route<dynamic> route) {
-                  bool shouldPop = false;
-                  if (route.settings.name == '/user_accounts') {
-                    shouldPop = true;
-                  }
-                  return shouldPop;
-                });
-              });
-            });
-          }
-         */
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -978,7 +953,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget getGenderDetails() {
-    print('selectedGender getGenderDetails $selectedGender');
     return StatefulBuilder(builder: (context, setState) {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -1140,12 +1114,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         addFamilyUserInfoBloc.email = emailController.text;
         addFamilyUserInfoBloc.gender =
             toBeginningOfSentenceCase(selectedGender.toLowerCase());
-        print('selected gender' + addFamilyUserInfoBloc.gender);
         addFamilyUserInfoBloc.dateOfBirth = dateOfBirthController.text;
 
         if (selectedBloodGroup != null && selectedBloodRange != null) {
-          print(' addfamilyuser selectedBloodGroup $selectedBloodGroup');
-          print('addfamilyuser selectedBloodRange $selectedBloodRange');
+         
           addFamilyUserInfoBloc.bloodGroup =
               selectedBloodGroup + '_' + selectedBloodRange;
         }
@@ -1464,7 +1436,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else {
         PreferenceUtil.saveString(
             Constants.PROFILE_EMAIL, emailController.text);
-        print(PreferenceUtil.getStringValue(Constants.MOB_NUM) + " NUMBER");
 
         Navigator.of(context)
             .push(MaterialPageRoute(
@@ -1602,7 +1573,6 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                         var image =
                             ImagePicker.pickImage(source: ImageSource.gallery);
                         image.then((value) {
-                          print('file Path' + value.path);
                           if (isProfileImage) {
                             imageURI = value;
                           } else {

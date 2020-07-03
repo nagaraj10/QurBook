@@ -335,7 +335,6 @@ class _MyAppointmentState extends State<MyAppointment> {
 
     detailsList = await FHBUtils().getAllAppointments();
     reverseDetailsList = detailsList.reversed.toList();
-    //print(reverseDetailsList.toString());
     return detailsList;
   }
 }

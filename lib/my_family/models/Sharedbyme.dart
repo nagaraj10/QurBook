@@ -1,0 +1,33 @@
+import 'package:myfhb/my_family/models/LinkedData.dart';
+import 'package:myfhb/my_family/models/ProfileData.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
+class Sharedbyme {
+  ProfileData profileData;
+  LinkedData linkedData;
+
+  Sharedbyme({this.profileData, this.linkedData});
+
+  Sharedbyme.fromJson(Map<String, dynamic> json) {
+    profileData = json[parameters.strprofileData] != null
+        ? new ProfileData.fromJson(json[parameters.strprofileData])
+        : null;
+    linkedData = json[parameters.strlinkedData] != null
+        ? new LinkedData.fromJson(json[parameters.strlinkedData])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.profileData != null) {
+      data['profileData'] = this.profileData.toJson();
+    }
+    if (this.linkedData != null) {
+      data['linkedData'] = this.linkedData.toJson();
+    }
+    return data;
+  }
+}
+
+
+

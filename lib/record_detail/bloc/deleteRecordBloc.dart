@@ -38,7 +38,6 @@ class DeleteRecordBloc with Validators implements BaseBloc {
           await _deleteRecordRepository.deleteRecordForIds(jsonString);
     } catch (e) {
       delteRecordSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return deleteRecordResponse;
   }
@@ -56,7 +55,6 @@ class DeleteRecordBloc with Validators implements BaseBloc {
           .deleteRecordForMediaMasterIds(jsonString);
     } catch (e) {
       delteRecordSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return deleteRecordResponse;
   }

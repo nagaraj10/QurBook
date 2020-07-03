@@ -89,7 +89,6 @@ class FamilyListBloc implements BaseBloc {
       familyMemberListSink.add(ApiResponse.completed(familyResponseList));
     } catch (e) {
       familyMemberListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return familyResponseList;
   }
@@ -102,7 +101,6 @@ class FamilyListBloc implements BaseBloc {
       relationShipListSink.add(ApiResponse.completed(relationShipResponseList));
     } catch (e) {
       relationShipListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 
@@ -116,7 +114,6 @@ class FamilyListBloc implements BaseBloc {
 //      userLinkingSink.add(ApiResponse.completed(userLinking));
     } catch (e) {
       userLinkingSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return userLinking;
@@ -132,7 +129,6 @@ class FamilyListBloc implements BaseBloc {
 //      userLinkingSink.add(ApiResponse.completed(userLinking));
     } catch (e) {
       userDeLinkingSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return userDeLinking;
@@ -148,7 +144,6 @@ class FamilyListBloc implements BaseBloc {
           .postUserLinkingForPrimaryNo(jsonString);
     } catch (e) {
       userLinkingForPrimaryNoSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return addFamilyOTPResponse;

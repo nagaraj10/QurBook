@@ -19,18 +19,18 @@ import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/add_providers/models/update_providers_id.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
-import 'package:myfhb/search_providers/models/doctors_list_response.dart';
-import 'package:myfhb/search_providers/models/hospital_list_response.dart';
-import 'package:myfhb/search_providers/models/labs_list_response.dart';
+import 'package:myfhb/search_providers/models/doctors_data.dart';
+import 'package:myfhb/search_providers/models/hospital_data.dart';
+import 'package:myfhb/search_providers/models/lab_data.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -40,7 +40,7 @@ import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class AddProviders extends StatefulWidget {
-  Data data;
+  DoctorsData data;
   HospitalData hospitalData;
   LabData labData;
 
@@ -193,7 +193,6 @@ class AddProvidersState extends State<AddProviders> {
                                     providerType:
                                         widget.arguments.searchKeyWord),
                               ).then((value) {
-                                print(widget.arguments.placeDetail.url);
 
                                 buildUI();
                                 getAddressesFromCoordinates();
@@ -541,9 +540,7 @@ class AddProvidersState extends State<AddProviders> {
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
-    print(
-        ' ${address.locality}, ${address.adminArea},${address.subLocality}, ${address.subAdminArea},${address.addressLine}, ${address.featureName},${address.thoroughfare}, ${address.subThoroughfare}');
-  }
+}
 
   Future addMarker() async {
     final Uint8List markerIcon =
@@ -843,70 +840,6 @@ class AddProvidersState extends State<AddProviders> {
         });
   }
 
-  /*  Widget callUpdateProvidersStreamBuilder(UpdateProvidersBloc bloc) {
-                          return StreamBuilder(
-                              stream: widget.arguments.searchKeyWord == CommonConstants.doctors
-                                  ? updateProvidersBloc.doctorsStream
-                                  : widget.arguments.searchKeyWord == CommonConstants.hospitals
-                                      ? updateProvidersBloc.hospitalsStream
-                                      : updateProvidersBloc.labsStream,
-                              builder:
-                                  (context, AsyncSnapshot<ApiResponse<UpdateProvidersId>> snapshot) {
-                                if (!snapshot.hasData) return Container();
-                      
-                                if (snapshot.data.status == Status.COMPLETED) {
-                      //            Navigator.pop(context, 1);
-                                 
-                                   if (widget.arguments.fromClass ==
-                                      CommonConstants.serach_specific_list) {
-                                    widget.arguments.searchKeyWord == CommonConstants.doctors
-                                        ? _doctorsListBlock
-                                            .getDoctorObjUsingId(bloc.providerId)
-                                            .then((doctorsListResponse) {
-                                            print('Doctors Update');
-                                            print('doctorsListResponse ' +
-                                                doctorsListResponse.response.data[0].name);
-                                            Navigator.of(context).pop(
-                                                {'doctor': doctorsListResponse.response.data[0]});
-                                          })
-                                        : widget.arguments.searchKeyWord == CommonConstants.hospitals
-                                            ? _hospitalListBlock
-                                                .getHospitalObjectusingId(bloc.providerId)
-                                                .then((hospitalDataResponse) {
-                                                print('hospital Update');
-                                                print('hospitalDataResponse ' +
-                                                    hospitalDataResponse.response.data[0].name);
-                                                Navigator.of(context).pop({
-                                                  'hospital': hospitalDataResponse.response.data[0]
-                                                });
-                                              })
-                                            : _labsListBlock
-                                                .getLabsListUsingID(bloc.providerId)
-                                                .then((lablistResponse) {
-                                                print('hospital Update');
-                                                print('lablistResponse ' +
-                                                    lablistResponse.response.data[0].name);
-                                                Navigator.of(context).pop({
-                                                  'laborartory': lablistResponse.response.data[0]
-                                                });
-                                              });
-                                      }else{
-                                         Navigator.popUntil(context, (Route<dynamic> route) {
-                                    bool shouldPop = false;
-                                    if (route.settings.name == '/user_accounts') {
-                                      shouldPop = true;
-                                    }
-                                    return shouldPop;
-                                  });
-                                  return Container();
-                      
-                                      }
-                                } else {
-                                  return Container();
-                                }
-                              });
-                        }*/
-
   Widget callUpdateProvidersStreamBuilder(UpdateProvidersBloc bloc) {
     return StreamBuilder(
         stream: widget.arguments.searchKeyWord == CommonConstants.doctors
@@ -925,9 +858,7 @@ class AddProvidersState extends State<AddProviders> {
                   ? _doctorsListBlock
                       .getDoctorObjUsingId(bloc.providerId)
                       .then((doctorsListResponse) {
-                      print('Doctors Update');
-                      print('doctorsListResponse ' +
-                          doctorsListResponse.response.data[0].name);
+                    
                       Navigator.of(context).pop();
 
                       Navigator.of(context).pop(
@@ -937,9 +868,7 @@ class AddProvidersState extends State<AddProviders> {
                       ? _hospitalListBlock
                           .getHospitalObjectusingId(bloc.providerId)
                           .then((hospitalDataResponse) {
-                          print('hospital Update');
-                          print('hospitalDataResponse ' +
-                              hospitalDataResponse.response.data[0].name);
+                          
                           Navigator.of(context).pop();
 
                           Navigator.of(context).pop({
@@ -949,9 +878,7 @@ class AddProvidersState extends State<AddProviders> {
                       : _labsListBlock
                           .getLabsListUsingID(bloc.providerId)
                           .then((lablistResponse) {
-                          print('hospital Update');
-                          print('lablistResponse ' +
-                              lablistResponse.response.data[0].name);
+                        
                           Navigator.of(context).pop();
                           Navigator.of(context).pop({
                             'laborartory': lablistResponse.response.data[0]
@@ -1206,7 +1133,7 @@ class AddProvidersState extends State<AddProviders> {
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
-      print('Inside dashboard' + profileData.toString());
+      
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
           .then((value) {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
@@ -1226,7 +1153,6 @@ class AddProvidersState extends State<AddProviders> {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
 
     _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
-      print('Inside dashboard' + profileData.toString());
       Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
@@ -1255,276 +1181,5 @@ class AddProvidersState extends State<AddProviders> {
           );
   }
 
-//@override
-//Widget build(BuildContext context) {
-//  // TODO: implement build
-//  return Scaffold(
-//    appBar: AppBar(
-//      elevation: 0,
-//      flexibleSpace: Container(
-//        decoration: BoxDecoration(
-//            gradient: LinearGradient(
-//                begin: Alignment.topLeft,
-//                end: Alignment.bottomRight,
-//                colors: <Color>[
-//                  const Color(0XFF6717CD),
-//                  const Color(0XFF0A41A6)
-//                ],
-//                stops: [
-//                  0.3,
-//                  1
-//                ])),
-//      ),
-//      leading: IconButton(
-//        icon: Icon(
-//          Icons.arrow_back_ios,
-//          size: 20,
-//        ),
-//        onPressed: () {
-//          Navigator.of(context).pop();
-//        },
-//      ),
-//      title: Text(
-//        CommonConstants.add_providers,
-//        style: TextStyle(
-//          fontWeight: FontWeight.w400,
-//          color: Colors.white,
-//          fontSize: 18,
-//        ),
-//      ),
-//    ),
-//    body: Container(
-//      constraints: BoxConstraints.expand(),
-//      child: Column(
-//        crossAxisAlignment: CrossAxisAlignment.start,
-//        children: <Widget>[
-//          InkWell(
-//            onTap: () {
-//              if (widget.arguments.hasData == false) {
-//                Navigator.pushNamed(
-//                  context,
-//                  '/add_address',
-//                  arguments: AddAddressArguments(
-//                      providerType: widget.arguments.searchKeyWord),
-//                ).then((value) {
-//                  print(widget.arguments.placeDetail.url);
-//
-//                  buildUI();
-//                  getAddressesFromCoordinates();
-//                });
-//              }
-//            },
-//            child: Container(
-//              //margin: EdgeInsets.all(5),
-//              child: Container(
-//                margin: EdgeInsets.all(10),
-//                color: Colors.white,
-//                child: TextField(
-//                  enabled: false,
-//                  controller: _textFieldController,
-//                  onChanged: (editedValue) {
-////                                  value = editedValue;
-////                                  widget.arguments.searchWord == CommonConstants.doctors
-////                                      ? _doctorsListBlock.getDoctorsList(value)
-////                                      : widget.arguments.searchWord == CommonConstants.hospitals
-////                                      ? _hospitalListBlock.getHospitalList(value)
-////                                      : _labsListBlock.getLabsList(value);
-//                    setState(() {});
-//                  },
-//                  decoration: InputDecoration(
-//                    fillColor: Colors.white,
-//                    prefixIcon: Icon(
-//                      Icons.search,
-//                      color: Colors.black54,
-//                    ),
-//                    hintText: 'Search',
-//                    hintStyle: TextStyle(color: Colors.black54),
-//                    border: InputBorder.none,
-//                  ),
-//                ),
-//              ),
-//              decoration: new BoxDecoration(
-//                gradient: LinearGradient(
-//                    begin: Alignment.topLeft,
-//                    end: Alignment.bottomRight,
-//                    colors: <Color>[
-//                      const Color(0XFF6717CD),
-//                      const Color(0XFF0A41A6)
-//                    ],
-//                    stops: [
-//                      0.3,
-//                      1
-//                    ]),
-//                /* borderRadius: new BorderRadius.all(
-//                  new Radius.circular(30.0),
-//                ), */
-//                //border: Border.all(color: Colors.black),
-//                //color: Colors.white
-//              ),
-//              padding: new EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
-//            ),
-//
-////                          Container(
-////                            height: 40,
-////                            color: Colors.white,
-////                            margin:
-////                                EdgeInsets.only(left: 10, right: 10, top: 40),
-////                            child: Row(
-////                              children: <Widget>[
-////                                SizedBox(width: 10),
-////                                InkWell(
-////                                    onTap: () {
-////                                      Navigator.pop(context);
-////                                    },
-////                                    child: Image.asset(ImageUrlUtils.backImg,
-////                                        width: 16,
-////                                        height: 16,
-////                                        fit: BoxFit.cover)),
-////                                SizedBox(width: 10),
-////                                Text(CommonConstants.searchPlaces,
-////                                    style: TextStyle(
-////                                        fontSize: 16.0,
-////                                        fontWeight: FontWeight.w400,
-////                                        color: ColorUtils.greycolor1)),
-////                              ],
-////                            ),
-////                          )
-//          ),
-//          SingleChildScrollView(
-//            child: Column(
-//              children: <Widget>[
-//                Container(
-//                  width: MediaQuery.of(context).size.width,
-//                  height: 300,
-//                  child: Stack(
-//                    children: <Widget>[
-//                      GoogleMap(
-//                        scrollGesturesEnabled: false,
-//                        mapType: MapType.normal,
-//                        initialCameraPosition: kGooglePlex,
-//                        onCameraMove: _onCameraMove,
-//                        markers: Set.from(_markers),
-//                        onMapCreated: _onMapCreated,
-//                      ),
-//                      Column(
-//                        children: <Widget>[
-//                          Visibility(
-//                              visible: widget.arguments.hasData == true
-//                                  ? latitude == 0.0 ? true : false
-//                                  : false,
-//                              child: Container(
-//                                height: 300,
-//                                color: ColorUtils.blackcolor.withOpacity(0.7),
-//                                child: Center(
-//                                  child: Text(
-//                                    CommonConstants.comingSoon,
-//                                    style: TextStyle(
-//                                        fontSize: 16.0,
-//                                        fontWeight: FontWeight.w400,
-//                                        color: Colors.white),
-//                                  ),
-//                                ),
-//                              ))
-//                        ],
-//                      )
-//                    ],
-//                  ),
-//                ),
-//                Container(
-//                  padding: EdgeInsets.only(left: 10, top: 20, right: 10),
-//                  child: Column(
-//                    mainAxisAlignment: MainAxisAlignment.end,
-//                    crossAxisAlignment: CrossAxisAlignment.start,
-//                    children: <Widget>[
-//                      Visibility(
-//                          visible: widget.arguments.hasData == false
-//                              ? true
-//                              : false,
-//                          child: Text(
-//                            widget.arguments.hasData == false
-//                                ? 'Add ${widget.arguments.searchKeyWord}'
-//                                : '',
-//                            style: TextStyle(
-//                                fontSize: 18.0,
-//                                fontWeight: FontWeight.w500,
-//                                color: ColorUtils.blackcolor),
-//                          )),
-//                      _ShowDoctorTextField(),
-//                      SizedBox(height: 10),
-//                      Text(
-//                        'Associated Member',
-//                        style: TextStyle(
-//                            fontSize: 14.0,
-//                            fontWeight: FontWeight.w400,
-//                            color: ColorUtils.greycolor1),
-//                      ),
-//                      SizedBox(height: 10),
-//                      _showUser(),
-//                      SizedBox(height: 10),
-//                      InkWell(
-//                        onTap: () {},
-//                        child: Text(
-//                          'Switch User',
-//                          style: TextStyle(
-//                              fontSize: 14.0,
-//                              fontWeight: FontWeight.w400,
-//                              color: Theme.of(context).primaryColor),
-//                        ),
-//                      ),
-//                      SizedBox(height: 10),
-//                      Row(
-//                        children: <Widget>[
-//                          IgnorePointer(
-//                              ignoring: widget.arguments.fromClass ==
-//                                  CommonConstants.myProviders
-//                                  ? true
-//                                  : false,
-//                              child: Switch(
-//                                value: isPreferred,
-//                                onChanged: (value) {
-//                                  setState(() {
-//                                    isPreferred = value;
-//                                  });
-//                                },
-//                                activeTrackColor:
-//                                Theme.of(context).primaryColor,
-//                                activeColor: Theme.of(context).primaryColor,
-//                              )),
-//                          Text(
-//                            'Set as Preferred',
-//                            style: TextStyle(
-//                                fontSize: 14.0,
-//                                fontWeight: FontWeight.w400,
-//                                color: ColorUtils.blackcolor),
-//                          ),
-//                        ],
-//                      ),
-//                      Visibility(
-//                        visible: widget.arguments.fromClass ==
-//                            CommonConstants.myProviders
-//                            ? false
-//                            : true,
-//                        child: Row(
-//                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                          children: <Widget>[
-//                            _showCancelButton(),
-//                            _showAddButton()
-//                          ],
-//                        ),
-//                      ),
-//                      SizedBox(height: 20),
-//                    ],
-//                  ),
-//                ),
-//              ],
-//            ),
-//          ),
-//          callAddDoctorProvidersStreamBuilder(addProvidersBloc),
-//          callAddHospitalProvidersStreamBuilder(addProvidersBloc),
-//          callAddLabProvidersStreamBuilder(addProvidersBloc),
-//          callUpdateProvidersStreamBuilder(updateProvidersBloc),
-//        ],
-//      ),
-//    ),
-//  );
+
 }

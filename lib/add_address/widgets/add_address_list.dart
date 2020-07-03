@@ -43,7 +43,6 @@ class AddAddressListState extends State<AddAddressList> {
     return ListView.builder(
       itemBuilder: (BuildContext context, index) {
         Place eachPlaceModel = widget.placesListArray[index];
-        print(index);
         return InkWell(
           onTap: () {
             if (sessionToken == null) {
@@ -56,7 +55,6 @@ class AddAddressListState extends State<AddAddressList> {
             );
 
             futurePlaceDetail.then((value) {
-              print(value.lat);
 
               Navigator.pushNamed(
                 context,

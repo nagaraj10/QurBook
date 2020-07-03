@@ -17,8 +17,10 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
+import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
@@ -175,16 +177,13 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   saveMediaDialog(
       BuildContext context, String categoryName, String deviceName) {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-    //print('pary categoryName' + categoryName);
 
     audioPath = '';
     containsAudio = false;
     try {
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
-      //print('pary deviceName' + deviceName);
       setFileName();
     } catch (e) {
-      print(e);
     }
 
     if (categoryName != Constants.STR_DEVICES) {
@@ -197,9 +196,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               dateOfVisit,
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            print('Audio Path delete' + containsAudio.toString());
-            print('Audio Path delete' + audioPath.toString());
-
+            
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -207,8 +204,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('Audio Path DisplayPicture' + containsAudio.toString());
-            print('Audio Path DisplayPicture' + audioPath.toString());
+          
 
             audioPath = audioPath;
             containsAudio = containsAudio;
@@ -224,8 +220,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                print('Audio Path delete' + containsAudio.toString());
-                print('Audio Path delete' + audioPath.toString());
+                
 
                 setState(() {
                   audioPath = audioPath;
@@ -234,8 +229,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               },
               widget.imagePath,
               (containsAudio, audioPath) {
-                print('Audio Path DisplayPicture' + containsAudio.toString());
-                print('Audio Path DisplayPicture' + audioPath.toString());
+              
 
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -253,8 +247,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                print('Audio Path delete' + containsAudio.toString());
-                print('Audio Path delete' + audioPath.toString());
+                
 
                 setState(() {
                   audioPath = audioPath;
@@ -263,8 +256,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               },
               widget.imagePath,
               (containsAudio, audioPath) {
-                print('Audio Path DisplayPicture' + containsAudio.toString());
-                print('Audio Path DisplayPicture' + audioPath.toString());
+              
 
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -285,9 +277,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               dateOfVisit,
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            print('Audio Path delete' + containsAudio.toString());
-            print('Audio Path delete' + audioPath.toString());
-
+            
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -295,9 +285,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('Audio Path DisplayPicture' + containsAudio.toString());
-            print('Audio Path DisplayPicture' + audioPath.toString());
-
+          
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -312,9 +300,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               dateOfVisit,
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            print('Audio Path delete' + containsAudio.toString());
-            print('Audio Path delete' + audioPath.toString());
-
+            
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -322,8 +308,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('Audio Path DisplayPicture' + containsAudio.toString());
-            print('Audio Path DisplayPicture' + audioPath.toString());
+           
 
             audioPath = audioPath;
             containsAudio = containsAudio;
@@ -337,9 +322,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                //print('Audio Path delete' + containsAudio.toString());
-                //print('Audio Path delete' + audioPath.toString());
-
+                
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -347,8 +330,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               },
               widget.imagePath,
               (containsAudio, audioPath) {
-                print('Audio Path DisplayPicture' + containsAudio.toString());
-                print('Audio Path DisplayPicture' + audioPath.toString());
+              
 
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -363,10 +345,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           break;
       }
     } else {
-      //print(deviceName + " Paaaaaaaaaaaaaaaaaaru");
 
       var digitRecog = true;
-      //      displayDevicesList(deviceName);
 
       digitRecog =
           PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
@@ -659,7 +639,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         if (results.containsKey('doctor')) {
           doctorsData = json.decode(results['doctor']);
 
-          print('doctor data' + doctorsData.toString());
+          
           setState(() {
             doctorsName.text = doctorsData['name'];
           });
@@ -766,7 +746,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
           postDeviceData.add(postDeviceValuesExtraClone);
         }
-        print(postDeviceData.toString() + 'Values of readings');
+        
         postMediaData['deviceReadings'] = postDeviceData;
       } else if (categoryName == Constants.STR_PRESCRIPTION ||
           categoryName == Constants.STR_MEDICALREPORT) {
@@ -778,7 +758,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         }
       } else if (categoryName == Constants.STR_IDDOCS) {
         if (selectedID != null) {
-          print(selectedID.split(' ')[0]);
 
           postMediaData['idType'] = selectedID.split(' ')[0];
         }
@@ -790,15 +769,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
       postMainData['metaInfo'] = postMediaData;
 
-      print('body' + postMainData.toString());
-      print('postDeviceData ' + postMediaData['deviceReadings'].toString());
+
 
       var params = json.encode(postMainData);
 
-      print('params' + params.toString());
-      print('params' + postMainData['metaInfo'].toString());
+     
 
-      //print('imagePath' + widget.imagePath);
 
       //imageFile = File(widget.imagePath);
 
@@ -823,7 +799,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   getAllObjectToPost() {
-    print('inside getAllObjectToPost');
     initialData();
     setFileName();
 
@@ -831,10 +806,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     deviceController = new TextEditingController(text: '');
     memoController = new TextEditingController(text: '');
 
-    if (doctorsName.text != null) {
-      print('doctors Controller' + doctorsName.text);
-      print('hospital Controller' + hospitalName.text);
-    }
+   
 
     dateOfVisit = new TextEditingController(
         text: FHBUtils().getFormattedDateOnly(dateTime.toString()));
@@ -850,7 +822,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         categoryName == Constants.IS_CATEGORYNAME_DEVICES ? true : false;
     categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
 
-    print('categoryID' + categoryID);
 
     categoryDataObj = new CommonUtil()
         .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
@@ -872,9 +843,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   onDateSelected(DateTime dateTimeSelected, String selectedDate) {
-    print('inside setState');
-    print('inside setState' + dateTimeSelected.toString());
-    print('inside setState' + selectedDate);
+    
 
     setState(() {
       dateTime = dateTimeSelected;
@@ -886,39 +855,27 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     Map<String, dynamic> postImage = new Map();
 
     postImage['mediaMetaId'] = mediaMetaID;
-    print('I am here ' + mediaMetaID);
 
-    /* _healthReportListForUserBlock
-                  .saveImage(widget.imagePath, mediaMetaID, '')
-                  .then((postImageResponse) {
-                print(
-                    'output mediaMaster' + postImageResponse.response.data.mediaMasterId);
-          
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              });*/
+  
   }
 
   void postAudioToServer(String mediaMetaID) {
     Map<String, dynamic> postImage = new Map();
 
     postImage['mediaMetaId'] = mediaMetaID;
-    print('I am here ' + mediaMetaID);
-    print('I am here audioPath' + audioPath);
+    
     int k = 0;
     for (int i = 0; i < widget.imagePath.length; i++) {
       _healthReportListForUserBlock
           .saveImage(widget.imagePath[i], mediaMetaID, '')
           .then((postImageResponse) {
-        print('output audio mediaMaster images' +
-            postImageResponse.response.data.mediaMasterId);
+       
         k++;
         if (audioPath != '' && k == widget.imagePath.length) {
           _healthReportListForUserBlock
               .saveImage(audioPath, mediaMetaID, '')
               .then((postImageResponse) {
-            print('output audio mediaMaster' +
-                postImageResponse.response.data.mediaMasterId);
+            
             Navigator.of(context).pop();
             Navigator.of(context).pop();
           });
@@ -932,7 +889,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   Future<Widget> getDialogBoxForPrescription(BuildContext context) {
-    print('inside prescription');
     if (fileName.text == '' || fileName.text == null) {
       setFileName();
     }
@@ -1027,7 +983,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   Future<Widget> getDialogBoxForGlucometer(
       BuildContext context, String deviceName) {
-    print('inside initilzeData');
+    
     if (fileName.text == '' || fileName.text == null) {
       setFileName();
     }
@@ -1092,7 +1048,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 ],
                 onPressed: (int index) {
                   setState(() {
-                    print('inside setState');
                     for (int i = 0; i < isSelected.length; i++) {
                       isSelected[i] = i == index;
                     }
@@ -1394,7 +1349,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   void initialData() {
-    print('inside initilzeData');
 
     if (!firstTym) {
       categoryNameClone =
@@ -1407,7 +1361,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         ? Constants.IS_CATEGORYNAME_DEVICES
         : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
 
-    print('category name : ' + categoryName);
   }
 
   Widget getToggleButton() {
@@ -1441,7 +1394,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   onToggleBUttonPressed(int index) async {
     setState(() {
-      print('inside setState');
       for (int i = 0; i < isSelected.length; i++) {
         isSelected[i] = i == index;
       }
@@ -1668,7 +1620,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   bool doValidationBeforePosting() {
     bool validationConditon = false;
-    print('selectedID $selectedID');
+    
     if (categoryName == Constants.STR_PRESCRIPTION ||
         categoryName == Constants.STR_MEDICALREPORT) {
       if (doctorsName.text == '') {
@@ -1780,10 +1732,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       }
     }
 
-    print('category Name' +
-        categoryName +
-        '  validationConditon' +
-        validationConditon.toString());
+    
     return validationConditon;
   }
 
@@ -1831,7 +1780,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
             if (results.containsKey('audioFile')) {
               containsAudio = true;
               audioPath = results['audioFile'];
-              print('Audio Path' + audioPath);
 
               setState(() {});
             }
@@ -1856,7 +1804,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   void deleteAudioFile() {
-    print('inside delete');
+    
     audioPath = '';
     containsAudio = false;
     setState(() {});
@@ -1983,8 +1931,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           .then((postImageResponse) {
         _scaffoldKey.currentState.hideCurrentSnackBar();
 
-        //print('post image response' + postImageResponse.message);
-        //displayDevicesList(deviceName, null);
+        
 
         if (skipTapped == false) {
           displayDevicesList(deviceName, postImageResponse);
@@ -2011,7 +1958,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   void callBackToRefresh() {
     setState(() {
-      print('setState of home Screen');
     });
   }
 
@@ -2021,15 +1967,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     });
   }
 
-  /*  void initialData() {
-    print('inside initilzeData');
-
-    if (!firstTym) {
-      categoryNameClone =
-          PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-      firstTym = true;
-    }
-  } */
+ 
 
   void initializeData() {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);

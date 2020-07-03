@@ -48,8 +48,6 @@ class _AddReminderState extends State<AddReminder> {
           minute: int.parse(timeArray[1].substring(0, 2)));
       int intervalIndex = selectedInterval.indexOf(widget.model.interval);
       isSelected[intervalIndex] = true;
-      /* print(
-          '==============is selected array on update mode${isSelected.toString()}======================'); */
     } else {
       isUpdate = false;
       selectedDate = DateTime.now();
@@ -283,24 +281,19 @@ class _AddReminderState extends State<AddReminder> {
       });
 
     if (FHBUtils().checkdate(selectedDate)) {
-      //print('280------$_isTimeAfter');
       setState(() {
         _isTimeAfter = true;
       });
-      //print('284------$_isTimeAfter');
     } else {
       if (FHBUtils().checkTime(selectedTime)) {
         setState(() {
           _isTimeAfter = true;
         });
-        //print('288------$_isTimeAfter');
-        //_isTimeAfter=true;
       } else {
         setState(() {
           _isTimeAfter = false;
         });
-        //print('292------$_isTimeAfter');
-        //_isTimeAfter=false;
+
       }
     }
   }
@@ -317,7 +310,6 @@ class _AddReminderState extends State<AddReminder> {
       },
     );
 
-    //print('291------$_isTimeAfter');
     if (pickedTime != null && pickedTime != selectedTime)
       setState(() {
         selectedTime = pickedTime;
@@ -330,14 +322,12 @@ class _AddReminderState extends State<AddReminder> {
         setState(() {
           _isTimeAfter = true;
         });
-        //print('299------$_isTimeAfter');
-        //_isTimeAfter=true;
+       
       } else {
         setState(() {
           _isTimeAfter = false;
         });
-        //print('303------$_isTimeAfter');
-        //_isTimeAfter=false;
+        
       }
     }
   }

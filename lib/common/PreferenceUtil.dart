@@ -1,12 +1,15 @@
 import 'dart:core';
 import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/FamilyData.dart';
+import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Media/MediaData.dart';
+import 'package:myfhb/src/model/user/DoctorIds.dart';
+import 'package:myfhb/src/model/user/HospitalIds.dart';
+import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
-import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -34,7 +37,7 @@ class PreferenceUtil {
 
   static Future<bool> saveMediaData(
       String keyProfile, MediaData mediaData) async {
-    print('profile data in shared preference : $mediaData');
+    
     var instance = await _prefs;
     String profile = json.encode(mediaData);
 
@@ -106,7 +109,7 @@ class PreferenceUtil {
 
   static Future<bool> saveProfileData(
       String keyProfile, MyProfile profileData) async {
-    print('profile data in shared preference : $profileData');
+    
     var instance = await _prefs;
     String profile = json.encode(profileData);
 
@@ -196,7 +199,7 @@ class PreferenceUtil {
 
   static Future<bool> saveCompleteData(
       String keyCompletedData, CompleteData completeData) async {
-    print('profile data in shared preference : $completeData');
+    
     var instance = await _prefs;
     String completeDataStr = json.encode(completeData);
 

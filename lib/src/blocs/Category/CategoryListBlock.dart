@@ -34,7 +34,7 @@ class CategoryListBlock implements BaseBloc{
       categoryListSink.add(ApiResponse.completed(categoryResponseList));
     } catch (e) {
       categoryListSink.add(ApiResponse.error(e.toString()));
-      print(e);
+      
     }
 
   }

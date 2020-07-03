@@ -22,8 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         String authToken =
             PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-        print('auth token : $authToken');
-        //PageNavigator.goToPermanent(context, '/sign_in_screen');
+
         if (authToken != null) {
           PageNavigator.goToPermanent(context, '/dashboard_screen');
         } else {

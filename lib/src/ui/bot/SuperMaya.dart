@@ -45,7 +45,7 @@ class _SuperMayaState extends State<SuperMaya> {
   Future<PermissionStatus> requestPermission(Permission micPermission) async {
     final status = await micPermission.request();
     setState(() {
-      print(status);
+      
       permissionStatus = status;
     });
     return status;
@@ -125,10 +125,7 @@ class _SuperMayaState extends State<SuperMaya> {
                                           },
                                         ),
                                       );
-                                    } else {
-                                      print(
-                                          'Mic permission has not been given by the user');
-                                    }
+                                    } 
                                   });
                                 }),
                             'Maya')),

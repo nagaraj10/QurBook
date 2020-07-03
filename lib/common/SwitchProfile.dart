@@ -4,6 +4,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
@@ -86,21 +87,14 @@ class SwitchProfile {
                         )),
             )));
 
-    //}
-
-    /*  return <Widget>[
-                        IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: _startSearch,
-                        ),
-                      ]; */
+   
   }
 
   Future<Widget> getDialogBoxWithFamilyMemberScrap(FamilyData familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, keyLoader, (context, userId, userName) {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
-        print('user id of family inside switch profile $userId');
+        
         if (PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME) ==
             Constants.STR_IDDOCS) {
           if (PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID) !=
@@ -135,7 +129,7 @@ class SwitchProfile {
         new HealthReportListForUserBlock();
 
     _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
-      print('inside myrecprds' + profileData.toString());
+      
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
           .then((value) {
         _healthReportListForUserBlock.getHelthReportList().then((value) {

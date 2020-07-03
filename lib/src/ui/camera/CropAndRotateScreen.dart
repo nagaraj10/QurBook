@@ -104,9 +104,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
   }
 
   void callBackToRefresh() {
-    /* setState(() {
-      print('setState of home Screen');
-    }); */
+  
     (context as Element).markNeedsBuild();
   }
 
@@ -135,7 +133,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
               onPageChanged: (index) {
                 setState(() {
                   _current = index;
-                  print(_current.toString() + ' onPageChanged');
+                  
                   currentImagePath = widget.imagePath[_current];
                 });
               },
@@ -300,7 +298,6 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
           title: 'Cropper',
         ));
     if (croppedFile != null) {
-      print('Cropper current' + _current.toString());
       widget.imagePath.removeAt(_current);
       setState(() {
         widget.imagePath.insert((_current), croppedFile.path);

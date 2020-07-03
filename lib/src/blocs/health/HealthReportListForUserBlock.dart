@@ -5,9 +5,12 @@ import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
 import 'package:myfhb/record_detail/model/UpdateMediaResponse.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
+import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/PostImageResponse.dart';
 import 'package:myfhb/src/model/Health/SavedMetaDataResponse.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 
@@ -96,27 +99,12 @@ class HealthReportListForUserBlock implements BaseBloc {
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       healthReportListSink.add(ApiResponse.error(e.toString()));
-      print(e);
+      
     }
     return userHealthResponseList;
   }
 
-  /* submit(String jsonData) async {
-    print('jsonString' + jsonData);
-
-    metadataListSink.add(ApiResponse.loading('Signing in user'));
-    try {
-      SavedMetaDataResponse saveMetaDataResponse =
-          await _healthReportListForUserRepository.postMediaData(jsonData);
-      metadataListSink.add(ApiResponse.completed(saveMetaDataResponse));
-    } catch (e) {
-      metadataListSink.add(ApiResponse.error(e.toString()));
-      print(e);
-    }
-  } */
-
   Future<SavedMetaDataResponse> submit(String jsonData) async {
-    print('jsonString' + jsonData);
     SavedMetaDataResponse saveMetaDataResponse;
     metadataListSink.add(ApiResponse.loading('Signing in user'));
     try {
@@ -125,7 +113,6 @@ class HealthReportListForUserBlock implements BaseBloc {
       metadataListSink.add(ApiResponse.completed(saveMetaDataResponse));
     } catch (e) {
       metadataListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return saveMetaDataResponse;
   }
@@ -136,7 +123,6 @@ class HealthReportListForUserBlock implements BaseBloc {
           await _healthReportListForUserRepository.getDoctorProfile(doctorsId);
       return userHealthResponseList;
     } catch (e) {
-      print(e);
     }
   }
 
@@ -146,13 +132,11 @@ class HealthReportListForUserBlock implements BaseBloc {
           .getDocumentImage(metaMasterId);
       return userHealthResponseList;
     } catch (e) {
-      print(e);
     }
   }
 
   Future<PostImageResponse> saveImage(
       String fileName, String metaID, String jsonData) async {
-    print('jsonString' + jsonData);
     PostImageResponse postImageResponse;
     imageDataSink.add(ApiResponse.loading('Signing in user'));
     try {
@@ -161,14 +145,12 @@ class HealthReportListForUserBlock implements BaseBloc {
       imageDataSink.add(ApiResponse.completed(postImageResponse));
     } catch (e) {
       imageDataSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return postImageResponse;
   }
 
   Future<DigitRecogResponse> saveDeviceImage(
       String fileName, String metaID, String jsonData) async {
-    print('jsonString' + jsonData);
     DigitRecogResponse digitRecogResponse;
     imageDataSink.add(ApiResponse.loading('Signing in user'));
     try {
@@ -177,7 +159,6 @@ class HealthReportListForUserBlock implements BaseBloc {
 //      imageDataSink.add(ApiResponse.completed(postImageResponse));
     } catch (e) {
       imageDataSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return digitRecogResponse;
   }
@@ -192,14 +173,12 @@ class HealthReportListForUserBlock implements BaseBloc {
       moveMetaDataSInk.add(ApiResponse.completed(metaDataMovedResponse));
     } catch (e) {
       metadataListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return metaDataMovedResponse;
   }
 
   Future<UpdateMediaResponse> updateMedia(
       String jsonData, String metaInfoId) async {
-    print('jsonString' + jsonData);
     UpdateMediaResponse updateMediaResponse;
     metaDataUpdateSink.add(ApiResponse.loading('Updating Data'));
     try {
@@ -208,7 +187,6 @@ class HealthReportListForUserBlock implements BaseBloc {
       metaDataUpdateSink.add(ApiResponse.completed(updateMediaResponse));
     } catch (e) {
       metaDataUpdateSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return updateMediaResponse;
   }
@@ -226,7 +204,6 @@ class HealthReportListForUserBlock implements BaseBloc {
     } catch (e) {
       imageListSink.add(ApiResponse.error(e.toString()));
 
-      print(e);
     }
 
     return userHealthResponseList;

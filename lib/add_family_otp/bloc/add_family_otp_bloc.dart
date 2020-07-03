@@ -61,7 +61,6 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
           await _authenticationRepository.verifyAddFamilyOTP(jsonString);
     } catch (e) {
       otpSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return addFamilyOTPResponse;
   }

@@ -158,7 +158,6 @@ class AudioWidgetState extends State<AudioWidget> {
 
   void seekToPlayer(int milliSecs) async {
     String result = await flutterSound.seekToPlayer(milliSecs);
-    print('seekToPlayer: $result');
   }
 
   onStartPlayerPressed() {
@@ -200,10 +199,8 @@ class AudioWidgetState extends State<AudioWidget> {
         }
       }
       if (path == null) {
-        print('Error starting player');
         return;
       }
-      print('startPlayer: $path');
       await flutterSound.setVolume(1.0);
 
       _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
@@ -221,7 +218,7 @@ class AudioWidgetState extends State<AudioWidget> {
         }
       });
     } catch (err) {
-      print('error: $err');
+      
     }
 
     setState(() {});
@@ -238,10 +235,9 @@ class AudioWidgetState extends State<AudioWidget> {
       File file = File(path);
       file.openRead();
       var contents = await file.readAsBytes();
-      print('The file is ${contents.length} bytes long.');
+      
       return contents;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -258,13 +254,11 @@ class AudioWidgetState extends State<AudioWidget> {
     try {
       if (flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED) {
         result = await flutterSound.resumePlayer();
-        print('resumePlayer: $result');
+        
       } else {
         result = await flutterSound.pausePlayer();
-        print('pausePlayer: $result');
       }
     } catch (err) {
-      print('error: $err');
     }
     if (result == 'paused player') {
       isPlaying = false;
@@ -284,14 +278,13 @@ class AudioWidgetState extends State<AudioWidget> {
   void stopPlayer() async {
     try {
       String result = await flutterSound.stopPlayer();
-      print('stopPlayer: $result');
+      
       if (_playerSubscription != null) {
         _playerSubscription.cancel();
         _playerSubscription = null;
       }
       sliderCurrentPosition = 0.0;
     } catch (err) {
-      print('error: $err');
     }
     this.setState(() {});
   }

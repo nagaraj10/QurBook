@@ -1,3 +1,5 @@
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 class SpeechModelResponse {
   String recipientId;
   String text;
@@ -8,19 +10,19 @@ class SpeechModelResponse {
 
   //setter
   SpeechModelResponse.fromJson(Map<String, dynamic> json) {
-    recipientId = json['recipient_id'];
-    text = json['text'];
-    imageURL = json.containsKey('imageURL')?json['imageURL']:null;
-    endOfConv =json['endOfConv'];
+    recipientId = json[parameters.strReceiptId];
+    text = json[parameters.strText];
+    imageURL = json.containsKey(parameters.strSpeechImageURL)?json[parameters.strSpeechImageURL]:null;
+    endOfConv =json[parameters.strEndOfConv];
   }
 
   //getter
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['recipient_id'] = this.recipientId;
-    data['text'] = this.text;
-    data['endOfConv'] = this.endOfConv;
-    data['imageURL'] = this.imageURL;
+    data[parameters.strReceiptId] = this.recipientId;
+    data[parameters.strText] = this.text;
+    data[parameters.strEndOfConv] = this.endOfConv;
+    data[parameters.strSpeechImageURL] = this.imageURL;
     return data;
   }
 }

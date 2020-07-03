@@ -145,7 +145,7 @@ class OverlayDeviceDialog extends ModalRoute<void> {
         },
       ));
     }
-    print('deviceWidgetList' + deviceWidgetList.length.toString());
+    
 
     return deviceWidgetList;
   }

@@ -36,7 +36,6 @@ class DoctorsListBlock implements BaseBloc {
       doctorsListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       doctorsListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 
@@ -49,7 +48,6 @@ class DoctorsListBlock implements BaseBloc {
       doctorsListSink.add(ApiResponse.completed(doctorsListResponse));
     } catch (e) {
       doctorsListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return doctorsListResponse;

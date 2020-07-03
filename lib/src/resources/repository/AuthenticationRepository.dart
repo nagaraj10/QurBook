@@ -70,7 +70,7 @@ class AuthenticationRepository {
           await MultipartFile.fromFile(file.path, filename: fileNoun);
     }
     //ssfinal response;
-    print(mapForSignUp.toString());
+    
     final response =
         await _helper.signUpPage("authentication/signup", mapForSignUp);
     return SignUp.fromJson(response);

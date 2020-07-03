@@ -36,7 +36,7 @@ class HospitalListBlock implements BaseBloc {
       hospitalListSink.add(ApiResponse.completed(hospitalListResponse));
     } catch (e) {
       hospitalListSink.add(ApiResponse.error(e.toString()));
-      print(e);
+      
     }
   }
 }

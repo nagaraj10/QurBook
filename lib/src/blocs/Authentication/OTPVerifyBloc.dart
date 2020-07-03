@@ -61,7 +61,6 @@ class OTPVerifyBloc with Validators implements BaseBloc {
       otpResponse = await _authenticationRepository.verifyOTP(jsonString);
     } catch (e) {
       otpSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return otpResponse;
   }
@@ -84,9 +83,7 @@ class OTPVerifyBloc with Validators implements BaseBloc {
     try {
       otpResponse = await _authenticationRepository.generateOTP(jsonString);
     } catch (e) {
-      otpSink.add(ApiResponse.error(e.toString()));
-      print(e);
-    }
+      otpSink.add(ApiResponse.error(e.toString()));    }
     return otpResponse;
   }
 
@@ -103,7 +100,6 @@ class OTPVerifyBloc with Validators implements BaseBloc {
           await _authenticationRepository.verifyOTPFromEmail(jsonString);
     } catch (e) {
       otpFromEmailSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return otpEmailResponse;
   }

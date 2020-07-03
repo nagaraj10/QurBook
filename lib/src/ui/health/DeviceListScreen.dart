@@ -10,6 +10,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
 class DeviceListScreen extends StatefulWidget {
   final CompleteData completeData;

@@ -706,7 +706,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
-      print('Inside getUserProfileData' + profileData.toString());
+      
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
           .then((value) {
         Navigator.of(context).pop();

@@ -110,7 +110,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           await addFamilyUserInfoRepository.getCustomRoles();
     } catch (e) {
       relationShipListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return relationShipResponseList;
@@ -150,7 +149,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return updateAddFamilyInfo;
@@ -166,7 +164,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       updateRelationshipSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return updateAddFamilyRelationInfo;
@@ -193,7 +190,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return updateAddFamilyInfo;
@@ -208,7 +204,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       verifyEmailSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return verifyEmailResponse;

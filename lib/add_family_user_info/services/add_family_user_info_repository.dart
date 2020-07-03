@@ -9,7 +9,6 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-
 class AddFamilyUserInfoRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
@@ -44,7 +43,6 @@ class AddFamilyUserInfoRepository {
 
     var response;
 
-    print('add familyUser $query');
 
     if (profilePic != null) {
       response = await _helper.saveImageToServerClone1(
@@ -91,7 +89,6 @@ class AddFamilyUserInfoRepository {
       response = await _helper
           .updateFamilyUserProfile("userProfiles/$userID/?sections=${query}");
     }
-    print('respponse' + response.toString());
 
     return UpdateAddFamilyInfo.fromJson(response);
   }

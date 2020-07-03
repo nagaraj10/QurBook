@@ -15,7 +15,7 @@ import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:launch_review/launch_review.dart';
 
 class MoreMenuScreen extends StatefulWidget {
-  Function refresh;
+  final Function refresh;
 
   MoreMenuScreen({this.refresh});
   @override

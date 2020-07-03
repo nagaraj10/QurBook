@@ -91,7 +91,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   initFlashlight() async {
     bool hasFlash = await Flashlight.hasFlashlight;
-    //print("Device has flash ? $hasFlash");
     setState(() {
       _hasFlashlight = hasFlash;
     });
@@ -221,7 +220,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       callDisplayPictureScreen(context);
                                     } catch (e) {
                                       // If an error occurs, log the error to the console.
-                                      print(e);
                                     }
                                   }
                                 },
@@ -258,7 +256,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     setState(() {});
                                   } catch (e) {
                                     // If an error occurs, log the error to the console.
-                                    print(e);
                                   }
                                 },
                               ),
@@ -331,7 +328,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                           callDisplayPictureScreen(context);
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
-                                          print(e);
                                         }
                                       }
                                     },
@@ -365,7 +361,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                           callDisplayPictureScreen(context);
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
-                                          print(e);
                                         }
                                       }
                                     },
@@ -412,7 +407,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     }
                                   } catch (e) {
                                     // If an error occurs, log the error to the console.
-                                    print(e);
                                   }
                                 },
                               ),

@@ -7,21 +7,42 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart'
     as familyMember;
+import 'package:myfhb/my_family/models/LinkedData.dart';
+import 'package:myfhb/my_family/models/ProfileData.dart';
+import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Health/CategoryInfo.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/DeviceReadings.dart';
+import 'package:myfhb/src/model/Health/Doctor.dart';
+import 'package:myfhb/src/model/Health/Hospital.dart';
+import 'package:myfhb/src/model/Health/Laboratory.dart';
+import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
+import 'package:myfhb/src/model/Health/MetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/src/model/user/DoctorIds.dart';
+import 'package:myfhb/src/model/user/GeneralInfo.dart';
+import 'package:myfhb/src/model/user/HospitalIds.dart';
+import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/global_search/model/GlobalSearch.dart' as globalSearch;
 import 'package:get/get.dart';
+import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
+import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:showcaseview/showcase.dart';
 
 class CommonUtil {
@@ -109,20 +130,7 @@ class CommonUtil {
     return mediaMetaInfoObj;
   }
 
-  /* MediaData getMediaTypeInfoForParticularLabel(
-      String mediaId, List<MediaData> mediaDataList) {
-    MediaData mediaDataObj = new MediaData();
-    for (MediaData mediaData in mediaDataList) {
-      if (mediaData.categoryId == mediaId) {
-        mediaDataObj = mediaData;
-        print(mediaDataObj.name + ' for ' + mediaDataObj.toString());
 
-        // break;
-      }
-    }
-
-    return mediaDataObj;
-  } */
 
   MediaData getMediaTypeInfoForParticularLabel(
       String mediaId, List<MediaData> mediaDataList, String categoryName) {
@@ -137,7 +145,7 @@ class CommonUtil {
         if (mediaData.categoryId == mediaId &&
             mediaData.description == selectedMediaData.description) {
           mediaDataObj = mediaData;
-          print(mediaDataObj.name + ' for ' + mediaDataObj.toString());
+          (mediaDataObj.name + ' for ' + mediaDataObj.toString());
 
           // break;
         }
@@ -245,7 +253,6 @@ class CommonUtil {
         deviceList.add(new DeviceModel(mediaMetaInfo.name, mediaMetaInfo.logo));
       }
     }
-    print('deviceList' + deviceList.length.toString());
     return deviceList;
   }
 
@@ -255,7 +262,6 @@ class CommonUtil {
     for (MediaData mediaData in mediaDataList) {
       if (mediaData.name == deviceName) {
         mediaDataObj = mediaData;
-        print(mediaDataObj.name + ' for ' + mediaDataObj.toString());
 
         // break;
       }
@@ -318,13 +324,13 @@ class CommonUtil {
   List<MediaMasterIds> getMetaMasterIdList(MediaMetaInfo data) {
     List<MediaMasterIds> mediaMasterIdsList = new List();
     if (data.mediaMasterIds.length > 0) {
-      print('Getting into media masters');
+      
       for (MediaMasterIds mediaMasterIds in data.mediaMasterIds) {
         if (mediaMasterIds.fileType == "image/jpg" ||
             mediaMasterIds.fileType == "image/png")
           mediaMasterIdsList.add(mediaMasterIds);
       }
-    } else {}
+    } 
 
     return mediaMasterIdsList.length > 0 ? mediaMasterIdsList : new List();
   }
@@ -391,28 +397,31 @@ class CommonUtil {
     });
   }
 
-  familyMember.Sharedbyme getProfileDetails() {
+  
+  Sharedbyme getProfileDetails() {
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     GeneralInfo generalInfo = myProfile.response.data.generalInfo;
-    familyMember.LinkedData linkedData =
-        new familyMember.LinkedData(roleName: 'Self', nickName: 'Self');
-    familyMember.ProfilePicThumbnail profilePicThumbnail =
+    
+    LinkedData linkedData =
+        new LinkedData(roleName: 'Self', nickName: 'Self');
+    ProfilePicThumbnailMain profilePicThumbnail =
         generalInfo.profilePicThumbnail != null
-            ? new familyMember.ProfilePicThumbnail(
+            ? new ProfilePicThumbnailMain(
                 type: generalInfo.profilePicThumbnail.type,
                 data: generalInfo.profilePicThumbnail.data)
             : null;
 
-    familyMember.QualifiedFullName qualifiedFullName =
+    QualifiedFullName qualifiedFullName =
         generalInfo.qualifiedFullName != null
-            ? new familyMember.QualifiedFullName(
+            ? new QualifiedFullName(
                 firstName: generalInfo.qualifiedFullName.firstName,
                 middleName: generalInfo.qualifiedFullName.middleName,
                 lastName: generalInfo.qualifiedFullName.lastName)
             : null;
 
-    familyMember.ProfileData profileData = new familyMember.ProfileData(
+    
+    ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         name: generalInfo.name,
@@ -428,7 +437,8 @@ class CommonUtil {
         isEmailVerified: generalInfo.isEmailVerified,
         isTempUser: generalInfo.isTempUser);
 
-    return new familyMember.Sharedbyme(
+    return new 
+    Sharedbyme(
         profileData: profileData, linkedData: linkedData);
   }
 
@@ -787,7 +797,6 @@ class CommonUtil {
 
     completeData = new CompleteData(mediaMetaInfo: mediaMetaInfoList);
 
-    print('value inside completeData');
 
     return completeData;
   }
@@ -811,8 +820,7 @@ class CommonUtil {
       }
     }
 
-    print('value inside removeDuplicatevalues' +
-        categoryDataList.length.toString());
+
     return categoryDataList;
   }
 
@@ -910,8 +918,7 @@ class CommonUtil {
 
   networkUI() {
     Get.bottomSheet(
-      builder: (_) {
-        return Container(
+        Container(
           constraints: BoxConstraints(maxHeight: 120),
           child: Card(
             elevation: 10.0,
@@ -939,14 +946,15 @@ class CommonUtil {
               ],
             ),
           ),
-        );
-      },
+        ),
+ 
       backgroundColor: Colors.transparent,
       isDismissible: false,
       enableDrag: false,
     );
   }
-
+  
+  
   Widget customSnack(bool isOffline) {
     return Container(
       height: 20.0,
@@ -1010,35 +1018,14 @@ class CommonUtil {
       }
     }
     // Directly return the joined string
-    print('**********' + splitStr.join(' '));
     return splitStr.join(' ');
   }
 
-  /*  void getAllCustomRoles() {
-    FamilyListBloc _familyListBloc = new FamilyListBloc();
-    try {
-      if (PreferenceUtil.getFamilyRelationship('keyFamilyrel') != null) {
-        print('family relation data present');
-      } else {
-        _familyListBloc.getCustomRoles().then((relationShip) {
-          PreferenceUtil.saveRelationshipArray(
-              'keyFamilyrel', relationShip.relationShipAry);
-        });
-      }
-    } catch (e) {
-      _familyListBloc.getCustomRoles().then((relationShip) {
-        PreferenceUtil.saveRelationshipArray(
-            'keyFamilyrel', relationShip.relationShipAry);
-      });
-    }
-  }
- */
-
+  
   Future<void> getAllCustomRoles() async {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
     try {
       if (PreferenceUtil.getFamilyRelationship('keyFamilyrel') != null) {
-        print('family relation data present');
       } else {
         _familyListBloc.getCustomRoles().then((relationShip) {
           PreferenceUtil.saveRelationshipArray(
@@ -1053,35 +1040,7 @@ class CommonUtil {
     }
   }
 
-  /*  Future<MyProfile> getUserProfileData() async {
-    MyProfileBloc _myProfileBloc = new MyProfileBloc();
-
-    _myProfileBloc
-        .getMyProfileData(Constants.KEY_USERID_MAIN)
-        .then((profileData) {
-      if (profileData != null &&
-          profileData.status == 200 &&
-          profileData.success) {
-        print('Inside dashboard' + profileData.toString());
-        PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
-            .then((value) {
-          try {
-            if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
-                PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
-            } else {
-              PreferenceUtil.saveProfileData(
-                  Constants.KEY_PROFILE, profileData);
-            }
-          } catch (e) {
-            PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
-          }
-        });
-
-        return profileData;
-      }
-    });
-  } */
-
+ 
   Future<MyProfile> getUserProfileData() async {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
 
@@ -1093,7 +1052,6 @@ class CommonUtil {
       if (profileData != null &&
           profileData.status == 200 &&
           profileData.success) {
-        print('Inside dashboard' + profileData.toString());
         PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
             .then((value) {
           try {
@@ -1124,36 +1082,27 @@ class CommonUtil {
 
   Future<MyProfile> getMyProfile() async {
     if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
-      print('Profile present');
       return PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     } else {
       return await getUserProfileData();
     }
   }
 
-  /* void getMediaTypes() async {
-    MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
-    try {
-      if (PreferenceUtil.getMediaType() != null) {
-        print('media data present');
-      } else {
-        _mediaTypeBlock.getMediTypes().then(() {});
-      }
-    } catch (e) {
-      _mediaTypeBlock.getMediTypes().then(() {});
-    }
-  } */
+ 
 
   Future<void> getMediaTypes() async {
     MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
     try {
       if (PreferenceUtil.getMediaType() != null) {
-        print('media data present');
       } else {
         _mediaTypeBlock.getMediTypes().then(() {});
       }
     } catch (e) {
       _mediaTypeBlock.getMediTypes().then(() {});
     }
+  }
+
+  String checkIfStringIsEmpty(String value){
+    return value!=null?value:'';
   }
 }

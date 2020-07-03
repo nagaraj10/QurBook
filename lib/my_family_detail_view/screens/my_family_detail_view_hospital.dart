@@ -7,6 +7,9 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+
 
 class MyFamilyDetailViewHospital extends StatefulWidget {
   CompleteData completeData;

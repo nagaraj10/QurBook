@@ -73,8 +73,7 @@ class TakePictureScreenForDevicesState
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
         ? Constants.IS_CATEGORYNAME_DEVICES
         : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
-    print('pary categoryName' + categoryName);
-
+    
     isObjectDetecting =
         PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
                 'false'
@@ -103,7 +102,7 @@ class TakePictureScreenForDevicesState
   }
 
   void initilzeData() {
-    print('inside initilzeData');
+    
 
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
@@ -365,7 +364,6 @@ class TakePictureScreenForDevicesState
                                           setState(() {});
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
-                                          print(e);
                                         }
                                       }
                                     },
@@ -437,7 +435,6 @@ class TakePictureScreenForDevicesState
                                           callDisplayPictureScreen(context);
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
-                                          print(e);
                                         }
                                       }
                                     },
@@ -496,7 +493,6 @@ class TakePictureScreenForDevicesState
                                           }
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
-                                          print(e);
                                         }
                                       }
                                     },
@@ -661,9 +657,7 @@ class TakePictureScreenForDevicesState
       recognitions, imageHeight, imageWidth, CameraController control) {
     setState(() {
       recognitions.map((re) {
-        print(
-            "Detected Text : --------------${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%");
-        _recognitions = recognitions;
+         _recognitions = recognitions;
       });
 
       _recognitions = recognitions;

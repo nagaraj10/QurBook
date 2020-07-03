@@ -228,10 +228,7 @@ class DatabaseUtil {
     var db = new DatabaseHelper();
     CountryMetrics countryMetrics = await db.getCustomer(countryCode);
 
-    print('countryMetrics ' +
-        countryMetrics.glucometerUnit +
-        ' ' +
-        countryMetrics.name);
+    
   }
 
   static void insertUnitsForDevices() async {

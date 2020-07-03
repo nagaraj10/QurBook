@@ -7,8 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
+
 
 import 'AppException.dart';
 
@@ -60,13 +62,11 @@ class ApiBaseHelper {
 
     var responseJson;
 
-    print('url' + url);
-    print('otpVerifyData' + otpVerifyData);
+    
     try {
       final response = await http.post(_baseUrl + url,
           body: otpVerifyData, headers: requestHeaders);
       responseJson = _returnResponse(response);
-      print('responseJson' + responseJson.toString());
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
@@ -759,10 +759,9 @@ class ApiBaseHelper {
     try {
       final response = await http.post(_baseUrl + url, headers: requestHeaders);
 
-      print('response' + response.toString());
+      
       responseJson = _returnResponse(response);
 
-      print('responseJson' + responseJson.toString());
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
@@ -779,13 +778,12 @@ class ApiBaseHelper {
 
     var responseJson;
 
-    print('url' + url);
-    print('otpVerifyData' + otpVerifyData);
+    
     try {
       final response = await http.post(_baseUrl + url,
           body: otpVerifyData, headers: requestHeaders);
       responseJson = _returnResponse(response);
-      print('responseJson' + responseJson.toString());
+      
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
@@ -800,7 +798,7 @@ class ApiBaseHelper {
       'Authorization': authToken,
     };
 
-    print(_baseUrl + url + param);
+    
     var responseJson;
     try {
       final response =
@@ -828,8 +826,7 @@ class ApiBaseHelper {
           await http.get(_baseUrl + url + param, headers: requestHeaders);
 
       responseJson = _returnResponse(response);
-      print(_baseUrl + url + param);
-      print(responseJson);
+      
     } on SocketException {
       //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');

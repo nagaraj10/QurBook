@@ -6,6 +6,7 @@ import 'package:myfhb/my_family_detail_view/bloc/my_family_detail_view_boc.dart'
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view_hospital.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view_insurance.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
@@ -14,6 +15,9 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+
 
 
 class MyFamilyDetailView extends StatefulWidget {

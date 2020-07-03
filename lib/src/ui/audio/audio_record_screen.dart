@@ -72,7 +72,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       String path = await flutterSound.startRecorder(
         codec: _codec,
       );
-      print('startRecorder: $path');
+      
 
       _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
@@ -86,7 +86,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       });
       _dbPeakSubscription =
           flutterSound.onRecorderDbPeakChanged.listen((value) {
-        print("got update -> $value");
+        
         setState(() {
           this._dbLevel = value;
         });
@@ -97,7 +97,6 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         this._path[_codec.index] = path;
       });
     } catch (err) {
-      print('startRecorder error: $err');
       setState(() {
         this._isRecording = false;
       });
@@ -108,8 +107,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     String result;
     try {
       result = await flutterSound.stopRecorder();
-      print('stopRecorder: $result');
-
+      
       if (_recorderSubscription != null) {
         _recorderSubscription.cancel();
         _recorderSubscription = null;
@@ -119,12 +117,10 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         _dbPeakSubscription = null;
       }
     } catch (err) {
-      print('stopRecorder error: $err');
     }
     this.setState(() {
       this._isRecording = false;
     });
-    print('babyyyyyyyyyyyyyyyyyyyyyyyyy ' + this._path[_codec.index]);
     if (widget.fromVoice) {
       PreferenceUtil.saveString(
               Constants.KEY_CATEGORYNAME, Constants.STR_VOICERECORDS)
@@ -139,18 +135,12 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
           new CommonDialogBox().getDialogForVoicerecords(
               context, containsAudioMain, this._path[_codec.index],
               (containsAudio, audioPath) {
-            print('áudio' +
-                audioPath +
-                ' contains Audio' +
-                containsAudio.toString());
+            
             audioPathMain = audioPath;
             containsAudioMain = containsAudio;
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('áudio' +
-                audioPath +
-                ' contains Audio' +
-                containsAudio.toString());
+            
             audioPathMain = audioPath;
             containsAudioMain = containsAudio;
             setState(() {});
@@ -174,10 +164,9 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       File file = File(path);
       file.openRead();
       var contents = await file.readAsBytes();
-      print('The file is ${contents.length} bytes long.');
+      
       return contents;
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -220,10 +209,9 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         }
       }
       if (path == null) {
-        print('Error starting player');
+        
         return;
       }
-      print('startPlayer: $path');
       await flutterSound.setVolume(1.0);
 
       _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
@@ -241,7 +229,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         }
       });
     } catch (err) {
-      print('error: $err');
+      
     }
     setState(() {});
   }
@@ -249,15 +237,13 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
   void stopPlayer() async {
     try {
       String result = await flutterSound.stopPlayer();
-      print('stopPlayer: $result');
       if (_playerSubscription != null) {
         _playerSubscription.cancel();
         _playerSubscription = null;
       }
       sliderCurrentPosition = 0.0;
     } catch (err) {
-      print('error: $err');
-    }
+      }
     this.setState(() {
       //this._isPlaying = false;
     });
@@ -268,20 +254,18 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     try {
       if (flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED) {
         result = await flutterSound.resumePlayer();
-        print('resumePlayer: $result');
+        
       } else {
         result = await flutterSound.pausePlayer();
-        print('pausePlayer: $result');
       }
     } catch (err) {
-      print('error: $err');
     }
     setState(() {});
   }
 
   void seekToPlayer(int milliSecs) async {
     String result = await flutterSound.seekToPlayer(milliSecs);
-    print('seekToPlayer: $result');
+    
   }
 
   onPausePlayerPressed() {

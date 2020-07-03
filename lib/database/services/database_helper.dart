@@ -83,7 +83,6 @@ class DatabaseHelper {
       user.setUserId(list[i]["countryCode"]);
       employees.add(user);
     }
-    print(employees.length);
     return employees;
   }
 
@@ -145,7 +144,6 @@ class DatabaseHelper {
       );
       unitsList.add(unitObj);
     }
-    print(unitsList.length);
     return unitsList;
   }
 }

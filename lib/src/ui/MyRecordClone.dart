@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/TabModel.dart';
-import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -9,8 +10,6 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/global_search/bloc/GlobalSearchBloc.dart';
 import 'package:myfhb/global_search/model/GlobalSearch.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
@@ -18,11 +17,8 @@ import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
-import 'package:myfhb/src/model/TabModel.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
-import 'package:myfhb/src/ui/camera/TakePictureScreen.dart';
 import 'package:myfhb/src/ui/health/BillsList.dart';
 import 'package:myfhb/src/ui/health/DeviceListScreen.dart';
 import 'package:myfhb/src/ui/health/HealthReportListScreen.dart';
@@ -31,17 +27,16 @@ import 'package:myfhb/src/ui/health/LabReportListScreen.dart';
 import 'package:myfhb/src/ui/health/MedicalReportListScreen.dart';
 import 'package:myfhb/src/ui/health/OtherDocsList.dart';
 import 'package:myfhb/src/ui/health/VoiceRecordList.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:showcaseview/showcase_widget.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 import '../../constants/fhb_constants.dart';
 
 export 'package:myfhb/common/CommonUtil.dart';
 export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+
 
 class MyRecordsClone extends StatefulWidget {
   @override
@@ -355,7 +350,6 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
         } catch (e) {}
       },
       onScroll: (position) {
-        // print('$position');
         try {
           initPosition = position.toInt();
           getDataForParticularLabel(
@@ -826,6 +820,66 @@ class _CustomTabsState extends State<CustomTabView>
         PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch
         ? getMediTypeForlabels(data, widget.completeData)
+        :completeDataFromPreference != null
+            ? getMediTypeForlabels(data, completeDataFromPreference)
+            : StreamBuilder<ApiResponse<UserHealthResponseList>>(
+                stream: _healthReportListForUserBlock.healthReportStream,
+                builder: (context,
+                    AsyncSnapshot<ApiResponse<UserHealthResponseList>>
+                        snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        return Scaffold(
+                          backgroundColor: Colors.white,
+                          body: Center(
+                              child: SizedBox(
+                            child: CircularProgressIndicator(
+                              backgroundColor:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                            ),
+                            width: 30,
+                            height: 30,
+                          )),
+                        );
+                        break;
+
+                      case Status.ERROR:
+                        return FHBBasicWidget.getRefreshContainerButton(
+                            snapshot.data.message, () {
+                          setState(() {});
+                        });
+                        /* return Center(
+                    child: Text('Oops, something went wrong',
+                        style: TextStyle(color: Colors.red)));*/
+                        break;
+
+                      case Status.COMPLETED:
+                        _healthReportListForUserBlock = null;
+                        rebuildAllBlocks();
+                        if (!widget.fromSearch) {
+                          PreferenceUtil.saveCompleteData(
+                              Constants.KEY_COMPLETE_DATA,
+                              snapshot.data.data.response.data);
+                        }
+
+                        return getMediTypeForlabels(
+                            data, snapshot.data.data.response.data);
+                        break;
+                    }
+                  } else {
+                    return Container(height: 0, color: Colors.white);
+                  }
+                },
+              );
+  }
+
+
+Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
+    CompleteData completeDataFromPreference =
+        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
+    return widget.fromSearch
+        ? getMediTypeForlabels(data, widget.completeData)
         : completeDataFromPreference != null
             ? getMediTypeForlabels(data, completeDataFromPreference)
             : StreamBuilder<ApiResponse<UserHealthResponseList>>(
@@ -879,6 +933,7 @@ class _CustomTabsState extends State<CustomTabView>
                 },
               );
   }
+
 
   void rebuildAllBlocks() {
     if (_categoryListBlock == null) {

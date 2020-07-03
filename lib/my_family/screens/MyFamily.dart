@@ -14,7 +14,10 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/RelationShip.dart';
+import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
@@ -500,7 +503,6 @@ class _MyFamilyState extends State<MyFamily> {
     List<RelationShip> data =
         PreferenceUtil.getFamilyRelationship('keyFamilyrel');
 
-    print(data);
 
     return showDialog<void>(
       context: context,
@@ -671,8 +673,7 @@ class _MyFamilyState extends State<MyFamily> {
               PreferenceUtil.saveRelationshipArray(
                   'keyFamilyrel', snapshot.data.data.relationShipAry);
               relationShipResponseList = snapshot.data.data;
-              print('relationShipResponseList' +
-                  relationShipResponseList.toString());
+
               familyWidget =
                   getRelationshipDetails(snapshot.data.data.relationShipAry);
 
@@ -974,9 +975,8 @@ class _MyFamilyState extends State<MyFamily> {
                                   addFamilyUserInfo:
                                       addFamilyOTPResponse.response.data))
                           .then((value) {
-                        print('value $value in primary yes');
+                        
 
-                        //Navigator.of(context).pop();
                         mobileNoController.text = '';
                         nameController.text = '';
                         isPrimaryNoSelected = false;

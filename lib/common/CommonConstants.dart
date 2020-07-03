@@ -240,12 +240,7 @@ class CommonConstants {
 
     unitsMeasurements = await db.getMeasurementsBasedOnUnits(units);
 
-    print('unitsMeasurements for ' +
-        units +
-        "  max" +
-        unitsMeasurements.maxValue.toString() +
-        ' min' +
-        unitsMeasurements.minValue.toString());
+    
 
     return unitsMeasurements;
   }

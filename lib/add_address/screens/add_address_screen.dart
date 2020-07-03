@@ -9,13 +9,12 @@ import 'package:uuid/uuid.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 class AddAddressScreen extends StatefulWidget {
-  AddAddressArguments arguments;
+  final AddAddressArguments arguments;
 
   AddAddressScreen({this.arguments});
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return AddAddressScreenState();
   }
 }
@@ -33,7 +32,6 @@ class AddAddressScreenState extends State<AddAddressScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     searchController.addListener(textListener);
@@ -119,7 +117,6 @@ class AddAddressScreenState extends State<AddAddressScreen> {
   }
 
   textListener() {
-    print("Current Text is ${searchController.text}");
     if (sessionToken == null) {
       sessionToken = uuid.v4();
     }

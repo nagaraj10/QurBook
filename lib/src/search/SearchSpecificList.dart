@@ -41,7 +41,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
 
     value = _textFieldController.text.toString();
-    print('_textFieldController.toString() ' + value);
+    
     if (value != '') {
       _doctorsListBlock.getDoctorsList(
           _textFieldController.text.toString() == null
@@ -56,7 +56,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   @override
   Widget build(BuildContext context) {
-    print('widget.searchKeyWord' + widget.searchKeyWord);
+    
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
@@ -148,7 +148,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getResponseFromApiWidgetForDoctors() {
-    print('In Docootors response');
+    
 
     return StreamBuilder<ApiResponse<DoctorsListResponse>>(
       stream: _doctorsListBlock.doctorsStream,
@@ -188,7 +188,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getResponseFromApiWidgetForHospital() {
-    print('In hopsital response');
+    
     return StreamBuilder<ApiResponse<HospitalListResponse>>(
       stream: _hospitalListBlock.hospitalStream,
       builder:
@@ -249,10 +249,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getAllDatasInDoctorsList(List<DoctorsData> data) {
-    print('In Doctors response');
-
-    print('returned ' + data.length.toString());
-    print('returned ' + data.length.toString());
+    
 
     return RefreshIndicator(
       key: _refreshIndicatorKey,
@@ -299,12 +296,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   void passHospitalValue(HospitalData hospitaData, BuildContext context) {
-    print('passHospitalValue');
+    
     Navigator.of(context).pop({'hospital': json.encode(hospitaData)});
   }
 
   getCardToDisplaySearchHospitalList(HospitalData data) {
-    print('getCardToDisplaySearchHospitalList');
     return GestureDetector(
       child: Padding(
           padding: new EdgeInsets.only(top: 2, bottom: 2),
@@ -403,10 +399,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   getAllDatasInHospitalList(List<HospitalData> data) {
-    print('returned ' + data.length.toString());
-    print('returned ' + data.length.toString());
-
-    print('In hopsital response');
+    
 
     return RefreshIndicator(
       key: _refreshIndicatorKey,

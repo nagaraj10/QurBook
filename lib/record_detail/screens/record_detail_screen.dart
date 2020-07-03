@@ -11,9 +11,12 @@ import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/PDFViewer.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/record_detail/bloc/deleteRecordBloc.dart';
 import 'package:myfhb/record_detail/screens/record_info_card.dart';
+import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
+import 'package:myfhb/src/model/Health/MetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
@@ -30,6 +33,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'dart:typed_data';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+
 
 class RecordDetailScreen extends StatefulWidget {
   final MediaMetaInfo data;
@@ -224,7 +230,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 color: Colors.black,
                               ),
                               onPressed: () {
-                                print('Profile Pressed');
                                 //getAllFamilyMembers();
                                 CommonUtil.showLoadingDialog(
                                     contxt, _keyLoader, 'Please Wait');
@@ -262,10 +267,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     .then((status) {
                                   if (status == PermissionStatus.granted) {
                                     saveImageToGallery(imagesPathMain, contxt);
-                                  } else {
-                                    print(
-                                        'storage permission has not been given by the user');
-                                  }
+                                  } 
                                 });
                               }),
                           IconButton(
@@ -310,14 +312,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                   if (results.containsKey('audioFile')) {
                                     containsAudio = true;
                                     audioPath = results['audioFile'];
-                                    print('Audio Path' + audioPath);
                                     _healthReportListForUserBlock
                                         .saveImage(
                                             audioPath, widget.data.id, '')
                                         .then((postImageResponse) {
-                                      print('output audio mediaMaster' +
-                                          postImageResponse
-                                              .response.data.mediaMasterId);
+                                      
 
                                       audioMediaId = postImageResponse
                                           .response.data.mediaMasterId;
@@ -497,8 +496,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Widget getAudioIconWithFile({String fpath}) {
     var path = (fpath != null || fpath != '') ? fpath : audioPath;
-    print(
-        '----------- audio path at getAudioIconWithFile $audioPath-------------');
+    
     return Container(
         //height: 60,
         child: Column(
@@ -508,7 +506,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
           containsAudio = containsAudioClone;
           audioPath = audioPathClone;
-          // print('Delete Media Meta');
           deleteMediRecord(audioMediaId);
         }),
       ],
@@ -516,55 +513,24 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void deleteAudioFile() {
-    print('inside delete');
     audioPath = null;
     containsAudio = false;
     setState(() {});
   }
 
-  /* Future<Widget> getDialogBoxWithFamilyMember(FamilyData familyData) {
-                                        return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
-                                            familyData, context, _keyLoader, (context, value) {
-                                          /*PreferenceUtil.saveString(Constants.KEY_USERID, value).then((onValue) {
-                                                                                                    Navigator.of(context).pop();
-                                                                                                    Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                                                                                                  });*/
-                                          print('user id of the family member' + value.toString());
-                                          print(widget.data.id);
-                                          Navigator.of(context).pop();
-                                          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-                                    
-                                          _healthReportListForUserBlock
-                                              .switchDataToOtherUser(value, widget.data.id)
-                                              .then((moveMetaDataResponse) {
-                                            if (moveMetaDataResponse.success) {
-                                              print('moveMetaDataResponse.success' + moveMetaDataResponse.message);
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                            } else {
-                                              Navigator.pop(context);
-                                              Navigator.pop(context);
-                                            }
-                                          });
-                                        });
-                                      } */
-
+ 
   Future<Widget> getDialogBoxWithFamilyMember(FamilyData familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, _keyLoader, (context, userId, userName) {
-      print('user id of the family member' + userId.toString());
-      print(widget.data.id);
-      //Navigator.of(context).pop();
+      
 
       _healthReportListForUserBlock
           .switchDataToOtherUser(userId, widget.data.id)
           .then((moveMetaDataResponse) {
         if (moveMetaDataResponse.success) {
-          print('moveMetaDataResponse.success' + moveMetaDataResponse.message);
           _healthReportListForUserBlock.getHelthReportList().then((value) {
             PreferenceUtil.saveCompleteData(
                 Constants.KEY_COMPLETE_DATA, value.response.data);
-            print('Saved data');
 
             Future.delayed(const Duration(seconds: 2), () {
               new FHBBasicWidget()
@@ -670,8 +636,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            print('Audio Path delete' + containsAudio.toString());
-            print('Audio Path delete' + audioPath.toString());
+           
 
             setState(() {
               audioPath = audioPath;
@@ -680,9 +645,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('Audio Path DisplayPicture' + containsAudio.toString());
-            print('Audio Path DisplayPicture' + audioPath.toString());
-
+           
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -705,8 +668,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                       : ''),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            print('Audio Path delete' + containsAudio.toString());
-            print('Audio Path delete' + audioPath.toString());
+           
 
             setState(() {
               audioPath = audioPath;
@@ -715,8 +677,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('Audio Path DisplayPicture' + containsAudio.toString());
-            print('Audio Path DisplayPicture' + audioPath.toString());
+           
 
             audioPath = audioPath;
             containsAudio = containsAudio;
@@ -734,9 +695,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                print('Audio Path delete' + containsAudio.toString());
-                print('Audio Path delete' + audioPath.toString());
-
+                
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -744,8 +703,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               new List(),
               (containsAudio, audioPath) {
-                print('Audio Path DisplayPicture' + containsAudio.toString());
-                print('Audio Path DisplayPicture' + audioPath.toString());
+              
 
                 audioPath = audioPath;
                 containsAudio = containsAudio;
@@ -765,8 +723,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                print('Audio Path delete' + containsAudio.toString());
-                print('Audio Path delete' + audioPath.toString());
+                
 
                 setState(() {
                   audioPath = audioPath;
@@ -815,7 +772,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       }
     } else {
       deviceName = widget.data.metaInfo.mediaTypeInfo.name;
-      print('pary deviceName' + deviceName);
+      
       PreferenceUtil.saveString(Constants.KEY_DEVICENAME, deviceName)
           .then((value) {
         switch (deviceName) {
@@ -995,15 +952,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     Map<String, dynamic> postImage = new Map();
 
     postImage['mediaMetaId'] = mediaMetaID;
-    print('I am here ' + mediaMetaID);
-    print('I am here audioPath' + audioPath);
+    
     if (audioPath != '') {
       _healthReportListForUserBlock
           .saveImage(audioPath, mediaMetaID, '')
           .then((postImageResponse) {
-        print('output audio mediaMaster' +
-            postImageResponse.response.data.mediaMasterId);
-
+        
         _healthReportListForUserBlock.getHelthReportList().then((value) {
           PreferenceUtil.saveCompleteData(
               Constants.KEY_COMPLETE_DATA, value.response.data);
@@ -1025,7 +979,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Widget getCarousalImage(List<dynamic> imagesPath) {
-    print('inside not clone');
+    
     if (imagesPath != null && imagesPath.length > 0) {
       index = _current + 1;
       _current = 0;
@@ -1077,7 +1031,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     AssetImage('assets/icons/attach.png'),
                                     color: Colors.white),
                                 onPressed: () {
-                                  //print('pdf is pressed');
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => PDFViewer(pdfFile),
                                   ));
@@ -1137,7 +1090,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Widget getDocumentImageWidgetClone() {
-    //print('inside clone');
 
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
@@ -1192,26 +1144,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     final status = await storagePermission.request();
 
     setState(() {
-      print(status);
       permissionStatus = status;
     });
 
     return status;
   }
 
-  /*showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
-                                        if (data.metaInfo.hasVoiceNotes) {
-                                    
-                                          String mediaMetaId= new CommonUtil().getMediaMasterIDForAudioFileType(data.mediaMasterIds);
-                                          getWidgetForPlayingAudioFromServer(mediaMetaId);
-                                          //getWidgetForPlayingAudioFromServer('5af2ee90-593e-4672-966d-a2871f70357a');
-                                        }
-                                      }*/
-
   showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
     if (data.metaInfo.hasVoiceNotes) {
       audioMediaId = checkIfMp3IsPresent(data);
-      print(audioMediaId + ' inside showAudioWidgetIfVoiceNotesAvailable');
       getWidgetForPlayingAudioFromServer(audioMediaId);
     }
   }
@@ -1225,7 +1166,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Widget getWidgetForPlayingAudioFromServer(String audioMediaId) {
-    print('audioMediaId' + audioMediaId);
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
@@ -1244,7 +1184,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       new File(path).writeAsBytesSync(data);
       containsAudio = true;
       audioPath = path;
-      print('----------- audio path at download media $audioPath-------------');
       isAudioDownload = true;
       setState(() {});
     });
@@ -1262,7 +1201,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     }
     _healthReportListForUserBlock.getDocumentImage(pdfFileMediaId).then((res) {
-      print('inside getPDFFIleData');
       pdfFile = res;
       setState(() {});
     });

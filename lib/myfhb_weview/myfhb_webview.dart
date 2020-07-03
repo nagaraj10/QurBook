@@ -26,7 +26,6 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
 
   @override
   Widget build(BuildContext context) {
-    print('selected url :' + widget.selectedUrl);
 
     return Scaffold(
         appBar: AppBar(

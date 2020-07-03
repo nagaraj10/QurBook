@@ -9,6 +9,8 @@ import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
 class IDDocsList extends StatefulWidget {
   final CompleteData completeData;
@@ -56,8 +58,7 @@ class _IDDocsListState extends State<IDDocsList> {
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionIDDocs);
-    print('IDDOcs ' + mediaMetaInfoObj.length.toString());
-
+    
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,

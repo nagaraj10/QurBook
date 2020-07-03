@@ -39,7 +39,6 @@ class MediaTypeBlock implements BaseBloc {
       mediaTypeSink.add(ApiResponse.completed(mediaTypesResponse));
     } catch (e) {
       mediaTypeSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 }

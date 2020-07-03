@@ -33,7 +33,6 @@ class GlobalSearchBloc implements BaseBloc {
       globalSearchSink.add(ApiResponse.completed(globalSearch));
     } catch (e) {
       globalSearchSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 }

@@ -238,20 +238,10 @@ class _MyRemindersState extends State<MyReminders> {
   }
 
   getRemindersList() async {
-    /*prefs = await SharedPreferences.getInstance();
-
-    String getData = await prefs.get('reminders');
-    if (getData == null) {
-      detailsList = new List();
-    } else {
-      detailsList = json.decode(getData);
-
-      reverseDetailsList = detailsList.reversed.toList();
-    }*/
+    
 
     detailsList = await FHBUtils().getAll('reminders');
     reverseDetailsList = detailsList.reversed.toList();
-    print(reverseDetailsList.toString());
     return detailsList;
   }
 }

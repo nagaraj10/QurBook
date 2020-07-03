@@ -41,7 +41,6 @@ class MyProfileBloc implements BaseBloc {
       myProfileInfoSink.add(ApiResponse.completed(profileResponse));
     } catch (e) {
       myProfileInfoSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return profileResponse;
   }
@@ -56,7 +55,7 @@ class MyProfileBloc implements BaseBloc {
       myCompleteProfileInfoSink.add(ApiResponse.completed(profileCompleteData));
     } catch (e) {
       myCompleteProfileInfoSink.add(ApiResponse.error(e.toString()));
-      print(e);
+      
     }
     return profileCompleteData;
   }

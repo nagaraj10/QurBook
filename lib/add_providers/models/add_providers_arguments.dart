@@ -1,11 +1,14 @@
 import 'package:myfhb/add_address/models/place.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
+import 'package:myfhb/search_providers/models/doctors_data.dart';
 import 'package:myfhb/search_providers/models/doctors_list_response.dart';
+import 'package:myfhb/search_providers/models/hospital_data.dart';
 import 'package:myfhb/search_providers/models/hospital_list_response.dart';
+import 'package:myfhb/search_providers/models/lab_data.dart';
 import 'package:myfhb/search_providers/models/labs_list_response.dart';
 
 class AddProvidersArguments {
-  Data data;
+  DoctorsData data;
   HospitalData hospitalData;
   LabData labData;
 

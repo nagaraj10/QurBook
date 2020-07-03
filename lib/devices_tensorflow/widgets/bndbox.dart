@@ -17,8 +17,6 @@ class BndBox extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> _renderBoxes() {
       return results.map((re) {
-        print(
-            "Detected Text : --------------${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%");
         var _x = re["rect"]["x"];
         var _w = re["rect"]["w"];
         var _y = re["rect"]["y"];

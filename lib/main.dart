@@ -13,7 +13,6 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/ui/IntroSlider.dart';
-//import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/ui/MyRecordClone.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
@@ -194,8 +193,6 @@ class _MyFHBState extends State<MyFHB> {
       CommonConstants.appVersion = _responseFromNative;
     });
 
-//    Get.snackbar('From native code response:', _responseFromNative);
-//    print('From native code response:$_responseFromNative');
   }
 
   Future<void> showSecurityWall() async {
@@ -208,8 +205,7 @@ class _MyFHBState extends State<MyFHB> {
           break;
       }
     } on PlatformException catch (e, s) {
-      print(e.message);
-      print(s);
+
     }
   }
 }

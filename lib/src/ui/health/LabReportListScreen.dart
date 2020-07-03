@@ -10,6 +10,9 @@ import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+
 
 class LabReportListScreen extends StatefulWidget {
   final CompleteData completeData;
@@ -93,7 +96,6 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
   }
 
   Widget getCardWidgetForLabReport(MediaMetaInfo mediaMetaInfo, int position) {
-    //print('logo url ' + mediaMetaInfo.metaInfo.laboratory.logoThumbnail);
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -215,8 +217,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {
-    print('lab id ${data.metaInfo.laboratory.id}');
-
+    
     return FutureBuilder(
       future:
           _healthReportListForUserBlock.getProfilePic(data.metaInfo.doctor.id),

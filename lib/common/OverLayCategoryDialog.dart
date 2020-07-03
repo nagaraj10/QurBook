@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
 
@@ -151,7 +152,6 @@ class OverlayCategoryDialog extends ModalRoute<void> {
         ),
       );
     }
-    print('categoryWidgetList' + categoryWidgetList.length.toString());
 
     return categoryWidgetList;
   }

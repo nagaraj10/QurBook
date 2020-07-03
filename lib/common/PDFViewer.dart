@@ -48,7 +48,7 @@ class PDFViewer extends StatelessWidget {
                             customizer: (context, page, size) => Stack(
                                   alignment: Alignment.bottomCenter,
                                   children: <Widget>[
-                                    if (page != null) page,
+                                    page != null? page :0,
                                     Text('${index + 1}',
                                         style: TextStyle(
                                             fontSize:

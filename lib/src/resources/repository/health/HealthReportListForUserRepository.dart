@@ -6,9 +6,12 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
 import 'package:myfhb/record_detail/model/UpdateMediaResponse.dart';
 import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
+import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/PostImageResponse.dart';
 import 'package:myfhb/src/model/Health/SavedMetaDataResponse.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
 class HealthReportListForUserRepository {

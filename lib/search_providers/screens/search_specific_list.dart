@@ -6,6 +6,9 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
+import 'package:myfhb/search_providers/models/doctors_data.dart';
+import 'package:myfhb/search_providers/models/hospital_data.dart';
+import 'package:myfhb/search_providers/models/lab_data.dart';
 import 'package:myfhb/search_providers/models/labs_list_response.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
@@ -60,7 +63,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
 
     value = _textFieldController.text.toString();
-    print('_textFieldController.toString() ' + value);
+    
     if (value != '') {
       _doctorsListBlock.getDoctorsList(
           _textFieldController.text.toString() == null
@@ -74,25 +77,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   @override
   Widget build(BuildContext context) {
-    print('widget.searchKeyWord' + widget.arguments.searchWord);
     return Scaffold(
       appBar: AppBar(
           elevation: 0,
           flexibleSpace: GradientAppBar(),
-          /*Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: <Color>[
-                  const Color(0XFF6717CD),
-                  const Color(0XFF0A41A6)
-                ],
-                    stops: [
-                  0.3,
-                  1
-                ])),
-          )*/
+        
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -172,7 +161,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getResponseFromApiWidgetForDoctors() {
-    //print('In Docotors response');
 
     return StreamBuilder<ApiResponse<DoctorsListResponse>>(
       stream: _doctorsListBlock.doctorsStream,
@@ -213,7 +201,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getResponseFromApiWidgetForHospital() {
-    print('In hopsital response');
     return StreamBuilder<ApiResponse<HospitalListResponse>>(
       stream: _hospitalListBlock.hospitalStream,
       builder:
@@ -254,7 +241,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getResponseFromApiWidgetForLabs() {
-    print('In Labs response');
     return StreamBuilder<ApiResponse<LabsListResponse>>(
       stream: _labsListBlock.labStream,
       builder:
@@ -388,12 +374,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         child: loginButtonWithGesture);
   }
 
-  Widget getAllDatasInDoctorsList(List<Data> data) {
-    print('In Doctors response');
-
-    print('returned ' + data.length.toString());
-    print('returned ' + data.length.toString());
-
+  Widget getAllDatasInDoctorsList(List<DoctorsData> data) {
+    
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
@@ -439,7 +421,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       data[i].addressLine1,
                       data[i].id,
                       data[i].logo == null ? '' : data[i].logo,
-                      Data(),
+                      DoctorsData(),
                       data[i],
                       LabData()),
                 ),
@@ -470,7 +452,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       data[i].addressLine1,
                       data[i].id,
                       '',
-                      Data(),
+                      DoctorsData(),
                       HospitalData(),
                       data[i]),
                 ),
@@ -486,7 +468,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getCardToDisplaySearchList(String name, String address, String id,
-      String logo, Data data, HospitalData hospitalData, LabData labData) {
+      String logo, DoctorsData data, HospitalData hospitalData, LabData labData) {
     return GestureDetector(
         child: Padding(
             padding:
@@ -556,17 +538,15 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     return Icon(Icons.verified_user);
   }
 
-  void passDoctorsValue(Data doctorData, BuildContext context) {
+  void passDoctorsValue(DoctorsData doctorData, BuildContext context) {
     Navigator.of(context).pop({'doctor': json.encode(doctorData)});
   }
 
   void passHospitalValue(HospitalData hospitaData, BuildContext context) {
-    print('passHospitalValue');
     Navigator.of(context).pop({'hospital': json.encode(hospitaData)});
   }
 
   void passLaboratoryValue(LabData laboratoryData, BuildContext context) {
-    print('passHospitalValue');
     Navigator.of(context).pop({'laborartory': json.encode(laboratoryData)});
   }
 
@@ -630,7 +610,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     }
   }
 
-  void passdataToNextScreen(String name, BuildContext context, Data data,
+  void passdataToNextScreen(String name, BuildContext context, DoctorsData data,
       HospitalData hospitalData, LabData labData) {
     if (widget.arguments.searchWord == CommonConstants.doctors) {
       Navigator.pushNamed(
@@ -713,7 +693,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   passDoctorsValueSample(dynamic results, BuildContext context) {
-    Data jsonDecodeForDoctor = results['doctor'];
+    DoctorsData jsonDecodeForDoctor = results['doctor'];
 
     passDoctorsValue(jsonDecodeForDoctor, context);
   }
@@ -725,10 +705,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   passLaboratoryValueSample(dynamic results, BuildContext context) {
-    print('Sample doctors pass');
+    
     LabData jsonDecodeForDoctor = results['laborartory'];
 
-    print(jsonDecodeForDoctor.name + 'hello');
     passLaboratoryValue(jsonDecodeForDoctor, context);
   }
 }

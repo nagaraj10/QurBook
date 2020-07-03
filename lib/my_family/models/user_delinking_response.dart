@@ -1,3 +1,5 @@
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 class UserDeLinkingResponseList {
   int status;
   bool success;
@@ -6,8 +8,8 @@ class UserDeLinkingResponseList {
   UserDeLinkingResponseList({this.status, this.success, this.message});
 
   UserDeLinkingResponseList.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
+    status = json[parameters.strStatus];
+    success = json[parameters.strSuccess];
+    message = json[parameters.strMessage];
   }
 }

@@ -233,8 +233,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
           ),
           icon: descriptor,
           onDragEnd: ((value) {
-            print(value.latitude);
-            print(value.longitude);
+          
 
             if (googleMapControll != null) {
               getAddressesFromCoordinates(value.latitude, value.longitude);
@@ -265,7 +264,5 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
     searchController.text = address.addressLine;
-    print(
-        ' ${address.locality}, ${address.adminArea},${address.subLocality}, ${address.subAdminArea},${address.addressLine}, ${address.featureName},${address.thoroughfare}, ${address.subThoroughfare}');
-  }
+     }
 }

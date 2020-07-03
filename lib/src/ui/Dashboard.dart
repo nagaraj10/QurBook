@@ -330,7 +330,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   saveMediaDialog(BuildContext cont, bool isProfileImage) {
-    print('Inside saveMedia');
+    
     return showDialog<void>(
       context: cont,
       builder: (BuildContext context) {
@@ -350,7 +350,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         var image =
                             ImagePicker.pickImage(source: ImageSource.gallery);
                         image.then((value) {
-                          print('file Path' + value.path);
 
                           imageURIProfile = value;
                           PreferenceUtil.saveString(
@@ -466,20 +465,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void dbInitialize() {
-    DatabaseUtil.getCountryMetrics(
-        PreferenceUtil.getIntValue(CommonConstants.KEY_COUNTRYCODE));
-
     var commonConstants = new CommonConstants();
     commonConstants.getCountryMetrics();
   }
 
   void callImportantsMethod() async {
-    
     getFamilyRelationAndMediaType();
     getProfileData();
 
     await new CommonUtil().getMedicalPreference();
-
   }
 
   void getFamilyRelationAndMediaType() async {

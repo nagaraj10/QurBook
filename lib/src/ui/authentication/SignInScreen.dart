@@ -220,7 +220,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     bloc
                         .submit(phoneTextController.text, countryCode)
                         .then((signInResponse) {
-                      print('paru' + signInResponse.toString());
+                      
                       if (signInResponse.message == Constants.STR_MSG_SIGNUP ||
                           signInResponse.message == Constants.STR_MSG_SIGNUP1 ||
                           signInResponse.message == Constants.STR_VERIFY_OTP ||
@@ -262,10 +262,9 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void moveToNext(SignIn signIn, String phoneNumber, String countryCode) {
-    print('Outside signIn');
+    
 
     if (signIn.success) {
-      print('Inside signIn');
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) {
@@ -287,7 +286,6 @@ class _SignInScreenState extends State<SignInScreen> {
     String locale = await Devicelocale.currentLocale;
     List localeList = locale.split('_');
     _selected = Country.localeList[1];
-    print(localeList[1]);
-    print('device locale' + locale);
+  
   } */
 }

@@ -67,7 +67,6 @@ class AddProvidersBloc implements BaseBloc {
       doctorsSink.add(ApiResponse.completed(addDoctorsProvidersId));
     } catch (e) {
       doctorsSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 
@@ -81,7 +80,6 @@ class AddProvidersBloc implements BaseBloc {
       hospitalsSink.add(ApiResponse.completed(addHospitalsProvidersId));
     } catch (e) {
       hospitalsSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 
@@ -95,7 +93,6 @@ class AddProvidersBloc implements BaseBloc {
       labsSink.add(ApiResponse.completed(addLabProvidersId));
     } catch (e) {
       labsSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 

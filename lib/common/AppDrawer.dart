@@ -27,19 +27,8 @@ class AppDrawerState extends State<AppDrawer> {
   ];
 
   _onSelectItem(int index) {
-    /* setState(() {
-      _selectedIndex = index;
-      print(drawerItems[index].title);
-      //_getDrawerItemScreen(_selectedIndex);
-    }); */
-    print(drawerItems[index].title);
+   
     Navigator.of(context).pop(); // close the drawer
-//    Navigator.push(
-//      context,
-//      new MaterialPageRoute(
-//        builder: (context) => _getDrawerItemScreen(_selectedIndex),
-//      ),
-//    );
   }
 
   @override

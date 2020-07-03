@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/database/model/UnitsMesurement.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
@@ -113,8 +114,7 @@ class FHBBasicWidget {
     if (picked != null && picked != dateTime) {
       dateTime = picked ?? dateTime;
 
-      print('setstate' +
-          new DateFormat("dd/MM/yyyy").format(dateTime).toString());
+      
 
       return onDateSelected(
           dateTime, new DateFormat("dd/MM/yyyy").format(dateTime).toString());
@@ -268,8 +268,7 @@ class FHBBasicWidget {
             if (results.containsKey('audioFile')) {
               containsAudio = true;
               audioPath = results['audioFile'];
-              print('Audio Path' + audioPath);
-              print('Audio Path' + containsAudio.toString());
+           
 
               updateUI(containsAudio, audioPath);
             }
@@ -336,7 +335,6 @@ class FHBBasicWidget {
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
-                  //print("you choose no");
                   Navigator.of(context).pop(false);
                 },
                 child: Text('Cancel',

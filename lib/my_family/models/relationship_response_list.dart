@@ -1,3 +1,6 @@
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/my_family/models/RelationShip.dart';
+
 class RelationShipResponseList {
   int status;
   bool success;
@@ -8,21 +11,21 @@ class RelationShipResponseList {
       {this.status, this.success, this.message, this.relationShipAry});
 
   RelationShipResponseList.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
-    Map<String, dynamic> responseJson = json['response'];
+    status = json[parameters.strStatus];
+    success = json[parameters.strSuccess];
+    message = json[parameters.strMessage];
+    Map<String, dynamic> responseJson = json[parameters.strResponse];
 
     if (responseJson != null) {
       relationShipAry = new List<RelationShip>();
-      responseJson['data'].forEach((v) {
+      responseJson[parameters.strData].forEach((v) {
         relationShipAry.add(new RelationShip.fromJson(v));
       });
     }
   }
 }
 
-class RelationShip {
+/*class RelationShip {
   String id;
   String roleName;
   String roleDescription;
@@ -58,4 +61,4 @@ class RelationShip {
 
     return data;
   }
-}
+}*/

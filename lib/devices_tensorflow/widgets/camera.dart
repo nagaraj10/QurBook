@@ -42,10 +42,8 @@ class _CameraState extends State<Camera> {
         }
         setState(() {
           int startTime = new DateTime.now().millisecondsSinceEpoch;
-          print("Start time ${startTime}");
           controller.startImageStream((CameraImage img) {
             if (!isDetecting) {
-              print('Start camera');
               String stopDetect =
                   PreferenceUtil.getStringValue(Constants.stop_detecting);
 
@@ -53,7 +51,6 @@ class _CameraState extends State<Camera> {
                 controller.stopImageStream();
               }
 
-              print('Middle camera');
 
               isDetecting = true;
 
@@ -66,8 +63,7 @@ class _CameraState extends State<Camera> {
                   imageWidth: img.width,
                   numResults: 2,
                 ).then((recognitions) {
-                  int endTime = new DateTime.now().millisecondsSinceEpoch;
-                  print("Detection took ${endTime - startTime}");
+                  
 
                   widget.setRecognitions(
                       recognitions, img.height, img.width, controller);
@@ -83,9 +79,7 @@ class _CameraState extends State<Camera> {
                   imageWidth: img.width,
                   numResults: 2,
                 ).then((recognitions) {
-                  int endTime = new DateTime.now().millisecondsSinceEpoch;
-                  print("Detection took ${endTime - startTime}");
-                  print('End camera');
+                  
 
                   widget.setRecognitions(
                       recognitions, img.height, img.width, controller);
@@ -106,16 +100,12 @@ class _CameraState extends State<Camera> {
                   threshold: widget.model == yolo ? 0.2 : 0.4,
                 ).then((recognitions) {
                   int endTime = new DateTime.now().millisecondsSinceEpoch;
-                  print("Detection took ${endTime - startTime}");
-                  print('End camera');
-
+                  
                   if (endTime - startTime > 3000) {
                     widget.setRecognitions(
                         recognitions, img.height, img.width, controller);
 
-                    print('Inside the block');
                   }
-                  print(recognitions);
 
                   isDetecting = false;
                 });

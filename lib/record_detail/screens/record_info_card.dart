@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Health/DeviceReadings.dart';
+import 'package:myfhb/src/model/Health/MetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/DashSeparator.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+
 
 class RecordInfoCard {
   Widget getCardForPrescription(MetaInfo metaInfo, String createdDate) {
@@ -455,7 +460,6 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
 getDoctorProfileImageWidget(MetaInfo data) {
   HealthReportListForUserBlock _healthReportListForUserBlock =
       new HealthReportListForUserBlock();
-  print('docotor id : ${data.doctor.id}');
   return FutureBuilder(
     future: _healthReportListForUserBlock.getProfilePic(data.doctor.id),
     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {

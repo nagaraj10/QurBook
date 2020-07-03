@@ -1,3 +1,4 @@
+import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 
 class AddFamilyOTPArguments {

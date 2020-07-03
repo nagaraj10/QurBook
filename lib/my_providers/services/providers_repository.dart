@@ -9,7 +9,6 @@ class ProvidersListRepository {
   String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
   Future<MyProvidersResponseList> getMedicalPreferencesList() async {
-    print('userID : ${userID}');
     final response =
         await _helper.getMedicalPreferencesList("userProfiles/$userID/");
     return MyProvidersResponseList.fromJson(response);
