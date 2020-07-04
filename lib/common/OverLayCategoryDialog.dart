@@ -118,7 +118,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
                   width: 25,
                   height: 25,
                   child: CachedNetworkImage(
-                    imageUrl: Constants.BASERURL + catgoryDataList[i].logo,
+                    imageUrl: Constants.BASE_URL + catgoryDataList[i].logo,
                     color: Colors.white70,
                     placeholder: (context, url) =>
                         new CircularProgressIndicator(),

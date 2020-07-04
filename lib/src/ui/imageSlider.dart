@@ -38,66 +38,12 @@ class _ImageSliderState extends State<ImageSlider> {
             ),
 
             Expanded(flex: 7, child: showPhotoView(widget.imageList)
-                //_loadImage(widget.imageList),
                 ),
-            //Expanded(flex: 1,child: SizedBox(height: 5,)),
           ],
         ),
       ),
     );
   }
-
-  /*  Widget _loadImage(List<dynamic> imagesPath) {
-    index = _current + 1;
-    _current = 0;
-    length = imagesPath.length;
-    if (imagesPath.length > 0) {
-      return Row(
-        children: <Widget>[
-          /* Expanded(
-                        flex: 0,
-                        child: IconButton(icon: Icon(Icons.chevron_left),onPressed: (){goToPrevious();},color: Colors.white,iconSize: 30.0,),
-                      ),*/
-          Expanded(
-            flex: 1,
-            child: CarouselSlider(
-              height: 500,
-              //width: MediaQuery.of(context).size.width,
-              initialPage: 0,
-              enlargeCenterPage: true,
-              reverse: false,
-              enableInfiniteScroll: false,
-              pauseAutoPlayOnTouch: Duration(seconds: 10),
-              scrollDirection: Axis.horizontal,
-              onPageChanged: (index) {
-                setState(() {
-                  _current = index;
-                });
-              },
-              items: imagesPath.map((imgUrl) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        child: PhotoView(
-                            minScale: 0.6,
-                            imageProvider:
-                                MemoryImage(Uint8List.fromList(imgUrl))));
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  */
-
   goToPrevious() {
     carouselSlider.previousPage(
         duration: Duration(milliseconds: 300), curve: Curves.ease);
@@ -118,7 +64,6 @@ class _ImageSliderState extends State<ImageSlider> {
             initialScale: PhotoViewComputedScale.contained * 1.0,
             minScale: PhotoViewComputedScale.contained * 1.0,
             maxScale: PhotoViewComputedScale.contained * 2.0
-            //heroAttributes: HeroAttributes(tag: galleryItems[index].id),
             );
       },
       itemCount: imageList.length,
@@ -133,9 +78,6 @@ class _ImageSliderState extends State<ImageSlider> {
           ),
         ),
       ),
-      /*  backgroundDecoration: widget.backgroundDecoration,
-      pageController: widget.pageController,
-      onPageChanged: onPageChanged, */
     ));
   }
 }

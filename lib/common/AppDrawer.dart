@@ -164,7 +164,7 @@ class AppDrawerState extends State<AppDrawer> {
                   ],
                 ),
                 onPressed: () {
-                  PageNavigator.goToPermanent(context, '/sign_in_screen');
+                  PageNavigator.goToPermanent(context, '/sign-in-screen');
                 }),
           ),
         ],

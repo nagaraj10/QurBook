@@ -10,10 +10,8 @@ import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
-import 'my_appointments.dart';
 
 class AddAppointments extends StatefulWidget {
-  // ignore: non_constant_identifier_names
   final ReminderModel model;
 
   AddAppointments({this.model});
@@ -23,10 +21,7 @@ class AddAppointments extends StatefulWidget {
 }
 
 class _AddAppointmentState extends State<AddAppointments> {
-  //bool isUpdate = false;
   List<bool> isSelected = [false, false, false];
-  /*DateTime selectedDate = DateTime.now();
-  TimeOfDay selectedTime = TimeOfDay.now();*/
   static DateTime selectedDate;
   static TimeOfDay selectedTime;
   String id = '';
@@ -34,7 +29,6 @@ class _AddAppointmentState extends State<AddAppointments> {
   String myCurrentTime = '';
   @override
   void initState() {
-    //init();
     selectedDate = DateTime.now();
     selectedTime = TimeOfDay.now();
   }
@@ -124,7 +118,6 @@ class _AddAppointmentState extends State<AddAppointments> {
                             OutlineButton(
                               onPressed: () {
                                 _selectTime(context);
-                                //setState(() {});
                               },
                               child: Row(
                                 children: <Widget>[
@@ -156,9 +149,6 @@ class _AddAppointmentState extends State<AddAppointments> {
                           controller: reasonController,
                           decoration: InputDecoration(
                             labelText: 'Reason',
-//                              errorText: _isTitleEmpty
-//                                  ? 'Hospital name can\'t be empty'
-//                                  : null
                           ),
                         ),
                       ]),
@@ -176,10 +166,8 @@ class _AddAppointmentState extends State<AddAppointments> {
                 ),
                 onPressed: () {
                   NewAppointment();
-                  //Navigator.of(context).pop();
                 },
               )
-              //RaisedButton(child: Text('Save'), onPressed: () {})
             ]),
       ),
     );
@@ -232,8 +220,6 @@ class _AddAppointmentState extends State<AddAppointments> {
         selectedTime = pickedTime;
       });
 
-    //todo check date and time
-
     if (!FHBUtils().checkdate(selectedDate)) {
       if (FHBUtils().checkTime(selectedTime)) {
         setState(() {
@@ -250,8 +236,6 @@ class _AddAppointmentState extends State<AddAppointments> {
   }
 
   void NewAppointment() async {
-    //prefs = await SharedPreferences.getInstance();
-    //TODO logic to check text field is empty or not
     if (hosContoller.text.isEmpty || docNameController.text.isEmpty) {
       setState(() {
         hosContoller.text.isEmpty ? _isTitleEmpty = true : _isNoteEmpty = false;

@@ -48,6 +48,24 @@ import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:showcaseview/showcase.dart';
 
 class CommonUtil {
+  static String MAYA_URL="";
+  static String FAQ_URL="";
+  static String GOOGLE_MAP_URL="";
+  static String GOOGLE_PLACE_API_KEY="";
+  static String GOOGLE_MAP_PLACE_DETAIL_URL="";
+  static String GOOGLE_ADDRESS_FROM__LOCATION_URL="";
+  static String GOOGLE_STATIC_MAP_URL="";
+  static String BASE_URL_FROM_RES="";
+  static String BASE_COVER_IMAGE="";
+
+  static Future<dynamic> getResourceLoader() async {
+    final Future<Secret> secret = SecretLoader(secretPath: "secrets.json").load();
+    var valueFromRes = await secret;
+    return valueFromRes.myScerets;
+  }
+
+
+
   List<MediaMetaInfo> getDataForParticularCategoryDescription(
       CompleteData completeData, String categoryDescription) {
     List<MediaMetaInfo> mediaMetaInfoObj = new List();
@@ -670,7 +688,7 @@ class CommonUtil {
           isEdit: dataObj.metaInfo.categoryInfo.isEdit,
           isRead: dataObj.metaInfo.categoryInfo.isRead,
           logo: dataObj.metaInfo.categoryInfo.logo,
-          url: Constants.BASERURL + dataObj.metaInfo.categoryInfo.logo);
+          url: Constants.BASE_URL + dataObj.metaInfo.categoryInfo.logo);
 
       MediaTypeInfo mediaTypeInfo = new MediaTypeInfo(
           categoryId: dataObj.metaInfo.mediaTypeInfo.categoryId,
@@ -689,7 +707,7 @@ class CommonUtil {
           lastModifiedOn: dataObj.metaInfo.mediaTypeInfo.lastModifiedOn,
           logo: dataObj.metaInfo.mediaTypeInfo.logo,
           name: dataObj.metaInfo.mediaTypeInfo.name,
-          url: Constants.BASERURL + dataObj.metaInfo.mediaTypeInfo.logo);
+          url: Constants.BASE_URL + dataObj.metaInfo.mediaTypeInfo.logo);
 
       Doctor doctor;
       if (dataObj.metaInfo.doctor != null) {
@@ -798,7 +816,6 @@ class CommonUtil {
     }
 
     completeData = new CompleteData(mediaMetaInfo: mediaMetaInfoList);
-
 
     return completeData;
   }
@@ -1105,11 +1122,6 @@ class CommonUtil {
 
   String checkIfStringIsEmpty(String value){
     return value!=null?value:'';
-  }
-  static Future<dynamic> getResourceLoader(String key) async {
-    final Future<Secret> secret = SecretLoader(secretPath: "secrets.json").load(key);
-    var valueFromRes = await secret;
-    return valueFromRes.apiKey;
   }
 
 }

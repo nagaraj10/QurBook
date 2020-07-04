@@ -566,7 +566,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     if (categoryName == Constants.STR_DEVICES) {
       PreferenceUtil.saveString(Constants.stop_detecting, 'NO');
 
-      Navigator.pushNamed(_context, '/take_picture_screen_for_devices')
+      Navigator.pushNamed(_context, '/take-picture-screen-for-devices')
           .then((value) {
         Navigator.pop(_context);
       });

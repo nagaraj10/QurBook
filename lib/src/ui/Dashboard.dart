@@ -263,7 +263,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 ? IconButton(
                                     icon: Icon(
                                       Icons.more_vert,
-                                      color: Colors.white,
+                                      color: Colors.black87,
                                       size: 30,
                                     ),
                                     onPressed: () {
@@ -330,7 +330,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   saveMediaDialog(BuildContext cont, bool isProfileImage) {
-    
     return showDialog<void>(
       context: cont,
       builder: (BuildContext context) {
@@ -350,7 +349,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         var image =
                             ImagePicker.pickImage(source: ImageSource.gallery);
                         image.then((value) {
-
                           imageURIProfile = value;
                           PreferenceUtil.saveString(
                               Constants.KEY_DASHBOARD_BANNER, value.path);
@@ -389,7 +387,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void moveToFamilyOrprovider(int position) {
     Navigator.pushNamed(
       context,
-      '/user_accounts',
+      '/user-accounts',
       arguments: UserAccountsArguments(selectedIndex: position),
     );
   }
@@ -411,9 +409,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void navigateToHomeScreen(int position) {
     Navigator.pushNamed(
       context,
-      '/home_screen',
+      '/home-screen',
       arguments: HomeScreenArguments(selectedIndex: position),
-    ).then((value) {});
+    ).then((value) {
+      setState(() {});
+    });
   }
 
   bool checkPagesForEveryIndex(int position) {

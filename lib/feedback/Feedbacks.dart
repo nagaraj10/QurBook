@@ -43,6 +43,7 @@ class _FeedbacksState extends State<Feedbacks> {
   MediaData mediaDataObj = new MediaData();
 
   final feedbackController = TextEditingController();
+  bool isFeedBackEmptied = false;
   FocusNode feedbackFocus = FocusNode();
   HealthReportListForUserBlock _healthReportListForUserBlock =
       new HealthReportListForUserBlock();
@@ -179,10 +180,6 @@ class _FeedbacksState extends State<Feedbacks> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    /*  Container(
-                      child: Text('Feedback'),
-                    ),*/
-
                     _showFeedbacktextFiled(),
                     Divider(),
                     Container(
@@ -245,7 +242,10 @@ class _FeedbacksState extends State<Feedbacks> {
                   children: <Widget>[
                     SizedBox(height: 20),
                     fhbBasicWidget.getSaveButton(() {
-                      onPostDataToServer(context, imagePaths);
+                      setState(() {
+                        feedbackController.text.isEmpty? isFeedBackEmptied=true : isFeedBackEmptied= false;
+                        isFeedBackEmptied?null:onPostDataToServer(context, imagePaths);
+                      });
                     }),
                     SizedBox(height: 20)
                   ],
@@ -412,14 +412,14 @@ class _FeedbacksState extends State<Feedbacks> {
   }
 
   Widget _showFeedbacktextFiled() {
-    return TextField(
+    return TextFormField(
       cursorColor: Theme.of(context).primaryColor,
       controller: feedbackController,
       maxLines: 1,
       keyboardType: TextInputType.text,
       focusNode: feedbackFocus,
       textInputAction: TextInputAction.done,
-      onSubmitted: (term) {
+      onFieldSubmitted: (term) {
         feedbackFocus.unfocus();
       },
       style: new TextStyle(
@@ -427,6 +427,7 @@ class _FeedbacksState extends State<Feedbacks> {
           fontSize: 16.0,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
+        errorText: isFeedBackEmptied?'Feedback should not be empty':null,
         hintText: 'Feedback',
         labelStyle: TextStyle(
             fontSize: 12.0,
@@ -440,6 +441,7 @@ class _FeedbacksState extends State<Feedbacks> {
         border: new UnderlineInputBorder(
             borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
       ),
+
     );
   }
 }

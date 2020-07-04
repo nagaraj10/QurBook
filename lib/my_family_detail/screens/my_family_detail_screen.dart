@@ -132,7 +132,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             IconButton(
                 icon: Icon(Icons.edit),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/add_family_user_info',
+                  Navigator.pushNamed(context, '/add-family-user-info',
                           arguments: AddFamilyUserInfoArguments(
                               sharedbyme: widget
                                   .arguments.profilesSharedByMe[_currentPage],
@@ -841,7 +841,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   Widget _showViewInsuranceButton(Sharedbyme sharedbyme) {
     final GestureDetector viewInsuranceButtonWithGesture = new GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/my_family_detail_view_insurance',
+        Navigator.pushNamed(context, '/my-family-detail-view-insurance',
             arguments:
                 MyFamilyDetailViewArguments(index: 0, sharedbyme: sharedbyme));
       },
@@ -888,7 +888,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   Widget _showViewHospitalButton(Sharedbyme sharedbyme) {
     final GestureDetector viewHospitalButtonWithGesture = new GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/my_family_detail_view_insurance',
+        Navigator.pushNamed(context, '/my-family-detail-view-insurance',
             arguments:
                 MyFamilyDetailViewArguments(index: 1, sharedbyme: sharedbyme));
       },

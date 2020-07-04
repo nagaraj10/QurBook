@@ -1,8 +1,8 @@
 library fhb_constants;
 
-const String BASERURL = 'https://healthbook.vsolgmi.com/hb/api/v3/';
-const String BASEURL_COVERIMAGE =
-    'https://images.pexels.com/photos/443356/pexels-photo-443356.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940';
+import 'package:myfhb/common/CommonUtil.dart';
+ String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
+ String BASEURL_COVERIMAGE =CommonUtil.BASE_COVER_IMAGE;
 const String APP_NAME = 'myFHB';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';

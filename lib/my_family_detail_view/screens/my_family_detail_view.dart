@@ -130,12 +130,12 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                         PreferenceUtil.saveString(
                                 Constants.KEY_CATEGORYID, e.id)
                             .then((value) {
-                          //PageNavigator.goTo(context, '/take_picture_screen');
+                          //PageNavigator.goTo(context, '/take-picture-screen');
                           PreferenceUtil.saveString(
                                   Constants.KEY_FAMILYMEMBERID,
                                   widget.arguments.sharedbyme.profileData.id)
                               .then((value) {
-                            Navigator.pushNamed(context, '/take_picture_screen')
+                            Navigator.pushNamed(context, '/take-picture-screen')
                                 .then((value) {
                               myFamilyDetailViewBloc.getHelthReportList();
                             });

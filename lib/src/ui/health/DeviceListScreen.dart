@@ -162,7 +162,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   child: Image.network(
                     data.metaInfo.mediaTypeInfo.url != null
                         ? data.metaInfo.mediaTypeInfo.url
-                        : Constants.BASERURL + data.metaInfo.categoryInfo.logo,
+                        : Constants.BASE_URL + data.metaInfo.categoryInfo.logo,
                     height: 25,
                     width: 25,
                     color: Color(new CommonUtil().getMyPrimaryColor()),

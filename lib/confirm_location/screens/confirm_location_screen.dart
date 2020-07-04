@@ -29,10 +29,12 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
   GoogleMapController googleMapControll;
   List<Marker> _markers = [];
-
+  static const double _lat = 12.861693;
+  static const double _lang = 80.227242;
+  static const double _zoom = 14.4746;
   CameraPosition kGooglePlex = CameraPosition(
-    target: LatLng(12.861693, 80.227242),
-    zoom: 14.4746,
+    target: LatLng(_lat, _lang),
+    zoom: _zoom,
   );
   LatLng lastMapPosition;
   LatLng center = LatLng(0, 0);
@@ -202,7 +204,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
   void confirmBtnTapped() {
     Navigator.popUntil(context, (Route<dynamic> route) {
       bool shouldPop = false;
-      if (route.settings.name == '/add_providers') {
+      if (route.settings.name == '/add-providers') {
         (route.settings.arguments as AddProvidersArguments).placeDetail =
             widget.arguments.placeDetail;
         (route.settings.arguments as AddProvidersArguments).place =

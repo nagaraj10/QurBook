@@ -28,7 +28,7 @@ class MyProvidersDoctorsList extends StatelessWidget {
         DoctorsModel eachDoctorModel = doctorsModel[index];
         return InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/add_providers',
+              Navigator.pushNamed(context, '/add-providers',
                       arguments: AddProvidersArguments(
                           searchKeyWord: CommonConstants.doctors,
                           doctorsModel: eachDoctorModel,

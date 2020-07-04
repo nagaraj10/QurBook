@@ -28,7 +28,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
         HospitalsModel eachHospitalModel = hospitalsModel[index];
         return InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/add_providers',
+              Navigator.pushNamed(context, '/add-providers',
                       arguments: AddProvidersArguments(
                           searchKeyWord: CommonConstants.hospitals,
                           hospitalsModel: eachHospitalModel,
@@ -57,7 +57,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
                     ClipOval(
                         child: eachHospitalModel.logo != null
                             ? Image.network(
-                                Constants.BASERURL + eachHospitalModel.logo,
+                                Constants.BASE_URL + eachHospitalModel.logo,
                                 height: 50,
                                 width: 50,
                                 fit: BoxFit.cover,

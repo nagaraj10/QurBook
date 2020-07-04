@@ -37,7 +37,7 @@ class _IntroSliderState extends State<IntroSliderPage> {
   }
 
   void onDonePress() {
-    PageNavigator.goToPermanent(context, '/sign_in_screen');
+    PageNavigator.goToPermanent(context, '/sign-in-screen');
   }
 
   Widget renderNextBtn() {

@@ -227,7 +227,7 @@ class _MyFamilyState extends State<MyFamily> {
     return InkWell(
       onTap: () {
         if (position != 0) {
-          Navigator.pushNamed(context, '/my_family_detail_screen',
+          Navigator.pushNamed(context, '/my-family-detail-screen',
                   arguments: MyFamilyDetailArguments(
                       profilesSharedByMe: profilesSharedByMeAry,
                       currentPage: position - 1))
@@ -238,7 +238,7 @@ class _MyFamilyState extends State<MyFamily> {
             });
           });
         }
-//        Navigator.pushNamed(context, '/add_family_user_info',
+//        Navigator.pushNamed(context, '/add-family-user-info',
 //                arguments: AddFamilyUserInfoArguments(
 //                    sharedbyme: data, fromClass: CommonConstants.my_family))
 //            .then((value) {
@@ -965,7 +965,7 @@ class _MyFamilyState extends State<MyFamily> {
                           .pop();
 
                       Navigator.pop(context);
-                      Navigator.pushNamed(context, '/add_family_user_info',
+                      Navigator.pushNamed(context, '/add-family-user-info',
                               arguments: AddFamilyUserInfoArguments(
                                   enteredFirstName: firstNameController.text,
                                   enteredMiddleName: middleNameController.text,
@@ -1022,7 +1022,7 @@ class _MyFamilyState extends State<MyFamily> {
 
                       Navigator.pushNamed(
                         context,
-                        '/add_family_otp_screen',
+                        '/add-family-otp-screen',
                         arguments: AddFamilyOTPArguments(
                             enteredMobNumber: mobileNoController.text,
                             enteredFirstName: firstNameController.text,

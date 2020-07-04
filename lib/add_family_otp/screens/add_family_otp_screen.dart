@@ -203,11 +203,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             Padding(
               padding: EdgeInsets.only(top: 40),
               child: Text(
-                toBeginningOfSentenceCase(widget.arguments.enteredFirstName +
-                    " " +
-                    widget.arguments.enteredMiddleName +
-                    " " +
-                    widget.arguments.enteredLastName),
+                toBeginningOfSentenceCase('${widget.arguments.enteredFirstName} ${widget.arguments.enteredMiddleName} ${widget.arguments.enteredLastName}'),
                 style: TextStyle(
                     color: Color(new CommonUtil().getMyPrimaryColor()),
                     fontWeight: FontWeight.w500),
@@ -440,10 +436,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                       controller2.text.length > 0 &&
                                       controller3.text.length > 0 &&
                                       controller4.text.length > 0) {
-                                    String otp = controller1.text +
-                                        controller2.text +
-                                        controller3.text +
-                                        controller4.text;
+                                    String otp = '${controller1.text}${controller2.text}${controller3.text}${controller4.text}';
                                     _addFamilyOTPBloc.fromClass =
                                         CommonConstants.add_family_otp;
                                     _addFamilyOTPBloc
@@ -584,7 +577,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         title: "Success",
         content: "Your family member has been added successfully",
         onPressedConfirm: () {
-          Navigator.pushNamed(context, '/add_family_user_info',
+          Navigator.pushNamed(context, '/add-family-user-info',
                   arguments: AddFamilyUserInfoArguments(
                       enteredFirstName: widget.arguments.enteredFirstName,
                       enteredMiddleName: widget.arguments.enteredMiddleName,
@@ -608,7 +601,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
 
     var signInData = {};
-    signInData['countryCode'] = "+" + selectedCountryCode;
+    signInData['countryCode'] = '+$selectedCountryCode';
     signInData['phoneNumber'] = enteredMobNumber;
     signInData['isPrimaryUser'] = widget.arguments.isPrimaryNoSelected;
     signInData['firstName'] = widget.arguments.enteredFirstName;

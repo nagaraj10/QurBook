@@ -673,7 +673,7 @@ class CommonDialogBox {
                     child: TextField(
                       autofocus: false,
                       readOnly:
-                          true, //onTap: () => _selectDate(context, dateOfVisit),
+                          true,
                       controller: dateOfVisit,
                       decoration: InputDecoration(
                           suffixIcon: new IconButton(
@@ -1490,7 +1490,6 @@ class CommonDialogBox {
       dateTime = picked ?? dateTime;
       dateOfVisit.text =
           new FHBUtils().getFormattedDateOnly(dateTime.toString());
-      // new DateFormat("dd/MM/yyyy").format(dateTime).toString();
     }
   }
 
@@ -1548,7 +1547,6 @@ class CommonDialogBox {
           shadowColor: Colors.transparent,
           shape: CircleBorder(),
           child: CircleAvatar(
-            //backgroundColor: Colors.transparent,
             backgroundColor: ColorUtils.greycolor,
             child: Icon(
               Icons.mic,
@@ -1689,7 +1687,6 @@ class CommonDialogBox {
           categoryName == Constants.STR_MEDICALREPORT) {
         postMediaData["doctor"] = doctorsData;
         if (hospitalData == null) {
-          //postMediaData["hospital"] = {};
         } else {
           postMediaData["hospital"] = hospitalData;
         }
@@ -2168,7 +2165,6 @@ class CommonDialogBox {
         dateOfBirthTapped(context, dateOfVisit);
       },
       child: Container(
-          // padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: TextField(
         cursorColor: Theme.of(context).primaryColor,
         controller: dateOfVisit,
@@ -2176,15 +2172,10 @@ class CommonDialogBox {
         autofocus: false,
         readOnly: true,
         keyboardType: TextInputType.text,
-        //          focusNode: dateOfBirthFocus,
         textInputAction: TextInputAction.done,
         onSubmitted: (term) {
           dateOfBirthFocus.unfocus();
         },
-        /* style: new TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.0,
-                    color: ColorUtils.blackcolor)*/
         decoration: InputDecoration(
           suffixIcon: new IconButton(
             icon: new Icon(Icons.calendar_today),
@@ -2192,19 +2183,6 @@ class CommonDialogBox {
               _selectDate(context, dateOfVisit);
             },
           ),
-          /*   labelText: CommonConstants.date_of_birth,
-                  hintText: CommonConstants.date_of_birth,
-                  labelStyle: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w400,
-                      color: ColorUtils.myFamilyGreyColor),
-                  hintStyle: TextStyle(
-                    fontSize: 14.0,
-                    color: ColorUtils.myFamilyGreyColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  border: new UnderlineInputBorder(
-                      borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),*/
         ),
       )),
     );

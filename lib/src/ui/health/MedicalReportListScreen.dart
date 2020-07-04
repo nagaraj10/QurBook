@@ -127,7 +127,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                     child: data.metaInfo.hospital != null
                         ? data.metaInfo.hospital.logoThumbnail != null
                             ? Image.network(
-                                Constants.BASERURL +
+                                Constants.BASE_URL +
                                     data.metaInfo.hospital.logoThumbnail,
                                 height: 50,
                                 width: 50,
@@ -135,7 +135,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                             : Container(
                                 padding: EdgeInsets.all(10),
                                 child: Image.network(
-                                  Constants.BASERURL +
+                                  Constants.BASE_URL +
                                       data.metaInfo.categoryInfo.logo,
                                   height: 30,
                                   width: 30,

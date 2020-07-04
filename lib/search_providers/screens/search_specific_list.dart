@@ -139,11 +139,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     0.3,
                     1
                   ]),
-              /* borderRadius: new BorderRadius.all(
-                  new Radius.circular(30.0),
-                ), */
-              //border: Border.all(color: Colors.black),
-              //color: Colors.white
             ),
             padding: new EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
           ),
@@ -522,15 +517,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 data.name, context, data, hospitalData, labData);
           }
         }
-
-        /* widget.toPreviousScreen
-          ? widget.arguments.searchWord == CommonConstants.doctors
-              ? passDoctorsValue(data, context)
-              : widget.arguments.searchWord == CommonConstants.hospitals
-                  ? passHospitalValue(hospitalData, context)
-                  : passLaboratoryValue(labData, context)
-          : passdataToNextScreen(
-              data.name, context, data, hospitalData, labData), */
         );
   }
 
@@ -605,7 +591,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       return Container();
     } else {
       return Image.network(
-        Constants.BASERURL + logo,
+        Constants.BASE_URL + logo,
       );
     }
   }
@@ -615,7 +601,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     if (widget.arguments.searchWord == CommonConstants.doctors) {
       Navigator.pushNamed(
         context,
-        '/add_providers',
+        '/add-providers',
         arguments: AddProvidersArguments(
             data: data, searchKeyWord: CommonConstants.doctors, hasData: true),
       ).then((value) {
@@ -626,7 +612,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     } else if (widget.arguments.searchWord == CommonConstants.hospitals) {
       Navigator.pushNamed(
         context,
-        '/add_providers',
+        '/add-providers',
         arguments: AddProvidersArguments(
             hospitalData: hospitalData,
             searchKeyWord: CommonConstants.hospitals,
@@ -639,7 +625,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     } else {
       Navigator.pushNamed(
         context,
-        '/add_providers',
+        '/add-providers',
         arguments: AddProvidersArguments(
             labData: labData,
             searchKeyWord: CommonConstants.labs,
@@ -651,23 +637,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       });
     }
   }
-
-  /*  void _addBtnTapped() {
-    Navigator.pushNamed(context, '/add_providers',
-        arguments: AddProvidersArguments(
-            searchText: value,
-            searchKeyWord:
-                widget.arguments.searchWord == CommonConstants.doctors
-                    ? CommonConstants.doctors
-                    : widget.arguments.searchWord == CommonConstants.hospitals
-                        ? CommonConstants.hospitals
-                        : CommonConstants.labs,
-            hasData: false));
-    //  );
-  } */
-
   void _addBtnTapped() {
-    Navigator.pushNamed(context, '/add_providers',
+    Navigator.pushNamed(context, '/add-providers',
             arguments: AddProvidersArguments(
                 searchText: value,
                 fromClass: widget.arguments.fromClass == 'add_providers'

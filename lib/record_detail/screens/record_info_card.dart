@@ -125,7 +125,7 @@ class RecordInfoCard {
                   backgroundColor: Colors.grey[200],
                   backgroundImage: metaInfo.hospital.logoThumbnail != null
                       ? NetworkImage(
-                          Constants.BASERURL + metaInfo.hospital.logoThumbnail)
+                          Constants.BASE_URL + metaInfo.hospital.logoThumbnail)
                       : null,
                 ),
                 Expanded(
@@ -207,7 +207,7 @@ class RecordInfoCard {
                   radius: 30,
                   backgroundColor: Colors.grey[200],
                   backgroundImage: metaInfo.laboratory.logoThumbnail != null
-                      ? NetworkImage(Constants.BASERURL +
+                      ? NetworkImage(Constants.BASE_URL +
                           metaInfo.laboratory.logoThumbnail)
                       : null,
                 ),

@@ -44,52 +44,62 @@ List<CameraDescription> listOfCameras;
 
 var routes = <String, WidgetBuilder>{
   "/splashscreen": (BuildContext context) => SplashScreen(),
-  "/sign_in_screen": (BuildContext context) => SignInScreen(),
-  "/dashboard_screen": (BuildContext context) => DashboardScreen(),
-  "/home_screen": (BuildContext context) =>
+  "/sign-in-screen": (BuildContext context) => SignInScreen(),
+  "/dashboard-screen": (BuildContext context) => DashboardScreen(),
+  "/home-screen": (BuildContext context) =>
       HomeScreen(arguments: ModalRoute.of(context).settings.arguments),
-  "/user_accounts": (BuildContext context) =>
+  "/user-accounts": (BuildContext context) =>
       UserAccounts(arguments: ModalRoute.of(context).settings.arguments),
-  "/app_settings": (BuildContext context) => MySettings(),
-  "/my_records": (BuildContext context) => MyRecordsClone(),
-  "/my_family": (BuildContext context) => MyFamily(),
-  "/my_providers": (BuildContext context) => MyProvider(),
-  "/add_providers": (BuildContext context) =>
+  "/app-settings": (BuildContext context) => MySettings(),
+  "/my-records": (BuildContext context) => MyRecordsClone(),
+  "/my-family": (BuildContext context) => MyFamily(),
+  "/my-providers": (BuildContext context) => MyProvider(),
+  "/add-providers": (BuildContext context) =>
       AddProviders(arguments: ModalRoute.of(context).settings.arguments),
-  "/add_address": (BuildContext context) =>
+  "/add-address": (BuildContext context) =>
       AddAddressScreen(arguments: ModalRoute.of(context).settings.arguments),
-  "/search_providers": (BuildContext context) => SearchSpecificList(
+  "/search-providers": (BuildContext context) => SearchSpecificList(
         arguments: ModalRoute.of(context).settings.arguments,
         toPreviousScreen: false,
       ),
-  "/take_picture_screen": (BuildContext context) => TakePictureScreen(
+  "/take-picture-screen": (BuildContext context) => TakePictureScreen(
         camera: firstCamera,
       ),
-  "/take_picture_screen_for_devices": (BuildContext context) =>
+  "/take-picture-screen-for-devices": (BuildContext context) =>
       TakePictureScreenForDevices(cameras: listOfCameras),
-  "/confirm_location": (BuildContext context) => ConfirmLocationScreen(
+  "/confirm-location": (BuildContext context) => ConfirmLocationScreen(
       arguments: ModalRoute.of(context).settings.arguments),
-  "/audio_record_screen": (BuildContext context) => AudioRecordScreen(),
+  "/audio-record-screen": (BuildContext context) => AudioRecordScreen(),
   // "/sign_up_screen": (BuildContext context) => SignUpScreen(),
-  "/add_family_otp_screen": (BuildContext context) =>
+  "/add-family-otp-screen": (BuildContext context) =>
       AddFamilyOTPScreen(arguments: ModalRoute.of(context).settings.arguments),
-  "/add_family_user_info": (BuildContext context) => AddFamilyUserInfoScreen(
+  "/add-family-user-info": (BuildContext context) => AddFamilyUserInfoScreen(
       arguments: ModalRoute.of(context).settings.arguments),
-  "/my_family_detail_screen": (BuildContext context) => MyFamilyDetailScreen(
+  "/my-family-detail-screen": (BuildContext context) => MyFamilyDetailScreen(
       arguments: ModalRoute.of(context).settings.arguments),
-  "/my_family_detail_view_insurance": (BuildContext context) =>
+  "/my-family-detail-view-insurance": (BuildContext context) =>
       MyFamilyDetailView(arguments: ModalRoute.of(context).settings.arguments),
-  "/add_reminders": (BuildContext context) => AddReminder(),
-  "/add_appointments": (BuildContext context) => AddAppointments(),
-  "/intro_slider": (BuildContext context) => IntroSliderPage(),
+  "/add-reminders": (BuildContext context) => AddReminder(),
+  "/add-appointments": (BuildContext context) => AddAppointments(),
+  "/intro-slider": (BuildContext context) => IntroSliderPage(),
   "/feedbacks": (BuildContext context) => Feedbacks(),
-  "/feedbacks_success": (BuildContext context) => FeedbackSuccess()
+  "/feedbacks-success": (BuildContext context) => FeedbackSuccess()
 };
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
+
+  //get secret from resource
+  List<dynamic> resList= [];
+  await CommonUtil.getResourceLoader().then((value){
+    Map mSecretMap = value;
+    mSecretMap.values.forEach((element) {
+      resList.add(element);
+    });
+    setValues(resList);
+  });
 
   // Obtain a list of the available cameras on the device.
   final cameras = await availableCameras();
@@ -122,6 +132,20 @@ Future<void> main() async {
     MyFHB(),
   );
 }
+
+void setValues(List<dynamic> values){
+  CommonUtil.MAYA_URL=values[0];
+  CommonUtil.FAQ_URL=values[1];
+  CommonUtil.GOOGLE_MAP_URL=values[2];
+  CommonUtil.GOOGLE_PLACE_API_KEY=values[3];
+  CommonUtil.GOOGLE_MAP_PLACE_DETAIL_URL=values[4];
+  CommonUtil.GOOGLE_ADDRESS_FROM__LOCATION_URL=values[5];
+  CommonUtil.GOOGLE_STATIC_MAP_URL=values[6];
+  CommonUtil.BASE_URL_FROM_RES=values[7];
+  CommonUtil.BASE_COVER_IMAGE=values[8];
+}
+
+
 
 class MyFHB extends StatefulWidget {
   @override
@@ -199,10 +223,6 @@ class _MyFHBState extends State<MyFHB> {
 
   Future<void> showSecurityWall() async {
     try {
-      await CommonUtil.getResourceLoader('faq_url').then(
-              (value) => print("getResourceLoader: ${value}")
-              );
-
       final int RESULT_CODE = await secure_platform.invokeMethod('secureMe');
       switch (RESULT_CODE) {
         case 1003:

@@ -188,7 +188,7 @@ class AddProvidersState extends State<AddProviders> {
                             if (widget.arguments.hasData == false) {
                               Navigator.pushNamed(
                                 context,
-                                '/add_address',
+                                '/add-address',
                                 arguments: AddAddressArguments(
                                     providerType:
                                         widget.arguments.searchKeyWord),
@@ -858,7 +858,7 @@ class AddProvidersState extends State<AddProviders> {
                   ? _doctorsListBlock
                       .getDoctorObjUsingId(bloc.providerId)
                       .then((doctorsListResponse) {
-                    
+
                       Navigator.of(context).pop();
 
                       Navigator.of(context).pop(
@@ -868,7 +868,7 @@ class AddProvidersState extends State<AddProviders> {
                       ? _hospitalListBlock
                           .getHospitalObjectusingId(bloc.providerId)
                           .then((hospitalDataResponse) {
-                          
+
                           Navigator.of(context).pop();
 
                           Navigator.of(context).pop({
@@ -878,7 +878,7 @@ class AddProvidersState extends State<AddProviders> {
                       : _labsListBlock
                           .getLabsListUsingID(bloc.providerId)
                           .then((lablistResponse) {
-                        
+
                           Navigator.of(context).pop();
                           Navigator.of(context).pop({
                             'laborartory': lablistResponse.response.data[0]
@@ -888,7 +888,7 @@ class AddProvidersState extends State<AddProviders> {
               //            Navigator.pop(context, 1);
               Navigator.popUntil(context, (Route<dynamic> route) {
                 bool shouldPop = false;
-                if (route.settings.name == '/user_accounts') {
+                if (route.settings.name == '/user-accounts') {
                   shouldPop = true;
                 }
                 return shouldPop;
@@ -1133,14 +1133,14 @@ class AddProvidersState extends State<AddProviders> {
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
-      
+
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
           .then((value) {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
         Navigator.popUntil(context, (Route<dynamic> route) {
           bool shouldPop = false;
-          if (route.settings.name == '/user_accounts') {
+          if (route.settings.name == '/user-accounts') {
             shouldPop = true;
           }
           return shouldPop;
