@@ -919,35 +919,41 @@ class CommonUtil {
   }
 
   networkUI() {
-    Get.bottomSheet(
-        Container(
-          constraints: BoxConstraints(maxHeight: 120),
-          child: Card(
-            elevation: 10.0,
-            //margin: EdgeInsets.only(left: 3.0,right: 3.0),
-            color: Colors.white,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20.0),
-                    topLeft: Radius.circular(20.0))),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ImageIcon(
-                  AssetImage('assets/icons/wifi.png'),
-                  color: Color(CommonUtil().getMyPrimaryColor()),
-                  fontSize: 16.0,
-                ),
+  Get.bottomSheet(
+    Container(
+      constraints: BoxConstraints(maxHeight: 120),
+      child: Card(
+        elevation: 10.0,
+        //margin: EdgeInsets.only(left: 3.0,right: 3.0),
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+                topRight: Radius.circular(20.0),
+                topLeft: Radius.circular(20.0))),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            ImageIcon(
+              AssetImage('assets/icons/wifi.png'),
+              color: Color(CommonUtil().getMyPrimaryColor()),
+              size: 50.0,
+            ),
+            Text(
+              'No internet connection',
+              style: TextStyle(
+                color: Color(CommonUtil().getMyPrimaryColor()),
+                fontSize: 16.0,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
- 
-      backgroundColor: Colors.transparent,
-      isDismissible: false,
-      enableDrag: false,
-    );
-  }
+      ),
+    ),
+    backgroundColor: Colors.transparent,
+    isDismissible: false,
+    enableDrag: false,
+  );
+}
   
   
   Widget customSnack(bool isOffline) {
