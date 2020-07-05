@@ -170,3 +170,5 @@ const String STR_NO_CONNECTIVITY = 'No Internet connection';
 const String STR_OTP_FIELD = 'Please enter a valid OTP';
 const String STR_ERROR_LOADING_DATA = 'Unable To Load Data,Please Try Again';
 const String STR_ERROR_LOADING_IMAGE = 'Unable To Load Image,Please Try Again';
+
+const String KEY_FAMILYREL='keyFamilyrel';

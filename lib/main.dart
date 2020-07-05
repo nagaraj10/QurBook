@@ -38,6 +38,8 @@ import 'my_family/screens/MyFamily.dart';
 import 'my_family_detail/screens/my_family_detail_screen.dart';
 import 'package:myfhb/src/model/secretmodel.dart';
 import 'package:myfhb/src/model/sceretLoader.dart';
+import 'telehealth/features/MyProvider/view/TelehealthProviders.dart';
+
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -83,7 +85,10 @@ var routes = <String, WidgetBuilder>{
   "/add-appointments": (BuildContext context) => AddAppointments(),
   "/intro-slider": (BuildContext context) => IntroSliderPage(),
   "/feedbacks": (BuildContext context) => Feedbacks(),
-  "/feedbacks-success": (BuildContext context) => FeedbackSuccess()
+  "/feedbacks-success": (BuildContext context) => FeedbackSuccess(),
+
+    "/telehealth-providers": (BuildContext context) =>
+      TelehealthProviders(arguments: ModalRoute.of(context).settings.arguments),
 };
 
 Future<void> main() async {
@@ -223,13 +228,7 @@ class _MyFHBState extends State<MyFHB> {
 
   Future<void> showSecurityWall() async {
     try {
-<<<<<<< HEAD
-      await CommonUtil.getResourceLoader('faq_url').then(
-              (value) =>
-              );
-
-=======
->>>>>>> 62491224d2a0f855de56a29ece962c823e7fd808
+     
       final int RESULT_CODE = await secure_platform.invokeMethod('secureMe');
       switch (RESULT_CODE) {
         case 1003:

@@ -671,7 +671,7 @@ class _MyFamilyState extends State<MyFamily> {
             case Status.COMPLETED:
               isCalled = true;
               PreferenceUtil.saveRelationshipArray(
-                  'keyFamilyrel', snapshot.data.data.relationShipAry);
+                  Constants.KEY_FAMILYREL, snapshot.data.data.relationShipAry);
               relationShipResponseList = snapshot.data.data;
 
               familyWidget =

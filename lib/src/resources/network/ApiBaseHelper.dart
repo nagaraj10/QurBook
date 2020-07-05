@@ -347,10 +347,6 @@ class ApiBaseHelper {
           responseJson = convert.jsonDecode(response.body.toString());
         }
 
-<<<<<<< HEAD
-       // print(response.body.toString());
-=======
->>>>>>> 62491224d2a0f855de56a29ece962c823e7fd808
         return responseJson;
 
       case 201:

@@ -75,6 +75,8 @@ dependencies:
   #android_intent: ^0.3.7+1
   pdf_render: ^0.57.2
   loading: ^1.0.2
+  expandable: ^4.1.4
+  date_picker_timeline: ^1.2.0
 
 dev_dependencies:
   flutter_test:

@@ -406,14 +406,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-  void navigateToHomeScreen(int position) {
-    Navigator.pushNamed(
+   void navigateToHomeScreen(int position) {
+   /* Navigator.pushNamed(
       context,
       '/home-screen',
       arguments: HomeScreenArguments(selectedIndex: position),
-    ).then((value) {
-      setState(() {});
-    });
+    ).then((value) {});*/
+     Navigator.pushNamed(
+      context,
+      '/telehealth-providers',
+      arguments: HomeScreenArguments(selectedIndex: position),
+    ).then((value) {});
+
+    
   }
 
   bool checkPagesForEveryIndex(int position) {

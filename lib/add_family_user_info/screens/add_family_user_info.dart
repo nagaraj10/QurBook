@@ -101,10 +101,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
 
-    if (PreferenceUtil.getFamilyRelationship('keyFamilyrel') != null) {
+    if (PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL) != null) {
       setState(() {
         relationShipResponseList =
-            PreferenceUtil.getFamilyRelationship('keyFamilyrel');
+            PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL);
         getSelectedRelation();
       });
     } else {
@@ -113,7 +113,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           relationShipResponseList = value.relationShipAry;
 
           PreferenceUtil.saveRelationshipArray(
-              'keyFamilyrel', value.relationShipAry);
+              Constants.KEY_FAMILYREL, value.relationShipAry);
           getSelectedRelation();
         });
 
