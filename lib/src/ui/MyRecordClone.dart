@@ -858,6 +858,7 @@ class _CustomTabsState extends State<CustomTabView>
                         _healthReportListForUserBlock = null;
                         rebuildAllBlocks();
                         if (!widget.fromSearch) {
+                          
                           PreferenceUtil.saveCompleteData(
                               Constants.KEY_COMPLETE_DATA,
                               snapshot.data.data.response.data);

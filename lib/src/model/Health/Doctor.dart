@@ -28,7 +28,7 @@ class Doctor {
     description = json[parameters.strDescription];
     email = json[parameters.strEmail]==null?'':json[parameters.strEmail];
     id = json[parameters.strId];
-    isUserDefined = json[parameters.strIsUserDefined];
+    isUserDefined = json[parameters.strIsUserDefined]!=null?json[parameters.strIsUserDefined]:false;
     name = json[parameters.strName];
     specialization = json[parameters.strSpecilization];
     state = json[parameters.strState];

@@ -200,7 +200,7 @@ class _MyFHBState extends State<MyFHB> {
   Future<void> showSecurityWall() async {
     try {
       await CommonUtil.getResourceLoader('faq_url').then(
-              (value) => print("getResourceLoader: ${value}")
+              (value) =>
               );
 
       final int RESULT_CODE = await secure_platform.invokeMethod('secureMe');

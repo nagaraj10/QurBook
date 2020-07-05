@@ -8,8 +8,20 @@ class DeviceMeasurementsData {
   DeviceMeasurementsData({this.parameter, this.unit, this.values});
 
   DeviceMeasurementsData.fromJson(Map<String, dynamic> json) {
-    parameter = json[parameters.strParameters];
-    unit = json[parameters.strUnits];
-    values = json[parameters.strValues];
+  
+
+
+     try{
+          parameter = json[parameters.strParameters];
+
+ if (json[parameters.strValues] is int) {
+      values =json[parameters.strValues].toString();
+    } else {
+      values = json[parameters.strValues];
+    }
+    unit = json[parameters.strunit];
+    }catch(e){
+      
+    }
   }
 }

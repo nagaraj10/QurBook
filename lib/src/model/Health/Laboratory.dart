@@ -43,7 +43,7 @@ class Laboratory {
     description = json[parameters.strDescription];
     email = json[parameters.strEmail];
     id = json[parameters.strId];
-    isUserDefined = json[parameters.strIsUserDefined];
+    isUserDefined = json[parameters.strIsUserDefined]!=null?json[parameters.strIsUserDefined]:false;
     if (json[parameters.strLatitude] is String) {
       latitude = json[parameters.strLatitude];
     } else {

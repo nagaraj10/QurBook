@@ -47,7 +47,7 @@ class MediaTypeInfo {
     if (json[parameters.strIsActive] is bool) {
       isActive = json[parameters.strIsActive];
     } else {
-      isActive = bool.fromEnvironment(json[parameters.strIsActive]);
+      isActive = true;
     }
 
     isCreate = json[parameters.strIsCreate];

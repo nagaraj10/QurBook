@@ -37,12 +37,12 @@ class MediaMetaInfo {
     metaInfo = json[parameters.strmetaInfo] != null
         ? new MetaInfo.fromJson(json[parameters.strmetaInfo])
         : null;
-    isActive = json[parameters.strIsActive];
+    isActive = json[parameters.strIsActive]!=null?json[parameters.strIsActive]:false;
     createdBy = json[parameters.strCreatedBy];
     createdOn = json[parameters.strCreatedOn];
     lastModifiedOn = json[parameters.strLastModifiedOn];
-    isBookmarked = json[parameters.strIsBookmarked];
-    isDraft = json[parameters.strisDraft];
+    isBookmarked = json[parameters.strIsBookmarked]!=null?json[parameters.strIsBookmarked]:false;
+    isDraft = json[parameters.strisDraft]!=null?json[parameters.strisDraft]:false;
     createdByUser = json[parameters.strcreatedByUser];
     if (json[parameters.strmediaMasterIds] != null) {
       mediaMasterIds = new List<MediaMasterIds>();

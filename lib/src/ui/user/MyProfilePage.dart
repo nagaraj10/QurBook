@@ -305,7 +305,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
         new FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
       } else {
         PreferenceUtil.saveString(Constants.PROFILE_EMAIL, email.text);
-        print(PreferenceUtil.getStringValue(Constants.MOB_NUM) + " NUMBER");
 
         Navigator.of(context)
             .push(MaterialPageRoute(

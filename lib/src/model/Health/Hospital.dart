@@ -43,7 +43,7 @@ class Hospital {
     description = json[parameters.strDescription];
     email = json[parameters.strEmail]==null?'':json[parameters.strEmail];
     id = json[parameters.strId];
-    isUserDefined = json[parameters.strIsUserDefined];
+    isUserDefined = json[parameters.strIsUserDefined]!=null?json[parameters.strIsUserDefined]:false;
     if (json[parameters.strLatitude] is String) {
       latitude = json[parameters.strLatitude];
     } else {
@@ -55,7 +55,7 @@ class Hospital {
       longitude = json[parameters.strLongitute].toString();
     }
 
-    logoThumbnail = json[parameters.strLogothumbnail]=null?'':json[parameters.strLogothumbnail];
+    logoThumbnail = json[parameters.strLogothumbnail]==null?'':json[parameters.strLogothumbnail];
     name = json[parameters.strName];
     website = json[parameters.strWebsite];
     if (zipcode is String) {

@@ -29,18 +29,18 @@ class CategoryInfo {
       this.isActive});
 
   CategoryInfo.fromJson(Map<String, dynamic> json) {
-    categoryDescription = json[parameters.strCategoryDesc];
-    categoryName = json[parameters.strCategoryName];
-    id = json[parameters.strId];
-    isCreate = json[parameters.strIsCreate];
-    isDelete = json[parameters.strIsDelete];
-    isDisplay = json[parameters.strIsDisplay];
-    isEdit = json[parameters.strIsEdit];
-    isRead = json[parameters.strIsRead];
-    logo = json[parameters.strLogo];
-    url = json[parameters.strurl];
-    localid = json[parameters.strlocalid];
-    isActive = json[parameters.strIsActive];
+    categoryDescription = json[parameters.strCategoryDesc]!=null?json[parameters.strCategoryDesc]:'';
+    categoryName = json[parameters.strCategoryName]!=null?json[parameters.strCategoryName]:'';
+    id = json[parameters.strId]!=null?json[parameters.strId]:'';
+    isCreate = json[parameters.strIsCreate]!=null?json[parameters.strurl]:false;
+    isDelete = json[parameters.strIsDelete]!=null?json[parameters.strurl]:false;
+    isDisplay = json[parameters.strIsDisplay]!=null?json[parameters.strurl]:false;
+    isEdit = json[parameters.strIsEdit]!=null?json[parameters.strurl]:false;
+    isRead = json[parameters.strIsRead]!=null?json[parameters.strurl]:false;
+    logo = json[parameters.strLogo]!=null?json[parameters.strLogo]:'';
+    url = json[parameters.strurl]!=null?json[parameters.strurl]:'';
+    localid = json[parameters.strlocalid]!=null?json[parameters.strlocalid]:0;
+    isActive = json[parameters.strIsActive]!=null?json[parameters.strurl]:false;
   }
 
   Map<String, dynamic> toJson() {

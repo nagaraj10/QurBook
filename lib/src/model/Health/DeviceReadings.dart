@@ -8,20 +8,31 @@ class DeviceReadings {
   DeviceReadings({this.parameter, this.unit, this.value});
 
   DeviceReadings.fromJson(Map<String, dynamic> json) {
-    parameter = json[parameters.strParameters];
-    if (json[parameters.strvalue] is int) {
+    try{
+          parameter = json[parameters.strParameters];
+
+ if (json[parameters.strvalue] is int) {
       value = json[parameters.strvalue].toString();
     } else {
       value = json[parameters.strvalue];
     }
     unit = json[parameters.strunit];
+    }catch(e){
+      
+    }
+   
   }
 
   Map<String, dynamic> toJson() {
+    try{
+
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data[parameters.strParameters] = this.parameter;
     data[parameters.strunit] = this.unit;
     data[parameters.strvalue] = this.value;
     return data;
+     }catch(e){
+      
+    }
   }
 }
