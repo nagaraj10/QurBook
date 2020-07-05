@@ -15,7 +15,7 @@ import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'AppException.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = Constants.BASERURL;
+  final String _baseUrl = Constants.BASE_URL;
 
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -31,30 +31,10 @@ class ApiBaseHelper {
           body: jsonData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
   }
-
-/*   Future<dynamic> verifyOTP(String url, String otpVerifyData) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-    };
-
-    var responseJson;
-    try {
-      final response = await http.post(_baseUrl + url,
-          body: otpVerifyData, headers: requestHeaders);
-      responseJson = _returnResponse(response);
-    } on SocketException {
-      CommonUtil().networkUI();
-      throw FetchDataException('No Internet connection');
-    }
-    return responseJson;
-  }
- */
-
   Future<dynamic> verifyOTP(String url, String otpVerifyData) async {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
@@ -86,7 +66,6 @@ class ApiBaseHelper {
           body: otpVerifyData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -105,7 +84,6 @@ class ApiBaseHelper {
           body: healthRecordData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -124,7 +102,6 @@ class ApiBaseHelper {
           body: bookmarkData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -142,7 +119,6 @@ class ApiBaseHelper {
           await http.put(_baseUrl + url, body: '', headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -161,7 +137,6 @@ class ApiBaseHelper {
           body: jsonData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -178,7 +153,6 @@ class ApiBaseHelper {
       final response = await http.get(_baseUrl + url, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -202,7 +176,6 @@ class ApiBaseHelper {
       final response = await http.get(_baseUrl + url, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -282,7 +255,6 @@ class ApiBaseHelper {
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -321,7 +293,6 @@ class ApiBaseHelper {
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -340,7 +311,6 @@ class ApiBaseHelper {
       final response = await http.get(_baseUrl + url, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -377,7 +347,10 @@ class ApiBaseHelper {
           responseJson = convert.jsonDecode(response.body.toString());
         }
 
+<<<<<<< HEAD
        // print(response.body.toString());
+=======
+>>>>>>> 62491224d2a0f855de56a29ece962c823e7fd808
         return responseJson;
 
       case 201:
@@ -436,7 +409,6 @@ class ApiBaseHelper {
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
 
@@ -465,7 +437,6 @@ class ApiBaseHelper {
 
       return response.data;
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
   }
@@ -483,11 +454,8 @@ class ApiBaseHelper {
 
       return response.data;
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
-
-    //return (response!=null || response != '')?response.data:response;
   }
 
   Future<dynamic> addUserLinking(String url, String jsonData) async {
@@ -503,7 +471,6 @@ class ApiBaseHelper {
           body: jsonData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -522,7 +489,6 @@ class ApiBaseHelper {
           body: jsonData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -540,7 +506,6 @@ class ApiBaseHelper {
           await http.put(_baseUrl + url, body: '', headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -559,7 +524,6 @@ class ApiBaseHelper {
           body: jsonData, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -605,7 +569,6 @@ class ApiBaseHelper {
 
       return response.data;
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
   }
@@ -625,7 +588,6 @@ class ApiBaseHelper {
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
 
@@ -649,7 +611,6 @@ class ApiBaseHelper {
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
 
@@ -696,7 +657,6 @@ class ApiBaseHelper {
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
 
@@ -718,7 +678,6 @@ class ApiBaseHelper {
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -744,7 +703,6 @@ class ApiBaseHelper {
 
       return response.data;
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
   }
@@ -808,7 +766,6 @@ class ApiBaseHelper {
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
@@ -830,7 +787,6 @@ class ApiBaseHelper {
       responseJson = _returnResponse(response);
       
     } on SocketException {
-      //CommonUtil().networkUI();
       throw FetchDataException('No Internet connection');
     }
     return responseJson;

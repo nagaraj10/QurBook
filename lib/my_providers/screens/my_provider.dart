@@ -47,7 +47,7 @@ class _MyProviderState extends State<MyProvider>
         onPressed: () {
           switch (_activeTabIndex) {
             case 0:
-              Navigator.pushNamed(context, '/search_providers',
+              Navigator.pushNamed(context, '/search-providers',
                   arguments: SearchArguments(
                     searchWord: CommonConstants.doctors,
                     fromClass: 'add_providers',
@@ -59,7 +59,7 @@ class _MyProviderState extends State<MyProvider>
 
               break;
             case 1:
-              Navigator.pushNamed(context, '/search_providers',
+              Navigator.pushNamed(context, '/search-providers',
                   arguments: SearchArguments(
                     searchWord: CommonConstants.hospitals,
                       fromClass: 'add_providers',
@@ -71,7 +71,7 @@ class _MyProviderState extends State<MyProvider>
 
               break;
             case 2:
-              Navigator.pushNamed(context, '/search_providers',
+              Navigator.pushNamed(context, '/search-providers',
                   arguments: SearchArguments(
                     searchWord: CommonConstants.labs,
                       fromClass: 'add_providers',

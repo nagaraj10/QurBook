@@ -90,7 +90,7 @@ class MyFamilyDetailViewHospitalState
                   child: Image.network(
                     mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                        : Constants.BASERURL +
+                        : Constants.BASE_URL +
                             mediaMetaInfoObj.metaInfo.mediaTypeInfo.logo,
                     height: 20,
                     width: 20,

@@ -103,7 +103,7 @@ class _UserAccountsState extends State<UserAccounts>
                               //sliverBarHeight = 50;
 
                               Navigator.pushNamed(
-                                      context, '/add_family_user_info',
+                                      context, '/add-family-user-info',
                                       arguments: AddFamilyUserInfoArguments(
                                           sharedbyme: sharedbyme,
                                           fromClass:

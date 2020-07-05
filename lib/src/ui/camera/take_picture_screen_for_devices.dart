@@ -799,7 +799,7 @@ class TakePictureScreenForDevicesState
   void initializeData(BuildContext _context) {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     if (categoryName != Constants.STR_DEVICES) {
-      Navigator.pushNamed(_context, '/take_picture_screen').then((value) {
+      Navigator.pushNamed(_context, '/take-picture-screen').then((value) {
         Navigator.pop(_context);
       });
     } else {

@@ -44,7 +44,6 @@ class MyRecordsClone extends StatefulWidget {
 }
 
 class _MyRecordsCloneState extends State<MyRecordsClone> {
-  // final String _baseUrl = 'https://healthbook.vsolgmi.com/hb/api/v2/';
   List<TabModel> tabModelList = new List();
   CategoryListBlock _categoryListBlock;
   HealthReportListForUserBlock _healthReportListForUserBlock;
@@ -54,9 +53,6 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
   String searchQuery = "Search query";
   String categoryName;
   String categoryID;
-
-  // MediaData mediaData;
-
   FamilyListBloc _familyListBloc;
   MyProfileBloc _myProfileBloc;
 
@@ -149,7 +145,6 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
 
               switch (snapshot.data.status) {
                 case Status.LOADING:
-                  // rebuildBlockObject();
                   return Center(
                       child: SizedBox(
                     child: CircularProgressIndicator(
@@ -163,19 +158,11 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
                   break;
 
                 case Status.ERROR:
-                  // rebuildBlockObject();
-
                   return FHBBasicWidget.getRefreshContainerButton(
                       snapshot.data.message, () {
                     setState(() {});
                   });
-                  /* return Center(
-                    child: Text('Oops, something went wrong',
-                        style: TextStyle(color: Colors.red)));*/
-                  break;
-                  break;
-
-                case Status.COMPLETED:
+                  case Status.COMPLETED:
                   _categoryListBlock = null;
                   rebuildAllBlocks();
                   return snapshot.data.data.response.count == 0
@@ -205,39 +192,6 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
 
     return getMainWidgets(categoryDataList);
   }
-
-  /*Widget getWidgetForSearchedMedia(List<Data> data) {
-    List<CategoryData> categoryDataList;
-    if (PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null) {
-      PreferenceUtil.saveCategoryList(Constants.KEY_SEARCHED_CATEGORY, null)
-          .then((value) {
-        PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, null)
-            .then((value) {
-          categoryDataList = new CommonUtil().getAllCategoryList(data);
-          completeData = new CommonUtil().getMediaTypeInfo(data);
-          PreferenceUtil.saveCompleteData(
-                  Constants.KEY_SEARCHED_LIST, completeData)
-              .then((value) {
-            PreferenceUtil.saveCategoryList(
-                    Constants.KEY_SEARCHED_CATEGORY, categoryDataList)
-                .then((value) {
-            });
-          });
-        });
-      });
-    } else {
-      categoryDataList = new CommonUtil().getAllCategoryList(data);
-      completeData = new CommonUtil().getMediaTypeInfo(data);
-      PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, completeData)
-          .then((value) {
-        PreferenceUtil.saveCategoryList(
-                Constants.KEY_SEARCHED_CATEGORY, categoryDataList)
-            .then((value) {
-          return getMainWidgets(categoryDataList);
-        });
-      });
-    }
-  }*/
 
   Widget getResponseFromApiWidget() {
     List<CategoryData> categoryDataFromPrefernce =
@@ -269,9 +223,6 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
                     snapshot.data.message, () {
                   setState(() {});
                 });
-                /* return Center(
-                    child: Text('Oops, something went wrong',
-                        style: TextStyle(color: Colors.red)));*/
                 break;
 
               case Status.COMPLETED:
@@ -311,8 +262,6 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
         categoryData = fliterCategories(categoryDataFromPrefernce);
 
         categoryData.add(categoryDataObjClone);
-
-        //categoryData.addAll(categoryDataFromPrefernce);
       } else {
         categoryData = fliterCategories(data);
         categoryData.add(categoryDataObjClone);
@@ -333,8 +282,6 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
       initPosition: initPosition,
       itemCount: categoryData.length,
       fromSearch: fromSearch,
-      // tabBuilder: (context, index) => Tab(text: data[index]),
-      //pageBuilder: (context, index) => Center(child: Text(data[index])),
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -446,7 +393,6 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
               ),
             ),
           ),
-          //_buildActions(),
           new SwitchProfile()
               .buildActions(context, _keyLoader, callBackToRefresh)
         ],
@@ -670,7 +616,6 @@ class _CustomTabsState extends State<CustomTabView>
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Container(
-          // alignment: Alignment.center,
           decoration: BoxDecoration(
               gradient: LinearGradient(
                   begin: Alignment.centerLeft,
@@ -756,15 +701,13 @@ class _CustomTabsState extends State<CustomTabView>
                                   Constants.stop_detecting, 'NO');
 
                               Navigator.pushNamed(context,
-                                      '/take_picture_screen_for_devices')
+                                      '/take-picture-screen-for-devices')
                                   .then((value) {
-                                //callBackToRefresh();
                               });
                             } else {
                               Navigator.pushNamed(
-                                      context, '/take_picture_screen')
+                                      context, '/take-picture-screen')
                                   .then((value) {
-                                //callBackToRefresh();
                               });
                             }
                           });
@@ -788,7 +731,6 @@ class _CustomTabsState extends State<CustomTabView>
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    //sliverBarHeight = 50;
                     PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME,
                             Constants.STR_VOICERECORDS)
                         .then((value) {
@@ -849,9 +791,6 @@ class _CustomTabsState extends State<CustomTabView>
                             snapshot.data.message, () {
                           setState(() {});
                         });
-                        /* return Center(
-                    child: Text('Oops, something went wrong',
-                        style: TextStyle(color: Colors.red)));*/
                         break;
 
                       case Status.COMPLETED:
@@ -910,9 +849,6 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
                             snapshot.data.message, () {
                           setState(() {});
                         });
-                        /* return Center(
-                    child: Text('Oops, something went wrong',
-                        style: TextStyle(color: Colors.red)));*/
                         break;
 
                       case Status.COMPLETED:
@@ -1127,15 +1063,6 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
               getDataForParticularLabel,
               CommonConstants.categoryDescriptionClaimsRecord));
         }
-        /*  else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionWearable) {
-          tabWidgetList.add(new IDDocsList(completeData, callBackToRefresh,
-              categoryName, dataObj.id, getDataForParticularLabel));
-        } else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionFeedback) {
-          tabWidgetList.add(new IDDocsList(completeData, callBackToRefresh,
-              categoryName, dataObj.id, getDataForParticularLabel));
-        }  */
         else {
           tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
         }
@@ -1202,7 +1129,7 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
         tabWidgetList.add(Column(children: [
           Padding(padding: EdgeInsets.only(top: 10)),
           Image.network(
-            Constants.BASERURL + dataObj.logo,
+            Constants.BASE_URL + dataObj.logo,
             width: 20,
             height: 20,
             color: Colors.white,

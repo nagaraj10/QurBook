@@ -393,7 +393,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       return Container();
     } else {
       return Image.network(
-        Constants.BASERURL + logo,
+        Constants.BASE_URL + logo,
       );
     }
   }

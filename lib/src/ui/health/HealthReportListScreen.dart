@@ -437,7 +437,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
   getDoctorProfileImageWidgetNew(MediaMetaInfo data) {
     return CachedNetworkImage(
-      imageUrl: Constants.BASERURL +
+      imageUrl: Constants.BASE_URL +
           "doctors/" +
           data.metaInfo.doctor.id +
           "/getprofilepic",
@@ -504,7 +504,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   getDocumentImageWidgetNew(MediaMetaInfo data) {
     String usrId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     return CachedNetworkImage(
-      imageUrl: Constants.BASERURL +
+      imageUrl: Constants.BASE_URL +
           "mediameta/" +
           usrId +
           "/getRawMedia/" +

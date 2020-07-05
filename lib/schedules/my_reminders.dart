@@ -52,7 +52,7 @@ class _MyRemindersState extends State<MyReminders> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  PageNavigator.goTo(context, '/add_reminders');
+                  PageNavigator.goTo(context, '/add-reminders');
                 },
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),

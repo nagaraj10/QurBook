@@ -160,7 +160,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                     child: Image.network(
                       mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                           ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                          : Constants.BASERURL +
+                          : Constants.BASE_URL +
                               mediaMetaInfoObj.metaInfo.categoryInfo.logo,
                       height: 25,
                       width: 25,

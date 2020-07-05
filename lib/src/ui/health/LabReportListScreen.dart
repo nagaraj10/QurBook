@@ -127,7 +127,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
               ClipOval(
                   child: mediaMetaInfo.metaInfo.laboratory.logoThumbnail != null
                       ? Image.network(
-                          Constants.BASERURL +
+                          Constants.BASE_URL +
                               mediaMetaInfo.metaInfo.laboratory.logoThumbnail,
                           width: 50,
                           height: 50,
@@ -137,7 +137,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                           height: 50,
                           padding: EdgeInsets.all(10),
                           child: Image.network(
-                            Constants.BASERURL +
+                            Constants.BASE_URL +
                                 mediaMetaInfo.metaInfo.categoryInfo.logo,
                             color: Color(
                               CommonUtil().getMyPrimaryColor(),

@@ -166,7 +166,7 @@ class _SignInScreenState extends State<SignInScreen> {
   moveToNextScreen() {
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        PageNavigator.goTo(context, '/home_screen');
+        PageNavigator.goTo(context, '/home-screen');
       });
     });
   }

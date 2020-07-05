@@ -115,7 +115,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 onTap: () {
                   Navigator.pushNamed(
                     context,
-                    '/user_accounts',
+                    '/user-accounts',
                     arguments: UserAccountsArguments(selectedIndex: 0),
                   );
                 },
@@ -130,7 +130,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                 size: 14,
               ),
               onTap: () {
-                PageNavigator.goTo(context, '/app_settings');
+                PageNavigator.goTo(context, '/app-settings');
               },
             ),
             Divider(),
@@ -155,7 +155,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     )),
                     onTap: () {
                       openWebView(Constants.FAQ,
-                          'https://fhb.faqs.vsolgmi.com/', false);
+                          CommonUtil.FAQ_URL, false);
                     },
                   ),
                   ListTile(
@@ -342,7 +342,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   void moveToLoginPage(SignOutResponse signOutResponse) {
     PreferenceUtil.clearAllData().then((value) {
-      PageNavigator.goToPermanent(context, '/sign_in_screen');
+      PageNavigator.goToPermanent(context, '/sign-in-screen');
     });
   }
 }

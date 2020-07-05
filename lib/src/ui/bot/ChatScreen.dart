@@ -186,7 +186,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   sendToMaya(String msg) async {
-    String mayaUrl = 'https://ai.vsolgmi.com/ai/api/rasa/';
+    //String mayaUrl = 'https://ai.vsolgmi.com/ai/api/rasa/';
+    String mayaUrl = CommonUtil.MAYA_URL;
     String uuidString = uuid;
 
     

@@ -57,7 +57,7 @@ class MyProvidersLabsList extends StatelessWidget {
                     ClipOval(
                         child: eachLabModel.logo != null
                             ? Image.network(
-                                Constants.BASERURL + eachLabModel.logo,
+                                Constants.BASE_URL + eachLabModel.logo,
                                 height: 50,
                                 width: 50,
                                 fit: BoxFit.cover,

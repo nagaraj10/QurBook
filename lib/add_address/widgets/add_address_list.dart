@@ -58,7 +58,7 @@ class AddAddressListState extends State<AddAddressList> {
 
               Navigator.pushNamed(
                 context,
-                '/confirm_location',
+                '/confirm-location',
                 arguments: ConfirmLocationArguments(
                     place: eachPlaceModel,
                     placeDetail: value,

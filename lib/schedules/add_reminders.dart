@@ -10,7 +10,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 
 class AddReminder extends StatefulWidget {
-  // ignore: non_constant_identifier_names
   final ReminderModel model;
 
   AddReminder({this.model});
@@ -32,11 +31,8 @@ class _AddReminderState extends State<AddReminder> {
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-//  NotificationAppLaunchDetails notificationAppLaunchDetails;
   @override
   void initState() {
-    //init();
-
     if (widget.model != null) {
       isUpdate = true;
       tileContoller.text = widget.model.title;
@@ -148,7 +144,6 @@ class _AddReminderState extends State<AddReminder> {
                             OutlineButton(
                               onPressed: () {
                                 _selectTime(context);
-                                //setState(() {});
                               },
                               child: Row(
                                 children: <Widget>[
@@ -181,7 +176,6 @@ class _AddReminderState extends State<AddReminder> {
                         Center(
                           child: ToggleButtons(
                             borderColor: Colors.black,
-                            //TODO chnage theme
                             fillColor:
                                 Color(new CommonUtil().getMyPrimaryColor()),
                             borderWidth: 1,
@@ -193,7 +187,6 @@ class _AddReminderState extends State<AddReminder> {
                                 alignment: Alignment.center,
                                 constraints: BoxConstraints(
                                     minWidth: 100, maxHeight: 40),
-                                //padding: const EdgeInsets.all(4.0),
                                 child: Text(
                                   'Daily',
                                   style: TextStyle(fontSize: 14),
@@ -203,7 +196,6 @@ class _AddReminderState extends State<AddReminder> {
                                 alignment: Alignment.center,
                                 constraints: BoxConstraints(
                                     minWidth: 100, maxHeight: 40),
-                                //padding: const EdgeInsets.all(4.0),
                                 child: Text(
                                   'Weekly',
                                   style: TextStyle(fontSize: 14),
@@ -213,7 +205,6 @@ class _AddReminderState extends State<AddReminder> {
                                 alignment: Alignment.center,
                                 constraints: BoxConstraints(
                                     minWidth: 100, maxHeight: 40),
-                                //padding: const EdgeInsets.all(4.0),
                                 child: Text(
                                   'Monthly',
                                   style: TextStyle(fontSize: 14),
@@ -248,7 +239,6 @@ class _AddReminderState extends State<AddReminder> {
               ),
               RaisedGradientButton(
                 gradient: LinearGradient(colors: [
-                  //TODO chnage theme
                   Color(new CommonUtil().getMyPrimaryColor()),
                   Color(new CommonUtil().getMyGredientColor()),
                 ]),
@@ -259,10 +249,8 @@ class _AddReminderState extends State<AddReminder> {
                 ),
                 onPressed: () {
                   setReminder();
-                  //Navigator.of(context).pop();
                 },
               )
-              //RaisedButton(child: Text('Save'), onPressed: () {})
             ]),
       ),
     );
@@ -315,8 +303,6 @@ class _AddReminderState extends State<AddReminder> {
         selectedTime = pickedTime;
       });
 
-    //todo check date and time
-
     if (!FHBUtils().checkdate(selectedDate)) {
       if (FHBUtils().checkTime(selectedTime)) {
         setState(() {
@@ -333,8 +319,6 @@ class _AddReminderState extends State<AddReminder> {
   }
 
   void setReminder() async {
-    //prefs = await SharedPreferences.getInstance();
-    //TODO logic to check text field is empty or not
     if (tileContoller.text.isEmpty || notesController.text.isEmpty) {
       setState(() {
         tileContoller.text.isEmpty
@@ -362,7 +346,6 @@ class _AddReminderState extends State<AddReminder> {
       } else {
         await FHBUtils().create(model, 'reminders').then((res) {
           Navigator.of(context).pop();
-          //MyReminders.of(context).refresh();
         });
       }
       _triggerNotification(model);
@@ -376,7 +359,6 @@ class _AddReminderState extends State<AddReminder> {
     var iosPlatformChannelSpecifies = new IOSNotificationDetails();
     var platformChannelSpecifies = new NotificationDetails(
         androidPlatformChannelSpecifies, iosPlatformChannelSpecifies);
-    //await flutterLocalNotificationsPlugin.show(0, 'TEST', 'Hi floks this sample notification', platformChannelSpecifies,payload: 'Hello mohan!! How are you?');
     var timeArray = model.time.split(':');
     var hour = int.parse(timeArray[0]);
     var mintues = int.parse(timeArray[1].substring(0, 2));
@@ -401,7 +383,6 @@ class _AddReminderState extends State<AddReminder> {
     switch (model.interval) {
       case 'Day':
         {
-          //var time = Time(hour, mintues, 0);
           var time = Time(hour, mintues, 0);
           await flutterLocalNotificationsPlugin.showDailyAtTime(
               1, model.title, model.notes, time, platformChannelSpecifies);
@@ -432,22 +413,5 @@ class _AddReminderState extends State<AddReminder> {
         break;
     }
 
-    //await flutterLocalNotificationsPlugin.
-//    await flutterLocalNotificationsPlugin.show(0, 'TEST', 'Hi floks this sample notification', platformChannelSpecifies,payload: 'Hello mohan!! How are you?');
   }
-
-  /*getRemindersList() async {
-    prefs = await SharedPreferences.getInstance();
-
-    String getData = await prefs.get('reminders');
-    if (getData == null) {
-      detailsList = new List();
-    } else {
-      detailsList = json.decode(getData);
-
-      reverseDetailsList = detailsList.reversed.toList();
-    }
-
-    return detailsList;
-  }*/
 }

@@ -1,3 +1,4 @@
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/database/model/CountryMetrics.dart';
 import 'package:myfhb/database/model/UnitsMesurement.dart';
@@ -267,5 +268,5 @@ class ImageUrlUtils {
 }
 
 class GoogleApiKey {
-  static String place_key = 'AIzaSyBJVk-_P30Ix8eqfZj0E7nWJdWJDbz3e6I';
+  static String place_key = CommonUtil.GOOGLE_PLACE_API_KEY;
 }

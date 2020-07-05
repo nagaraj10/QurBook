@@ -18,19 +18,16 @@ class _SplashScreenState extends State<SplashScreen> {
       var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
       if (!isFirstTime) {
         PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, 'true');
-        PageNavigator.goToPermanent(context, '/intro_slider');
+        PageNavigator.goToPermanent(context, '/intro-slider');
       } else {
         String authToken =
             PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-
         if (authToken != null) {
-          PageNavigator.goToPermanent(context, '/dashboard_screen');
+          PageNavigator.goToPermanent(context, '/dashboard-screen');
         } else {
-          PageNavigator.goToPermanent(context, '/sign_in_screen');
+          PageNavigator.goToPermanent(context, '/sign-in-screen');
         }
       }
-
-      //setState(() {});
     });
   }
 

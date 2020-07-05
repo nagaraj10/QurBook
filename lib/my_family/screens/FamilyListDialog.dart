@@ -44,13 +44,9 @@ class FamilyListDialogState extends State<FamilyListDialog> {
       _familyListBloc = new FamilyListBloc();
     }
 
-    //CommonUtil.showLoadingDialogWithCustomChild(context, _keyLoader, '', getDialogBoxWithFamilyList(widget.familyData));
-
     getDialogBoxWithFamilyMember(widget.familyData).then((widget) {
       return widget;
     });
-
-    //return Container(child: Text('Empty'),);
   }
 
   Widget getFamilyMemberList() {
@@ -232,7 +228,6 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                                 sharedByMe[index].profileData.id)
                             .then((onValue) {
                           Navigator.of(context).pop();
-                          //getUserProfileData();
                         });
                       },
                     ),
@@ -241,7 +236,6 @@ class FamilyListDialogState extends State<FamilyListDialog> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    //TODO chnage theme
                     color: Color(new CommonUtil().getMyPrimaryColor()),
                     borderRadius: BorderRadius.circular(10)),
                 child: FlatButton(

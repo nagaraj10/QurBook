@@ -156,7 +156,6 @@ class HealthReportListForUserBlock implements BaseBloc {
     try {
       digitRecogResponse = await _healthReportListForUserRepository
           .postDevicesData(fileName, metaID, jsonData);
-//      imageDataSink.add(ApiResponse.completed(postImageResponse));
     } catch (e) {
       imageDataSink.add(ApiResponse.error(e.toString()));
     }
