@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,8 @@ import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/ProfilePic.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 
@@ -26,7 +30,6 @@ class CommonWidgets {
   Widget getRaisedButton() {
     return new RaisedButton(
       textColor: Colors.white,
-      
       color: Color(new CommonUtil().getMyPrimaryColor()),
       onPressed: () {},
       padding: const EdgeInsets.all(8.0),
@@ -82,8 +85,8 @@ class CommonWidgets {
     );
   }
 
-  Widget getBookMarkedIcon(Data docs) {
-    return docs.isBookmarked
+  Widget getBookMarkedIcon(DoctorIds docs) {
+    return docs.isActive
         ? ImageIcon(
             AssetImage('assets/icons/record_fav_active.png'),
             color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -147,13 +150,32 @@ class CommonWidgets {
     ));
   }
 
-  Widget showDoctorDetailView(Data docs, BuildContext context) {
+  Widget getClipOvalImageNew(ProfilePic profileImage, double imageSize) {
+    return ClipOval(child: getProfilePicWidget(profileImage));
+  }
+
+  Widget getProfilePicWidget(ProfilePic profilePicThumbnail) {
+    return profilePicThumbnail != null
+        ? Image.memory(
+            Uint8List.fromList(profilePicThumbnail.data),
+            height: 50,
+            width: 50,
+            fit: BoxFit.cover,
+          )
+        : Container(
+            color: Color(fhbColors.bgColorContainer),
+            height: 50,
+            width: 50,
+          );
+  }
+
+  Widget showDoctorDetailView(DoctorIds docs, BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             content: Container(
               width: MediaQuery.of(context).size.width - 20,
               child: Stack(
@@ -180,8 +202,8 @@ class CommonWidgets {
                         children: <Widget>[
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child: getClipOvalImage('${docs.profileimage}',
-                                fhbStyles.detailClipImage),
+                            child:
+                                getClipOvalImageNew(docs.profilePic,fhbStyles.detailClipImage),
                           ),
                           getSizeBoxWidth(10.0),
                           Expanded(
@@ -190,8 +212,8 @@ class CommonWidgets {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                getTextForDoctors('${docs.fullname}'),
-                                getDoctoSpecialist('${docs.specialist}'),
+                                getTextForDoctors('${docs.name}'),
+                                getDoctoSpecialist('${docs.specialization}'),
                                 getDoctorsAddress('${docs.city}')
                               ],
                             ),
@@ -350,15 +372,14 @@ class CommonWidgets {
     );
   }
 
-  Widget getDoctorStatusWidget(Data docs) {
+  Widget getDoctorStatusWidget(DoctorIds docs) {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
         width: 15.0,
         height: 15.0,
         decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: getDoctorStatus('${docs.isAvailable}')
+            shape: BoxShape.circle, color: getDoctorStatus('${docs.isActive}')
             //color: getDoctorStatus('5'),
             ),
       ),
@@ -380,6 +401,7 @@ class CommonWidgets {
   }
 
   Color getDoctorStatus(String s) {
+    print(s + 'getDoctorStatus' );
     switch (s) {
       case 'available':
         return Colors.green;

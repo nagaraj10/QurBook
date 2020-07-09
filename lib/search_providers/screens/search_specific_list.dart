@@ -168,7 +168,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return Center(
                 child: SizedBox(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),),
               width: 30,
               height: 30,
             ));

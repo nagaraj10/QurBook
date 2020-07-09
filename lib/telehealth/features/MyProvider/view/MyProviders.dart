@@ -3,13 +3,15 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
 import '../../SearchWidget/view/SearchWidget.dart';
 
-import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
+
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 
@@ -28,16 +30,18 @@ class _MyProvidersState extends State<MyProviders> {
   CommonWidgets commonWidgets = new CommonWidgets();
   bool isSearch = false;
 
-  List<Data> doctorData = new List();
+  List<DoctorIds> doctorData = new List();
 
   @override
   void initState() {
     super.initState();
+    getDataForProvider();
+
+    
   }
 
   @override
   Widget build(BuildContext context) {
-    getDataForProvider();
     return Scaffold(
         appBar: AppBar(
           leading: Icon(Icons
@@ -70,13 +74,8 @@ class _MyProvidersState extends State<MyProviders> {
               },
             ),
             Expanded(
-              child: ListView.builder(
-                itemBuilder: (BuildContext ctx, int i) => doctorsListItem(
-                    ctx, i, isSearch ? doctorData : providerViewModel.docsList),
-                itemCount: isSearch
-                    ? doctorData.length
-                    : providerViewModel.docsList.length,
-              ),
+              child:
+             getDoctorProviderList(),
             )
           ],
         )),
@@ -93,7 +92,7 @@ class _MyProvidersState extends State<MyProviders> {
 
   
 
-  Widget doctorsListItem(BuildContext ctx, int i, List<Data> docs) {
+  Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return ExpandableNotifier(
       child: Container(
         padding: EdgeInsets.all(4.0),
@@ -121,7 +120,7 @@ class _MyProvidersState extends State<MyProviders> {
     );
   }
 
-  Widget collapseListItem(BuildContext ctx, int i, List<Data> docs) {
+  Widget collapseListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
       padding: EdgeInsets.all(2.0),
       child: ExpandableButton(
@@ -130,7 +129,7 @@ class _MyProvidersState extends State<MyProviders> {
     );
   }
 
-  Widget expandedListItem(BuildContext ctx, int i, List<Data> docs) {
+  Widget expandedListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
       padding: EdgeInsets.all(5.0),
       width: MediaQuery.of(context).size.width,
@@ -162,7 +161,7 @@ class _MyProvidersState extends State<MyProviders> {
     (context as Element).markNeedsBuild();
   }
 
-  Widget getDoctorsWidget(int i, List<Data> docs) {
+  Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -171,8 +170,8 @@ class _MyProvidersState extends State<MyProviders> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-              child: commonWidgets.getClipOvalImage(
-                  '${docs[i].profileimage}', fhbStyles.cardClipImage),
+              child: commonWidgets.getClipOvalImageNew(
+                  docs[i].profilePicThumbnail, fhbStyles.cardClipImage),
             ),
             new Positioned(
               bottom: -1.0,
@@ -193,7 +192,7 @@ class _MyProvidersState extends State<MyProviders> {
                   Expanded(
                       child: Row(
                     children: [
-                      commonWidgets.getTextForDoctors('${docs[i].fullname}'),
+                      commonWidgets.getTextForDoctors('${docs[i].name}'),
                       commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
@@ -219,7 +218,7 @@ class _MyProvidersState extends State<MyProviders> {
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
-              commonWidgets.getDoctoSpecialist('${docs[i].specialist}'),
+              commonWidgets.getDoctoSpecialist('${docs[i].specialization}'),
               commonWidgets.getSizedBox(5.0),
               commonWidgets.getDoctorsAddress('${docs[i].city}')
             ],
@@ -229,11 +228,11 @@ class _MyProvidersState extends State<MyProviders> {
     );
   }
 
-  void getDataForProvider() {
+  void getDataForProvider() async{
     if (firstTym == false) {
       firstTym = true;
       providerViewModel = Provider.of<MyProviderViewModel>(context);
-      providerViewModel.fetchDoctors();
+      await providerViewModel.fetchProviderDoctors();
       //doctorData .addAll(providerViewModel.docsList);
       providerViewModel.getDateSlots();
     }
@@ -243,7 +242,7 @@ class _MyProvidersState extends State<MyProviders> {
     print(doctorName);
     doctorData.clear();
     if (doctorName != null) {
-      for (Data fiterData
+      for (DoctorIds fiterData
           in providerViewModel.getFilterDoctorList(doctorName)) {
         doctorData.add(fiterData);
       }
@@ -251,5 +250,33 @@ class _MyProvidersState extends State<MyProviders> {
     }
 
     setState(() {});
+  }
+
+  Widget getDoctorProviderList(){
+          providerViewModel = Provider.of<MyProviderViewModel>(context);
+
+    return new FutureBuilder<List<DoctorIds>>(
+      future: providerViewModel.fetchProviderDoctors(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return new Center(
+            child: new CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return new Text('Error: ${snapshot.error}');
+        } else {
+          final items = snapshot.data ?? <DoctorIds>[]; // handle the case that data is null
+
+          return new ListView.builder(
+                itemBuilder: (BuildContext ctx, int i) => doctorsListItem(
+                    ctx, i, isSearch ? doctorData : snapshot.data),
+                itemCount: isSearch
+                    ? doctorData.length
+                    : providerViewModel.doctorIdsList.length,
+              );
+        }
+      },
+    );
+  
   }
 }

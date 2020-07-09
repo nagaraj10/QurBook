@@ -11,11 +11,11 @@ import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 
-
 import 'AppException.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
+  final String _baseUrlV2 = Constants.BASEURL_V2;
 
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -35,6 +35,7 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
   Future<dynamic> verifyOTP(String url, String otpVerifyData) async {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
@@ -42,7 +43,6 @@ class ApiBaseHelper {
 
     var responseJson;
 
-    
     try {
       final response = await http.post(_baseUrl + url,
           body: otpVerifyData, headers: requestHeaders);
@@ -347,6 +347,7 @@ class ApiBaseHelper {
           responseJson = convert.jsonDecode(response.body.toString());
         }
 
+        print(responseJson);
         return responseJson;
 
       case 201:
@@ -715,9 +716,7 @@ class ApiBaseHelper {
     try {
       final response = await http.post(_baseUrl + url, headers: requestHeaders);
 
-      
       responseJson = _returnResponse(response);
-
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
@@ -734,12 +733,10 @@ class ApiBaseHelper {
 
     var responseJson;
 
-    
     try {
       final response = await http.post(_baseUrl + url,
           body: otpVerifyData, headers: requestHeaders);
       responseJson = _returnResponse(response);
-      
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
@@ -754,7 +751,6 @@ class ApiBaseHelper {
       'Authorization': authToken,
     };
 
-    
     var responseJson;
     try {
       final response =
@@ -781,7 +777,24 @@ class ApiBaseHelper {
           await http.get(_baseUrl + url + param, headers: requestHeaders);
 
       responseJson = _returnResponse(response);
-      
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getTelehealthDoctorsList(String url) async {
+    Map<String, String> requestHeaders = {
+      'accept': 'application/json',
+      'Authorization':
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQyMDU3NzQ0NTIsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0MjAyMTc0NDUyLCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5MTc2MTE3ODIyIiwidXNlcklkIjoiYWM5ZDExNGQtOGUwMS00YzA5LThkNzQtODhiOTkwZGVkNGMzIiwiaWF0IjoxNTk0MjAyMTc0LCJleHAiOjE1OTc4MDIxNzQsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImU3YTk2YWU0LWE5ZDUtNDZkNy1hNTJiLWM3Yjk4N2ZlYWQzOSJ9._YG3TnIFLL00mOWQwctX9hQTh1D32LNNL4fm_FsgrMo',
+    };
+
+    var responseJson;
+    try {
+      final response =
+          await http.get(_baseUrlV2 + url, headers: requestHeaders);
+      responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }

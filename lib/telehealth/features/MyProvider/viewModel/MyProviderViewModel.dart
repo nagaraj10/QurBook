@@ -1,13 +1,20 @@
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
+import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/mockDoctorsData.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
 
 class MyProviderViewModel extends ChangeNotifier {
   List<GetAllPatientsModel> mockDoctors = List<GetAllPatientsModel>();
   List<Data> docsList = new List<Data>();
+  List<DoctorIds> doctorIdsList = new List();
   List<DateSlotTimings> dateSlotTimings = new List();
+  List<TelehealthProviderModel> teleHealthProviderModel = new List();
+
+  ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
   Future<void> fetchDoctors() async {
     mockDoctorsData mockData = mockDoctorsData();
@@ -20,6 +27,17 @@ class MyProviderViewModel extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  Future<List<DoctorIds>> fetchProviderDoctors() async {
+    try {
+      TelehealthProviderModel myProvidersResponseList =
+          await _providersListRepository.getTelehealthDoctorsList();
+
+      doctorIdsList = myProvidersResponseList
+          .response.data.medicalPreferences.preferences.doctorIds;
+          return doctorIdsList;
+    } catch (e) {}
   }
 
   Future<void> getDateSlots() async {
@@ -39,7 +57,7 @@ class MyProviderViewModel extends ChangeNotifier {
     dateTimings2.add(new DateTiming(timeslots: '6:00'));
     dateTimings2.add(new DateTiming(timeslots: '6:00'));
     dateTimings2.add(new DateTiming(timeslots: '6:30'));
-   
+
     List<DateTiming> dateTimings3 = new List();
     dateTimings3.add(new DateTiming(timeslots: '6:00'));
     dateTimings3.add(new DateTiming(timeslots: '6:30'));
@@ -67,16 +85,16 @@ class MyProviderViewModel extends ChangeNotifier {
         new DateSlotTimings(dateTimings: '', dateTimingsSlots: dateTimings4));
   }
 
-  List<Data> getFilterDoctorList(String doctorName) {
-    List<Data> filterDoctorData = new List();
-    for (Data doctorData in docsList) {
-      print('$doctorName ************ ${doctorData.fullname}');
+  List<DoctorIds> getFilterDoctorList(String doctorName) {
+    List<DoctorIds> filterDoctorData = new List();
+    for (DoctorIds doctorData in doctorIdsList) {
+      print('$doctorName ************ ${doctorData.name}');
 
-      if (doctorData.fullname
+      if (doctorData.name
           .toLowerCase()
           .trim()
           .contains(doctorName.toLowerCase().trim())) {
-        print('$doctorName ************ $doctorData.fullname');
+        print('$doctorName ************ $doctorData.name');
         filterDoctorData.add(doctorData);
       }
     }

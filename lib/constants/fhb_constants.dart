@@ -1,8 +1,11 @@
 library fhb_constants;
 
 import 'package:myfhb/common/CommonUtil.dart';
- String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
- String BASEURL_COVERIMAGE =CommonUtil.BASE_COVER_IMAGE;
+
+String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
+String BASEURL_COVERIMAGE = CommonUtil.BASE_COVER_IMAGE;
+String BASEURL_V2=CommonUtil.BASE_URL_V2;
+
 const String APP_NAME = 'myFHB';
 const String MOB_NUM = 'Mobile number';
 const String ENTER_MOB_NUM = 'Enter your mobile number';
@@ -171,4 +174,6 @@ const String STR_OTP_FIELD = 'Please enter a valid OTP';
 const String STR_ERROR_LOADING_DATA = 'Unable To Load Data,Please Try Again';
 const String STR_ERROR_LOADING_IMAGE = 'Unable To Load Image,Please Try Again';
 
-const String KEY_FAMILYREL='keyFamilyrel';
+const String KEY_FAMILYREL = 'keyFamilyrel';
+
+

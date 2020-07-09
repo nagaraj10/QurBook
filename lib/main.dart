@@ -148,6 +148,7 @@ void setValues(List<dynamic> values){
   CommonUtil.GOOGLE_STATIC_MAP_URL=values[6];
   CommonUtil.BASE_URL_FROM_RES=values[7];
   CommonUtil.BASE_COVER_IMAGE=values[8];
+  CommonUtil.BASE_URL_V2=values[9];
 }
 
 
