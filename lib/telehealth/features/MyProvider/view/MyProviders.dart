@@ -36,8 +36,6 @@ class _MyProvidersState extends State<MyProviders> {
   void initState() {
     super.initState();
     getDataForProvider();
-
-    
   }
 
   @override
@@ -74,8 +72,7 @@ class _MyProvidersState extends State<MyProviders> {
               },
             ),
             Expanded(
-              child:
-             getDoctorProviderList(),
+              child: getDoctorProviderList(),
             )
           ],
         )),
@@ -89,8 +86,6 @@ class _MyProvidersState extends State<MyProviders> {
           ),
         ));
   }
-
-  
 
   Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return ExpandableNotifier(
@@ -176,7 +171,7 @@ class _MyProvidersState extends State<MyProviders> {
             new Positioned(
               bottom: -1.0,
               right: -4.0,
-              child: commonWidgets.getDoctorStatusWidget(docs[i]),
+              child: commonWidgets.getDoctorStatusWidget(docs[i],i),
             )
           ],
         ),
@@ -218,7 +213,9 @@ class _MyProvidersState extends State<MyProviders> {
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
-              commonWidgets.getDoctoSpecialist('${docs[i].specialization}'),
+              Row(children: [
+                commonWidgets.getDoctoSpecialist('${docs[i].specialization}'),
+              ]),
               commonWidgets.getSizedBox(5.0),
               commonWidgets.getDoctorsAddress('${docs[i].city}')
             ],
@@ -228,7 +225,7 @@ class _MyProvidersState extends State<MyProviders> {
     );
   }
 
-  void getDataForProvider() async{
+  void getDataForProvider() async {
     if (firstTym == false) {
       firstTym = true;
       providerViewModel = Provider.of<MyProviderViewModel>(context);
@@ -252,8 +249,8 @@ class _MyProvidersState extends State<MyProviders> {
     setState(() {});
   }
 
-  Widget getDoctorProviderList(){
-          providerViewModel = Provider.of<MyProviderViewModel>(context);
+  Widget getDoctorProviderList() {
+    providerViewModel = Provider.of<MyProviderViewModel>(context);
 
     return new FutureBuilder<List<DoctorIds>>(
       future: providerViewModel.fetchProviderDoctors(),
@@ -265,18 +262,18 @@ class _MyProvidersState extends State<MyProviders> {
         } else if (snapshot.hasError) {
           return new Text('Error: ${snapshot.error}');
         } else {
-          final items = snapshot.data ?? <DoctorIds>[]; // handle the case that data is null
+          final items = snapshot.data ??
+              <DoctorIds>[]; // handle the case that data is null
 
           return new ListView.builder(
-                itemBuilder: (BuildContext ctx, int i) => doctorsListItem(
-                    ctx, i, isSearch ? doctorData : snapshot.data),
-                itemCount: isSearch
-                    ? doctorData.length
-                    : providerViewModel.doctorIdsList.length,
-              );
+            itemBuilder: (BuildContext ctx, int i) =>
+                doctorsListItem(ctx, i, isSearch ? doctorData : snapshot.data),
+            itemCount: isSearch
+                ? doctorData.length
+                : providerViewModel.doctorIdsList.length,
+          );
         }
       },
     );
-  
   }
 }

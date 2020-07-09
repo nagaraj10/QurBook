@@ -372,14 +372,14 @@ class CommonWidgets {
     );
   }
 
-  Widget getDoctorStatusWidget(DoctorIds docs) {
+  Widget getDoctorStatusWidget(DoctorIds docs,int position) {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
         width: 15.0,
         height: 15.0,
         decoration: BoxDecoration(
-            shape: BoxShape.circle, color: getDoctorStatus('${docs.isActive}')
+            shape: BoxShape.circle, color: getDoctorStatus('${docs.isActive}',position)
             //color: getDoctorStatus('5'),
             ),
       ),
@@ -400,8 +400,13 @@ class CommonWidgets {
     );
   }
 
-  Color getDoctorStatus(String s) {
+  Color getDoctorStatus(String s,int position) {
     print(s + 'getDoctorStatus' );
+    if(position%2==0){
+      s='available';
+    }else{
+      s='busy';
+    }
     switch (s) {
       case 'available':
         return Colors.green;
@@ -411,4 +416,6 @@ class CommonWidgets {
         return null;
     }
   }
+
+
 }
