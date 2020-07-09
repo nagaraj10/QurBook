@@ -10,6 +10,8 @@ import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.d
 import '../../SearchWidget/view/SearchWidget.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/styles/styles.dart' as fhbStyles;
 
 class MyProviders extends StatefulWidget {
   @override
@@ -24,7 +26,7 @@ class _MyProvidersState extends State<MyProviders> {
   bool firstTym = false;
   String doctorsName;
   CommonWidgets commonWidgets = new CommonWidgets();
-  bool isSearch=false;
+  bool isSearch = false;
 
   List<Data> doctorData = new List();
 
@@ -71,7 +73,9 @@ class _MyProvidersState extends State<MyProviders> {
               child: ListView.builder(
                 itemBuilder: (BuildContext ctx, int i) => doctorsListItem(
                     ctx, i, isSearch ? doctorData : providerViewModel.docsList),
-                itemCount: isSearch?doctorData.length:providerViewModel.docsList.length,
+                itemCount: isSearch
+                    ? doctorData.length
+                    : providerViewModel.docsList.length,
               ),
             )
           ],
@@ -80,16 +84,20 @@ class _MyProvidersState extends State<MyProviders> {
           onPressed: () {
             //PageNavigator.goTo(context, '/add_appointments');
           },
-          child: Icon(Icons.add),
-          backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+          child: Icon(
+            Icons.add,
+            color: Color(new CommonUtil().getMyPrimaryColor()),
+          ),
         ));
   }
+
+  
 
   Widget doctorsListItem(BuildContext ctx, int i, List<Data> docs) {
     return ExpandableNotifier(
       child: Container(
-        padding: EdgeInsets.all(8.0),
-        margin: EdgeInsets.only(left: 10, right: 10, top: 8),
+        padding: EdgeInsets.all(4.0),
+        margin: EdgeInsets.only(left: 20, right: 20, top: 8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -115,8 +123,7 @@ class _MyProvidersState extends State<MyProviders> {
 
   Widget collapseListItem(BuildContext ctx, int i, List<Data> docs) {
     return Container(
-      padding: EdgeInsets.all(4.0),
-      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.all(2.0),
       child: ExpandableButton(
         child: getDoctorsWidget(i, docs),
       ),
@@ -125,7 +132,7 @@ class _MyProvidersState extends State<MyProviders> {
 
   Widget expandedListItem(BuildContext ctx, int i, List<Data> docs) {
     return Container(
-      padding: EdgeInsets.all(4.0),
+      padding: EdgeInsets.all(5.0),
       width: MediaQuery.of(context).size.width,
       child: ExpandableButton(
         child: Column(
@@ -137,11 +144,14 @@ class _MyProvidersState extends State<MyProviders> {
                 _selectedValue = dateTime;
               });
             }),
-            commonWidgets.getSizedBox(20.0),
-            Column(
-              children:
-                  commonWidgets.getTimeSlots(providerViewModel.dateSlotTimings),
-            )
+            commonWidgets.getSizedBox(5.0),
+            Container(
+              margin: EdgeInsets.only(left: 5),
+              child: Column(
+                children: commonWidgets
+                    .getTimeSlots(providerViewModel.dateSlotTimings),
+              ),
+            ),
           ],
         ),
       ),
@@ -154,29 +164,67 @@ class _MyProvidersState extends State<MyProviders> {
 
   Widget getDoctorsWidget(int i, List<Data> docs) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Stack(
+        new Stack(
+          overflow: Overflow.visible,
           children: <Widget>[
-            commonWidgets.getClipOvalImage('${docs[i].profileimage}')
+            Container(
+              alignment: Alignment.center,
+              child: commonWidgets.getClipOvalImage(
+                  '${docs[i].profileimage}', fhbStyles.cardClipImage),
+            ),
+            new Positioned(
+              bottom: -1.0,
+              right: -4.0,
+              child: commonWidgets.getDoctorStatusWidget(docs[i]),
+            )
           ],
         ),
-        commonWidgets.getSizeBoxWidth(20.0),
+        commonWidgets.getSizeBoxWidth(10.0),
         Expanded(
-          // flex: 4,
+          flex: 4,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              commonWidgets.getTextForDoctors('${docs[i].fullname}'),
-              commonWidgets.getSizedBox(10.0),
-              commonWidgets.getDoctorPhoneNumber('${docs[i].phoneNumber}'),
-              SizedBox(height: 10.0),
-              commonWidgets.getDoctorsAddress('${docs[i].address}')
+              Row(
+                children: [
+                  Expanded(
+                      child: Row(
+                    children: [
+                      commonWidgets.getTextForDoctors('${docs[i].fullname}'),
+                      commonWidgets.getSizeBoxWidth(10.0),
+                      commonWidgets.getIcon(
+                          width: fhbStyles.imageWidth,
+                          height: fhbStyles.imageHeight,
+                          icon: Icons.info,
+                          onTap: () {
+                            print('on Info pressed');
+                            commonWidgets.showDoctorDetailView(
+                                docs[i], context);
+                          }),
+                    ],
+                  )),
+                  commonWidgets.getIcon(
+                      width: fhbStyles.imageWidth,
+                      height: fhbStyles.imageHeight,
+                      icon: Icons.check_circle,
+                      onTap: () {
+                        print('on check  pressed');
+                      }),
+                  commonWidgets.getSizeBoxWidth(15.0),
+                  commonWidgets.getBookMarkedIcon(docs[i]),
+                  commonWidgets.getSizeBoxWidth(10.0),
+                ],
+              ),
+              commonWidgets.getSizedBox(5.0),
+              commonWidgets.getDoctoSpecialist('${docs[i].specialist}'),
+              commonWidgets.getSizedBox(5.0),
+              commonWidgets.getDoctorsAddress('${docs[i].city}')
             ],
           ),
         ),
-        commonWidgets.getDownArrowWidget()
       ],
     );
   }
@@ -193,14 +241,14 @@ class _MyProvidersState extends State<MyProviders> {
 
   onSearched(String doctorName) {
     print(doctorName);
+    doctorData.clear();
     if (doctorName != null) {
-    for(Data fiterData in providerViewModel.getFilterDoctorList(doctorName)){
-     doctorData.add(fiterData); 
+      for (Data fiterData
+          in providerViewModel.getFilterDoctorList(doctorName)) {
+        doctorData.add(fiterData);
+      }
+      print(doctorData.length);
     }
-    print(doctorData.length);
-  
-    }
-  
 
     setState(() {});
   }

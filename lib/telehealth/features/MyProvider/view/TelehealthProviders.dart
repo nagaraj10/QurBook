@@ -10,7 +10,10 @@ import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavigationArguments.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigation.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigationMain.dart';
+import 'package:myfhb/telehealth/features/Devices/view/Devices.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
+import 'package:myfhb/telehealth/features/chat/view/Chat.dart';
+import 'package:myfhb/telehealth/features/telehealth/view/Telehealth.dart';
 
 class TelehealthProviders extends StatefulWidget {
   static _TelehealthProvidersState of(BuildContext context) =>
@@ -32,11 +35,11 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<BottomNavigationArguments> bottomNavigationArgumentsList = new List();
   var _widgetOptions = [
+    Telehealth(),
     MyProvidersMain(),
-    MyRecordsClone(),
     SuperMaya(),
-    MySchedule(),
-    MoreMenuScreen()
+    Chat(),
+    Devices()
   ];
 
   void _onItemTapped(int index) {
@@ -87,16 +90,16 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
 
   void getAllValuesForBottom() {
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'TeleHealth', imageIcon: 'assets/navicons/home.png'));
+        name: 'TeleHealth', imageIcon: 'assets/navicons/th.png',));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'My Records', imageIcon: 'assets/navicons/records.png'));
+        name: 'Providers', imageIcon: 'assets/navicons/my_providers.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
       name: 'Maya',
       imageIcon: 'assets/maya/maya_us_main.png',
     ));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'Accounts', imageIcon: 'assets/navicons/schedule.png'));
+        name: 'Chat', imageIcon: 'assets/navicons/Chat.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'Settings', imageIcon: 'assets/navicons/more.png'));
+        name: 'Devices', imageIcon: 'assets/navicons/more.png'));
   }
 }

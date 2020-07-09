@@ -14,8 +14,11 @@ class SearchWdigetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
+      margin: EdgeInsets.only(left: 20, right: 20),
+      child:Padding(
       padding: EdgeInsets.only(top: 10, right: 10),
+      
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -23,7 +26,7 @@ class SearchWdigetState extends State<SearchWidget> {
             child: Container(
               constraints: BoxConstraints(maxHeight: 40),
               decoration: BoxDecoration(
-                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+                  color: Colors.white),
               child: TextField(
                 controller: _searchQueryController,
                 autofocus: false,
@@ -62,6 +65,6 @@ class SearchWdigetState extends State<SearchWidget> {
           ),
         ],
       ),
-    );
+    ));
   }
 }

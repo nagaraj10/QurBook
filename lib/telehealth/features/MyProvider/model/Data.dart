@@ -11,6 +11,12 @@ class Data {
   String status;
   String conditions;
 
+  bool isBookmarked;
+  String isAvailable;
+  String consultationFee;
+  String specialist;
+  String city;
+
   Data(
       {this.userid,
       this.username,
@@ -22,7 +28,12 @@ class Data {
       this.countryCode,
       this.phoneNumber,
       this.status,
-      this.conditions});
+      this.conditions,
+      this.isBookmarked,
+      this.isAvailable,
+      this.consultationFee,
+      this.city,
+      this.specialist});
 
   Data.fromJson(Map<String, dynamic> json) {
     userid = json['userid'];
@@ -36,6 +47,12 @@ class Data {
     phoneNumber = json['phoneNumber'];
     status = json['status'];
     conditions = json['conditions'];
+    isBookmarked = json['isBookMarked'];
+    isAvailable = json['isAvailable'];
+    consultationFee = json['consultation_fee'];
+
+    specialist = json['specialist'];
+    city = json['city'];
   }
 
   Map<String, dynamic> toJson() {
@@ -50,7 +67,13 @@ class Data {
     data['countryCode'] = this.countryCode;
     data['phoneNumber'] = this.phoneNumber;
     data['status'] = this.status;
-    data['conditions']=this.conditions;
+    data['conditions'] = this.conditions;
+    data['isBookMarked'] = this.isBookmarked;
+    data['isAvailable'] = this.isAvailable;
+    data['consultation_fee'] = this.consultationFee;
+    data['specialist'] = this.specialist;
+    data['city'] = this.city;
+
     return data;
   }
 }

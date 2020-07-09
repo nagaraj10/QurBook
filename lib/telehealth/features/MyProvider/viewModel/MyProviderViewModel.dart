@@ -37,20 +37,34 @@ class MyProviderViewModel extends ChangeNotifier {
     dateTimings2.add(new DateTiming(timeslots: '5:00'));
     dateTimings2.add(new DateTiming(timeslots: '5:30'));
     dateTimings2.add(new DateTiming(timeslots: '6:00'));
-
+    dateTimings2.add(new DateTiming(timeslots: '6:00'));
+    dateTimings2.add(new DateTiming(timeslots: '6:30'));
+   
     List<DateTiming> dateTimings3 = new List();
     dateTimings3.add(new DateTiming(timeslots: '6:00'));
     dateTimings3.add(new DateTiming(timeslots: '6:30'));
     dateTimings3.add(new DateTiming(timeslots: '7:00'));
+    dateTimings3.add(new DateTiming(timeslots: '7:30'));
+    dateTimings3.add(new DateTiming(timeslots: '8:00'));
+
+    List<DateTiming> dateTimings4 = new List();
+    dateTimings4.add(new DateTiming(timeslots: '6:00'));
+    dateTimings4.add(new DateTiming(timeslots: '6:30'));
+    dateTimings4.add(new DateTiming(timeslots: '7:00'));
+    dateTimings4.add(new DateTiming(timeslots: '7:30'));
+    dateTimings4.add(new DateTiming(timeslots: '8:00'));
 
     dateSlotTimings.add(new DateSlotTimings(
         dateTimings: '10.00am - 11.30am', dateTimingsSlots: dateTimings));
     dateSlotTimings.add(new DateSlotTimings(
-        dateTimings: '02.00pm - 04.00pm', dateTimingsSlots: dateTimings1));
+        dateTimings: '10.00am - 11.30am', dateTimingsSlots: dateTimings1));
     dateSlotTimings.add(new DateSlotTimings(
         dateTimings: '05.00pm - 11.00pm', dateTimingsSlots: dateTimings2));
+
     dateSlotTimings.add(
         new DateSlotTimings(dateTimings: '', dateTimingsSlots: dateTimings3));
+    dateSlotTimings.add(
+        new DateSlotTimings(dateTimings: '', dateTimingsSlots: dateTimings4));
   }
 
   List<Data> getFilterDoctorList(String doctorName) {
@@ -58,7 +72,9 @@ class MyProviderViewModel extends ChangeNotifier {
     for (Data doctorData in docsList) {
       print('$doctorName ************ ${doctorData.fullname}');
 
-      if (doctorData.fullname.toLowerCase().trim()
+      if (doctorData.fullname
+          .toLowerCase()
+          .trim()
           .contains(doctorName.toLowerCase().trim())) {
         print('$doctorName ************ $doctorData.fullname');
         filterDoctorData.add(doctorData);

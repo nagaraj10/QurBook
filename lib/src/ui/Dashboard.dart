@@ -195,6 +195,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 Padding(
                                                   padding: EdgeInsets.all(10.0),
                                                   child: Image.asset(
+                                                    'assets/navicons/th.png',
+                                                    color: Colors.white,
+                                                    height: 25,
+                                                    width: 25,
+                                                  ),
+                                                ),
+                                                Constants.RECORDS_TITLE),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              'TeleHealth',
+                                              style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 11),
+                                            )
+                                          ],
+                                        ),
+                                        onTap: () {
+                                          navigateToTelehealthScreen(1);
+                                        },
+                                      )),
+                                  Positioned(
+                                    bottom: 50,
+                                    right: 20,
+                                    child: InkWell(
+                                      child:Column(
+                                          children: <Widget>[
+                                            FHBBasicWidget.customShowCase(
+                                                _records,
+                                                Constants.RECORDS_DESC,
+                                                Padding(
+                                                  padding: EdgeInsets.all(10.0),
+                                                  child: Image.asset(
                                                     'assets/navicons/records.png',
                                                     color: Colors.white,
                                                     height: 25,
@@ -211,17 +245,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                   color: Colors.white,
                                                   fontSize: 11),
                                             )
-                                          ],
-                                        ),
-                                        onTap: () {
-                                          moveToNextScreen(1);
-                                        },
-                                      )),
-                                  Positioned(
-                                    bottom: 50,
-                                    right: 20,
-                                    child: InkWell(
-                                      child: Column(
+                                          ]
+                                      
+                                      /* Column(
                                         children: <Widget>[
                                           FHBBasicWidget.customShowCase(
                                               _family,
@@ -245,10 +271,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 color: Colors.white,
                                                 fontSize: 11),
                                           )
-                                        ],
+                                        ],*/
                                       ),
                                       onTap: () {
-                                        moveToFamilyOrprovider(1);
+                                                                                  moveToNextScreen(1);
+
                                       },
                                     ),
                                   )
@@ -407,18 +434,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
    void navigateToHomeScreen(int position) {
-   /* Navigator.pushNamed(
+    Navigator.pushNamed(
       context,
       '/home-screen',
       arguments: HomeScreenArguments(selectedIndex: position),
-    ).then((value) {});*/
-     Navigator.pushNamed(
+    ).then((value) {});
+   
+
+    
+  }
+
+  void navigateToTelehealthScreen(int position){
+  Navigator.pushNamed(
       context,
       '/telehealth-providers',
       arguments: HomeScreenArguments(selectedIndex: position),
     ).then((value) {});
-
-    
   }
 
   bool checkPagesForEveryIndex(int position) {
