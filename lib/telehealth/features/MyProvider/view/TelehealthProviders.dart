@@ -100,6 +100,6 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
         name: 'Chat', imageIcon: 'assets/navicons/Chat.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'Devices', imageIcon: 'assets/navicons/more.png'));
+        name: 'Devices', imageIcon: 'assets/navicons/reading.png'));
   }
 }

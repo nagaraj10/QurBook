@@ -56,7 +56,7 @@ class CommonWidgets {
       softWrap: false,
       style: TextStyle(
           fontWeight: FontWeight.w200,
-          color: Color(0xFF8C8C8C),
+          color: Colors.grey[600],
           fontSize: fhbStyles.fnt_city),
     );
   }
@@ -175,7 +175,7 @@ class CommonWidgets {
         builder: (BuildContext context) {
           return AlertDialog(
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             content: Container(
               width: MediaQuery.of(context).size.width - 20,
               child: Stack(
@@ -202,8 +202,8 @@ class CommonWidgets {
                         children: <Widget>[
                           Align(
                             alignment: Alignment.bottomCenter,
-                            child:
-                                getClipOvalImageNew(docs.profilePic,fhbStyles.detailClipImage),
+                            child: getClipOvalImageNew(
+                                docs.profilePic, fhbStyles.detailClipImage),
                           ),
                           getSizeBoxWidth(10.0),
                           Expanded(
@@ -355,8 +355,8 @@ class CommonWidgets {
       child: DatePicker(
         DateTime.now().add(Duration(days: -3)),
         controller: _controller,
-        width: 50,
-        height: 60,
+        width: 40,
+        height: 50,
         initialSelectedDate: DateTime.now(),
         selectionColor: Color(new CommonUtil().getMyPrimaryColor()),
         selectedTextColor: Colors.white,
@@ -372,14 +372,15 @@ class CommonWidgets {
     );
   }
 
-  Widget getDoctorStatusWidget(DoctorIds docs,int position) {
+  Widget getDoctorStatusWidget(DoctorIds docs, int position) {
     return Container(
       alignment: Alignment.bottomRight,
       child: Container(
-        width: 15.0,
-        height: 15.0,
+        width: 10.0,
+        height: 10.0,
         decoration: BoxDecoration(
-            shape: BoxShape.circle, color: getDoctorStatus('${docs.isActive}',position)
+            shape: BoxShape.circle,
+            color: getDoctorStatus('${docs.isActive}', position)
             //color: getDoctorStatus('5'),
             ),
       ),
@@ -400,12 +401,12 @@ class CommonWidgets {
     );
   }
 
-  Color getDoctorStatus(String s,int position) {
-    print(s + 'getDoctorStatus' );
-    if(position%2==0){
-      s='available';
-    }else{
-      s='busy';
+  Color getDoctorStatus(String s, int position) {
+    print(s + 'getDoctorStatus');
+    if (position % 2 == 0) {
+      s = 'available';
+    } else {
+      s = 'busy';
     }
     switch (s) {
       case 'available':
@@ -416,6 +417,4 @@ class CommonWidgets {
         return null;
     }
   }
-
-
 }

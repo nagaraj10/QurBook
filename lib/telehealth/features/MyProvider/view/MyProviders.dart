@@ -6,6 +6,7 @@ import 'package:myfhb/common/SwitchProfile.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
 import '../../SearchWidget/view/SearchWidget.dart';
@@ -42,6 +43,8 @@ class _MyProvidersState extends State<MyProviders> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          flexibleSpace: GradientAppBar(),
+
           leading: Icon(Icons
               .arrow_back_ios), // you can put Icon as well, it accepts any widget.
           title: Column(
@@ -90,7 +93,7 @@ class _MyProvidersState extends State<MyProviders> {
   Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return ExpandableNotifier(
       child: Container(
-        padding: EdgeInsets.all(4.0),
+        padding: EdgeInsets.all(2.0),
         margin: EdgeInsets.only(left: 20, right: 20, top: 8),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -126,7 +129,7 @@ class _MyProvidersState extends State<MyProviders> {
 
   Widget expandedListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
-      padding: EdgeInsets.all(5.0),
+      padding: EdgeInsets.all(2.0),
       width: MediaQuery.of(context).size.width,
       child: ExpandableButton(
         child: Column(
@@ -169,9 +172,9 @@ class _MyProvidersState extends State<MyProviders> {
                   docs[i].profilePicThumbnail, fhbStyles.cardClipImage),
             ),
             new Positioned(
-              bottom: -1.0,
-              right: -4.0,
-              child: commonWidgets.getDoctorStatusWidget(docs[i],i),
+              bottom: 0.0,
+              right: 2.0,
+              child: commonWidgets.getDoctorStatusWidget(docs[i], i),
             )
           ],
         ),
@@ -251,6 +254,7 @@ class _MyProvidersState extends State<MyProviders> {
 
   Widget getDoctorProviderList() {
     providerViewModel = Provider.of<MyProviderViewModel>(context);
+    providerViewModel.getDateSlots();
 
     return new FutureBuilder<List<DoctorIds>>(
       future: providerViewModel.fetchProviderDoctors(),

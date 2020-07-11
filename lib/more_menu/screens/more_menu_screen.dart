@@ -33,8 +33,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     'assets/maya/maya_arab_main',
   ];
 
-  List<int> myThemes = [
-    0xff5e1fe0,
+ List<int> myThemes = [
+    0xff015eea,
     0xffcf4791,
     0xff0483df,
     0xff118c94,
@@ -42,12 +42,12 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   ];
 
   List<int> myGradient = [
-    0xff753aec,
+    0xff00c0fa,
     0xfffab273,
     0xff01bbd4,
     0xff0cbcb6,
-    0xff84ce6b,
-  ];
+    0xff84ce6b];
+
 
   String selectedMaya = PreferenceUtil.getStringValue('maya_asset') != null
       ? PreferenceUtil.getStringValue('maya_asset')
