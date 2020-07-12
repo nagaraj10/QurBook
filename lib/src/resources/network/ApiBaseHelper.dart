@@ -14,7 +14,7 @@ import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'AppException.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = Constants.BASE_URL;
+  final String _baseUrl = Constants.BASEURL_V2;
   final String _baseUrlV2 = Constants.BASEURL_V2;
 
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);

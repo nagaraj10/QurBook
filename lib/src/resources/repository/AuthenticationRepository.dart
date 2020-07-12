@@ -50,13 +50,16 @@ class AuthenticationRepository {
       String middleName,
       String lastName) async {
     Map<String, dynamic> mapForSignUp = new Map();
-    mapForSignUp['sourceName'] = CommonConstants.strTrident;
+    //mapForSignUp['sourceName'] = CommonConstants.strTrident;
     mapForSignUp['countryCode'] = countryCode;
     mapForSignUp['phoneNumber'] = phoneNumber;
     mapForSignUp['email'] = email;
     mapForSignUp['gender'] = gender;
     mapForSignUp['firstName'] = name;
     mapForSignUp['lastName'] = lastName;
+    mapForSignUp['sourceId'] = "e13019a4-1446-441b-8af1-72c40c725548";
+    mapForSignUp['entityId'] = "28858877-4710-4dd3-899f-0efe0e9255db";
+    mapForSignUp['roleId'] = "285bbe41-3030-4b0e-b914-00e404a77032";
 
     if (middleName != '') mapForSignUp['middleName'] = middleName;
 

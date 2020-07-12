@@ -44,9 +44,13 @@ class LoginBloc with Validators implements BaseBloc {
 
   Future<SignIn> submit(String phoneNumber, String countryCode) async {
     var signInData = {};
-    signInData['sourceName'] = CommonConstants.strTrident;
+    //signInData['sourceName'] = CommonConstants.strTrident;
     signInData['countryCode'] = '+' + countryCode;
     signInData['phoneNumber'] = phoneNumber;
+    signInData['sourceId'] = "e13019a4-1446-441b-8af1-72c40c725548";
+    signInData['entityId'] = "28858877-4710-4dd3-899f-0efe0e9255db";
+    signInData['roleId'] = "285bbe41-3030-4b0e-b914-00e404a77032";
+
     var jsonString = convert.jsonEncode(signInData);
 
     signInSink.add(ApiResponse.loading('Signing in user'));
@@ -68,7 +72,9 @@ class LoginBloc with Validators implements BaseBloc {
       String passsword,
       String bloodGroup,
       String dateOfBirth,
-      File file,String middleName,String lastName) async {
+      File file,
+      String middleName,
+      String lastName) async {
     signUpSink.add(ApiResponse.loading('Signing in user'));
     SignUp signUp;
     try {
@@ -81,12 +87,15 @@ class LoginBloc with Validators implements BaseBloc {
           passsword,
           bloodGroup,
           dateOfBirth,
-          file,middleName,lastName);
+          file,
+          middleName,
+          lastName);
     } catch (e) {
       signUpSink.add(ApiResponse.error(e.toString()));
     }
     return signUp;
   }
+
   Future<SignOutResponse> logout() async {
     signOutSink.add(ApiResponse.loading('Sign out'));
     SignOutResponse signOutResponse;
