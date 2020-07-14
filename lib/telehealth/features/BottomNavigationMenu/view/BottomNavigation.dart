@@ -29,7 +29,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.blue,
+      color: Colors.transparent,
       padding: EdgeInsets.only(top: 20),
       child: CurvedNavigationBar(
           key: _bottomNavigationKey,
