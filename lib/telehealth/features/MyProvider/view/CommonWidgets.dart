@@ -1,16 +1,21 @@
 import 'dart:typed_data';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
+import 'package:gmiwidgetspackage/widgets/GridViewWidget.dart';
+import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/ProfilePic.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
 
 class CommonWidgets {
   Widget getTextForDoctors(String docName) {
@@ -28,13 +33,21 @@ class CommonWidgets {
   }
 
   Widget getRaisedButton() {
-    return new RaisedButton(
-      textColor: Colors.white,
-      color: Color(new CommonUtil().getMyPrimaryColor()),
-      onPressed: () {},
-      padding: const EdgeInsets.all(8.0),
-      child: new Text(
-        "Book Now",
+    return  SizedBoxWithChild(
+      width: 85,
+      height: 35,
+      child: FlatButton(
+        shape: RoundedRectangleBorder(
+            borderRadius:
+            BorderRadius.circular(8.0),
+            side: BorderSide(color: Colors.deepPurple)),
+        color: Colors.white,
+        textColor: Colors.deepPurple,
+        padding: EdgeInsets.all(8.0),
+        onPressed: () {
+        },
+        child:
+        TextWidget(text: 'Book Now', fontsize: 12),
       ),
     );
   }
@@ -92,15 +105,15 @@ class CommonWidgets {
         },
         child: docs.isDefault
             ? ImageIcon(
-                AssetImage('assets/icons/record_fav_active.png'),
-                color: Color(new CommonUtil().getMyPrimaryColor()),
-                size: fhbStyles.imageWidth,
-              )
+          AssetImage('assets/icons/record_fav_active.png'),
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          size: fhbStyles.imageWidth,
+        )
             : ImageIcon(
-                AssetImage('assets/icons/record_fav.png'),
-                color: Colors.black,
-                size: fhbStyles.imageWidth,
-              ));
+          AssetImage('assets/icons/record_fav.png'),
+          color: Colors.black,
+          size: fhbStyles.imageWidth,
+        ));
   }
 
   Widget getGridView() {
@@ -185,7 +198,19 @@ class CommonWidgets {
               child: Stack(
                 overflow: Overflow.visible,
                 children: <Widget>[
-                 
+                  Positioned(
+                    top: -1.0,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -206,11 +231,7 @@ class CommonWidgets {
                               children: <Widget>[
                                 getTextForDoctors('${docs.name}'),
                                 getDoctoSpecialist('${docs.specialization}'),
-                                getDoctorsAddress('${docs.city}'),
-                                Divider(thickness: 1.0,color: Colors.grey[300],),
-                                getDoctorsAddress('Can Speak'),
-                                getDoctorsAddress('Hindi,English')
-
+                                getDoctorsAddress('${docs.city}')
                               ],
                             ),
                           ),
@@ -237,37 +258,44 @@ class CommonWidgets {
   Widget getTimeSlotText(String textSlotTime) {
     return Text(
       textSlotTime,
-      style: TextStyle(color: Colors.blueGrey, fontSize: fhbStyles.fnt_day),
+      style: TextStyle(color: Colors.blueGrey, fontSize: fhbStyles.fnt_sessionTime),
     );
   }
 
-  List<Widget> getTimeSlots(List<DateSlotTimings> dateTimeSlotsList) {
+  List<Widget> getTimeSlots(List<SessionsTime> dateTimeSlotsList) {
     List<Widget> rowTimeWidget = new List();
+    String sessionTimings='';
 
-    for (DateSlotTimings dateSlotTimingsObj in dateTimeSlotsList) {
-      rowTimeWidget.add(new Row(
-        children: [
-          Expanded(
-              flex: 1,
-              child: dateSlotTimingsObj.dateTimings == ''
-                  ? getSizeBoxWidth(142.0)
-                  : getTimeSlotText(dateSlotTimingsObj.dateTimings)),
-          Expanded(
-              flex: 2,
-              child: Row(
-                children:
-                    getSpecificTimeSlots(dateSlotTimingsObj.dateTimingsSlots),
-              )),
-        ],
+    for (SessionsTime dateSlotTimingsObj in dateTimeSlotsList) {
+      sessionTimings = removeLastThreeDigits(dateSlotTimingsObj.sessionStartTime)+" - "
+          +removeLastThreeDigits(dateSlotTimingsObj.sessionEndTime);
+      rowTimeWidget.add(
+          Container(
+            height: 90.0,
+        child: new Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+                flex: 1,
+                child: sessionTimings == ''
+                    ? getSizeBoxWidth(142.0)
+                    : getTimeSlotText(sessionTimings)),
+            Expanded(
+                flex: 2,
+                child: GridViewNew(dateSlotTimingsObj.slots)),
+          ],
+        ),
       ));
     }
 
-    rowTimeWidget.add(getSizedBox(20));
+    rowTimeWidget.add(getSizedBox(10));
 
     rowTimeWidget.add(Align(
       alignment: Alignment.center,
       child: getRaisedButton(),
     ));
+
+    rowTimeWidget.add(SizedBoxWidget(height: 10,));
     return rowTimeWidget;
   }
 
@@ -281,31 +309,53 @@ class CommonWidgets {
     );
   }
 
-  getSpecificTimeSlots(List<DateTiming> dateTimingsSlots) {
+  getSpecificTimeSlots(List<Slots> dateTimingsSlots) {
     List<Widget> rowSpecificTimeSlots = new List();
+    String timeSlots ='';
 
-    for (DateTiming dateTiming in dateTimingsSlots) {
-      rowSpecificTimeSlots.add(getSpecificSlots(dateTiming.timeslots));
+    for (Slots dateTiming in dateTimingsSlots) {
+
+      timeSlots = removeLastThreeDigits(dateTiming.startTime);
+
+      rowSpecificTimeSlots.add(getSpecificSlots(timeSlots));
     }
 
     return rowSpecificTimeSlots;
   }
 
-  getGridViewWidget(List<DateTiming> dateTimingsSlot) {
+  getGridViewWidget(List<Slots> dateTimingsSlot) {
+    /*return GridViewWidget(list: dateTimingsSlot,crossAxisCount: 4,crossAxisSpacing: 1.0
+        ,childAspectRatio: 1.5,widget: timeSlotsItem(dateTimingsSlot));*/
+    List _selectedIndexs=[];
+    int _selectedIndex = 0;
+
     return GridView.count(
-      crossAxisCount: 5,
-      crossAxisSpacing: 30,
-      childAspectRatio: 3,
-      children: dateTimingsSlot.map((value) {
-        return Container(
-          alignment: Alignment.center,
-          margin: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
+      crossAxisCount: 4,
+      crossAxisSpacing: 1.0,
+      childAspectRatio: 1.5,
+      children: List.generate(dateTimingsSlot.length, (index) {
+        final _isSelected = dateTimingsSlot.contains(index);
+        return GestureDetector(
+          onTap: (){
+            if(_isSelected){
+              _selectedIndexs.remove(dateTimingsSlot[index]);
+
+            }else{
+              _selectedIndexs.add(dateTimingsSlot[index]);
+            }
+          },
+          child: Container(
+            alignment: Alignment.center,
+            margin: EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              color: _isSelected?Colors.blue:null,
+              border: Border.all(color: Colors.green),
+              borderRadius: new BorderRadius.circular(5),
+            ),
+            child: Text(removeLastThreeDigits(dateTimingsSlot[index].startTime),style: TextStyle(fontSize: fhbStyles.fntSlots),),
           ),
-          child: Text("Item ${value}"),
         );
-      }).toList(),
+      }),
     );
   }
 
@@ -328,31 +378,32 @@ class CommonWidgets {
 
   Widget getSpecificSlots(String time) {
     return Container(
-      width: 35,
-      margin: const EdgeInsets.all(2.0),
-      //padding: const EdgeInsets.only(left: 5.0,right: 5.0,top:2.0,bottom: 2.0),
-      padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
-      decoration: myBoxDecoration(),
-      child: Center(
-        child: Text(
-          time,
-          style:
+          width: 35,
+          margin: const EdgeInsets.all(2.0),
+          //padding: const EdgeInsets.only(left: 5.0,right: 5.0,top:2.0,bottom: 2.0),
+          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
+          decoration: myBoxDecoration(),
+          child: Center(
+            child: Text(
+              time,
+              style:
               TextStyle(fontSize: fhbStyles.fnt_date_slot, color: Colors.green),
-        ),
-      ),
+            ),
+          ),
     );
   }
 
   Widget getDatePickerSlot(
       DatePickerController _controller, Function(DateTime) dateTimeSelected) {
     return Container(
-      height: 65,
+      height: 70,
       color: Color(fhbColors.cardShadowColor),
       child: DatePicker(
-        DateTime.now().add(Duration(days: -3)),
+        DateTime.now().add(Duration(days: -0)),
         controller: _controller,
-        width: 40,
-        height: 50,
+        daysCount: 8,
+        width: 55,
+        height: 65,
         initialSelectedDate: DateTime.now(),
         selectionColor: Color(new CommonUtil().getMyPrimaryColor()),
         selectedTextColor: Colors.white,
@@ -412,5 +463,13 @@ class CommonWidgets {
       default:
         return null;
     }
+  }
+
+  removeLastThreeDigits(String string){
+
+    String removedString='';
+    removedString = string.substring(0, string.length - 3);
+
+    return removedString;
   }
 }

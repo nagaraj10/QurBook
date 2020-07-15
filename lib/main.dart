@@ -131,6 +131,9 @@ Future<void> main() async {
 
   await FHBUtils.instance.initPlatformState();
   await FHBUtils.instance.getDb();
+  await saveToPreference();
+
+
 
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
@@ -270,5 +273,5 @@ class _MyFHBState extends State<MyFHB> {
 
     }
   }
-  
+
 }

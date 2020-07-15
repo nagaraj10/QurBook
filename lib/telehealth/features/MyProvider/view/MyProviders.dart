@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/JSONMockSlots.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -33,10 +35,44 @@ class _MyProvidersState extends State<MyProviders> {
 
   List<DoctorIds> doctorData = new List();
 
+  List<DoctorTimeSlotsModel> doctorTimeSlotsModel = new List<DoctorTimeSlotsModel>();
+  List<SessionsTime> sessionTimeModel = new List<SessionsTime>();
+  List<Slots> slotsModel = new List<Slots>();
+
+  JSONMockSlots jsonMockSlots = new JSONMockSlots();
+
   @override
   void initState() {
     super.initState();
     getDataForProvider();
+
+    getMockData();
+  }
+
+
+  getMockData(){
+
+    doctorTimeSlotsModel
+        .add(DoctorTimeSlotsModel.fromJson(jsonMockSlots.mockList));
+
+    for(int i =0;i<doctorTimeSlotsModel.length;i++){
+      for(int j = 0;j<doctorTimeSlotsModel[i].response.data.sessions.length;j++){
+
+        sessionTimeModel.add(doctorTimeSlotsModel[i].response.data.sessions[j]);
+
+        for(int k=0;k<doctorTimeSlotsModel[i].response.data.sessions[j].slots.length;k++){
+
+        slotsModel.add(doctorTimeSlotsModel[i].response.data.sessions[j].slots[k]);
+
+        }
+        
+      }
+
+    }
+
+    print("ok ok"+slotsModel.length.toString());
+
+
   }
 
   @override
@@ -160,7 +196,7 @@ class _MyProvidersState extends State<MyProviders> {
               margin: EdgeInsets.only(left: 5),
               child: Column(
                 children: commonWidgets
-                    .getTimeSlots(providerViewModel.dateSlotTimings),
+                    .getTimeSlots(sessionTimeModel),
               ),
             ),
           ],
@@ -285,7 +321,7 @@ class _MyProvidersState extends State<MyProviders> {
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
-            child: new CircularProgressIndicator(),
+            child: new CircularProgressIndicator(backgroundColor:Colors.grey,),
           );
         } else if (snapshot.hasError) {
           return new Text('Error: ${snapshot.error}');

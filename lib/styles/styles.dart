@@ -13,3 +13,5 @@ const double fnt_doc_specialist = 11.0;
 const double fnt_city = 11.0;
 const double fnt_day = 10.0;
 const double fnt_date = 10.0;
+const double fnt_sessionTime = 12.0;
+const double fntSlots = 9.0;
