@@ -141,13 +141,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.1"
-  date_picker_timeline:
-    dependency: "direct main"
-    description:
-      name: date_picker_timeline
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.2.0"
   device_info:
     dependency: transitive
     description:
@@ -331,6 +324,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.14.1"
+  gmiwidgetspackage:
+    dependency: "direct main"
+    description:
+      path: "D:\\goFHB_latest\\gmi_widgets_package\\gmi_widgets_package"
+      relative: false
+    source: path
+    version: "0.0.1"
   google_api_availability:
     dependency: transitive
     description:

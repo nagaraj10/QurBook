@@ -1,6 +1,6 @@
-import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 
@@ -47,9 +47,9 @@ class _MyProvidersState extends State<MyProviders> {
 
           leading: Icon(Icons
               .arrow_back_ios), // you can put Icon as well, it accepts any widget.
-          title: Column(
+          title:getTitle()/* Column(
             children: [
-              Text("MyProviders"),
+              Text("My Providers"),
             ],
           ),
           actions: [
@@ -57,7 +57,7 @@ class _MyProvidersState extends State<MyProviders> {
             new SwitchProfile()
                 .buildActions(context, _keyLoader, callBackToRefresh),
             Icon(Icons.more_vert),
-          ],
+          ],*/
         ),
         body: Container(
             child: Column(
@@ -88,6 +88,20 @@ class _MyProvidersState extends State<MyProviders> {
             color: Color(new CommonUtil().getMyPrimaryColor()),
           ),
         ));
+  }
+
+  Widget getTitle() {
+    return Row(
+      children: [
+        Expanded(
+          child: Text("My Providers"),
+        ),
+        Icon(Icons.notifications),
+        new SwitchProfile()
+            .buildActions(context, _keyLoader, callBackToRefresh),
+        Icon(Icons.more_vert),
+      ],
+    );
   }
 
   Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
@@ -203,15 +217,25 @@ class _MyProvidersState extends State<MyProviders> {
                           }),
                     ],
                   )),
-                  commonWidgets.getIcon(
-                      width: fhbStyles.imageWidth,
-                      height: fhbStyles.imageHeight,
-                      icon: Icons.check_circle,
-                      onTap: () {
-                        print('on check  pressed');
-                      }),
+                  docs[i].isActive
+                      ? commonWidgets.getIcon(
+                          width: fhbStyles.imageWidth,
+                          height: fhbStyles.imageHeight,
+                          icon: Icons.check_circle,
+                          onTap: () {
+                            print('on check  pressed');
+                          })
+                      : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
-                  commonWidgets.getBookMarkedIcon(docs[i]),
+                  commonWidgets.getBookMarkedIcon(docs[i], () {
+                    providerViewModel
+                        .bookMarkDoctor(!(docs[i].isDefault), docs[i])
+                        .then((status) {
+                      if (status) {
+                        setState(() {});
+                      }
+                    });
+                  }),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               ),

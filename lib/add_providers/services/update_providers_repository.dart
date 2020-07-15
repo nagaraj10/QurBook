@@ -12,15 +12,16 @@ class UpdateProvidersRepository {
       String providerId, bool isPreferred) async {
     String query = '';
     if (isPreferred) {
-      query = 'medicalPreferences||entity=doctorIds|add=$providerId|setDefault=$providerId';
+      query = 'medicalPreferences|entity=doctorIds|add=$providerId|setDefault=$providerId';
     } else {
-      query = 'medicalPreferences||entity=doctorIds|add=$providerId';
+      query = 'medicalPreferences|entity=doctorIds|add=$providerId';
     }
 
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    final response = await _helper
-        .updateProviders("userProfiles/$userID/?sections=${query}");
+   // final response = await _helper .updateProviders("userProfiles/$userID/?sections=${query}");
+        final response = await _helper.updateTeleHealthProviders("userProfiles/$userID/?sections=${query}");
+
     return UpdateProvidersId.fromJson(response);
   }
 

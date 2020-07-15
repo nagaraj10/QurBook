@@ -1128,12 +1128,12 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
           .isDisplay /*&& dataObj.categoryName != Constants.STR_FEEDBACK*/) {
         tabWidgetList.add(Column(children: [
           Padding(padding: EdgeInsets.only(top: 10)),
-          Image.network(
-            Constants.BASE_URL + dataObj.logo,
+         dataObj.logo!=null? Image.network(
+            Constants.BASEURL_V2 + dataObj.logo,
             width: 20,
             height: 20,
             color: Colors.white,
-          ),
+          ):Icon(Icons.calendar_today,size:20,color: Colors.white),
           Padding(padding: EdgeInsets.only(top: 10)),
           Container(
               child: Text(

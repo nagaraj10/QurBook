@@ -39,6 +39,7 @@ class ApiBaseHelper {
   Future<dynamic> verifyOTP(String url, String otpVerifyData) async {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
+      'accept': 'application/json'
     };
 
     var responseJson;
@@ -117,6 +118,23 @@ class ApiBaseHelper {
     try {
       final response =
           await http.put(_baseUrl + url, body: '', headers: requestHeaders);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> updateTeleHealthProviders(String url) async {
+    Map<String, String> requestHeaders = {
+      'Content-type': 'application/json',
+      'Authorization': authToken,
+    };
+
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrl + url,
+          body: '', headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -346,19 +364,26 @@ class ApiBaseHelper {
         } else {
           responseJson = convert.jsonDecode(response.body.toString());
         }
+                print(responseJson);
 
-        print(responseJson);
+
         return responseJson;
 
       case 201:
         var responseJson = convert.jsonDecode(response.body.toString());
+                print(responseJson);
+
         return responseJson;
 
       case 400:
         var responseJson = convert.jsonDecode(response.body.toString());
+                print(responseJson);
+
         return responseJson;
       case 401:
         var responseJson = convert.jsonDecode(response.body.toString());
+                print(responseJson);
+
 
         if (responseJson['message'] == Constants.STR_OTPMISMATCHED) {
           return responseJson;
@@ -372,6 +397,8 @@ class ApiBaseHelper {
 
       case 403:
         var responseJson = convert.jsonDecode(response.body.toString());
+                print(responseJson);
+
         if (responseJson['message'] == Constants.STR_OTPMISMATCHEDFOREMAIL) {
           return responseJson;
         } else {
@@ -440,14 +467,18 @@ class ApiBaseHelper {
 
   Future<dynamic> signUpPage(
       String url, Map<String, dynamic> mapForSignUp) async {
-    var response;
+    var responseJson;
     try {
       Dio dio = new Dio();
 
       dio.options.headers['accept'] = 'application/json';
-      dio.options.headers['content-Type'] = 'multipart/form-data';
+      dio.options.headers['Content-Type'] = 'multipart/form-data';
       FormData formData = new FormData.fromMap(mapForSignUp);
-      response = await dio.post(_baseUrl + url, data: formData);
+
+      
+     var  response = await dio.post(_baseUrl + url, data: formData);
+
+     responseJson =_returnResponse(response.data);
 
       return response.data;
     } on SocketException {
@@ -786,14 +817,32 @@ class ApiBaseHelper {
   Future<dynamic> getTelehealthDoctorsList(String url) async {
     Map<String, String> requestHeaders = {
       'accept': 'application/json',
-      'Authorization':
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQyMDU3NzQ0NTIsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0MjAyMTc0NDUyLCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5MTc2MTE3ODIyIiwidXNlcklkIjoiYWM5ZDExNGQtOGUwMS00YzA5LThkNzQtODhiOTkwZGVkNGMzIiwiaWF0IjoxNTk0MjAyMTc0LCJleHAiOjE1OTc4MDIxNzQsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImU3YTk2YWU0LWE5ZDUtNDZkNy1hNTJiLWM3Yjk4N2ZlYWQzOSJ9._YG3TnIFLL00mOWQwctX9hQTh1D32LNNL4fm_FsgrMo',
+      'Authorization': authToken
     };
 
     var responseJson;
     try {
       final response =
           await http.get(_baseUrlV2 + url, headers: requestHeaders);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> bookMarkDoctor(String url, String jsonBody) async {
+    Map<String, String> requestHeaders = {
+      'accept': 'application/json',
+      'Authorization': authToken,
+      'Content-Type': 'application/json'
+    };
+
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrlV2 + url,
+          headers: requestHeaders, body: jsonBody);
+          print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');

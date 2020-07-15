@@ -136,6 +136,35 @@ Future<void> main() async {
   runApp(
     MyFHB(),
   );
+
+   await saveToPreference();
+}
+
+void saveToPreference()async{
+
+  PreferenceUtil.saveString(
+              Constants.KEY_USERID_MAIN, 'bde140db-0ffc-4be6-b4c0-5e44b9f54535')
+          .then((onValue) {
+        PreferenceUtil.saveString(Constants.KEY_USERID, 'bde140db-0ffc-4be6-b4c0-5e44b9f54535')
+            .then((onValue) {
+          PreferenceUtil.saveString(
+                  Constants.KEY_AUTHTOKEN, Constants.Auth_token)
+              .then((onValue) {
+            PreferenceUtil.saveString(
+                    Constants.MOB_NUM, '9176117878')
+                .then((onValue) {
+              PreferenceUtil.saveString(
+                      Constants.COUNTRY_CODE, '91')
+                  .then((onValue) {
+                PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
+                        int.parse('91'))
+                    .then((value) {
+                });
+              });
+            });
+          });
+        });
+      });
 }
 
 void setValues(List<dynamic> values){

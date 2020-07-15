@@ -195,10 +195,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 Padding(
                                                   padding: EdgeInsets.all(10.0),
                                                   child: Image.asset(
-                                                    'assets/navicons/th.png',
+                                                   'assets/navicons/th.png',
                                                     color: Colors.white,
-                                                    height: 25,
-                                                    width: 25,
+                                                    height: 70,
+                                                    width: 70,
                                                   ),
                                                 ),
                                                 Constants.RECORDS_TITLE),

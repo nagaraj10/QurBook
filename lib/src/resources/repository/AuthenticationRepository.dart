@@ -50,7 +50,7 @@ class AuthenticationRepository {
       String middleName,
       String lastName) async {
     Map<String, dynamic> mapForSignUp = new Map();
-    //mapForSignUp['sourceName'] = CommonConstants.strTrident;
+    mapForSignUp['sourceName'] = CommonConstants.strTrident;
     mapForSignUp['countryCode'] = countryCode;
     mapForSignUp['phoneNumber'] = phoneNumber;
     mapForSignUp['email'] = email;

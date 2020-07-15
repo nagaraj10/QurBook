@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
@@ -85,18 +85,22 @@ class CommonWidgets {
     );
   }
 
-  Widget getBookMarkedIcon(DoctorIds docs) {
-    return docs.isActive
-        ? ImageIcon(
-            AssetImage('assets/icons/record_fav_active.png'),
-            color: Color(new CommonUtil().getMyPrimaryColor()),
-            size: fhbStyles.imageWidth,
-          )
-        : ImageIcon(
-            AssetImage('assets/icons/record_fav.png'),
-            color: Colors.black,
-            size: fhbStyles.imageWidth,
-          );
+  Widget getBookMarkedIcon(DoctorIds docs, Function onClick) {
+    return GestureDetector(
+        onTap: () {
+          onClick();
+        },
+        child: docs.isDefault
+            ? ImageIcon(
+                AssetImage('assets/icons/record_fav_active.png'),
+                color: Color(new CommonUtil().getMyPrimaryColor()),
+                size: fhbStyles.imageWidth,
+              )
+            : ImageIcon(
+                AssetImage('assets/icons/record_fav.png'),
+                color: Colors.black,
+                size: fhbStyles.imageWidth,
+              ));
   }
 
   Widget getGridView() {
@@ -181,19 +185,7 @@ class CommonWidgets {
               child: Stack(
                 overflow: Overflow.visible,
                 children: <Widget>[
-                  Positioned(
-                    top: -1.0,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        color: Colors.black,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
+                 
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -214,7 +206,11 @@ class CommonWidgets {
                               children: <Widget>[
                                 getTextForDoctors('${docs.name}'),
                                 getDoctoSpecialist('${docs.specialization}'),
-                                getDoctorsAddress('${docs.city}')
+                                getDoctorsAddress('${docs.city}'),
+                                Divider(thickness: 1.0,color: Colors.grey[300],),
+                                getDoctorsAddress('Can Speak'),
+                                getDoctorsAddress('Hindi,English')
+
                               ],
                             ),
                           ),

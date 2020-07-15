@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/mockDoctorsData.dart';
@@ -9,25 +10,11 @@ import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
 
 class MyProviderViewModel extends ChangeNotifier {
   List<GetAllPatientsModel> mockDoctors = List<GetAllPatientsModel>();
-  List<Data> docsList = new List<Data>();
   List<DoctorIds> doctorIdsList = new List();
   List<DateSlotTimings> dateSlotTimings = new List();
   List<TelehealthProviderModel> teleHealthProviderModel = new List();
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
-
-  Future<void> fetchDoctors() async {
-    mockDoctorsData mockData = mockDoctorsData();
-
-    mockDoctors.add(GetAllPatientsModel.fromJson(mockData.doctorList));
-
-    for (int i = 0; i < mockDoctors.length; i++) {
-      for (int j = 0; j < mockDoctors[i].data.length; j++) {
-        docsList.add(mockDoctors[i].data[j]);
-      }
-    }
-    notifyListeners();
-  }
 
   Future<List<DoctorIds>> fetchProviderDoctors() async {
     try {
@@ -36,9 +23,19 @@ class MyProviderViewModel extends ChangeNotifier {
 
       doctorIdsList = myProvidersResponseList
           .response.data.medicalPreferences.preferences.doctorIds;
-          return doctorIdsList;
+      return doctorIdsList;
     } catch (e) {}
   }
+
+  Future<bool> bookMarkDoctor(bool condition, DoctorIds doctorIds) async {
+    bool condition;
+
+    DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
+        await _providersListRepository.bookMarkDoctor(condition, doctorIds);
+
+    return doctorBookMarkedSucessModel.success;
+
+    }
 
   Future<void> getDateSlots() async {
     List<DateTiming> dateTimings = new List();
@@ -91,6 +88,12 @@ class MyProviderViewModel extends ChangeNotifier {
       print('$doctorName ************ ${doctorData.name}');
 
       if (doctorData.name
+          .toLowerCase()
+          .trim()
+          .contains(doctorName.toLowerCase().trim())||doctorData.specialization
+          .toLowerCase()
+          .trim()
+          .contains(doctorName.toLowerCase().trim())||doctorData.city
           .toLowerCase()
           .trim()
           .contains(doctorName.toLowerCase().trim())) {
