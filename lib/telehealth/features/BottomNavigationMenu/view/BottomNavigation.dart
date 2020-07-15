@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavigationArguments.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomBarWidget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/telehealth/features/BottomNavigationMenu/viewModel/BottomNavigationViewModel.dart' as bottomNavigationVModel;
+import 'package:myfhb/telehealth/features/BottomNavigationMenu/viewModel/BottomNavigationViewModel.dart'
+    as bottomNavigationVModel;
 
 class BottomNavigationWidget extends StatefulWidget {
   BottomNavigationWidget(
@@ -74,7 +75,9 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   void getDataForProvider() {
     if (firstTym == false) {
       firstTym = true;
-      bottomNavigationViewModel =Provider.of<bottomNavigationVModel.BottomNavigationViewModel>(context);
+      bottomNavigationViewModel =
+          Provider.of<bottomNavigationVModel.BottomNavigationViewModel>(
+              context);
       bottomNavigationViewModel.getAllValuesForBottom();
     }
   }
