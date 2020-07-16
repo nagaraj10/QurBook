@@ -20,6 +20,12 @@ dependencies:
   flutter:
     sdk: flutter
 
+<<<<<<< HEAD
+  gmiwidgetspackage:
+    path: D:\goFHB_latest\gmi_widgets_package\gmi_widgets_package
+
+=======
+>>>>>>> 8fec284ebbcc0b95e90641894a838da8a0ceef95
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
