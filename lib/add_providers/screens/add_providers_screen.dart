@@ -17,6 +17,7 @@ import 'package:myfhb/add_providers/models/add_hospitals_providers_id.dart';
 import 'package:myfhb/add_providers/models/add_labs_providers_id.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/add_providers/models/update_providers_id.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -25,6 +26,9 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
+import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
+import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
+import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
 import 'package:myfhb/search_providers/models/doctors_data.dart';
 import 'package:myfhb/search_providers/models/hospital_data.dart';
 import 'package:myfhb/search_providers/models/lab_data.dart';
@@ -34,10 +38,6 @@ import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
-import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
-import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class AddProviders extends StatefulWidget {
   DoctorsData data;
@@ -193,7 +193,6 @@ class AddProvidersState extends State<AddProviders> {
                                     providerType:
                                         widget.arguments.searchKeyWord),
                               ).then((value) {
-
                                 buildUI();
                                 getAddressesFromCoordinates();
                               });
@@ -268,7 +267,7 @@ class AddProvidersState extends State<AddProviders> {
                     _ShowDoctorTextField(),
                     SizedBox(height: 10),
                     Text(
-                      'Associated Member',
+                      Constants.Associated_Member,
                       style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.w400,
@@ -301,7 +300,7 @@ class AddProvidersState extends State<AddProviders> {
                         }
                       },
                       child: Text(
-                        'Switch User',
+                        Constants.Switch_User,
                         style: TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
@@ -328,7 +327,7 @@ class AddProvidersState extends State<AddProviders> {
                               activeColor: Theme.of(context).primaryColor,
                             )),
                         Text(
-                          'Set as Preferred',
+                          Constants.Set_as_Preferred,
                           style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.w400,
@@ -540,7 +539,7 @@ class AddProvidersState extends State<AddProviders> {
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
-}
+  }
 
   Future addMarker() async {
     final Uint8List markerIcon =
@@ -579,7 +578,8 @@ class AddProvidersState extends State<AddProviders> {
     return InkWell(
         onTap: () {
           if (widget.arguments.fromClass != CommonConstants.myProviders) {
-            CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+            CommonUtil.showLoadingDialog(
+                context, _keyLoader, Constants.Please_Wait);
 
             if (_familyListBloc != null) {
               _familyListBloc = null;
@@ -640,7 +640,7 @@ class AddProvidersState extends State<AddProviders> {
                   margin: EdgeInsets.only(right: 10),
                   child: Text(
                     selectedFamilyMemberName == null
-                        ? 'Self'
+                        ? Constants.Self
                         : toBeginningOfSentenceCase(selectedFamilyMemberName),
                     softWrap: true,
                     textAlign: TextAlign.left,
@@ -722,8 +722,8 @@ class AddProvidersState extends State<AddProviders> {
         child: new Center(
           child: new Text(
             widget.arguments.fromClass == CommonConstants.myProviders
-                ? 'Update'
-                : 'Add',
+                ? Constants.Update
+                : Constants.Add,
             style: new TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -758,7 +758,7 @@ class AddProvidersState extends State<AddProviders> {
         ),
         child: new Center(
           child: new Text(
-            'Cancel',
+            Constants.Cancel,
             style: new TextStyle(
               color: ColorUtils.blackcolor,
               fontSize: 14.0,
@@ -858,7 +858,6 @@ class AddProvidersState extends State<AddProviders> {
                   ? _doctorsListBlock
                       .getDoctorObjUsingId(bloc.providerId)
                       .then((doctorsListResponse) {
-
                       Navigator.of(context).pop();
 
                       Navigator.of(context).pop(
@@ -868,7 +867,6 @@ class AddProvidersState extends State<AddProviders> {
                       ? _hospitalListBlock
                           .getHospitalObjectusingId(bloc.providerId)
                           .then((hospitalDataResponse) {
-
                           Navigator.of(context).pop();
 
                           Navigator.of(context).pop({
@@ -878,7 +876,6 @@ class AddProvidersState extends State<AddProviders> {
                       : _labsListBlock
                           .getLabsListUsingID(bloc.providerId)
                           .then((lablistResponse) {
-
                           Navigator.of(context).pop();
                           Navigator.of(context).pop({
                             'laborartory': lablistResponse.response.data[0]
@@ -908,11 +905,10 @@ class AddProvidersState extends State<AddProviders> {
         if (myprovidersPreferred) {
           // alert
           Alert.displayAlertPlain(context,
-              title: "Error",
-              content:
-                  'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.');
+              title: Constants.Error, content: Constants.preferred_descrip);
         } else {
-          CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+          CommonUtil.showLoadingDialog(
+              context, _keyLoader, Constants.Please_Wait); //
 
           updateProvidersBloc.isPreferred = isPreferred;
 
@@ -942,7 +938,8 @@ class AddProvidersState extends State<AddProviders> {
           }
         }
       } else {
-        CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+        CommonUtil.showLoadingDialog(
+            context, _keyLoader, Constants.Please_Wait); //
 
         updateProvidersBloc.isPreferred = isPreferred;
 
@@ -974,7 +971,8 @@ class AddProvidersState extends State<AddProviders> {
       var signInData = {};
 
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-        CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+        CommonUtil.showLoadingDialog(
+            context, _keyLoader, Constants.Please_Wait); //
 
         signInData['name'] = doctorController.text.toString();
         signInData['specialization'] = '';
@@ -1003,8 +1001,8 @@ class AddProvidersState extends State<AddProviders> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("Error"),
-                  content: Text("Please choose the address"),
+                  title: Text(Constants.Error),
+                  content: Text(Constants.choose_address),
                   actions: <Widget>[
                     IconButton(
                         icon: Icon(Icons.check),
@@ -1015,7 +1013,8 @@ class AddProvidersState extends State<AddProviders> {
                 );
               });
         } else {
-          CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+          CommonUtil.showLoadingDialog(
+              context, _keyLoader, Constants.Please_Wait); //
 
           signInData['name'] = doctorController.text.toString();
           signInData['phoneNumbers'] = widget.arguments.placeDetail == null
@@ -1023,7 +1022,7 @@ class AddProvidersState extends State<AddProviders> {
               : widget.arguments.placeDetail.formattedPhoneNumber == null
                   ? ''
                   : widget.arguments.placeDetail.formattedPhoneNumber;
-          signInData['description'] = 'Cancer Speciality Hospital';
+          signInData['description'] = Constants.cancer_speciality;
           signInData['email'] = 'apollo@sample.com';
           signInData['addressLine1'] =
               widget.arguments.confirmAddressDescription == null
@@ -1054,8 +1053,8 @@ class AddProvidersState extends State<AddProviders> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("Error"),
-                  content: Text("Please choose the address"),
+                  title: Text(Constants.Error),
+                  content: Text(Constants.choose_address),
                   actions: <Widget>[
                     IconButton(
                         icon: Icon(Icons.check),
@@ -1066,7 +1065,8 @@ class AddProvidersState extends State<AddProviders> {
                 );
               });
         } else {
-          CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+          CommonUtil.showLoadingDialog(
+              context, _keyLoader, Constants.Please_Wait); //
 
           signInData['name'] = doctorController.text.toString();
           signInData['phoneNumbers'] = widget.arguments.placeDetail == null
@@ -1074,8 +1074,8 @@ class AddProvidersState extends State<AddProviders> {
               : widget.arguments.placeDetail.formattedPhoneNumber == null
                   ? ''
                   : widget.arguments.placeDetail.formattedPhoneNumber;
-          signInData['description'] = 'Cancer Speciality Hospital';
-          signInData['email'] = 'apollo@sample.com';
+          signInData['description'] = Constants.cancer_speciality;
+          signInData['email'] = Constants.apollo_email;
           signInData['addressLine1'] =
               widget.arguments.confirmAddressDescription == null
                   ? ''
@@ -1120,7 +1120,8 @@ class AddProvidersState extends State<AddProviders> {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
         //getUserProfileData();
         Navigator.pop(context);
-        CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+        CommonUtil.showLoadingDialog(
+            context, _keyLoader, Constants.Please_Wait);
 
         getUserProfileWithId();
       });
@@ -1133,7 +1134,6 @@ class AddProvidersState extends State<AddProviders> {
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
-
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
           .then((value) {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
@@ -1180,6 +1180,4 @@ class AddProvidersState extends State<AddProviders> {
             width: 30,
           );
   }
-
-
 }

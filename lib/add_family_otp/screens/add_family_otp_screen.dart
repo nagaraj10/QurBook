@@ -1,3 +1,5 @@
+import 'dart:convert' as convert;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -9,11 +11,10 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/src/blocs/Authentication/OTPVerifyBloc.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'dart:convert' as convert;
 
 class AddFamilyOTPScreen extends StatefulWidget {
   AddFamilyOTPArguments arguments;
@@ -194,7 +195,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         //resizeToAvoidBottomInset: false,
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          title: Text('Otp Verification', style: TextStyle(fontSize: 18)),
+          title:
+              Text(Constants.Otp_Verification, style: TextStyle(fontSize: 18)),
         ),
         key: scaffold_state,
         body: Column(
@@ -203,7 +205,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             Padding(
               padding: EdgeInsets.only(top: 40),
               child: Text(
-                toBeginningOfSentenceCase('${widget.arguments.enteredFirstName} ${widget.arguments.enteredMiddleName} ${widget.arguments.enteredLastName}'),
+                toBeginningOfSentenceCase(
+                    '${widget.arguments.enteredFirstName} ${widget.arguments.enteredMiddleName} ${widget.arguments.enteredLastName}'),
                 style: TextStyle(
                     color: Color(new CommonUtil().getMyPrimaryColor()),
                     fontWeight: FontWeight.w500),
@@ -212,14 +215,14 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             Padding(
               padding: EdgeInsets.only(top: 10),
               child: Text(
-                'Please enter the received OTP',
+                Constants.enter_otp,
                 style: TextStyle(
                     color: Colors.black38, fontWeight: FontWeight.w400),
               ),
             ),
             Expanded(
               child: Image.asset(
-                'assets/icons/otp_icon.png',
+                Constants.otp_assets,
                 width: 70,
                 height: 70,
               ),
@@ -244,7 +247,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                   ))),
                       SizedBox(height: 20),
                       Text(
-                        'Didn\'t receive the OTP?',
+                        Constants.Receive_OTP,
                         style: TextStyle(
                           fontSize: 11,
                           color: Colors.grey,
@@ -257,7 +260,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                 widget.arguments.enteredMobNumber);
                           },
                           child: Text(
-                            'Resend Code',
+                            Constants.Resend_Code,
                             style: TextStyle(
                                 //color: Colors.deepPurple[300],
                                 color:
@@ -436,7 +439,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                       controller2.text.length > 0 &&
                                       controller3.text.length > 0 &&
                                       controller4.text.length > 0) {
-                                    String otp = '${controller1.text}${controller2.text}${controller3.text}${controller4.text}';
+                                    String otp =
+                                        '${controller1.text}${controller2.text}${controller3.text}${controller4.text}';
                                     _addFamilyOTPBloc.fromClass =
                                         CommonConstants.add_family_otp;
                                     _addFamilyOTPBloc
@@ -450,7 +454,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                     });
                                   } else {
                                     Alert.displayAlertPlain(context,
-                                        title: "Error",
+                                        title: Constants.Error,
                                         content: CommonConstants.all_fields);
                                   }
                                   //matchOtp();
@@ -468,7 +472,6 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                     ],
                   ),
                 )
-
                 //flex: 40,
                 ),
           ],
@@ -555,8 +558,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Successfully"),
-            content: Text("Otp matched successfully."),
+            title: Text(Constants.Successfully),
+            content: Text(Constants.OTP_Matched),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.check),
@@ -574,10 +577,10 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     if (addFamilyOTPResponse.success && addFamilyOTPResponse.status == 200) {
       Alert.displayConfirmation(
         context,
-        title: "Success",
-        content: "Your family member has been added successfully",
+        title: Constants.Success,
+        content: Constants.Family_Member_Added,
         onPressedConfirm: () {
-          Navigator.pushNamed(context, '/add-family-user-info',
+          Navigator.pushNamed(context, Constants.addFamilyUserInfo,
                   arguments: AddFamilyUserInfoArguments(
                       enteredFirstName: widget.arguments.enteredFirstName,
                       enteredMiddleName: widget.arguments.enteredMiddleName,
@@ -593,7 +596,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
       );
     } else {
       Alert.displayAlertPlain(context,
-          title: "Error", content: addFamilyOTPResponse.message);
+          title: Constants.Error, content: addFamilyOTPResponse.message);
     }
   }
 

@@ -4,7 +4,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 String BASEURL_COVERIMAGE = CommonUtil.BASE_COVER_IMAGE;
-String BASEURL_V2=CommonUtil.BASE_URL_V2;
+String BASEURL_V2 = CommonUtil.BASE_URL_V2;
 
 const String APP_NAME = 'myFHB';
 const String MOB_NUM = 'Mobile number';
@@ -175,11 +175,11 @@ const String STR_ERROR_LOADING_DATA = 'Unable To Load Data,Please Try Again';
 const String STR_ERROR_LOADING_IMAGE = 'Unable To Load Image,Please Try Again';
 
 const String KEY_FAMILYREL = 'keyFamilyrel';
-const String Auth_token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ0OTI1OTI1MjYsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NDg4OTkyNTI2LCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5MTc2MTE3ODc4IiwidXNlcklkIjoiYmRlMTQwZGItMGZmYy00YmU2LWI0YzAtNWU0NGI5ZjU0NTM1IiwiaWF0IjoxNTk0NDg4OTkyLCJleHAiOjE1OTgwODg5OTIsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImE0ZTQ4MzY3LTM0M2EtNDIzNC1hYjEyLTgzMzEyMTZkZDUyYSJ9.qqSTMlm5UQKJ5vrCMQQ2NiPCM9lU8-5OStHAj1Q2Vfk';
+const String Auth_token =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ0OTI1OTI1MjYsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NDg4OTkyNTI2LCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5MTc2MTE3ODc4IiwidXNlcklkIjoiYmRlMTQwZGItMGZmYy00YmU2LWI0YzAtNWU0NGI5ZjU0NTM1IiwiaWF0IjoxNTk0NDg4OTkyLCJleHAiOjE1OTgwODg5OTIsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImE0ZTQ4MzY3LTM0M2EtNDIzNC1hYjEyLTgzMzEyMTZkZDUyYSJ9.qqSTMlm5UQKJ5vrCMQQ2NiPCM9lU8-5OStHAj1Q2Vfk';
 
+const String ADD_NEW_FAMILY_MEMBER = 'Add new family member';
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 const String Self = 'Self';
 const String Delink = 'Delink';
 const String Please_Wait = 'Please Wait';
@@ -231,9 +231,3 @@ const String cancer_speciality = 'Cancer Speciality Hospital';
 const String apollo_email = 'apollo@sample.com';
 const String preferred_descrip =
     'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
-=======
-
-
->>>>>>> 8fec284ebbcc0b95e90641894a838da8a0ceef95
-=======
->>>>>>> parent of 24c701c... Fixed Maya issues in an iOS

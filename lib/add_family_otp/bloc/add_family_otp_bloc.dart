@@ -52,7 +52,7 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
 
     var jsonString = convert.jsonEncode(verifyOTP);
 
-    otpSink.add(ApiResponse.loading('Signing in user'));
+    otpSink.add(ApiResponse.loading(''));
     AddFamilyOTPResponse addFamilyOTPResponse;
 
     try {
