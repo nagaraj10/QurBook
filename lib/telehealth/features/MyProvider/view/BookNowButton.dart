@@ -4,7 +4,7 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/DoctorDetail.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class BookNowButton extends StatelessWidget{

@@ -27,6 +27,7 @@ class _DoctorDetail extends State<DoctorDetail> {
   CommonWidgets commonWidgets = new CommonWidgets();
   MyProviderViewModel providerViewModel;
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
