@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
@@ -18,6 +20,8 @@ import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderMod
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 
+import 'DoctorSessionTimeSlot.dart';
+
 class MyProviders extends StatefulWidget {
   @override
   _MyProvidersState createState() => _MyProvidersState();
@@ -28,6 +32,7 @@ class _MyProvidersState extends State<MyProviders> {
   MyProviderViewModel providerViewModel;
   DatePickerController _controller = DatePickerController();
   DateTime _selectedValue = DateTime.now();
+  int selectedPosition = 0;
   bool firstTym = false;
   String doctorsName;
   CommonWidgets commonWidgets = new CommonWidgets();
@@ -35,7 +40,8 @@ class _MyProvidersState extends State<MyProviders> {
 
   List<DoctorIds> doctorData = new List();
 
-  List<DoctorTimeSlotsModel> doctorTimeSlotsModel = new List<DoctorTimeSlotsModel>();
+  List<DoctorTimeSlotsModel> doctorTimeSlotsModel =
+      new List<DoctorTimeSlotsModel>();
   List<SessionsTime> sessionTimeModel = new List<SessionsTime>();
   List<Slots> slotsModel = new List<Slots>();
 
@@ -45,45 +51,41 @@ class _MyProvidersState extends State<MyProviders> {
   void initState() {
     super.initState();
     getDataForProvider();
-
-    getMockData();
+    //getSlotsList();
+    // getMockData();
   }
 
-
-  getMockData(){
-
+  getMockData() {
     doctorTimeSlotsModel
         .add(DoctorTimeSlotsModel.fromJson(jsonMockSlots.mockList));
 
-    for(int i =0;i<doctorTimeSlotsModel.length;i++){
-      for(int j = 0;j<doctorTimeSlotsModel[i].response.data.sessions.length;j++){
-
+    for (int i = 0; i < doctorTimeSlotsModel.length; i++) {
+      for (int j = 0;
+          j < doctorTimeSlotsModel[i].response.data.sessions.length;
+          j++) {
         sessionTimeModel.add(doctorTimeSlotsModel[i].response.data.sessions[j]);
 
-        for(int k=0;k<doctorTimeSlotsModel[i].response.data.sessions[j].slots.length;k++){
-
-        slotsModel.add(doctorTimeSlotsModel[i].response.data.sessions[j].slots[k]);
-
+        for (int k = 0;
+            k < doctorTimeSlotsModel[i].response.data.sessions[j].slots.length;
+            k++) {
+          slotsModel
+              .add(doctorTimeSlotsModel[i].response.data.sessions[j].slots[k]);
         }
-        
       }
-
     }
 
-    print("ok ok"+slotsModel.length.toString());
-
-
+    print("ok ok" + slotsModel.length.toString());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-
-          leading: Icon(Icons
-              .arrow_back_ios), // you can put Icon as well, it accepts any widget.
-          title:getTitle()/* Column(
+            flexibleSpace: GradientAppBar(),
+            leading: Icon(Icons.arrow_back_ios),
+            // you can put Icon as well, it accepts any widget.
+            title:
+                getTitle() /* Column(
             children: [
               Text("My Providers"),
             ],
@@ -94,7 +96,7 @@ class _MyProvidersState extends State<MyProviders> {
                 .buildActions(context, _keyLoader, callBackToRefresh),
             Icon(Icons.more_vert),
           ],*/
-        ),
+            ),
         body: Container(
             child: Column(
           children: [
@@ -186,19 +188,7 @@ class _MyProvidersState extends State<MyProviders> {
           children: [
             getDoctorsWidget(i, docs),
             commonWidgets.getSizedBox(20.0),
-            commonWidgets.getDatePickerSlot(_controller, (dateTime) {
-              setState(() {
-                _selectedValue = dateTime;
-              });
-            }),
-            commonWidgets.getSizedBox(5.0),
-            Container(
-              margin: EdgeInsets.only(left: 5),
-              child: Column(
-                children: commonWidgets
-                    .getTimeSlots(sessionTimeModel),
-              ),
-            ),
+           DoctorSessionTimeSlot(date: _selectedValue.toString(),doctorId: docs[i].id,docs: docs,i: i),
           ],
         ),
       ),
@@ -292,9 +282,9 @@ class _MyProvidersState extends State<MyProviders> {
     if (firstTym == false) {
       firstTym = true;
       providerViewModel = Provider.of<MyProviderViewModel>(context);
-      await providerViewModel.fetchProviderDoctors();
+      //await providerViewModel.fetchProviderDoctors();
       //doctorData .addAll(providerViewModel.docsList);
-      providerViewModel.getDateSlots();
+      //providerViewModel.getDateSlots();
     }
   }
 
@@ -321,7 +311,9 @@ class _MyProvidersState extends State<MyProviders> {
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
-            child: new CircularProgressIndicator(backgroundColor:Colors.grey,),
+            child: new CircularProgressIndicator(
+              backgroundColor: Colors.grey,
+            ),
           );
         } else if (snapshot.hasError) {
           return new Text('Error: ${snapshot.error}');

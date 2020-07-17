@@ -30,13 +30,13 @@ class DoctorTimeSlotsModel {
 
 class Response {
   int count;
-  Data data;
+  SessionData data;
 
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
     count = json['count'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? new SessionData.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -49,16 +49,16 @@ class Response {
   }
 }
 
-class Data {
+class SessionData {
   String doctorId;
   String date;
   String day;
   int sessionCounts;
   List<SessionsTime> sessions;
 
-  Data({this.doctorId, this.date, this.day, this.sessionCounts, this.sessions});
+  SessionData({this.doctorId, this.date, this.day, this.sessionCounts, this.sessions});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  SessionData.fromJson(Map<String, dynamic> json) {
     doctorId = json['doctorId'];
     date = json['date'];
     day = json['day'];

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
@@ -7,7 +8,8 @@ import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 class GridViewNew extends StatefulWidget {
 
   List<Slots> dateTimingsSlot;
-  GridViewNew(this.dateTimingsSlot);
+  int rowPosition=0;
+  GridViewNew(this.dateTimingsSlot,this.rowPosition);
 
   @override
   State<StatefulWidget> createState() {
@@ -20,8 +22,16 @@ class GridViewNew extends StatefulWidget {
 class _GridViewNew extends State<GridViewNew> {
 
   int _selectedIndex = -1;
+  int rowPosition = -1;
+  CommonWidgets commonWidgets = new CommonWidgets();
+
 
   _onSelected(int index) {
+
+    rowPosition = widget.rowPosition;
+
+    print(rowPosition.toString());
+    _selectedIndex = index;
     setState(() => _selectedIndex = index);
   }
 
@@ -29,25 +39,14 @@ class _GridViewNew extends State<GridViewNew> {
   Widget build(BuildContext context) {
     return GridView.count(
       crossAxisCount: 4,
-      crossAxisSpacing: 1.0,
-      childAspectRatio: 1.5,
+      crossAxisSpacing: 15,
+      childAspectRatio: 2.2,
       children: List.generate(widget.dateTimingsSlot.length, (index) {
         return GestureDetector(
           onTap: (){
             _onSelected(index);
           },
-          child: Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              color: _selectedIndex != null && _selectedIndex == index
-                  ? Colors.blue
-                  : Colors.white,
-              border: Border.all(color: Colors.green),
-              borderRadius: new BorderRadius.circular(5),
-            ),
-            child: Text(removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),style: TextStyle(fontSize: fhbStyles.fntSlots),),
-          ),
+          child:getSpecificSlots(removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),index),
         );
       }),
     );
@@ -59,6 +58,35 @@ class _GridViewNew extends State<GridViewNew> {
     removedString = string.substring(0, string.length - 3);
 
     return removedString;
+  }
+
+  Widget getSpecificSlots(String time,int index) {
+    return Container(
+      width: 35,
+      decoration: myBoxDecoration(index),
+      child: Center(
+        child: Text(removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),
+          style:
+          TextStyle(fontSize: fhbStyles.fnt_date_slot, color:
+          _selectedIndex != null && _selectedIndex == index && rowPosition==widget.rowPosition
+              ? Colors.white
+              : Colors.green),
+        ),
+      ),
+    );
+  }
+
+  BoxDecoration myBoxDecoration(int index) {
+    return BoxDecoration(
+      border: Border.all(
+          width: 1, //
+          color: Colors.green
+      ),
+      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      color: _selectedIndex != null && _selectedIndex == index && rowPosition==widget.rowPosition
+          ? Color(new CommonUtil().getMyPrimaryColor())
+          : Colors.white,
+    );
   }
 
 }

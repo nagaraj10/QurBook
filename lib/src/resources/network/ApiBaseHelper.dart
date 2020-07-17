@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
@@ -72,8 +73,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> deleteHealthRecord(
-      String url, String healthRecordData) async {
+  Future<dynamic> deleteHealthRecord(String url,
+      String healthRecordData) async {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Authorization': authToken,
@@ -117,7 +118,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response =
-          await http.put(_baseUrl + url, body: '', headers: requestHeaders);
+      await http.put(_baseUrl + url, body: '', headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -178,7 +179,7 @@ class ApiBaseHelper {
 
   /**
    * The below method helps to get categroy list from server using the get method,
-   * it contains one parameter which describ ethe URL  type 
+   * it contains one parameter which describ ethe URL  type
    * Created by Parvathi M on 7th Jan 2020
    */
 
@@ -201,7 +202,7 @@ class ApiBaseHelper {
 
   /**
    * The below method helps to get health record list from server for a particular userID using the get method,
-   * it contains one parameter which describ ethe URL  type 
+   * it contains one parameter which describ ethe URL  type
    * Created by Parvathi M on 7th Jan 2020
    */
 
@@ -307,7 +308,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response =
-          await http.get(_baseUrl + url + param, headers: requestHeaders);
+      await http.get(_baseUrl + url + param, headers: requestHeaders);
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -364,25 +365,25 @@ class ApiBaseHelper {
         } else {
           responseJson = convert.jsonDecode(response.body.toString());
         }
-                print(responseJson);
+        print(responseJson);
 
 
         return responseJson;
 
       case 201:
         var responseJson = convert.jsonDecode(response.body.toString());
-                print(responseJson);
+        print(responseJson);
 
         return responseJson;
 
       case 400:
         var responseJson = convert.jsonDecode(response.body.toString());
-                print(responseJson);
+        print(responseJson);
 
         return responseJson;
       case 401:
         var responseJson = convert.jsonDecode(response.body.toString());
-                print(responseJson);
+        print(responseJson);
 
 
         if (responseJson['message'] == Constants.STR_OTPMISMATCHED) {
@@ -397,7 +398,7 @@ class ApiBaseHelper {
 
       case 403:
         var responseJson = convert.jsonDecode(response.body.toString());
-                print(responseJson);
+        print(responseJson);
 
         if (responseJson['message'] == Constants.STR_OTPMISMATCHEDFOREMAIL) {
           return responseJson;
@@ -412,7 +413,8 @@ class ApiBaseHelper {
       case 500:
       default:
         throw FetchDataException(
-            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+            'Error occured while Communication with Server with StatusCode : ${response
+                .statusCode}');
     }
   }
 
@@ -451,7 +453,9 @@ class ApiBaseHelper {
       dio.options.headers['content-Type'] = 'multipart/form-data';
 
       dio.options.headers["authorization"] = authToken;
-      String fileNoun = file.path.split('/').last;
+      String fileNoun = file.path
+          .split('/')
+          .last;
 
       FormData formData = new FormData.fromMap({
         "mediaMetaId": metaID,
@@ -465,8 +469,8 @@ class ApiBaseHelper {
     }
   }
 
-  Future<dynamic> signUpPage(
-      String url, Map<String, dynamic> mapForSignUp) async {
+  Future<dynamic> signUpPage(String url,
+      Map<String, dynamic> mapForSignUp) async {
     var responseJson;
     try {
       Dio dio = new Dio();
@@ -475,10 +479,10 @@ class ApiBaseHelper {
       dio.options.headers['Content-Type'] = 'multipart/form-data';
       FormData formData = new FormData.fromMap(mapForSignUp);
 
-      
-     var  response = await dio.post(_baseUrl + url, data: formData);
 
-     responseJson =_returnResponse(response.data);
+      var response = await dio.post(_baseUrl + url, data: formData);
+
+      responseJson = _returnResponse(response.data);
 
       return response.data;
     } on SocketException {
@@ -531,7 +535,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response =
-          await http.put(_baseUrl + url, body: '', headers: requestHeaders);
+      await http.put(_baseUrl + url, body: '', headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -539,8 +543,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> updateRelationShipUserInFamilyLinking(
-      String url, String jsonData) async {
+  Future<dynamic> updateRelationShipUserInFamilyLinking(String url,
+      String jsonData) async {
     Map<String, String> requestHeaders = {
       'Content-type': 'application/json',
       'Authorization': authToken,
@@ -575,8 +579,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> saveImageToServerClone1(
-      String url, File file, String jsonBody) async {
+  Future<dynamic> saveImageToServerClone1(String url, File file,
+      String jsonBody) async {
     var response;
     try {
       String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -587,11 +591,13 @@ class ApiBaseHelper {
       dio.options.headers['content-Type'] = 'multipart/form-data';
 
       dio.options.headers["authorization"] = authToken;
-      String fileNoun = file.path.split('/').last;
+      String fileNoun = file.path
+          .split('/')
+          .last;
 
       FormData formData = new FormData.fromMap({
         "profilePic":
-            await MultipartFile.fromFile(file.path, filename: fileNoun)
+        await MultipartFile.fromFile(file.path, filename: fileNoun)
       });
       response = await dio.put(_baseUrl + url, data: formData);
 
@@ -645,8 +651,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<List<dynamic>> getDocumentImageList(
-      String url, List<MediaMasterIds> metaMasterIdList) async {
+  Future<List<dynamic>> getDocumentImageList(String url,
+      List<MediaMasterIds> metaMasterIdList) async {
     var imagesList = new List<dynamic>();
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -702,7 +708,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response =
-          await http.get(_baseUrl + url + param, headers: requestHeaders);
+      await http.get(_baseUrl + url + param, headers: requestHeaders);
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -721,7 +727,9 @@ class ApiBaseHelper {
 
       dio.options.headers['Content-Type'] = 'application/json';
       dio.options.headers["Authorization"] = authToken;
-      String fileNoun = file.path.split('/').last;
+      String fileNoun = file.path
+          .split('/')
+          .last;
 
       FormData formData = new FormData.fromMap({
         "mediaMetaInfo": metaID,
@@ -785,7 +793,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response =
-          await http.get(_baseUrl + url + param, headers: requestHeaders);
+      await http.get(_baseUrl + url + param, headers: requestHeaders);
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -805,7 +813,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response =
-          await http.get(_baseUrl + url + param, headers: requestHeaders);
+      await http.get(_baseUrl + url + param, headers: requestHeaders);
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -823,7 +831,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response =
-          await http.get(_baseUrlV2 + url, headers: requestHeaders);
+      await http.get(_baseUrlV2 + url, headers: requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -842,11 +850,31 @@ class ApiBaseHelper {
     try {
       final response = await http.post(_baseUrlV2 + url,
           headers: requestHeaders, body: jsonBody);
-          print(response.body);
+      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
     }
     return responseJson;
   }
+
+  Future<dynamic> getTimeSlotsList(String url,String jsonBody) async {
+    Map<String, String> requestHeaders = {
+      'accept': 'application/json',
+      'Authorization': Auth_token_slots,
+      'Content-Type': 'application/json'
+    };
+
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrlV2 + url,
+          headers: requestHeaders, body: jsonBody);
+      print(response.body);
+      responseJson = _returnResponse(response);
+    }on SocketException {
+      throw FetchDataException('No Internet connection');
+    }
+    return responseJson;
+  }
+
 }

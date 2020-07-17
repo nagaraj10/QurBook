@@ -15,6 +15,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/ProfilePic.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/telehealth/features/MyProvider/view/BookNowButton.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
 
 class CommonWidgets {
@@ -30,26 +31,6 @@ class CommonWidgets {
 
   Widget getSizedBox(double height) {
     return SizedBox(height: height);
-  }
-
-  Widget getRaisedButton() {
-    return  SizedBoxWithChild(
-      width: 85,
-      height: 35,
-      child: FlatButton(
-        shape: RoundedRectangleBorder(
-            borderRadius:
-            BorderRadius.circular(8.0),
-            side: BorderSide(color: Colors.deepPurple)),
-        color: Colors.white,
-        textColor: Colors.deepPurple,
-        padding: EdgeInsets.all(8.0),
-        onPressed: () {
-        },
-        child:
-        TextWidget(text: 'Book Now', fontsize: 12),
-      ),
-    );
   }
 
   Widget getDoctoSpecialist(String phoneNumber) {
@@ -262,37 +243,66 @@ class CommonWidgets {
     );
   }
 
-  List<Widget> getTimeSlots(List<SessionsTime> dateTimeSlotsList) {
+  List<Widget> getTimeSlots(SessionData dateSlotTimingsObj,List<DoctorIds> docs,int j) {
     List<Widget> rowTimeWidget = new List();
     String sessionTimings='';
 
-    for (SessionsTime dateSlotTimingsObj in dateTimeSlotsList) {
-      sessionTimings = removeLastThreeDigits(dateSlotTimingsObj.sessionStartTime)+" - "
-          +removeLastThreeDigits(dateSlotTimingsObj.sessionEndTime);
+    for(int i =0;i<dateSlotTimingsObj.sessions.length;i++){
+
+      sessionTimings = removeLastThreeDigits(dateSlotTimingsObj.sessions[i].sessionStartTime)+" - "
+          +removeLastThreeDigits(dateSlotTimingsObj.sessions[i].sessionEndTime);
       rowTimeWidget.add(
           Container(
-            height: 90.0,
-        child: new Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(
-                flex: 1,
-                child: sessionTimings == ''
-                    ? getSizeBoxWidth(142.0)
-                    : getTimeSlotText(sessionTimings)),
-            Expanded(
-                flex: 2,
-                child: GridViewNew(dateSlotTimingsObj.slots)),
-          ],
-        ),
-      ));
+            alignment: Alignment.center,
+            height: 50.0,
+            child: new Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBoxWidget(width: 15,),
+                Expanded(
+                    flex: 1,
+                    child: sessionTimings == ''
+                        ? getSizeBoxWidth(132.0)
+                        : getTimeSlotText(sessionTimings)),
+                Expanded(
+                    flex: 2,
+                    child: GridViewNew(dateSlotTimingsObj.sessions[i].slots,i)),
+              ],
+            ),
+          ));
     }
+
+    /*for(SessionsTime sessionsTime in dateSlotTimingsObj.sessions){
+
+      sessionTimings = removeLastThreeDigits(sessionsTime.sessionStartTime)+" - "
+          +removeLastThreeDigits(sessionsTime.sessionEndTime);
+      rowTimeWidget.add(
+          Container(
+            alignment: Alignment.center,
+            height: 50.0,
+            child: new Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBoxWidget(width: 15,),
+                Expanded(
+                    flex: 1,
+                    child: sessionTimings == ''
+                        ? getSizeBoxWidth(132.0)
+                        : getTimeSlotText(sessionTimings)),
+                Expanded(
+                    flex: 2,
+                    child: GridViewNew(sessionsTime.slots,dateSlotTimingsObj.sessions)),
+              ],
+            ),
+          ));
+
+    }*/
 
     rowTimeWidget.add(getSizedBox(10));
 
     rowTimeWidget.add(Align(
       alignment: Alignment.center,
-      child: getRaisedButton(),
+      child: BookNowButton(docs: docs,i: j),
     ));
 
     rowTimeWidget.add(SizedBoxWidget(height: 10,));
@@ -302,10 +312,10 @@ class CommonWidgets {
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
       border: Border.all(
-          width: 1, //
-          color: Colors.green //        <--- border width here
+          width: 0.8, //
+          color: Colors.green
           ),
-      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      borderRadius: BorderRadius.all(Radius.circular(10.0)),
     );
   }
 
@@ -321,42 +331,6 @@ class CommonWidgets {
     }
 
     return rowSpecificTimeSlots;
-  }
-
-  getGridViewWidget(List<Slots> dateTimingsSlot) {
-    /*return GridViewWidget(list: dateTimingsSlot,crossAxisCount: 4,crossAxisSpacing: 1.0
-        ,childAspectRatio: 1.5,widget: timeSlotsItem(dateTimingsSlot));*/
-    List _selectedIndexs=[];
-    int _selectedIndex = 0;
-
-    return GridView.count(
-      crossAxisCount: 4,
-      crossAxisSpacing: 1.0,
-      childAspectRatio: 1.5,
-      children: List.generate(dateTimingsSlot.length, (index) {
-        final _isSelected = dateTimingsSlot.contains(index);
-        return GestureDetector(
-          onTap: (){
-            if(_isSelected){
-              _selectedIndexs.remove(dateTimingsSlot[index]);
-
-            }else{
-              _selectedIndexs.add(dateTimingsSlot[index]);
-            }
-          },
-          child: Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              color: _isSelected?Colors.blue:null,
-              border: Border.all(color: Colors.green),
-              borderRadius: new BorderRadius.circular(5),
-            ),
-            child: Text(removeLastThreeDigits(dateTimingsSlot[index].startTime),style: TextStyle(fontSize: fhbStyles.fntSlots),),
-          ),
-        );
-      }),
-    );
   }
 
   getSpecificTimeSlotsNew(List<DateTiming> dateTimingsSlots) {
@@ -379,9 +353,6 @@ class CommonWidgets {
   Widget getSpecificSlots(String time) {
     return Container(
           width: 35,
-          margin: const EdgeInsets.all(2.0),
-          //padding: const EdgeInsets.only(left: 5.0,right: 5.0,top:2.0,bottom: 2.0),
-          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
           decoration: myBoxDecoration(),
           child: Center(
             child: Text(
@@ -390,32 +361,6 @@ class CommonWidgets {
               TextStyle(fontSize: fhbStyles.fnt_date_slot, color: Colors.green),
             ),
           ),
-    );
-  }
-
-  Widget getDatePickerSlot(
-      DatePickerController _controller, Function(DateTime) dateTimeSelected) {
-    return Container(
-      height: 70,
-      color: Color(fhbColors.cardShadowColor),
-      child: DatePicker(
-        DateTime.now().add(Duration(days: -0)),
-        controller: _controller,
-        daysCount: 8,
-        width: 55,
-        height: 65,
-        initialSelectedDate: DateTime.now(),
-        selectionColor: Color(new CommonUtil().getMyPrimaryColor()),
-        selectedTextColor: Colors.white,
-        dayTextStyle:
-            TextStyle(fontSize: fhbStyles.fnt_day, fontWeight: FontWeight.bold),
-        dateTextStyle: TextStyle(
-            fontSize: fhbStyles.fnt_date, fontWeight: FontWeight.bold),
-        onDateChange: (date) {
-          print(date);
-          dateTimeSelected(date);
-        },
-      ),
     );
   }
 
