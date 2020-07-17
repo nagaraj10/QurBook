@@ -17,6 +17,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderMod
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/view/BookNowButton.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
 
 class CommonWidgets {
   Widget getTextForDoctors(String docName) {
@@ -245,58 +246,8 @@ class CommonWidgets {
 
   List<Widget> getTimeSlots(SessionData dateSlotTimingsObj,List<DoctorIds> docs,int j) {
     List<Widget> rowTimeWidget = new List();
-    String sessionTimings='';
 
-    for(int i =0;i<dateSlotTimingsObj.sessions.length;i++){
-
-      sessionTimings = removeLastThreeDigits(dateSlotTimingsObj.sessions[i].sessionStartTime)+" - "
-          +removeLastThreeDigits(dateSlotTimingsObj.sessions[i].sessionEndTime);
-      rowTimeWidget.add(
-          Container(
-            alignment: Alignment.center,
-            height: 50.0,
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBoxWidget(width: 15,),
-                Expanded(
-                    flex: 1,
-                    child: sessionTimings == ''
-                        ? getSizeBoxWidth(132.0)
-                        : getTimeSlotText(sessionTimings)),
-                Expanded(
-                    flex: 2,
-                    child: GridViewNew(dateSlotTimingsObj.sessions[i].slots,i)),
-              ],
-            ),
-          ));
-    }
-
-    /*for(SessionsTime sessionsTime in dateSlotTimingsObj.sessions){
-
-      sessionTimings = removeLastThreeDigits(sessionsTime.sessionStartTime)+" - "
-          +removeLastThreeDigits(sessionsTime.sessionEndTime);
-      rowTimeWidget.add(
-          Container(
-            alignment: Alignment.center,
-            height: 50.0,
-            child: new Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBoxWidget(width: 15,),
-                Expanded(
-                    flex: 1,
-                    child: sessionTimings == ''
-                        ? getSizeBoxWidth(132.0)
-                        : getTimeSlotText(sessionTimings)),
-                Expanded(
-                    flex: 2,
-                    child: GridViewNew(sessionsTime.slots,dateSlotTimingsObj.sessions)),
-              ],
-            ),
-          ));
-
-    }*/
+      rowTimeWidget.add(SessionList(sessionData: dateSlotTimingsObj.sessions,));
 
     rowTimeWidget.add(getSizedBox(10));
 

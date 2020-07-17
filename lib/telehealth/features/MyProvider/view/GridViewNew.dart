@@ -8,16 +8,17 @@ import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 class GridViewNew extends StatefulWidget {
 
   List<Slots> dateTimingsSlot;
-  int rowPosition=0;
-  GridViewNew(this.dateTimingsSlot,this.rowPosition);
+  final int rowPosition;
+  final int selectedRow;
+  Function(int) onSelected;
+
+  GridViewNew(this.dateTimingsSlot,this.rowPosition,this.onSelected,this.selectedRow);
 
   @override
   State<StatefulWidget> createState() {
     return _GridViewNew();
   }
-
 }
-
 
 class _GridViewNew extends State<GridViewNew> {
 
@@ -26,13 +27,15 @@ class _GridViewNew extends State<GridViewNew> {
   CommonWidgets commonWidgets = new CommonWidgets();
 
 
-  _onSelected(int index) {
+  _onSelected(int index,int positionFinal) {
 
-    rowPosition = widget.rowPosition;
+    rowPosition = positionFinal;
 
     print(rowPosition.toString());
     _selectedIndex = index;
     setState(() => _selectedIndex = index);
+
+    widget.onSelected(rowPosition);
   }
 
   @override
@@ -44,7 +47,7 @@ class _GridViewNew extends State<GridViewNew> {
       children: List.generate(widget.dateTimingsSlot.length, (index) {
         return GestureDetector(
           onTap: (){
-            _onSelected(index);
+            _onSelected(index,widget.rowPosition);
           },
           child:getSpecificSlots(removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),index),
         );
@@ -61,6 +64,8 @@ class _GridViewNew extends State<GridViewNew> {
   }
 
   Widget getSpecificSlots(String time,int index) {
+    print(widget.rowPosition);
+    print(widget.selectedRow);
     return Container(
       width: 35,
       decoration: myBoxDecoration(index),
@@ -68,7 +73,7 @@ class _GridViewNew extends State<GridViewNew> {
         child: Text(removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),
           style:
           TextStyle(fontSize: fhbStyles.fnt_date_slot, color:
-          _selectedIndex != null && _selectedIndex == index && rowPosition==widget.rowPosition
+          _selectedIndex != null && _selectedIndex == index && widget.rowPosition == widget.selectedRow
               ? Colors.white
               : Colors.green),
         ),
@@ -83,7 +88,7 @@ class _GridViewNew extends State<GridViewNew> {
           color: Colors.green
       ),
       borderRadius: BorderRadius.all(Radius.circular(8.0)),
-      color: _selectedIndex != null && _selectedIndex == index && rowPosition==widget.rowPosition
+      color: _selectedIndex != null && _selectedIndex == index && widget.rowPosition == widget.selectedRow
           ? Color(new CommonUtil().getMyPrimaryColor())
           : Colors.white,
     );
