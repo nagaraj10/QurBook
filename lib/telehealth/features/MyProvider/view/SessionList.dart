@@ -35,7 +35,7 @@ class SessionListState extends State<SessionList>{
                 +removeLastThreeDigits(widget.sessionData[index].sessionEndTime);
             return Container(
               alignment: Alignment.center,
-              height: 50.0,
+              height: 40.0,
               child: new Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

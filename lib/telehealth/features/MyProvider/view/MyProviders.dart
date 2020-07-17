@@ -6,7 +6,6 @@ import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/JSONMockSlots.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -45,36 +44,10 @@ class _MyProvidersState extends State<MyProviders> {
   List<SessionsTime> sessionTimeModel = new List<SessionsTime>();
   List<Slots> slotsModel = new List<Slots>();
 
-  JSONMockSlots jsonMockSlots = new JSONMockSlots();
-
   @override
   void initState() {
     super.initState();
     getDataForProvider();
-    //getSlotsList();
-    // getMockData();
-  }
-
-  getMockData() {
-    doctorTimeSlotsModel
-        .add(DoctorTimeSlotsModel.fromJson(jsonMockSlots.mockList));
-
-    for (int i = 0; i < doctorTimeSlotsModel.length; i++) {
-      for (int j = 0;
-          j < doctorTimeSlotsModel[i].response.data.sessions.length;
-          j++) {
-        sessionTimeModel.add(doctorTimeSlotsModel[i].response.data.sessions[j]);
-
-        for (int k = 0;
-            k < doctorTimeSlotsModel[i].response.data.sessions[j].slots.length;
-            k++) {
-          slotsModel
-              .add(doctorTimeSlotsModel[i].response.data.sessions[j].slots[k]);
-        }
-      }
-    }
-
-    print("ok ok" + slotsModel.length.toString());
   }
 
   @override

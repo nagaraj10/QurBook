@@ -42,8 +42,8 @@ class _GridViewNew extends State<GridViewNew> {
   Widget build(BuildContext context) {
     return GridView.count(
       crossAxisCount: 4,
-      crossAxisSpacing: 15,
-      childAspectRatio: 2.2,
+      crossAxisSpacing: 10,
+      childAspectRatio: 2.0,
       children: List.generate(widget.dateTimingsSlot.length, (index) {
         return GestureDetector(
           onTap: (){
@@ -87,7 +87,7 @@ class _GridViewNew extends State<GridViewNew> {
           width: 1, //
           color: Colors.green
       ),
-      borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      borderRadius: BorderRadius.all(Radius.circular(15.0)),
       color: _selectedIndex != null && _selectedIndex == index && widget.rowPosition == widget.selectedRow
           ? Color(new CommonUtil().getMyPrimaryColor())
           : Colors.white,

@@ -22,7 +22,7 @@ class BookNowButton extends StatelessWidget{
       child: FlatButton(
         shape: RoundedRectangleBorder(
             borderRadius:
-            BorderRadius.circular(12.0),
+            BorderRadius.circular(18.0),
             side: BorderSide(color: Color(new CommonUtil().getMyPrimaryColor()))),
         color: Colors.transparent,
         textColor: Color(new CommonUtil().getMyPrimaryColor()),
