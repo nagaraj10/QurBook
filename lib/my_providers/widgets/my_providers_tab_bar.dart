@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/DoctorModel.dart';
+import 'package:myfhb/my_providers/models/HospitalModel.dart';
+import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/screens/my_providers_doctors_list.dart';
 import 'package:myfhb/my_providers/screens/my_providers_hospitals_list.dart';

@@ -7,8 +7,11 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/HospitalModel.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class MyProvidersHospitalsList extends StatelessWidget {
   List<HospitalsModel> hospitalsModel;
@@ -28,7 +31,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
         HospitalsModel eachHospitalModel = hospitalsModel[index];
         return InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/add-providers',
+              Navigator.pushNamed(context, router.rt_AddProvider,
                       arguments: AddProvidersArguments(
                           searchKeyWord: CommonConstants.hospitals,
                           hospitalsModel: eachHospitalModel,
@@ -113,20 +116,12 @@ class MyProvidersHospitalsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              /*  InkWell(
-                                child: Icon(
-                                  Icons.more_horiz,
-                                  size: 22,
-                                  color: Colors.grey,
-                                ),
-                                onTap: () {},
-                              ), */
-                              //SizedBox(height: 20),
+                            
                               InkWell(
                                   child: eachHospitalModel.isDefault == true
                                       ? ImageIcon(
                                           AssetImage(
-                                              'assets/icons/record_fav_active.png'),
+                                              variable.icon_record_fav_active),
                                           color: Color(new CommonUtil()
                                               .getMyPrimaryColor()),
                                           size: 20,
@@ -134,11 +129,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
                                       : Container(
                                           height: 0,
                                           width: 0,
-                                        ) /* Icon(
-                                          Icons.bookmark,
-                                          size: 22,
-                                          color: Colors.grey,
-                                        ) */
+                                        ) 
                                   ),
                             ],
                           ),

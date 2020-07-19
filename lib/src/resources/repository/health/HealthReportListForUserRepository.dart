@@ -27,7 +27,7 @@ class HealthReportListForUserRepository {
 
   Future<dynamic> getDoctorProfile(String doctorsId) async {
     final response = await _helper
-        .getDoctorProfilePic("doctors/" + doctorsId + "/getprofilepic/");
+        .getDoctorProfilePic("doctors/" + doctorsId + "/getprofilepic/isOriginalPicRequired=true");
     return response;
   }
 

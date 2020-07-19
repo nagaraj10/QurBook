@@ -32,13 +32,7 @@ class DatabaseHelper {
 
   DatabaseHelper.internal();
 
-  /*initDb() async {
-    io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, DBConstants.DB_NAME);
-    var theDb = await openDatabase(path, version: 1, onCreate: _onCreate);
-    return theDb;
-  }*/
-
+ 
   initDb() async {
     if (DatabaseHelper._db == null){
       io.Directory documentsDirectory = await getApplicationDocumentsDirectory();

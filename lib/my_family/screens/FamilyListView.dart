@@ -14,6 +14,7 @@ import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class FamilyListView {
   FamilyData familyData;
@@ -41,21 +42,7 @@ class FamilyListView {
                             onTextFieldtap, _keyLoader)
                         : setupAlertDialoadContainer(
                             null, context, onTextFieldtap, _keyLoader),
-                    /*  Container(
-                      margin: EdgeInsets.only(left: 20, right: 20),
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                    color: Color( new CommonUtil().getMyPrimaryColor()),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: FlatButton(
-                        child: Text(
-                          'Add new family member',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {},
-                      ),
-                    ) */
+                  
                   ],
                 ),
               ));
@@ -74,7 +61,7 @@ class FamilyListView {
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
-    LinkedData linkedData = new LinkedData(roleName: 'Self', nickName: 'Self');
+    LinkedData linkedData = new LinkedData(roleName: variable.Self, nickName: variable.Self);
 
     if (sharedByMe == null) {
       sharedByMe = new List();
@@ -88,8 +75,7 @@ class FamilyListView {
     }
     if (sharedByMe.length > 0) {
       return Container(
-          /*  constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height - 200), */
+       
           decoration: BoxDecoration(
               color: const Color(fhbColors.bgColorContainer),
               borderRadius: BorderRadius.circular(10)),
@@ -103,7 +89,7 @@ class FamilyListView {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      'Switch User',
+                      variable.Switch_User,
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     ),
@@ -143,7 +129,7 @@ class FamilyListView {
                                   child: sharedByMe[index]
                                               .linkedData
                                               .nickName ==
-                                          'Self'
+                                          variable.Self
                                       ? myProfile.response.data.generalInfo
                                                   .profilePicThumbnail !=
                                               null
@@ -270,7 +256,7 @@ class FamilyListView {
             ],
           ));
     } else {
-      return Center(child: Text('No family members added yet'));
+      return Center(child: Text(variable.strNoFamily));
     }
   }
 }

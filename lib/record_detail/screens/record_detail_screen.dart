@@ -6,6 +6,7 @@ import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/AudioWidget.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/PDFViewer.dart';
@@ -35,6 +36,11 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'dart:typed_data';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
+
 
 
 class RecordDetailScreen extends StatefulWidget {
@@ -93,17 +99,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
 
-    /* if (widget.data.mediaMasterIds.length > 0) {
-      List<MediaMasterIds> mediMasterId =
-          new CommonUtil().getMetaMasterIdList(widget.data);
-
-      _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
-      if (checkIfMp3IsPresent(widget.data) != '') {
-        widget.data.metaInfo.hasVoiceNotes = true;
-      } else {
-        widget.data.metaInfo.hasVoiceNotes = false;
-      }
-    } */
+  
 
     mediMasterId = new CommonUtil().getMetaMasterIdList(widget.data);
 
@@ -179,7 +175,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 IconButton(
-                                  //Todo need to add action for this icon
                                   onPressed: () => Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -212,13 +207,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               icon: _isRecordBookmarked
                                   ? ImageIcon(
                                       AssetImage(
-                                          'assets/icons/record_fav_active.png'),
+                                          variable.icon_record_fav_active),
                                       //TODO chnage theme
                                       color: Color(
                                           new CommonUtil().getMyPrimaryColor()),
                                     )
                                   : ImageIcon(
-                                      AssetImage('assets/icons/record_fav.png'),
+                                      AssetImage(variable.icon_record_fav),
                                       color: Colors.black,
                                     ),
                               onPressed: () {
@@ -226,13 +221,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               }),
                           IconButton(
                               icon: ImageIcon(
-                                AssetImage('assets/icons/record_switch.png'),
+                                AssetImage(variable.icon_record_switch),
                                 color: Colors.black,
                               ),
                               onPressed: () {
                                 //getAllFamilyMembers();
                                 CommonUtil.showLoadingDialog(
-                                    contxt, _keyLoader, 'Please Wait');
+                                    contxt, _keyLoader, variable.Please_Wait);
 
                                 if (_familyListBloc != null) {
                                   _familyListBloc = null;
@@ -251,7 +246,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               }),
                           IconButton(
                               icon: ImageIcon(
-                                AssetImage('assets/icons/record_edit.png'),
+                                AssetImage(variable.icon_edit),
                                 color: Colors.black,
                               ),
                               onPressed: () {
@@ -259,7 +254,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               }),
                           IconButton(
                               icon: ImageIcon(
-                                AssetImage('assets/icons/record_download.png'),
+                                AssetImage(variable.icon_download),
                                 color: Colors.black,
                               ),
                               onPressed: () async {
@@ -272,7 +267,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               }),
                           IconButton(
                               icon: ImageIcon(
-                                AssetImage('assets/icons/record_delete.png'),
+                                AssetImage(variable.icon_delete),
                                 color: Colors.black,
                               ),
                               onPressed: () {
@@ -309,9 +304,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               ))
                                   .then((results) {
                                 if (results != null) {
-                                  if (results.containsKey('audioFile')) {
+                                  if (results.containsKey(Constants.keyAudioFile)) {
                                     containsAudio = true;
-                                    audioPath = results['audioFile'];
+                                    audioPath = results[Constants.keyAudioFile];
                                     _healthReportListForUserBlock
                                         .saveImage(
                                             audioPath, widget.data.id, '')
@@ -348,7 +343,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                         new CommonUtil().getMyPrimaryColor()),
                                   ),
                                   SizedBox(width: 10),
-                                  Text('Add voice note',
+                                  Text(variable.strAddVoiceNote,
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Color(new CommonUtil()
@@ -371,7 +366,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   void saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
     //check the storage permission for both android and ios!
     Scaffold.of(contxt).showSnackBar(SnackBar(
-      content: Text('Download Started'),
+      content: Text(variable.strDownloadStart),
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
     ));
 
@@ -380,13 +375,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         await ImageGallerySaver.saveImage(imagesPathMain[i]);
       }
       Scaffold.of(contxt).showSnackBar(SnackBar(
-        content: Text('All Files are downloaded, view in Gallery'),
+        content: Text(variable.strFilesDownloaded),
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
       ));
     } else {
       await ImageGallerySaver.saveImage(imagesPathMain[0]).then((res) {
         Scaffold.of(contxt).showSnackBar(SnackBar(
-          content: Text('File downloaded, view in Gallery'),
+          content: Text(variable.strFilesView),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         ));
         return;
@@ -396,39 +391,39 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   getCategoryInfo(MetaInfo metaInfo) {
     switch (metaInfo.categoryInfo.categoryDescription) {
-      case 'Catcode001':
+      case CommonConstants.categoryDescriptionPrescription:
         return RecordInfoCard().getCardForPrescription(
             widget.data.metaInfo, widget.data.createdOn);
         break;
-      case 'Catcode002':
+      case CommonConstants.categoryDescriptionDevice:
         return RecordInfoCard()
             .getCardForDevices(widget.data.metaInfo, widget.data.createdOn);
         break;
-      case 'Catcode003':
+      case CommonConstants.categoryDescriptionLabReport:
         return RecordInfoCard()
             .getCardForLab(widget.data.metaInfo, widget.data.createdOn);
         break;
-      case 'Catcode004':
+      case CommonConstants.categoryDescriptionMedicalReport:
         return RecordInfoCard().getCardForMedicalRecord(
             widget.data.metaInfo, widget.data.createdOn);
         break;
-      case 'Catcode005':
+      case CommonConstants.categoryDescriptionBills:
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
-      case 'Catcode006':
+      case CommonConstants.categoryDescriptionIDDocs:
         return RecordInfoCard()
             .getCardForIDDocs(widget.data.metaInfo, widget.data.createdOn);
         break;
-      case 'Catcode007':
+      case CommonConstants.categoryDescriptionOthers:
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
-      case 'Catcode010':
+      case CommonConstants.categoryDescriptionVoiceRecord:
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
-      case 'Catcode011':
+      case CommonConstants.categoryDescriptionClaimsRecord:
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
@@ -575,9 +570,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           new CommonDialogBox().getDialogBoxForPrescription(
               context,
               new TextEditingController(
-                  text: hospitalData != null ? hospitalData['name'] : ''),
+                  text: hospitalData != null ? hospitalData[variable.strName] : ''),
               new TextEditingController(
-                  text: doctorsData != null ? doctorsData['name'] : ''),
+                  text: doctorsData != null ? doctorsData[variable.strName] : ''),
               new TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
@@ -595,7 +590,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           }, new List(), widget.data, true,
               new TextEditingController(text: fileName));
 
-          // getDialogBoxForPrescription(context);
           break;
 
         case Constants.STR_BILLS:
@@ -630,9 +624,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           new CommonDialogBox().getDialogBoxForLabReport(
               context,
               new TextEditingController(
-                  text: labData != null ? labData['name'] : ''),
+                  text: labData != null ? labData[variable.strName] : ''),
               new TextEditingController(
-                  text: doctorsData != null ? doctorsData['name'] : ''),
+                  text: doctorsData != null ? doctorsData[variable.strName] : ''),
               new TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
@@ -659,9 +653,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           new CommonDialogBox().getDialogBoxForPrescription(
               context,
               new TextEditingController(
-                  text: hospitalData != null ? hospitalData['name'] : ''),
+                  text: hospitalData != null ? hospitalData[variable.strName] : ''),
               new TextEditingController(
-                  text: doctorsData != null ? doctorsData['name'] : ''),
+                  text: doctorsData != null ? doctorsData[variable.strName]: ''),
               new TextEditingController(
                   text: widget.data.metaInfo.dateOfVisit != null
                       ? widget.data.metaInfo.dateOfVisit
@@ -782,7 +776,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 : '';
             String fileName = widget.data.metaInfo.fileName;
             List<bool> isSelected =
-                widget.data.metaInfo.deviceReadings[1].unit == 'After'
+                widget.data.metaInfo.deviceReadings[1].unit == variable.strAfter
                     ? [false, true]
                     : [true, false];
             new CommonDialogBox().getDialogBoxForGlucometer(
@@ -951,7 +945,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   void postAudioToServer(String mediaMetaID) {
     Map<String, dynamic> postImage = new Map();
 
-    postImage['mediaMetaId'] = mediaMetaID;
+    postImage[parameters.strmediaMetaId] = mediaMetaID;
     
     if (audioPath != '') {
       _healthReportListForUserBlock
@@ -974,7 +968,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   void createdDateMethod() {
     var parsedDate = DateTime.parse(widget.data.createdOn);
-    final dateFormatter = DateFormat('dd/MM/yyyy');
+    final dateFormatter = DateFormat(variable.strDateFormatDay);
     createdDate = dateFormatter.format(parsedDate);
   }
 
@@ -1028,7 +1022,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           : Container(
                               child: IconButton(
                                 icon: ImageIcon(
-                                    AssetImage('assets/icons/attach.png'),
+                                    AssetImage(variable.icon_attach),
                                     color: Colors.white),
                                 onPressed: () {
                                   Navigator.of(context).push(MaterialPageRoute(
@@ -1046,35 +1040,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               : Container(
                   child: Icon(Icons.mic, size: 60, color: Colors.white)),
 
-          /* SizedBox(
-              height: 10.0,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                OutlineB//utton(
-                  onPressed: goToPrevious,
-                  child: Text("<"),
-                ),
-                OutlineButton(
-                  onPressed: goToNext,
-                  child: Text(">"),
-                ),
-                SizedBox(
-                  width: 35,
-                ),
-                Container(
-                  width: 50.0,
-                  height: 30.0,
-                  child: Text('$index /' + imagesPath.length.toString()),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    //color: _current == index ? Colors.redAccent : Colors.green,
-                  ),
-                )
-              ],
-            ),*/
-        ],
+         ],
       ),
     );
   }
@@ -1179,7 +1145,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   downloadMedia(List data, BuildContext context) {
     var path;
-    FHBUtils.createFolderInAppDocDir('myFHB/Audio').then((filePath) {
+    FHBUtils.createFolderInAppDocDir(variable.stAudioPath).then((filePath) {
       path = '$filePath${widget.data.metaInfo.fileName}.mp3';
       new File(path).writeAsBytesSync(data);
       containsAudio = true;

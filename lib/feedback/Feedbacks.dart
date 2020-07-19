@@ -19,6 +19,9 @@ import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'dart:convert';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+
 
 class Feedbacks extends StatefulWidget {
   Feedbacks();
@@ -48,19 +51,21 @@ class _FeedbacksState extends State<Feedbacks> {
   HealthReportListForUserBlock _healthReportListForUserBlock =
       new HealthReportListForUserBlock();
 
+      String currentDate= '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
+
   Future<void> loadAssets() async {
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 300,
         enableCamera: true,
         selectedAssets: assests,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
         materialOptions: MaterialOptions(
-          actionBarColor: "#6d35de",
+          actionBarColor: fhbColors.actionColor,
           //actionBarTitle: "Example App",
           //allViewTitle: "All Photos",
           useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
+          selectCircleStrokeColor: fhbColors.colorBlack,
         ),
       );
     } on FetchException catch (e) {
@@ -153,18 +158,18 @@ class _FeedbacksState extends State<Feedbacks> {
                         ), */
                         Padding(
                           padding: EdgeInsets.all(10),
-                          child: Image.asset('assets/launcher/myfhb.png',
+                          child: Image.asset(variable.icon_fhb,
                               width: 100, height: 100),
                         ),
                         Padding(
                             padding: EdgeInsets.only(left: 20),
-                            child: Text('Feedback',
+                            child: Text(variable.strFeedBack,
                                 style: TextStyle(
                                     fontSize: 24, color: Colors.white))),
                         Padding(
                           padding: EdgeInsets.only(left: 20),
                           child: Text(
-                            'We would like to hear from you on your experience with MyFHB',
+                            variable.strFeedbackExp,
                             softWrap: true,
                             style: TextStyle(color: Colors.white70),
                           ),
@@ -186,7 +191,7 @@ class _FeedbacksState extends State<Feedbacks> {
                       height: 10,
                     ),
                     Container(
-                      child: Text('Attach Image'),
+                      child: Text(variable.strAttachImage),
                     ),
                     SizedBox(
                       height: 10,
@@ -197,7 +202,7 @@ class _FeedbacksState extends State<Feedbacks> {
                       color: ColorUtils.greycolor,
                       child: IconButton(
                         icon: new ImageIcon(
-                          AssetImage('assets/icons/attach.png'),
+                          AssetImage(variable.icon_attach),
                           color: Color(new CommonUtil().getMyPrimaryColor()),
                           size: 32,
                         ),
@@ -209,7 +214,7 @@ class _FeedbacksState extends State<Feedbacks> {
                       height: 20,
                     ),
                     Container(
-                      child: Text('Add Voice'),
+                      child: Text(variable.strAddVoice),
                     ),
                     SizedBox(
                       height: 10,
@@ -260,7 +265,7 @@ class _FeedbacksState extends State<Feedbacks> {
   }
 
   void onPostDataToServer(BuildContext context, List<String> imagePaths) {
-    CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
     Map<String, dynamic> postMainData = new Map();
     Map<String, dynamic> postMediaData = new Map();
@@ -271,27 +276,26 @@ class _FeedbacksState extends State<Feedbacks> {
         .getIdForDescription(catgoryDataList, Constants.STR_FEEDBACKS);
     categoryDataObj = new CommonUtil()
         .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
-    postMediaData["categoryInfo"] = categoryDataObj.toJson();
+    postMediaData[variable.strcategoryInfo] = categoryDataObj.toJson();
     List<MediaData> metaDataFromSharedPrefernce = PreferenceUtil.getMediaType();
 
     mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(
         categoryID, metaDataFromSharedPrefernce, Constants.STR_FEEDBACKS);
 
-    postMediaData["mediaTypeInfo"] = mediaDataObj.toJson();
-    postMediaData['feedback'] = feedbackController.text;
-    postMediaData["memoText"] = '';
+    postMediaData[variable.strmediaTypeInfo] = mediaDataObj.toJson();
+    postMediaData[variable.strfeedback] = feedbackController.text;
+    postMediaData[variable.strmemoText] = '';
 
-    postMediaData["isDraft"] = false;
+    postMediaData[variable.strisDraft] = false;
 
-    postMediaData["sourceName"] = CommonConstants.strTridentValue;
-    postMediaData["memoTextRaw"] = 'memoTextRaw';
+    postMediaData[variable.strsourceName] = CommonConstants.strTridentValue;
+    postMediaData[variable.strmemoTextRaw] =variable.strmemoTextRaw;
 
-    String fileName = Constants.STR_FEEDBACKS +
-        '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
+    String fileName = Constants.STR_FEEDBACKS +currentDate ;
 
-    postMediaData["fileName"] = fileName;
+    postMediaData[variable.strfileName] = fileName;
 
-    postMainData['metaInfo'] = postMediaData;
+    postMainData[variable.strmetaInfo] = postMediaData;
 
     var params = json.encode(postMainData);
 
@@ -322,7 +326,7 @@ class _FeedbacksState extends State<Feedbacks> {
   void postAudioToServer(String mediaMetaID, BuildContext context) {
     Map<String, dynamic> postImage = new Map();
 
-    postImage['mediaMetaId'] = mediaMetaID;
+    postImage[variable.strmediaMetaId] = mediaMetaID;
 
     int k = 0;
 
@@ -427,8 +431,8 @@ class _FeedbacksState extends State<Feedbacks> {
           fontSize: 16.0,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
-        errorText: isFeedBackEmptied?'Feedback should not be empty':null,
-        hintText: 'Feedback',
+        errorText: isFeedBackEmptied?variable.strFeedbackEmpty:null,
+        hintText: variable.strFeedBack,
         labelStyle: TextStyle(
             fontSize: 12.0,
             fontWeight: FontWeight.w400,

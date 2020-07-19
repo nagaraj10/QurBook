@@ -5,17 +5,17 @@ import 'package:myfhb/database/model/UnitsMesurement.dart';
 import 'package:myfhb/database/services/database_helper.dart';
 
 class CommonConstants {
-  static String categoryDescriptionPrescription = 'Catcode001';
-  static String categoryDescriptionDevice = 'Catcode002';
-  static String categoryDescriptionLabReport = 'Catcode003';
-  static String categoryDescriptionMedicalReport = 'Catcode004';
-  static String categoryDescriptionBills = 'Catcode005';
-  static String categoryDescriptionIDDocs = 'Catcode006';
-  static String categoryDescriptionOthers = 'Catcode007';
-  static String categoryDescriptionWearable = 'Catcode008';
-  static String categoryDescriptionFeedback = 'Catcode009';
-  static String categoryDescriptionVoiceRecord = 'Catcode010';
-  static String categoryDescriptionClaimsRecord = 'Catcode011';
+  static const String categoryDescriptionPrescription = 'Catcode001';
+  static const String categoryDescriptionDevice = 'Catcode002';
+  static const String categoryDescriptionLabReport = 'Catcode003';
+  static const String categoryDescriptionMedicalReport = 'Catcode004';
+  static const String categoryDescriptionBills = 'Catcode005';
+  static const String categoryDescriptionIDDocs = 'Catcode006';
+  static const String categoryDescriptionOthers = 'Catcode007';
+  static const String categoryDescriptionWearable = 'Catcode008';
+  static const String categoryDescriptionFeedback = 'Catcode009';
+  static const String categoryDescriptionVoiceRecord = 'Catcode010';
+  static const String categoryDescriptionClaimsRecord = 'Catcode011';
 
   static final String CAT_JSON_GLUCOMETER = "Catcode002_Typecode001";
   static final String CAT_JSON_BP_METER = "Catcode002_Typecode002";

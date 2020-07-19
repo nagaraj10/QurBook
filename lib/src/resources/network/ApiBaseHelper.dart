@@ -125,21 +125,24 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> updateTeleHealthProviders(String url) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Authorization': authToken,
-    };
-
+  Future<dynamic> updateTeleHealthProviders(String url,String query) async {
+    Dio dio = new Dio();
     var responseJson;
-    try {
-      final response = await http.post(_baseUrl + url,
-          body: '', headers: requestHeaders);
-      responseJson = _returnResponse(response);
-    } on SocketException {
-      throw FetchDataException('No Internet connection');
-    }
-    return responseJson;
+
+    dio.options.headers['accept'] = 'application/json';
+    dio.options.headers['Content-Type'] = 'multipart/form-data';
+    dio.options.headers['Authorization'] = authToken;
+
+    Map<String, dynamic> mapForSignUp = new Map();
+    mapForSignUp['sections'] = query;
+    FormData formData = new FormData.fromMap(mapForSignUp);
+
+    var response = await dio.post(_baseUrl+url, data: formData);
+
+    //responseJson = _returnResponse(response.data);
+
+    return response.data;
+
   }
 
   Future<dynamic> addProviders(String url, String jsonData) async {

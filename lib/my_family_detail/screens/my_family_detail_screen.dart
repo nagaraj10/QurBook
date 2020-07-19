@@ -20,6 +20,10 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
+
 
 class MyFamilyDetailScreen extends StatefulWidget {
   MyFamilyDetailArguments arguments;
@@ -84,14 +88,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'UnKnown'];
+  
 
-  List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
 
   String selectedBloodGroup;
   String selectedBloodRange;
 
-  List<String> genderArray = ['Male', 'Female', 'Others'];
   String selectedGender;
 
   @override
@@ -105,7 +107,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -132,7 +133,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             IconButton(
                 icon: Icon(Icons.edit),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/add-family-user-info',
+                  Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                           arguments: AddFamilyUserInfoArguments(
                               sharedbyme: widget
                                   .arguments.profilesSharedByMe[_currentPage],
@@ -225,9 +226,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       emailController.text = sharedbyme.profileData.email;
     }
 
-    if (sharedbyme.profileData.bloodGroup != null &&
-        sharedbyme.profileData.bloodGroup != "null") {
-//      bloodGroupController.text = sharedbyme.profileData.bloodGroup;
+    if (new CommonUtil().checkIfStringisNull(sharedbyme.profileData.bloodGroup)) {
 
       renameBloodGroup(sharedbyme.profileData.bloodGroup);
     }
@@ -372,15 +371,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
       try {
         if (bloodGroupSplitName.length > 1) {
-          for (String bloodGroup in bloodGroupArray) {
-//      var bloodgroupClone = bloodGroup.split(' ');
+          for (String bloodGroup in variable.bloodGroupArray) {
             if (bloodGroupSplitName[0] == bloodGroup) {
               selectedBloodGroup = bloodGroup;
               bloodGroupController.text = selectedBloodGroup;
             }
           }
 
-          for (String bloodRange in bloodRangeArray) {
+          for (String bloodRange in variable.bloodRangeArray) {
             if (bloodGroupSplitName[1] == bloodRange) {
               selectedBloodRange = bloodRange;
               bloodRangeController.text = selectedBloodRange;
@@ -389,14 +387,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         } else {
           var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
           if (bloodGroupSplitName.length > 1) {
-            for (String bloodGroup in bloodGroupArray) {
-//      var bloodgroupClone = bloodGroup.split(' ');
+            for (String bloodGroup in variable.bloodGroupArray) {
               if (bloodGroupSplitName[0] == bloodGroup) {
                 selectedBloodGroup = bloodGroup;
                 bloodGroupController.text = selectedBloodGroup;
               }
 
-              for (String bloodRange in bloodRangeArray) {
+              for (String bloodRange in variable.bloodRangeArray) {
                 if (bloodGroupSplitName[1][0] == bloodRange) {
                   selectedBloodRange = bloodRange;
                   bloodRangeController.text = selectedBloodRange;
@@ -608,7 +605,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
-//          focusNode: relationShipFocus,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(emailFocus);
@@ -645,7 +641,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
-//          focusNode: emailFocus,
           autofocus: false,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
@@ -804,7 +799,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             readOnly: true,
             enabled: false,
             keyboardType: TextInputType.text,
-//          focusNode: dateOfBirthFocus,
             textInputAction: TextInputAction.done,
             onSubmitted: (term) {
               dateOfBirthFocus.unfocus();
@@ -817,7 +811,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               suffixIcon: new IconButton(
                 icon: new Icon(Icons.calendar_today),
                 onPressed: () {
-//                  _selectDate(context);
                 },
               ),
               labelText: CommonConstants.date_of_birth,
@@ -841,7 +834,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   Widget _showViewInsuranceButton(Sharedbyme sharedbyme) {
     final GestureDetector viewInsuranceButtonWithGesture = new GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/my-family-detail-view-insurance',
+        Navigator.pushNamed(context, router.rt_FamilyInsurance,
             arguments:
                 MyFamilyDetailViewArguments(index: 0, sharedbyme: sharedbyme));
       },
@@ -880,15 +873,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
     return viewInsuranceButtonWithGesture;
 
-    /* return new Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
-        child: viewInsuranceButtonWithGesture);*/
+  
   }
 
   Widget _showViewHospitalButton(Sharedbyme sharedbyme) {
     final GestureDetector viewHospitalButtonWithGesture = new GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/my-family-detail-view-insurance',
+        Navigator.pushNamed(context,router.rt_FamilyInsurance,
             arguments:
                 MyFamilyDetailViewArguments(index: 1, sharedbyme: sharedbyme));
       },
@@ -938,12 +929,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
-//              familyWidget = Center(
-//                  child: SizedBox(
-//                child: CircularProgressIndicator(),
-//                width: 30,
-//                height: 30,
-//              ));
               break;
 
             case Status.ERROR:
@@ -956,18 +941,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               isCalled = true;
 
               relationShipResponseList = snapshot.data.data;
-
-//              if (widget.arguments.fromClass == CommonConstants.my_family) {
-//                for (var i = 0;
-//                    i < snapshot.data.data.relationShipAry.length;
-//                    i++) {
-//                  if (snapshot.data.data.relationShipAry[i].roleName ==
-//                      widget.arguments.sharedbyme.linkedData.roleName) {
-//                    selectedRelationShip =
-//                        snapshot.data.data.relationShipAry[i];
-//                  }
-//                }
-//              }
 
               familyWidget = getRelationshipDetails(snapshot.data.data);
               break;
@@ -1022,7 +995,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.blood_group),
                 value: selectedBloodGroup,
-                items: bloodGroupArray.map((eachBloodGroup) {
+                items: variable.bloodGroupArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
                     child: new Text(eachBloodGroup,
                         style: new TextStyle(
@@ -1051,7 +1024,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.blood_range),
                 value: selectedBloodRange,
-                items: bloodRangeArray.map((eachBloodGroup) {
+                items: variable.bloodRangeArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
                     child: new Text(eachBloodGroup,
                         style: new TextStyle(
@@ -1082,7 +1055,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 value: selectedGender != null
                     ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
                     : selectedGender,
-                items: genderArray.map((eachGender) {
+                items: variable.genderArray.map((eachGender) {
                   return DropdownMenuItem(
                     child: new Text(eachGender,
                         style: new TextStyle(
@@ -1112,7 +1085,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       setState(() {
         dateTime = picked ?? dateTime;
         dateOfBirthController.text =
-            new DateFormat("yyyy-MM-dd").format(dateTime).toString();
+            new DateFormat(variable.strDateYear).format(dateTime).toString();
       });
     }
   }

@@ -41,11 +41,12 @@ import 'package:myfhb/src/model/secretmodel.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
-import 'package:myfhb/global_search/model/GlobalSearch.dart' as globalSearch;
+import 'package:myfhb/global_search/model/Data.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:showcaseview/showcase.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class CommonUtil {
   static String MAYA_URL="";
@@ -425,7 +426,7 @@ class CommonUtil {
     GeneralInfo generalInfo = myProfile.response.data.generalInfo;
     
     LinkedData linkedData =
-        new LinkedData(roleName: 'Self', nickName: 'Self');
+        new LinkedData(roleName: variable.Self, nickName: variable.Self);
     ProfilePicThumbnailMain profilePicThumbnail =
         generalInfo.profilePicThumbnail != null
             ? new ProfilePicThumbnailMain(
@@ -462,84 +463,6 @@ class CommonUtil {
     Sharedbyme(
         profileData: profileData, linkedData: linkedData);
   }
-
-  /* void getMedicalPreference({Function callBackToRefresh}) async {
-    MyProfileBloc _myProfileBloc = new MyProfileBloc();
-    _myProfileBloc
-        .getCompleteProfileData(Constants.KEY_USERID)
-        .then((profileCompleteData) {
-      if (profileCompleteData.response.data.medicalPreferences != null) {
-        MedicalPreferences medicalPreferences =
-            profileCompleteData.response.data.medicalPreferences;
-
-        PreferenceUtil.savePrefereDoctors(Constants.KEY_PREFERRED_DOCTOR, null);
-
-        if (medicalPreferences.preferences.doctorIds != null &&
-            medicalPreferences.preferences.doctorIds.length > 0) {
-          medicalPreferences.preferences.doctorIds.sort(
-              (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
-
-          for (DoctorIds doctorIds
-              in medicalPreferences.preferences.doctorIds) {
-            if (doctorIds.isDefault) {
-              PreferenceUtil.savePrefereDoctors(
-                  Constants.KEY_PREFERRED_DOCTOR, doctorIds);
-            }
-          }
-        } else {
-          PreferenceUtil.savePrefereDoctors(
-              Constants.KEY_PREFERRED_DOCTOR, null);
-        }
-
-        if (medicalPreferences.preferences.hospitalIds != null &&
-            medicalPreferences.preferences.hospitalIds.length > 0) {
-          PreferenceUtil.savePrefereHospital(
-              Constants.KEY_PREFERRED_HOSPITAL, null);
-          medicalPreferences.preferences.hospitalIds.sort(
-              (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
-
-          for (HospitalIds hospitalIds
-              in medicalPreferences.preferences.hospitalIds) {
-            if (hospitalIds.isDefault) {
-              PreferenceUtil.savePrefereHospital(
-                  Constants.KEY_PREFERRED_HOSPITAL, hospitalIds);
-            }
-          }
-        } else {
-          PreferenceUtil.savePrefereHospital(
-              Constants.KEY_PREFERRED_HOSPITAL, null);
-        }
-
-        PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
-
-        if (medicalPreferences.preferences.laboratoryIds != null &&
-            medicalPreferences.preferences.laboratoryIds.length > 0) {
-          medicalPreferences.preferences.laboratoryIds.sort(
-              (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
-
-          for (LaboratoryIds laboratoryIds
-              in medicalPreferences.preferences.laboratoryIds) {
-            if (laboratoryIds.isDefault) {
-              PreferenceUtil.savePreferedLab(
-                  Constants.KEY_PREFERRED_LAB, laboratoryIds);
-            }
-          }
-        } else {
-          PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
-        }
-
-        // PreferenceUtil.saveCompleteProfileData(Constants.KEY_COMPLETE_PROFILEDATA,profileCompleteData);
-        callBackToRefresh();
-      } else {
-        PreferenceUtil.savePrefereDoctors(Constants.KEY_PREFERRED_DOCTOR, null);
-        PreferenceUtil.savePrefereHospital(
-            Constants.KEY_PREFERRED_HOSPITAL, null);
-
-        PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
-        callBackToRefresh();
-      }
-    });
-  } */
 
   Future<void> getMedicalPreference({Function callBackToRefresh}) async {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
@@ -624,30 +547,30 @@ class CommonUtil {
   }
 
   int getThemeColor() {
-    return PreferenceUtil.getSavedTheme('my_theme') != null
-        ? PreferenceUtil.getSavedTheme('my_theme')
+    return PreferenceUtil.getSavedTheme(Constants.keyTheme) != null
+        ? PreferenceUtil.getSavedTheme(Constants.keyTheme)
         : 0xff0a72e8;
   }
 
  int getMyPrimaryColor() {
-    return PreferenceUtil.getSavedTheme('pri_color') != null
-        ? PreferenceUtil.getSavedTheme('pri_color')
+    return PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
+        ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
         : 0xff015eea;
   }
 
 
   int getMyGredientColor() {
-    return PreferenceUtil.getSavedTheme('gre_color') != null
-        ? PreferenceUtil.getSavedTheme('gre_color')
+    return PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
+        ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
         : 0xff00c0fa;
   }
 
 
-  List<CategoryData> getAllCategoryList(List<globalSearch.Data> data) {
+  List<CategoryData> getAllCategoryList(List<Data> data) {
     List<CategoryData> categoryDataList = new List();
 
-    for (globalSearch.Data dataObj in data) {
-      globalSearch.CategoryInfo categoryInfo = dataObj.metaInfo.categoryInfo;
+    for (Data dataObj in data) {
+      CategoryInfo categoryInfo = dataObj.metaInfo.categoryInfo;
 
       categoryDataList.add(new CategoryData(
         id: categoryInfo.id,
@@ -658,7 +581,7 @@ class CommonUtil {
         isDisplay: categoryInfo.isDisplay,
         isEdit: categoryInfo.isEdit,
         isRead: categoryInfo.isRead,
-        lastModifiedOn: categoryInfo.lastModifiedOn,
+        //lastModifiedOn: categoryInfo.lastModifiedOn,
         logo: categoryInfo.logo,
         isActive: true,
       ));
@@ -667,13 +590,13 @@ class CommonUtil {
     return removeDuplicatevalues(categoryDataList);
   }
 
-  CompleteData getMediaTypeInfo(List<globalSearch.Data> data) {
+  CompleteData getMediaTypeInfo(List<Data> data) {
     CompleteData completeData;
     List<MediaMetaInfo> mediaMetaInfoList = new List();
 
-    for (globalSearch.Data dataObj in data) {
+    for (Data dataObj in data) {
       List<MediaMasterIds> mediaMasterIdsList = new List();
-      for (globalSearch.MediaMasterIds mediaMasterIds
+      for (MediaMasterIds mediaMasterIds
           in dataObj.mediaMasterIds) {
         mediaMasterIdsList.add(new MediaMasterIds(
             id: mediaMasterIds.id, fileType: mediaMasterIds.fileType));
@@ -744,7 +667,7 @@ class CommonUtil {
           longitude: dataObj.metaInfo.hospital.longitude,
           name: dataObj.metaInfo.hospital.name,
           website: dataObj.metaInfo.hospital.website,
-          zipcode: dataObj.metaInfo.hospital.zipCode.toString(),
+          zipcode: dataObj.metaInfo.hospital.zipcode,
         );
       } else {
         hospital = null;
@@ -777,7 +700,7 @@ class CommonUtil {
 
       if (dataObj.metaInfo.deviceReadings != null &&
           dataObj.metaInfo.deviceReadings.length > 0) {
-        for (globalSearch.DeviceReadings deviceReadingsObj
+        for (DeviceReadings deviceReadingsObj
             in dataObj.metaInfo.deviceReadings) {
           deviceReadings.add(new DeviceReadings(
               parameter: deviceReadingsObj.parameter,
@@ -793,7 +716,7 @@ class CommonUtil {
           categoryInfo: categoryInfo,
           mediaTypeInfo: mediaTypeInfo,
           fileName: dataObj.metaInfo.fileName,
-          hasVoiceNotes: dataObj.metaInfo.hasVoiceNote,
+          hasVoiceNotes: dataObj.metaInfo.hasVoiceNotes,
           isDraft: dataObj.metaInfo.isDraft,
           memoText: dataObj.metaInfo.memoText,
           memoTextRaw: dataObj.metaInfo.memoTextRaw,
@@ -859,23 +782,6 @@ class CommonUtil {
     return mediaMasterId;
   }
 
-  /*  static customShowCase(
-    GlobalKey _key,
-    String desc,
-    Widget _child, {
-    String title,
-  }) {
-    return Showcase(
-      key: _key,
-      disableAnimation: true,
-      shapeBorder: CircleBorder(),
-      //showcaseBackgroundColor: Colors.transparent,
-      title: title != null ? title : '',
-      description: desc,
-      descTextStyle: TextStyle(color: Colors.black),
-      child: _child,
-    );
-  } */
 
   static customShowCase(GlobalKey _key, String desc, Widget _child,
       {String title, BuildContext context}) {
@@ -883,7 +789,7 @@ class CommonUtil {
       key: _key,
       disableAnimation: false,
       shapeBorder: CircleBorder(),
-      title: 'MyFHB',
+      title: variable.strAPP_NAME,
       description: desc,
       child: _child,
       overlayColor: Colors.black,
@@ -899,7 +805,7 @@ class CommonUtil {
         child: Row(
           children: <Widget>[
             Image.asset(
-              'assets/maya/maya_us.png',
+              variable.icon_maya,
               height: 80,
               width: 80,
             ),
@@ -914,7 +820,7 @@ class CommonUtil {
                     style: TextStyle(
                         fontSize: 20.0,
                         color: Color(CommonUtil().getMyPrimaryColor()),
-                        fontFamily: 'Poppins'),
+                        fontFamily: variable.font_poppins),
                     maxLines: 2,
                     softWrap: true,
                   ),
@@ -927,7 +833,7 @@ class CommonUtil {
                   style: TextStyle(
                       fontSize: 12,
                       color: Color(CommonUtil().getMyPrimaryColor()),
-                      fontFamily: 'Poppins'),
+                      fontFamily: variable.font_poppins),
                   softWrap: true,
                 ),
               ],
@@ -954,12 +860,12 @@ class CommonUtil {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ImageIcon(
-              AssetImage('assets/icons/wifi.png'),
+              AssetImage(variable.icon_wifi),
               color: Color(CommonUtil().getMyPrimaryColor()),
               size: 50.0,
             ),
             Text(
-              'No internet connection',
+              variable.strNoInternet,
               style: TextStyle(
                 color: Color(CommonUtil().getMyPrimaryColor()),
                 fontSize: 16.0,
@@ -989,7 +895,7 @@ class CommonUtil {
             width: 10.0,
           ),
           Text(
-            isOffline ? 'back to online' : 'no connection',
+            isOffline ? variable.strBackOnline:variable.strNoConnection,
             style: TextStyle(color: Colors.white, fontSize: 15.0),
           ),
         ],
@@ -1011,9 +917,9 @@ class CommonUtil {
       }
     } else {}
 
-    if (bloodGroupClone.contains('ve')) {
+    if (bloodGroupClone.contains(variable.strve)) {
     } else {
-      bloodGroupClone = bloodGroupClone + 've';
+      bloodGroupClone = bloodGroupClone + variable.strve;
     }
     return bloodGroupClone;
   }
@@ -1046,17 +952,17 @@ class CommonUtil {
   Future<void> getAllCustomRoles() async {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
     try {
-      if (PreferenceUtil.getFamilyRelationship('keyFamilyrel') != null) {
+      if (PreferenceUtil.getFamilyRelationship(Constants.keyFamily) != null) {
       } else {
         _familyListBloc.getCustomRoles().then((relationShip) {
           PreferenceUtil.saveRelationshipArray(
-              'keyFamilyrel', relationShip.relationShipAry);
+              Constants.keyFamily, relationShip.relationShipAry);
         });
       }
     } catch (e) {
       _familyListBloc.getCustomRoles().then((relationShip) {
         PreferenceUtil.saveRelationshipArray(
-            'keyFamilyrel', relationShip.relationShipAry);
+            Constants.keyFamily, relationShip.relationShipAry);
       });
     }
   }
@@ -1093,13 +999,6 @@ class CommonUtil {
     });
   }
 
-  /*  Future<MyProfile> getMyProfile() async {
-    if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
-      return PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    } else {
-      return await getUserProfileData();
-    }
-  } */
 
   Future<MyProfile> getMyProfile() async {
     if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
@@ -1125,6 +1024,10 @@ class CommonUtil {
 
   String checkIfStringIsEmpty(String value){
     return value!=null?value:'';
+  }
+
+  bool checkIfStringisNull(String value){
+    return value!=null&&value!='null';
   }
 
 }

@@ -7,6 +7,8 @@ import 'dart:async';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 
 enum t_MEDIA {
   FILE,
@@ -42,15 +44,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
   bool isPlaying = false;
 
-  List<String> assetSample = [
-    'assets/samples/sample.aac',
-    'assets/samples/sample.aac',
-    'assets/samples/sample.opus',
-    'assets/samples/sample.caf',
-    'assets/samples/sample.mp3',
-    'assets/samples/sample.ogg',
-    'assets/samples/sample.wav',
-  ];
+ 
 
   @override
   void initState() {
@@ -176,7 +170,7 @@ class AudioWidgetState extends State<AudioWidget> {
     try {
       String path = widget.audioFile;
       if (_media == t_MEDIA.ASSET) {
-        Uint8List buffer = (await rootBundle.load(assetSample[_codec.index]))
+        Uint8List buffer = (await rootBundle.load(variable.assetSample[_codec.index]))
             .buffer
             .asUint8List();
         path = await flutterSound.startPlayerFromBuffer(

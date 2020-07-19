@@ -6,6 +6,7 @@ import 'package:myfhb/add_providers/models/add_labs_providers_id.dart';
 import 'package:myfhb/add_providers/services/add_providers_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class AddProvidersBloc implements BaseBloc {
   AddProvidersRepository addProvidersRepository;
@@ -60,7 +61,7 @@ class AddProvidersBloc implements BaseBloc {
   // 1
   // Doctors
   addDoctors() async {
-    doctorsSink.add(ApiResponse.loading('Signing in user'));
+    doctorsSink.add(ApiResponse.loading(variable.strAddingDoctors));
     try {
       AddDoctorsProvidersId addDoctorsProvidersId =
           await addProvidersRepository.addDoctors(doctorsJsonString);
@@ -73,7 +74,7 @@ class AddProvidersBloc implements BaseBloc {
   // 2
   // Hospitals
   addHospitals() async {
-    hospitalsSink.add(ApiResponse.loading('Signing in user'));
+    hospitalsSink.add(ApiResponse.loading(variable.strAddingHospital));
     try {
       AddHospitalsProvidersId addHospitalsProvidersId =
           await addProvidersRepository.addHospitals(hospitalsJsonString);
@@ -86,7 +87,7 @@ class AddProvidersBloc implements BaseBloc {
   // 3
   // Labs
   addLabs() async {
-    labsSink.add(ApiResponse.loading('Signing in user'));
+    labsSink.add(ApiResponse.loading(variable.strAddingLab));
     try {
       AddLabsProvidersId addLabProvidersId =
           await addProvidersRepository.addLabs(labsJsonString);

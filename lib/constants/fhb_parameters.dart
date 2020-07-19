@@ -162,3 +162,13 @@ const String strlinkedData='linkedData';
 const String strsharedbyme='sharedbyme';
 const String strsharedToMe='sharedToMe';
 const String strvirtualUserParent='virtualUserParent';
+
+const String strmedicalPreferences='medicalPreferences';
+const String strpreferences='preferences';
+const String strdoctorIds='doctorIds';
+const String strlaboratoryIds='laboratoryIds';
+const String strhospitalIds='hospitalIds';
+
+const String strdoctorPatientMappingId='doctorPatientMappingId';
+const String strisVisible='isVisible';
+const String strlastModifiedBy='lastModifiedBy';

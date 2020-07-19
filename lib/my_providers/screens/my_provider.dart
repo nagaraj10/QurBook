@@ -6,6 +6,8 @@ import 'package:myfhb/my_providers/widgets/my_providers_appbar.dart';
 import 'package:myfhb/my_providers/widgets/my_providers_stream_data.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
 
 class MyProvider extends StatefulWidget {
   @override
@@ -47,10 +49,10 @@ class _MyProviderState extends State<MyProvider>
         onPressed: () {
           switch (_activeTabIndex) {
             case 0:
-              Navigator.pushNamed(context, '/search-providers',
+              Navigator.pushNamed(context, router.rt_SearchProvider,
                   arguments: SearchArguments(
                     searchWord: CommonConstants.doctors,
-                    fromClass: 'add_providers',
+                    fromClass: router.cn_AddProvider,
                 
                   )).then((value) {
                 _providersBloc = new ProvidersBloc();
@@ -59,10 +61,10 @@ class _MyProviderState extends State<MyProvider>
 
               break;
             case 1:
-              Navigator.pushNamed(context, '/search-providers',
+              Navigator.pushNamed(context,router.rt_SearchProvider,
                   arguments: SearchArguments(
                     searchWord: CommonConstants.hospitals,
-                      fromClass: 'add_providers',
+                      fromClass: router.cn_AddProvider,
                     
                   )).then((value) {
                 _providersBloc = new ProvidersBloc();
@@ -71,10 +73,10 @@ class _MyProviderState extends State<MyProvider>
 
               break;
             case 2:
-              Navigator.pushNamed(context, '/search-providers',
+              Navigator.pushNamed(context, router.rt_SearchProvider,
                   arguments: SearchArguments(
                     searchWord: CommonConstants.labs,
-                      fromClass: 'add_providers',
+                      fromClass: router.cn_AddProvider,
                      )).then((value) {
                 _providersBloc = new ProvidersBloc();
                 _providersBloc.getMedicalPreferencesList();

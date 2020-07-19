@@ -178,62 +178,15 @@ const String KEY_FAMILYREL = 'keyFamilyrel';
 const String Auth_token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ0OTI1OTI1MjYsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NDg4OTkyNTI2LCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5MTc2MTE3ODc4IiwidXNlcklkIjoiYmRlMTQwZGItMGZmYy00YmU2LWI0YzAtNWU0NGI5ZjU0NTM1IiwiaWF0IjoxNTk0NDg4OTkyLCJleHAiOjE1OTgwODg5OTIsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImE0ZTQ4MzY3LTM0M2EtNDIzNC1hYjEyLTgzMzEyMTZkZDUyYSJ9.qqSTMlm5UQKJ5vrCMQQ2NiPCM9lU8-5OStHAj1Q2Vfk';
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-const String Self = 'Self';
-const String Delink = 'Delink';
-const String Please_Wait = 'Please Wait';
-const String parentToChild = 'parentToChild';
-const String DeLink = 'De-Link';
-const String Error = 'Error';
-const String Success = 'Success';
-const String Otp_Verification = 'Otp Verification';
-const String Resend_Code = 'Resend Code';
-const String Receive_OTP = 'Didn\'t receive the OTP?';
-const String enter_otp = 'Please enter the received OTP';
-const String Successfully = 'Successfully';
-const String OTP_Matched = 'Otp matched successfully';
-const String Family_Member_Added =
-    'Your family member has been added successfully';
-const String VerifyEmail = 'Tap to verify Email address';
-const String otp_assets = 'assets/icons/otp_icon.png';
-
-const String Family_Detail_Route = '/my-family-detail-screen';
-const String addFamilyUserInfo = '/add-family-user-info';
-const String addFamilyOtpScreen = '/add-family-otp-screen';
-const String userAccounts = '/user_accounts';
-const String search_providers = '/search-providers';
-
-List<String> genderArray = ['Male', 'Female', 'Others'];
-List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
-List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'UnKnown'];
-
-const String enterFirstName = 'Enter First Name';
-const String enterLastName = 'Enter Last Name';
-const String selectGender = 'Select Gender';
-const String selectDOB = 'Select DOB';
-const String selectRHType = 'Select Rh type';
-const String selectBloodGroup = 'Select Blood group';
-
-const String makeAChoice = 'Make a Choice!';
-const String Gallery = 'Gallery';
-const String Camera = 'Camera';
-const String Associated_Member = 'Associated Member';
-const String Switch_User = 'Switch User';
-const String Set_as_Preferred = 'Set as Preferred';
-
-const String Add = 'Add';
-const String Update = 'Update';
-const String Cancel = 'Cancel';
-const String add_providers = 'add_providers';
-const String choose_address = 'Please choose the address';
-const String cancer_speciality = 'Cancer Speciality Hospital';
-const String apollo_email = 'apollo@sample.com';
-const String preferred_descrip =
-    'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
-=======
+const String keyDoctor='doctor';
+const String keyHospital='hospital';
+const String keyLab='laborartory';
+const String keyFamily='keyFamilyrel';
+const String keyTheme='my_theme';
+const String keyPriColor='pri_color';
+const String keyGreyColor='gre_color';
+const String keyMayaAsset='maya_asset';
+const String keyAudioFile='audioFile';
 
 
->>>>>>> 8fec284ebbcc0b95e90641894a838da8a0ceef95
-=======
->>>>>>> parent of 24c701c... Fixed Maya issues in an iOS
+

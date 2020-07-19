@@ -9,6 +9,8 @@ import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 
 class AddFamilyUserInfoBloc extends BaseBloc {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
@@ -103,7 +105,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   }
 
   Future<RelationShipResponseList> getCustomRoles() async {
-    relationShipListSink.add(ApiResponse.loading('Fetching Custom Roles'));
+    relationShipListSink.add(ApiResponse.loading(variable.strFetchRoles));
     RelationShipResponseList relationShipResponseList;
     try {
       relationShipResponseList =
@@ -116,7 +118,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   }
 
   Future<MyProfile> getMyProfileInfo() async {
-    myProfileSink.add(ApiResponse.loading('Fetching Custom Roles'));
+    myProfileSink.add(ApiResponse.loading(variable.strFetchRoles));
     MyProfile myProfile;
 
     try {
@@ -129,7 +131,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   }
 
   Future<UpdateAddFamilyInfo> updateUserProfile() async {
-    userProfileSink.add(ApiResponse.loading('Signing in user'));
+    userProfileSink.add(ApiResponse.loading(variable.strUpdatingProfile));
     UpdateAddFamilyInfo updateAddFamilyInfo;
 
     try {
@@ -155,7 +157,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   }
 
   Future<UpdateAddFamilyRelationInfo> updateUserRelationShip() async {
-    updateRelationshipSink.add(ApiResponse.loading('Signing in user'));
+    updateRelationshipSink.add(ApiResponse.loading(variable.strUpdateUserRelation));
     UpdateAddFamilyRelationInfo updateAddFamilyRelationInfo;
 
     try {
@@ -170,7 +172,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   }
 
   Future<UpdateAddFamilyInfo> updateSelfProfile() async {
-    userProfileSink.add(ApiResponse.loading('Signing in user'));
+    userProfileSink.add(ApiResponse.loading(variable.strUpdatedSelfProfile));
     UpdateAddFamilyInfo updateAddFamilyInfo;
 
     try {
@@ -196,7 +198,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   }
 
   Future<VerifyEmailResponse> verifyEmail() async {
-    verifyEmailSink.add(ApiResponse.loading('verify email'));
+    verifyEmailSink.add(ApiResponse.loading(variable.strVerifyingMail));
     VerifyEmailResponse verifyEmailResponse;
 
     try {

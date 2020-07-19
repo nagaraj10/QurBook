@@ -9,7 +9,8 @@ import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_query.dart' as query;
 
 class MyFamilyDetailViewHospital extends StatefulWidget {
   CompleteData completeData;
@@ -18,7 +19,6 @@ class MyFamilyDetailViewHospital extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return MyFamilyDetailViewHospitalState();
   }
 }
@@ -27,7 +27,6 @@ class MyFamilyDetailViewHospitalState
     extends State<MyFamilyDetailViewHospital> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     getCategoryPreference();
     return getWidgetToDisplayIDDocs(widget.completeData);
   }
@@ -50,7 +49,7 @@ class MyFamilyDetailViewHospitalState
             ))
         : Container(
             child: Center(
-              child: Text('No Data Available'),
+              child: Text(variable.strNodata),
             ),
             color: const Color(fhbColors.bgColorContainer),
           );
@@ -121,7 +120,7 @@ class MyFamilyDetailViewHospitalState
                                   : false,
                           child: Text(
                             mediaMetaInfoObj.metaInfo.dateOfExpiry != null
-                                ? 'Valid thru - ' +
+                                ? variable.strValidThru +
                                     mediaMetaInfoObj.metaInfo.dateOfExpiry
                                 : '',
                             overflow: TextOverflow.ellipsis,
@@ -149,13 +148,13 @@ class MyFamilyDetailViewHospitalState
                           SizedBox(height: 20), */
                       mediaMetaInfoObj.isBookmarked
                           ? ImageIcon(
-                              AssetImage('assets/icons/record_fav_active.png'),
+                              AssetImage(variable.icon_record_fav_active),
                               color:
                                   Color(new CommonUtil().getMyPrimaryColor()),
                               size: 20,
                             )
                           : ImageIcon(
-                              AssetImage('assets/icons/record_fav.png'),
+                              AssetImage(variable.icon_record_fav),
                               color: Colors.black,
                               size: 20,
                             )

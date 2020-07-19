@@ -327,7 +327,7 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "D:\\goFHB_latest\\gmi_widgets_package\\gmi_widgets_package"
+      path: "D:\\myFHB\\CommonWidget"
       relative: false
     source: path
     version: "0.0.1"

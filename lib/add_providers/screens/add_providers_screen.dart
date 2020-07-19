@@ -24,6 +24,9 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
+import 'package:myfhb/my_providers/models/DoctorModel.dart';
+import 'package:myfhb/my_providers/models/HospitalModel.dart';
+import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/search_providers/models/doctors_data.dart';
 import 'package:myfhb/search_providers/models/hospital_data.dart';
@@ -38,6 +41,12 @@ import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
 import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
 import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+
+import 'package:myfhb/search_providers/screens/search_specific_list.dart';
+
+
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class AddProviders extends StatefulWidget {
   DoctorsData data;
@@ -141,27 +150,7 @@ class AddProvidersState extends State<AddProviders> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
-//      appBar: AppBar(
-//        leading: IconButton(
-//          icon: Icon(
-//            Icons.arrow_back_ios,
-//            size: 20,
-//          ),
-//          onPressed: () {
-//            Navigator.of(context).pop();
-//          },
-//        ),
-//        title: Text(
-//          CommonConstants.add_providers,
-//          style: TextStyle(
-//            fontWeight: FontWeight.w400,
-//            color: Colors.white,
-//            fontSize: 18,
-//          ),
-//        ),
-//      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         child: SingleChildScrollView(
@@ -188,12 +177,11 @@ class AddProvidersState extends State<AddProviders> {
                             if (widget.arguments.hasData == false) {
                               Navigator.pushNamed(
                                 context,
-                                '/add-address',
+                                router.rt_AddAddress,
                                 arguments: AddAddressArguments(
                                     providerType:
                                         widget.arguments.searchKeyWord),
                               ).then((value) {
-
                                 buildUI();
                                 getAddressesFromCoordinates();
                               });
@@ -268,7 +256,7 @@ class AddProvidersState extends State<AddProviders> {
                     _ShowDoctorTextField(),
                     SizedBox(height: 10),
                     Text(
-                      'Associated Member',
+                      variable.strAssociateMember,
                       style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.w400,
@@ -282,7 +270,7 @@ class AddProvidersState extends State<AddProviders> {
                         if (widget.arguments.fromClass !=
                             CommonConstants.myProviders) {
                           CommonUtil.showLoadingDialog(
-                              context, _keyLoader, 'Please Wait');
+                              context, _keyLoader, variable.Please_Wait);
 
                           if (_familyListBloc != null) {
                             _familyListBloc = null;
@@ -301,7 +289,7 @@ class AddProvidersState extends State<AddProviders> {
                         }
                       },
                       child: Text(
-                        'Switch User',
+                        variable.Switch_User,
                         style: TextStyle(
                             fontSize: 14.0,
                             fontWeight: FontWeight.w400,
@@ -312,10 +300,6 @@ class AddProvidersState extends State<AddProviders> {
                     Row(
                       children: <Widget>[
                         IgnorePointer(
-//                            ignoring: widget.arguments.fromClass ==
-//                                    CommonConstants.myProviders
-//                                ? true
-//                                : false,
                             ignoring: false,
                             child: Switch(
                               value: isPreferred,
@@ -328,7 +312,7 @@ class AddProvidersState extends State<AddProviders> {
                               activeColor: Theme.of(context).primaryColor,
                             )),
                         Text(
-                          'Set as Preferred',
+                          variable.Set_as_Preferred,
                           style: TextStyle(
                               fontSize: 14.0,
                               fontWeight: FontWeight.w400,
@@ -337,8 +321,6 @@ class AddProvidersState extends State<AddProviders> {
                       ],
                     ),
                     Visibility(
-//                      visible: widget.arguments.fromClass ==
-//                              CommonConstants.myProviders ? false : true,
                       visible: true,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -441,12 +423,6 @@ class AddProvidersState extends State<AddProviders> {
             : '';
         isPreferred = widget.arguments.doctorsModel.isDefault;
         myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
-//
-//        latitude = double.parse(widget.doctorsModel.latitude);
-//        longtiude = double.parse(widget.doctorsModel.longitude);
-//
-//        center = LatLng(latitude, longtiude);
-
         addressLine1 = widget.arguments.doctorsModel.addressLine1;
         addressLine2 = widget.arguments.doctorsModel.addressLine2;
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
@@ -540,7 +516,7 @@ class AddProvidersState extends State<AddProviders> {
     var addresses =
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
-}
+  }
 
   Future addMarker() async {
     final Uint8List markerIcon =
@@ -579,7 +555,8 @@ class AddProvidersState extends State<AddProviders> {
     return InkWell(
         onTap: () {
           if (widget.arguments.fromClass != CommonConstants.myProviders) {
-            CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+            CommonUtil.showLoadingDialog(
+                context, _keyLoader, variable.Please_Wait);
 
             if (_familyListBloc != null) {
               _familyListBloc = null;
@@ -640,13 +617,12 @@ class AddProvidersState extends State<AddProviders> {
                   margin: EdgeInsets.only(right: 10),
                   child: Text(
                     selectedFamilyMemberName == null
-                        ? 'Self'
+                        ? variable.Self
                         : toBeginningOfSentenceCase(selectedFamilyMemberName),
                     softWrap: true,
                     textAlign: TextAlign.left,
                     style: TextStyle(
                       color: Color.fromARGB(255, 85, 92, 89),
-                      //fontFamily: "Muli",
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
@@ -657,9 +633,6 @@ class AddProvidersState extends State<AddProviders> {
           )),
         ));
   }
-
-  //  new FHBBasicWidget()
-  //      .getDefaultProfileImage()
 
   Widget _ShowDoctorTextField() {
     return Padding(
@@ -686,9 +659,6 @@ class AddProvidersState extends State<AddProviders> {
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: Theme.of(context).primaryColor),
             ),
-            //            focusedBorder: UnderlineInputBorder(
-            //              borderSide: BorderSide(color: ColorUtils.greencolor),
-            //            ),
             labelText: widget.arguments.searchKeyWord,
             labelStyle: TextStyle(
                 fontSize: 16.0,
@@ -722,8 +692,8 @@ class AddProvidersState extends State<AddProviders> {
         child: new Center(
           child: new Text(
             widget.arguments.fromClass == CommonConstants.myProviders
-                ? 'Update'
-                : 'Add',
+                ? variable.Update
+                : variable.Add,
             style: new TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -758,7 +728,7 @@ class AddProvidersState extends State<AddProviders> {
         ),
         child: new Center(
           child: new Text(
-            'Cancel',
+            variable.Cancel,
             style: new TextStyle(
               color: ColorUtils.blackcolor,
               fontSize: 14.0,
@@ -858,41 +828,46 @@ class AddProvidersState extends State<AddProviders> {
                   ? _doctorsListBlock
                       .getDoctorObjUsingId(bloc.providerId)
                       .then((doctorsListResponse) {
-
                       Navigator.of(context).pop();
 
-                      Navigator.of(context).pop(
-                          {'doctor': doctorsListResponse.response.data[0]});
+                      Navigator.of(context).pop({
+                        Constants.keyDoctor:
+                            doctorsListResponse.response.data[0]
+                      });
                     })
                   : widget.arguments.searchKeyWord == CommonConstants.hospitals
                       ? _hospitalListBlock
                           .getHospitalObjectusingId(bloc.providerId)
                           .then((hospitalDataResponse) {
-
                           Navigator.of(context).pop();
 
                           Navigator.of(context).pop({
-                            'hospital': hospitalDataResponse.response.data[0]
+                            Constants.keyHospital:
+                                hospitalDataResponse.response.data[0]
                           });
                         })
                       : _labsListBlock
                           .getLabsListUsingID(bloc.providerId)
                           .then((lablistResponse) {
-
                           Navigator.of(context).pop();
                           Navigator.of(context).pop({
-                            'laborartory': lablistResponse.response.data[0]
+                            Constants.keyLab: lablistResponse.response.data[0]
                           });
                         });
             } else {
-              //            Navigator.pop(context, 1);
-              Navigator.popUntil(context, (Route<dynamic> route) {
+              //Navigator.pop(context, 1);
+
+            Navigator.of(context)
+              .popUntil(ModalRoute.withName(router.rt_UserAccounts));
+
+
+            /*   Navigator.popUntil(context, (Route<dynamic> route) {
                 bool shouldPop = false;
-                if (route.settings.name == '/user-accounts') {
+                if (route.settings.name == router.rt_UserAccounts) {
                   shouldPop = true;
                 }
                 return shouldPop;
-              });
+              });*/
             }
             return Container();
           } else {
@@ -908,11 +883,10 @@ class AddProvidersState extends State<AddProviders> {
         if (myprovidersPreferred) {
           // alert
           Alert.displayAlertPlain(context,
-              title: "Error",
-              content:
-                  'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.');
+              title: variable.Error, content: variable.preferred_descrip);
         } else {
-          CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+          CommonUtil.showLoadingDialog(
+              context, _keyLoader, variable.Please_Wait); //
 
           updateProvidersBloc.isPreferred = isPreferred;
 
@@ -942,7 +916,8 @@ class AddProvidersState extends State<AddProviders> {
           }
         }
       } else {
-        CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+        CommonUtil.showLoadingDialog(
+            context, _keyLoader, variable.Please_Wait); //
 
         updateProvidersBloc.isPreferred = isPreferred;
 
@@ -974,24 +949,26 @@ class AddProvidersState extends State<AddProviders> {
       var signInData = {};
 
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-        CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+        CommonUtil.showLoadingDialog(
+            context, _keyLoader, variable.Please_Wait); //
 
-        signInData['name'] = doctorController.text.toString();
-        signInData['specialization'] = '';
-        signInData['description'] = '';
-        signInData['city'] = address == null
+        signInData[variable.strName] = doctorController.text.toString();
+        signInData[variable.strSpecialization] = '';
+        signInData[variable.strDescription] = '';
+        signInData[variable.strCity] = address == null
             ? ''
             : address.locality == null ? '' : address.locality;
-        signInData['state'] = address == null
+        signInData[variable.strState] = address == null
             ? ''
             : address.adminArea == null ? '' : address.adminArea;
-        signInData['phoneNumbers'] = widget.arguments.placeDetail == null
-            ? ''
-            : widget.arguments.placeDetail.formattedPhoneNumber == null
+        signInData[variable.strPhoneNumbers] =
+            widget.arguments.placeDetail == null
                 ? ''
-                : widget.arguments.placeDetail.formattedPhoneNumber;
-        signInData['email'] = '';
-        signInData['isUserDefined'] = true;
+                : widget.arguments.placeDetail.formattedPhoneNumber == null
+                    ? ''
+                    : widget.arguments.placeDetail.formattedPhoneNumber;
+        signInData[variable.strEmail] = '';
+        signInData[variable.strIsUserDefined] = true;
 
         var jsonString = convert.jsonEncode(signInData);
 
@@ -1003,8 +980,8 @@ class AddProvidersState extends State<AddProviders> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("Error"),
-                  content: Text("Please choose the address"),
+                  title: Text(variable.strError),
+                  content: Text(variable.choose_address),
                   actions: <Widget>[
                     IconButton(
                         icon: Icon(Icons.check),
@@ -1015,33 +992,38 @@ class AddProvidersState extends State<AddProviders> {
                 );
               });
         } else {
-          CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+          CommonUtil.showLoadingDialog(
+              context, _keyLoader, variable.Please_Wait); //
 
-          signInData['name'] = doctorController.text.toString();
-          signInData['phoneNumbers'] = widget.arguments.placeDetail == null
-              ? ''
-              : widget.arguments.placeDetail.formattedPhoneNumber == null
+          signInData[variable.strName] = doctorController.text.toString();
+          signInData[variable.strPhoneNumbers] =
+              widget.arguments.placeDetail == null
                   ? ''
-                  : widget.arguments.placeDetail.formattedPhoneNumber;
-          signInData['description'] = 'Cancer Speciality Hospital';
-          signInData['email'] = 'apollo@sample.com';
-          signInData['addressLine1'] =
+                  : widget.arguments.placeDetail.formattedPhoneNumber == null
+                      ? ''
+                      : widget.arguments.placeDetail.formattedPhoneNumber;
+          signInData[variable.strDescription] = 'Cancer Speciality Hospital';
+          signInData[variable.strEmail] = 'apollo@sample.com';
+          signInData[variable.straddressLine1] =
               widget.arguments.confirmAddressDescription == null
                   ? ''
                   : widget.arguments.confirmAddressDescription == null
                       ? ''
                       : widget.arguments.confirmAddressDescription;
-          signInData['addressLine2'] =
+          signInData[variable.straddressLine2] =
               address.addressLine == null ? '' : address.addressLine;
-          signInData['city'] = address.locality == null ? '' : address.locality;
-          signInData['state'] =
+          signInData[variable.strCity] =
+              address.locality == null ? '' : address.locality;
+          signInData[variable.strState] =
               address.adminArea == null ? '' : address.adminArea;
-          signInData['zipCode'] =
+          signInData[variable.strzipCode] =
               address.postalCode == null ? '' : address.postalCode;
-          signInData['branch'] = '';
-          signInData['isUserDefined'] = true;
-          signInData['website'] = widget.arguments.placeDetail.website;
-          signInData['googleMapUrl'] = widget.arguments.placeDetail.url;
+          signInData[variable.strbranch] = '';
+          signInData[variable.strIsUserDefined] = true;
+          signInData[variable.strwebsite] =
+              widget.arguments.placeDetail.website;
+          signInData[variable.strgoogleMapUrl] =
+              widget.arguments.placeDetail.url;
 
           var jsonString = convert.jsonEncode(signInData);
 
@@ -1054,8 +1036,8 @@ class AddProvidersState extends State<AddProviders> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text("Error"),
-                  content: Text("Please choose the address"),
+                  title: Text(variable.strError),
+                  content: Text(variable.choose_address),
                   actions: <Widget>[
                     IconButton(
                         icon: Icon(Icons.check),
@@ -1066,37 +1048,39 @@ class AddProvidersState extends State<AddProviders> {
                 );
               });
         } else {
-          CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+          CommonUtil.showLoadingDialog(
+              context, _keyLoader, variable.Please_Wait); //
 
-          signInData['name'] = doctorController.text.toString();
-          signInData['phoneNumbers'] = widget.arguments.placeDetail == null
-              ? ''
-              : widget.arguments.placeDetail.formattedPhoneNumber == null
+          signInData[variable.strName] = doctorController.text.toString();
+          signInData[variable.strPhoneNumbers] =
+              widget.arguments.placeDetail == null
                   ? ''
-                  : widget.arguments.placeDetail.formattedPhoneNumber;
-          signInData['description'] = 'Cancer Speciality Hospital';
-          signInData['email'] = 'apollo@sample.com';
-          signInData['addressLine1'] =
+                  : widget.arguments.placeDetail.formattedPhoneNumber == null
+                      ? ''
+                      : widget.arguments.placeDetail.formattedPhoneNumber;
+          signInData[variable.strDescription] = 'Cancer Speciality Hospital';
+          signInData[variable.strEmail] = 'apollo@sample.com';
+          signInData[variable.straddressLine1] =
               widget.arguments.confirmAddressDescription == null
                   ? ''
                   : widget.arguments.confirmAddressDescription == null
                       ? ''
                       : widget.arguments.confirmAddressDescription;
-          signInData['addressLine2'] = address == null
+          signInData[variable.straddressLine2] = address == null
               ? ''
               : address.addressLine == null ? '' : address.addressLine;
-          signInData['city'] = address == null
+          signInData[variable.strCity] = address == null
               ? ''
               : address.locality == null ? '' : address.locality;
-          signInData['state'] = address == null
+          signInData[variable.strState] = address == null
               ? ''
               : address.adminArea == null ? '' : address.adminArea;
-          signInData['zipCode'] = address == null
+          signInData[variable.strzipCode] = address == null
               ? ''
               : address.postalCode == null ? '' : address.postalCode;
-          signInData['branch'] = '';
-          signInData['isUserDefined'] = true;
-          signInData['website'] = widget.arguments.placeDetail == null
+          signInData[variable.strbranch] = '';
+          signInData[variable.strIsUserDefined] = true;
+          signInData[variable.strwebsite] = widget.arguments.placeDetail == null
               ? ''
               : widget.arguments.placeDetail.website == null
                   ? ''
@@ -1120,7 +1104,7 @@ class AddProvidersState extends State<AddProviders> {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
         //getUserProfileData();
         Navigator.pop(context);
-        CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+        CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
         getUserProfileWithId();
       });
@@ -1133,14 +1117,13 @@ class AddProvidersState extends State<AddProviders> {
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
-
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
           .then((value) {
         Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
         Navigator.popUntil(context, (Route<dynamic> route) {
           bool shouldPop = false;
-          if (route.settings.name == '/user-accounts') {
+          if (route.settings.name == router.rt_UserAccounts) {
             shouldPop = true;
           }
           return shouldPop;
@@ -1180,6 +1163,4 @@ class AddProvidersState extends State<AddProviders> {
             width: 30,
           );
   }
-
-
 }

@@ -16,8 +16,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/fhb_query.dart' as query;
 
 
 class MyFamilyDetailView extends StatefulWidget {
@@ -27,7 +27,6 @@ class MyFamilyDetailView extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return MyFamilyDetailViewState();
   }
 }
@@ -42,7 +41,6 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     tabController = new TabController(length: 2, vsync: this);
@@ -69,7 +67,6 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       key: scaffold_state,
       appBar: AppBar(
@@ -130,12 +127,11 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                         PreferenceUtil.saveString(
                                 Constants.KEY_CATEGORYID, e.id)
                             .then((value) {
-                          //PageNavigator.goTo(context, '/take-picture-screen');
                           PreferenceUtil.saveString(
                                   Constants.KEY_FAMILYMEMBERID,
                                   widget.arguments.sharedbyme.profileData.id)
                               .then((value) {
-                            Navigator.pushNamed(context, '/take-picture-screen')
+                            Navigator.pushNamed(context, router.rt_TakePicture)
                                 .then((value) {
                               myFamilyDetailViewBloc.getHelthReportList();
                             });

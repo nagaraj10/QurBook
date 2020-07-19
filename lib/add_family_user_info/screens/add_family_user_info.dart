@@ -25,6 +25,9 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 
 import '../../common/CommonConstants.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments arguments;
@@ -70,14 +73,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   List<int> fetchedProfileData;
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'UnKnown'];
-
-  List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
-
   String selectedBloodGroup;
   String selectedBloodRange;
 
-  List<String> genderArray = ['Male', 'Female', 'Others'];
   String selectedGender;
 
   bool updateProfile = false;
@@ -94,6 +92,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   FocusNode lastNameFocus = FocusNode();
 
   String strErrorMsg = '';
+  CommonUtil commonUtil=new CommonUtil();
 
   @override
   void initState() {
@@ -117,11 +116,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           getSelectedRelation();
         });
 
-        /*   PreferenceUtil.saveRelationshipArray(
-                'keyFamilyrel', value.relationShipAry)
-            .then((value) {
-          setState(() {});
-        }); */
+      
       });
     }
 
@@ -174,8 +169,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else {
         firstNameController.text = '';
       }
-      if (widget.arguments.sharedbyme.profileData.bloodGroup != null &&
-          widget.arguments.sharedbyme.profileData.bloodGroup != "null") {
+      if (commonUtil.checkIfStringisNull(widget.arguments.sharedbyme.profileData.bloodGroup)) {
         selectedBloodGroup = widget.arguments.sharedbyme.profileData.bloodGroup;
 
         renameBloodGroup(selectedBloodGroup);
@@ -226,8 +220,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             : '';
       }
 
-      if (widget.arguments.sharedbyme.profileData.bloodGroup != null &&
-          widget.arguments.sharedbyme.profileData.bloodGroup != "null") {
+      if (commonUtil.checkIfStringisNull(widget.arguments.sharedbyme.profileData.bloodGroup)) {
         selectedBloodGroup = widget.arguments.sharedbyme.profileData.bloodGroup;
 
         renameBloodGroup(selectedBloodGroup);
@@ -280,8 +273,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         relationShipController.text = widget.arguments.relationShip.roleName;
 
-        if (value.response.data.generalInfo.bloodGroup != null &&
-            value.response.data.generalInfo.bloodGroup != "null") {
+        if (commonUtil.checkIfStringisNull(value.response.data.generalInfo.bloodGroup )) {
           selectedBloodGroup = value.response.data.generalInfo.bloodGroup;
 
           renameBloodGroup(selectedBloodGroup);
@@ -313,14 +305,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       var bloodGroupSplitName = selectedBloodGroupClone.split('_');
       try {
         if (bloodGroupSplitName.length > 1) {
-          for (String bloodGroup in bloodGroupArray) {
+          for (String bloodGroup in variable.bloodGroupArray) {
             //      var bloodgroupClone = bloodGroup.split(' ');
             if (bloodGroupSplitName[0] == bloodGroup) {
               selectedBloodGroup = bloodGroup;
             }
           }
 
-          for (String bloodRange in bloodRangeArray) {
+          for (String bloodRange in variable.bloodRangeArray) {
             if (bloodGroupSplitName[1] == bloodRange) {
               selectedBloodRange = bloodRange;
             }
@@ -328,13 +320,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         } else {
           var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
           if (bloodGroupSplitName.length > 1) {
-            for (String bloodGroup in bloodGroupArray) {
+            for (String bloodGroup in variable.bloodGroupArray) {
               //      var bloodgroupClone = bloodGroup.split(' ');
               if (bloodGroupSplitName[0] == bloodGroup) {
                 selectedBloodGroup = bloodGroup;
               }
 
-              for (String bloodRange in bloodRangeArray) {
+              for (String bloodRange in variable.bloodRangeArray) {
                 if (bloodGroupSplitName[1][0] == bloodRange) {
                   selectedBloodRange = bloodRange;
                 }
@@ -369,7 +361,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
             Navigator.popUntil(context, (Route<dynamic> route) {
               bool shouldPop = false;
-              if (route.settings.name == '/user_accounts') {
+              if (route.settings.name == router.rt_UserAccounts) {
                 shouldPop = true;
               }
               return shouldPop;
@@ -380,7 +372,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     });
   }
 
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -618,7 +609,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             widget.arguments.sharedbyme.profileData.email !=
                                 ''))
                     ? GestureDetector(
-                        child: Text('Tap to verify Email address',
+                        child: Text(variable.VerifyEmail,
                             style: TextStyle(
                                 fontSize: 13.0,
                                 fontWeight: FontWeight.w400,
@@ -816,12 +807,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
-              //              familyWidget = Center(
-              //                  child: SizedBox(
-              //                child: CircularProgressIndicator(),
-              //                width: 30,
-              //                height: 30,
-              //              ));
+            
               break;
 
             case Status.ERROR:
@@ -904,7 +890,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.blood_groupWithStar),
                 value: selectedBloodGroup,
-                items: bloodGroupArray.map((eachBloodGroup) {
+                items: variable.bloodGroupArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
                     child: new Text(eachBloodGroup,
                         style: new TextStyle(
@@ -933,7 +919,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.blood_rangeWithStar),
                 value: selectedBloodRange,
-                items: bloodRangeArray.map((eachBloodGroup) {
+                items: variable.bloodRangeArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
                     child: new Text(eachBloodGroup,
                         style: new TextStyle(
@@ -967,7 +953,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             selectedGender.toLowerCase())
                         : selectedGender
                     : selectedGender,
-                items: genderArray.map((eachGender) {
+                items: variable.genderArray.map((eachGender) {
                   return DropdownMenuItem(
                     child: new Text(eachGender,
                         style: new TextStyle(
@@ -1002,111 +988,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
   }
 
-  /*  void _saveBtnTapped() {
-            addFamilyUserInfoBloc.name = nameController.text;
-            addFamilyUserInfoBloc.email = emailController.text;
-            addFamilyUserInfoBloc.gender = selectedGender;
-            addFamilyUserInfoBloc.dateOfBirth = dateOfBirthController.text;
-            addFamilyUserInfoBloc.bloodGroup =
-                selectedBloodGroup != null ? selectedBloodGroup : '';
-        
-            addFamilyUserInfoBloc.profilePic = MySliverAppBar.imageURI;
-        
-            if (widget.arguments.fromClass == CommonConstants.my_family) {
-              addFamilyUserInfoBloc.relationship = selectedRelationShip.roleName;
-              addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData.id;
-              addFamilyUserInfoBloc.phoneNo =
-                  widget.arguments.sharedbyme.profileData.phoneNumber;
-        
-              if (nameController.text.length > 0 &&
-                  emailController.text.length > 0 &&
-                  mobileNoController.text.length > 0 &&
-                  selectedGender.length > 0 &&
-                  dateOfBirthController.text.length > 0 &&
-                  selectedBloodGroup.length > 0 &&
-                  selectedRelationShip.roleName.length > 0) {
-                CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
-        
-                var signInData = {};
-                signInData['countryCode'] =
-                    widget.arguments.sharedbyme.profileData.countryCode;
-                signInData['phoneNumber'] =
-                    widget.arguments.sharedbyme.profileData.phoneNumber;
-                signInData['nickName'] = nameController.text;
-                signInData['relation'] = selectedRelationShip.id;
-                var jsonString = convert.jsonEncode(signInData);
-        
-                addFamilyUserInfoBloc.relationshipJsonString = jsonString;
-        
-                // 1
-                addFamilyUserInfoBloc.updateUserRelationShip().then((value) {
-                  if (value.success && value.status == 200) {
-                    // 2
-                    addFamilyUserInfoBloc.updateUserProfile().then((value) {
-                      if (value.success && value.status == 200) {
-                        MySliverAppBar.imageURI = null;
-                        fetchedProfileData = null;
-        
-                        Navigator.popUntil(context, (Route<dynamic> route) {
-                          bool shouldPop = false;
-                          if (route.settings.name == '/user_accounts') {
-                            shouldPop = true;
-                          }
-                          return shouldPop;
-                        });
-                      }
-                    });
-                  }
-                });
-              } else {
-                Alert.displayAlertPlain(context,
-                    title: "Error", content: CommonConstants.all_fields);
-              }
-            } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-              addFamilyUserInfoBloc.updateSelfProfile().then((value) {
-                if (value.success && value.status == 200) {
-                  getUserProfileData();
-                }
-              });
-            } else {
-              addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
-              addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
-              addFamilyUserInfoBloc.relationship = relationShipController.text;
-        
-              if (nameController.text.length > 0 &&
-                  emailController.text.length > 0 &&
-                  mobileNoController.text.length > 0 &&
-                  selectedGender.length > 0 &&
-                  dateOfBirthController.text.length > 0 &&
-                  selectedBloodGroup.length > 0 &&
-                  relationShipController.text.length > 0) {
-                CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
-        
-                addFamilyUserInfoBloc.updateUserProfile().then((value) {
-                  if (value.success && value.status == 200) {
-                    MySliverAppBar.imageURI = null;
-                    fetchedProfileData = null;
-        
-                    Navigator.popUntil(context, (Route<dynamic> route) {
-                      bool shouldPop = false;
-                      if (route.settings.name == '/user_accounts') {
-                        // Hide Loading
-        //                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-        //                    .pop();
-                        shouldPop = true;
-                      }
-                      return shouldPop;
-                    });
-                  }
-                });
-              } else {
-                Alert.displayAlertPlain(context,
-                    title: "Error", content: CommonConstants.all_fields);
-              }
-            }
-          }
-         */
-
+ 
   void _saveBtnTapped() {
     new FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
@@ -1117,7 +999,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         addFamilyUserInfoBloc.dateOfBirth = dateOfBirthController.text;
 
         if (selectedBloodGroup != null && selectedBloodRange != null) {
-         
           addFamilyUserInfoBloc.bloodGroup =
               selectedBloodGroup + '_' + selectedBloodRange;
         }
@@ -1144,19 +1025,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
                   addFamilyUserInfoBloc.profileBanner.path);
             }
-            CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+            CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait); //
 
             var signInData = {};
-            signInData['countryCode'] =
+            signInData[variable.strCountryCode] =
                 widget.arguments.sharedbyme.profileData.countryCode;
-            signInData['phoneNumber'] =
+            signInData[variable.strPhoneNumber] =
                 widget.arguments.sharedbyme.profileData.phoneNumber;
-            signInData['firstName'] = firstNameController.text;
-            signInData['middleName'] = middleNameController.text.length == 0
+            signInData[variable.strFirstName] = firstNameController.text;
+            signInData[variable.strMiddleName] = middleNameController.text.length == 0
                 ? ''
                 : middleNameController.text;
-            signInData['lastName'] = lastNameController.text;
-            signInData['relation'] = selectedRelationShip.id;
+            signInData[variable.strLastName] = lastNameController.text;
+            signInData[variable.strRelation] = selectedRelationShip.id;
             var jsonString = convert.jsonEncode(signInData);
 
             addFamilyUserInfoBloc.relationshipJsonString = jsonString;
@@ -1176,7 +1057,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
                         Navigator.popUntil(context, (Route<dynamic> route) {
                           bool shouldPop = false;
-                          if (route.settings.name == '/user_accounts') {
+                          if (route.settings.name == router.rt_UserAccounts) {
                             shouldPop = true;
                           }
                           return shouldPop;
@@ -1189,7 +1070,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             });
           } else {
             Alert.displayAlertPlain(context,
-                title: "Error", content: CommonConstants.all_fields_mandatory);
+                title: variable.strError, content: CommonConstants.all_fields_mandatory);
           }
         } else if (widget.arguments.fromClass == CommonConstants.user_update) {
           if (doValidation()) {
@@ -1201,7 +1082,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
                   addFamilyUserInfoBloc.profileBanner.path);
             }
-            CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+            CommonUtil.showLoadingDialog(context, _keyLoader,variable.Please_Wait);
 
             addFamilyUserInfoBloc.updateSelfProfile().then((value) {
               if (value.success && value.status == 200) {
@@ -1212,7 +1093,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
                 Navigator.popUntil(context, (Route<dynamic> route) {
                   bool shouldPop = false;
-                  if (route.settings.name == '/user_accounts') {
+                  if (route.settings.name == router.rt_UserAccounts) {
                     shouldPop = true;
                   }
                   return shouldPop;
@@ -1223,7 +1104,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             showDialog(
                 context: context,
                 child: new AlertDialog(
-                  title: new Text("MyFHB"),
+                  title: new Text(variable.strAPP_NAME),
                   content: new Text(strErrorMsg),
                 ));
           }
@@ -1238,7 +1119,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
                   addFamilyUserInfoBloc.profileBanner.path);
             }
-            CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait'); //
+            CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait); //
 
             addFamilyUserInfoBloc.updateUserProfile().then((value) {
               if (value.success && value.status == 200) {
@@ -1251,7 +1132,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
                     Navigator.popUntil(context, (Route<dynamic> route) {
                       bool shouldPop = false;
-                      if (route.settings.name == '/user_accounts') {
+                      if (route.settings.name == router.rt_UserAccounts) {
                         shouldPop = true;
                       }
                       return shouldPop;
@@ -1262,7 +1143,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             });
           } else {
             Alert.displayAlertPlain(context,
-                title: "Error", content: CommonConstants.all_fields_mandatory);
+                title:variable.Error, content: CommonConstants.all_fields_mandatory);
           }
         }
       } else {
@@ -1277,16 +1158,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     if (firstNameController.text == '') {
       isValid = false;
-      strErrorMsg = 'Enter First Name';
+      strErrorMsg = variable.enterFirstName;
     } else if (lastNameController.text == '') {
       isValid = false;
-      strErrorMsg = 'Enter LastName';
+      strErrorMsg = variable.enterLastName;
     } else if (selectedGender.length == 0) {
       isValid = false;
-      strErrorMsg = 'Select Gender';
+      strErrorMsg = variable.selectGender;
     } else if (dateOfBirthController.text.length == 0) {
       isValid = false;
-      strErrorMsg = 'Select DOB';
+      strErrorMsg = variable.selectDOB;
     } else {
       isValid = true;
     }
@@ -1294,14 +1175,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (selectedBloodGroup != null) {
       if (selectedBloodRange == null) {
         isValid = false;
-        strErrorMsg = 'Select Rh type';
+        strErrorMsg = variable.selectRHType;
       } else {
         addFamilyUserInfoBloc.bloodGroup =
             selectedBloodGroup + '_' + selectedBloodRange;
       }
     } else {
       isValid = false;
-      strErrorMsg = 'Select Blood group';
+      strErrorMsg = variable.selectBloodGroup;
     }
 
     return isValid;
@@ -1451,10 +1332,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .then((value) {
           Navigator.popUntil(context, (Route<dynamic> route) {
             bool shouldPop = false;
-            if (route.settings.name == '/user_accounts') {
-              // Hide Loading
-              //                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-              //                    .pop();
+            if (route.settings.name == router.rt_UserAccounts) {
+            
               shouldPop = true;
             }
             return shouldPop;
@@ -1559,14 +1438,14 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-              title: Text('Make a Choice!'),
+              title: Text(variable.makeAChoice),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(1)),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     GestureDetector(
-                      child: Text('Gallery'),
+                      child: Text(variable.Gallery),
                       onTap: () {
                         Navigator.pop(context);
 
@@ -1588,7 +1467,7 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                       padding: EdgeInsets.all(8.0),
                     ),
                     GestureDetector(
-                      child: Text('Camera'),
+                      child: Text(variable.Camera),
                       onTap: () {
                         Navigator.pop(context);
 

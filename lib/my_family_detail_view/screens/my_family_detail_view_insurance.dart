@@ -9,6 +9,8 @@ import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_query.dart' as query;
 
 
 class MyFamilyDetailViewInsurance extends StatefulWidget {
@@ -51,7 +53,7 @@ class MyFamilyDetailViewInsuranceState
             ))
         : Container(
             child: Center(
-              child: Text('No Data Available'),
+              child: Text(variable.strNodata),
             ),
             color: const Color(fhbColors.bgColorContainer),
           );
@@ -122,7 +124,7 @@ class MyFamilyDetailViewInsuranceState
                                   : false,
                           child: Text(
                             mediaMetaInfoObj.metaInfo.dateOfExpiry != null
-                                ? 'Valid thru - ' +
+                                ? variable.strValidThru+
                                     mediaMetaInfoObj.metaInfo.dateOfExpiry
                                 : '',
                             overflow: TextOverflow.ellipsis,
@@ -148,23 +150,17 @@ class MyFamilyDetailViewInsuranceState
                     children: <Widget>[
                       mediaMetaInfoObj.isBookmarked
                           ? ImageIcon(
-                              AssetImage('assets/icons/record_fav_active.png'),
+                              AssetImage(variable.icon_record_fav_active),
                               color:
                                   Color(new CommonUtil().getMyPrimaryColor()),
                               size: 20,
                             )
                           : ImageIcon(
-                              AssetImage('assets/icons/record_fav.png'),
+                              AssetImage(variable.icon_record_fav),
                               color: Colors.black,
                               size: 20,
                             ),
-                      /*  mediaMetaInfoObj.metaInfo.hasVoiceNotes
-                          ? Icon(
-                              Icons.mic,
-                              color: Colors.black54,
-                            )
-                          : Container() */
-                    ],
+                     ],
                   ),
                 ),
               ],

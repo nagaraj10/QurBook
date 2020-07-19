@@ -6,6 +6,11 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 
 import 'my_providers_tab_bar.dart';
 
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 class MyProvidersStreamData extends StatelessWidget {
   ProvidersBloc providersBloc;
   TabController tabController;
@@ -33,7 +38,7 @@ class MyProvidersStreamData extends StatelessWidget {
 
             case Status.ERROR:
               return Center(
-                  child: Text('Oops, something went wrong',
+                  child: Text(variable.strSomethingWrong,
                       style: TextStyle(color: Colors.red)));
               break;
 

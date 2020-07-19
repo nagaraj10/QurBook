@@ -14,6 +14,9 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/ShapesPainter.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'dart:io';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
+
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -412,11 +415,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void moveToFamilyOrprovider(int position) {
-    Navigator.pushNamed(
+   /* Navigator.pushNamed(
       context,
-      '/user-accounts',
+      router.rt_UserAccounts,
       arguments: UserAccountsArguments(selectedIndex: position),
-    );
+    );*/
+
+    Navigator.of(context).push(
+            MaterialPageRoute(
+              settings: RouteSettings(name: router.rt_UserAccounts),
+              builder: (context) => UserAccounts(arguments: UserAccountsArguments(selectedIndex: position)),
+            ),
+          );
+
   }
 
   moveToNextScreen(int position) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/global_search/model/Data.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/TabModel.dart';

@@ -8,6 +8,8 @@ import 'package:myfhb/my_family/models/user_linking_response_list.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 
 class FamilyListBloc implements BaseBloc {
   FamilyMemberListRepository _familyResponseListRepository;
@@ -82,7 +84,7 @@ class FamilyListBloc implements BaseBloc {
 
   getFamilyMembersList() async {
     FamilyMembersList familyResponseList;
-    familyMemberListSink.add(ApiResponse.loading('Fetching family details'));
+    familyMemberListSink.add(ApiResponse.loading(variable.strFetchFamily));
     try {
       familyResponseList =
           await _familyResponseListRepository.getFamilyMembersList();
@@ -94,7 +96,7 @@ class FamilyListBloc implements BaseBloc {
   }
 
   getCustomRoles() async {
-    relationShipListSink.add(ApiResponse.loading('Fetching Custom Roles'));
+    relationShipListSink.add(ApiResponse.loading(variable.strFetchRoles));
     try {
       RelationShipResponseList relationShipResponseList =
           await _familyResponseListRepository.getCustomRoles();
@@ -105,7 +107,7 @@ class FamilyListBloc implements BaseBloc {
   }
 
   Future<UserLinkingResponseList> postUserLinking(String jsonString) async {
-    userLinkingSink.add(ApiResponse.loading('posting user link'));
+    userLinkingSink.add(ApiResponse.loading(variable.strPostUserLink));
 
     UserLinkingResponseList userLinking;
     try {
@@ -120,7 +122,7 @@ class FamilyListBloc implements BaseBloc {
   }
 
   Future<UserDeLinkingResponseList> postUserDeLinking(String jsonString) async {
-    userDeLinkingSink.add(ApiResponse.loading('posting user delink'));
+    userDeLinkingSink.add(ApiResponse.loading(variable.strPostuserDelink));
 
     UserDeLinkingResponseList userDeLinking;
     try {
@@ -136,7 +138,7 @@ class FamilyListBloc implements BaseBloc {
 
   Future<AddFamilyOTPResponse> postUserLinkingForPrimaryNo(
       String jsonString) async {
-    userLinkingForPrimaryNoSink.add(ApiResponse.loading('posting user link'));
+    userLinkingForPrimaryNoSink.add(ApiResponse.loading(variable.strPostUserLink));
 
     AddFamilyOTPResponse addFamilyOTPResponse;
     try {

@@ -1,4 +1,7 @@
 import 'package:myfhb/add_address/models/place.dart';
+import 'package:myfhb/my_providers/models/DoctorModel.dart';
+import 'package:myfhb/my_providers/models/HospitalModel.dart';
+import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/search_providers/models/doctors_data.dart';
 import 'package:myfhb/search_providers/models/doctors_list_response.dart';

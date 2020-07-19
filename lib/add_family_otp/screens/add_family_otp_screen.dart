@@ -14,6 +14,9 @@ import 'package:myfhb/src/blocs/Authentication/OTPVerifyBloc.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'dart:convert' as convert;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
 
 class AddFamilyOTPScreen extends StatefulWidget {
   AddFamilyOTPArguments arguments;
@@ -67,22 +70,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
       Padding(
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
-            //width: 10,
             alignment: Alignment.center,
-            /*   decoration: new BoxDecoration(
-              //color: Color.fromRGBO(0, 0, 0, 0.1),
-              border: new Border(
-                  top: BorderSide.none,
-                  left: BorderSide.none,
-                  right: BorderSide.none,
-                  bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                  //width: 1.0,
-                  //color: Colors.deepPurple.withOpacity(0.5)
-                  ),
-              //borderRadius: new BorderRadius.circular(4.0)
-            ), */
             child: new TextField(
-              //obscureText: true,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(1),
               ],
@@ -97,20 +86,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
           alignment: Alignment.center,
-          /*  decoration: new BoxDecoration(
-            //color: Color.fromRGBO(0, 0, 0, 0.1),
-            border: new Border(
-                top: BorderSide.none,
-                left: BorderSide.none,
-                right: BorderSide.none,
-                bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                //width: 1.0,
-                //color: Colors.deepPurple.withOpacity(0.5)
-                ),
-            //borderRadius: new BorderRadius.circular(4.0)
-          ), */
           child: new TextField(
-            //obscureText: true,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -127,20 +103,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
           alignment: Alignment.center,
-          /* decoration: new BoxDecoration(
-            //color: Color.fromRGBO(0, 0, 0, 0.1),
-            border: new Border(
-                top: BorderSide.none,
-                left: BorderSide.none,
-                right: BorderSide.none,
-                bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                //width: 1.0,
-                //color: Colors.deepPurple.withOpacity(0.5)
-                ),
-            //borderRadius: new BorderRadius.circular(4.0)
-          ), */
           child: new TextField(
-            //obscureText: true,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -157,20 +120,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
           alignment: Alignment.center,
-          /*  decoration: new BoxDecoration(
-            //color: Color.fromRGBO(0, 0, 0, 0.1),
-            border: new Border(
-                top: BorderSide.none,
-                left: BorderSide.none,
-                right: BorderSide.none,
-                bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                //width: 1.0,
-                //color: Colors.deepPurple.withOpacity(0.5)
-                ),
-            //borderRadius: new BorderRadius.circular(4.0)
-          ), */
           child: new TextField(
-            //obscureText: true,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -191,19 +141,19 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     ];
 
     return Scaffold(
-        //resizeToAvoidBottomInset: false,
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          title: Text('Otp Verification', style: TextStyle(fontSize: 18)),
+          title:
+              Text(variable.strOTPVerification, style: TextStyle(fontSize: 18)),
         ),
         key: scaffold_state,
         body: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(top: 40),
               child: Text(
-                toBeginningOfSentenceCase('${widget.arguments.enteredFirstName} ${widget.arguments.enteredMiddleName} ${widget.arguments.enteredLastName}'),
+                toBeginningOfSentenceCase(
+                    '${widget.arguments.enteredFirstName} ${widget.arguments.enteredMiddleName} ${widget.arguments.enteredLastName}'),
                 style: TextStyle(
                     color: Color(new CommonUtil().getMyPrimaryColor()),
                     fontWeight: FontWeight.w500),
@@ -212,14 +162,14 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             Padding(
               padding: EdgeInsets.only(top: 10),
               child: Text(
-                'Please enter the received OTP',
+                variable.strEnterOtp,
                 style: TextStyle(
                     color: Colors.black38, fontWeight: FontWeight.w400),
               ),
             ),
             Expanded(
               child: Image.asset(
-                'assets/icons/otp_icon.png',
+                variable.strOtpIcon,
                 width: 70,
                 height: 70,
               ),
@@ -244,7 +194,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                   ))),
                       SizedBox(height: 20),
                       Text(
-                        'Didn\'t receive the OTP?',
+                        variable.strOtpReceived,
                         style: TextStyle(
                           fontSize: 11,
                           color: Colors.grey,
@@ -257,7 +207,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                 widget.arguments.enteredMobNumber);
                           },
                           child: Text(
-                            'Resend Code',
+                            variable.streResendOtp,
                             style: TextStyle(
                                 //color: Colors.deepPurple[300],
                                 color:
@@ -285,34 +235,21 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                             children: <Widget>[
                               MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("1");
+                                  inputTextToField(variable.numOne);
                                 },
-                                child: Text("1",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
+                                child: getNumberWidet(variable.numOne),
                               ),
                               MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("2");
+                                  inputTextToField(variable.numTwo);
                                 },
-                                child: Text("2",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
+                                child: getNumberWidet(variable.numTwo),
                               ),
                               MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("3");
+                                  inputTextToField(variable.numThree);
                                 },
-                                child: Text("3",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                    textAlign: TextAlign.center),
+                                child: getNumberWidet(variable.numThree),
                               ),
                             ],
                           ),
@@ -328,33 +265,21 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                             children: <Widget>[
                               MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("4");
+                                  inputTextToField(variable.numFour);
                                 },
-                                child: Text("4",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
+                                child: getNumberWidet(variable.numFour),
                               ),
                               MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("5");
+                                  inputTextToField(variable.numFive);
                                 },
-                                child: Text("5",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
+                                child: getNumberWidet(variable.numFive),
                               ),
                               MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("6");
+                                  inputTextToField(variable.numSix);
                                 },
-                                child: Text("6",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
+                                child: getNumberWidet(variable.numSix),
                               ),
                             ],
                           ),
@@ -370,33 +295,21 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                             children: <Widget>[
                               MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("7");
+                                  inputTextToField(variable.numSeven);
                                 },
-                                child: Text("7",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
+                                child: getNumberWidet(variable.numSeven),
                               ),
                               MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("8");
+                                  inputTextToField(variable.numEight);
                                 },
-                                child: Text("8",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
+                                child: getNumberWidet(variable.numEight),
                               ),
                               MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("9");
+                                  inputTextToField(variable.numNine);
                                 },
-                                child: Text("9",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
+                                child: getNumberWidet(variable.numNine),
                               ),
                             ],
                           ),
@@ -421,13 +334,9 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                   )),
                               MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("0");
+                                  inputTextToField(variable.numZero);
                                 },
-                                child: Text("0",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
+                                child: getNumberWidet(variable.numZero),
                               ),
                               //submitButton(_otpVerifyBloc)
                               MaterialButton(
@@ -436,7 +345,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                       controller2.text.length > 0 &&
                                       controller3.text.length > 0 &&
                                       controller4.text.length > 0) {
-                                    String otp = '${controller1.text}${controller2.text}${controller3.text}${controller4.text}';
+                                    String otp =
+                                        '${controller1.text}${controller2.text}${controller3.text}${controller4.text}';
                                     _addFamilyOTPBloc.fromClass =
                                         CommonConstants.add_family_otp;
                                     _addFamilyOTPBloc
@@ -450,7 +360,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                     });
                                   } else {
                                     Alert.displayAlertPlain(context,
-                                        title: "Error",
+                                        title: variable.strError,
                                         content: CommonConstants.all_fields);
                                   }
                                   //matchOtp();
@@ -467,40 +377,10 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                       ),
                     ],
                   ),
-                )
-
-                //flex: 40,
-                ),
+                )),
           ],
         ));
   }
-
-  //  Widget submitButton(OTPVerifyBloc _otpVerifyBloc) {
-  //    return StreamBuilder(
-  //      stream: _otpVerifyBloc.submitCheck,
-  //      builder: (context, snapshot) {
-  //        return Container(
-  //          padding: EdgeInsets.all(20),
-  //          constraints: BoxConstraints(minWidth: 220, maxWidth: double.infinity),
-  //          child: MaterialButton(
-  //              child: Icon(Icons.done, color: Colors.deepPurple),
-  //              onPressed: //snapshot.hasData ? bloc.submit : null,
-  //                  () {
-  //                String otp = controller1.text +
-  //                    controller2.text +
-  //                    controller3.text +
-  //                    controller4.text;
-  //                _otpVerifyBloc
-  //                    .verifyOtp(widget.arguments.enteredMobNumber,
-  //                        widget.arguments.selectedCountryCode, otp)
-  //                    .then((otpResponse) {
-  //                  checkOTPResponse(otpResponse);
-  //                });
-  //              }),
-  //        );
-  //      },
-  //    );
-  //  }
 
   void inputTextToField(String str) {
     //Edit first textField
@@ -555,8 +435,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Successfully"),
-            content: Text("Otp matched successfully."),
+            title: Text(variable.strSuccessfully),
+            content: Text(variable.strOTPMatched),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.check),
@@ -568,16 +448,14 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         });
   }
 
-  void verifyOTP() {}
-
   void checkOTPResponse(AddFamilyOTPResponse addFamilyOTPResponse) {
     if (addFamilyOTPResponse.success && addFamilyOTPResponse.status == 200) {
       Alert.displayConfirmation(
         context,
-        title: "Success",
-        content: "Your family member has been added successfully",
+        title: variable.strSucess,
+        content: variable.strFamilySucess,
         onPressedConfirm: () {
-          Navigator.pushNamed(context, '/add-family-user-info',
+          Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                   arguments: AddFamilyUserInfoArguments(
                       enteredFirstName: widget.arguments.enteredFirstName,
                       enteredMiddleName: widget.arguments.enteredMiddleName,
@@ -585,15 +463,12 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                       relationShip: widget.arguments.relationShip,
                       isPrimaryNoSelected: widget.arguments.isPrimaryNoSelected,
                       addFamilyUserInfo: addFamilyOTPResponse.response.data))
-              .then((value) {
-            // Navigator.of(context).pop();
-            //Navigator.of(context).pop(true);
-          });
+              .then((value) {});
         },
       );
     } else {
       Alert.displayAlertPlain(context,
-          title: "Error", content: addFamilyOTPResponse.message);
+          title: variable.strError, content: addFamilyOTPResponse.message);
     }
   }
 
@@ -601,15 +476,17 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
 
     var signInData = {};
-    signInData['countryCode'] = '+$selectedCountryCode';
-    signInData['phoneNumber'] = enteredMobNumber;
-    signInData['isPrimaryUser'] = widget.arguments.isPrimaryNoSelected;
-    signInData['firstName'] = widget.arguments.enteredFirstName;
-    signInData['middleName'] = widget.arguments.enteredMiddleName.length > 0
-        ? widget.arguments.enteredMiddleName
-        : '';
-    signInData['lastName'] = widget.arguments.enteredLastName;
-    signInData['relation'] = widget.arguments.relationShip.id;
+    signInData[variable.strCountryCode] = '+$selectedCountryCode';
+    signInData[variable.strPhoneNumber] = enteredMobNumber;
+    signInData[variable.strisPrimaryUser] =
+        widget.arguments.isPrimaryNoSelected;
+    signInData[variable.strFirstName] = widget.arguments.enteredFirstName;
+    signInData[variable.strMiddleName] =
+        widget.arguments.enteredMiddleName.length > 0
+            ? widget.arguments.enteredMiddleName
+            : '';
+    signInData[variable.strLastName] = widget.arguments.enteredLastName;
+    signInData[variable.strRelation] = widget.arguments.relationShip.id;
 
     var jsonString = convert.jsonEncode(signInData);
 
@@ -637,5 +514,11 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         }
       });
     }
+  }
+
+  Widget getNumberWidet(String text) {
+    return Text(text,
+        style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
+        textAlign: TextAlign.center);
   }
 }

@@ -4,6 +4,8 @@ import 'package:myfhb/add_providers/models/update_providers_id.dart';
 import 'package:myfhb/add_providers/services/update_providers_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 
 class UpdateProvidersBloc implements BaseBloc {
   UpdateProvidersRepository updateProvidersRepository;
@@ -59,7 +61,7 @@ class UpdateProvidersBloc implements BaseBloc {
   // 1
   // Doctors
   updateDoctorsIdWithUserDetails() async {
-    doctorsSink.add(ApiResponse.loading('Signing in user'));
+    doctorsSink.add(ApiResponse.loading(variable.strUpdatingDoctor));
     try {
       UpdateProvidersId updateProvidersId = await updateProvidersRepository
           .updateDoctorsIdWithUserDetails(providerId, isPreferred);
@@ -72,7 +74,7 @@ class UpdateProvidersBloc implements BaseBloc {
   // 2
   // Hospitals
   updateHospitalsIdWithUserDetails() async {
-    hospitalsSink.add(ApiResponse.loading('Signing in user'));
+    hospitalsSink.add(ApiResponse.loading(variable.strUpdatingHospital));
     try {
       UpdateProvidersId updateProvidersId = await updateProvidersRepository
           .updateHospitalsIdWithUserDetails(providerId, isPreferred);
@@ -85,7 +87,7 @@ class UpdateProvidersBloc implements BaseBloc {
   // 3
   // Labs
   updateLabsIdWithUserDetails() async {
-    labsSink.add(ApiResponse.loading('Signing in user'));
+    labsSink.add(ApiResponse.loading(variable.strUpdatingLab));
     try {
       UpdateProvidersId updateProvidersId = await updateProvidersRepository
           .updateLabsIdWithUserDetails(providerId, isPreferred);

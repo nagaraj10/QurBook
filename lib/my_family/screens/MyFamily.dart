@@ -25,6 +25,10 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
+
 
 class MyFamily extends StatefulWidget {
   @override
@@ -60,25 +64,7 @@ class _MyFamilyState extends State<MyFamily> {
 
   bool firstTym = true;
 
-  List<String> bloodGroupArray = [
-    'A +ve',
-    'A -ve',
-    'B +ve',
-    'B -ve',
-    'O +ve',
-    'O -ve',
-    'AB +ve',
-    'AB -ve',
-    'A1+',
-    'A2+',
-    'A1B+',
-    'A2B+',
-    'A1-',
-    'A2-',
-    'A1B-',
-    'A2B-'
-  ];
-
+  
   // Option 2
   String selectedBloodGroup;
   RelationShip selectedRelationShip;
@@ -168,12 +154,10 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   Widget getMyFamilyMembers(FamilyData data) {
-//    List<Sharedbyme> profilesSharedByMe = new List();
 
     return data != null
         ? data.sharedbyme.length > 0
             ? Container(
-                //padding: EdgeInsets.only(left: 10, right: 10),
                 color: const Color(fhbColors.bgColorContainer),
                 child: ListView.builder(
                   padding: EdgeInsets.only(bottom: 20),
@@ -227,7 +211,7 @@ class _MyFamilyState extends State<MyFamily> {
     return InkWell(
       onTap: () {
         if (position != 0) {
-          Navigator.pushNamed(context, '/my-family-detail-screen',
+          Navigator.pushNamed(context, router.rt_FamilyDetailScreen,
                   arguments: MyFamilyDetailArguments(
                       profilesSharedByMe: profilesSharedByMeAry,
                       currentPage: position - 1))
@@ -238,13 +222,7 @@ class _MyFamilyState extends State<MyFamily> {
             });
           });
         }
-//        Navigator.pushNamed(context, '/add-family-user-info',
-//                arguments: AddFamilyUserInfoArguments(
-//                    sharedbyme: data, fromClass: CommonConstants.my_family))
-//            .then((value) {
-//          _familyListBloc.getFamilyMembersList();
-//        });
-      },
+},
       child: Container(
           padding: EdgeInsets.all(10.0),
           margin: EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -377,7 +355,7 @@ class _MyFamilyState extends State<MyFamily> {
                     SizedBox(height: 10.0),
                     Text(
                       position == 0
-                          ? 'Self'
+                          ? variable.Self
                           : data.linkedData.roleName != null
                               ? data.linkedData.roleName
                               : '',
@@ -398,7 +376,7 @@ class _MyFamilyState extends State<MyFamily> {
                         InkWell(
                           onTap: () {
                             Alert.displayConfirmProceed(context,
-                                title: "Delink",
+                                title: variable.Delink,
                                 content: CommonConstants.delink_alert,
                                 onPressedConfirm: () {
                               new FHBUtils().check().then((intenet) {
@@ -406,13 +384,13 @@ class _MyFamilyState extends State<MyFamily> {
                                   Navigator.pop(context);
 
                                   CommonUtil.showLoadingDialog(
-                                      context, _keyLoader, 'Please Wait');
+                                      context, _keyLoader, variable.Please_Wait);
 
                                   var deLinkingData = {};
-                                  deLinkingData['relatedTo'] =
+                                  deLinkingData[variable.strrelatedTo] =
                                       data.profileData.id;
-                                  deLinkingData['relationshipType'] =
-                                      'parentToChild';
+                                  deLinkingData[variable.strrelationshipType] =
+                                      variable.strparentToChild;
                                   var jsonString =
                                       convert.jsonEncode(deLinkingData);
 
@@ -472,7 +450,7 @@ class _MyFamilyState extends State<MyFamily> {
                                     color: Color(
                                         new CommonUtil().getMyPrimaryColor()))),
                             child: Text(
-                              'De-Link',
+                              variable.DeLink,
                               style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
@@ -501,7 +479,7 @@ class _MyFamilyState extends State<MyFamily> {
     rebuildFamilyBlock();
 
     List<RelationShip> data =
-        PreferenceUtil.getFamilyRelationship('keyFamilyrel');
+        PreferenceUtil.getFamilyRelationship(Constants.keyFamily);
 
 
     return showDialog<void>(
@@ -735,10 +713,6 @@ class _MyFamilyState extends State<MyFamily> {
               fontSize: 16.0,
               color: ColorUtils.blackcolor),
           decoration: InputDecoration(
-//            suffixIcon: IconButton(
-//              onPressed: () => searchController.clear(),
-//              icon: Icon(Icons.clear, color: ColorUtils.lightgraycolor),
-//            ),
             hintText: CommonConstants.mobile_numberWithStar,
             labelStyle: TextStyle(
                 fontSize: 12.0,
@@ -934,18 +908,18 @@ class _MyFamilyState extends State<MyFamily> {
         selectedRelationShip != null) {
       new FHBUtils().check().then((intenet) {
         if (intenet != null && intenet) {
-          CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+          CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
           var signInData = {};
-          signInData['countryCode'] = "+" + _selected.dialingCode;
-          signInData['phoneNumber'] = mobileNoController.text;
-          signInData['isPrimaryUser'] = isPrimaryNoSelected;
-          signInData['firstName'] = firstNameController.text;
-          signInData['middleName'] = middleNameController.text.length > 0
+          signInData[variable.strCountryCode] = "+" + _selected.dialingCode;
+          signInData[variable.strPhoneNumber] = mobileNoController.text;
+          signInData[variable.strisPrimaryUser] = isPrimaryNoSelected;
+          signInData[variable.strFirstName] = firstNameController.text;
+          signInData[variable.strMiddleName]= middleNameController.text.length > 0
               ? middleNameController.text
               : '';
-          signInData['lastName'] = lastNameController.text;
-          signInData['relation'] = selectedRelationShip.id;
+          signInData[variable.strLastName]= lastNameController.text;
+          signInData[variable.strRelation]= selectedRelationShip.id;
 
           var jsonString = convert.jsonEncode(signInData);
 
@@ -965,7 +939,7 @@ class _MyFamilyState extends State<MyFamily> {
                           .pop();
 
                       Navigator.pop(context);
-                      Navigator.pushNamed(context, '/add-family-user-info',
+                      Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                               arguments: AddFamilyUserInfoArguments(
                                   enteredFirstName: firstNameController.text,
                                   enteredMiddleName: middleNameController.text,
@@ -995,7 +969,7 @@ class _MyFamilyState extends State<MyFamily> {
                     Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                         .pop();
                     Alert.displayAlertPlain(context,
-                        title: "Error", content: value.message);
+                        title: variable.Error, content: value.message);
                   }
                 });
               } else {
@@ -1003,7 +977,7 @@ class _MyFamilyState extends State<MyFamily> {
                     .pop();
 
                 Alert.displayAlertPlain(context,
-                    title: "Error", content: addFamilyOTPResponse.message);
+                    title: variable.Error, content: addFamilyOTPResponse.message);
               }
             });
           } else {
@@ -1022,7 +996,7 @@ class _MyFamilyState extends State<MyFamily> {
 
                       Navigator.pushNamed(
                         context,
-                        '/add-family-otp-screen',
+                        router.rt_AddFamilyOtp,
                         arguments: AddFamilyOTPArguments(
                             enteredMobNumber: mobileNoController.text,
                             enteredFirstName: firstNameController.text,
@@ -1056,7 +1030,7 @@ class _MyFamilyState extends State<MyFamily> {
                     .pop();
 
                 Alert.displayAlertPlain(context,
-                    title: "Error", content: userLinking.message);
+                    title:variable.Error, content: userLinking.message);
               }
             });
           }
@@ -1069,7 +1043,7 @@ class _MyFamilyState extends State<MyFamily> {
       // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
       Alert.displayAlertPlain(context,
-          title: "Error", content: CommonConstants.all_fields);
+          title: variable.Error, content: CommonConstants.all_fields);
     }
   }
 

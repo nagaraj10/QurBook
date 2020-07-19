@@ -5,6 +5,7 @@ import 'package:myfhb/bookmark_record/services/bookmark_repository.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/Validators.dart';
 import 'dart:convert' as convert;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class BookmarkRecordBloc with Validators implements BaseBloc {
   BookmarkRepository _bookmarkRepository;
@@ -31,7 +32,7 @@ class BookmarkRecordBloc with Validators implements BaseBloc {
     bookmarkRequest.isBookmarked = bookMarkFlag;
 
     var jsonString = convert.jsonEncode(bookmarkRequest);
-    bookmarkSink.add(ApiResponse.loading('bookmark record'));
+    bookmarkSink.add(ApiResponse.loading(variable.strBookmarkRecord));
     BookmarkResponse bookmarkResponse;
     try {
       bookmarkResponse =

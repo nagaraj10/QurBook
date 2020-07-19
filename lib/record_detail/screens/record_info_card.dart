@@ -11,7 +11,8 @@ import 'package:myfhb/src/utils/DashSeparator.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class RecordInfoCard {
   Widget getCardForPrescription(MetaInfo metaInfo, String createdDate) {
@@ -70,7 +71,7 @@ class RecordInfoCard {
                             //Text('')
                             : SizedBox(height: 0),
                         Text(
-                          'Date of visit: ' + metaInfo.dateOfVisit,
+                          variable.strDateOfVisit + metaInfo.dateOfVisit,
                           style: TextStyle(fontSize: 11),
                         ),
                       ],
@@ -153,7 +154,7 @@ class RecordInfoCard {
                               )
                             : SizedBox(height: 0),
                         Text(
-                          'Date of visit: ' + metaInfo.dateOfVisit,
+                          variable.strDateOfVisit + metaInfo.dateOfVisit,
                           style: TextStyle(fontSize: 11),
                         ),
                       ],
@@ -236,7 +237,7 @@ class RecordInfoCard {
                               )
                             : SizedBox(height: 0),
                         Text(
-                          'Date of visit: ' + metaInfo.dateOfVisit,
+                          variable.strDateOfVisit + metaInfo.dateOfVisit,
                           style: TextStyle(fontSize: 11),
                         ),
                       ],
@@ -384,7 +385,7 @@ class RecordInfoCard {
             ),
             metaInfo.dateOfExpiry != null
                 ? Text(
-                    'Valid thru - ' + metaInfo.dateOfExpiry,
+                    variable.strValidThru + metaInfo.dateOfExpiry,
                     style: TextStyle(fontSize: 13),
                   )
                 : SizedBox(height: 0),

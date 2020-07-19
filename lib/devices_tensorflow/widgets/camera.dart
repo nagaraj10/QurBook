@@ -25,6 +25,10 @@ class _CameraState extends State<Camera> {
   CameraController controller;
   bool isDetecting = false;
 
+
+  String stryolo= "YOLO";
+  String ssmobileNet= "SSDMobileNet";
+
   @override
   void initState() {
     super.initState();
@@ -90,7 +94,7 @@ class _CameraState extends State<Camera> {
                   bytesList: img.planes.map((plane) {
                     return plane.bytes;
                   }).toList(),
-                  model: widget.model == yolo ? "YOLO" : "SSDMobileNet",
+                  model: widget.model == yolo ? stryolo : ssmobileNet,
                   imageHeight: img.height,
                   imageWidth: img.width,
                   imageMean: widget.model == yolo ? 0 : 127.5,

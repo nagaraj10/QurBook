@@ -5,6 +5,8 @@ import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_reposit
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class MyFamilyDetailViewBloc implements BaseBloc {
   StreamController _healthReportListController;
@@ -47,7 +49,7 @@ class MyFamilyDetailViewBloc implements BaseBloc {
   }
 
   getHelthReportList() async {
-    healthReportListSink.add(ApiResponse.loading('Signing in user'));
+    healthReportListSink.add(ApiResponse.loading(variable.strFetchingHealth));
     try {
       UserHealthResponseList userHealthResponseList =
           await _healthReportListForUserRepository.getHealthReportList(userId);
@@ -58,7 +60,7 @@ class MyFamilyDetailViewBloc implements BaseBloc {
   }
 
   Future<CategoryResponseList> getCategoryList() async {
-    categoryListSink.add(ApiResponse.loading('Signing in user'));
+    categoryListSink.add(ApiResponse.loading(variable.strFetchCategory));
 
     CategoryResponseList categoryResponseList;
 

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 
 class FeedbackSuccess extends StatefulWidget {
   @override
@@ -57,12 +59,12 @@ class _FeedbackSuccessState extends State<FeedbackSuccess> {
             )),
             SizedBox(height: 20),
             Text(
-              'Success',
+              variable.strSucess,
               style: TextStyle(
                   fontSize: 30, color: Color(CommonUtil().getMyPrimaryColor())),
             ),
             Text(
-              'Thank  you for your feedback',
+              variable.strFeedThank,
               style: TextStyle(
                   fontSize: 18,
                   color:

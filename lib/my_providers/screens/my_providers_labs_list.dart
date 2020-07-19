@@ -7,8 +7,11 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class MyProvidersLabsList extends StatelessWidget {
   List<LaboratoryModel> labsModel;
@@ -28,7 +31,7 @@ class MyProvidersLabsList extends StatelessWidget {
         LaboratoryModel eachLabModel = labsModel[index];
         return InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/add_providers',
+              Navigator.pushNamed(context,router.rt_AddProvider,
                       arguments: AddProvidersArguments(
                           searchKeyWord: CommonConstants.labs,
                           labsModel: eachLabModel,
@@ -112,20 +115,12 @@ class MyProvidersLabsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              /* InkWell(
-                                child: Icon(
-                                  Icons.more_horiz,
-                                  size: 22,
-                                  color: Colors.grey,
-                                ),
-                                onTap: () {},
-                              ), */
-                              // /SizedBox(height: 20),
+                            
                               InkWell(
                                   child: eachLabModel.isDefault == true
                                       ? ImageIcon(
                                           AssetImage(
-                                              'assets/icons/record_fav_active.png'),
+                                              variable.icon_record_fav_active),
                                           color: Color(new CommonUtil()
                                               .getMyPrimaryColor()),
                                           size: 20,
@@ -135,11 +130,7 @@ class MyProvidersLabsList extends StatelessWidget {
                                           width: 0,
                                         )
 
-                                  /* Icon(
-                                          Icons.bookmark,
-                                          size: 22,
-                                          color: Colors.grey,
-                                        ) */
+                                 
                                   ),
                             ],
                           ),

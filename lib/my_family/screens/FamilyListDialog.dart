@@ -16,6 +16,8 @@ import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 
 class FamilyListDialog extends StatefulWidget {
   final FamilyData familyData;
@@ -61,12 +63,12 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                 switch (snapshot.data.status) {
                   case Status.LOADING:
                     CommonUtil.showLoadingDialog(
-                        context, _keyLoader, 'Please Wait');
+                        context, _keyLoader, variable.Please_Wait);
                     break;
 
                   case Status.ERROR:
                     return Center(
-                        child: Text('Oops, something went wrong',
+                        child: Text(variable.strSomethingWrong,
                             style: TextStyle(color: Colors.red)));
                     break;
 
@@ -99,7 +101,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text('Switch User'),
+                  Text(variable.Switch_User),
                   IconButton(
                     icon: Icon(
                       Icons.close,
@@ -125,7 +127,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('Switch User'),
+            Text(variable.Switch_User),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -148,7 +150,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
 
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
-    LinkedData linkedData = new LinkedData(roleName: 'Self', nickName: 'Self');
+    LinkedData linkedData = new LinkedData(roleName: variable.Self, nickName:variable.Self);
 
     if (sharedByMe == null) {
       sharedByMe = new List();
@@ -187,7 +189,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                           children: <Widget>[
                             ClipOval(
                                 child: sharedByMe[index].linkedData.nickName ==
-                                        'Self'
+                                        variable.Self
                                     ? new FHBBasicWidget().getProfilePicWidget(
                                         myProfile.response.data.generalInfo
                                             .profilePicThumbnail)
@@ -240,7 +242,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                     borderRadius: BorderRadius.circular(10)),
                 child: FlatButton(
                   child: Text(
-                    'Add new family member',
+                    variable.strAddFamily,
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {},
@@ -249,7 +251,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
             ],
           ));
     } else {
-      return Center(child: Text('No family members added yet'));
+      return Center(child: Text(variable.strNoFamily));
     }
   }
 }
