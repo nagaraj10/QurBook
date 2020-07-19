@@ -15,7 +15,9 @@ class Loading : NSObject {
         vw.alpha = 0
         return vw
     }()
-
+    
+    
+    
     let baseView: UIView = {
         let vw = UIView()
         vw.backgroundColor = UIColor.white

@@ -15,3 +15,4 @@ const String rt_AddProvider='/add-providers';
 
 
 const String cn_AddProvider='add_providers';
+const String cn_teleheathProvider='tele_providers';

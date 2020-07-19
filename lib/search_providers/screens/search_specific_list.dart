@@ -603,7 +603,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         context,
         '/add-providers',
         arguments: AddProvidersArguments(
-            data: data, searchKeyWord: CommonConstants.doctors, hasData: true,fromClass:widget.arguments.fromClass),
+            data: data, searchKeyWord: CommonConstants.doctors, hasData: true),
       ).then((value) {
         if (value == 1) {
           Navigator.pop(context);

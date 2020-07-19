@@ -176,6 +176,8 @@ const String STR_ERROR_LOADING_IMAGE = 'Unable To Load Image,Please Try Again';
 
 const String KEY_FAMILYREL = 'keyFamilyrel';
 const String Auth_token='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ0OTI1OTI1MjYsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NDg4OTkyNTI2LCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5MTc2MTE3ODc4IiwidXNlcklkIjoiYmRlMTQwZGItMGZmYy00YmU2LWI0YzAtNWU0NGI5ZjU0NTM1IiwiaWF0IjoxNTk0NDg4OTkyLCJleHAiOjE1OTgwODg5OTIsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImE0ZTQ4MzY3LTM0M2EtNDIzNC1hYjEyLTgzMzEyMTZkZDUyYSJ9.qqSTMlm5UQKJ5vrCMQQ2NiPCM9lU8-5OStHAj1Q2Vfk';
+const String Auth_token_slots='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ1MjkzNzMzNDAsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NTI1NzczMzQwLCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5ODQwOTcyMjc1IiwidXNlcklkIjoiYWQ1ZDJkMzctNGVhZi00ZDkxLTk5ZTgtYTA3ODgxZDcyNjQ5IiwiaWF0IjoxNTk0NTI1NzczLCJleHAiOjE1OTgxMjU3NzMsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImExNDUxMzNlLTA4NTctNGQyMi1iNTAwLWY3MjEyMDlmNmI5YiJ9.MGP2eiAC4pYgMsHzFig1nowJObJ9TSfjPLbuRJVQciw';
+const String ADD_NEW_FAMILY_MEMBER = 'Add new family member';
 
 
 const String keyDoctor='doctor';
@@ -187,6 +189,50 @@ const String keyPriColor='pri_color';
 const String keyGreyColor='gre_color';
 const String keyMayaAsset='maya_asset';
 const String keyAudioFile='audioFile';
+const String Self = 'Self';
+const String Delink = 'Delink';
+const String Please_Wait = 'Please Wait';
+const String parentToChild = 'parentToChild';
+const String DeLink = 'De-Link';
+const String Error = 'Error';
+const String Success = 'Success';
+const String Otp_Verification = 'Otp Verification';
+const String Resend_Code = 'Resend Code';
+const String Receive_OTP = 'Didn\'t receive the OTP?';
+const String enter_otp = 'Please enter the received OTP';
+const String Successfully = 'Successfully';
+const String OTP_Matched = 'Otp matched successfully';
+const String Family_Member_Added =
+    'Your family member has been added successfully';
+const String VerifyEmail = 'Tap to verify Email address';
+const String otp_assets = 'assets/icons/otp_icon.png';
+
+
+
+const String enterFirstName = 'Enter First Name';
+const String enterLastName = 'Enter Last Name';
+const String selectGender = 'Select Gender';
+const String selectDOB = 'Select DOB';
+const String selectRHType = 'Select Rh type';
+const String selectBloodGroup = 'Select Blood group';
+
+const String makeAChoice = 'Make a Choice!';
+const String Gallery = 'Gallery';
+const String Camera = 'Camera';
+const String Associated_Member = 'Associated Member';
+const String Switch_User = 'Switch User';
+const String Set_as_Preferred = 'Set as Preferred';
+
+const String Add = 'Add';
+const String Update = 'Update';
+const String Cancel = 'Cancel';
+const String add_providers = 'add_providers';
+const String choose_address = 'Please choose the address';
+const String cancer_speciality = 'Cancer Speciality Hospital';
+const String apollo_email = 'apollo@sample.com';
+const String preferred_descrip =
+    'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
+
 
 
 

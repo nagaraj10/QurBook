@@ -3,6 +3,7 @@ import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/mockDoctorsData.dart';
@@ -11,6 +12,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
 class MyProviderViewModel extends ChangeNotifier {
   List<GetAllPatientsModel> mockDoctors = List<GetAllPatientsModel>();
   List<DoctorIds> doctorIdsList = new List();
+ SessionData sessionList = new SessionData();
   List<DateSlotTimings> dateSlotTimings = new List();
   List<TelehealthProviderModel> teleHealthProviderModel = new List();
 
@@ -102,5 +104,14 @@ class MyProviderViewModel extends ChangeNotifier {
       }
     }
     return filterDoctorData;
+  }
+
+  Future<SessionData> fetchTimeSlots(String date,String doctorId) async {
+    try {
+      DoctorTimeSlotsModel doctorTimeSlotsModel =
+      await _providersListRepository.getTelehealthSlotsList(date,doctorId);
+      sessionList = doctorTimeSlotsModel.response.data;
+      return sessionList;
+    } catch (e) {}
   }
 }

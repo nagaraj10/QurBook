@@ -17,6 +17,7 @@ import 'package:myfhb/add_providers/models/add_hospitals_providers_id.dart';
 import 'package:myfhb/add_providers/models/add_labs_providers_id.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/add_providers/models/update_providers_id.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -28,6 +29,9 @@ import 'package:myfhb/my_providers/models/DoctorModel.dart';
 import 'package:myfhb/my_providers/models/HospitalModel.dart';
 import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
+import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
+import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
+import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
 import 'package:myfhb/search_providers/models/doctors_data.dart';
 import 'package:myfhb/search_providers/models/hospital_data.dart';
 import 'package:myfhb/search_providers/models/lab_data.dart';
@@ -37,10 +41,6 @@ import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
-import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
-import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 

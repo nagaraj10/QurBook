@@ -3,6 +3,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 import 'dart:convert' as convert;
 
@@ -47,5 +48,16 @@ class ProvidersListRepository {
         query.qr_doctorpatientmapping + query.qr_updateDefaultProvider,
         jsonString);
     return DoctorBookMarkedSucessModel.fromJson(response);
+  }
+
+  Future<DoctorTimeSlotsModel> getTelehealthSlotsList(String date,String doctorId) async {
+
+    var slotInput = {};
+    slotInput['date'] = '2020-07-21';
+    slotInput['doctorId'] = 'c99b732e-d630-4301-b3fa-e7c800b891b4';
+
+    var jsonString = convert.jsonEncode(slotInput);
+    final response = await _helper.getTimeSlotsList("doctorSlots/getAvailability",jsonString);
+    return DoctorTimeSlotsModel.fromJson(response);
   }
 }

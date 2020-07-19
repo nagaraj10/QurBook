@@ -1,10 +1,10 @@
+// ignore: file_names
 import 'dart:convert' as convert;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_country_picker/country.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_arguments.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -22,6 +22,7 @@ import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
@@ -480,7 +481,6 @@ class _MyFamilyState extends State<MyFamily> {
 
     List<RelationShip> data =
         PreferenceUtil.getFamilyRelationship(Constants.keyFamily);
-
 
     return showDialog<void>(
       context: context,
@@ -949,8 +949,6 @@ class _MyFamilyState extends State<MyFamily> {
                                   addFamilyUserInfo:
                                       addFamilyOTPResponse.response.data))
                           .then((value) {
-                        
-
                         mobileNoController.text = '';
                         nameController.text = '';
                         isPrimaryNoSelected = false;

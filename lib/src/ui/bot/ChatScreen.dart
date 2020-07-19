@@ -1,22 +1,22 @@
 import 'dart:async';
+import 'dart:convert' as convert;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/bot/ConversationModel.dart';
 import 'package:myfhb/src/model/bot/SpeechModelResponse.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/services.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:uuid/uuid.dart';
-import 'dart:convert' as convert;
-import 'package:myfhb/common/FHBBasicWidget.dart';
 
 // ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
@@ -186,11 +186,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   sendToMaya(String msg) async {
-    //String mayaUrl = 'https://ai.vsolgmi.com/ai/api/rasa/';
+    //String mayaUrl = 'https://ai.dev.vsolgmi.com/ai/api/rasa/';
     String mayaUrl = CommonUtil.MAYA_URL;
     String uuidString = uuid;
 
-    
+    // /print(uuidString);
 
     var reqJson = {};
     reqJson["sender"] = user_id;
@@ -216,9 +216,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     if (response.statusCode == 200) {
       if (response.body != null) {
         var jsonResponse = convert.jsonDecode(response.body);
+        //print('response from maya ' + jsonResponse.toString());
         List<dynamic> list = jsonResponse;
         if (list.length > 0) {
           SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
+          //print('before env value $isEndOfConv');
           setState(() {
             isEndOfConv = res.endOfConv;
           });
@@ -240,6 +242,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             if (!stopTTSNow) {
               tts_platform.invokeMethod('textToSpeech',
                   {"message": res.text, "isClose": false}).then((res) {
+                //print('is maya currently speaking value is $res');
                 if (res == 1) {
                   isMayaSpeaks = 1;
                 }
