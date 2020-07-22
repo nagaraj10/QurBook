@@ -2,14 +2,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
 
 class SessionList extends StatefulWidget {
 
   final List<SessionsTime> sessionData;
+  Function(int,int) selectedPosition;
 
-  SessionList({this.sessionData});
+  SessionList({this.sessionData,this.selectedPosition});
 
   @override
   State<StatefulWidget> createState() {
@@ -21,8 +23,10 @@ class SessionList extends StatefulWidget {
 
 class SessionListState extends State<SessionList>{
 
+  CommonUtil commonUtil = new CommonUtil();
   String sessionTimings='';
   int selectedRow = -1;
+  int selectedItem = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +35,8 @@ class SessionListState extends State<SessionList>{
       child: ListView.builder(
           itemCount: widget.sessionData.length,
           itemBuilder: (BuildContext context, int index) {
-            sessionTimings = removeLastThreeDigits(widget.sessionData[index].sessionStartTime)+" - "
-                +removeLastThreeDigits(widget.sessionData[index].sessionEndTime);
+            sessionTimings = commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionStartTime)+" - "
+                +commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionEndTime);
             return Container(
               alignment: Alignment.center,
               height: 40.0,
@@ -47,9 +51,10 @@ class SessionListState extends State<SessionList>{
                           : TextWidget(text: sessionTimings,)),
                   Expanded(
                       flex: 2,
-                      child: GridViewNew(widget.sessionData[index].slots,index,(position){
-                        selectedRow = position;
-                        print(selectedRow);
+                      child: GridViewNew(widget.sessionData[index].slots,index,(rowPosition,itemPosition){
+                        selectedRow = rowPosition;
+                        selectedItem = itemPosition;
+                        widget.selectedPosition(rowPosition,itemPosition);
                         setState(() {});
                       },selectedRow)),
                 ],
@@ -60,13 +65,6 @@ class SessionListState extends State<SessionList>{
     );
   }
 
-  removeLastThreeDigits(String string){
-
-    String removedString='';
-    removedString = string.substring(0, string.length - 3);
-
-    return removedString;
-  }
 
 
 }

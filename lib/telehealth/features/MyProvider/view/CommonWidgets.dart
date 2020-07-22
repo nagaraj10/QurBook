@@ -15,11 +15,15 @@ import 'package:myfhb/telehealth/features/MyProvider/model/ProfilePic.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/MyProvider/view/BookNowButton.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
 
 class CommonWidgets {
+
+  CommonUtil commonUtil = new CommonUtil();
+  int rowPosition;
+  int itemPosition;
+
   Widget getTextForDoctors(String docName) {
     return Text(
       docName != null ? docName : '',
@@ -87,15 +91,15 @@ class CommonWidgets {
         },
         child: docs.isDefault
             ? ImageIcon(
-          AssetImage('assets/icons/record_fav_active.png'),
-          color: Color(new CommonUtil().getMyPrimaryColor()),
-          size: fhbStyles.imageWidth,
-        )
+                AssetImage('assets/icons/record_fav_active.png'),
+                color: Color(new CommonUtil().getMyPrimaryColor()),
+                size: fhbStyles.imageWidth,
+              )
             : ImageIcon(
-          AssetImage('assets/icons/record_fav.png'),
-          color: Colors.black,
-          size: fhbStyles.imageWidth,
-        ));
+                AssetImage('assets/icons/record_fav.png'),
+                color: Colors.black,
+                size: fhbStyles.imageWidth,
+              ));
   }
 
   Widget getGridView() {
@@ -240,43 +244,26 @@ class CommonWidgets {
   Widget getTimeSlotText(String textSlotTime) {
     return Text(
       textSlotTime,
-      style: TextStyle(color: Colors.blueGrey, fontSize: fhbStyles.fnt_sessionTime),
+      style: TextStyle(
+          color: Colors.blueGrey, fontSize: fhbStyles.fnt_sessionTime),
     );
-  }
-
-  List<Widget> getTimeSlots(SessionData dateSlotTimingsObj,List<DoctorIds> docs,int j) {
-    List<Widget> rowTimeWidget = new List();
-
-      rowTimeWidget.add(SessionList(sessionData: dateSlotTimingsObj.sessions,));
-
-    rowTimeWidget.add(getSizedBox(10));
-
-    rowTimeWidget.add(Align(
-      alignment: Alignment.center,
-      child: BookNowButton(docs: docs,i: j),
-    ));
-
-    rowTimeWidget.add(SizedBoxWidget(height: 10,));
-    return rowTimeWidget;
   }
 
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
       border: Border.all(
           width: 0.8, //
-          color: Colors.green
-          ),
+          color: Colors.green),
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
     );
   }
 
   getSpecificTimeSlots(List<Slots> dateTimingsSlots) {
     List<Widget> rowSpecificTimeSlots = new List();
-    String timeSlots ='';
+    String timeSlots = '';
 
     for (Slots dateTiming in dateTimingsSlots) {
-
-      timeSlots = removeLastThreeDigits(dateTiming.startTime);
+      timeSlots = commonUtil.removeLastThreeDigits(dateTiming.startTime);
 
       rowSpecificTimeSlots.add(getSpecificSlots(timeSlots));
     }
@@ -303,15 +290,15 @@ class CommonWidgets {
 
   Widget getSpecificSlots(String time) {
     return Container(
-          width: 35,
-          decoration: myBoxDecoration(),
-          child: Center(
-            child: Text(
-              time,
-              style:
+      width: 35,
+      decoration: myBoxDecoration(),
+      child: Center(
+        child: Text(
+          time,
+          style:
               TextStyle(fontSize: fhbStyles.fnt_date_slot, color: Colors.green),
-            ),
-          ),
+        ),
+      ),
     );
   }
 
@@ -361,11 +348,4 @@ class CommonWidgets {
     }
   }
 
-  removeLastThreeDigits(String string){
-
-    String removedString='';
-    removedString = string.substring(0, string.length - 3);
-
-    return removedString;
-  }
 }

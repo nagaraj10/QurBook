@@ -10,7 +10,7 @@ class GridViewNew extends StatefulWidget {
   List<Slots> dateTimingsSlot;
   final int rowPosition;
   final int selectedRow;
-  Function(int) onSelected;
+  Function(int,int) onSelected;
 
   GridViewNew(this.dateTimingsSlot,this.rowPosition,this.onSelected,this.selectedRow);
 
@@ -25,17 +25,16 @@ class _GridViewNew extends State<GridViewNew> {
   int _selectedIndex = -1;
   int rowPosition = -1;
   CommonWidgets commonWidgets = new CommonWidgets();
+  CommonUtil commonUtil = new CommonUtil();
 
 
   _onSelected(int index,int positionFinal) {
 
     rowPosition = positionFinal;
-
-    print(rowPosition.toString());
     _selectedIndex = index;
     setState(() => _selectedIndex = index);
 
-    widget.onSelected(rowPosition);
+    widget.onSelected(rowPosition,_selectedIndex);
   }
 
   @override
@@ -49,28 +48,19 @@ class _GridViewNew extends State<GridViewNew> {
           onTap: (){
             _onSelected(index,widget.rowPosition);
           },
-          child:getSpecificSlots(removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),index),
+          child:getSpecificSlots(commonUtil.removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),index),
         );
       }),
     );
   }
 
-  removeLastThreeDigits(String string){
-
-    String removedString='';
-    removedString = string.substring(0, string.length - 3);
-
-    return removedString;
-  }
 
   Widget getSpecificSlots(String time,int index) {
-    print(widget.rowPosition);
-    print(widget.selectedRow);
     return Container(
       width: 35,
       decoration: myBoxDecoration(index),
       child: Center(
-        child: Text(removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),
+        child: Text(commonUtil.removeLastThreeDigits(widget.dateTimingsSlot[index].startTime),
           style:
           TextStyle(fontSize: fhbStyles.fnt_date_slot, color:
           _selectedIndex != null && _selectedIndex == index && widget.rowPosition == widget.selectedRow

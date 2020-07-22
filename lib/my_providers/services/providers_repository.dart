@@ -52,9 +52,12 @@ class ProvidersListRepository {
 
   Future<DoctorTimeSlotsModel> getTelehealthSlotsList(String date,String doctorId) async {
 
+    print(date);
+    print(doctorId);
+
     var slotInput = {};
-    slotInput['date'] = '2020-07-21';
-    slotInput['doctorId'] = 'c99b732e-d630-4301-b3fa-e7c800b891b4';
+    slotInput['date'] = date;
+    slotInput['doctorId'] = doctorId;
 
     var jsonString = convert.jsonEncode(slotInput);
     final response = await _helper.getTimeSlotsList("doctorSlots/getAvailability",jsonString);
