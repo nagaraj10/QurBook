@@ -27,3 +27,6 @@ const String qr_sortCateories='?sortBy=categoryName.asc&offset=0&limit=10';
 const String qr_medicalPreferences='medicalPreferences';
 const String qr_doctorpatientmapping='doctorpatientmapping/';
 const String qr_updateDefaultProvider='updateDefaultProvider';
+const String qr_slotDate='date';
+const String qr_doctorid='doctorId';
+const String qr_getSlots='doctorSlots/getAvailability';

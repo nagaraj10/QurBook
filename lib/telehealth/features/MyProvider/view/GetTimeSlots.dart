@@ -4,6 +4,7 @@ import 'package:gmiwidgetspackage/widgets/DatePicker/showAlertDialog.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
@@ -63,7 +64,7 @@ class GetTimeSlots extends StatelessWidget {
                   );*/
                 }
               },
-              child: TextWidget(text: 'Book Now', fontsize: 12),
+              child: TextWidget(text: bookNow, fontsize: 12),
             ),
           ),
         ),

@@ -12,6 +12,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
@@ -141,7 +142,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           hint: Row(
             children: <Widget>[
               SizedBoxWidget(width: 20),
-              Text("Please Choose", style: TextStyle(fontSize: 12)),
+              Text(pleaseChoose, style: TextStyle(fontSize: 12)),
             ],
           ),
           items: _familyNames
@@ -179,7 +180,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           Container(
             child: Row(
               children: <Widget>[
-                Text('The Appointment is for',
+                Text(theAppointmentIsFor,
                     style: TextStyle(fontSize: 10, color: Colors.grey)),
               ],
             ),
@@ -197,7 +198,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             child: Row(
               children: <Widget>[
                 TextWidget(
-                  text: 'Date & Time',
+                  text: dateAndTime,
                   fontsize: 10,
                   colors: Colors.grey,
                 ),
@@ -276,7 +277,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        title: getTitle('Confirmation Details'),
+        title: getTitle(confirmDetails),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -310,7 +311,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       children: <Widget>[
                         Row(
                           children: <Widget>[
-                            Text('Pre Consulting Details',
+                            Text(preConsultingDetails,
                                 style: TextStyle(
                                     fontSize: 10, color: Colors.grey)),
                           ],
@@ -344,7 +345,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                 ),
                                 SizedBoxWidget(height: 2.0),
                                 TextWidget(
-                                    text: 'Add Notes',
+                                    text: addNotes,
                                     fontsize: 8.0,
                                     colors: Colors.grey),
                               ],
@@ -372,7 +373,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                 ),
                                 SizedBoxWidget(height: 2.0),
                                 TextWidget(
-                                    text: 'Add Voice',
+                                    text: addVoice,
                                     fontsize: 8.0,
                                     colors: Colors.grey),
                               ],
@@ -400,7 +401,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                 ),
                                 SizedBoxWidget(height: 2.0),
                                 TextWidget(
-                                    text: 'Records',
+                                    text: records,
                                     fontsize: 8.0,
                                     colors: Colors.grey),
                               ],
@@ -428,7 +429,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                 ),
                                 SizedBoxWidget(height: 2.0),
                                 TextWidget(
-                                    text: 'Device Readings',
+                                    text: deviceReading,
                                     fontsize: 8.0,
                                     colors: Colors.grey),
                               ],
@@ -498,7 +499,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       fontSize: 14.0
                   );
                       },
-                      child: TextWidget(text: 'Pay Now', fontsize: 12),
+                      child: TextWidget(text: payNow, fontsize: 12),
                     ),
                   ),
                 ],

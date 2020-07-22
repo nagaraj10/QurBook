@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
@@ -111,20 +112,16 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
           } else if (snapshot.hasError) {
             return new Text('Error: ${snapshot.error}');
           } else {
-            print('check' + snapshot.data.toString());
             return Container(
               margin: EdgeInsets.only(left: 5, top: 12),
               child: GetTimeSlots(dateSlotTimingsObj: snapshot.data,docs: widget.docs,j: widget.i,selectedDate: _selectedValue),
-              /*child: Column(
-                children: commonWidgets.getTimeSlots(snapshot.data,widget.docs,widget.i,_selectedValue),
-              ),*/
             );
           }
         } else {
           return Column(
               children: <Widget>[
                 SizedBoxWidget(height: 8,),
-                new Text('Slot not available in this date',style: TextStyle(fontSize: 10.0),),
+                new Text(slotsAreNotAvailable,style: TextStyle(fontSize: 10.0),),
                 SizedBoxWidget(height: 8,),
               ],
         );
