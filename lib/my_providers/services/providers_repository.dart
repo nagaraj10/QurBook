@@ -1,5 +1,6 @@
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
@@ -24,11 +25,9 @@ class ProvidersListRepository {
   }
 
   Future<TelehealthProviderModel> getTelehealthDoctorsList() async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-
     final response = await _helper.getTelehealthDoctorsList(
         query.qr_Userprofile +
-            userID +
+            "bde140db-0ffc-4be6-b4c0-5e44b9f54535" +
             query.qr_slash +
             query.qr_sections +
             query.qr_medicalPreferences);
@@ -53,17 +52,17 @@ class ProvidersListRepository {
     return DoctorBookMarkedSucessModel.fromJson(response);
   }
 
-  
- 
   Future<DoctorTimeSlotsModel> getTelehealthSlotsList(String date,String doctorId) async {
 
-   var slotInput = {};
-    slotInput[parameters.strDate] = query.qr_slot_date;
-    slotInput[parameters.strDoctorId] =query.qr_docId_val;
+    print(date);
+    print(doctorId);
+
+    var slotInput = {};
+    slotInput[qr_slotDate] = date;
+    slotInput[qr_doctorid] = doctorId;
 
     var jsonString = convert.jsonEncode(slotInput);
-    final response = await _helper.getTimeSlotsList(
-       query.qr_doctorslot+query.qr_availability, jsonString);
+    final response = await _helper.getTimeSlotsList(qr_getSlots,jsonString);
     return DoctorTimeSlotsModel.fromJson(response);
   }
 }
