@@ -5,8 +5,7 @@ import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 
-export 'package:myfhb/search_providers/models/hospital_list_response.dart'
-    show Data;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class HospitalListBlock implements BaseBloc {
   HospitalListRepository _hospitalListRepository;
@@ -31,7 +30,7 @@ class HospitalListBlock implements BaseBloc {
   }
 
   getHospitalList(String param) async {
-    hospitalListSink.add(ApiResponse.loading('Signing in user'));
+    hospitalListSink.add(ApiResponse.loading(variable.strGetHospitalList));
     try {
       HospitalListResponse hospitalListResponse =
           await _hospitalListRepository.getHospitalFromSearch(param);
@@ -44,7 +43,7 @@ class HospitalListBlock implements BaseBloc {
   Future<HospitalListResponse> getHospitalObjectusingId(
       String hospitalId) async {
     HospitalListResponse hospitalListResponse;
-    hospitalListSink.add(ApiResponse.loading('Signing in user'));
+    hospitalListSink.add(ApiResponse.loading(variable.strGetHospitalById));
     try {
       hospitalListResponse =
           await _hospitalListRepository.gethopitalFromId(hospitalId);

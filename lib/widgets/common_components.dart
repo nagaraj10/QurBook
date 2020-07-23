@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class CommonComponents {
   getOutlineButton(String buttonText, onPressed) {
@@ -64,7 +65,7 @@ class CommonComponents {
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 14,
-                            fontFamily: "Roboto",
+                            fontFamily: variable.font_roboto,
                             fontWeight: FontWeight.w300),
                       ),
                     ),

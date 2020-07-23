@@ -11,10 +11,12 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/ProfilePic.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Languages.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/ProfilePic.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookNowButton.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
@@ -36,7 +38,7 @@ class CommonWidgets {
 
   Widget getDoctoSpecialist(String phoneNumber) {
     return Text(
-      phoneNumber != null ? phoneNumber : '',
+      (phoneNumber != null && phoneNumber != 'null') ? phoneNumber : '',
       style: TextStyle(
           color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_doc_specialist),
       softWrap: false,
@@ -87,15 +89,15 @@ class CommonWidgets {
         },
         child: docs.isDefault
             ? ImageIcon(
-          AssetImage('assets/icons/record_fav_active.png'),
-          color: Color(new CommonUtil().getMyPrimaryColor()),
-          size: fhbStyles.imageWidth,
-        )
+                AssetImage('assets/icons/record_fav_active.png'),
+                color: Color(new CommonUtil().getMyPrimaryColor()),
+                size: fhbStyles.imageWidth,
+              )
             : ImageIcon(
-          AssetImage('assets/icons/record_fav.png'),
-          color: Colors.black,
-          size: fhbStyles.imageWidth,
-        ));
+                AssetImage('assets/icons/record_fav.png'),
+                color: Colors.black,
+                size: fhbStyles.imageWidth,
+              ));
   }
 
   Widget getGridView() {
@@ -195,6 +197,8 @@ class CommonWidgets {
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+
                     children: <Widget>[
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,19 +217,22 @@ class CommonWidgets {
                               children: <Widget>[
                                 getTextForDoctors('${docs.name}'),
                                 getDoctoSpecialist('${docs.specialization}'),
-                                getDoctorsAddress('${docs.city}')
+                                getDoctorsAddress('${docs.city}'),
+                                Row(children: getLanguages(docs)),
                               ],
                             ),
                           ),
                         ],
                       ),
                       getSizedBox(20),
+                       getTextForDoctors('About'),
+                          getHospitalDetails(docs.professionalDetails != null
+                              ? docs.professionalDetails[0].aboutMe
+                              : ''),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          getTextForDoctors('About'),
-                          getHospitalDetails(
-                              'A hospital is a place where a person goes to be healed when he or she is sick or injured. Doctors and nurses work at hospitals. Doctors make use of advanced medical technology to heal patients. ')
+                         
                         ],
                       )
                     ],
@@ -240,23 +247,29 @@ class CommonWidgets {
   Widget getTimeSlotText(String textSlotTime) {
     return Text(
       textSlotTime,
-      style: TextStyle(color: Colors.blueGrey, fontSize: fhbStyles.fnt_sessionTime),
+      style: TextStyle(
+          color: Colors.blueGrey, fontSize: fhbStyles.fnt_sessionTime),
     );
   }
 
-  List<Widget> getTimeSlots(SessionData dateSlotTimingsObj,List<DoctorIds> docs,int j) {
+  List<Widget> getTimeSlots(
+      SessionData dateSlotTimingsObj, List<DoctorIds> docs, int j) {
     List<Widget> rowTimeWidget = new List();
 
-      rowTimeWidget.add(SessionList(sessionData: dateSlotTimingsObj.sessions,));
+    rowTimeWidget.add(SessionList(
+      sessionData: dateSlotTimingsObj.sessions,
+    ));
 
     rowTimeWidget.add(getSizedBox(10));
 
     rowTimeWidget.add(Align(
       alignment: Alignment.center,
-      child: BookNowButton(docs: docs,i: j),
+      child: BookNowButton(docs: docs, i: j),
     ));
 
-    rowTimeWidget.add(SizedBoxWidget(height: 10,));
+    rowTimeWidget.add(SizedBoxWidget(
+      height: 10,
+    ));
     return rowTimeWidget;
   }
 
@@ -264,18 +277,16 @@ class CommonWidgets {
     return BoxDecoration(
       border: Border.all(
           width: 0.8, //
-          color: Colors.green
-          ),
+          color: Colors.green),
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
     );
   }
 
   getSpecificTimeSlots(List<Slots> dateTimingsSlots) {
     List<Widget> rowSpecificTimeSlots = new List();
-    String timeSlots ='';
+    String timeSlots = '';
 
     for (Slots dateTiming in dateTimingsSlots) {
-
       timeSlots = removeLastThreeDigits(dateTiming.startTime);
 
       rowSpecificTimeSlots.add(getSpecificSlots(timeSlots));
@@ -303,15 +314,15 @@ class CommonWidgets {
 
   Widget getSpecificSlots(String time) {
     return Container(
-          width: 35,
-          decoration: myBoxDecoration(),
-          child: Center(
-            child: Text(
-              time,
-              style:
+      width: 35,
+      decoration: myBoxDecoration(),
+      child: Center(
+        child: Text(
+          time,
+          style:
               TextStyle(fontSize: fhbStyles.fnt_date_slot, color: Colors.green),
-            ),
-          ),
+        ),
+      ),
     );
   }
 
@@ -345,7 +356,7 @@ class CommonWidgets {
   }
 
   Color getDoctorStatus(String s, int position) {
-    print(s + 'getDoctorStatus');
+    
     if (position % 2 == 0) {
       s = 'available';
     } else {
@@ -361,11 +372,23 @@ class CommonWidgets {
     }
   }
 
-  removeLastThreeDigits(String string){
-
-    String removedString='';
+  removeLastThreeDigits(String string) {
+    String removedString = '';
     removedString = string.substring(0, string.length - 3);
 
     return removedString;
+  }
+
+  getLanguages(DoctorIds docs) {
+    List<Widget> languageWidget = new List();
+    if (docs.languages != null && docs.languages.length > 0) {
+      for (Languages lang in docs.languages) {
+        languageWidget.add(getDoctorsAddress(lang.name + ','));
+      }
+    } else {
+      languageWidget.add(SizedBox());
+    }
+
+    return languageWidget;
   }
 }

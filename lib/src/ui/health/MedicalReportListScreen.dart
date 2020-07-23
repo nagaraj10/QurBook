@@ -15,6 +15,8 @@ import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 class MedicalReportListScreen extends StatefulWidget {
   final CompleteData completeData;
   final Function callBackToRefresh;
@@ -39,14 +41,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    /*  PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
+   
 
     super.initState();
   }
@@ -79,7 +74,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                   child: Text(
                     Constants.NO_DATA_MEDICAL_REPORT,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Poppins'),
+                    style: TextStyle(fontFamily: variable.font_poppins),
                   ),
                 ),
               ),
@@ -191,29 +186,20 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      /*  Icon(
-                        Icons.more_horiz,
-                        size: 20,
-                        color: Colors.grey,
-                      ),
-                      SizedBox(height: 20), */
+                   
                       IconButton(
-                          /* icon: ImageIcon(
-                            AssetImage('assets/icons/record_fav.png'),
-                            color:
-                                data.isBookmarked ? Colors.red : Colors.black,
-                          ), */
+                       
                           icon: data.isBookmarked
                               ? ImageIcon(
                                   AssetImage(
-                                      'assets/icons/record_fav_active.png'),
+                                      variable.icon_record_fav_active),
                                   //TODO chnage theme
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
+                                  AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
                                   size: 20,
                                 ),

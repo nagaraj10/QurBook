@@ -15,7 +15,8 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_query.dart' as query;
 
 class HealthReportListScreen extends StatefulWidget {
   final CompleteData completeData;
@@ -49,57 +50,13 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     _bookmarkRecordBloc = BookmarkRecordBloc();
 
     PreferenceUtil.init();
-    /*  PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return _getWidgetToDisplayHealthRecords(widget.completeData);
-  }
-
-  Widget getResponseWithHealthRecordListWidget() {
-    return StreamBuilder<ApiResponse<UserHealthResponseList>>(
-      stream: _healthReportListForUserBlock.healthReportStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<UserHealthResponseList>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return Center(
-                  child: SizedBox(
-                child: CircularProgressIndicator(),
-                width: 30,
-                height: 30,
-              ));
-              break;
-
-            case Status.ERROR:
-              return Text('Unable To load Tabs',
-                  style: TextStyle(color: Colors.red));
-              break;
-
-            case Status.COMPLETED:
-
-              return _getWidgetToDisplayHealthRecords(
-                  snapshot.data.data.response.data);
-              break;
-          }
-        } else {
-          return Container(
-            width: 0,
-            height: 0,
-          );
-        }
-      },
-    );
   }
 
   Widget _getWidgetToDisplayHealthRecords(CompleteData completeData) {
@@ -125,7 +82,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                   child: Text(
                     Constants.NO_DATA_PRESCRIPTION,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Poppins'),
+                    style: TextStyle(fontFamily: variable.font_poppins),
                   ),
                 ),
               ),
@@ -171,8 +128,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               children: <Widget>[
                 ClipOval(
                     child: data.metaInfo.doctor != null
-                       // ? getDoctorProfileImageWidget(data)
-                        ?Container(
+                        // ? getDoctorProfileImageWidget(data)
+                        ? Container(
                             width: 50,
                             height: 50,
                             color: const Color(fhbColors.bgColorContainer))
@@ -228,22 +185,16 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                       IconButton(
                           icon: data.isBookmarked
                               ? ImageIcon(
-                                  AssetImage(
-                                      'assets/icons/record_fav_active.png'),
+                                  AssetImage(variable.icon_record_fav_active),
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
+                                  AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
                                   size: 20,
                                 ),
-                          /* ImageIcon(
-                            AssetImage('assets/icons/record_fav.png'),
-                            color:
-                                data.isBookmarked ? Colors.red : Colors.black,
-                          ), */
                           onPressed: () {
                             new CommonUtil().bookMarkRecord(data, _refresh);
                           }),
@@ -252,8 +203,6 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                 ),
               ],
             )));
-
-   
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {
@@ -355,9 +304,10 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     String usrId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     return CachedNetworkImage(
       imageUrl: Constants.BASE_URL +
-          "mediameta/" +
+          query.qr_mediameta +
           usrId +
-          "/getRawMedia/" +
+          query.qr_slash +
+          query.qr_rawMedia +
           new CommonUtil().getMetaMasterId(data),
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(

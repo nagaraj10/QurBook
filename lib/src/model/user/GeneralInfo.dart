@@ -36,47 +36,49 @@ class GeneralInfo {
       this.profilePicThumbnail});
 
   GeneralInfo.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    countryCode = json['countryCode'];
-    phoneNumber = json['phoneNumber'];
-    email = json['email'];
-    gender = json['gender'];
-    bloodGroup = json['bloodGroup'];
-    createdBy = json['createdBy'];
-    isEmailVerified = json['isEmailVerified'];
-    isVirtualUser = json['isVirtualUser'];
-    isTempUser = json['isTempUser'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    dateOfBirth = json['dateOfBirth'];
-    profilePicThumbnail = json['profilePicThumbnail'] != null
-        ? new ProfilePicThumbnailMain.fromJson(json['profilePicThumbnail'])
+    name = json[parameters.strName];
+    countryCode = json[parameters.strCountryCode];
+    phoneNumber = json[parameters.strPhoneNumber];
+    email = json[parameters.strEmail];
+    gender = json[parameters.strGender];
+    bloodGroup = json[parameters.strbloodGroup];
+    createdBy = json[parameters.strCreatedBy];
+    isEmailVerified = json[parameters.strisEmailVerified];
+    isVirtualUser = json[parameters.strisVirtualUser];
+    isTempUser = json[parameters.strIstemper];
+    createdOn = json[parameters.strCreatedOn];
+    lastModifiedOn = json[parameters.strLastModifiedOn];
+    dateOfBirth = json[parameters.strdateOfBirth];
+    profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
+        ? new ProfilePicThumbnailMain.fromJson(
+            json[parameters.strprofilePicThumbnail])
         : null;
-         qualifiedFullName = json['qualifiedFullName'] != null
-        ? new QualifiedFullName.fromJson(json['qualifiedFullName'])
+    qualifiedFullName = json[parameters.strqualifiedFullName] != null
+        ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['countryCode'] = this.countryCode;
-    data['phoneNumber'] = this.phoneNumber;
-    data['email'] = this.email;
-    data['gender'] = this.gender;
-    data['bloodGroup'] = this.bloodGroup;
-    data['createdBy'] = this.createdBy;
-    data['isEmailVerified'] = this.isEmailVerified;
-    data['isVirtualUser'] = this.isVirtualUser;
-    data['isTempUser'] = this.isTempUser;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    data['dateOfBirth'] = this.dateOfBirth;
+    data[parameters.strName] = this.name;
+    data[parameters.strCountryCode] = this.countryCode;
+    data[parameters.strPhoneNumber] = this.phoneNumber;
+    data[parameters.strEmail] = this.email;
+    data[parameters.strGender] = this.gender;
+    data[parameters.strbloodGroup] = this.bloodGroup;
+    data[parameters.strCreatedBy] = this.createdBy;
+    data[parameters.strisEmailVerified] = this.isEmailVerified;
+    data[parameters.strisVirtualUser] = this.isVirtualUser;
+    data[parameters.strIstemper] = this.isTempUser;
+    data[parameters.strCreatedOn] = this.createdOn;
+    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
+    data[parameters.strdateOfBirth] = this.dateOfBirth;
     if (this.profilePicThumbnail != null) {
-      data['profilePicThumbnail'] = this.profilePicThumbnail.toJson();
+      data[parameters.strprofilePicThumbnail] =
+          this.profilePicThumbnail.toJson();
     }
-     if (this.qualifiedFullName != null) {
-      data['qualifiedFullName'] = this.qualifiedFullName.toJson();
+    if (this.qualifiedFullName != null) {
+      data[parameters.strqualifiedFullName] = this.qualifiedFullName.toJson();
     }
     return data;
   }

@@ -9,6 +9,7 @@ import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/exception/FetchException.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -16,6 +17,10 @@ import 'package:showcaseview/showcase_widget.dart';
 import 'CropAndRotateScreen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class TakePictureScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -107,7 +112,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     _context = context;
     return ShowCaseWidget(onFinish: () {
-      PreferenceUtil.saveString(Constants.KEY_SHOWCASE_CAMERASCREEN, 'true');
+      PreferenceUtil.saveString(
+          Constants.KEY_SHOWCASE_CAMERASCREEN, variable.strtrue);
     }, builder: Builder(builder: (context) {
       _cameraScreenContext = context;
       return Scaffold(
@@ -200,7 +206,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                             child: Center(
                               child: IconButton(
                                 icon: new ImageIcon(
-                                  AssetImage('assets/icons/attach.png'),
+                                  AssetImage(variable.icon_attach),
                                   color: Colors.white,
                                   size: 32,
                                 ),
@@ -215,7 +221,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     try {
                                       var image = await FilePicker.getFile(
                                           type: FileType.custom,
-                                          allowedExtensions: ['pdf']);
+                                          allowedExtensions: [variable.strpdf]);
                                       imagePaths.add(image.path);
                                       callDisplayPictureScreen(context);
                                     } catch (e) {
@@ -342,7 +348,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                   Constants.ATTACH_DESC,
                                   IconButton(
                                     icon: new ImageIcon(
-                                      AssetImage('assets/icons/attach.png'),
+                                      AssetImage(variable.icon_attach),
                                       color: Colors.white,
                                       size: 32,
                                     ),
@@ -421,8 +427,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       Constants.MULTI_IMG_DESC,
                                       new IconButton(
                                           icon: new ImageIcon(
-                                            AssetImage(
-                                                'assets/icons/img_multi.png'),
+                                            AssetImage(variable.icon_multi),
                                             size: 24,
                                             color: isMultipleImages
                                                 ? Colors.white
@@ -456,7 +461,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                   new IconButton(
                                       icon: new ImageIcon(
                                         AssetImage(
-                                            'assets/icons/img_single.png'),
+                                            variable.icon_image_single),
                                         color: isMultipleImages
                                             ? Colors.white54
                                             : Colors.white,
@@ -489,27 +494,23 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     }));
   }
 
-  Future<void> loadAssets() async {
+ Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();
-    String error = 'No Error Dectected';
 
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 300,
         enableCamera: true,
         selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
         materialOptions: MaterialOptions(
-          actionBarColor: "#6d35de",
-          //actionBarTitle: "Example App",
-          //allViewTitle: "All Photos",
+          actionBarColor: fhbColors.actionColor,
+         
           useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
+          selectCircleStrokeColor: fhbColors.colorBlack,
         ),
       );
-    } on Exception catch (e) {
-      error = e.toString();
-    }
+    } on FetchException catch (e) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -521,19 +522,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
       imagePaths.add(filePath);
     }
-  }
 
-  /*  void callDisplayPictureScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DisplayPictureScreen(imagePath: imagePaths),
-      ),
-    ).then((value) {
-      Navigator.pop(context);
+    setState(() {
+      images = resultList;
     });
-  } */
-
+  }
   void callDisplayPictureScreen(BuildContext context) {
     if (imagePaths.length > 0) {
       Navigator.push(
@@ -564,9 +557,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
     if (categoryName == Constants.STR_DEVICES) {
-      PreferenceUtil.saveString(Constants.stop_detecting, 'NO');
+      PreferenceUtil.saveString(Constants.stop_detecting, variable.strNO);
 
-      Navigator.pushNamed(_context, '/take-picture-screen-for-devices')
+      Navigator.pushNamed(_context, router.rt_TakePictureForDevices)
           .then((value) {
         Navigator.pop(_context);
       });
@@ -584,7 +577,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Future<void> getFilePath() async {
     List<File> filePaths = await FilePicker.getMultiFile(
       type: FileType.custom,
-      allowedExtensions: ['pdf'],
+      allowedExtensions: [variable.strpdf],
     );
 
     for (File file in filePaths) {

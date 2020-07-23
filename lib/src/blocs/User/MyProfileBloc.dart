@@ -5,6 +5,8 @@ import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/User/MyProfileRepository.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 class MyProfileBloc implements BaseBloc {
   MyProfileRepository _myProfileRepository;
   StreamController _myProfileController;
@@ -34,7 +36,7 @@ class MyProfileBloc implements BaseBloc {
   }
 
  Future<MyProfile> getMyProfileData(String profileKey) async {
-    myProfileInfoSink.add(ApiResponse.loading('Signing in user'));
+    myProfileInfoSink.add(ApiResponse.loading(variable.strGetProfileData));
     MyProfile profileResponse;
     try {
       profileResponse = await _myProfileRepository.getMyProfileInfo(profileKey);
@@ -47,7 +49,7 @@ class MyProfileBloc implements BaseBloc {
 
 
   Future<ProfileCompleteData> getCompleteProfileData(String profileKey) async {
-    myCompleteProfileInfoSink.add(ApiResponse.loading('Signing in user'));
+    myCompleteProfileInfoSink.add(ApiResponse.loading(variable.strGetProfileData));
     ProfileCompleteData profileCompleteData;
     try {
       profileCompleteData =

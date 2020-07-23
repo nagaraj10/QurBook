@@ -62,8 +62,6 @@ class _FeedbacksState extends State<Feedbacks> {
         cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
         materialOptions: MaterialOptions(
           actionBarColor: fhbColors.actionColor,
-          //actionBarTitle: "Example App",
-          //allViewTitle: "All Photos",
           useDetailsView: false,
           selectCircleStrokeColor: fhbColors.colorBlack,
         ),

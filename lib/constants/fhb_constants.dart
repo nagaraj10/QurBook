@@ -182,7 +182,7 @@ const String ADD_NEW_FAMILY_MEMBER = 'Add new family member';
 
 const String keyDoctor='doctor';
 const String keyHospital='hospital';
-const String keyLab='laborartory';
+const String keyLab='laboratory';
 const String keyFamily='keyFamilyrel';
 const String keyTheme='my_theme';
 const String keyPriColor='pri_color';
@@ -235,4 +235,21 @@ const String preferred_descrip =
 
 
 
+const String AddAppointment='Add Appointment';
+const String HospitalName='Hospital Name';
+const String hopspitalEmpty='Hospital name can\'t be empty';
+const String DoctorName='Doctor\'s Name';
+const String DoctorNameEmpty='Doctor name can\'t be empty';
+const String AppointmentDateTime='Appointment Date & Time';
+const String WrongTime='wrong time picked';
+const String Reason='Reason';
+const String Save='Save';
+
+const String keyDetectedClass='detectedClass';
+
+const String userID='bde140db-0ffc-4be6-b4c0-5e44b9f54535';
+const String countryCode='91';
+const String mobileNumber='9176117878';
+
+//for security purposes
 

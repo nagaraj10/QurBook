@@ -214,6 +214,9 @@ class CommonConstants {
 
   static String KEY_COUNTRYMETRICS = 'CountryMetrics';
 
+  static String STR_RHTYPE='Rh type';
+
+
   static final CommonConstants _instance = new CommonConstants.internal();
   static CountryMetrics countryMetrics;
   static UnitsMesurements unitsMeasurements;

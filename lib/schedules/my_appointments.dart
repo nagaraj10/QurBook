@@ -9,6 +9,10 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:random_color/random_color.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
+
 
 class MyAppointment extends StatefulWidget {
   static _MyAppointmentState of(BuildContext context) =>
@@ -44,7 +48,7 @@ class _MyAppointmentState extends State<MyAppointment> {
           return MaterialApp(
             home: Scaffold(
                 body: Center(
-              child: Text('Loading...'),
+              child: Text(variable.strLoadWait),
             )),
           );
         } else {
@@ -53,7 +57,7 @@ class _MyAppointmentState extends State<MyAppointment> {
             home: new Scaffold(
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  PageNavigator.goTo(context, '/add-appointments');
+                  PageNavigator.goTo(context, router.rt_AddAppointments);
                 },
                 child: Icon(Icons.add),
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
@@ -124,7 +128,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                               color: Colors.black)),
                                       SizedBox(height: 5),
                                       Text(
-                                        'Dr. ' +
+                                        variable.strDr +
                                             toBeginningOfSentenceCase(
                                                 model.dName),
                                         style: TextStyle(
@@ -180,7 +184,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                           child: Text(
                             Constants.NO_DATA_SCHEDULES,
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Poppins'),
+                            style: TextStyle(fontFamily: variable.font_poppins),
                           ),
                         ),
                       ),
@@ -192,8 +196,7 @@ class _MyAppointmentState extends State<MyAppointment> {
       },
       future: getProjectDetails(),
     );
-    /*    },
-    ); */
+   
   }
 
   getProjectDetails() async {

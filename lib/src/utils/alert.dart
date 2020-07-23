@@ -4,6 +4,8 @@
 ///
 
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class Alert {
   static Future displayAlertPlain(
@@ -26,7 +28,7 @@ class Alert {
     BuildContext context, {
     String title = '',
     String content = '',
-    String confirm = 'OK',
+    String confirm = variable.strOK,
     Function onPressed,
   }) {
     return showDialog(
@@ -53,8 +55,8 @@ class Alert {
     BuildContext context, {
     String title = '',
     String content = '',
-    String cancel = 'CANCEL',
-    String confirm = 'OK',
+    String cancel = variable.strCANCEL,
+    String confirm = variable.strOK,
     Function onPressedCancel,
     Function onPressedConfirm,
   }) {
@@ -93,7 +95,7 @@ class Alert {
     BuildContext context, {
     String title = '',
     String content = '',
-    String confirm = 'OKAY',
+    String confirm = variable.strOKAY,
     Function onPressedCancel,
     Function onPressedConfirm,
   }) {

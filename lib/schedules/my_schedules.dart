@@ -6,6 +6,10 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'my_appointments.dart';
 import 'my_reminders.dart';
 
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
 class MySchedule extends StatefulWidget {
   @override
   _MyScheduleState createState() => _MyScheduleState();
@@ -37,14 +41,11 @@ class _MyScheduleState extends State<MySchedule>
           bottom: TabBar(
             tabs: [
               Tab(
-                /*   icon: ImageIcon(
-                  AssetImage('assets/navicons/schedule.png'),
-                  size: 20,
-                ), */
-                text: 'Appointments',
+                
+                text: variable.strAppointments
               ),
               Tab(
-                text: 'Reminders',
+                text: variable.strRemainders,
               ),
             ],
             controller: _tabController,

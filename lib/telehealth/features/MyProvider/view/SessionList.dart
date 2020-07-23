@@ -49,7 +49,7 @@ class SessionListState extends State<SessionList>{
                       flex: 2,
                       child: GridViewNew(widget.sessionData[index].slots,index,(position){
                         selectedRow = position;
-                        print(selectedRow);
+                        
                         setState(() {});
                       },selectedRow)),
                 ],

@@ -8,6 +8,8 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -16,7 +18,6 @@ import 'package:provider/provider.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
 import '../../SearchWidget/view/SearchWidget.dart';
 
-import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
@@ -110,7 +111,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
           } else if (snapshot.hasError) {
             return new Text('Error: ${snapshot.error}');
           } else {
-            print('check' + snapshot.data.toString());
+            
             return Container(
               margin: EdgeInsets.only(left: 5, top: 12),
               child: Column(

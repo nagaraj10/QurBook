@@ -20,10 +20,10 @@ class Sharedbyme {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.profileData != null) {
-      data['profileData'] = this.profileData.toJson();
+      data[parameters.strprofileData] = this.profileData.toJson();
     }
     if (this.linkedData != null) {
-      data['linkedData'] = this.linkedData.toJson();
+      data[parameters.strlinkedData] = this.linkedData.toJson();
     }
     return data;
   }

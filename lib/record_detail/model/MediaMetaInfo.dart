@@ -1,4 +1,7 @@
 import 'package:myfhb/record_detail/model/UpdateMediaResponse.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/fhb_query.dart' as query;
 
 class MediaMetaInfo {
   String id;
@@ -29,38 +32,38 @@ class MediaMetaInfo {
       this.lastModifiedBy});
 
   MediaMetaInfo.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    metaTypeId = json['metaTypeId'];
-    userId = json['userId'];
-    metaInfo = json['metaInfo'] != null
-        ? new MetaInfo.fromJson(json['metaInfo'])
+    id = json[parameters.strId];
+    metaTypeId = json[parameters.strmetaTypeId];
+    userId = json[parameters.struserId];
+    metaInfo = json[parameters.strmetaInfo] != null
+        ? new MetaInfo.fromJson(json[parameters.strmetaInfo])
         : null;
-    isActive = json['isActive'];
-    isVisible = json['isVisible'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-    isBookmarked = json['isBookmarked'];
-    isDraft = json['isDraft'];
-    lastModifiedBy = json['lastModifiedBy'];
+    isActive = json[parameters.strIsActive];
+    isVisible = json[parameters.strisVisible];
+    createdBy = json[parameters.strCreatedBy];
+    createdOn = json[parameters.strCreatedOn];
+    lastModifiedOn = json[parameters.strLastModifiedOn];
+    isBookmarked = json[parameters.strIsBookmarked];
+    isDraft = json[parameters.strisDraft];
+    lastModifiedBy = json[parameters.strlastModifiedBy];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['metaTypeId'] = this.metaTypeId;
-    data['userId'] = this.userId;
+    data[parameters.strId] = this.id;
+    data[parameters.strmetaTypeId] = this.metaTypeId;
+    data[parameters.struserId] = this.userId;
     if (this.metaInfo != null) {
-      data['metaInfo'] = this.metaInfo.toJson();
+      data[parameters.strmetaInfo] = this.metaInfo.toJson();
     }
-    data['isActive'] = this.isActive;
-    data['isVisible'] = this.isVisible;
-    data['createdBy'] = this.createdBy;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    data['isBookmarked'] = this.isBookmarked;
-    data['isDraft'] = this.isDraft;
-    data['lastModifiedBy'] = this.lastModifiedBy;
+    data[parameters.strIsActive] = this.isActive;
+    data[parameters.strisVisible] = this.isVisible;
+    data[parameters.strCreatedBy] = this.createdBy;
+    data[parameters.strCreatedOn] = this.createdOn;
+    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
+    data[parameters.strIsBookmarked] = this.isBookmarked;
+    data[parameters.strisDraft] = this.isDraft;
+    data[parameters.strlastModifiedBy] = this.lastModifiedBy;
     return data;
   }
 }

@@ -11,6 +11,8 @@ const String strEmail = 'email';
 const String strCountryCode = 'countryCode';
 const String strPhoneNumber = 'phoneNumber';
 const String strGender = 'gender';
+const String strGenderID = 'genderId';
+const String strdob='dob';
 const String strName = 'name';
 const String strIstemper = 'isTempUser';
 const String strIsEmailVerified = 'isEmailVerified';
@@ -172,3 +174,88 @@ const String strhospitalIds='hospitalIds';
 const String strdoctorPatientMappingId='doctorPatientMappingId';
 const String strisVisible='isVisible';
 const String strlastModifiedBy='lastModifiedBy';
+
+const String strDate='date';
+const String strDoctorId='doctorId';
+
+const String strSourceId='sourceId';
+const String strEntityId='entityId';
+const String strRoleId='roleId';
+const String strSrcIdVal='e13019a4-1446-441b-8af1-72c40c725548';
+const String strEntityIdVal='28858877-4710-4dd3-899f-0efe0e9255db';
+const String strRoleIdVal='285bbe41-3030-4b0e-b914-00e404a77032';
+const String strotp='otp';
+const String strOperation='operation';
+const String strverification='verificationCode';
+const String strfileType='fileType';
+const String stroid='oid';
+const String strpassword='password';
+
+const String strhosname='hosname';
+const String strdocname='docname';
+const String strappdate='appdate';
+const String strapptime='apptime';
+const String strreason='reason';
+
+const String strtitle='title';
+const String strnotes='notes';
+const String strdate='date';
+const String strtime='time';
+const String strinterval='interval';
+
+const String strSections='sections';
+const String strfile='file';
+const String strIsClose='isClose';
+
+
+const String strAuthtoken='authToken';
+const String strSourceName='sourceName';
+const String strMemoRawTxtVal='memoTextRaw';
+
+
+const String strTerms='terms';
+const String strplaceId='placeId';
+const String strplace_id='place_id';
+const String strformatted_address='formatted_address';
+const String strformatted_phone_number='formatted_phone_number';
+const String strrating='rating';
+const String strvicinity='vicinity';
+const String strgeometry='geometry';
+const String strlocation='location';
+const String strlat='lat';
+const String strlng='lng';
+const String strpredictions='predictions';
+const String strresult='result';
+const String strresults='results';
+
+const String strentityCode='entityCode';
+const String strgoFhbCode='goFhbCode';
+const String strlabPatientMappingId='labPatientMappingId';
+const String strcityId='cityId';
+const String strstateId='stateId';
+const String strpinCode='pinCode';
+const String strisTelehealthEnabled='isTelehealthEnabled';
+const String strisMCIVerified='isMCIVerified';
+const String strlanguages='languages';
+const String strprofessionalDetails='professionalDetails';
+const String strfees='fees';
+const String strlanguageId='languageId';
+const String straboutMe='aboutMe';
+const String strqualificationInfo='qualificationInfo';
+const String strmedicalCouncilInfo='medicalCouncilInfo';
+const String strspecialty='specialty';
+const String strclinicName='clinicName';
+
+const String strdegree='degree';
+const String struniversity='university';
+const String strconsulting='consulting';
+const String strfollowup='followup';
+const String strcancellation='cancellation';
+const String strdays='days';
+const String strfee='fee';
+const String strfollowupIn='followupIn';
+const String strfollowupValue='followupValue';
+const String strfollowupType='followupType';
+const String strdestinationId='destinationId';
+
+

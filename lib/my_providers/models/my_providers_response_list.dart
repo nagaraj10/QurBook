@@ -94,14 +94,14 @@ class MyProvidersData {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.doctorsModel != null) {
-      data['doctorIds'] = this.doctorsModel.map((v) => v.toJson()).toList();
+      data[parameters.strdoctorIds] = this.doctorsModel.map((v) => v.toJson()).toList();
     }
     if (this.laboratoryModel != null) {
-      data['laboratoryIds'] =
+      data[parameters.strlaboratoryIds] =
           this.laboratoryModel.map((v) => v.toJson()).toList();
     }
     if (this.hospitalsModel != null) {
-      data['hospitalIds'] = this.hospitalsModel.map((v) => v.toJson()).toList();
+      data[parameters.strhospitalIds] = this.hospitalsModel.map((v) => v.toJson()).toList();
     }
     return data;
   }

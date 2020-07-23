@@ -6,6 +6,8 @@ import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/Media/MediaTypeRepository.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 
 class MediaTypeBlock implements BaseBloc {
   MediaTypeRepository _mediaTypeRepository;
@@ -28,7 +30,7 @@ class MediaTypeBlock implements BaseBloc {
   }
 
   getMediTypes() async {
-    mediaTypeSink.add(ApiResponse.loading('Signing in user'));
+    mediaTypeSink.add(ApiResponse.loading(variable.strgetMediaTypes));
     try {
       MediaTypesResponse mediaTypesResponse =
           await _mediaTypeRepository.getMediaType();

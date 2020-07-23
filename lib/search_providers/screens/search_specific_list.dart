@@ -24,6 +24,11 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 
 export '../models/hospital_list_response.dart';
 
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+import 'package:myfhb/constants/router_variable.dart' as router;
+
 class SearchSpecificList extends StatefulWidget {
   SearchArguments arguments;
 
@@ -63,7 +68,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
 
     value = _textFieldController.text.toString();
-    
+
     if (value != '') {
       _doctorsListBlock.getDoctorsList(
           _textFieldController.text.toString() == null
@@ -81,7 +86,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       appBar: AppBar(
           elevation: 0,
           flexibleSpace: GradientAppBar(),
-        
           leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -91,7 +95,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               Navigator.pop(context, [1]);
             },
           ),
-          title: Text('${widget.arguments.searchWord} Search')),
+          title: Text('${widget.arguments.searchWord}' + variable.strSearch)),
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
       // until the controller has finished initializing.
@@ -121,7 +125,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     Icons.search,
                     color: Colors.black54,
                   ),
-                  hintText: 'Search',
+                  hintText: variable.strSearch,
                   hintStyle: TextStyle(color: Colors.black54),
                   border: InputBorder.none,
                 ),
@@ -156,7 +160,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getResponseFromApiWidgetForDoctors() {
-
     return StreamBuilder<ApiResponse<DoctorsListResponse>>(
       stream: _doctorsListBlock.doctorsStream,
       builder:
@@ -168,7 +171,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
             return Center(
                 child: SizedBox(
-              child: CircularProgressIndicator(backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),),
+              child: CircularProgressIndicator(
+                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+              ),
               width: 30,
               height: 30,
             ));
@@ -216,7 +221,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.ERROR:
             rebuildBlockObject();
-            return Text('Unable To load Tabs',
+            return Text(variable.strNoLoadtabls,
                 style: TextStyle(color: Colors.red));
             break;
 
@@ -256,7 +261,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.ERROR:
             rebuildBlockObject();
-            return Text('Unable To load Tabs',
+            return Text(variable.strNoLoadtabls,
                 style: TextStyle(color: Colors.red));
             break;
 
@@ -305,7 +310,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text('Add',
+                    Text(variable.Add,
                         style: new TextStyle(
                           color: ColorUtils.blackcolor,
                           fontSize: 15.0,
@@ -353,7 +358,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         ),
         child: new Center(
           child: new Text(
-            'Add',
+            variable.Add,
             style: new TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -370,7 +375,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   Widget getAllDatasInDoctorsList(List<DoctorsData> data) {
-    
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
@@ -393,7 +397,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ))
           : Container(
               child: Center(
-                child: Text('No Data Available'),
+                child: Text(variable.strNodata),
               ),
               color: Color(fhbColors.bgColorContainer),
             ),
@@ -424,7 +428,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ))
           : Container(
               child: Center(
-                child: Text('No Data Available'),
+                child: Text(variable.strNodata),
               ),
               color: Color(fhbColors.bgColorContainer),
             ),
@@ -455,15 +459,21 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ))
           : Container(
               child: Center(
-                child: Text('No Data Available'),
+                child: Text(variable.strNodata),
               ),
               color: Color(fhbColors.bgColorContainer),
             ),
     );
   }
 
-  Widget getCardToDisplaySearchList(String name, String address, String id,
-      String logo, DoctorsData data, HospitalData hospitalData, LabData labData) {
+  Widget getCardToDisplaySearchList(
+      String name,
+      String address,
+      String id,
+      String logo,
+      DoctorsData data,
+      HospitalData hospitalData,
+      LabData labData) {
     return GestureDetector(
         child: Padding(
             padding:
@@ -516,8 +526,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             passdataToNextScreen(
                 data.name, context, data, hospitalData, labData);
           }
-        }
-        );
+        });
   }
 
   getCorrespondingImageWidget(String id) {
@@ -525,15 +534,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   }
 
   void passDoctorsValue(DoctorsData doctorData, BuildContext context) {
-    Navigator.of(context).pop({'doctor': json.encode(doctorData)});
+    Navigator.of(context).pop({Constants.keyDoctor: json.encode(doctorData)});
   }
 
   void passHospitalValue(HospitalData hospitaData, BuildContext context) {
-    Navigator.of(context).pop({'hospital': json.encode(hospitaData)});
+    Navigator.of(context)
+        .pop({Constants.keyHospital: json.encode(hospitaData)});
   }
 
   void passLaboratoryValue(LabData laboratoryData, BuildContext context) {
-    Navigator.of(context).pop({'laborartory': json.encode(laboratoryData)});
+    Navigator.of(context).pop({Constants.keyLab: json.encode(laboratoryData)});
   }
 
   getDataToView(String name, String address, String id) {
@@ -577,7 +587,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           );
         } else {
           return ImageIcon(
-            AssetImage('assets/icons/stetho.png'),
+            AssetImage(variable.icon_stetho),
             size: 40,
             color: Color(CommonUtil().getMyPrimaryColor()),
           );
@@ -601,7 +611,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     if (widget.arguments.searchWord == CommonConstants.doctors) {
       Navigator.pushNamed(
         context,
-        '/add-providers',
+        router.rt_AddProvider,
         arguments: AddProvidersArguments(
             data: data, searchKeyWord: CommonConstants.doctors, hasData: true),
       ).then((value) {
@@ -612,7 +622,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     } else if (widget.arguments.searchWord == CommonConstants.hospitals) {
       Navigator.pushNamed(
         context,
-        '/add-providers',
+        router.rt_AddProvider,
         arguments: AddProvidersArguments(
             hospitalData: hospitalData,
             searchKeyWord: CommonConstants.hospitals,
@@ -625,7 +635,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     } else {
       Navigator.pushNamed(
         context,
-        '/add-providers',
+        router.rt_AddProvider,
         arguments: AddProvidersArguments(
             labData: labData,
             searchKeyWord: CommonConstants.labs,
@@ -637,11 +647,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       });
     }
   }
+
   void _addBtnTapped() {
-    Navigator.pushNamed(context, '/add-providers',
+    Navigator.pushNamed(context, router.rt_AddProvider,
             arguments: AddProvidersArguments(
                 searchText: value,
-                fromClass: widget.arguments.fromClass == 'add_providers'
+                fromClass: widget.arguments.fromClass == router.cn_AddProvider
                     ? widget.arguments.fromClass
                     : CommonConstants.serach_specific_list,
                 searchKeyWord: widget.arguments.searchWord ==
@@ -660,24 +671,22 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 : passLaboratoryValueSample(results, context);
       }
     });
-    //  );
   }
 
   passDoctorsValueSample(dynamic results, BuildContext context) {
-    DoctorsData jsonDecodeForDoctor = results['doctor'];
+    DoctorsData jsonDecodeForDoctor = results[Constants.keyDoctor];
 
     passDoctorsValue(jsonDecodeForDoctor, context);
   }
 
   passHospitalValueSample(dynamic results, BuildContext context) {
-    HospitalData jsonDecodeForDoctor = results['hospital'];
+    HospitalData jsonDecodeForDoctor = results[Constants.keyHospital];
 
     passHospitalValue(jsonDecodeForDoctor, context);
   }
 
   passLaboratoryValueSample(dynamic results, BuildContext context) {
-    
-    LabData jsonDecodeForDoctor = results['laborartory'];
+    LabData jsonDecodeForDoctor = results[Constants.keyLab];
 
     passLaboratoryValue(jsonDecodeForDoctor, context);
   }

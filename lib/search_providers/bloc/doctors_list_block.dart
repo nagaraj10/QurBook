@@ -6,6 +6,9 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import '../models/doctors_list_response.dart';
 import '../services/doctors_list_repository.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 class DoctorsListBlock implements BaseBloc {
   DoctorsListRepository _doctorsListRepository;
   StreamController _doctorsListController;
@@ -29,7 +32,7 @@ class DoctorsListBlock implements BaseBloc {
   }
 
   getDoctorsList(String param) async {
-    doctorsListSink.add(ApiResponse.loading('Signing in user'));
+    doctorsListSink.add(ApiResponse.loading(variable.strGetDoctorsList));
     try {
       DoctorsListResponse userHealthResponseList =
           await _doctorsListRepository.getDoctorsListFromSearch(param);
@@ -41,7 +44,7 @@ class DoctorsListBlock implements BaseBloc {
 
   Future<DoctorsListResponse> getDoctorObjUsingId(String doctorsId) async {
     DoctorsListResponse doctorsListResponse;
-    doctorsListSink.add(ApiResponse.loading('Signing in user'));
+    doctorsListSink.add(ApiResponse.loading(variable.strGetDoctorById));
     try {
       doctorsListResponse =
           await _doctorsListRepository.getDoctorUsingId(doctorsId);

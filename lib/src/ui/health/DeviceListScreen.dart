@@ -12,6 +12,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class DeviceListScreen extends StatefulWidget {
   final CompleteData completeData;
@@ -38,15 +39,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    /*  PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
-
+ 
     super.initState();
   }
 
@@ -79,7 +72,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     child: Text(
                       Constants.NO_DATA_DEVICES,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontFamily: 'Poppins'),
+                      style: TextStyle(fontFamily: variable.font_poppins),
                     ),
                   ),
                 ),
@@ -122,40 +115,6 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
             ),
             child: Row(
               children: <Widget>[
-                /*  Expanded(
-              flex: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Container(
-                    color: Colors.grey[200],
-                    width: 50.0,
-                    height: 50.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          new FHBUtils().convertMonthFromString(data.createdOn),
-                          style: TextStyle(color: Colors.black54),
-                        ),
-                        Text(
-                            new FHBUtils()
-                                .convertDateFromString(data.createdOn),
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500))
-                      ],
-                    ),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                ],
-              ),
-            ), */
-
                 CircleAvatar(
                   radius: 25,
                   backgroundColor: const Color(fhbColors.bgColorContainer),
@@ -167,33 +126,6 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     width: 25,
                     color: Color(new CommonUtil().getMyPrimaryColor()),
                   ),
-
-                  /* FadeInImage(
-                      height: 30,
-                      width: 30,
-                      placeholder: NetworkImage(
-                          'https://healthbook.vsolgmi.com/hb/api/v3/static/logos/categories/device-c.png'),
-                      image: NetworkImage(
-                        data.metaInfo.mediaTypeInfo.url != null
-                            ? data.metaInfo.mediaTypeInfo.url
-                            : Constants.BASERURL +
-                                data.metaInfo.mediaTypeInfo.logo,
-                      )), */
-
-                  /*  FadeInImage(
-                      height: 30,
-                      width: 30,
-                      placeholder: NetworkImage(
-                          'https://healthbook.vsolgmi.com/hb/api/v3/static/logos/categories/device-c.png'),
-                      image: NetworkImage(
-                        data.metaInfo.mediaTypeInfo.url,
-                      )), */
-                  /*  child: Image.network(
-                  data.metaInfo.mediaTypeInfo.url,
-                  width: 30,
-                  height: 30,
-                  color: Colors.white,
-                ):Image.network('https://healthbook.vsolgmi.com/hb/api/v3/static/logos/categories/device-c.png') */
                 ),
                 SizedBox(
                   width: 20,
@@ -213,11 +145,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      //SizedBox(height: 10.0),
                       Text(
-                        /*  data.metaInfo.fileName != null
-                        ? data.metaInfo.fileName
-                        : '', */
                         new FHBUtils().getFormattedDateString(data.createdOn),
                         style: TextStyle(
                             color: Colors.grey[400],
@@ -229,48 +157,33 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     ],
                   ),
                 ),
-                /*  Expanded(
-              flex: 1,
-              child: Column(
-                children: <Widget>[getDocumentImageWidget(data)],
-              ),
-            ), */
+
                 Expanded(
                   flex: 1,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      /* Icon(
-                        Icons.more_horiz,
-                        color: Colors.grey,
-                        size: 20,
-                      ),
-                      SizedBox(height: 10), */
+                     
                       IconButton(
                           icon: data.isBookmarked
                               ? ImageIcon(
                                   AssetImage(
-                                      'assets/icons/record_fav_active.png'),
+                                      variable.icon_record_fav_active),
                                   //TODO chnage theme
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
+                                  AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
                                   size: 20,
                                 ),
                           onPressed: () {
                             new CommonUtil().bookMarkRecord(data, _refresh);
                           }),
-                      /*  data.metaInfo.hasVoiceNotes
-                          ? Icon(
-                              Icons.audiotrack,
-                              color: Colors.grey,
-                            )
-                          : Container() */
+                    
                     ],
                   ),
                 ),
@@ -300,7 +213,6 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
               ));
         }
 
-        ///load until snapshot.hasData resolves to true
       },
     );
   }

@@ -38,6 +38,9 @@ export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
 
 class MyRecordsClone extends StatefulWidget {
   @override
@@ -102,7 +105,7 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
   @override
   Widget build(BuildContext context) {
     return ShowCaseWidget(onFinish: () {
-      PreferenceUtil.saveString(Constants.KEY_SHOWCASE_HOMESCREEN, 'true');
+      PreferenceUtil.saveString(Constants.KEY_SHOWCASE_HOMESCREEN, variable.strtrue);
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return getCompleteWidgets();
@@ -187,9 +190,12 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
 
     categoryDataList = new CommonUtil().getAllCategoryList(data);
     completeData = new CommonUtil().getMediaTypeInfo(data);
+    print('getWidgetForSearchedMedia');
     PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, completeData);
     PreferenceUtil.saveCategoryList(
         Constants.KEY_SEARCHED_CATEGORY, categoryDataList);
+
+        initPosition=0;
 
     return getMainWidgets(categoryDataList);
   }
@@ -278,6 +284,7 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
         completeData =
             PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST);
       }
+      print('end of getMainWidgets');
     }
     return CustomTabView(
       initPosition: initPosition,
@@ -335,7 +342,7 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
                 autofocus: false,
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(2),
-                  hintText: "Search your records",
+                  hintText: variable.strSearchRecords,
                   prefixIcon: Icon(
                     Icons.search,
                     color: Colors.black54,
@@ -697,17 +704,17 @@ class _CustomTabsState extends State<CustomTabView>
                               .then((value) {
                             if (categoryName == STR_DEVICES) {
                               PreferenceUtil.saveString(
-                                  Constants.stop_detecting, 'NO');
+                                  Constants.stop_detecting, variable.strNO);
                               PreferenceUtil.saveString(
-                                  Constants.stop_detecting, 'NO');
+                                  Constants.stop_detecting, variable.strNO);
 
                               Navigator.pushNamed(context,
-                                      '/take-picture-screen-for-devices')
+                                      router.rt_TakePictureForDevices)
                                   .then((value) {
                               });
                             } else {
                               Navigator.pushNamed(
-                                      context, '/take-picture-screen')
+                                      context, router.rt_TakePictureScreen)
                                   .then((value) {
                               });
                             }
@@ -948,7 +955,7 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
                     break;
 
                   case Status.ERROR:
-                    return Text('Unable To load Tabs',
+                    return Text(variable.strNoLoadtabls,
                         style: TextStyle(color: Colors.red));
                     break;
 
@@ -998,8 +1005,8 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
     List<Widget> tabWidgetList = new List();
     //data.sort((a, b) => a.categoryName.compareTo(b.categoryName));
     for (CategoryData dataObj in data) {
-      if (dataObj
-          .isDisplay /*&& dataObj.categoryName != Constants.STR_FEEDBACK*/) {
+    /* if (dataObj
+          .isDisplay && dataObj.categoryName != Constants.STR_FEEDBACK) {*/
         if (dataObj.categoryDescription ==
             CommonConstants.categoryDescriptionPrescription) {
           tabWidgetList.add(new HealthReportListScreen(
@@ -1067,7 +1074,7 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
         else {
           tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
         }
-      }
+     /* }*/
     }
     return tabWidgetList;
   }
@@ -1078,9 +1085,7 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
       if (widget.onPositionChange is ValueChanged<int>) {
         widget.onPositionChange(_currentPosition);
 
-        /* getDataForParticularLabel(
-            categoryDataList.elementAt(_currentPosition).categoryName,
-            categoryDataList.elementAt(_currentPosition).id);*/
+      
         try {
           _currentPosition = controller.index;
 
@@ -1110,7 +1115,6 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
 
   List<Widget> getAllTabsToDisplayInHeader(List<CategoryData> data) {
     List<Widget> tabWidgetList = new List();
-    //tabWidgetList.add(SizedBox(height: 5));
 
     data.sort((a, b) {
       return a.categoryDescription
@@ -1118,15 +1122,11 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
           .compareTo(b.categoryDescription.toLowerCase());
     });
 
-    /* data.sort((a, b) {
-      return a.categoryDescription
-          .toLowerCase()
-          .compareTo(b.categoryDescription.toLowerCase());
-    }); */
+   
 
     for (CategoryData dataObj in data) {
-      if (dataObj
-          .isDisplay /*&& dataObj.categoryName != Constants.STR_FEEDBACK*/) {
+     /* if (dataObj
+          .isDisplay ) {*/
         tabWidgetList.add(Column(children: [
           Padding(padding: EdgeInsets.only(top: 10)),
          dataObj.logo!=null? Image.network(
@@ -1143,7 +1143,7 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
           )),
           Padding(padding: EdgeInsets.only(top: 10)),
         ]));
-      }
+     /* }*/
     }
 
     return tabWidgetList;

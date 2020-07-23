@@ -27,3 +27,62 @@ const String qr_sortCateories='?sortBy=categoryName.asc&offset=0&limit=10';
 const String qr_medicalPreferences='medicalPreferences';
 const String qr_doctorpatientmapping='doctorpatientmapping/';
 const String qr_updateDefaultProvider='updateDefaultProvider';
+const String qr_isOriginalPicRequired='isOriginalPicRequired=false';
+const String qr_isOriginalPicRequiredTrue='isOriginalPicRequired=true';
+
+const String qr_sendVerificationMail='/sendVerificationMail';
+const String qr_sortByQ='?sortBy=';
+
+//modified by parvathi 
+const String qr_doctorslot='doctorSlots/';
+const String qr_availability='getAvailability';
+const String qr_slot_date='2020-07-21';
+const String qr_docId_val='c99b732e-d630-4301-b3fa-e7c800b891b4';
+
+const String qr_deletemedia='deletemeta/';
+const String qr_deletemaster='deletemaster/';
+
+const String qr_SearchBy='search?';
+const String qr_sortBy='sortBy=';
+const String qr_offset='offset=';
+const String qr_limit='limit=';
+const String qr_And='&';
+const String qr_name_asc='name.asc';
+const String qr_hopitals='hospitals/';
+const String qr_lab='laboratories/';
+
+const String qr_rawMedia='getRawMedia/';
+
+const String qr_generalInfo='generalInfo';
+const String qr_gender='gender=';
+const String qr_bloodgroup='bloodGroup=';
+const String qr_dateOfBirth='dateOfBirth=';
+const String qr_name='name';
+const String qr_firstName='firstName=';
+const String qr_middleName='middleName=';
+const String qr_lastname='lastName=';
+const String qr_email='email=';
+const String qr_DSlash='||';
+const String qr_OSlash='|';
+
+const String qr_category_asc='categoryName.asc';
+const String qr_getprofilepic='getprofilepic/';
+const String qr_savedmedia='savemediameta/';
+const String qr_ai='ai/';
+const String qr_savehealth='saveHealthRecord/';
+const String qr_mediamaster='mediamaster/';
+const String qr_savedmediamaster='savemediamaster/';
+const String qr_move='/move';
+const String qr_updatemediameta='updatemediameta/';
+const String qr_mediaTypes='mediaTypes/';
+
+const String qr_authentication='authentication';
+const String qr_auth='auth';
+const String qr_signin='signin';
+const String qr_verifyotp='verifyotp';
+const String qr_generateotp='generateOTP';
+const String qr_signup='signup';
+const String qr_signout='signout';
+const String qr_verifymail='verifyMail';
+
+

@@ -17,6 +17,9 @@ import 'package:provider/provider.dart';
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 var firstCamera;
 List<CameraDescription> listOfCameras;
 
@@ -75,19 +78,19 @@ Future<void> main() async {
 
 void saveToPreference() async {
   PreferenceUtil.saveString(
-          Constants.KEY_USERID_MAIN, 'bde140db-0ffc-4be6-b4c0-5e44b9f54535')
+          Constants.KEY_USERID_MAIN, Constants.userID)
       .then((onValue) {
     PreferenceUtil.saveString(
-            Constants.KEY_USERID, 'bde140db-0ffc-4be6-b4c0-5e44b9f54535')
+            Constants.KEY_USERID, Constants.userID)
         .then((onValue) {
       PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.Auth_token)
           .then((onValue) {
-        PreferenceUtil.saveString(Constants.MOB_NUM, '9176117878')
+        PreferenceUtil.saveString(Constants.MOB_NUM, Constants.mobileNumber)
             .then((onValue) {
-          PreferenceUtil.saveString(Constants.COUNTRY_CODE, '91')
+          PreferenceUtil.saveString(Constants.COUNTRY_CODE, Constants.countryCode)
               .then((onValue) {
             PreferenceUtil.saveInt(
-                    CommonConstants.KEY_COUNTRYCODE, int.parse('91'))
+                    CommonConstants.KEY_COUNTRYCODE, int.parse(Constants.countryCode))
                 .then((value) {});
           });
         });
@@ -116,10 +119,10 @@ class MyFHB extends StatefulWidget {
 
 class _MyFHBState extends State<MyFHB> {
   int myPrimaryColor = new CommonUtil().getMyPrimaryColor();
-  static const platform = const MethodChannel('flutter.native/versioncode');
-  String _responseFromNative = 'wait! Its loading';
+  static const platform = variable.version_platform;
+  String _responseFromNative = variable.strWaitLoading;
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  static const secure_platform = const MethodChannel('flutter.native/security');
+  static const secure_platform = variable.security;
 
   @override
   void initState() {
@@ -131,7 +134,7 @@ class _MyFHBState extends State<MyFHB> {
   @override
   Widget build(BuildContext context) {
     var nsSettingsForAndroid =
-        new AndroidInitializationSettings('@mipmap/ic_launcher');
+        new AndroidInitializationSettings(variable.strLauncher);
     var nsSettingsForIOS = new IOSInitializationSettings();
     var platform =
         new InitializationSettings(nsSettingsForAndroid, nsSettingsForIOS);
@@ -156,7 +159,7 @@ class _MyFHBState extends State<MyFHB> {
         child: MaterialApp(
           title: Constants.APP_NAME,
           theme: ThemeData(
-            fontFamily: 'Poppins',
+            fontFamily: variable.font_poppins,
             primaryColor: Color(myPrimaryColor),
             accentColor: Colors.white,
           ),
@@ -170,10 +173,10 @@ class _MyFHBState extends State<MyFHB> {
   Future<void> gettingResponseFromNative() async {
     String res = '';
     try {
-      final String result = await platform.invokeMethod('getAppVersion');
+      final String result = await platform.invokeMethod(variable.strGetAppVersion);
       res = result;
     } on PlatformException catch (e) {
-      res = "Failed to Invoke: '${e.message}'.";
+      res = variable.strFailed+"'${e.message}'.";
     }
 
     setState(() {
@@ -184,11 +187,11 @@ class _MyFHBState extends State<MyFHB> {
 
   Future<void> showSecurityWall() async {
     try {
-      final int RESULT_CODE = await secure_platform.invokeMethod('secureMe');
+      final int RESULT_CODE = await secure_platform.invokeMethod(variable.strSecure);
       switch (RESULT_CODE) {
         case 1003:
           //todo authorized unsuccessfull
-          SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop');
+          SystemChannels.platform.invokeMethod<void>(variable.strpop);
           break;
       }
     } on PlatformException catch (e, s) {}

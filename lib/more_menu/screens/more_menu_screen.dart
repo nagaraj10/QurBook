@@ -249,7 +249,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                             child: Padding(
                               padding: EdgeInsets.all(5),
                               child: Image.asset(
-                                variable.mayaAssets[index] + '.png',
+                                variable.mayaAssets[index] + variable.strExtImg,
                                 height: 50,
                                 width: 50,
                               ),

@@ -206,7 +206,7 @@ class CommonUtil {
 
   String getCurrentDate() {
     var now = new DateTime.now();
-    return new DateFormat("dd/MM/yyyy").format(now);
+    return new DateFormat(variable.strDateFormatDay).format(now);
   }
 
   Future<DateTime> _selectDate(BuildContext context) async {
@@ -242,24 +242,9 @@ class CommonUtil {
         return imageList;
       }
 
-      /* return FutureBuilder(
-        future: _healthReportListForUserBlock
-            .getDocumentImage(new CommonUtil().getMetaMasterId(data)),
-        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-          if (snapshot.hasData) {
-            return Image.memory(
-              snapshot.data,
-            );
-          } else {
-            return Container();
-          }
-        },
-      );*/
+   
     } else {
-      /* return Container(
-        width: 0,
-        height: 0,
-      );*/
+     
 
       return new List();
     }
@@ -291,29 +276,7 @@ class CommonUtil {
     return mediaDataObj;
   }
 
-  /*  Future<void> writeToFile(List<MediaMasterIds> mediaMasterIds) async {
-    HealthReportListForUserBlock _healthReportsMedia =
-        HealthReportListForUserBlock();
 
-    mediaMasterIds.forEach((item) {
-      writeFileToLocal(_healthReportsMedia.getDocumentImage(item.id));
-    });
-
-    //final buffer = data.buffer;
-
-    /* return new File(path).writeAsBytes(
-              buffer.asUint8List(data.offsetInBytes, data.lengthInBytes)); */
-  }
-
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-    return directory.path;
-  }
-
-  Future<void> writeFileToLocal(Future documentImage) async {
-    final String path = await _localPath;
-    return new File(path).writeAsBytes(documentImage as);
-  } */
 
   static Future<void> showLoadingDialog(
       BuildContext context, GlobalKey key, String msgToDisplay) async {
@@ -596,11 +559,14 @@ class CommonUtil {
 
     for (Data dataObj in data) {
       List<MediaMasterIds> mediaMasterIdsList = new List();
+      if(dataObj.mediaMasterIds!=null && dataObj.mediaMasterIds.length>0){
       for (MediaMasterIds mediaMasterIds
           in dataObj.mediaMasterIds) {
         mediaMasterIdsList.add(new MediaMasterIds(
             id: mediaMasterIds.id, fileType: mediaMasterIds.fileType));
       }
+      }
+
 
       CategoryInfo categoryInfo = new CategoryInfo(
           id: dataObj.metaInfo.categoryInfo.id,
@@ -734,6 +700,8 @@ class CommonUtil {
           lastModifiedOn: dataObj.lastModifiedOn,
           isActive: dataObj.isActive,
           id: dataObj.id,
+          userId:dataObj.userId,
+          metaTypeId:dataObj.metaTypeId,
           isBookmarked: dataObj.isBookmarked,
           isDraft: dataObj.isDraft,
           mediaMasterIds: mediaMasterIdsList);

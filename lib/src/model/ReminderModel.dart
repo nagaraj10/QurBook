@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
+
 class ReminderModel{
   final String id;
   final String title;
@@ -13,12 +16,12 @@ class ReminderModel{
 
   Map<String,dynamic> toMap(){
     return {
-      'id':id,
-      'title':title,
-      'notes':notes,
-      'date':date,
-      'time':time,
-      'interval':interval
+      parameters.strId:id,
+      parameters.strtitle:title,
+      parameters.strnotes:notes,
+      parameters.strdate:date,
+      parameters.strtime:time,
+      parameters.strinterval:interval
     };
   }
 

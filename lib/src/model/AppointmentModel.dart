@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 class AppointmentModel{
   final String id;
   final String hName;
@@ -14,12 +16,12 @@ class AppointmentModel{
 
   Map<String,dynamic> toMap(){
     return {
-      'id':id,
-      'hosname':hName,
-      'docname':dName,
-      'appdate':appDate,
-      'apptime':appTime,
-      'reason':reason
+      parameters.strId:id,
+      parameters.strhosname:hName,
+      parameters.strdocname:dName,
+      parameters.strappdate:appDate,
+      parameters.strapptime:appTime,
+      parameters.strreason:reason
     };
   }
 

@@ -17,6 +17,10 @@ import 'dart:io';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
+
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -64,7 +68,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return ShowCaseWidget(
       onFinish: () {
-        PreferenceUtil.saveString(Constants.KEY_SHOWCASE_DASHBOARD, 'true');
+        PreferenceUtil.saveString(Constants.KEY_SHOWCASE_DASHBOARD,variable.strtrue);
       },
       builder: Builder(
         builder: (context) {
@@ -124,13 +128,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                             EdgeInsets.all(5),
                                                         child: Image.asset(
                                                           PreferenceUtil.getStringValue(
-                                                                      'maya_asset') !=
+                                                                      Constants.keyMayaAsset) !=
                                                                   null
                                                               ? PreferenceUtil
                                                                       .getStringValue(
-                                                                          'maya_asset') +
-                                                                  '.png'
-                                                              : 'assets/maya/maya_us_main.png',
+                                                                          Constants.keyMayaAsset) +
+                                                                  variable.strExtImg
+                                                              : variable.icon_mayaMain,
                                                           height: 60,
                                                           width: 60,
                                                         ),
@@ -160,7 +164,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                     padding:
                                                         EdgeInsets.all(10.0),
                                                     child: Image.asset(
-                                                      'assets/navicons/my_providers.png',
+                                                      variable.icon_provider,
                                                       width: 30,
                                                       height: 30,
                                                       color: Colors.white,
@@ -171,7 +175,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 height: 5,
                                               ),
                                               Text(
-                                                'My Providers',
+                                                variable.strMyProvider,
                                                 style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 11),
@@ -179,7 +183,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             ],
                                           ),
                                           onTap: () {
-                                            //moveToNextScreen(3);
 
                                             moveToFamilyOrprovider(2);
                                           })),
@@ -198,7 +201,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 Padding(
                                                   padding: EdgeInsets.all(10.0),
                                                   child: Image.asset(
-                                                   'assets/navicons/th.png',
+                                                   variable.icon_th,
                                                     color: Colors.white,
                                                     height: 70,
                                                     width: 70,
@@ -209,7 +212,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               height: 5,
                                             ),
                                             Text(
-                                              'TeleHealth',
+                                              variable.strTelehealth,
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 11),
@@ -232,7 +235,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 Padding(
                                                   padding: EdgeInsets.all(10.0),
                                                   child: Image.asset(
-                                                    'assets/navicons/records.png',
+                                                    variable.icon_records,
                                                     color: Colors.white,
                                                     height: 25,
                                                     width: 25,
@@ -243,38 +246,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               height: 5,
                                             ),
                                             Text(
-                                              'My Records',
+                                              variable.strMyRecords,
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 11),
                                             )
                                           ]
                                       
-                                      /* Column(
-                                        children: <Widget>[
-                                          FHBBasicWidget.customShowCase(
-                                              _family,
-                                              Constants.FAMILY_DESC,
-                                              Padding(
-                                                padding: EdgeInsets.all(10.0),
-                                                child: Image.asset(
-                                                  'assets/navicons/my_family.png',
-                                                  height: 30,
-                                                  width: 30,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              Constants.FAMILY_TITLE),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'My Family',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 11),
-                                          )
-                                        ],*/
                                       ),
                                       onTap: () {
                                                                                   moveToNextScreen(1);
@@ -343,7 +321,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()),
                                                 fontSize: 13,
-                                                fontFamily: 'Poppins'),
+                                                fontFamily: variable.font_poppins),
                                           ),
                                         )
                                       ],
@@ -365,14 +343,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-              title: Text('Make a Choice!'),
+              title: Text(Constants.makeAChoice),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(1)),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     GestureDetector(
-                      child: Text('Gallery'),
+                      child: Text(Constants.GALLERY_TITLE),
                       onTap: () {
                         Navigator.pop(context);
 
@@ -391,7 +369,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       padding: EdgeInsets.all(8.0),
                     ),
                     GestureDetector(
-                      child: Text('Camera'),
+                      child: Text(Constants.CAMERA_TITLE),
                       onTap: () {
                         Navigator.pop(context);
 
@@ -447,7 +425,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
    void navigateToHomeScreen(int position) {
     Navigator.pushNamed(
       context,
-      '/home-screen',
+      router.rt_HomeScreen,
       arguments: HomeScreenArguments(selectedIndex: position),
     ).then((value) {});
    
@@ -458,7 +436,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void navigateToTelehealthScreen(int position){
   Navigator.pushNamed(
       context,
-      '/telehealth-providers',
+      router.rt_TelehealthProvider,
       arguments: HomeScreenArguments(selectedIndex: position),
     ).then((value) {});
   }

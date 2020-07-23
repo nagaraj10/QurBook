@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/model/Authentication/SignIn.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/Authentication/SignUp.dart';
@@ -9,6 +8,11 @@ import 'package:myfhb/src/resources/repository/AuthenticationRepository.dart';
 import 'package:myfhb/src/utils/Validators.dart';
 import 'package:rxdart/rxdart.dart';
 import 'dart:convert' as convert;
+
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 
 class LoginBloc with Validators implements BaseBloc {
   AuthenticationRepository _authenticationRepository;
@@ -45,15 +49,15 @@ class LoginBloc with Validators implements BaseBloc {
   Future<SignIn> submit(String phoneNumber, String countryCode) async {
     var signInData = {};
     //signInData['sourceName'] = CommonConstants.strTrident;
-    signInData['countryCode'] = '+' + countryCode;
-    signInData['phoneNumber'] = phoneNumber;
-    signInData['sourceId'] = "e13019a4-1446-441b-8af1-72c40c725548";
-    signInData['entityId'] = "28858877-4710-4dd3-899f-0efe0e9255db";
-    signInData['roleId'] = "285bbe41-3030-4b0e-b914-00e404a77032";
+    signInData[parameters.strCountryCode] = '+' + countryCode;
+    signInData[parameters.strPhoneNumber] = phoneNumber;
+    signInData[parameters.strSourceId] = parameters.strSrcIdVal;
+    signInData[parameters.strEntityId] =parameters.strEntityIdVal;
+    signInData[parameters.strRoleId] = parameters.strRoleIdVal;
 
     var jsonString = convert.jsonEncode(signInData);
 
-    signInSink.add(ApiResponse.loading('Signing in user'));
+    signInSink.add(ApiResponse.loading(variable.strSignUp));
     SignIn signIn;
     try {
       signIn = await _authenticationRepository.signInUser(jsonString);
@@ -75,7 +79,7 @@ class LoginBloc with Validators implements BaseBloc {
       File file,
       String middleName,
       String lastName) async {
-    signUpSink.add(ApiResponse.loading('Signing in user'));
+    signUpSink.add(ApiResponse.loading(variable.strCreateuser));
     SignUp signUp;
     try {
       signUp = await _authenticationRepository.signUpUser(
@@ -97,7 +101,7 @@ class LoginBloc with Validators implements BaseBloc {
   }
 
   Future<SignOutResponse> logout() async {
-    signOutSink.add(ApiResponse.loading('Sign out'));
+    signOutSink.add(ApiResponse.loading(variable.strSignOut));
     SignOutResponse signOutResponse;
     try {
       signOutResponse = await _authenticationRepository.signOutUser();

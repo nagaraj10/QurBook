@@ -13,6 +13,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class LabReportListScreen extends StatefulWidget {
   final CompleteData completeData;
@@ -39,17 +40,8 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    /*  PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
+
     super.initState();
-    /*  WidgetsBinding.instance
-        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show()); */
   }
 
   @override
@@ -69,7 +61,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
           ? Container(
               color: const Color(fhbColors.bgColorContainer),
               child: ListView.builder(
-                itemBuilder: (c, i) =>
+                itemBuilder: (c, i)  =>
                     getCardWidgetForLabReport(mediaMetaInfoObj[i], i),
                 itemCount: mediaMetaInfoObj.length,
               ))
@@ -80,7 +72,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                   child: Text(
                     Constants.NO_DATA_LAB_REPORT,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Poppins'),
+                    style: TextStyle(fontFamily: variable.font_poppins),
                   ),
                 ),
               ),
@@ -124,29 +116,45 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
           ),
           child: Row(
             children: <Widget>[
-              ClipOval(
-                  child: mediaMetaInfo.metaInfo.laboratory.logoThumbnail != null
-                      ? Image.network(
-                          Constants.BASE_URL +
-                              mediaMetaInfo.metaInfo.laboratory.logoThumbnail,
-                          width: 50,
-                          height: 50,
-                        )
-                      : Container(
-                          width: 50,
-                          height: 50,
-                          padding: EdgeInsets.all(10),
-                          child: Image.network(
-                            Constants.BASE_URL +
-                                mediaMetaInfo.metaInfo.categoryInfo.logo,
-                            color: Color(
-                              CommonUtil().getMyPrimaryColor(),
-                            ),
-                          ),
-                          color: const Color(
-                            fhbColors.bgColorContainer,
-                          ),
-                        )),
+              mediaMetaInfo.metaInfo.laboratory != null
+                  ? ClipOval(
+                      child: (mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
+                                  null &&
+                              mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
+                                  'null' && mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
+                                  '')
+                          ? Image.network(
+                              Constants.BASE_URL +
+                                  mediaMetaInfo
+                                      .metaInfo.laboratory.logoThumbnail,
+                              width: 50,
+                              height: 50,
+                            )
+                          : mediaMetaInfo.metaInfo.categoryInfo.logo != null
+                              ? Container(
+                                  width: 50,
+                                  height: 50,
+                                  padding: EdgeInsets.all(10),
+                                  child: Image.network(
+                                    Constants.BASE_URL +
+                                        mediaMetaInfo
+                                            .metaInfo.categoryInfo.logo,
+                                    color: Color(
+                                      CommonUtil().getMyPrimaryColor(),
+                                    ),
+                                  ),
+                                  color: const Color(
+                                    fhbColors.bgColorContainer,
+                                  ),
+                                )
+                              : Container(
+                                  width: 50,
+                                  height: 50,
+                                ))
+                  : Container(
+                      width: 50,
+                      height: 50,
+                    ),
               SizedBox(width: 20),
               Expanded(
                 flex: 6,
@@ -193,14 +201,13 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                     IconButton(
                         icon: mediaMetaInfo.isBookmarked
                             ? ImageIcon(
-                                AssetImage(
-                                    'assets/icons/record_fav_active.png'),
+                                AssetImage(variable.icon_record_fav_active),
                                 color:
                                     Color(new CommonUtil().getMyPrimaryColor()),
                                 size: 20,
                               )
                             : ImageIcon(
-                                AssetImage('assets/icons/record_fav.png'),
+                                AssetImage(variable.icon_record_fav),
                                 color: Colors.black,
                                 size: 20,
                               ),
@@ -217,7 +224,6 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {
-    
     return FutureBuilder(
       future:
           _healthReportListForUserBlock.getProfilePic(data.metaInfo.doctor.id),

@@ -179,8 +179,6 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             Expanded(
                 flex: 2,
                 child: ListView(
-                    //mainAxisAlignment: MainAxisAlignment.center,
-                    //crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       GridView.count(
                           crossAxisCount: 6,
@@ -196,7 +194,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                   ))),
                       SizedBox(height: 20),
                       Text(
-                        variable.strOtpReceived,
+                        variable.strdidtReceive,
                         style: TextStyle(
                           fontSize: 11,
                           color: Colors.grey,
@@ -209,7 +207,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                                 widget.arguments.enteredMobNumber);
                           },
                           child: Text(
-                            variable.streResendOtp,
+                            variable.strResendCode,
                             style: TextStyle(
                                 //color: Colors.deepPurple[300],
                                 color:
@@ -221,8 +219,6 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             Expanded(
                 flex: 3,
                 child: SingleChildScrollView(
-                  //width: MediaQuery.of(context).size.width,
-                  //color: Colors.grey.withOpacity(0.1),
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.center,

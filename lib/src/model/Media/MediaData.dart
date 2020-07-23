@@ -74,7 +74,6 @@ class MediaData {
 
   @override
   String toString() {
-    // TODO: implement toString
     return id +
         name +
         description +

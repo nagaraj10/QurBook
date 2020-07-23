@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -17,15 +20,15 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 2), () {
       var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
       if (!isFirstTime) {
-        PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, 'true');
-        PageNavigator.goToPermanent(context, '/intro-slider');
+        PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, variable.strtrue);
+        PageNavigator.goToPermanent(context,router.rt_IntroSlider );
       } else {
         String authToken =
             PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
         if (authToken != null) {
-          PageNavigator.goToPermanent(context, '/dashboard-screen');
+          PageNavigator.goToPermanent(context, router.rt_Dashboard);
         } else {
-          PageNavigator.goToPermanent(context, '/sign-in-screen');
+          PageNavigator.goToPermanent(context, router.rt_SignIn);
         }
       }
     });
@@ -36,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Center(
           child: Image.asset(
-        'assets/launcher/myfhb.png',
+        variable.icon_fhb,
         height: 150,
         width: 150,
       )),

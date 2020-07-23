@@ -16,7 +16,7 @@ class Hospital {
   String longitude;
   String logo;
   String logoThumbnail;
-  int zipCode;
+  String zipCode;
   String website;
   String email;
   String googleMapUrl;
@@ -70,7 +70,13 @@ class Hospital {
     longitude = json[parameters.strLongitute];
     logo = json[parameters.strLogo];
     logoThumbnail = json[parameters.strLogothumbnail];
+    if(json[parameters.strZipcode] is String){
     zipCode = json[parameters.strZipcode];
+
+    }else{
+          zipCode = json[parameters.strZipcode].toString();
+
+    }
     website = json[parameters.strWebsite];
     email = json[parameters.strEmail];
     googleMapUrl = json[parameters.strGoogleMapUrl];

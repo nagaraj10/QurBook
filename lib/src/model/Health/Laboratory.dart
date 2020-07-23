@@ -54,10 +54,10 @@ class Laboratory {
     } else {
       longitude = json[parameters.strLongitute].toString();
     }
-    logoThumbnail = json[parameters.strLogothumbnail];
+    logoThumbnail = json[parameters.strLogothumbnail]!=null?json[parameters.strLogothumbnail]:'';
     name = json[parameters.strName];
     website = json[parameters.strWebsite];
-    if (zipcode is String) {
+    if (json[parameters.strZipcode] is String) {
       zipcode = json[parameters.strZipcode];
     } else {
       zipcode = json[parameters.strZipcode].toString();

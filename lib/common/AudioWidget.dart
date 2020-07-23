@@ -205,7 +205,7 @@ class AudioWidgetState extends State<AudioWidget> {
           DateTime date = new DateTime.fromMillisecondsSinceEpoch(
               e.currentPosition.toInt(),
               isUtc: true);
-          String txt = DateFormat('mm:ss', 'en_US').format(date);
+          String txt = DateFormat(variable.strDatems, variable.strenUs).format(date);
           this.setState(() {
             this._playerTxt = txt.substring(0, 5);
           });
@@ -254,7 +254,7 @@ class AudioWidgetState extends State<AudioWidget> {
       }
     } catch (err) {
     }
-    if (result == 'paused player') {
+    if (result == variable.st_pausedplayer) {
       isPlaying = false;
     } else {
       isPlaying = true;

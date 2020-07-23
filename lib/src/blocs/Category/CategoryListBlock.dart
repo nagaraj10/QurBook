@@ -5,6 +5,8 @@ import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/CategoryRepository/CategoryResponseListRepository.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 class CategoryListBlock implements BaseBloc{
 
   CategoryResponseListRepository _categoryResponseListRepository;
@@ -28,7 +30,7 @@ class CategoryListBlock implements BaseBloc{
 
   getCategoryList()async{
 
-    categoryListSink.add(ApiResponse.loading('Signing in user'));
+    categoryListSink.add(ApiResponse.loading(variable.strGettingCategory));
     try {
       CategoryResponseList categoryResponseList = await _categoryResponseListRepository.getCategoryList();
       categoryListSink.add(ApiResponse.completed(categoryResponseList));

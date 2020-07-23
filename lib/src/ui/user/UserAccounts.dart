@@ -17,6 +17,10 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 
 import 'MyProfilePage.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 
 class UserAccounts extends StatefulWidget {
   UserAccountsArguments arguments;
@@ -103,7 +107,7 @@ class _UserAccountsState extends State<UserAccounts>
                               //sliverBarHeight = 50;
 
                               Navigator.pushNamed(
-                                      context, '/add-family-user-info',
+                                      context, router.rt_AddFamilyUserInfo,
                                       arguments: AddFamilyUserInfoArguments(
                                           sharedbyme: sharedbyme,
                                           fromClass:
@@ -171,9 +175,9 @@ class _UserAccountsState extends State<UserAccounts>
                   indicatorSize: TabBarIndicatorSize.label,
                   indicatorWeight: 2,
                   tabs: [
-                    Tab(text: "My Info"),
-                    Tab(text: "My Family"),
-                    Tab(text: "My Provider"),
+                    Tab(text: variable.strMyInfo),
+                    Tab(text:variable.strMyFamily),
+                    Tab(text: variable.strMyProvider),
                   ],
                 ),
               ),

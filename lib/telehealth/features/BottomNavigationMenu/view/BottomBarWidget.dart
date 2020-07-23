@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 class BottomBarWidget extends StatelessWidget {
   String name;
   String icon;
@@ -11,13 +14,13 @@ class BottomBarWidget extends StatelessWidget {
       {this.name, this.icon, this.pageIndex, this.selectedPageIndex});
   @override
   Widget build(BuildContext context) {
-    print(icon);
+    
     return Padding(
         padding: EdgeInsets.all(5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            name == 'Maya'
+            name == variable.strMaya
                 ? Image.asset(
                     icon,
                     height: 32,
@@ -29,7 +32,6 @@ class BottomBarWidget extends StatelessWidget {
                     color: selectedPageIndex == pageIndex
                         ? Colors.white
                         : Colors.black,
-                    //size: 22,
                   ),
             selectedPageIndex == pageIndex
                 ? Container(

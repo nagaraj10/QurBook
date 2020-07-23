@@ -18,6 +18,9 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:uuid/uuid.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 // ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
   List<Conversation> conversation;
@@ -27,15 +30,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
-  static const voice_platform =
-      const MethodChannel('flutter.native/voiceIntent');
-  static const version_platform =
-      const MethodChannel('flutter.native/versioncode');
-  static const tts_platform =
-      const MethodChannel('flutter.native/textToSpeech');
   static var uuid = Uuid().v1();
   bool _isSpeaks = false;
-  String _wordsFromMaya = 'waiting for maya to speak';
 
   var user_id = PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
   var auth_token = PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
@@ -69,13 +65,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   startMayaAutomatically() {
     Future.delayed(Duration(seconds: 1), () {
-      sendToMaya('Hi Maya');
+      sendToMaya(variable.strhiMaya);
     });
 
     var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
     Conversation model = new Conversation(
       isMayaSaid: false,
-      text: 'Hi Maya',
+      text: variable.strhiMaya,
       name: prof.response.data.generalInfo.name,
       timeStamp: date,
     );
@@ -93,8 +89,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   stopTTSEngine() async {
-    await tts_platform
-        .invokeMethod('textToSpeech', {"message": "", "isClose": true});
+    await variable.tts_platform.invokeMethod(variable.strtts,
+        {parameters.strMessage: "", parameters.strIsClose: true});
   }
 
   @override
@@ -104,7 +100,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        title: Text('Maya'),
+        title: Text(variable.strMaya),
         leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
@@ -148,7 +144,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Tap to Speak",
+              variable.strtapToSpeak,
               style: TextStyle(
                   fontSize: 25.0,
                   color: Color(new CommonUtil().getMyPrimaryColor())),
@@ -162,8 +158,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   Future<void> gettingReposnseFromNative() async {
     isListening = true;
     try {
-      await voice_platform
-          .invokeMethod('speakWithVoiceAssistant')
+      await variable.voice_platform
+          .invokeMethod(variable.strspeakAssistant)
           .then((response) {
         isListening = false;
         sendToMaya(response);
@@ -181,46 +177,40 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         });
       });
     } on PlatformException catch (e) {
-      //res = 'failed to get the voice data due to${e.message}';
     }
   }
 
   sendToMaya(String msg) async {
-    //String mayaUrl = 'https://ai.dev.vsolgmi.com/ai/api/rasa/';
     String mayaUrl = CommonUtil.MAYA_URL;
     String uuidString = uuid;
 
-    // /print(uuidString);
 
     var reqJson = {};
-    reqJson["sender"] = user_id;
-    reqJson["Name"] = user_name;
-    reqJson["message"] = msg;
-    reqJson["source"] = "device";
-    reqJson["sessionId"] = uuidString;
-    reqJson["authToken"] = auth_token;
+    reqJson[parameters.strSender] = user_id;
+    reqJson[parameters.strSenderName] = user_name;
+    reqJson[parameters.strMessage] = msg;
+    reqJson[parameters.strSource] = variable.strdevice;
+    reqJson[parameters.strSessionId] = uuidString;
+    reqJson[parameters.strAuthtoken] = auth_token;
 
     String jsonString = convert.jsonEncode(reqJson);
 
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    };
+    
 
     var response = await http.post(
       mayaUrl,
       body: jsonString,
-      headers: requestHeaders,
+      headers: variable.requestHeadersWithoutToken,
     );
 
     if (response.statusCode == 200) {
       if (response.body != null) {
         var jsonResponse = convert.jsonDecode(response.body);
-        //print('response from maya ' + jsonResponse.toString());
+        
         List<dynamic> list = jsonResponse;
         if (list.length > 0) {
           SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
-          //print('before env value $isEndOfConv');
+         
           setState(() {
             isEndOfConv = res.endOfConv;
           });
@@ -240,9 +230,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             isLoading = false;
             isMayaSpeaks = 0;
             if (!stopTTSNow) {
-              tts_platform.invokeMethod('textToSpeech',
-                  {"message": res.text, "isClose": false}).then((res) {
-                //print('is maya currently speaking value is $res');
+              variable.tts_platform.invokeMethod(variable.strtts,
+                  {parameters.strMessage: res.text, parameters.strIsClose: false}).then((res) {
+                
                 if (res == 1) {
                   isMayaSpeaks = 1;
                 }
@@ -285,9 +275,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
-//          crossAxisAlignment: CrossAxisAlignment.end,
-//          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
+        children: [
             Text(
               c.name.toUpperCase(),
               style: Theme.of(context).textTheme.body1,
@@ -321,7 +309,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 ),
               ),
             ),
-            //SizedBox(height: 15,),
             Text(
               "${c.timeStamp}",
               style:
@@ -349,9 +336,9 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       children: [
         CircleAvatar(
           child: Image.asset(
-            PreferenceUtil.getStringValue('maya_asset') != null
-                ? PreferenceUtil.getStringValue('maya_asset') + '.png'
-                : 'assets/maya/maya_us.png',
+            PreferenceUtil.getStringValue(constants.keyMayaAsset) != null
+                ? PreferenceUtil.getStringValue(constants.keyMayaAsset) + '.png'
+                : variable.icon_maya,
             height: 32,
             width: 32,
           ),
@@ -362,7 +349,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "MAYA",
+              variable.strMAYA,
               style: Theme.of(context).textTheme.body1,
               softWrap: true,
             ),

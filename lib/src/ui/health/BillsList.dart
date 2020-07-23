@@ -11,6 +11,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 
 
@@ -39,14 +40,7 @@ class _BillsListState extends State<BillsList> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    /* PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
+   
 
     super.initState();
   }
@@ -79,7 +73,7 @@ class _BillsListState extends State<BillsList> {
                   child: Text(
                     Constants.NO_DATA_BILLS,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Poppins'),
+                    style: TextStyle(fontFamily: variable.font_poppins),
                   ),
                 ),
               ),
@@ -178,14 +172,14 @@ class _BillsListState extends State<BillsList> {
                           icon: mediaMetaInfoObj.isBookmarked
                               ? ImageIcon(
                                   AssetImage(
-                                      'assets/icons/record_fav_active.png'),
+                                      variable.icon_record_fav_active),
                                   //TODO chnage theme
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
+                                  AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
                                   size: 20,
                                 ),
@@ -229,7 +223,6 @@ class _BillsListState extends State<BillsList> {
               ));
         }
 
-        ///load until snapshot.hasData resolves to true
       },
     );
   }

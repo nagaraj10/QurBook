@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:pdf_render/pdf_render_widgets.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 
 class PDFViewer extends StatelessWidget {
   /// render at 100 dpi
@@ -18,7 +20,7 @@ class PDFViewer extends StatelessWidget {
     return new MaterialApp(
       home: new Scaffold(
           appBar: AppBar(
-              title: Text('View PDF'),
+              title: Text(variable.strViewPDF),
               elevation: 0,
               automaticallyImplyLeading: false,
               flexibleSpace: GradientAppBar(),

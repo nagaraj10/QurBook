@@ -6,6 +6,8 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/confirm_location/models/confirm_location_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:uuid/uuid.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+
 
 class AddAddressList extends StatefulWidget {
   List<Place> placesListArray;
@@ -29,13 +31,11 @@ class AddAddressListState extends State<AddAddressList> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Expanded(child: Container(child: buildGooglePlacesList()));
   }
 
@@ -58,7 +58,7 @@ class AddAddressListState extends State<AddAddressList> {
 
               Navigator.pushNamed(
                 context,
-                '/confirm-location',
+                router.rt_ConfirmLocation,
                 arguments: ConfirmLocationArguments(
                     place: eachPlaceModel,
                     placeDetail: value,

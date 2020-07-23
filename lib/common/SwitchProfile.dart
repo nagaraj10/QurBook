@@ -13,6 +13,8 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 
 class SwitchProfile {
   FamilyListBloc _familyListBloc;
@@ -118,7 +120,7 @@ class SwitchProfile {
   }
 
   getUserProfileData() async {
-    CommonUtil.showLoadingDialog(context, keyLoader, 'Relaoding');
+    CommonUtil.showLoadingDialog(context, keyLoader, variable.strRelaoding);
     if (_myProfileBloc != null) {
       _myProfileBloc = null;
       _myProfileBloc = new MyProfileBloc();

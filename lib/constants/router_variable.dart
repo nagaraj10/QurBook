@@ -2,7 +2,6 @@ const String rt_AddFamilyUserInfo='/add-family-user-info';
 const String rt_AddFamilyOtp='/add-family-otp-screen';
 const String rt_UserAccounts = '/user-accounts';
 const String rt_AddAddress='/add-address'; 
-const String rt_AppSettings='/app-settings';
 const String rt_Feedbacks='/feedbacks';
 const String rt_SignIn='/sign-in-screen';
 const String rt_FamilyDetailScreen='/my-family-detail-screen';
@@ -10,6 +9,25 @@ const String rt_FamilyInsurance='/my-family-detail-view-insurance';
 const String rt_TakePicture='/take-picture-screen';
 const String rt_SearchProvider='/search-providers';
 const String rt_AddProvider='/add-providers';
+const String rt_AddAppointments='/add-appointments';
+const String rt_AddRemainder='/add-reminders';
+const String rt_Dashboard='/dashboard-screen';
+const String rt_HomeScreen='/home-screen';
+const String rt_TakePictureForDevices='/take-picture-screen-for-devices';
+const String rt_TakePictureScreen='/take-picture-screen';
+const String rt_TelehealthProvider='/telehealth-providers';
+const String rt_Signinscreen= '/sign-in-screen';
+const String rt_IntroSlider='/intro-slider';
+const String rt_ConfirmLocation='/confirm-location';
+const String rt_AddReminders='/add-reminders';
+const String rt_FeedbackSucess='/feedbacks-success';
+const String rt_SplashScreen='/splashscreen';
+const String rt_AppSettings='/app-settings';
+const String rt_MyRecords='/my-records';
+const String rt_MyFamily='/my-family';
+const String rt_myprovider='/my-providers';
+const String rt_AudioScreen='/audio-record-screen';
+const String rt_Splash='/splashscreen';
 
 
 

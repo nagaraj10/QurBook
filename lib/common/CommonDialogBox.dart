@@ -26,6 +26,11 @@ import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
+
 class CommonDialogBox {
   String categoryName, deviceName;
   TextEditingController fileName = new TextEditingController();
@@ -69,7 +74,6 @@ class CommonDialogBox {
   MediaMetaInfo mediaMetaInfo;
   String metaInfoId = '';
   bool modeOfSave;
-  List<String> documentList = ['Hospital IDS', 'Insurance IDs', 'Other IDs'];
   MediaData selectedMediaData;
 
   List<MediaData> mediaDataAry = PreferenceUtil.getMediaType();
@@ -207,18 +211,7 @@ class CommonDialogBox {
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strDateOfVisit),
-                    /* Container(
-                            width: MediaQuery.of(context).size.width - 60,
-                            child: TextField(
-                              autofocus: false,
-                              onTap: () => _selectDate(context, dateOfVisit),
-                              controller: dateOfVisit,
-                              decoration: InputDecoration(
-                                  suffixIcon: new IconButton(
-                                icon: new Icon(Icons.calendar_today),
-                                onPressed: () => _selectDate(context, dateOfVisit),
-                              )),
-                            )),*/
+                   
                     _showDateOfVisit(context, dateOfVisit),
                     SizedBox(
                       height: 15,
@@ -826,7 +819,7 @@ class CommonDialogBox {
                 setState(() {
                   errGluco = errorValue;
                 });
-              }, errGluco, 'mgdl'),
+              }, errGluco, variable.strGlucUnit),
               SizedBox(
                 height: 15,
               ),
@@ -851,14 +844,14 @@ class CommonDialogBox {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'Before Food',
+                      variable.strbfood,
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      'After Food',
+                      variable.strafood,
                       style: TextStyle(fontSize: 16),
                     ),
                   ),
@@ -1260,7 +1253,7 @@ class CommonDialogBox {
               setState(() {
                 errPoOs = errorValue;
               });
-            }, errPoOs, "%spo2"),
+            }, errPoOs, variable.strpulseUnit),
             SizedBox(
               height: 15,
             ),
@@ -1272,7 +1265,7 @@ class CommonDialogBox {
               setState(() {
                 errPoPulse = errorValue;
               });
-            }, errPoPulse, "pulse"),
+            }, errPoPulse, variable.strpulse),
             SizedBox(
               height: 15,
             ),
@@ -1399,7 +1392,7 @@ class CommonDialogBox {
               setState(() {
                 errForbpSp = errorValue;
               });
-            }, errForbpSp, "mmHg"),
+            }, errForbpSp, variable.strbpunit),
             SizedBox(
               height: 15,
             ),
@@ -1411,7 +1404,7 @@ class CommonDialogBox {
               setState(() {
                 errFForbpDp = errorValue;
               });
-            }, errFForbpDp, "dp"),
+            }, errFForbpDp, variable.strbpdp),
             SizedBox(
               height: 15,
             ),
@@ -1423,7 +1416,7 @@ class CommonDialogBox {
               setState(() {
                 errForbpPulse = errorValue;
               });
-            }, errForbpPulse, 'pulse'),
+            }, errForbpPulse, variable.strpulse),
             SizedBox(
               height: 15,
             ),
@@ -1512,23 +1505,23 @@ class CommonDialogBox {
                 )))
         .then((results) {
       if (results != null) {
-        if (results.containsKey('doctor')) {
-          doctorsData = json.decode(results['doctor']);
+        if (results.containsKey(Constants.keyDoctor)) {
+          doctorsData = json.decode(results[Constants.keyDoctor]);
 
 
-          doctorsName.text = doctorsData['name'];
-          doctor.text = doctorsData['name'];
-        } else if (results.containsKey('hospital')) {
+          doctorsName.text = doctorsData[parameters.strName];
+          doctor.text = doctorsData[parameters.strName];
+        } else if (results.containsKey(Constants.keyHospital)) {
 
-          hospitalData = json.decode(results['hospital']);
+          hospitalData = json.decode(results[Constants.keyHospital]);
 
-          hospitalName.text = hospitalData['name'];
-          hospital.text = hospitalData['name'];
-        } else if (results.containsKey('laborartory')) {
-          labData = json.decode(results['laborartory']);
+          hospitalName.text = hospitalData[parameters.strName];
+          hospital.text = hospitalData[parameters.strName];
+        } else if (results.containsKey(Constants.keyLab)) {
+          labData = json.decode(results[Constants.keyLab]);
         
-          labName.text = labData['name'];
-          lab.text = labData['name'];
+          labName.text = labData[parameters.strName];
+          lab.text = labData[parameters.strName];
         }
         onTextFinished();
       }
@@ -1566,9 +1559,9 @@ class CommonDialogBox {
         ))
             .then((results) {
           if (results != null) {
-            if (results.containsKey('audioFile')) {
+            if (results.containsKey(Constants.keyAudioFile)) {
               containsAudio = true;
-              audioPath = results['audioFile'];
+              audioPath = results[Constants.keyAudioFile];
               
 
               audioPathMain = audioPath;
@@ -1584,19 +1577,19 @@ class CommonDialogBox {
 
   void onPostDataToServer(BuildContext context, List<String> imagePath) async {
     if (doValidationBeforePosting()) {
-      CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+      CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
       Map<String, dynamic> postMainData = new Map();
       Map<String, dynamic> postMediaData = new Map();
       String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       if (modeOfSave) {
-        postMainData["userId"] = userID;
+        postMainData[parameters.struserId] = userID;
       }
       List<CategoryData> catgoryDataList = PreferenceUtil.getCategoryType();
 
       categoryDataObj = new CommonUtil()
           .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
-      postMediaData["categoryInfo"] = categoryDataObj.toJson();
+      postMediaData[parameters.strcategoryInfo] = categoryDataObj.toJson();
       List<MediaData> metaDataFromSharedPrefernce =
           PreferenceUtil.getMediaType();
 
@@ -1608,21 +1601,21 @@ class CommonDialogBox {
             deviceName, metaDataFromSharedPrefernce);
       }
 
-      postMediaData["mediaTypeInfo"] = mediaDataObj.toJson();
+      postMediaData[parameters.strmediaTypeInfo] = mediaDataObj.toJson();
 
-      postMediaData["memoText"] = memoController.text;
+      postMediaData[parameters.strmemoText] = memoController.text;
 
       if (categoryName != Constants.STR_VOICERECORDS) {
-        postMediaData["hasVoiceNotes"] =
+        postMediaData[parameters.strhasVoiceNotes] =
             (audioPathMain != '' && audioPathMain != null) ? true : false;
 
-        postMediaData["dateOfVisit"] = dateOfVisit.text;
+        postMediaData[parameters.strdateOfVisit] = dateOfVisit.text;
       }
 
-      postMediaData["isDraft"] = false;
+      postMediaData[parameters.strisDraft] = false;
 
-      postMediaData["sourceName"] = CommonConstants.strTridentValue;
-      postMediaData["memoTextRaw"] = 'memoTextRaw';
+      postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
+      postMediaData[parameters.strmemoTextRaw] = parameters.strMemoRawTxtVal;
 
       if (categoryName == CommonConstants.strDevice) {
         List<Map<String, dynamic>> postDeviceData = new List();
@@ -1631,78 +1624,78 @@ class CommonDialogBox {
         Map<String, dynamic> postDeviceValuesExtraClone = new Map();
 
         if (deviceName == Constants.STR_GLUCOMETER) {
-          postDeviceValues['parameter'] = CommonConstants.strSugarLevel;
-          postDeviceValues['value'] = deviceController.text;
-          postDeviceValues['unit'] = CommonConstants.strGlucometerValue;
+          postDeviceValues[parameters.strParameters] = CommonConstants.strSugarLevel;
+          postDeviceValues[parameters.strvalue] = deviceController.text;
+          postDeviceValues[parameters.strunit] = CommonConstants.strGlucometerValue;
           postDeviceData.add(postDeviceValues);
-          postDeviceValuesExtra['parameter'] = CommonConstants.strTimeIntake;
-          postDeviceValuesExtra['value'] = '';
-          postDeviceValuesExtra['unit'] =
-              isSelected[0] == true ? 'Before' : 'After';
+          postDeviceValuesExtra[parameters.strParameters] = CommonConstants.strTimeIntake;
+          postDeviceValuesExtra[parameters.strvalue] = '';
+          postDeviceValuesExtra[parameters.strunit] =
+              isSelected[0] == true ? variable.strBefore : variable.strAfter;
           postDeviceData.add(postDeviceValuesExtra);
         } else if (deviceName == Constants.STR_THERMOMETER) {
-          postDeviceValues['parameter'] = CommonConstants.strTemperature;
-          postDeviceValues['value'] = deviceController.text;
-          postDeviceValues['unit'] = CommonConstants.strTemperatureUnit;
+          postDeviceValues[parameters.strParameters] = CommonConstants.strTemperature;
+          postDeviceValues[parameters.strvalue] = deviceController.text;
+          postDeviceValues[parameters.strunit] = CommonConstants.strTemperatureUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
-          postDeviceValues['parameter'] = CommonConstants.strWeightParam;
-          postDeviceValues['value'] = deviceController.text;
-          postDeviceValues['unit'] = CommonConstants.strWeightUnit;
+          postDeviceValues[parameters.strParameters] = CommonConstants.strWeightParam;
+          postDeviceValues[parameters.strvalue] = deviceController.text;
+          postDeviceValues[parameters.strunit] = CommonConstants.strWeightUnit;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_PULSE_OXIMETER) {
-          postDeviceValues['parameter'] = CommonConstants.strOxygenParams;
-          postDeviceValues['value'] = deviceController.text;
-          postDeviceValues['unit'] = CommonConstants.strOxygenUnits;
+          postDeviceValues[parameters.strParameters] = CommonConstants.strOxygenParams;
+          postDeviceValues[parameters.strvalue] = deviceController.text;
+          postDeviceValues[parameters.strunit] = CommonConstants.strOxygenUnits;
           postDeviceData.add(postDeviceValues);
 
-          postDeviceValuesExtra['parameter'] = CommonConstants.strPulseRate;
-          postDeviceValuesExtra['value'] = pulse.text;
-          postDeviceValuesExtra['unit'] = CommonConstants.strPulseUnit;
+          postDeviceValuesExtra[parameters.strParameters] = CommonConstants.strPulseRate;
+          postDeviceValuesExtra[parameters.strvalue] = pulse.text;
+          postDeviceValuesExtra[parameters.strunit] = CommonConstants.strPulseUnit;
 
           postDeviceData.add(postDeviceValuesExtra);
         } else if (deviceName == Constants.STR_BP_MONITOR) {
-          postDeviceValues['parameter'] = CommonConstants.strBPParams;
-          postDeviceValues['value'] = deviceController.text;
+          postDeviceValues[parameters.strParameters] = CommonConstants.strBPParams;
+          postDeviceValues[parameters.strvalue] = deviceController.text;
 
-          postDeviceValues['unit'] = CommonConstants.strBPUNits;
+          postDeviceValues[parameters.strunit] = CommonConstants.strBPUNits;
           postDeviceData.add(postDeviceValues);
 
-          postDeviceValuesExtra['parameter'] =
+          postDeviceValuesExtra[parameters.strParameters] =
               CommonConstants.strDiastolicParams;
-          postDeviceValuesExtra['value'] = diaStolicPressure.text;
-          postDeviceValuesExtra['unit'] = CommonConstants.strBPUNits;
+          postDeviceValuesExtra[parameters.strvalue] = diaStolicPressure.text;
+          postDeviceValuesExtra[parameters.strunit] = CommonConstants.strBPUNits;
 
           postDeviceData.add(postDeviceValuesExtra);
 
-          postDeviceValuesExtraClone['parameter'] =
+          postDeviceValuesExtraClone[parameters.strParameters] =
               CommonConstants.strPulseRate;
-          postDeviceValuesExtraClone['value'] = pulse.text;
-          postDeviceValuesExtraClone['unit'] = CommonConstants.strPulseUnit;
+          postDeviceValuesExtraClone[parameters.strvalue] = pulse.text;
+          postDeviceValuesExtraClone[parameters.strunit] = CommonConstants.strPulseUnit;
 
           postDeviceData.add(postDeviceValuesExtraClone);
         }
-        postMediaData['deviceReadings'] = postDeviceData;
+        postMediaData[parameters.strdeviceReadings] = postDeviceData;
       } else if (categoryName == Constants.STR_PRESCRIPTION ||
           categoryName == Constants.STR_MEDICALREPORT) {
-        postMediaData["doctor"] = doctorsData;
+        postMediaData[Constants.keyDoctor] = doctorsData;
         if (hospitalData == null) {
         } else {
-          postMediaData["hospital"] = hospitalData;
+          postMediaData[Constants.keyHospital] = hospitalData;
         }
       } else if (categoryName == Constants.STR_IDDOCS) {
         if (selectedMediaData != null) {
-          postMediaData['idType'] = selectedMediaData.name.split(' ')[0];
+          postMediaData[parameters.stridType] = selectedMediaData.name.split(' ')[0];
         }
       } else if (categoryName == Constants.STR_LABREPORT) {
-        postMediaData["doctor"] = doctorsData;
-        postMediaData["laboratory"] = labData;
+        postMediaData[Constants.keyDoctor] = doctorsData;
+        postMediaData[Constants.keyLab] = labData;
       }
-      postMediaData["fileName"] = fileName.text;
+      postMediaData[parameters.strfileName] = fileName.text;
 
-      postMainData['metaInfo'] = postMediaData;
+      postMainData[parameters.strmetaInfo] = postMediaData;
       if (modeOfSave) {
-        postMainData['isActive'] = true;
+        postMainData[parameters.strIsActive] = true;
       }
 
    
@@ -1764,7 +1757,7 @@ class CommonDialogBox {
       showDialog(
           context: context,
           child: new AlertDialog(
-            title: new Text("myFHB"),
+            title: new Text(variable.strAPP_NAME),
             content: new Text(validationMsg),
           ));
     }
@@ -1773,7 +1766,7 @@ class CommonDialogBox {
   void postAudioToServer(String mediaMetaID, BuildContext context) {
     Map<String, dynamic> postImage = new Map();
 
-    postImage['mediaMetaId'] = mediaMetaID;
+    postImage[parameters.strmediaMetaId] = mediaMetaID;
     
     int k = 0;
     for (int i = 0; i < imagePathMain.length; i++) {

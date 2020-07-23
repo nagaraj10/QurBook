@@ -40,9 +40,6 @@ import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
-
-
-
 class RecordDetailScreen extends StatefulWidget {
   final MediaMetaInfo data;
 
@@ -98,8 +95,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
-
-  
 
     mediMasterId = new CommonUtil().getMetaMasterIdList(widget.data);
 
@@ -226,23 +221,31 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               ),
                               onPressed: () {
                                 //getAllFamilyMembers();
-                                CommonUtil.showLoadingDialog(
-                                    contxt, _keyLoader, variable.Please_Wait);
-
-                                if (_familyListBloc != null) {
-                                  _familyListBloc = null;
-                                  _familyListBloc = new FamilyListBloc();
-                                }
-                                _familyListBloc
-                                    .getFamilyMembersList()
-                                    .then((familyMembersList) {
-                                  Navigator.of(_keyLoader.currentContext,
-                                          rootNavigator: true)
-                                      .pop();
-
+                                if (PreferenceUtil.getFamilyData(
+                                        Constants.KEY_FAMILYMEMBER) !=
+                                    null) {
                                   getDialogBoxWithFamilyMember(
-                                      familyMembersList.response.data);
-                                });
+                                      PreferenceUtil.getFamilyData(
+                                          Constants.KEY_FAMILYMEMBER));
+                                } else {
+                                  CommonUtil.showLoadingDialog(
+                                      contxt, _keyLoader, variable.Please_Wait);
+
+                                  if (_familyListBloc != null) {
+                                    _familyListBloc = null;
+                                    _familyListBloc = new FamilyListBloc();
+                                  }
+                                  _familyListBloc
+                                      .getFamilyMembersList()
+                                      .then((familyMembersList) {
+                                    Navigator.of(_keyLoader.currentContext,
+                                            rootNavigator: true)
+                                        .pop();
+
+                                    getDialogBoxWithFamilyMember(
+                                        familyMembersList.response.data);
+                                  });
+                                }
                               }),
                           IconButton(
                               icon: ImageIcon(
@@ -262,7 +265,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     .then((status) {
                                   if (status == PermissionStatus.granted) {
                                     saveImageToGallery(imagesPathMain, contxt);
-                                  } 
+                                  }
                                 });
                               }),
                           IconButton(
@@ -304,15 +307,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               ))
                                   .then((results) {
                                 if (results != null) {
-                                  if (results.containsKey(Constants.keyAudioFile)) {
+                                  if (results
+                                      .containsKey(Constants.keyAudioFile)) {
                                     containsAudio = true;
                                     audioPath = results[Constants.keyAudioFile];
                                     _healthReportListForUserBlock
                                         .saveImage(
                                             audioPath, widget.data.id, '')
                                         .then((postImageResponse) {
-                                      
-
                                       audioMediaId = postImageResponse
                                           .response.data.mediaMasterId;
 
@@ -491,7 +493,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Widget getAudioIconWithFile({String fpath}) {
     var path = (fpath != null || fpath != '') ? fpath : audioPath;
-    
+
     return Container(
         //height: 60,
         child: Column(
@@ -513,15 +515,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     setState(() {});
   }
 
- 
   Future<Widget> getDialogBoxWithFamilyMember(FamilyData familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, _keyLoader, (context, userId, userName) {
-      
-
       _healthReportListForUserBlock
           .switchDataToOtherUser(userId, widget.data.id)
           .then((moveMetaDataResponse) {
+           
         if (moveMetaDataResponse.success) {
           _healthReportListForUserBlock.getHelthReportList().then((value) {
             PreferenceUtil.saveCompleteData(
@@ -531,6 +531,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new FHBBasicWidget()
                   .showInSnackBar(moveMetaDataResponse.message, scaffold_state);
             });
+
 
             Navigator.pop(context);
             Navigator.pop(context);
@@ -570,9 +571,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           new CommonDialogBox().getDialogBoxForPrescription(
               context,
               new TextEditingController(
-                  text: hospitalData != null ? hospitalData[variable.strName] : ''),
+                  text: hospitalData != null
+                      ? hospitalData[variable.strName]
+                      : ''),
               new TextEditingController(
-                  text: doctorsData != null ? doctorsData[variable.strName] : ''),
+                  text:
+                      doctorsData != null ? doctorsData[variable.strName] : ''),
               new TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
@@ -626,12 +630,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(
                   text: labData != null ? labData[variable.strName] : ''),
               new TextEditingController(
-                  text: doctorsData != null ? doctorsData[variable.strName] : ''),
+                  text:
+                      doctorsData != null ? doctorsData[variable.strName] : ''),
               new TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-           
-
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -639,7 +642,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-           
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -653,17 +655,18 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           new CommonDialogBox().getDialogBoxForPrescription(
               context,
               new TextEditingController(
-                  text: hospitalData != null ? hospitalData[variable.strName] : ''),
+                  text: hospitalData != null
+                      ? hospitalData[variable.strName]
+                      : ''),
               new TextEditingController(
-                  text: doctorsData != null ? doctorsData[variable.strName]: ''),
+                  text:
+                      doctorsData != null ? doctorsData[variable.strName] : ''),
               new TextEditingController(
                   text: widget.data.metaInfo.dateOfVisit != null
                       ? widget.data.metaInfo.dateOfVisit
                       : ''),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-           
-
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -671,8 +674,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-           
-
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -689,7 +690,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -697,8 +697,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               new List(),
               (containsAudio, audioPath) {
-              
-
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -717,8 +715,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                
-
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -766,7 +762,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       }
     } else {
       deviceName = widget.data.metaInfo.mediaTypeInfo.name;
-      
+
       PreferenceUtil.saveString(Constants.KEY_DEVICENAME, deviceName)
           .then((value) {
         switch (deviceName) {
@@ -946,12 +942,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     Map<String, dynamic> postImage = new Map();
 
     postImage[parameters.strmediaMetaId] = mediaMetaID;
-    
+
     if (audioPath != '') {
       _healthReportListForUserBlock
           .saveImage(audioPath, mediaMetaID, '')
           .then((postImageResponse) {
-        
         _healthReportListForUserBlock.getHelthReportList().then((value) {
           PreferenceUtil.saveCompleteData(
               Constants.KEY_COMPLETE_DATA, value.response.data);
@@ -973,7 +968,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Widget getCarousalImage(List<dynamic> imagesPath) {
-    
     if (imagesPath != null && imagesPath.length > 0) {
       index = _current + 1;
       _current = 0;
@@ -1039,8 +1033,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                         )
               : Container(
                   child: Icon(Icons.mic, size: 60, color: Colors.white)),
-
-         ],
+        ],
       ),
     );
   }
@@ -1056,7 +1049,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   Widget getDocumentImageWidgetClone() {
-
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
       _healthReportListForUserBlock = new HealthReportListForUserBlock();

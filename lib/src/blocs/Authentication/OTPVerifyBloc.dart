@@ -8,6 +8,10 @@ import 'package:rxdart/rxdart.dart';
 import 'dart:convert' as convert;
 import '../../../common/CommonConstants.dart';
 
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 class OTPVerifyBloc with Validators implements BaseBloc {
   AuthenticationRepository _authenticationRepository;
   StreamController _otpVerifyController;
@@ -44,21 +48,21 @@ class OTPVerifyBloc with Validators implements BaseBloc {
   Future<OTPResponse> verifyOtp(String enteredMobNumber,
       String selectedCountryCode, String otp, bool isFromSignIn) async {
     var verifyOTP = {};
-    verifyOTP['sourceName'] = CommonConstants.strTrident;
-    verifyOTP['countryCode'] = '+' + selectedCountryCode;
-    verifyOTP['phoneNumber'] = enteredMobNumber;
-    verifyOTP['otp'] = otp;
-       verifyOTP['sourceId'] = "e13019a4-1446-441b-8af1-72c40c725548";
-    verifyOTP['entityId'] = "28858877-4710-4dd3-899f-0efe0e9255db";
-    verifyOTP['roleId'] = "285bbe41-3030-4b0e-b914-00e404a77032";
+    //verifyOTP['sourceName'] = CommonConstants.strTrident;
+    verifyOTP[parameters.strCountryCode] = '+' + selectedCountryCode;
+    verifyOTP[parameters.strPhoneNumber] = enteredMobNumber;
+    verifyOTP[parameters.strotp] = otp;
+      verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
+    verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
+    verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
     if (isFromSignIn)
-      verifyOTP['operation'] = CommonConstants.strOperationSignIN;
+      verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignIN;
     else
-      verifyOTP['operation'] = CommonConstants.strOperationSignUp;
+      verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignUp;
 
     var jsonString = convert.jsonEncode(verifyOTP);
 
-    otpSink.add(ApiResponse.loading('Signing in user'));
+    otpSink.add(ApiResponse.loading(variable.strVerifyOtp));
     OTPResponse otpResponse;
     try {
       otpResponse = await _authenticationRepository.verifyOTP(jsonString);
@@ -72,19 +76,19 @@ class OTPVerifyBloc with Validators implements BaseBloc {
       String selectedCountryCode, bool isFromSignIn) async {
     var verifyOTP = {};
     //verifyOTP['sourceName'] = CommonConstants.strTrident;
-    verifyOTP['countryCode'] = '+' + selectedCountryCode;
-    verifyOTP['phoneNumber'] = enteredMobNumber;
-    verifyOTP['sourceId'] = "e13019a4-1446-441b-8af1-72c40c725548";
-    verifyOTP['entityId'] = "28858877-4710-4dd3-899f-0efe0e9255db";
-    verifyOTP['roleId'] = "285bbe41-3030-4b0e-b914-00e404a77032";
+    verifyOTP[parameters.strCountryCode] = '+' + selectedCountryCode;
+    verifyOTP[parameters.strPhoneNumber] = enteredMobNumber;
+     verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
+    verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
+    verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
     if (isFromSignIn)
-      verifyOTP['operation'] = CommonConstants.strOperationSignIN;
+      verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignIN;
     else
-      verifyOTP['operation'] = CommonConstants.strOperationSignUp;
+      verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignUp;
 
     var jsonString = convert.jsonEncode(verifyOTP);
 
-    otpSink.add(ApiResponse.loading('Signing in user'));
+    otpSink.add(ApiResponse.loading(variable.strGeneratingOtp));
     OTPResponse otpResponse;
     try {
       otpResponse = await _authenticationRepository.generateOTP(jsonString);
@@ -95,11 +99,11 @@ class OTPVerifyBloc with Validators implements BaseBloc {
 
   Future<OTPEmailResponse> verifyOTPFromEmail(String otp) async {
     var verifyEmailOTP = {};
-    verifyEmailOTP['verificationCode'] = otp;
+    verifyEmailOTP[parameters.strverification] = otp;
 
     var jsonString = convert.jsonEncode(verifyEmailOTP);
 
-    otpFromEmailSink.add(ApiResponse.loading('verify otp'));
+    otpFromEmailSink.add(ApiResponse.loading(variable.strVerifyOtp));
     OTPEmailResponse otpEmailResponse;
     try {
       otpEmailResponse =

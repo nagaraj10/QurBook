@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 class ImageSlider extends StatefulWidget {
   final List<dynamic> imageList;
 
@@ -31,7 +34,7 @@ class _ImageSliderState extends State<ImageSlider> {
             Padding(
               padding: EdgeInsets.only(top: 30, right: 10),
               child: OutlineButton(
-                  child: Text('Close'),
+                  child: Text(variable.strClose),
                   textColor: Colors.white70,
                   borderSide: BorderSide(color: Colors.white70),
                   onPressed: Navigator.of(context).pop),

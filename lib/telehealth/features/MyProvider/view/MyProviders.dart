@@ -8,6 +8,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -16,11 +18,10 @@ import 'package:provider/provider.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
 import '../../SearchWidget/view/SearchWidget.dart';
 
-import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
-
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 import 'DoctorSessionTimeSlot.dart';
 
@@ -89,7 +90,10 @@ class _MyProvidersState extends State<MyProviders> {
               },
             ),
             Expanded(
-              child: getDoctorProviderList(),
+              child: (providerViewModel.doctorIdsList != null &&
+                      providerViewModel.doctorIdsList.length > 0)
+                  ? providerListWidget(providerViewModel.doctorIdsList)
+                  : getDoctorProviderList(),
             )
           ],
         )),
@@ -224,11 +228,10 @@ class _MyProvidersState extends State<MyProviders> {
                       height: fhbStyles.imageHeight,
                       icon: Icons.info,
                       onTap: () {
-                        print('on Info pressed');
                         commonWidgets.showDoctorDetailView(docs[i], context);
                       }),
                   commonWidgets.getSizeBoxWidth(10.0),
-                  docs[i].isActive
+                  docs[i].isTelehealthEnabled
                       ? commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
@@ -249,11 +252,16 @@ class _MyProvidersState extends State<MyProviders> {
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
-              Row(children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
                 Expanded(
                   child: commonWidgets
                       .getDoctoSpecialist('${docs[i].specialization}'),
                 ),
+                Container(child: getFees(docs[i])),
+                                  commonWidgets.getSizeBoxWidth(10.0),
+
               ]),
               commonWidgets.getSizedBox(5.0),
               commonWidgets.getDoctorsAddress('${docs[i].city}')
@@ -267,31 +275,31 @@ class _MyProvidersState extends State<MyProviders> {
   void getDataForProvider() async {
     if (firstTym == false) {
       firstTym = true;
-      providerViewModel = Provider.of<MyProviderViewModel>(context);
-      //await providerViewModel.fetchProviderDoctors();
-      //doctorData .addAll(providerViewModel.docsList);
-      //providerViewModel.getDateSlots();
+      providerViewModel = new MyProviderViewModel();
     }
   }
 
   onSearched(String doctorName) {
-    print(doctorName);
     doctorData.clear();
     if (doctorName != null) {
       for (DoctorIds fiterData
           in providerViewModel.getFilterDoctorList(doctorName)) {
         doctorData.add(fiterData);
       }
-      print(doctorData.length);
     }
 
     setState(() {});
   }
 
-  Widget getDoctorProviderList() {
-    providerViewModel = Provider.of<MyProviderViewModel>(context);
-    providerViewModel.getDateSlots();
+  Widget getFees(DoctorIds doctorId) {
+    return doctorId.fees != null
+        ? commonWidgets.getHospitalDetails(doctorId.fees.consulting != null
+            ? variable.strRs+' '+doctorId.fees.consulting.fee
+            : '')
+        : Text('');
+  }
 
+  Widget getDoctorProviderList() {
     return new FutureBuilder<List<DoctorIds>>(
       future: providerViewModel.fetchProviderDoctors(),
       builder: (BuildContext context, snapshot) {
@@ -307,15 +315,18 @@ class _MyProvidersState extends State<MyProviders> {
           final items = snapshot.data ??
               <DoctorIds>[]; // handle the case that data is null
 
-          return new ListView.builder(
-            itemBuilder: (BuildContext ctx, int i) =>
-                doctorsListItem(ctx, i, isSearch ? doctorData : snapshot.data),
-            itemCount: isSearch
-                ? doctorData.length
-                : providerViewModel.doctorIdsList.length,
-          );
+          return providerListWidget(snapshot.data);
         }
       },
+    );
+  }
+
+  Widget providerListWidget(List<DoctorIds> doctorList) {
+    return new ListView.builder(
+      itemBuilder: (BuildContext ctx, int i) =>
+          doctorsListItem(ctx, i, isSearch ? doctorData : doctorList),
+      itemCount:
+          isSearch ? doctorData.length : providerViewModel.doctorIdsList.length,
     );
   }
 }

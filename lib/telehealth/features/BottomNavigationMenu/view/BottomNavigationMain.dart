@@ -20,7 +20,6 @@ class _BottomNavigationMainState extends State<BottomNavigationMain> {
   Widget build(BuildContext context) {
     getDataForProvider();
     return Scaffold(
-//      appBar: AppBar(flexibleSpace: GradientAppBar()),
       body: ChangeNotifierProvider(
         create: (context) => BottomNavigationViewModel(),
         child: BottomNavigationWidget(

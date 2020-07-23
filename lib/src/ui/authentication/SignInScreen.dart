@@ -16,7 +16,8 @@ import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
-
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
 class SignInScreen extends StatefulWidget {
   @override
   _SignInScreenState createState() => _SignInScreenState();
@@ -27,12 +28,12 @@ class _SignInScreenState extends State<SignInScreen> {
   var _selected = Country.IN;
   TextEditingController phoneTextController = new TextEditingController();
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  
 
   @override
   void initState() {
     super.initState();
     _loginBloc = LoginBloc();
-    //getDeviceLocale();
   }
 
   @override
@@ -43,8 +44,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        //backgroundColor: Colors.white,
-        //NOTE commented app bar
+        
         key: scaffold_state,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -57,7 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
               Padding(
                 padding: EdgeInsets.only(top: 40),
                 child: Text(
-                  'Welcome',
+                  variable.strwelcome,
                   textAlign: TextAlign.start,
                   style: TextStyle(
                       //TODO chnage theme
@@ -69,26 +69,17 @@ class _SignInScreenState extends State<SignInScreen> {
               Padding(
                 padding: EdgeInsets.all(10),
                 child: Text(
-                  'Get started with myFHB',
+                  variable.strgetStart,
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 14,
                       fontWeight: FontWeight.w400),
                 ),
               ),
-
-              /*    Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      'Enter your mobile number',
-                      style: TextStyle(
-                          color: Colors.black38, fontWeight: FontWeight.w500),
-                    ),
-                  ), */
               Padding(
                 padding: EdgeInsets.all(20),
                 child: ImageIcon(
-                  AssetImage('assets/icons/otp_icon.png'),
+                  AssetImage(variable.icon_otp),
                   size: 70,
                   color: Color(new CommonUtil().getMyPrimaryColor()),
                 ),
@@ -103,7 +94,6 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   child: Row(
-                    //crossAxisAlignment: CrossAxisAlignment.baseline,
                     children: <Widget>[
                       CountryPicker(
                         nameTextStyle: TextStyle(
@@ -126,7 +116,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         selectedCountry: _selected,
                       ),
                       Container(
-                        //margin: EdgeInsets.only(left: 30, right: 30),
                         width: 1,
                         height: 30,
                         color: Colors.grey.withOpacity(0.5),
@@ -134,26 +123,12 @@ class _SignInScreenState extends State<SignInScreen> {
                       Expanded(
                           child: mobileNumberField(
                               _loginBloc, phoneTextController)),
-                      /* Container(
-                            //margin: EdgeInsets.only(left: 30, right: 30),
-                            width: 1,
-                            height: 20,
-                            color: Colors.grey.withOpacity(0.5),
-                          ), */
+                    
                     ],
                   ),
                 ),
               ),
               SizedBox(height: 20),
-              /*  InkWell(
-                    child: Container(
-                      child: Text('New Member? Sign Up'),
-                      padding: EdgeInsets.all(10),
-                    ),
-                    onTap: () {
-                      PageNavigator.goTo(context, '/sign_up_screen');
-                    },
-                  ), */
               SizedBox(height: 20),
               submitButton(
                   _loginBloc, _selected.dialingCode, phoneTextController),
@@ -166,7 +141,7 @@ class _SignInScreenState extends State<SignInScreen> {
   moveToNextScreen() {
     Future.delayed(const Duration(seconds: 2), () {
       setState(() {
-        PageNavigator.goTo(context, '/home-screen');
+        PageNavigator.goTo(context, router.rt_HomeScreen);
       });
     });
   }
@@ -204,7 +179,7 @@ class _SignInScreenState extends State<SignInScreen> {
           constraints: BoxConstraints(maxWidth: 220),
           child: RaisedGradientButton(
               child: Text(
-                'NEXT',
+                variable.strNext,
                 style: TextStyle(color: Colors.white, fontSize: 16),
               ),
               gradient: LinearGradient(
@@ -225,7 +200,6 @@ class _SignInScreenState extends State<SignInScreen> {
                           signInResponse.message == Constants.STR_MSG_SIGNUP1 ||
                           signInResponse.message == Constants.STR_VERIFY_OTP ||
                           signInResponse.message == Constants.STR_VERIFY_USER)
-                        //PageNavigator.goTo(context, '/sign_up_screen');
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {
@@ -282,10 +256,5 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-  /*  void getDeviceLocale() async {
-    String locale = await Devicelocale.currentLocale;
-    List localeList = locale.split('_');
-    _selected = Country.localeList[1];
-  
-  } */
+ 
 }

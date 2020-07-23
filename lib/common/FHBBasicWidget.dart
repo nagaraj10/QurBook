@@ -12,6 +12,12 @@ import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+
+
+
 
 import 'CommonConstants.dart';
 
@@ -25,14 +31,13 @@ class FHBBasicWidget {
       width: 120,
       height: 40,
       child: Text(
-        'Save',
+        variable.strSave,
         style: TextStyle(
             color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
       ),
       borderRadius: 30,
       gradient: LinearGradient(
         colors: <Color>[
-          //Colors.deepPurple[300], Colors.deepPurple
           Color(new CommonUtil().getMyPrimaryColor()),
           Color(new CommonUtil().getMyGredientColor())
         ],
@@ -54,7 +59,6 @@ class FHBBasicWidget {
           autofocus: false,
           onTap: () {
             onTextFieldtap(context, searchParam);
-            //moveToSearchScreen(context, 'Doctors');
           },
           controller: searchController,
         ));
@@ -117,7 +121,7 @@ class FHBBasicWidget {
       
 
       return onDateSelected(
-          dateTime, new DateFormat("dd/MM/yyyy").format(dateTime).toString());
+          dateTime, new DateFormat(variable.strDateFormatDay).format(dateTime).toString());
     }
   }
 
@@ -141,7 +145,7 @@ class FHBBasicWidget {
   Widget getContainerWithNoDataText() {
     return Container(
       child: Center(
-        child: Text('No data Available'),
+        child: Text(variable.strNoData),
       ),
     );
   }
@@ -214,7 +218,7 @@ class FHBBasicWidget {
               errorValue = CommonConstants.strErrorStringForDevices +
                   ' ' +
                   unitsMesurements.minValue.toString() +
-                  ' and ' +
+                  variable.strAnd +
                   unitsMesurements.maxValue.toString();
 
               onTextChanged(errorValue);
@@ -265,9 +269,9 @@ class FHBBasicWidget {
         ))
             .then((results) {
           if (results != null) {
-            if (results.containsKey('audioFile')) {
+            if (results.containsKey(Constants.keyAudioFile)) {
               containsAudio = true;
-              audioPath = results['audioFile'];
+              audioPath = results[Constants.keyAudioFile];
            
 
               updateUI(containsAudio, audioPath);
@@ -324,12 +328,12 @@ class FHBBasicWidget {
           context: context,
           child: AlertDialog(
             title: Text(
-              'Logout',
+              variable.strLogout,
               style: TextStyle(
                   fontSize: 16, color: Color(CommonUtil().getMyPrimaryColor())),
             ),
             content: Text(
-              'Stay Healthy.. See you Soon. \nMaya will be waiting to serve you.',
+              variable.strLogoutMsg,
               style: TextStyle(fontSize: 14),
             ),
             actions: <Widget>[
@@ -337,7 +341,7 @@ class FHBBasicWidget {
                 onPressed: () {
                   Navigator.of(context).pop(false);
                 },
-                child: Text('Cancel',
+                child: Text(variable.Cancel,
                     style: TextStyle(
                         color: Color(CommonUtil().getMyPrimaryColor()))),
               ),
@@ -345,7 +349,7 @@ class FHBBasicWidget {
                 onPressed: () {
                   logout();
                 },
-                child: Text('Yes',
+                child: Text(variable.strYes,
                     style: TextStyle(
                         color: Color(CommonUtil().getMyPrimaryColor()))),
               ),
@@ -402,7 +406,6 @@ class FHBBasicWidget {
                         ],
                       )),
                   decoration: new BoxDecoration(
-                    //color: Colors.white,
                     gradient: LinearGradient(colors: [
                       Color(CommonUtil().getMyPrimaryColor()),
                       Color(CommonUtil().getMyGredientColor())
@@ -423,7 +426,7 @@ class FHBBasicWidget {
                   padding: EdgeInsets.all(4),
                   alignment: FractionalOffset.centerLeft,
                   child: new Image(
-                    image: new AssetImage('assets/maya/maya_us_main.png'),
+                    image: new AssetImage(variable.icon_mayaMain),
                     height: 80.0,
                     width: 80.0,
                   ),
@@ -433,51 +436,6 @@ class FHBBasicWidget {
               ],
             ))
 
-        /* Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        child: Row(
-          children: <Widget>[
-            Image.asset(
-              'assets/maya/maya_us.png',
-              height: 80,
-              width: 80,
-            ),
-            SizedBox(width: 20),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    desc,
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                        fontFamily: 'Poppins'),
-                    maxLines: 2,
-                    softWrap: true,
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Text(
-                  desc,
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      fontFamily: 'Poppins'),
-                  softWrap: true,
-                ),
-              ],
-            )
-          ],
-        ),
-      ), */
         );
   }
 
@@ -494,17 +452,7 @@ class FHBBasicWidget {
               style: TextStyle(
                 fontSize: 13,
               )),
-          /*  FlatButton(
-              onPressed: () {
-                onRefreshPressed();
-              },
-              child: Text(
-                'Refresh',
-                style: TextStyle(
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
-                    fontWeight: FontWeight.w600),
-              )),
-        */
+        
         ],
       ),
     );

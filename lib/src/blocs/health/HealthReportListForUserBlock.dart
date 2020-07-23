@@ -14,6 +14,8 @@ import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 class HealthReportListForUserBlock implements BaseBloc {
   HealthReportListForUserRepository _healthReportListForUserRepository;
   StreamController _categoryListControlller;
@@ -92,21 +94,21 @@ class HealthReportListForUserBlock implements BaseBloc {
 
   Future<UserHealthResponseList> getHelthReportList() async {
     UserHealthResponseList userHealthResponseList;
-    healthReportListSink.add(ApiResponse.loading('Signing in user'));
+    healthReportListSink
+        .add(ApiResponse.loading(variable.strGettingHealthRecords));
     try {
       userHealthResponseList =
           await _healthReportListForUserRepository.getHealthReportList();
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       healthReportListSink.add(ApiResponse.error(e.toString()));
-      
     }
     return userHealthResponseList;
   }
 
   Future<SavedMetaDataResponse> submit(String jsonData) async {
     SavedMetaDataResponse saveMetaDataResponse;
-    metadataListSink.add(ApiResponse.loading('Signing in user'));
+    metadataListSink.add(ApiResponse.loading(variable.strSubmitting));
     try {
       saveMetaDataResponse =
           await _healthReportListForUserRepository.postMediaData(jsonData);
@@ -122,8 +124,7 @@ class HealthReportListForUserBlock implements BaseBloc {
       var userHealthResponseList =
           await _healthReportListForUserRepository.getDoctorProfile(doctorsId);
       return userHealthResponseList;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> getDocumentImage(String metaMasterId) async {
@@ -131,14 +132,13 @@ class HealthReportListForUserBlock implements BaseBloc {
       var userHealthResponseList = await _healthReportListForUserRepository
           .getDocumentImage(metaMasterId);
       return userHealthResponseList;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<PostImageResponse> saveImage(
       String fileName, String metaID, String jsonData) async {
     PostImageResponse postImageResponse;
-    imageDataSink.add(ApiResponse.loading('Signing in user'));
+    imageDataSink.add(ApiResponse.loading(variable.strSavingImg));
     try {
       postImageResponse = await _healthReportListForUserRepository.postImage(
           fileName, metaID, jsonData);
@@ -152,7 +152,7 @@ class HealthReportListForUserBlock implements BaseBloc {
   Future<DigitRecogResponse> saveDeviceImage(
       String fileName, String metaID, String jsonData) async {
     DigitRecogResponse digitRecogResponse;
-    imageDataSink.add(ApiResponse.loading('Signing in user'));
+    imageDataSink.add(ApiResponse.loading(variable.strSavingImg));
     try {
       digitRecogResponse = await _healthReportListForUserRepository
           .postDevicesData(fileName, metaID, jsonData);
@@ -165,7 +165,7 @@ class HealthReportListForUserBlock implements BaseBloc {
   Future<MetaDataMovedResponse> switchDataToOtherUser(
       String familyMemberID, String detailID) async {
     MetaDataMovedResponse metaDataMovedResponse;
-    moveMetaDataSInk.add(ApiResponse.loading('Moving data to user'));
+    moveMetaDataSInk.add(ApiResponse.loading(variable.strMoveData));
     try {
       metaDataMovedResponse = await _healthReportListForUserRepository
           .moveDataToOtherUser(familyMemberID, detailID);
@@ -179,7 +179,7 @@ class HealthReportListForUserBlock implements BaseBloc {
   Future<UpdateMediaResponse> updateMedia(
       String jsonData, String metaInfoId) async {
     UpdateMediaResponse updateMediaResponse;
-    metaDataUpdateSink.add(ApiResponse.loading('Updating Data'));
+    metaDataUpdateSink.add(ApiResponse.loading(variable.strUpdateData));
     try {
       updateMediaResponse = await _healthReportListForUserRepository
           .updateMediaData(jsonData, metaInfoId);
@@ -193,7 +193,7 @@ class HealthReportListForUserBlock implements BaseBloc {
   Future<List<dynamic>> getDocumentImageList(
       List<MediaMasterIds> metaMasterIdList) async {
     List<dynamic> userHealthResponseList;
-    imageListSink.add(ApiResponse.loading('Updating Data'));
+    imageListSink.add(ApiResponse.loading(variable.strUpdateData));
 
     try {
       userHealthResponseList = await _healthReportListForUserRepository
@@ -202,7 +202,6 @@ class HealthReportListForUserBlock implements BaseBloc {
       imageListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       imageListSink.add(ApiResponse.error(e.toString()));
-
     }
 
     return userHealthResponseList;

@@ -1,7 +1,5 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/src/model/AppointmentModel.dart';
 import 'package:myfhb/src/model/ReminderModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
@@ -9,6 +7,8 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+
 
 
 class AddAppointments extends StatefulWidget {
@@ -52,7 +52,7 @@ class _AddAppointmentState extends State<AddAppointments> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        title: Text('Add Appointment'),
+        title: Text(Constants.AddAppointment),
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
@@ -72,22 +72,22 @@ class _AddAppointmentState extends State<AddAppointments> {
                         TextFormField(
                           controller: hosContoller,
                           decoration: InputDecoration(
-                              labelText: 'Hospital Name',
+                              labelText: Constants.HospitalName,
                               errorText: _isTitleEmpty
-                                  ? 'Hospital name can\'t be empty'
+                                  ? Constants.hopspitalEmpty
                                   : null),
                         ),
                         TextFormField(
                           controller: docNameController,
                           decoration: InputDecoration(
-                              labelText: "Doctor's Name",
+                              labelText: Constants.DoctorName,
                               errorText: _isNoteEmpty
-                                  ? 'Doctor name can\'t be empty'
+                                  ? Constants.DoctorNameEmpty
                                   : null),
                         ),
                         Padding(
                           child: Text(
-                            'Appointment Date & Time',
+                            Constants.AppointmentDateTime,
                             textAlign: TextAlign.start,
                             style: TextStyle(color: Colors.grey[600]),
                           ),
@@ -103,7 +103,6 @@ class _AddAppointmentState extends State<AddAppointments> {
                               child: Row(
                                 children: <Widget>[
                                   Text(
-                                      /*isUpdate?FHBUtils().getFormattedDateOnly(widget.model.date):*/
                                       FHBUtils().getFormattedDateOnly(
                                           selectedDate.toString())),
                                   SizedBox(width: 10),
@@ -121,7 +120,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                               },
                               child: Row(
                                 children: <Widget>[
-                                  Text(/*isUpdate?widget.model.time:*/
+                                  Text(
                                       FHBUtils().formatTimeOfDay(selectedTime)),
                                   SizedBox(width: 10),
                                   Icon(
@@ -140,7 +139,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                             child: Opacity(
                               opacity: _isTimeAfter ? 0.0 : 1.0,
                               child: Text(
-                                'wrong time picked',
+                               Constants.WrongTime,
                                 style: TextStyle(
                                     color: Colors.red[500], fontSize: 14.0),
                               ),
@@ -148,7 +147,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                         TextFormField(
                           controller: reasonController,
                           decoration: InputDecoration(
-                            labelText: 'Reason',
+                            labelText: Constants.Reason,
                           ),
                         ),
                       ]),
@@ -161,7 +160,7 @@ class _AddAppointmentState extends State<AddAppointments> {
                 ]),
                 width: 200,
                 child: Text(
-                  'Save',
+                  Constants.Save,
                   style: TextStyle(color: Colors.white),
                 ),
                 onPressed: () {

@@ -4,12 +4,13 @@ import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 import 'dart:convert' as convert;
 
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
 class ProvidersListRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -23,9 +24,11 @@ class ProvidersListRepository {
   }
 
   Future<TelehealthProviderModel> getTelehealthDoctorsList() async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
     final response = await _helper.getTelehealthDoctorsList(
         query.qr_Userprofile +
-            "bde140db-0ffc-4be6-b4c0-5e44b9f54535" +
+            userID +
             query.qr_slash +
             query.qr_sections +
             query.qr_medicalPreferences);
@@ -50,14 +53,15 @@ class ProvidersListRepository {
     return DoctorBookMarkedSucessModel.fromJson(response);
   }
 
-  Future<DoctorTimeSlotsModel> getTelehealthSlotsList(String date,String doctorId) async {
-
+  Future<DoctorTimeSlotsModel> getTelehealthSlotsList(
+      String date, String doctorId) async {
     var slotInput = {};
-    slotInput['date'] = '2020-07-21';
-    slotInput['doctorId'] = 'c99b732e-d630-4301-b3fa-e7c800b891b4';
+    slotInput[parameters.strDate] = query.qr_slot_date;
+    slotInput[parameters.strDoctorId] =query.qr_docId_val;
 
     var jsonString = convert.jsonEncode(slotInput);
-    final response = await _helper.getTimeSlotsList("doctorSlots/getAvailability",jsonString);
+    final response = await _helper.getTimeSlotsList(
+       query.qr_doctorslot+query.qr_availability, jsonString);
     return DoctorTimeSlotsModel.fromJson(response);
   }
 }

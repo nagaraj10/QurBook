@@ -9,6 +9,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'ChatScreen.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class SuperMaya extends StatefulWidget {
   @override
@@ -55,7 +57,7 @@ class _SuperMayaState extends State<SuperMaya> {
   Widget build(BuildContext context) {
     return ShowCaseWidget(
       onFinish: () {
-        PreferenceUtil.saveString(Constants.KEY_SHOWCASE_MAYA, 'true');
+        PreferenceUtil.saveString(Constants.KEY_SHOWCASE_MAYA, variable.strtrue);
       },
       builder: Builder(
         builder: (context) {
@@ -69,7 +71,7 @@ class _SuperMayaState extends State<SuperMaya> {
                   backgroundColor: Colors.transparent,
                   leading: Container(),
                   elevation: 0,
-                  title: Text('Maya'),
+                  title: Text(variable.strMaya),
                   centerTitle: true,
                 ),
               ),
@@ -79,16 +81,16 @@ class _SuperMayaState extends State<SuperMaya> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Image.asset(
-                      PreferenceUtil.getStringValue('maya_asset') != null
-                          ? PreferenceUtil.getStringValue('maya_asset') + '.png'
-                          : 'assets/maya/maya_us_main.png',
+                      PreferenceUtil.getStringValue(Constants.keyMayaAsset) != null
+                          ? PreferenceUtil.getStringValue(Constants.keyMayaAsset) + variable.strExtImg
+                          : variable.icon_mayaMain,
                       height: 160,
                       width: 160,
                       //color: Colors.deepPurple,
                     ),
                     //Icon(Icons.people),
                     Text(
-                      'Hi, I am Maya your voice health assistant.',
+                      variable.strIntromaya,
                       softWrap: true,
                     ),
                     SizedBox(
@@ -99,11 +101,11 @@ class _SuperMayaState extends State<SuperMaya> {
                         height: 50,
                         child: FHBBasicWidget.customShowCase(
                             _micKey,
-                            'Tap me and invoke. Lets converse',
+                            variable.strTapMaya,
                             RaisedGradientButton(
                                 borderRadius: 30,
                                 child: Text(
-                                  'Start now',
+                                  variable.strStartNow,
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16),
                                 ),
@@ -128,7 +130,7 @@ class _SuperMayaState extends State<SuperMaya> {
                                     } 
                                   });
                                 }),
-                            'Maya')),
+                            variable.strMaya)),
                   ],
                 ),
               ));
@@ -137,9 +139,5 @@ class _SuperMayaState extends State<SuperMaya> {
     );
   }
 
-  /*  void checkForVoicePermission() async {
-    try {
-      await voice_platform.invokeMethod('speakWithVoiceAssistant');
-    } on PlatformException catch (e) {}
-  } */
+ 
 }

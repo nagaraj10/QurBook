@@ -79,7 +79,6 @@ class AddProviders extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return AddProvidersState();
   }
 }
@@ -129,7 +128,6 @@ class AddProvidersState extends State<AddProviders> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     addProvidersBloc = AddProvidersBloc();
@@ -143,7 +141,6 @@ class AddProvidersState extends State<AddProviders> {
     _hospitalListBlock = new HospitalListBlock();
     _labsListBlock = new LabsListBlock();
 
-//    getCurrentLocation();
 
     buildUI();
   }
@@ -576,7 +573,6 @@ class AddProvidersState extends State<AddProviders> {
           child: UnconstrainedBox(
               child: Container(
             padding: EdgeInsets.all(5.0),
-            //height: 35,
             decoration: BoxDecoration(
               color: Color.fromARGB(255, 246, 246, 246),
               border: Border.all(

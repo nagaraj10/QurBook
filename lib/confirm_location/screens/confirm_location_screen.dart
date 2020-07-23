@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/confirm_location/models/confirm_location_arguments.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
 class ConfirmLocationScreen extends StatefulWidget {
@@ -18,7 +19,6 @@ class ConfirmLocationScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return ConfirmLocationScreenState();
   }
 }
@@ -43,7 +43,6 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     searchController.text = widget.arguments.place.description;
@@ -62,7 +61,6 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
 
     return Scaffold(
         body: Stack(children: <Widget>[
@@ -204,7 +202,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
   void confirmBtnTapped() {
     Navigator.popUntil(context, (Route<dynamic> route) {
       bool shouldPop = false;
-      if (route.settings.name == '/add-providers') {
+      if (route.settings.name == rt_AddProvider) {
         (route.settings.arguments as AddProvidersArguments).placeDetail =
             widget.arguments.placeDetail;
         (route.settings.arguments as AddProvidersArguments).place =

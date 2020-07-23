@@ -5,6 +5,9 @@ import 'package:myfhb/search_providers/services/labs_list_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 class LabsListBlock implements BaseBloc {
   LabsListRepository _labsListRepository;
   StreamController _labsListController;
@@ -26,7 +29,7 @@ class LabsListBlock implements BaseBloc {
   }
 
   getLabsList(String param) async {
-    labListSink.add(ApiResponse.loading('Signing in user'));
+    labListSink.add(ApiResponse.loading(variable.strGetLabList));
     try {
       LabsListResponse labsListResponse =
           await _labsListRepository.getLabsFromSearch(param);
@@ -39,7 +42,7 @@ class LabsListBlock implements BaseBloc {
 
   Future<LabsListResponse> getLabsListUsingID(String labId) async {
     LabsListResponse labsListResponse;
-    labListSink.add(ApiResponse.loading('Signing in user'));
+    labListSink.add(ApiResponse.loading(variable.strGetLabById));
     try {
       labsListResponse = await _labsListRepository.getLabsFromId(labId);
       labListSink.add(ApiResponse.completed(labsListResponse));

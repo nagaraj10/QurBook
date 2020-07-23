@@ -124,10 +124,10 @@ class RecordInfoCard {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
-                  backgroundImage: metaInfo.hospital.logoThumbnail != null
+                  backgroundImage: metaInfo.hospital!=null?metaInfo.hospital.logoThumbnail != null
                       ? NetworkImage(
                           Constants.BASE_URL + metaInfo.hospital.logoThumbnail)
-                      : null,
+                      : null:null,
                 ),
                 Expanded(
                   child: Padding(
@@ -135,7 +135,7 @@ class RecordInfoCard {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        metaInfo.hospital.name != null
+                       metaInfo.hospital!=null? metaInfo.hospital.name != null
                             ? Text(
                                 toBeginningOfSentenceCase(
                                     metaInfo.hospital.name),
@@ -145,6 +145,8 @@ class RecordInfoCard {
                                 overflow: TextOverflow.ellipsis,
                               )
                             : SizedBox(
+                                height: 0,
+                              ): SizedBox(
                                 height: 0,
                               ),
                         metaInfo.doctor != null
@@ -207,10 +209,10 @@ class RecordInfoCard {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
-                  backgroundImage: metaInfo.laboratory.logoThumbnail != null
+                  backgroundImage: metaInfo.laboratory!=null?metaInfo.laboratory.logoThumbnail != null
                       ? NetworkImage(Constants.BASE_URL +
                           metaInfo.laboratory.logoThumbnail)
-                      : null,
+                      : null:null,
                 ),
                 Expanded(
                   child: Padding(
@@ -218,7 +220,7 @@ class RecordInfoCard {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        metaInfo.laboratory.name != null
+                        metaInfo.laboratory!=null?metaInfo.laboratory.name != null
                             ? Text(
                                 toBeginningOfSentenceCase(
                                     metaInfo.laboratory.name),
@@ -228,6 +230,8 @@ class RecordInfoCard {
                                 overflow: TextOverflow.ellipsis,
                               )
                             : SizedBox(
+                                height: 0,
+                              ):SizedBox(
                                 height: 0,
                               ),
                         metaInfo.doctor != null

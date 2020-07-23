@@ -284,7 +284,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         selectedGender = value.response.data.generalInfo.gender == null
             ? null
             : value.response.data.generalInfo.gender;
-        // dateOfBirthController.text =    value.response.data.generalInfo.dateOfBirth;
 
         dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
             value.response.data.generalInfo.dateOfBirth);
@@ -306,7 +305,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       try {
         if (bloodGroupSplitName.length > 1) {
           for (String bloodGroup in variable.bloodGroupArray) {
-            //      var bloodgroupClone = bloodGroup.split(' ');
             if (bloodGroupSplitName[0] == bloodGroup) {
               selectedBloodGroup = bloodGroup;
             }
@@ -321,7 +319,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
           if (bloodGroupSplitName.length > 1) {
             for (String bloodGroup in variable.bloodGroupArray) {
-              //      var bloodgroupClone = bloodGroup.split(' ');
               if (bloodGroupSplitName[0] == bloodGroup) {
                 selectedBloodGroup = bloodGroup;
               }
@@ -1204,7 +1201,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               ? true
               : false,
           keyboardType: TextInputType.text,
-          //          focusNode: nameFocus,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(middleNameFocus);
@@ -1243,7 +1239,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               ? true
               : false,
           keyboardType: TextInputType.text,
-          //          focusNode: nameFocus,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(lastNameFocus);
@@ -1282,7 +1277,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               ? true
               : false,
           keyboardType: TextInputType.text,
-          //          focusNode: nameFocus,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(relationShipFocus);

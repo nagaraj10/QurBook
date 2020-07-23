@@ -13,6 +13,9 @@ import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -36,18 +39,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'UnKnown'];
-
-  List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
+  
 
   @override
   void initState() {
     PreferenceUtil.init();
     super.initState();
-    /* _myProfileBloc = new MyProfileBloc();
-    _myProfileBloc.getMyProfileData().then((profileData) {
-      PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData); 
-    });*/
+ 
   }
 
   @override
@@ -71,13 +69,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
       var bloodGroupSplitName = selectedBloodGroupClone.split('_');
 
       if (bloodGroupSplitName.length > 1) {
-        for (String bloodGroup in bloodGroupArray) {
+        for (String bloodGroup in variable.bloodGroupArray) {
           if (bloodGroupSplitName[0] == bloodGroup) {
             bloodGroupController.text = bloodGroup;
           }
         }
 
-        for (String bloodRange in bloodRangeArray) {
+        for (String bloodRange in variable.bloodRangeArray) {
           if (bloodGroupSplitName[1] == bloodRange) {
             bloodRangeController.text = bloodRange;
           }
@@ -85,17 +83,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
       } else {
         var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
         if (bloodGroupSplitName.length > 1) {
-          for (String bloodGroup in bloodGroupArray) {
+          for (String bloodGroup in variable.bloodGroupArray) {
             if (bloodGroupSplitName[0] == bloodGroup) {
               bloodGroupController.text = bloodGroup;
             }
 
-            for (String bloodRange in bloodRangeArray) {
+            for (String bloodRange in variable.bloodRangeArray) {
               if (bloodGroupSplitName[1][0] == bloodRange) {
                 bloodRangeController.text = bloodRange;
-                /*  if (!bloodRangeController.text.contains('ve')) {
-                  bloodRangeController.text = bloodRange + ' ve';
-                } */
+            
               }
             }
           }
@@ -153,9 +149,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     controller: mobile,
                     enabled: false,
                     decoration: InputDecoration(
-                      hintText: 'MobileNumber',
+                      hintText: variable.strMobileNum,
                       hintStyle: TextStyle(fontSize: 12),
-                      labelText: 'MobileNumber',
+                      labelText: variable.strMobileNum,
                     ),
                   )),
 
@@ -202,9 +198,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       controller: email,
                       enabled: false,
                       decoration: InputDecoration(
-                        hintText: 'Email Address',
+                        hintText: variable.strEmailAddress,
                         hintStyle: TextStyle(fontSize: 12),
-                        labelText: 'Email Address',
+                        labelText: variable.strEmailAddress,
                         //suffix: Text('Tap to verify')
                       ),
                     ),
@@ -216,7 +212,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       ? GestureDetector(
                           child: Padding(
                               padding: EdgeInsets.all(10),
-                              child: Text('Tap to verify Email address',
+                              child: Text(Constants.VerifyEmail,
                                   style: TextStyle(
                                       fontSize: 13.0,
                                       fontWeight: FontWeight.w400,
@@ -244,9 +240,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   controller: gender,
                   enabled: false,
                   decoration: InputDecoration(
-                    hintText: 'Gender',
+                    hintText: CommonConstants.gender,
                     hintStyle: TextStyle(fontSize: 12),
-                    labelText: 'Gender',
+                    labelText: CommonConstants.gender,
                   ),
                 ),
               ),
@@ -260,9 +256,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           controller: bloodGroupController,
                           enabled: false,
                           decoration: InputDecoration(
-                              hintText: 'Blood Group',
+                              hintText: CommonConstants.blood_group,
                               hintStyle: TextStyle(fontSize: 12),
-                              labelText: 'Blood Group'),
+                              labelText: CommonConstants.blood_group),
                         ),
                       )),
                   Padding(
@@ -273,9 +269,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           controller: bloodRangeController,
                           enabled: false,
                           decoration: InputDecoration(
-                              hintText: 'Rh type',
+                              hintText: CommonConstants.STR_RHTYPE,
                               hintStyle: TextStyle(fontSize: 12),
-                              labelText: 'Rh type'),
+                              labelText: CommonConstants.STR_RHTYPE),
                         ),
                       )),
                 ],
@@ -287,9 +283,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   controller: dob,
                   enabled: false,
                   decoration: InputDecoration(
-                      hintText: 'Date of Birth',
+                      hintText: CommonConstants.date_of_birth,
                       hintStyle: TextStyle(fontSize: 12),
-                      labelText: 'Date of Birth'),
+                      labelText: CommonConstants.date_of_birth),
                 ),
               ),
             ],

@@ -12,6 +12,9 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 
 class VoiceRecordList extends StatefulWidget {
   final CompleteData completeData;
@@ -37,14 +40,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    /*   PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
+
     super.initState();
   }
 
@@ -76,7 +72,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                   child: Text(
                     Constants.NO_VOICE_RECRODS,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Poppins'),
+                    style: TextStyle(fontFamily: variable.font_poppins),
                   ),
                 ),
               ),
@@ -119,41 +115,6 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
             ),
             child: Row(
               children: <Widget>[
-                /*   Expanded(
-              flex: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Container(
-                    color: Colors.grey[200],
-                    width: 50.0,
-                    height: 50.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          new FHBUtils().convertMonthFromString(
-                              mediaMetaInfoObj.createdOn),
-                          style: TextStyle(color: Colors.black54),
-                        ),
-                        Text(
-                            new FHBUtils().convertDateFromString(
-                                mediaMetaInfoObj.createdOn),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18))
-                      ],
-                    ),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                ],
-              ),
-            ),
-             */
                 CircleAvatar(
                     radius: 25,
                     backgroundColor: const Color(fhbColors.bgColorContainer),
@@ -184,7 +145,6 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      //SizedBox(height: 10),
                       Text(
                         new FHBUtils()
                             .getFormattedDateString(mediaMetaInfoObj.createdOn),
@@ -199,26 +159,18 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      /*  Icon(
-                    Icons.more_horiz,
-                    color: Colors.grey,
-                    size: 20,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ), */
+                   
                       IconButton(
                           icon: mediaMetaInfoObj.isBookmarked
                               ? ImageIcon(
                                   AssetImage(
-                                      'assets/icons/record_fav_active.png'),
-                                  //TODO change theme
+                                      variable.icon_record_fav_active),
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
+                                  AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
                                   size: 20,
                                 ),
@@ -227,12 +179,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
 
-                      /*  mediaMetaInfoObj.metaInfo.hasVoiceNotes
-                      ? Icon(
-                          Icons.mic,
-                          color: Colors.black54,
-                        )
-                      : Container() */
+                   
                     ],
                   ),
                 ),

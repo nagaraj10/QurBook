@@ -12,6 +12,8 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_query.dart' as query;
 class IDDocsList extends StatefulWidget {
   final CompleteData completeData;
   final Function callBackToRefresh;
@@ -36,15 +38,7 @@ class _IDDocsListState extends State<IDDocsList> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    /*    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
-
+ 
     super.initState();
   }
 
@@ -77,7 +71,7 @@ class _IDDocsListState extends State<IDDocsList> {
                   child: Text(
                     Constants.NO_ID_DOCS,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Poppins'),
+                    style: TextStyle(fontFamily: variable.font_poppins),
                   ),
                 ),
               ),
@@ -120,41 +114,6 @@ class _IDDocsListState extends State<IDDocsList> {
             ),
             child: Row(
               children: <Widget>[
-                /*     Expanded(
-              flex: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Container(
-                    color: Colors.grey[200],
-                    width: 50.0,
-                    height: 50.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          new FHBUtils().convertMonthFromString(
-                              mediaMetaInfoObj.createdOn),
-                          style: TextStyle(color: Colors.black54),
-                        ),
-                        Text(
-                            new FHBUtils().convertDateFromString(
-                                mediaMetaInfoObj.createdOn),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500))
-                      ],
-                    ),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                ],
-              ),
-            ),
-            */
                 CircleAvatar(
                   radius: 25,
                   backgroundColor: const Color(fhbColors.bgColorContainer),
@@ -192,7 +151,7 @@ class _IDDocsListState extends State<IDDocsList> {
                                   : false,
                           child: Text(
                             mediaMetaInfoObj.metaInfo.dateOfExpiry != null
-                                ? 'Valid thru - ' +
+                                ? variable.strValidThru+
                                     mediaMetaInfoObj.metaInfo.dateOfExpiry
                                 : '',
                             overflow: TextOverflow.ellipsis,
@@ -210,45 +169,26 @@ class _IDDocsListState extends State<IDDocsList> {
                     ],
                   ),
                 ),
-                /*  Expanded(
-              flex: 1,
-              child: Column(
-                children: <Widget>[
-                  getDocumentImageWidget(mediaMetaInfoObj),
-                  /* Container(
-                        width: 40,
-                        height: 60,
-                        decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey)),
-                        child: Column(
-                          children: <Widget>[
-                            getDocumentImageWidget(mediaMetaInfoObj),
-                          ],
-                        ),
-                      ), */
-                ],
-              ),
-            ), */
+
                 Expanded(
                   flex: 1,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      /*  Icon(Icons.more_horiz, color: Colors.grey, size: 20),
-                  SizedBox(height: 20), */
+                     
                       IconButton(
                           icon: mediaMetaInfoObj.isBookmarked
                               ? ImageIcon(
                                   AssetImage(
-                                      'assets/icons/record_fav_active.png'),
+                                      variable.icon_record_fav_active),
                                   //TODO chnage theme
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
+                                  AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
                                   size: 20,
                                 ),
@@ -256,12 +196,7 @@ class _IDDocsListState extends State<IDDocsList> {
                             new CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
-                      /*  mediaMetaInfoObj.metaInfo.hasVoiceNotes
-                      ? Icon(
-                          Icons.mic,
-                          color: Colors.black54,
-                        )
-                      : Container() */
+                     
                     ],
                   ),
                 ),

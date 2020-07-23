@@ -4,23 +4,27 @@ import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
 import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_info.dart';
 import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/webservice_call.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_query.dart' as query;
+
 
 class AddFamilyUserInfoRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
+  WebserviceCall webserviceCall = new WebserviceCall();
 
   Future<RelationShipResponseList> getCustomRoles() async {
     final response = await _helper
-        .getCustomRoles("customRoles/" + "?sortBy=roleName.asc&limit=50");
+        .getCustomRoles(query.qr_customRole + query.qr_sort);
     return RelationShipResponseList.fromJson(response);
   }
 
   Future<MyProfile> getMyProfileInfo(String userID) async {
     final response = await _helper.getProfileInfo(
-        "userProfiles/$userID/?sections=generalInfo|isOriginalPicRequired=false");
+        query.qr_Userprofile+userID+query.qr_slash+query.qr_sections+query.qr_generalInfo+query.qr_OSlash+query.qr_isOriginalPicRequired);
     return MyProfile.fromJson(response);
   }
 
@@ -38,18 +42,38 @@ class AddFamilyUserInfoRepository {
       String lastName) async {
     String query = '';
 
-    query =
-        "generalInfo||gender=$gender|bloodGroup=$bloodGroup|dateOfBirth=$dateOfBirth|name=$name|firstName=$firstName|middleName=$middleName|lastName=$lastName|email=$email";
-
     var response;
-
 
     if (profilePic != null) {
       response = await _helper.saveImageToServerClone1(
-          "userProfiles/$userID/?sections=$query", profilePic, '');
+          webserviceCall.getQueryToUpdateProfile(
+              userID,
+              name,
+              phoneNo,
+              email,
+              gender,
+              bloodGroup,
+              dateOfBirth,
+              profilePic,
+              firstName,
+              middleName,
+              lastName),
+          profilePic,
+          '');
     } else {
-      response = await _helper
-          .updateFamilyUserProfile("userProfiles/$userID/?sections=$query");
+       response = await _helper.updateFamilyUserProfile(webserviceCall.getUrlToUpdateDoctor(),
+          webserviceCall.getQueryToUpdateProfile(
+              userID,
+              name,
+              phoneNo,
+              email,
+              gender,
+              bloodGroup,
+              dateOfBirth,
+              profilePic,
+              firstName,
+              middleName,
+              lastName));
     }
 
     return UpdateAddFamilyInfo.fromJson(response);
@@ -58,7 +82,7 @@ class AddFamilyUserInfoRepository {
   Future<UpdateAddFamilyRelationInfo> updateRelationShip(
       String jsonString) async {
     final response = await _helper.updateRelationShipUserInFamilyLinking(
-        "userLinking/", jsonString);
+        query.qr_userlinking, jsonString);
     return UpdateAddFamilyRelationInfo.fromJson(response);
   }
 
@@ -76,18 +100,39 @@ class AddFamilyUserInfoRepository {
       String lastName) async {
     String query = '';
 
-    query =
-        "generalInfo||gender=$gender|bloodGroup=$bloodGroup|dateOfBirth=$dateOfBirth|name=$name|firstName=$firstName|middleName=$middleName|lastName=$lastName|email=$email";
-    // query ="generalInfo||firstName=$firstName|middleName=$middleName|lastName=$lastName";
-
+   
     var response;
 
     if (profilePic != null) {
       response = await _helper.saveImageToServerClone1(
-          "userProfiles/$userID/?sections=${query}", profilePic, '');
+          webserviceCall.getQueryToUpdateProfile(
+              userID,
+              name,
+              phoneNo,
+              email,
+              gender,
+              bloodGroup,
+              dateOfBirth,
+              profilePic,
+              firstName,
+              middleName,
+              lastName),
+          profilePic,
+          '');
     } else {
-      response = await _helper
-          .updateFamilyUserProfile("userProfiles/$userID/?sections=${query}");
+      response = await _helper.updateFamilyUserProfile(webserviceCall.getUrlToUpdateDoctor(),
+          webserviceCall.getQueryToUpdateProfile(
+              userID,
+              name,
+              phoneNo,
+              email,
+              gender,
+              bloodGroup,
+              dateOfBirth,
+              profilePic,
+              firstName,
+              middleName,
+              lastName));
     }
 
     return UpdateAddFamilyInfo.fromJson(response);
@@ -97,7 +142,7 @@ class AddFamilyUserInfoRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper
-        .verifyEmail("userProfiles/" + userID + "/sendVerificationMail");
+        .verifyEmail(query.qr_Userprofile + userID + query.qr_sendVerificationMail);
     return VerifyEmailResponse.fromJson(response);
   }
 }

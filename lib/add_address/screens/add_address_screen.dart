@@ -39,7 +39,6 @@ class AddAddressScreenState extends State<AddAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
 
     return Scaffold(
         body: Column(
@@ -88,7 +87,6 @@ class AddAddressScreenState extends State<AddAddressScreen> {
         keyboardType: TextInputType.text,
         focusNode: searchFocus,
         textInputAction: TextInputAction.done,
-//        autofocus: true,
         onSubmitted: (term) {
           searchFocus.unfocus();
         },

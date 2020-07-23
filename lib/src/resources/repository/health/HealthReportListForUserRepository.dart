@@ -14,6 +14,10 @@ import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
+import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
+
 class HealthReportListForUserRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
@@ -21,13 +25,13 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper
-        .getHealthRecordList("mediameta/" + userID + "/getmediameta/");
+        .getHealthRecordList(query.qr_mediameta + userID + query.qr_slash+query.qr_getMediaData);
     return UserHealthResponseList.fromJson(response);
   }
 
   Future<dynamic> getDoctorProfile(String doctorsId) async {
     final response = await _helper
-        .getDoctorProfilePic("doctors/" + doctorsId + "/getprofilepic/isOriginalPicRequired=true");
+        .getDoctorProfilePic(query.qr_doctors + doctorsId +query.qr_slash+query.qr_getprofilepic+query.qr_slash+query.qr_isOriginalPicRequiredTrue);
     return response;
   }
 
@@ -35,7 +39,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.getDocumentImage(
-        "mediameta/" + userID + "/getRawMedia/" + metaMasterID);
+        query.qr_mediameta+ userID + query.qr_slash+query.qr_rawMedia+metaMasterID);
     return response;
   }
 
@@ -55,7 +59,7 @@ class HealthReportListForUserRepository {
     }
 
     var response = await _helper.saveMediaData(
-        "mediameta/" + id + "/savemediameta/", jsonString);
+       query.qr_mediameta+ id + query.qr_slash +query.qr_savedmedia, jsonString);
     return SavedMetaDataResponse.fromJson(response);
   }
 
@@ -64,7 +68,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.saveImageAndGetDeviceInfo(
-        "ai/" + userID + "/saveHealthRecord/",
+        query.qr_ai + userID + query.qr_slash+query.qr_savehealth,
         File(fileName),
         fileName,
         metaID,
@@ -77,7 +81,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.saveImageToServerClone(
-        "mediamaster/" + userID + "/savemediamaster/",
+        query.qr_mediamaster + userID +query.qr_slash+query.qr_savedmediamaster,
         File(fileName),
         fileName,
         metaID,
@@ -88,13 +92,13 @@ class HealthReportListForUserRepository {
   Future<MetaDataMovedResponse> moveDataToOtherUser(
       String familyID, String metaID) async {
     var signInData = {};
-    signInData['mediaMetaId'] = metaID;
-    signInData['destinationId'] = familyID;
+    signInData[parameters.strmediaMetaId] = metaID;
+    signInData[parameters.strdestinationId] = familyID;
     var jsonString = convert.jsonEncode(signInData);
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.moveMetaDataToOtherUser(
-        "mediameta/" + userID + "/move", jsonString);
+        query.qr_mediameta + userID + query.qr_move, jsonString);
     return MetaDataMovedResponse.fromJson(response);
   }
 
@@ -103,7 +107,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     var response = await _helper.updateMediaData(
-        "mediameta/" + userID + "/updatemediameta/" + metaInfoID, jsonString);
+        query.qr_mediameta + userID + query.qr_slash+query.qr_updatemediameta + metaInfoID, jsonString);
     return UpdateMediaResponse.fromJson(response);
   }
 
@@ -112,7 +116,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.getDocumentImageList(
-        "mediameta/" + userID + "/getRawMedia/", metaMasterIdList);
+       query.qr_mediameta + userID + query.qr_slash+query.qr_rawMedia, metaMasterIdList);
     return response;
   }
 }

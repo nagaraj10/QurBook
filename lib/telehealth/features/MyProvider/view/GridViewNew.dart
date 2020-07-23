@@ -31,7 +31,7 @@ class _GridViewNew extends State<GridViewNew> {
 
     rowPosition = positionFinal;
 
-    print(rowPosition.toString());
+    
     _selectedIndex = index;
     setState(() => _selectedIndex = index);
 
@@ -64,8 +64,7 @@ class _GridViewNew extends State<GridViewNew> {
   }
 
   Widget getSpecificSlots(String time,int index) {
-    print(widget.rowPosition);
-    print(widget.selectedRow);
+    
     return Container(
       width: 35,
       decoration: myBoxDecoration(index),

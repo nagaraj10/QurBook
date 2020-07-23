@@ -12,6 +12,9 @@ import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 import 'AppException.dart';
 
 class ApiBaseHelper {
@@ -21,161 +24,120 @@ class ApiBaseHelper {
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
   Future<dynamic> signIn(String url, String jsonData) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-    };
-
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
-          body: jsonData, headers: requestHeaders);
+          body: jsonData, headers: variable.requestHeadersWithoutToken);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
   Future<dynamic> verifyOTP(String url, String otpVerifyData) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'accept': 'application/json'
-    };
-
     var responseJson;
 
     try {
       final response = await http.post(_baseUrl + url,
-          body: otpVerifyData, headers: requestHeaders);
+          body: otpVerifyData, headers: variable.requestHeadersWithoutToken);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
   Future<dynamic> verifyAddFamilyOTP(String url, String otpVerifyData) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
 
     try {
       final response = await http.post(_baseUrl + url,
-          body: otpVerifyData, headers: requestHeaders);
+          body: otpVerifyData, headers: variable.requestHeadersAuthContent);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
-  Future<dynamic> deleteHealthRecord(String url,
-      String healthRecordData) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Authorization': authToken,
-    };
-
+  Future<dynamic> deleteHealthRecord(
+      String url, String healthRecordData) async {
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
-          body: healthRecordData, headers: requestHeaders);
+          body: healthRecordData, headers: variable.requestHeadersAuthContent);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
   Future<dynamic> bookmarkRecord(String url, String bookmarkData) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
 
     try {
       final response = await http.post(_baseUrl + url,
-          body: bookmarkData, headers: requestHeaders);
+          body: bookmarkData, headers: variable.requestHeadersAuthContent);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
   Future<dynamic> updateProviders(String url) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
-      final response =
-      await http.put(_baseUrl + url, body: '', headers: requestHeaders);
+      final response = await http.put(_baseUrl + url,
+          body: '', headers: variable.requestHeadersAuthContent);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
-  Future<dynamic> updateTeleHealthProviders(String url,String query) async {
+  Future<dynamic> updateTeleHealthProviders(String url, String query) async {
     Dio dio = new Dio();
     var responseJson;
 
-    dio.options.headers['accept'] = 'application/json';
-    dio.options.headers['Content-Type'] = 'multipart/form-data';
-    dio.options.headers['Authorization'] = authToken;
+    dio.options.headers[variable.straccept] = variable.strAcceptVal;
+    dio.options.headers[variable.strContentType] = variable.strcntVal;
+    dio.options.headers[variable.strAuthorization] = authToken;
 
     Map<String, dynamic> mapForSignUp = new Map();
-    mapForSignUp['sections'] = query;
+    mapForSignUp[parameters.strSections] = query;
     FormData formData = new FormData.fromMap(mapForSignUp);
 
-    var response = await dio.post(_baseUrl+url, data: formData);
+    var response = await dio.post(_baseUrl + url, data: formData);
 
     //responseJson = _returnResponse(response.data);
 
     return response.data;
-
   }
 
   Future<dynamic> addProviders(String url, String jsonData) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
-          body: jsonData, headers: requestHeaders);
+          body: jsonData, headers: variable.requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
   Future<dynamic> getMedicalPreferencesList(String url) async {
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url,
+          headers: variable.requestHeadersAuthAccept);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -188,17 +150,14 @@ class ApiBaseHelper {
 
   Future<dynamic> getCategoryList(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    Map<String, String> requestHeaders = {
-      'Content-Type': 'application/json',
-      'Authorization': authToken,
-    };
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url,
+          headers: variable.requestHeadersAuthContent);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -212,17 +171,13 @@ class ApiBaseHelper {
   Future<dynamic> getHealthRecordList(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url,
+          headers: variable.requestHeadersAuthAccept);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -230,17 +185,13 @@ class ApiBaseHelper {
   Future<dynamic> getMediaTypes(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url,
+          headers: variable.requestHeadersAuthAccept);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -248,17 +199,13 @@ class ApiBaseHelper {
   Future<dynamic> getDoctorProfilePic(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': '*/*',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url,
+          headers: variable.requestHeadersAuthStar);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -266,18 +213,14 @@ class ApiBaseHelper {
   Future<dynamic> getHospitalListFromSearch(String url, String param) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url,
+          headers: variable.requestHeadersAuthAccept);
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -285,17 +228,13 @@ class ApiBaseHelper {
   Future<dynamic> getDocumentImage(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url,
+          headers: variable.requestHeadersAuthAccept);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -303,19 +242,14 @@ class ApiBaseHelper {
   Future<dynamic> getDoctorsListFromSearch(String url, String param) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
-      final response =
-      await http.get(_baseUrl + url + param, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url + param,
+          headers: variable.requestHeadersAuthAccept);
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -323,17 +257,13 @@ class ApiBaseHelper {
   Future<dynamic> getFamilyMembersList(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url,
+          headers: variable.requestHeadersAuthAccept);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -341,17 +271,13 @@ class ApiBaseHelper {
   Future<dynamic> getProfileInfo(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url,
+          headers: variable.requestHeadersAuthAccept);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -360,85 +286,72 @@ class ApiBaseHelper {
     switch (response.statusCode) {
       case 200:
         var responseJson;
-        if (response.headers['content-type'] == 'image/jpg' ||
-            response.headers['content-type'] == 'image/png' ||
-            response.headers['content-type'] == 'image/*' ||
-            response.headers['content-type'] == 'audio/mp3') {
+        if (response.headers[variable.strcontenttype] ==
+                variable.file_img_jpg ||
+            response.headers[variable.strcontenttype] ==
+                variable.file_img_png ||
+            response.headers[variable.strcontenttype] ==
+                variable.file_img_all ||
+            response.headers[variable.strcontenttype] ==
+                variable.file_audio_mp) {
           responseJson = response.bodyBytes;
         } else {
           responseJson = convert.jsonDecode(response.body.toString());
         }
-        print(responseJson);
-
+        print(response.body.toString());
 
         return responseJson;
 
       case 201:
         var responseJson = convert.jsonDecode(response.body.toString());
-        print(responseJson);
 
         return responseJson;
 
       case 400:
         var responseJson = convert.jsonDecode(response.body.toString());
-        print(responseJson);
 
         return responseJson;
       case 401:
         var responseJson = convert.jsonDecode(response.body.toString());
-        print(responseJson);
 
-
-        if (responseJson['message'] == Constants.STR_OTPMISMATCHED) {
+        if (responseJson[parameters.strMessage] ==
+            Constants.STR_OTPMISMATCHED) {
           return responseJson;
         } else {
-          PreferenceUtil.clearAllData().then((value) {
-            Get.offAll(SignInScreen());
-            Get.snackbar('Message', 'Logged into other Device');
-          });
+          SnackbarToLogout();
         }
         break;
 
       case 403:
         var responseJson = convert.jsonDecode(response.body.toString());
-        print(responseJson);
 
-        if (responseJson['message'] == Constants.STR_OTPMISMATCHEDFOREMAIL) {
+        if (responseJson[parameters.strMessage] ==
+            Constants.STR_OTPMISMATCHEDFOREMAIL) {
           return responseJson;
         } else {
-          PreferenceUtil.clearAllData().then((value) {
-            Get.offAll(SignInScreen());
-            Get.snackbar('Message', 'Logged into other Device');
-          });
+          SnackbarToLogout();
         }
         break;
 
       case 500:
       default:
         throw FetchDataException(
-            'Error occured while Communication with Server with StatusCode : ${response
-                .statusCode}');
+            variable.strErrComm + '${response.statusCode}');
     }
   }
 
   Future<dynamic> saveMediaData(String url, String jsonBody) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': authToken,
-    };
-
     var responseJson;
     var response;
     try {
       response = await http.post(_baseUrl + url,
-          body: jsonBody, headers: requestHeaders);
+          body: jsonBody, headers: variable.requestHeaders);
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
 
     return responseJson;
@@ -452,36 +365,32 @@ class ApiBaseHelper {
 
       Dio dio = new Dio();
 
-      dio.options.headers['accept'] = 'application/json';
-      dio.options.headers['content-Type'] = 'multipart/form-data';
-
-      dio.options.headers["authorization"] = authToken;
-      String fileNoun = file.path
-          .split('/')
-          .last;
+      dio.options.headers[variable.straccept] = variable.strAcceptVal;
+      dio.options.headers[variable.strcontenttype] = variable.strcntVal;
+      dio.options.headers[variable.strauthorization] = authToken;
+      String fileNoun = file.path.split('/').last;
 
       FormData formData = new FormData.fromMap({
-        "mediaMetaId": metaID,
-        "file": await MultipartFile.fromFile(file.path, filename: fileNoun)
+        parameters.strmediaMetaId: metaID,
+        parameters.strfile: await MultipartFile.fromFile(file.path, filename: fileNoun)
       });
       response = await dio.post(_baseUrl + url, data: formData);
 
       return response.data;
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
   }
 
-  Future<dynamic> signUpPage(String url,
-      Map<String, dynamic> mapForSignUp) async {
+  Future<dynamic> signUpPage(
+      String url, Map<String, dynamic> mapForSignUp) async {
     var responseJson;
     try {
       Dio dio = new Dio();
 
-      dio.options.headers['accept'] = 'application/json';
-      dio.options.headers['Content-Type'] = 'multipart/form-data';
+      dio.options.headers[variable.straccept] = variable.strAcceptVal;
+      dio.options.headers[variable.strContentType] = variable.strcntVal;
       FormData formData = new FormData.fromMap(mapForSignUp);
-
 
       var response = await dio.post(_baseUrl + url, data: formData);
 
@@ -489,77 +398,79 @@ class ApiBaseHelper {
 
       return response.data;
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
   }
 
   Future<dynamic> addUserLinking(String url, String jsonData) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
-    };
+   
 
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
-          body: jsonData, headers: requestHeaders);
+          body: jsonData, headers: variable.requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
   Future<dynamic> addUserDeLinking(String url, String jsonData) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
-    };
+  
 
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
-          body: jsonData, headers: requestHeaders);
+          body: jsonData, headers: variable.requestHeaders);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
-  Future<dynamic> updateFamilyUserProfile(String url) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Authorization': authToken,
-    };
-
+  Future<dynamic> updateFamilyUserProfile(String url,String query) async {
+    Dio dio = new Dio();
     var responseJson;
+
+    dio.options.headers[variable.strContentType] = variable.strcntVal;
+    dio.options.headers[variable.strAuthorization] = authToken;
+
+    Map<String, dynamic> mapForSignUp = new Map();
+    mapForSignUp[parameters.strSections] = query;
+    FormData formData = new FormData.fromMap(mapForSignUp);
+
+    var response = await dio.post(_baseUrl + url, data: formData);
+
+    //responseJson = _returnResponse(response.data);
+
+    return response.data;
+
+
+
+    /*var responseJson;
     try {
       final response =
-      await http.put(_baseUrl + url, body: '', headers: requestHeaders);
+          await http.put(_baseUrl + url, body: '', headers: variable.requestHeadersAuthContent);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
-    return responseJson;
+    return responseJson;*/
   }
 
-  Future<dynamic> updateRelationShipUserInFamilyLinking(String url,
-      String jsonData) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Authorization': authToken,
-    };
+  Future<dynamic> updateRelationShipUserInFamilyLinking(
+      String url, String jsonData) async {
+    
 
     var responseJson;
     try {
       final response = await http.put(_baseUrl + url,
-          body: jsonData, headers: requestHeaders);
+          body: jsonData, headers: variable.requestHeadersAuthContent);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -567,65 +478,55 @@ class ApiBaseHelper {
   Future<dynamic> getCustomRoles(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': '*/*',
-      'Authorization': authToken,
-    };
+   
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: requestHeaders);
+      final response = await http.get(_baseUrl + url, headers: variable.requestHeadersAuthStar);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
-  Future<dynamic> saveImageToServerClone1(String url, File file,
-      String jsonBody) async {
+  Future<dynamic> saveImageToServerClone1(
+      String url, File file, String jsonBody) async {
     var response;
     try {
       String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
       Dio dio = new Dio();
 
-      dio.options.headers['accept'] = 'application/json';
-      dio.options.headers['content-Type'] = 'multipart/form-data';
-
-      dio.options.headers["authorization"] = authToken;
-      String fileNoun = file.path
-          .split('/')
-          .last;
+       dio.options.headers[variable.straccept] = variable.strAcceptVal;
+      dio.options.headers[variable.strcontenttype] = variable.strcntVal;
+      dio.options.headers[variable.strauthorization] = authToken;
+      String fileNoun = file.path.split('/').last;
 
       FormData formData = new FormData.fromMap({
-        "profilePic":
-        await MultipartFile.fromFile(file.path, filename: fileNoun)
+        parameters.strprofilePic:
+            await MultipartFile.fromFile(file.path, filename: fileNoun)
       });
       response = await dio.put(_baseUrl + url, data: formData);
 
       return response.data;
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
   }
 
   Future<dynamic> moveMetaDataToOtherUser(String url, String jsonBody) async {
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': authToken,
-    };
+   
 
     var responseJson;
     var response;
     try {
       response = await http.post(_baseUrl + url,
-          body: jsonBody, headers: requestHeaders);
+          body: jsonBody, headers: variable.requestHeaders);
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
 
     return responseJson;
@@ -634,41 +535,33 @@ class ApiBaseHelper {
   Future<dynamic> updateMediaData(String url, String jsonBody) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Accept': 'application/json',
-      'Authorization': authToken,
-    };
-
+  
     var responseJson;
     var response;
     try {
       response = await http.put(_baseUrl + url,
-          body: jsonBody, headers: requestHeaders);
+          body: jsonBody, headers: variable.requestHeaders);
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
 
     return responseJson;
   }
 
-  Future<List<dynamic>> getDocumentImageList(String url,
-      List<MediaMasterIds> metaMasterIdList) async {
+  Future<List<dynamic>> getDocumentImageList(
+      String url, List<MediaMasterIds> metaMasterIdList) async {
     var imagesList = new List<dynamic>();
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     for (int i = 0; i < metaMasterIdList.length; i++) {
-      Map<String, String> requestHeaders = {
-        'accept': 'application/json',
-        'Authorization': authToken,
-      };
+     
 
       var responseJson;
       try {
         final response = await http.get(_baseUrl + url + metaMasterIdList[i].id,
-            headers: requestHeaders);
+            headers: variable.requestHeadersAuthAccept);
         responseJson = _returnResponse(response);
       } on SocketException {
         throw FetchDataException('No Internet connection');
@@ -682,19 +575,16 @@ class ApiBaseHelper {
   Future<dynamic> signoutPage(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'Accept': 'application/json',
-      'Authorization': authToken,
-    };
+   
 
     var responseJson;
     var response;
     try {
-      response = await http.put(_baseUrl + url, headers: requestHeaders);
+      response = await http.put(_baseUrl + url, headers: variable.requestHeadersAuthAccept);
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
 
     return responseJson;
@@ -703,19 +593,16 @@ class ApiBaseHelper {
   Future<dynamic> getSearchMediaFromServer(String url, String param) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
+   
 
     var responseJson;
     try {
       final response =
-      await http.get(_baseUrl + url + param, headers: requestHeaders);
+          await http.get(_baseUrl + url + param, headers: variable.requestHeadersAuthAccept);
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -728,39 +615,34 @@ class ApiBaseHelper {
 
       Dio dio = new Dio();
 
-      dio.options.headers['Content-Type'] = 'application/json';
-      dio.options.headers["Authorization"] = authToken;
-      String fileNoun = file.path
-          .split('/')
-          .last;
+      dio.options.headers[variable.strContentType] = variable.strAcceptVal;
+      dio.options.headers[variable.strAuthorization] = authToken;
+      String fileNoun = file.path.split('/').last;
 
       FormData formData = new FormData.fromMap({
-        "mediaMetaInfo": metaID,
-        "file": await MultipartFile.fromFile(file.path, filename: fileNoun)
+        parameters.strmediaMetaInfo: metaID,
+        parameters.strfile: await MultipartFile.fromFile(file.path, filename: fileNoun)
       });
       response = await dio.post(_baseUrl + url, data: formData);
 
       return response.data;
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
   }
 
   Future<dynamic> verifyEmail(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
+   
 
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url, headers: requestHeaders);
+      final response = await http.post(_baseUrl + url, headers: variable.requestHeadersAuthAccept);
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -768,19 +650,16 @@ class ApiBaseHelper {
   Future<dynamic> verifyOTPFromEmail(String url, String otpVerifyData) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'Content-type': 'application/json',
-      'Authorization': authToken,
-    };
+    
 
     var responseJson;
 
     try {
       final response = await http.post(_baseUrl + url,
-          body: otpVerifyData, headers: requestHeaders);
+          body: otpVerifyData, headers: variable.requestHeadersAuthContent);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -788,19 +667,15 @@ class ApiBaseHelper {
   Future<dynamic> getDoctorsFromId(String url, String param) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
-
+   
     var responseJson;
     try {
       final response =
-      await http.get(_baseUrl + url + param, headers: requestHeaders);
+          await http.get(_baseUrl + url + param, headers: variable.requestHeadersAuthAccept);
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
@@ -808,76 +683,65 @@ class ApiBaseHelper {
   Future<dynamic> getHospitalAndLabUsingId(String url, String param) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-    };
-
+   
     var responseJson;
     try {
       final response =
-      await http.get(_baseUrl + url + param, headers: requestHeaders);
+          await http.get(_baseUrl + url + param, headers: variable.requestHeadersAuthAccept);
 
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
   Future<dynamic> getTelehealthDoctorsList(String url) async {
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken
-    };
-
+   
     var responseJson;
     try {
       final response =
-      await http.get(_baseUrlV2 + url, headers: requestHeaders);
+          await http.get(_baseUrlV2 + url, headers: variable.requestHeadersAuthAccept);
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
   Future<dynamic> bookMarkDoctor(String url, String jsonBody) async {
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': authToken,
-      'Content-Type': 'application/json'
-    };
-
+    
     var responseJson;
     try {
       final response = await http.post(_baseUrlV2 + url,
-          headers: requestHeaders, body: jsonBody);
-      print(response.body);
+          headers: variable.requestHeaders, body: jsonBody);
+      
       responseJson = _returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
-  Future<dynamic> getTimeSlotsList(String url,String jsonBody) async {
-    Map<String, String> requestHeaders = {
-      'accept': 'application/json',
-      'Authorization': Auth_token_slots,
-      'Content-Type': 'application/json'
-    };
+  Future<dynamic> getTimeSlotsList(String url, String jsonBody) async {
+   
 
     var responseJson;
     try {
       final response = await http.post(_baseUrlV2 + url,
-          headers: requestHeaders, body: jsonBody);
-      print(response.body);
+          headers: variable.requestHeadersTimeSlot, body: jsonBody);
+      
       responseJson = _returnResponse(response);
-    }on SocketException {
-      throw FetchDataException('No Internet connection');
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
+  void SnackbarToLogout() {
+    PreferenceUtil.clearAllData().then((value) {
+      Get.offAll(SignInScreen());
+      Get.snackbar(variable.strMessage, variable.strlogInDeviceOthr);
+    });
+  }
 }

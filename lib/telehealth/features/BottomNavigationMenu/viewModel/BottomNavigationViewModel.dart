@@ -1,23 +1,26 @@
 import 'package:flutter/cupertino.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavigationArguments.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 class BottomNavigationViewModel extends ChangeNotifier {
     List<BottomNavigationArguments> bottomNavigationArgumentsList = new List();
 
   
   Future<void>  getAllValuesForBottom() async {
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'TeleHealth', imageIcon: 'assets/navicons/home.png'));
+        name: variable.strTelehealth, imageIcon: variable.icon_home));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'My Records', imageIcon: 'assets/navicons/records.png'));
+        name:variable.strMyRecords , imageIcon: variable.icon_records));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-      name: 'Maya',
-      imageIcon: 'assets/maya/maya_us_main.png',
+      name:variable.strMaya,
+      imageIcon: variable.icon_mayaMain,
     ));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'Accounts', imageIcon: 'assets/navicons/schedule.png'));
+        name: variable.strAccounts, imageIcon: variable.icon_schedule));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'Settings', imageIcon: 'assets/navicons/more.png'));
+        name: variable.strSettings, imageIcon: variable.icon_more));
 
         notifyListeners();
   }

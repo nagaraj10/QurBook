@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProviders.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -95,7 +96,7 @@ class _DoctorDetail extends State<DoctorDetail> {
                               height: fhbStyles.imageHeight,
                               icon: Icons.info,
                               onTap: () {
-                                print('on Info pressed');
+                               
                                 commonWidgets.showDoctorDetailView(
                                     widget.docs[widget.i], context);
                               }),
@@ -107,7 +108,7 @@ class _DoctorDetail extends State<DoctorDetail> {
                       height: fhbStyles.imageHeight,
                       icon: Icons.check_circle,
                       onTap: () {
-                        print('on check  pressed');
+                        
                       })
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
