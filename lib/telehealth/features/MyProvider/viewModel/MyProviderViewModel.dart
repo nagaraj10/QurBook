@@ -5,7 +5,6 @@ import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/mockDoctorsData.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
