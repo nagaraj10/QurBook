@@ -259,3 +259,16 @@ const String strfollowupType='followupType';
 const String strdestinationId='destinationId';
 
 
+//Booking Confirm
+const String pleaseChoose='Please Choose';
+const String theAppointmentIsFor='The Appointment is for';
+const String dateAndTime='Date & Time';
+const String confirmDetails='Confirmation Details';
+const String preConsultingDetails='Pre Consulting Details';
+const String addNotes='Add Notes';
+const String addVoice='Add Voice';
+const String records='Records';
+const String deviceReading='Device Readings';
+const String payNow='Pay Now';
+const String slotsAreNotAvailable='Slot not available in this date';
+const String bookNow='Book Now';

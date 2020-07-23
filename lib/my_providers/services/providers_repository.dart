@@ -53,9 +53,11 @@ class ProvidersListRepository {
     return DoctorBookMarkedSucessModel.fromJson(response);
   }
 
-  Future<DoctorTimeSlotsModel> getTelehealthSlotsList(
-      String date, String doctorId) async {
-    var slotInput = {};
+  
+ 
+  Future<DoctorTimeSlotsModel> getTelehealthSlotsList(String date,String doctorId) async {
+
+   var slotInput = {};
     slotInput[parameters.strDate] = query.qr_slot_date;
     slotInput[parameters.strDoctorId] =query.qr_docId_val;
 

@@ -24,7 +24,7 @@ class MyProviderViewModel extends ChangeNotifier {
       TelehealthProviderModel myProvidersResponseList =
           await _providersListRepository.getTelehealthDoctorsList();
 
-      doctorIdsList = myProvidersResponseList
+        doctorIdsList = myProvidersResponseList
           .response.data.medicalPreferences.preferences.doctorIds;
       return doctorIdsList;
     } catch (e) {}

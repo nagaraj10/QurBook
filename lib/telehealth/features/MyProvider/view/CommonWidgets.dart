@@ -1,27 +1,25 @@
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
-import 'package:gmiwidgetspackage/widgets/GridViewWidget.dart';
-import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
-import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
-
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Languages.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/ProfilePic.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/BookNowButton.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+
 
 class CommonWidgets {
+
+  CommonUtil commonUtil = new CommonUtil();
+  int rowPosition;
+  int itemPosition;
+
   Widget getTextForDoctors(String docName) {
     return Text(
       docName != null ? docName : '',
@@ -252,27 +250,6 @@ class CommonWidgets {
     );
   }
 
-  List<Widget> getTimeSlots(
-      SessionData dateSlotTimingsObj, List<DoctorIds> docs, int j) {
-    List<Widget> rowTimeWidget = new List();
-
-    rowTimeWidget.add(SessionList(
-      sessionData: dateSlotTimingsObj.sessions,
-    ));
-
-    rowTimeWidget.add(getSizedBox(10));
-
-    rowTimeWidget.add(Align(
-      alignment: Alignment.center,
-      child: BookNowButton(docs: docs, i: j),
-    ));
-
-    rowTimeWidget.add(SizedBoxWidget(
-      height: 10,
-    ));
-    return rowTimeWidget;
-  }
-
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
       border: Border.all(
@@ -287,7 +264,7 @@ class CommonWidgets {
     String timeSlots = '';
 
     for (Slots dateTiming in dateTimingsSlots) {
-      timeSlots = removeLastThreeDigits(dateTiming.startTime);
+      timeSlots = commonUtil.removeLastThreeDigits(dateTiming.startTime);
 
       rowSpecificTimeSlots.add(getSpecificSlots(timeSlots));
     }

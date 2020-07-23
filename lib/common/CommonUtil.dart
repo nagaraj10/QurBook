@@ -998,4 +998,41 @@ class CommonUtil {
     return value!=null&&value!='null';
   }
 
+  dateConversion(DateTime dateTime) {
+    var newFormat = DateFormat("EEE ,MMMM d,yyyy");
+    String updatedDate = newFormat.format(dateTime);
+
+    return updatedDate;
+  }
+
+  dateConversionToDayMonthYear(DateTime dateTime) {
+    var newFormat = DateFormat('d MMM, ''yyyy');
+    String updatedDate = newFormat.format(dateTime);
+
+    return updatedDate;
+  }
+
+  dateConversionToTime(DateTime dateTime) {
+    var newFormat = DateFormat('h:mm a');
+    String updatedDate = newFormat.format(dateTime);
+
+    return updatedDate;
+  }
+
+  stringToDateTime(String string){
+
+    DateTime dateTime = DateTime.parse(string);
+
+    return dateTime;
+
+  }
+
+  removeLastThreeDigits(String string){
+
+    String removedString='';
+    removedString = string.substring(0, string.length - 3);
+
+    return removedString;
+  }
+
 }

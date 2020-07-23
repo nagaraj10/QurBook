@@ -7,11 +7,13 @@ import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/GetTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +43,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
 class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = new CommonWidgets();
-  DateTime _selectedValue;
+  DateTime _selectedValue= DateTime.now();
   DatePickerController _controller = DatePickerController();
 
 
@@ -111,16 +113,20 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
           } else if (snapshot.hasError) {
             return new Text('Error: ${snapshot.error}');
           } else {
-            
             return Container(
               margin: EdgeInsets.only(left: 5, top: 12),
-              child: Column(
-                children: commonWidgets.getTimeSlots(snapshot.data,widget.docs,widget.i),
-              ),
+              child: GetTimeSlots(dateSlotTimingsObj: snapshot.data,docs: widget.docs,j: widget.i,selectedDate: _selectedValue),
             );
           }
         } else {
-          return new Text('No Slots');
+          return Column(
+              children: <Widget>[
+                SizedBoxWidget(height: 8,),
+                new Text(slotsAreNotAvailable,style: TextStyle(fontSize: 10.0),),
+                SizedBoxWidget(height: 8,),
+              ],
+        );
+
         }
       },
     );

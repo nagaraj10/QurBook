@@ -233,6 +233,12 @@ const String apollo_email = 'apollo@sample.com';
 const String preferred_descrip =
     'We allow only one preferred provider for a user. To remove your preference, please set another Provider as Preferred.';
 
+//ICONS LINK
+const String NOTES_ICON_LINK = "assets/icons/Notes.png";
+const String RECORDS_ICON_LINK = "assets/navicons/my_records.png";
+const String VOICE_ICON_LINK = "assets/icons/Voice-notes.png";
+const String DEVICE_ICON_LINK = "assets/navicons/reading.png";
+
 
 
 const String AddAppointment='Add Appointment';

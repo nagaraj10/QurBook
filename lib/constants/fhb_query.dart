@@ -86,3 +86,6 @@ const String qr_signout='signout';
 const String qr_verifymail='verifyMail';
 
 
+const String qr_slotDate='date';
+const String qr_doctorid='doctorId';
+const String qr_getSlots='doctorSlots/getAvailability';
