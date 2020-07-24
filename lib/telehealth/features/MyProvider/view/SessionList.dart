@@ -38,12 +38,12 @@ class SessionListState extends State<SessionList>{
             sessionTimings = commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionStartTime)+" - "
                 +commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionEndTime);
             return Container(
+              height: 70,
               alignment: Alignment.center,
-              height: 40.0,
               child: new Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBoxWidget(width: 15,),
+                  SizedBoxWidget(width: 10),
                   Expanded(
                       flex: 1,
                       child: sessionTimings == ''
@@ -57,6 +57,7 @@ class SessionListState extends State<SessionList>{
                         widget.selectedPosition(rowPosition,itemPosition);
                         setState(() {});
                       },selectedRow)),
+                  SizedBoxWidget(width: 10),
                 ],
               ),
             );

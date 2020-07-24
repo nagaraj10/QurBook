@@ -3,6 +3,8 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentOld.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'dart:convert' as convert;
@@ -64,5 +66,38 @@ class ProvidersListRepository {
     var jsonString = convert.jsonEncode(slotInput);
     final response = await _helper.getTimeSlotsList(qr_getSlots,jsonString);
     return DoctorTimeSlotsModel.fromJson(response);
+  }
+
+  Future<BookAppointmentOld> bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,
+      String startTime,String endTime, String slotNumber,String isMedicalShared,String isFollowUp) async {
+
+
+    ///NEW
+    /*var slotInput = {};
+    slotInput["createdBy"] = createdBy;
+    slotInput["createdFor"] = createdFor;
+    slotInput["doctorSessionId"] = doctorSessionId;
+    slotInput["scheduledDate"] = scheduleDate;
+    slotInput["slotNumber"] = slotNumber;
+    slotInput["isMedicalRecordsShared"] = isMedicalShared;
+    slotInput["isFollowUp"] = isFollowUp;
+    slotInput["healthRecordReference"] = [""];*/
+
+
+    ///OLD
+    var slotInput = {};
+    slotInput["createdBy"] = createdBy;
+    slotInput["createdFor"] = createdFor!=null?createdFor:createdBy;
+    slotInput["doctorSessionId"] = doctorSessionId;
+    slotInput["plannedStartDateTime"] = scheduleDate+" "+startTime;
+    slotInput["plannedEndDateTime"] = scheduleDate+" "+endTime;
+    slotInput["slotNumber"] = slotNumber;
+    slotInput["isMedicalRecordsShared"] = false;
+    slotInput["isFollowUp"] = false;
+
+    var jsonString = convert.jsonEncode(slotInput);
+    print(jsonString);
+    final response = await _helper.bookAppointment(qr_bookAppmnt,jsonString);
+    return BookAppointmentOld.fromJson(response);
   }
 }

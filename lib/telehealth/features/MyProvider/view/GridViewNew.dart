@@ -42,7 +42,7 @@ class _GridViewNew extends State<GridViewNew> {
     return GridView.count(
       crossAxisCount: 4,
       crossAxisSpacing: 10,
-      childAspectRatio: 2.0,
+      childAspectRatio: 1.6,
       children: List.generate(widget.dateTimingsSlot.length, (index) {
         return GestureDetector(
           onTap: (){
@@ -57,6 +57,7 @@ class _GridViewNew extends State<GridViewNew> {
 
   Widget getSpecificSlots(String time,int index) {
     return Container(
+      margin: EdgeInsets.symmetric(vertical: 3),
       width: 35,
       decoration: myBoxDecoration(index),
       child: Center(

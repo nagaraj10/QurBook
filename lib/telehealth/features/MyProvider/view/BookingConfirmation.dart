@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gmiwidgetspackage/widgets/IconButtonWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -13,9 +14,12 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentOld.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/Payment/payment_page.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
@@ -46,20 +50,26 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   FamilyListBloc _familyListBloc;
   FamilyMembersList familyMembersModel = new FamilyMembersList();
   List<Sharedbyme> sharedbyme = new List();
+  FlutterToast toast = new FlutterToast();
 
 
   final List<ProfileData> _familyNames = new List();
 
-  String slotNumber='',slotTime='';
+  String slotNumber='',slotTime='',createdBy='',createdFor='',doctorSessionId='',scheduleDate='';
+  String apiStartTime='',apiEndTime='';
   ProfileData selectedUser;
   var selectedId = '';
 
   @override
   void initState() {
 
+
+    providerViewModel = new MyProviderViewModel();
+
+     createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
-     getSlotsTimeNumber();
+     getDataFromWidget();
   }
 
   Future<FamilyMembersList> getList() async {
@@ -75,10 +85,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return familyMembersModel;
   }
 
-  getSlotsTimeNumber(){
+  getDataFromWidget(){
 
      slotTime = commonUtil.removeLastThreeDigits(widget.sessionData[widget.rowPosition].slots[widget.itemPosition].startTime);
+     apiStartTime = widget.sessionData[widget.rowPosition].slots[widget.itemPosition].startTime;
+     apiEndTime = widget.sessionData[widget.rowPosition].slots[widget.itemPosition].endTime;
      slotNumber = widget.sessionData[widget.rowPosition].slots[widget.itemPosition].slotNumber.toString();
+     doctorSessionId = widget.sessionData[widget.rowPosition].doctorSessionId;
+     scheduleDate = commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
 
   }
 
@@ -485,15 +499,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       textColor: Colors.blue[800],
                       padding: EdgeInsets.all(8.0),
                       onPressed: () {
-                        Fluttertoast.showToast(
-                      msg: "Under Maintenance..",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.blue[800],
-                      textColor: Colors.white,
-                      fontSize: 14.0
-                  );
+                        _displayDialog(context);
                       },
                       child: TextWidget(text: parameters.payNow, fontsize: 12),
                     ),
@@ -505,6 +511,151 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         ),
       ),
     );
+  }
+
+  _displayDialog(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            insetPadding: EdgeInsets.symmetric(horizontal: 8),
+            backgroundColor: Colors.transparent,
+            content: Container(
+              width: double.maxFinite,
+              height: 250.0,
+              child: Column(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        child: Container(
+                          height: 160,
+                          padding: EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              TextWidget(
+                                  text: 'You are being re-directed to a secure third party site for payment',
+                                  fontsize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  colors: Colors.grey[600]),
+                              SizedBoxWidget(height: 10,),
+                              Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  SizedBoxWithChild(
+                                    width: 90,
+                                    height: 40,
+                                    child: FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12.0),
+                                          side: BorderSide(color: Colors.grey)),
+                                      color: Colors.transparent,
+                                      textColor: Colors.grey,
+                                      padding: EdgeInsets.all(8.0),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: TextWidget(text: 'Cancel', fontsize: 12),
+                                    ),
+                                  ),
+                                  SizedBoxWithChild(
+                                    width: 90,
+                                    height: 40,
+                                    child: FlatButton(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12.0),
+                                          side: BorderSide(color: Colors.blue[800])),
+                                      color: Colors.transparent,
+                                      textColor: Colors.blue[800],
+                                      padding: EdgeInsets.all(8.0),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        bookAppointment(createdBy,selectedId,doctorSessionId,
+                                            scheduleDate,apiStartTime,apiEndTime,slotNumber,"false","false");
+                                      },
+                                      child: TextWidget(text: 'Ok', fontsize: 12),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  ////NEW BOOKING APPOINTMENT API
+
+  /*Future<BookAppointmentModel> bookAppointmentCall(String createdBy,String createdFor,String doctorSessionId,
+      String scheduleDate,String slotNumber,String isMedicalShared,String isFollowUp) async {
+
+    BookAppointmentModel bookAppointmentModel = await providerViewModel.putBookAppointment(createdBy,createdFor,doctorSessionId,
+        scheduleDate,slotNumber,isMedicalShared,isFollowUp);
+
+    return bookAppointmentModel;
+  }
+
+
+  bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,
+      String slotNumber,String isMedicalShared,String isFollowUp){
+
+    bookAppointmentCall(createdBy,createdFor,doctorSessionId,
+        scheduleDate,slotNumber,isMedicalShared,isFollowUp).then((value) {
+          print(value.response);
+      if(value.status==200 && value.success==true){
+        toast.getToast('Your appointment has been booked... Go To Payment..',Colors.green);
+      }else{
+        print(value.response.toString());
+        print(value.message);
+        toast.getToast('Booking appointment failed.. Some went wrong!',Colors.red);
+      }
+    });
+
+  }*/
+
+  //////OLD API
+
+  Future<BookAppointmentOld> bookAppointmentCall(String createdBy,String createdFor,String doctorSessionId,
+      String scheduleDate,String startTime,String endTime,String slotNumber,String isMedicalShared,String isFollowUp) async {
+
+    BookAppointmentOld bookAppointmentModel = await providerViewModel.putBookAppointment(createdBy,createdFor,doctorSessionId,
+        scheduleDate,startTime,endTime,slotNumber,isMedicalShared,isFollowUp);
+
+    return bookAppointmentModel;
+  }
+
+
+  bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,String startTime,String endTime,
+      String slotNumber,String isMedicalShared,String isFollowUp){
+
+    bookAppointmentCall(createdBy,createdFor,doctorSessionId,
+        scheduleDate,startTime,endTime,slotNumber,isMedicalShared,isFollowUp).then((value) {
+      if(value.status==200 && value.success==true && value.message=='Created a new  appointment(s) successfully'){
+        goToPaymentPage();
+      }else{
+        toast.getToast('Booking appointment failed.. Some went wrong!',Colors.red);
+      }
+    });
+
+  }
+
+  goToPaymentPage(){
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => PaymentPage()));
   }
 
   Widget getTitle(String title) {

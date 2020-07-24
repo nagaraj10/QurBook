@@ -744,4 +744,20 @@ class ApiBaseHelper {
       Get.snackbar(variable.strMessage, variable.strlogInDeviceOthr);
     });
   }
+
+  Future<dynamic> bookAppointment(String url, String jsonBody) async {
+
+
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrlV2 + url,
+          headers: variable.requestHeadersTimeSlot, body: jsonBody);
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
 }

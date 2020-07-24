@@ -1035,4 +1035,11 @@ class CommonUtil {
     return removedString;
   }
 
+  dateConversionToApiFormat(DateTime dateTime) {
+    var newFormat = DateFormat('yyyy-MM-d');
+    String updatedDate = newFormat.format(dateTime);
+
+    return updatedDate;
+  }
+
 }

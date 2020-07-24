@@ -123,8 +123,8 @@ class _MyProvidersState extends State<MyProviders> {
           child: Text("My Providers"),
         ),
         Icon(Icons.notifications),
-        /*new SwitchProfile()
-            .buildActions(context, _keyLoader, callBackToRefresh),*/
+        new SwitchProfile()
+            .buildActions(context, _keyLoader, callBackToRefresh),
         Icon(Icons.more_vert),
       ],
     );
