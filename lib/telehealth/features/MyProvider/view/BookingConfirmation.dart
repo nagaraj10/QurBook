@@ -29,6 +29,7 @@ import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:progress_dialog/progress_dialog.dart';
 
 
 class BookingConfirmation extends StatefulWidget {
@@ -63,14 +64,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   String apiStartTime='',apiEndTime='';
   ProfileData selectedUser;
   var selectedId = '';
+  ProgressDialog pr;
 
   @override
   void initState() {
 
-
     providerViewModel = new MyProviderViewModel();
 
      createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+     selectedId = createdBy;
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
      getDataFromWidget();
@@ -100,7 +102,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   }
 
-  Widget getNotes() {
+  Widget getDropdown() {
     return StreamBuilder<ApiResponse<FamilyMembersList>>(
       stream: _familyListBloc.familyMemberListStream,
       builder: (context,
@@ -254,7 +256,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           ),
           /*familyData!=null
               ? dropDownButton(
-              familyData.sharedbyme):*/getNotes(),
+              familyData.sharedbyme):*/getDropdown(),
           SizedBoxWidget(
             height: 10.0,
           ),
@@ -338,6 +340,27 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   Widget build(BuildContext context) {
+
+    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr.style(
+        message: 'Redirecting',
+        borderRadius: 10.0,
+        backgroundColor: Colors.white,
+        progressWidget: SizedBox(
+          child: CircularProgressIndicator(strokeWidth: 2.0,backgroundColor: Color(0xff138fcf)),
+          height: 20.0,
+          width: 20.0,
+        ),
+        elevation: 6.0,
+        insetAnimCurve: Curves.easeInOut,
+        progress: 0.0,
+        maxProgress: 100.0,
+        progressTextStyle: TextStyle(
+            color: Colors.black, fontSize: 10.0, fontWeight: FontWeight.w400),
+        messageTextStyle: TextStyle(
+            color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.w600)
+    );
+
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
@@ -514,7 +537,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             Container(
               child: Center(
                 child: TextWidget(
-                    text: 'Pay INR 350',
+                    text: 'Pay INR 120',
                     fontsize: 22.0,
                     fontWeight: FontWeight.w500,
                     colors: Colors.blue[800]),
@@ -694,11 +717,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,String startTime,String endTime,
       String slotNumber,String isMedicalShared,String isFollowUp){
 
+    setState(() {
+      pr.show();
+    });
+
     bookAppointmentCall(createdBy,createdFor,doctorSessionId,
         scheduleDate,startTime,endTime,slotNumber,isMedicalShared,isFollowUp).then((value) {
       if(value.status==200 && value.success==true && value.message=='Created a new  appointment(s) successfully'){
+        pr.hide();
         goToPaymentPage();
       }else{
+        pr.hide();
         toast.getToast('Booking appointment failed.. Some went wrong!',Colors.red);
       }
     });

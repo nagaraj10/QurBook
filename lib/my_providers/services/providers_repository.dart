@@ -87,7 +87,7 @@ class ProvidersListRepository {
     ///OLD
     var slotInput = {};
     slotInput["createdBy"] = createdBy;
-    slotInput["createdFor"] = createdFor!=null?createdFor:createdBy;
+    slotInput["createdFor"] = createdFor;
     slotInput["doctorSessionId"] = doctorSessionId;
     slotInput["plannedStartDateTime"] = scheduleDate+" "+startTime;
     slotInput["plannedEndDateTime"] = scheduleDate+" "+endTime;
