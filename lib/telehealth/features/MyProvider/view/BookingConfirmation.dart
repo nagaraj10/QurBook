@@ -7,13 +7,16 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
+import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentOld.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
@@ -51,6 +54,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   FamilyMembersList familyMembersModel = new FamilyMembersList();
   List<Sharedbyme> sharedbyme = new List();
   FlutterToast toast = new FlutterToast();
+  FamilyData familyData = new FamilyData();
 
 
   final List<ProfileData> _familyNames = new List();
@@ -96,7 +100,55 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   }
 
-  Widget getFamilyMembers() {
+  Widget getNotes() {
+    return StreamBuilder<ApiResponse<FamilyMembersList>>(
+      stream: _familyListBloc.familyMemberListStream,
+      builder: (context,
+          AsyncSnapshot<ApiResponse<FamilyMembersList>> snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return Scaffold(
+                backgroundColor: Colors.white,
+                body: Center(
+                    child: SizedBox(
+                      child: CircularProgressIndicator(
+                        backgroundColor:
+                        Color(new CommonUtil().getMyPrimaryColor()),
+                      ),
+                      width: 30,
+                      height: 30,
+                    )),
+              );
+              break;
+
+            case Status.ERROR:
+              return FHBBasicWidget.getRefreshContainerButton(
+                  snapshot.data.message, () {
+                setState(() {});
+              });
+              break;
+
+            case Status.COMPLETED:
+            //_healthReportListForUserBlock = null;
+              print(snapshot.data.toString());
+              familyData = snapshot.data.data.response.data;
+
+              print(familyData.sharedbyme.length.toString());
+
+              PreferenceUtil.saveFamilyData(
+                  Constants.KEY_FAMILYMEMBER, snapshot.data.data.response.data);
+              return dropDownButton(snapshot.data.data.response.data.sharedbyme);
+              break;
+          }
+        } else {
+          return Container(height: 0, color: Colors.white);
+        }
+      },
+    );
+  }
+
+  /*Widget getFamilyMembers() {
     sharedbyme.clear();
     return FutureBuilder<FamilyMembersList>(
       future: getList(),
@@ -117,6 +169,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           return new Text('Error: ${snapshot.error}');
         } else {
           print(snapshot.data.toString());
+          familyData = snapshot.data.response.data;
           PreferenceUtil.saveFamilyData(
               Constants.KEY_FAMILYMEMBER, snapshot.data.response.data);
           return snapshot.data!=null&&snapshot.data.response.data.sharedbyme.length>0?Container(
@@ -125,11 +178,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         }
       },
     );
-  }
+  }*/
 
   Widget dropDownButton(List<Sharedbyme> sharedByMeList) {
 
     if(_familyNames.length==0){
+
       for (int i = 0; i < sharedByMeList.length; i++) {
         _familyNames.add(sharedByMeList[i].profileData);
       }
@@ -198,9 +252,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           SizedBoxWidget(
             height: 8.0,
           ),
-          PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
+          /*familyData!=null
               ? dropDownButton(
-              PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER).sharedbyme):getFamilyMembers(),
+              familyData.sharedbyme):*/getNotes(),
           SizedBoxWidget(
             height: 10.0,
           ),
