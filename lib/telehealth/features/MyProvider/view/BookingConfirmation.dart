@@ -340,7 +340,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   Widget build(BuildContext context) {
-
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(
         message: 'Redirecting',
