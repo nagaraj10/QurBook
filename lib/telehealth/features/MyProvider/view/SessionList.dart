@@ -38,7 +38,6 @@ class SessionListState extends State<SessionList>{
             sessionTimings = commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionStartTime)+" - "
                 +commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionEndTime);
             return Container(
-              height: 70,
               alignment: Alignment.center,
               child: new Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

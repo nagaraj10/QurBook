@@ -30,7 +30,7 @@ class _ResultPage extends State<ResultPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Image.asset(
-                          status?'assets/images/success_tick.jpg':'assets/images/failure.png',width:160,height: 160),
+                          status?'assets/payment/success_tick.png':'assets/payment/failure.png',width:160,height: 160,color:status?Colors.green:Colors.red),
                       SizedBox(height: 15),
                       Text(status?'Payment Successful':'Payment Failure',style: TextStyle(fontSize: 22,color:Colors.white,fontWeight: FontWeight.bold)),
                       SizedBox(height: 10),

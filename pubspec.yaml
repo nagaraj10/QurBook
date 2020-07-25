@@ -77,6 +77,8 @@ dependencies:
   pdf_render: ^0.57.2
   loading: ^1.0.2
   expandable: ^4.1.4
+  fluttertoast: ^7.0.1
+  progress_dialog: ^1.2.4
   
 
 dev_dependencies:
@@ -117,7 +119,8 @@ flutter:
     - assets/
     - secrets.json
     - assets/payment/failure.png
-    - assets/payment/success_tick.jpg
+    - assets/payment/success_tick.png
+
 
   #  - images/a_dot_ham.jpeg
 
