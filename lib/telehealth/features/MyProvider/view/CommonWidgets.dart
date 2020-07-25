@@ -157,14 +157,14 @@ class CommonWidgets {
     return profilePicThumbnail != null
         ? Image.memory(
             Uint8List.fromList(profilePicThumbnail.data),
-            height: 50,
-            width: 50,
+            height: 40,
+            width: 40,
             fit: BoxFit.cover,
           )
         : Container(
             color: Color(fhbColors.bgColorContainer),
-            height: 50,
-            width: 50,
+            height: 40,
+            width: 40,
           );
   }
 

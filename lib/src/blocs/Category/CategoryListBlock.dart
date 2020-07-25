@@ -28,16 +28,17 @@ class CategoryListBlock implements BaseBloc{
 
   }
 
-  getCategoryList()async{
-
+ Future<CategoryResponseList> getCategoryList()async{
+CategoryResponseList categoryResponseList;
     categoryListSink.add(ApiResponse.loading(variable.strGettingCategory));
     try {
-      CategoryResponseList categoryResponseList = await _categoryResponseListRepository.getCategoryList();
+     categoryResponseList  = await _categoryResponseListRepository.getCategoryList();
       categoryListSink.add(ApiResponse.completed(categoryResponseList));
     } catch (e) {
       categoryListSink.add(ApiResponse.error(e.toString()));
       
     }
+    return categoryResponseList;
 
   }
 

@@ -27,9 +27,21 @@ class HealthReportListScreen extends StatefulWidget {
   final String categoryId;
 
   final Function(String, String) getDataForParticularLabel;
+  final Function(String, bool) mediaSelected;
+  final bool allowSelect;
+  final bool isNotesSelect;
+  final bool isAudioSelect;
 
-  HealthReportListScreen(this.completeData, this.callBackToRefresh,
-      this.categoryName, this.categoryId, this.getDataForParticularLabel);
+  List<String> mediaMeta;
+  HealthReportListScreen(
+      this.completeData,
+      this.callBackToRefresh,
+      this.categoryName,
+      this.categoryId,
+      this.getDataForParticularLabel,
+      this.mediaSelected,
+      this.allowSelect,
+      this.mediaMeta,this.isNotesSelect,this.isAudioSelect);
 
   @override
   _HealthReportListScreenState createState() => _HealthReportListScreenState();
@@ -98,36 +110,63 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     widget.callBackToRefresh();
   }
 
-  Widget getCardWidgetForPrescription(MediaMetaInfo data, int position) {
+  Widget getCardWidgetForPrescription(MediaMetaInfo mediaMetaInfoObj, int position) {
     return InkWell(
-        onTap: () {
+         onLongPress: () {
+        if (widget.allowSelect) {
+          mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+          setState(() {});
+          widget.mediaSelected(
+              mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
+        }
+      },
+      onTap: () {
+        print(widget.allowSelect);
+          if (widget.allowSelect) {
+            bool condition;
+            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+            widget.mediaSelected(mediaMetaInfoObj.id, condition);
+          }
+        else {
           Navigator.push(
             context,
             MaterialPageRoute(
               builder: (context) => RecordDetailScreen(
-                data: data,
+                data: mediaMetaInfoObj,
               ),
             ),
           );
-        },
+        }
+      },
         child: Container(
             padding: EdgeInsets.all(10.0),
             margin: EdgeInsets.only(left: 10, right: 10, top: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(fhbColors.cardShadowColor),
-                  blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 0, // has the effect of extending the shadow
-                )
-              ],
-            ),
-            child: Row(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(fhbColors.cardShadowColor),
+                blurRadius: 16, // has the effect of softening the shadow
+                spreadRadius: 0, // has the effect of extending the shadow
+              )
+            ],
+          ),
+            child: Stack(
+                          alignment: Alignment.centerRight,
+
+              children: [
+              Row(
               children: <Widget>[
                 ClipOval(
-                    child: data.metaInfo.doctor != null
+                    child: mediaMetaInfoObj.metaInfo.doctor != null
                         // ? getDoctorProfileImageWidget(data)
                         ? Container(
                             width: 50,
@@ -145,18 +184,18 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        toBeginningOfSentenceCase(data.metaInfo.doctor.name),
+                        toBeginningOfSentenceCase(mediaMetaInfoObj.metaInfo.doctor.name),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Visibility(
                           visible:
-                              data.metaInfo.hospital != null ? true : false,
+                              mediaMetaInfoObj.metaInfo.hospital != null ? true : false,
                           child: Text(
-                            data.metaInfo.hospital != null
+                            mediaMetaInfoObj.metaInfo.hospital != null
                                 ? toBeginningOfSentenceCase(
-                                    data.metaInfo.hospital.name)
+                                    mediaMetaInfoObj.metaInfo.hospital.name)
                                 : '',
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -165,7 +204,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                 fontWeight: FontWeight.w500),
                           )),
                       Text(
-                        new FHBUtils().getFormattedDateString(data.createdOn),
+                        new FHBUtils().getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w200,
@@ -183,7 +222,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                       /*   Icon(Icons.more_horiz, color: Colors.grey, size: 20),
                       SizedBox(height: 20), */
                       IconButton(
-                          icon: data.isBookmarked
+                          icon: mediaMetaInfoObj.isBookmarked
                               ? ImageIcon(
                                   AssetImage(variable.icon_record_fav_active),
                                   color: Color(
@@ -196,13 +235,30 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                   size: 20,
                                 ),
                           onPressed: () {
-                            new CommonUtil().bookMarkRecord(data, _refresh);
+                            new CommonUtil().bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
                     ],
                   ),
                 ),
               ],
-            )));
+            ),
+            widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                  ? Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Color(new CommonUtil().getMyGredientColor()),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.done,
+                          size: 16.0,
+                          color: Colors.white,
+                        ),
+                      ))
+                  : SizedBox()
+            ],)));
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {

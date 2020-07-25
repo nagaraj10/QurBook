@@ -16,7 +16,7 @@ class MediaTypeRepository {
         query.qr_And +
         query.qr_offset +
         0.toString() +
-        query.qr_slash +
+        query.qr_And +
         query.qr_limit +
         100.toString());
     return MediaTypesResponse.fromJson(response);

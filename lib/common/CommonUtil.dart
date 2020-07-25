@@ -1042,4 +1042,38 @@ class CommonUtil {
     return updatedDate;
   }
 
+   List<CategoryData> fliterCategories(List<CategoryData> data) {
+    List<CategoryData> filteredCategoryData = new List();
+      CategoryData categoryDataObjClone = new CategoryData();
+
+    for (CategoryData dataObj in data) {
+      if (/*dataObj.isDisplay &&*/
+          dataObj.categoryName != Constants.STR_FEEDBACK &&
+          dataObj.categoryName != Constants.STR_CLAIMSRECORD && dataObj.categoryName != Constants.STR_WEARABLES) {
+        filteredCategoryData.add(dataObj);
+      }
+    }
+
+    int i = 0;
+    for (CategoryData categoryDataObj in filteredCategoryData) {
+      if (categoryDataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionOthers) {
+        
+        filteredCategoryData.removeAt(i);
+        break;
+      }
+      i++;
+    }
+
+    filteredCategoryData.sort((a, b) {
+      return a.categoryDescription
+          .toLowerCase()
+          .compareTo(b.categoryDescription.toLowerCase());
+    });
+    filteredCategoryData.add(categoryDataObjClone);
+
+
+    return filteredCategoryData;
+  }
+
 }

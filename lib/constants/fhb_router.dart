@@ -7,7 +7,7 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/ui/IntroSlider.dart';
-import 'package:myfhb/src/ui/MyRecordClone.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
@@ -47,7 +47,7 @@ setRouter(List<CameraDescription> listOfCameras)async{
   router.rt_UserAccounts: (BuildContext context) =>
       UserAccounts(arguments: ModalRoute.of(context).settings.arguments),
   router.rt_AppSettings: (BuildContext context) => MySettings(),
-  router.rt_MyRecords: (BuildContext context) => MyRecordsClone(),
+  router.rt_MyRecords: (BuildContext context) => MyRecords(),
   router.rt_MyFamily: (BuildContext context) => MyFamily(),
   router.rt_myprovider: (BuildContext context) => MyProvider(),
   router.rt_AddProvider: (BuildContext context) =>

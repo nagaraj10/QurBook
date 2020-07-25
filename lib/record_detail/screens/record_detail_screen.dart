@@ -429,6 +429,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
+          case CommonConstants.categoryDescriptionNotes:
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metaInfo, widget.data.createdOn);
+        break;
+
 
       default:
         return RecordInfoCard().getCardForPrescription(
@@ -741,6 +746,32 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               context,
               containsAudio,
               audioPath,
+              (containsAudio, audioPath) {
+                setState(() {
+                  audioPath = audioPath;
+                  containsAudio = containsAudio;
+                });
+              },
+              new List(),
+              (containsAudio, audioPath) {
+                audioPath = audioPath;
+                containsAudio = containsAudio;
+
+                setState(() {});
+              },
+              widget.data,
+              true,
+              new TextEditingController(text: fileName));
+
+          break;
+
+          case Constants.STR_NOTES:
+          String fileName = widget.data.metaInfo.fileName;
+
+          new CommonDialogBox().getDialogBoxForNotes(
+              context,
+              false,
+              null,
               (containsAudio, audioPath) {
                 setState(() {
                   audioPath = audioPath;

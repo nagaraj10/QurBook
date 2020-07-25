@@ -15,6 +15,7 @@ class MediaMetaInfo {
   bool isDraft;
   String createdByUser;
   List<MediaMasterIds> mediaMasterIds;
+  bool isSelected = false;
 
   MediaMetaInfo(
       {this.id,
@@ -28,7 +29,8 @@ class MediaMetaInfo {
       this.isBookmarked,
       this.isDraft,
       this.createdByUser,
-      this.mediaMasterIds});
+      this.mediaMasterIds,
+      this.isSelected});
 
   MediaMetaInfo.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
@@ -37,12 +39,18 @@ class MediaMetaInfo {
     metaInfo = json[parameters.strmetaInfo] != null
         ? new MetaInfo.fromJson(json[parameters.strmetaInfo])
         : null;
-    isActive = json[parameters.strIsActive]!=null?json[parameters.strIsActive]:false;
+    isActive = json[parameters.strIsActive] != null
+        ? json[parameters.strIsActive]
+        : false;
     createdBy = json[parameters.strCreatedBy];
     createdOn = json[parameters.strCreatedOn];
     lastModifiedOn = json[parameters.strLastModifiedOn];
-    isBookmarked = json[parameters.strIsBookmarked]!=null?json[parameters.strIsBookmarked]:false;
-    isDraft = json[parameters.strisDraft]!=null?json[parameters.strisDraft]:false;
+    isBookmarked = json[parameters.strIsBookmarked] != null
+        ? json[parameters.strIsBookmarked]
+        : false;
+    isDraft = json[parameters.strisDraft] != null
+        ? json[parameters.strisDraft]
+        : false;
     createdByUser = json[parameters.strcreatedByUser];
     if (json[parameters.strmediaMasterIds] != null) {
       mediaMasterIds = new List<MediaMasterIds>();
@@ -74,4 +82,3 @@ class MediaMetaInfo {
     return data;
   }
 }
-

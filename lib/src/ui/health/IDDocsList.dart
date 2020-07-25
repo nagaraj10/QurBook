@@ -21,9 +21,15 @@ class IDDocsList extends StatefulWidget {
   final String categoryId;
 
   final Function(String, String) getDataForParticularLabel;
+   final Function(String, bool) mediaSelected;
+  final bool allowSelect;
+    List<String> mediaMeta;
+  final bool isNotesSelect;
+  final bool isAudioSelect;
+
 
   IDDocsList(this.completeData, this.callBackToRefresh, this.categoryName,
-      this.categoryId, this.getDataForParticularLabel);
+      this.categoryId, this.getDataForParticularLabel,this.mediaSelected,this.allowSelect,this.mediaMeta,this.isNotesSelect,this.isAudioSelect);
 
   @override
   _IDDocsListState createState() => new _IDDocsListState();
@@ -88,7 +94,29 @@ class _IDDocsListState extends State<IDDocsList> {
 
   getCardWidgetForDocs(MediaMetaInfo mediaMetaInfoObj, int i) {
     return InkWell(
+        onLongPress: () {
+        if (widget.allowSelect) {
+          mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+          
+          setState(() {});
+          widget.mediaSelected(
+              mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
+        }
+      },
         onTap: () {
+          if (widget.allowSelect) {
+            bool condition;
+            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+            // setState(() {});
+            widget.mediaSelected(mediaMetaInfoObj.id, condition);
+          
+        } else {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -97,22 +125,27 @@ class _IDDocsListState extends State<IDDocsList> {
               ),
             ),
           );
+        }
         },
         child: Container(
             padding: EdgeInsets.all(10.0),
             margin: EdgeInsets.only(left: 10, right: 10, top: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
+color: Colors.white,          borderRadius: BorderRadius.circular(10),
               boxShadow: [
-                BoxShadow(
-                  color: const Color(fhbColors.cardShadowColor),
-                  blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 0, // has the effect of extending the shadow
-                )
+
+              BoxShadow(
+                color: const Color(fhbColors.cardShadowColor),
+                blurRadius: 16, // has the effect of softening the shadow
+                spreadRadius: 0, // has the effect of extending the shadow
+              )
               ],
             ),
-            child: Row(
+            child: Stack(
+                          alignment: Alignment.centerRight,
+
+              children: [
+              Row(
               children: <Widget>[
                 CircleAvatar(
                   radius: 25,
@@ -201,7 +234,25 @@ class _IDDocsListState extends State<IDDocsList> {
                   ),
                 ),
               ],
-            )));
+            ),
+            widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                  ? Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Color(new CommonUtil().getMyGredientColor()),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.done,
+                          size: 16.0,
+                          color: Colors.white,
+                        ),
+                      ))
+                  : SizedBox()
+            
+            ],)));
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {

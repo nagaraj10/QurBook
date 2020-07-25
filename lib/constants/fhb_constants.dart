@@ -49,6 +49,8 @@ const String STR_OTHERS = 'Others';
 const String STR_VOICERECORDS = 'Voice Records';
 const String STR_CLAIMSRECORD = 'Claim Records';
 const String STR_FEEDBACK = 'Feedback';
+const String STR_WEARABLES = 'Wearable';
+
 const String STR_VOICE_NOTES = 'Voice Notes';
 const String KEY_USERID_MAIN = 'mainUserUD';
 const String KEY_PROFILE_MAIN = 'profileMain';
@@ -258,4 +260,7 @@ const String countryCode='91';
 const String mobileNumber='9176117878';
 
 //for security purposes
+
+const String STR_NOTES = 'Notes';
+const String STR_ONLY_ONE='Can attach only one record';
 

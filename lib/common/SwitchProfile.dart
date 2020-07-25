@@ -134,7 +134,7 @@ class SwitchProfile {
       
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
           .then((value) {
-        _healthReportListForUserBlock.getHelthReportList().then((value) {
+        _healthReportListForUserBlock.getHelthReportList(condtion: false).then((value) {
           PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value.response.data)
               .then((value) {

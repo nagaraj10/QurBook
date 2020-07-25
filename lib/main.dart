@@ -9,7 +9,6 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_router.dart' as router;
 
 import 'package:myfhb/schedules/add_reminders.dart';
-import 'package:myfhb/src/ui/MyRecordClone.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/connectivity_bloc.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';

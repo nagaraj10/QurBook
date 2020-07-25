@@ -120,7 +120,7 @@ class _MyProvidersState extends State<MyProviders> {
     return Row(
       children: [
         Expanded(
-          child: Text("My Providers"),
+          child: Text("My Providers",style:TextStyle(fontWeight: FontWeight.w500),),
         ),
         Icon(Icons.notifications),
         new SwitchProfile()
@@ -191,7 +191,7 @@ class _MyProvidersState extends State<MyProviders> {
     (context as Element).markNeedsBuild();
   }
 
-  Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
+ Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -220,23 +220,29 @@ class _MyProvidersState extends State<MyProviders> {
               Row(
                 children: [
                   Expanded(
-                    child: commonWidgets.getTextForDoctors('${docs[i].name}'),
-                  ),
-                  commonWidgets.getSizeBoxWidth(10.0),
-                  commonWidgets.getIcon(
-                      width: fhbStyles.imageWidth,
-                      height: fhbStyles.imageHeight,
-                      icon: Icons.info,
-                      onTap: () {
-                        commonWidgets.showDoctorDetailView(docs[i], context);
-                      }),
-                  commonWidgets.getSizeBoxWidth(10.0),
-                  docs[i].isTelehealthEnabled
+                      child: Row(
+                    children: [
+                      commonWidgets.getTextForDoctors('${docs[i].name}'),
+                      commonWidgets.getSizeBoxWidth(10.0),
+                      commonWidgets.getIcon(
+                          width: fhbStyles.imageWidth,
+                          height: fhbStyles.imageHeight,
+                          icon: Icons.info,
+                          onTap: () {
+                            print('on Info pressed');
+                            commonWidgets.showDoctorDetailView(
+                                docs[i], context);
+                          }),
+                    ],
+                  )),
+                  docs[i].isActive
                       ? commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
                           icon: Icons.check_circle,
-                          onTap: () {})
+                          onTap: () {
+                            print('on check  pressed');
+                          })
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
                   commonWidgets.getBookMarkedIcon(docs[i], () {
@@ -252,16 +258,9 @@ class _MyProvidersState extends State<MyProviders> {
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                Expanded(
-                  child: commonWidgets
-                      .getDoctoSpecialist('${docs[i].specialization}'),
-                ),
-                Container(child: getFees(docs[i])),
-                                  commonWidgets.getSizeBoxWidth(10.0),
-
+              Row(children: [
+                docs[i].specialization!=null?
+                commonWidgets.getDoctoSpecialist('${docs[i].specialization}'):SizedBox(),
               ]),
               commonWidgets.getSizedBox(5.0),
               commonWidgets.getDoctorsAddress('${docs[i].city}')

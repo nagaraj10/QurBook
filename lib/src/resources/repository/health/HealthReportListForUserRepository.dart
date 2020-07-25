@@ -21,11 +21,11 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 class HealthReportListForUserRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<UserHealthResponseList> getHealthReportList() async {
+   Future<UserHealthResponseList> getHealthReportList({bool condition}) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper
-        .getHealthRecordList(query.qr_mediameta + userID + query.qr_slash+query.qr_getMediaData);
+        .getHealthRecordList(query.qr_mediameta + userID + query.qr_slash+query.qr_getMediaData,condition:condition);
     return UserHealthResponseList.fromJson(response);
   }
 

@@ -153,7 +153,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       )),
                                   Positioned(
                                       bottom: 50,
-                                      left: 20,
+                                      left: 5,
                                       child: InkWell(
                                           child: Column(
                                             children: <Widget>[
@@ -192,22 +192,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               2) -
                                           35,
                                       child: InkWell(
-                                        splashColor: Colors.red,
+                                        
                                         child: Column(
                                           children: <Widget>[
-                                            FHBBasicWidget.customShowCase(
-                                                _records,
-                                                Constants.RECORDS_DESC,
-                                                Padding(
-                                                  padding: EdgeInsets.all(10.0),
-                                                  child: Image.asset(
+                                          
+                                                   Image.asset(
                                                    variable.icon_th,
                                                     color: Colors.white,
-                                                    height: 70,
-                                                    width: 70,
+                                                    height: 25,
+                                                    width: 25,
                                                   ),
-                                                ),
-                                                Constants.RECORDS_TITLE),
+                                               
                                             SizedBox(
                                               height: 5,
                                             ),
@@ -225,7 +220,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       )),
                                   Positioned(
                                     bottom: 50,
-                                    right: 20,
+                                    right: 5,
                                     child: InkWell(
                                       child:Column(
                                           children: <Widget>[

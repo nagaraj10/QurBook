@@ -22,9 +22,15 @@ class DeviceListScreen extends StatefulWidget {
   final String categoryId;
 
   final Function(String, String) getDataForParticularLabel;
+   final Function(String, bool) mediaSelected;
+  final bool allowSelect;
+    List<String> mediaMeta;
+  final bool isNotesSelect;
+  final bool isAudioSelect;
+
 
   DeviceListScreen(this.completeData, this.callBackToRefresh, this.categoryName,
-      this.categoryId, this.getDataForParticularLabel);
+      this.categoryId, this.getDataForParticularLabel,this.mediaSelected,this.allowSelect,this.mediaMeta,this.isNotesSelect,this.isAudioSelect);
 
   @override
   _DeviceListScreentState createState() => _DeviceListScreentState();
@@ -88,7 +94,29 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
 
   Widget getCardWidgetForDevice(MediaMetaInfo data, int position) {
     return InkWell(
+      onLongPress: () {
+        if (widget.allowSelect) {
+          data.isSelected = !data.isSelected;
+          
+          setState(() {});
+          widget.mediaSelected(
+              data.id, data.isSelected);
+        }
+      },
         onTap: () {
+          if (widget.allowSelect) {
+            bool condition;
+            if (widget.mediaMeta.contains(data.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            data.isSelected = !data.isSelected;
+
+            // setState(() {});
+            widget.mediaSelected(data.id, condition);
+         
+        } else {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -97,23 +125,29 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
               ),
             ),
           );
-        },
+        }
+        }
+        ,
         child: Container(
             //height: 70,
             padding: EdgeInsets.all(10.0),
             margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(fhbColors.cardShadowColor),
-                  blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 0, // has the effect of extending the shadow
-                )
-              ],
-            ),
-            child: Row(
+            decoration:  BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(fhbColors.cardShadowColor),
+                blurRadius: 16, // has the effect of softening the shadow
+                spreadRadius: 0, // has the effect of extending the shadow
+              )
+            ],
+          ),
+            child:Stack(
+                          alignment: Alignment.centerRight,
+
+              children: [
+               Row(
               children: <Widget>[
                 CircleAvatar(
                   radius: 25,
@@ -188,7 +222,24 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   ),
                 ),
               ],
-            )));
+            )
+           ,  widget.mediaMeta.contains(data.id)
+                  ? Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Color(new CommonUtil().getMyGredientColor()),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.done,
+                          size: 16.0,
+                          color: Colors.white,
+                        ),
+                      ))
+                  : SizedBox()
+            ],)));
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {

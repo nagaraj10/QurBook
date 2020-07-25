@@ -16,6 +16,8 @@ class CommonConstants {
   static const String categoryDescriptionFeedback = 'Catcode009';
   static const String categoryDescriptionVoiceRecord = 'Catcode010';
   static const String categoryDescriptionClaimsRecord = 'Catcode011';
+    static const String categoryDescriptionNotes='Catcode013';
+
 
   static final String CAT_JSON_GLUCOMETER = "Catcode002_Typecode001";
   static final String CAT_JSON_BP_METER = "Catcode002_Typecode002";
@@ -122,6 +124,8 @@ class CommonConstants {
   static String strFileEmpty = 'Please Enter File Name';
   static String strLabEmpty = 'Please Enter Lab Name';
   static String strIDEmpty = 'Please Select ID';
+    static String strMemoEmpty = 'Please Enter Memo';
+
 
   static String strSugarLevelEmpty = 'Please Enter Sugar Level';
 

@@ -168,14 +168,20 @@ class ApiBaseHelper {
    * Created by Parvathi M on 7th Jan 2020
    */
 
-  Future<dynamic> getHealthRecordList(String url) async {
+   Future<dynamic> getHealthRecordList(String url, {bool condition}) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
-          headers: variable.requestHeadersAuthAccept);
-      responseJson = _returnResponse(response);
+      if (condition) {
+        String baseURL = "https://dev.healthbook.vsolgmi.com/hb/api/v3/";
+        final response = await http.get(baseURL + url, headers: variable.auth);
+        responseJson = _returnResponse(response);
+      } else {
+        final response = await http.get(_baseUrl + url,
+            headers: variable.requestHeadersAuthAccept);
+        responseJson = _returnResponse(response);
+      }
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -703,6 +709,7 @@ class ApiBaseHelper {
       final response =
           await http.get(_baseUrlV2 + url, headers: variable.requestHeadersAuthAccept);
       responseJson = _returnResponse(response);
+      print(responseJson);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }

@@ -92,13 +92,13 @@ class HealthReportListForUserBlock implements BaseBloc {
     _imageListController = StreamController<ApiResponse<List<dynamic>>>();
   }
 
-  Future<UserHealthResponseList> getHelthReportList() async {
+  Future<UserHealthResponseList> getHelthReportList({bool condtion}) async {
     UserHealthResponseList userHealthResponseList;
     healthReportListSink
         .add(ApiResponse.loading(variable.strGettingHealthRecords));
     try {
       userHealthResponseList =
-          await _healthReportListForUserRepository.getHealthReportList();
+          await _healthReportListForUserRepository.getHealthReportList(condition:condtion??false);
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       healthReportListSink.add(ApiResponse.error(e.toString()));

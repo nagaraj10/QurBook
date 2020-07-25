@@ -399,6 +399,10 @@ Map<String, String> requestHeadersTimeSlot = {
   'Content-Type': 'application/json'
 };
 
+Map<String, String> auth = {
+  'authorization': authToken,
+};
+
 const String straccept = 'accept';
 const String strContentType = 'Content-Type';
 const String strAuthorization = 'Authorization';

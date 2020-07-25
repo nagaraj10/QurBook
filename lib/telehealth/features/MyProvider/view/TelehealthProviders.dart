@@ -5,7 +5,6 @@ import 'package:myfhb/notifications/myfhb_notifications.dart';
 import 'package:myfhb/schedules/my_schedules.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
-import 'package:myfhb/src/ui/MyRecordClone.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavigationArguments.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigation.dart';
@@ -98,8 +97,8 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       imageIcon: 'assets/maya/maya_us_main.png',
     ));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'Chat', imageIcon: 'assets/navicons/Chat.png'));
+        name: 'Chat', imageIcon: 'assets/navicons/chat.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'Devices', imageIcon: 'assets/navicons/reading.png'));
+        name: 'Devices', imageIcon: 'assets/navicons/device.png'));
   }
 }

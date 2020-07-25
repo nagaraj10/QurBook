@@ -14,7 +14,6 @@ import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
-
 class OtherDocsList extends StatefulWidget {
   final CompleteData completeData;
   final Function callBackToRefresh;
@@ -23,14 +22,23 @@ class OtherDocsList extends StatefulWidget {
   final String categoryDescription;
 
   final Function(String, String) getDataForParticularLabel;
-
+  final Function(String, bool) mediaSelected;
+  final bool allowSelect;
+  List<String> mediaMeta;
+  final bool isNotesSelect;
+  final bool isAudioSelect;
   OtherDocsList(
       this.completeData,
       this.callBackToRefresh,
       this.categoryName,
       this.categoryId,
       this.getDataForParticularLabel,
-      this.categoryDescription);
+      this.categoryDescription,
+      this.mediaSelected,
+      this.allowSelect,
+      this.mediaMeta,
+      this.isNotesSelect,
+      this.isAudioSelect);
 
   @override
   _OtherDocsState createState() => _OtherDocsState();
@@ -45,7 +53,7 @@ class _OtherDocsState extends State<OtherDocsList> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
- 
+
     super.initState();
   }
 
@@ -57,7 +65,6 @@ class _OtherDocsState extends State<OtherDocsList> {
   Widget getWidgetToDisplayOtherDocsList(CompleteData completeData) {
     List<MediaMetaInfo> mediaMetaInfoObj = new List();
 
- 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, widget.categoryDescription);
 
@@ -96,15 +103,37 @@ class _OtherDocsState extends State<OtherDocsList> {
 
   getCardWidgetForOtherDocs(MediaMetaInfo mediaMetaInfoObj, int i) {
     return InkWell(
+        onLongPress: () {
+          if (widget.allowSelect) {
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+            setState(() {});
+            widget.mediaSelected(
+                mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
+          }
+        },
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RecordDetailScreen(
-                data: mediaMetaInfoObj,
+          if (widget.allowSelect) {
+            bool condition;
+            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+            // setState(() {});
+            widget.mediaSelected(mediaMetaInfoObj.id, condition);
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RecordDetailScreen(
+                  data: mediaMetaInfoObj,
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
         child: Container(
             padding: EdgeInsets.all(10.0),
@@ -117,81 +146,101 @@ class _OtherDocsState extends State<OtherDocsList> {
                   color: const Color(fhbColors.cardShadowColor),
                   blurRadius: 16, // has the effect of softening the shadow
                   spreadRadius: 0, // has the effect of extending the shadow
+                  // has the effect of extending the shadow
                 )
               ],
             ),
-            child: Row(
-              children: <Widget>[
-            
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: const Color(fhbColors.bgColorContainer),
-                  child: Image.network(
-                    mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
-                        ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                        : Constants.BASE_URL +
-                            mediaMetaInfoObj.metaInfo.categoryInfo.logo,
-                    height: 25,
-                    width: 25,
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: 10.0),
-                      Text(
-                        mediaMetaInfoObj.metaInfo.fileName != null
-                            ? mediaMetaInfoObj.metaInfo.fileName
-                            : '',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
+            child: Stack(
+                          alignment: Alignment.centerRight,
+
+              children: [
+                Row(
+                  children: <Widget>[
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundColor: const Color(fhbColors.bgColorContainer),
+                      child: Image.network(
+                        mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                            ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
+                            : Constants.BASE_URL +
+                                mediaMetaInfoObj.metaInfo.categoryInfo.logo,
+                        height: 25,
+                        width: 25,
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
                       ),
-                      Text(
-                        new FHBUtils()
-                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
-                      )
-                    ],
-                  ),
+                    ),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Expanded(
+                      flex: 6,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 10.0),
+                          Text(
+                            mediaMetaInfoObj.metaInfo.fileName != null
+                                ? mediaMetaInfoObj.metaInfo.fileName
+                                : '',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                            overflow: TextOverflow.fade,
+                            softWrap: false,
+                          ),
+                          Text(
+                            new FHBUtils().getFormattedDateString(
+                                mediaMetaInfoObj.createdOn),
+                            style: TextStyle(
+                                color: Colors.grey[400], fontSize: 12),
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          IconButton(
+                              icon: mediaMetaInfoObj.isBookmarked
+                                  ? ImageIcon(
+                                      AssetImage(
+                                          variable.icon_record_fav_active),
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      size: 20,
+                                    )
+                                  : ImageIcon(
+                                      AssetImage(variable.icon_record_fav),
+                                      color: Colors.black,
+                                      size: 20,
+                                    ),
+                              onPressed: () {
+                                new CommonUtil()
+                                    .bookMarkRecord(mediaMetaInfoObj, _refresh);
+                              }),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-             
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                    
-                      IconButton(
-                          icon: mediaMetaInfoObj.isBookmarked
-                              ? ImageIcon(
-                                  AssetImage(
-                                      variable.icon_record_fav_active),
-                                  color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
-                                  size: 20,
-                                )
-                              : ImageIcon(
-                                  AssetImage(variable.icon_record_fav),
-                                  color: Colors.black,
-                                  size: 20,
-                                ),
-                          onPressed: () {
-                            new CommonUtil()
-                                .bookMarkRecord(mediaMetaInfoObj, _refresh);
-                          }),
-                     
-                    ],
-                  ),
-                ),
+                widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                    ? Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(30),
+                          color: Color(new CommonUtil().getMyGredientColor()),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.done,
+                            size: 16.0,
+                            color: Colors.white,
+                          ),
+                        ))
+                    : SizedBox()
               ],
             )));
   }

@@ -1615,7 +1615,7 @@ class CommonDialogBox {
       postMediaData[parameters.strisDraft] = false;
 
       postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
-      postMediaData[parameters.strmemoTextRaw] = parameters.strMemoRawTxtVal;
+      postMediaData[parameters.strmemoTextRaw] = memoController.text;
 
       if (categoryName == CommonConstants.strDevice) {
         List<Map<String, dynamic>> postDeviceData = new List();
@@ -1702,6 +1702,7 @@ class CommonDialogBox {
 
       var params = json.encode(postMainData);
 
+print(params);
 
       if (imagePath != null) {
         if (modeOfSave) {
@@ -1713,7 +1714,7 @@ class CommonDialogBox {
               PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
 
               
-              _healthReportListForUserBlock.getHelthReportList().then((value) {
+              _healthReportListForUserBlock.getHelthReportList(condtion: false).then((value) {
                 PreferenceUtil.saveCompleteData(
                     Constants.KEY_COMPLETE_DATA, value.response.data);
 
@@ -1781,7 +1782,7 @@ class CommonDialogBox {
               .then((postImageResponse) {
 
 
-            _healthReportListForUserBlock.getHelthReportList().then((value) {
+            _healthReportListForUserBlock.getHelthReportList(condtion: false).then((value) {
               PreferenceUtil.saveCompleteData(
                       Constants.KEY_COMPLETE_DATA, value.response.data)
                   .then((value) {
@@ -1794,7 +1795,7 @@ class CommonDialogBox {
             });
           });
         } else if (k == imagePathMain.length - 1) {
-          _healthReportListForUserBlock.getHelthReportList().then((value) {
+          _healthReportListForUserBlock.getHelthReportList(condtion: false).then((value) {
             PreferenceUtil.saveCompleteData(
                     Constants.KEY_COMPLETE_DATA, value.response.data)
                 .then((value) {
@@ -1806,7 +1807,7 @@ class CommonDialogBox {
             });
           });
         } else if (k == imagePathMain.length && modeOfSave == true) {
-          _healthReportListForUserBlock.getHelthReportList().then((value) {
+          _healthReportListForUserBlock.getHelthReportList(condtion: false).then((value) {
             PreferenceUtil.saveCompleteData(
                     Constants.KEY_COMPLETE_DATA, value.response.data)
                 .then((value) {
@@ -1831,7 +1832,7 @@ class CommonDialogBox {
           .saveImage(audioPathMain, mediaMetaID, '')
           .then((postImageResponse) {
         
-        _healthReportListForUserBlock.getHelthReportList().then((value) {
+        _healthReportListForUserBlock.getHelthReportList(condtion: false).then((value) {
           PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value.response.data)
               .then((value) {
@@ -1842,6 +1843,11 @@ class CommonDialogBox {
           });
         });
       });
+    }else{
+                  Navigator.of(context).pop();
+                              Navigator.of(context).pop();
+
+
     }
   }
 
@@ -1897,7 +1903,19 @@ class CommonDialogBox {
       } else {
         validationConditon = true;
       }
-    } else if (categoryName == Constants.STR_DEVICES) {
+    }else if (categoryName == Constants.STR_NOTES) {
+       if (fileName.text == '') {
+        validationConditon = false;
+        validationMsg = CommonConstants.strFileEmpty;
+      }else if(memoController.text=='') {
+        validationConditon = false;
+        validationMsg = CommonConstants.strMemoEmpty;
+      }
+      else {
+        validationConditon = true;
+      }
+    }
+     else if (categoryName == Constants.STR_DEVICES) {
       if (deviceName == Constants.STR_GLUCOMETER) {
         if (fileName.text == '') {
           validationConditon = false;
@@ -2183,5 +2201,113 @@ class CommonDialogBox {
 
   void loadMemoText(String memoText) {
     memoController.text = memoText;
+  }
+
+
+
+  Future<Widget> getDialogBoxForNotes(
+      BuildContext context,
+      bool containsAudio,
+      String audioPath,
+      Function(bool, String) deleteAudioFunction,
+      List<String> imagePath,
+      Function(bool, String) updateAudioUI,
+      MediaMetaInfo mediaMetaInfoClone,
+      bool modeOfSaveClone,
+      TextEditingController fileNameClone) {
+    if (mediaMetaInfoClone != null) {
+      if (mediaMetaInfoClone != null) {
+        metaInfoId = mediaMetaInfoClone.id;
+        
+      }
+    }
+    modeOfSave = modeOfSaveClone;
+    if(imagePath!=null)
+    imagePathMain.addAll(imagePath);
+    if (modeOfSave) {
+      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
+          ? mediaMetaInfoClone.metaInfo.memoText
+          : '');
+    } else {
+      memoController.text = '';
+    }
+
+    setFileName(fileNameClone.text);
+    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
+      return new AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
+            IconButton(
+              icon: Icon(
+                Icons.close,
+                color: Colors.black54,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ),
+        content: SingleChildScrollView(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strFileName),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
+            SizedBox(
+              height: 15,
+            ),
+            fhbBasicWidget.getTextForAlertDialog(
+                context, CommonConstants.strMemo),
+            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
+            SizedBox(
+              height: 15,
+            ),
+            modeOfSave
+                ? fhbBasicWidget.getSaveButton(() {
+                    onPostDataToServer(context, imagePath);
+                  })
+                : containsAudioMain
+                    ? fhbBasicWidget.getAudioIconWithFile(
+                        audioPathMain,
+                        containsAudioMain,
+                        (containsAudio, audioPath) {
+                          audioPathMain = audioPath;
+                          containsAudioMain = containsAudio;
+                          updateAudioUI(containsAudioMain, audioPathMain);
+                          setState(() {});
+                        },
+                        context,
+                        imagePath,
+                        (context, imagePath) {
+                          onPostDataToServer(context, imagePath);
+                        })
+                    : Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          fhbBasicWidget
+                              .getMicIcon(context, containsAudio, audioPath,
+                                  (containsAudio, audioPath) {
+                            audioPathMain = audioPath;
+                            containsAudioMain = containsAudio;
+                            updateAudioUI(containsAudioMain, audioPathMain);
+                          }),
+                          fhbBasicWidget.getSaveButton(() {
+                            onPostDataToServer(context, imagePath);
+                          })
+                        ],
+                      ),
+          ],
+        )),
+      );
+    });
+
+    return showDialog(
+        context: context, builder: (BuildContext context) => dialog);
   }
 }

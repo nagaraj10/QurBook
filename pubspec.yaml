@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   
   gmiwidgetspackage:
-    path: C:\Users\Faisal\Documents\myfhb-flutter-common
+    path: D:\myFHB\CommonWidget
 
   # The following adds the Cupertino Icons font to your application.
   flutter_launcher_icons: ^0.7.0
@@ -77,7 +77,6 @@ dependencies:
   pdf_render: ^0.57.2
   loading: ^1.0.2
   expandable: ^4.1.4
-  fluttertoast: ^7.0.1
   
 
 dev_dependencies:

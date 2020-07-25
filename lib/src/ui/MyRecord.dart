@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/global_search/model/Data.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
@@ -26,6 +29,7 @@ import 'package:myfhb/src/ui/health/HealthReportListScreen.dart';
 import 'package:myfhb/src/ui/health/IDDocsList.dart';
 import 'package:myfhb/src/ui/health/LabReportListScreen.dart';
 import 'package:myfhb/src/ui/health/MedicalReportListScreen.dart';
+import 'package:myfhb/src/ui/health/NotesScreen.dart';
 import 'package:myfhb/src/ui/health/OtherDocsList.dart';
 import 'package:myfhb/src/ui/health/VoiceRecordList.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -41,13 +45,25 @@ import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
 
+class MyRecords extends StatefulWidget {
+  int categoryPosition;
+  bool allowSelect;
+  bool isNotesSelect;
+  bool isAudioSelect;
+  List<String> selectedMedias;
 
-class MyRecordsClone extends StatefulWidget {
+  MyRecords(
+      {this.categoryPosition,
+      this.allowSelect,
+      this.isAudioSelect,
+      this.isNotesSelect,
+      this.selectedMedias});
+
   @override
-  _MyRecordsCloneState createState() => _MyRecordsCloneState();
+  _MyRecordsState createState() => _MyRecordsState();
 }
 
-class _MyRecordsCloneState extends State<MyRecordsClone> {
+class _MyRecordsState extends State<MyRecords> {
   List<TabModel> tabModelList = new List();
   CategoryListBlock _categoryListBlock;
   HealthReportListForUserBlock _healthReportListForUserBlock;
@@ -76,8 +92,11 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
   BuildContext _myContext;
   CategoryData categoryDataObjClone = new CategoryData();
 
+  List<String> selectedMedia = new List();
+
   @override
   void initState() {
+    initPosition = widget.categoryPosition;
     rebuildAllBlocks();
     searchQuery = _searchQueryController.text.toString();
     if (searchQuery != '') {
@@ -105,7 +124,8 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
   @override
   Widget build(BuildContext context) {
     return ShowCaseWidget(onFinish: () {
-      PreferenceUtil.saveString(Constants.KEY_SHOWCASE_HOMESCREEN, variable.strtrue);
+      PreferenceUtil.saveString(
+          Constants.KEY_SHOWCASE_HOMESCREEN, variable.strtrue);
     }, builder: Builder(builder: (context) {
       _myContext = context;
       return getCompleteWidgets();
@@ -166,7 +186,7 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
                       snapshot.data.message, () {
                     setState(() {});
                   });
-                  case Status.COMPLETED:
+                case Status.COMPLETED:
                   _categoryListBlock = null;
                   rebuildAllBlocks();
                   return snapshot.data.data.response.count == 0
@@ -195,7 +215,7 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
     PreferenceUtil.saveCategoryList(
         Constants.KEY_SEARCHED_CATEGORY, categoryDataList);
 
-        initPosition=0;
+    initPosition = 0;
 
     return getMainWidgets(categoryDataList);
   }
@@ -290,6 +310,10 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
       initPosition: initPosition,
       itemCount: categoryData.length,
       fromSearch: fromSearch,
+      allowSelect: widget.allowSelect??false,
+      allowSelectVoice: widget.isAudioSelect??false,
+      allowSelectNotes: widget.isNotesSelect??false,
+      selectedMedia: widget.selectedMedias,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -454,7 +478,8 @@ class _MyRecordsCloneState extends State<MyRecordsClone> {
     for (CategoryData dataObj in data) {
       if (dataObj.isDisplay &&
           dataObj.categoryName != Constants.STR_FEEDBACK &&
-          dataObj.categoryName != Constants.STR_CLAIMSRECORD) {
+          dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
+          dataObj.categoryName != Constants.STR_WEARABLES) {
         filteredCategoryData.add(dataObj);
       }
     }
@@ -502,6 +527,10 @@ class CustomTabView extends StatefulWidget {
   GlobalKey<ScaffoldState> scaffold_state;
   bool fromSearch;
   CompleteData completeData;
+  List<String> selectedMedia = new List();
+  bool allowSelect;
+  bool allowSelectNotes;
+  bool allowSelectVoice;
 
   CustomTabView(
       {@required this.itemCount,
@@ -516,7 +545,11 @@ class CustomTabView extends StatefulWidget {
       this.voiceKey,
       this.scaffold_state,
       this.fromSearch,
-      this.completeData});
+      this.completeData,
+      this.allowSelect,
+      this.selectedMedia,
+      this.allowSelectNotes,
+      this.allowSelectVoice});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -554,6 +587,7 @@ class _CustomTabsState extends State<CustomTabView>
     if (widget.fromSearch) {
       _currentPosition = 0;
     } else {
+      print(widget.initPosition);
       _currentPosition = widget.initPosition ?? 0;
     }
 
@@ -662,6 +696,9 @@ class _CustomTabsState extends State<CustomTabView>
 
   Widget getAllTabsToDisplayInBodyClone(List<CategoryData> data) {
     rebuildAllBlocks();
+    if (widget.selectedMedia == null) {
+      widget.selectedMedia = new List();
+    }
 
     return Stack(alignment: Alignment.bottomRight, children: <Widget>[
       getAllTabsToDisplayInBody(data),
@@ -693,6 +730,8 @@ class _CustomTabsState extends State<CustomTabView>
                       new FHBBasicWidget().showInSnackBar(
                           Constants.MSG_NO_CAMERA_VOICERECORDS,
                           widget.scaffold_state);
+                    } else if (categoryName == Constants.STR_NOTES) {
+                      openNotesDialog();
                     } else {
                       PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
                           .then((onValue) {
@@ -708,15 +747,13 @@ class _CustomTabsState extends State<CustomTabView>
                               PreferenceUtil.saveString(
                                   Constants.stop_detecting, variable.strNO);
 
-                              Navigator.pushNamed(context,
-                                      router.rt_TakePictureForDevices)
-                                  .then((value) {
-                              });
+                              Navigator.pushNamed(
+                                      context, router.rt_TakePictureForDevices)
+                                  .then((value) {});
                             } else {
                               Navigator.pushNamed(
                                       context, router.rt_TakePictureScreen)
-                                  .then((value) {
-                              });
+                                  .then((value) {});
                             }
                           });
                         });
@@ -758,72 +795,27 @@ class _CustomTabsState extends State<CustomTabView>
                     });
                   },
                 ),
-                Constants.VOICE_TITLE)
+                Constants.VOICE_TITLE),
           ],
         ),
+      ),
+      Align(
+        alignment: Alignment.bottomCenter,
+        child:(widget.selectedMedia!=null && widget.selectedMedia.length>0)? OutlineButton(
+          onPressed: () {
+            Navigator.of(context).pop({'metaId': widget.selectedMedia});
+          },
+          child: Text('Associate'),
+          textColor: Color(new CommonUtil().getMyPrimaryColor()),
+          color: Colors.white,
+          borderSide: BorderSide(color: Color(new CommonUtil().getMyPrimaryColor())),
+          shape: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+        ):SizedBox(),
       )
     ]);
   }
 
   Widget getAllTabsToDisplayInBody(List<CategoryData> data) {
-    CompleteData completeDataFromPreference =
-        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
-    return widget.fromSearch
-        ? getMediTypeForlabels(data, widget.completeData)
-        :completeDataFromPreference != null
-            ? getMediTypeForlabels(data, completeDataFromPreference)
-            : StreamBuilder<ApiResponse<UserHealthResponseList>>(
-                stream: _healthReportListForUserBlock.healthReportStream,
-                builder: (context,
-                    AsyncSnapshot<ApiResponse<UserHealthResponseList>>
-                        snapshot) {
-                  if (snapshot.hasData) {
-                    switch (snapshot.data.status) {
-                      case Status.LOADING:
-                        return Scaffold(
-                          backgroundColor: Colors.white,
-                          body: Center(
-                              child: SizedBox(
-                            child: CircularProgressIndicator(
-                              backgroundColor:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                            ),
-                            width: 30,
-                            height: 30,
-                          )),
-                        );
-                        break;
-
-                      case Status.ERROR:
-                        return FHBBasicWidget.getRefreshContainerButton(
-                            snapshot.data.message, () {
-                          setState(() {});
-                        });
-                        break;
-
-                      case Status.COMPLETED:
-                        _healthReportListForUserBlock = null;
-                        rebuildAllBlocks();
-                        if (!widget.fromSearch) {
-                          
-                          PreferenceUtil.saveCompleteData(
-                              Constants.KEY_COMPLETE_DATA,
-                              snapshot.data.data.response.data);
-                        }
-
-                        return getMediTypeForlabels(
-                            data, snapshot.data.data.response.data);
-                        break;
-                    }
-                  } else {
-                    return Container(height: 0, color: Colors.white);
-                  }
-                },
-              );
-  }
-
-
-Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
     CompleteData completeDataFromPreference =
         PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch
@@ -879,6 +871,61 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
               );
   }
 
+  Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
+    CompleteData completeDataFromPreference =
+        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
+    return widget.fromSearch
+        ? getMediTypeForlabels(data, widget.completeData)
+        : completeDataFromPreference != null
+            ? getMediTypeForlabels(data, completeDataFromPreference)
+            : StreamBuilder<ApiResponse<UserHealthResponseList>>(
+                stream: _healthReportListForUserBlock.healthReportStream,
+                builder: (context,
+                    AsyncSnapshot<ApiResponse<UserHealthResponseList>>
+                        snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        return Scaffold(
+                          backgroundColor: Colors.white,
+                          body: Center(
+                              child: SizedBox(
+                            child: CircularProgressIndicator(
+                              backgroundColor:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                            ),
+                            width: 30,
+                            height: 30,
+                          )),
+                        );
+                        break;
+
+                      case Status.ERROR:
+                        return FHBBasicWidget.getRefreshContainerButton(
+                            snapshot.data.message, () {
+                          setState(() {});
+                        });
+                        break;
+
+                      case Status.COMPLETED:
+                        _healthReportListForUserBlock = null;
+                        rebuildAllBlocks();
+                        if (!widget.fromSearch) {
+                          PreferenceUtil.saveCompleteData(
+                              Constants.KEY_COMPLETE_DATA,
+                              snapshot.data.data.response.data);
+                        }
+
+                        return getMediTypeForlabels(
+                            data, snapshot.data.data.response.data);
+                        break;
+                    }
+                  } else {
+                    return Container(height: 0, color: Colors.white);
+                  }
+                },
+              );
+  }
 
   void rebuildAllBlocks() {
     if (_categoryListBlock == null) {
@@ -1000,81 +1047,181 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
     categoryID = categoryId;
   }
 
+  void addMediaRemoveMaster(String metaId, bool condition) {
+    if (widget.allowSelect) {
+      if (condition) {
+        if (!(widget.selectedMedia.contains(metaId))) {
+          widget.selectedMedia.add(metaId);
+          print(metaId + ' Added ************');
+        }
+      } else {
+        widget.selectedMedia.remove(metaId);
+        print(metaId + ' removed **************');
+      }
+    } else if (widget.allowSelectNotes || widget.allowSelectVoice) {
+      if (condition) {
+        if (widget.selectedMedia.length > 0) {
+          new FHBBasicWidget()
+              .showInSnackBar(Constants.STR_ONLY_ONE, widget.scaffold_state);
+        } else {
+          widget.selectedMedia.add(metaId);
+          print(metaId + ' Added ************');
+        }
+      } else {
+        widget.selectedMedia.remove(metaId);
+        print(metaId + ' removed **************');
+      }
+    }
+
+    print(widget.selectedMedia);
+    callBackToRefresh();
+  }
+
   List<Widget> _getAllDataForTheTabs(List<CategoryData> data,
       CompleteData completeData, List<MediaData> mediaData) {
     List<Widget> tabWidgetList = new List();
     //data.sort((a, b) => a.categoryName.compareTo(b.categoryName));
     for (CategoryData dataObj in data) {
-    /* if (dataObj
-          .isDisplay && dataObj.categoryName != Constants.STR_FEEDBACK) {*/
-        if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionPrescription) {
-          tabWidgetList.add(new HealthReportListScreen(
-              completeData,
-              callBackToRefresh,
-              dataObj.categoryName,
-              dataObj.id,
-              getDataForParticularLabel));
-        } else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionDevice) {
-          tabWidgetList.add(new DeviceListScreen(
+      /* if (dataObj
+                                .isDisplay && dataObj.categoryName != Constants.STR_FEEDBACK) {*/
+      if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionPrescription) {
+        tabWidgetList.add(new HealthReportListScreen(
             completeData,
             callBackToRefresh,
             dataObj.categoryName,
             dataObj.id,
             getDataForParticularLabel,
-          ));
-        } else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionLabReport) {
-          tabWidgetList.add(new LabReportListScreen(
-              completeData,
-              callBackToRefresh,
-              dataObj.categoryName,
-              dataObj.id,
-              getDataForParticularLabel));
-        } else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionMedicalReport) {
-          tabWidgetList.add(new MedicalReportListScreen(
-              completeData,
-              callBackToRefresh,
-              dataObj.categoryName,
-              dataObj.id,
-              getDataForParticularLabel));
-        } else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionBills) {
-          tabWidgetList.add(new BillsList(completeData, callBackToRefresh,
-              dataObj.categoryName, dataObj.id, getDataForParticularLabel));
-        } else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionIDDocs) {
-          tabWidgetList.add(new IDDocsList(completeData, callBackToRefresh,
-              dataObj.categoryName, dataObj.id, getDataForParticularLabel));
-        } else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionOthers) {
-          tabWidgetList.add(new OtherDocsList(
-              completeData,
-              callBackToRefresh,
-              dataObj.categoryName,
-              dataObj.id,
-              getDataForParticularLabel,
-              CommonConstants.categoryDescriptionOthers));
-        } else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionVoiceRecord) {
-          tabWidgetList.add(new VoiceRecordList(completeData, callBackToRefresh,
-              dataObj.categoryName, dataObj.id, getDataForParticularLabel));
-        } else if (dataObj.categoryDescription ==
-            CommonConstants.categoryDescriptionClaimsRecord) {
-          tabWidgetList.add(new OtherDocsList(
-              completeData,
-              callBackToRefresh,
-              dataObj.categoryName,
-              dataObj.id,
-              getDataForParticularLabel,
-              CommonConstants.categoryDescriptionClaimsRecord));
-        }
-        else {
-          tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
-        }
-     /* }*/
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice));
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionDevice) {
+        tabWidgetList.add(new DeviceListScreen(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice));
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionLabReport) {
+        tabWidgetList.add(new LabReportListScreen(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice));
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionMedicalReport) {
+        tabWidgetList.add(new MedicalReportListScreen(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice));
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionBills) {
+        tabWidgetList.add(new BillsList(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice));
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionIDDocs) {
+        tabWidgetList.add(new IDDocsList(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice));
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionOthers) {
+        tabWidgetList.add(new OtherDocsList(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            CommonConstants.categoryDescriptionOthers,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice));
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionVoiceRecord) {
+        tabWidgetList.add(new VoiceRecordList(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            CommonConstants.categoryDescriptionVoiceRecord,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice));
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionClaimsRecord) {
+        tabWidgetList.add(new OtherDocsList(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            CommonConstants.categoryDescriptionClaimsRecord,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice));
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionNotes) {
+        tabWidgetList.add(new NotesScreenList(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            CommonConstants.categoryDescriptionNotes,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice));
+      } else {
+        tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
+      }
+      /* }*/
     }
     return tabWidgetList;
   }
@@ -1085,7 +1232,6 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
       if (widget.onPositionChange is ValueChanged<int>) {
         widget.onPositionChange(_currentPosition);
 
-      
         try {
           _currentPosition = controller.index;
 
@@ -1122,30 +1268,56 @@ Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
           .compareTo(b.categoryDescription.toLowerCase());
     });
 
-   
-
     for (CategoryData dataObj in data) {
-     /* if (dataObj
-          .isDisplay ) {*/
-        tabWidgetList.add(Column(children: [
-          Padding(padding: EdgeInsets.only(top: 10)),
-         dataObj.logo!=null? Image.network(
-            Constants.BASEURL_V2 + dataObj.logo,
-            width: 20,
-            height: 20,
-            color: Colors.white,
-          ):Icon(Icons.calendar_today,size:20,color: Colors.white),
-          Padding(padding: EdgeInsets.only(top: 10)),
-          Container(
-              child: Text(
-            dataObj.categoryName,
-            style: TextStyle(fontSize: 12),
-          )),
-          Padding(padding: EdgeInsets.only(top: 10)),
-        ]));
-     /* }*/
+      /* if (dataObj
+                                .isDisplay ) {*/
+      tabWidgetList.add(Column(children: [
+        Padding(padding: EdgeInsets.only(top: 10)),
+        dataObj.logo != null
+            ? Image.network(
+                Constants.BASEURL_V2 + dataObj.logo,
+                width: 20,
+                height: 20,
+                color: Colors.white,
+              )
+            : Icon(Icons.calendar_today, size: 20, color: Colors.white),
+        Padding(padding: EdgeInsets.only(top: 10)),
+        Container(
+            child: Text(
+          dataObj.categoryName,
+          style: TextStyle(fontSize: 12),
+        )),
+        Padding(padding: EdgeInsets.only(top: 10)),
+      ]));
+      /* }*/
     }
 
     return tabWidgetList;
+  }
+
+  void openNotesDialog() {
+    TextEditingController fileName = new TextEditingController(
+        text:
+            categoryName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+    new CommonDialogBox().getDialogBoxForNotes(
+        context,
+        false,
+        null,
+        (containsAudio, audioPath) {
+          setState(() {
+            audioPath = audioPath;
+            containsAudio = containsAudio;
+          });
+        },
+        null,
+        (containsAudio, audioPath) {
+          audioPath = audioPath;
+          containsAudio = containsAudio;
+
+          setState(() {});
+        },
+        null,
+        false,
+        fileName);
   }
 }

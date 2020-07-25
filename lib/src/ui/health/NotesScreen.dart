@@ -7,42 +7,45 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
+import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 
-
-class VoiceRecordList extends StatefulWidget {
+class NotesScreenList extends StatefulWidget {
   final CompleteData completeData;
   final Function callBackToRefresh;
   final String categoryName;
   final String categoryId;
+  final String categoryDescription;
 
   final Function(String, String) getDataForParticularLabel;
-    final Function(String, bool) mediaSelected;
-
-    final String categoryDescription;
-final bool isNotesSelect;
-  final bool isAudioSelect;
-    List<String> mediaMeta;
+  final Function(String, bool) mediaSelected;
   final bool allowSelect;
-
-
-  VoiceRecordList(this.completeData, this.callBackToRefresh, this.categoryName,
-      this.categoryId, this.getDataForParticularLabel,      this.categoryDescription,
-this.mediaSelected,
+  List<String> mediaMeta;
+  final bool isNotesSelect;
+  final bool isAudioSelect;
+  NotesScreenList(
+      this.completeData,
+      this.callBackToRefresh,
+      this.categoryName,
+      this.categoryId,
+      this.getDataForParticularLabel,
+      this.categoryDescription,
+      this.mediaSelected,
       this.allowSelect,
       this.mediaMeta,this.isNotesSelect,this.isAudioSelect);
 
   @override
-  _VoiceRecordListState createState() => new _VoiceRecordListState();
+  _NotesScreenListState createState() => _NotesScreenListState();
 }
 
-class _VoiceRecordListState extends State<VoiceRecordList> {
+class _NotesScreenListState extends State<NotesScreenList> {
   HealthReportListForUserBlock _healthReportListForUserBlock;
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
@@ -51,20 +54,23 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    _healthReportListForUserBlock.getHelthReportList(condtion: true);
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return getWidgetToDisplayVoiceRecords(widget.completeData);
+    //return getWidgetToDisplayOtherDocsList(widget.completeData);
+    return getNotes();
   }
 
-  Widget getWidgetToDisplayVoiceRecords(CompleteData completeData) {
+  Widget getWidgetToDisplayOtherDocsList(CompleteData completeData) {
     List<MediaMetaInfo> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
-        completeData, CommonConstants.categoryDescriptionVoiceRecord);
+        completeData, widget.categoryDescription);
+
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
@@ -73,7 +79,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
               color: const Color(fhbColors.bgColorContainer),
               child: ListView.builder(
                 itemBuilder: (c, i) =>
-                    getCardWidgetForVoiceRecords(mediaMetaInfoObj[i], i),
+                    getCardWidgetForOtherDocs(mediaMetaInfoObj[i], i),
                 itemCount: mediaMetaInfoObj.length,
               ))
           : Container(
@@ -81,7 +87,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                 child: Padding(
                   padding: EdgeInsets.only(left: 40, right: 40),
                   child: Text(
-                    Constants.NO_VOICE_RECRODS,
+                    Constants.NO_DATA_OTHERS,
                     textAlign: TextAlign.center,
                     style: TextStyle(fontFamily: variable.font_poppins),
                   ),
@@ -98,42 +104,41 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
     widget.callBackToRefresh();
   }
 
-  getCardWidgetForVoiceRecords(MediaMetaInfo mediaMetaInfoObj, int i) {
+  getCardWidgetForOtherDocs(MediaMetaInfo mediaMetaInfoObj, int i) {
     return InkWell(
- onLongPress: () {
-        if (widget.isAudioSelect) {
-          print('inside is audio');
-          mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
-          
-          setState(() {});
-          widget.mediaSelected(
-              mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
-        }
-      },
-        onTap: () {
-          if (widget.isAudioSelect) {
-            bool condition;
-            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
-              condition = false;
-            } else {
-              condition = true;
-            }
+        onLongPress: () {
+          if (widget.isNotesSelect) {
             mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
-            // setState(() {});
-            widget.mediaSelected(mediaMetaInfoObj.id, condition);
-          
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RecordDetailScreen(
-                data: mediaMetaInfoObj,
+            setState(() {});
+            widget.mediaSelected(
+                mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
+          }
+        },
+        onTap: () {
+            if (widget.isNotesSelect) {
+              bool condition;
+              if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+                condition = false;
+              } else {
+                condition = true;
+              }
+              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+              // setState(() {});
+              widget.mediaSelected(mediaMetaInfoObj.id, condition);
+            
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RecordDetailScreen(
+                  data: mediaMetaInfoObj,
+                ),
               ),
-            ),
-          );
-        } },     
-       
+            );
+          }
+        },
         child: Container(
             padding: EdgeInsets.all(10.0),
             margin: EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -154,22 +159,24 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
             child: Stack(
                           alignment: Alignment.centerRight,
 
-              children: [
-              Row(
+              children:[Row(
               children: <Widget>[
                 CircleAvatar(
-                    radius: 25,
-                    backgroundColor: const Color(fhbColors.bgColorContainer),
-                    child: Image.network(
-                      mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
-                          ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                          : Constants.BASE_URL +
-                              mediaMetaInfoObj.metaInfo.categoryInfo.logo,
-                      height: 25,
-                      width: 25,
-                      color: Color(new CommonUtil().getMyPrimaryColor()),
-                    )),
-                SizedBox(width: 20),
+                  radius: 25,
+                  backgroundColor: const Color(fhbColors.bgColorContainer),
+                  child: Image.network(
+                    mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                        ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
+                        : Constants.BASE_URL +
+                            mediaMetaInfoObj.metaInfo.categoryInfo.logo,
+                    height: 25,
+                    width: 25,
+                    color: Color(new CommonUtil().getMyPrimaryColor()),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
                 Expanded(
                   flex: 6,
                   child: Column(
@@ -181,11 +188,9 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                         mediaMetaInfoObj.metaInfo.fileName != null
                             ? mediaMetaInfoObj.metaInfo.fileName
                             : '',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                        overflow: TextOverflow.fade,
                         softWrap: false,
-                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         new FHBUtils()
@@ -198,15 +203,13 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                 Expanded(
                   flex: 1,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                   
                       IconButton(
                           icon: mediaMetaInfoObj.isBookmarked
                               ? ImageIcon(
-                                  AssetImage(
-                                      variable.icon_record_fav_active),
+                                  AssetImage(variable.icon_record_fav_active),
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
@@ -220,32 +223,29 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                             new CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
-
-                   
                     ],
                   ),
                 ),
               ],
             ),widget.mediaMeta.contains(mediaMetaInfoObj.id)
-                    ? Container(
-                        width: 30,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
-                          color: Color(new CommonUtil().getMyGredientColor()),
+                  ? Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30),
+                        color: Color(new CommonUtil().getMyGredientColor()),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.done,
+                          size: 16.0,
+                          color: Colors.white,
                         ),
-                        child: Center(
-                          child: Icon(
-                            Icons.done,
-                            size: 16.0,
-                            color: Colors.white,
-                          ),
-                        ))
-                    : SizedBox()
-            ],)));
+                      ))
+                  : SizedBox()])));
   }
 
-  getDocumentImagegetDocumentImageWidget(MediaMetaInfo data) {
+  getDocumentImageWidget(MediaMetaInfo data) {
     return FutureBuilder(
       future: _healthReportListForUserBlock
           .getDocumentImage(new CommonUtil().getMetaMasterId(data)),
@@ -265,6 +265,49 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
         }
 
         ///load until snapshot.hasData resolves to true
+      },
+    );
+  }
+
+ Widget getNotes() {
+    return StreamBuilder<ApiResponse<UserHealthResponseList>>(
+      stream: _healthReportListForUserBlock.healthReportStream,
+      builder: (context,
+          AsyncSnapshot<ApiResponse<UserHealthResponseList>> snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return Scaffold(
+                backgroundColor: Colors.white,
+                body: Center(
+                    child: SizedBox(
+                  child: CircularProgressIndicator(
+                    backgroundColor:
+                        Color(new CommonUtil().getMyPrimaryColor()),
+                  ),
+                  width: 30,
+                  height: 30,
+                )),
+              );
+              break;
+
+            case Status.ERROR:
+              return FHBBasicWidget.getRefreshContainerButton(
+                  snapshot.data.message, () {
+                setState(() {});
+              });
+              break;
+
+            case Status.COMPLETED:
+              //_healthReportListForUserBlock = null;
+
+              return getWidgetToDisplayOtherDocsList(
+                  snapshot.data.data.response.data);
+              break;
+          }
+        } else {
+          return Container(height: 0, color: Colors.white);
+        }
       },
     );
   }

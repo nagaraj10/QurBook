@@ -290,7 +290,7 @@ packages:
     source: sdk
     version: "0.0.0"
   fluttertoast:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: fluttertoast
       url: "https://pub.dartlang.org"
@@ -727,7 +727,7 @@ packages:
       name: webview_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.19+7"
+    version: "0.3.22+1"
   xml:
     dependency: transitive
     description:
