@@ -107,7 +107,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
   getCardWidgetForOtherDocs(MediaMetaInfo mediaMetaInfoObj, int i) {
     return InkWell(
         onLongPress: () {
-          if (widget.isNotesSelect) {
+          if (widget.isNotesSelect || widget.allowSelect || widget.isAudioSelect) {
             mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
             setState(() {});

@@ -111,7 +111,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
         }
       },
       onTap: () {
-          if (widget.allowSelect) {
+          if (widget.allowSelect || widget.isNotesSelect || widget.isAudioSelect) {
             bool condition;
             if (widget.mediaMeta.contains(mediaMetaInfo.id)) {
               condition = false;

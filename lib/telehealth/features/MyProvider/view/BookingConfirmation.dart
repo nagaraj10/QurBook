@@ -36,6 +36,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'dart:convert';
 import 'package:progress_dialog/progress_dialog.dart';
+
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
@@ -231,8 +232,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }*/
 
   Widget dropDownButton(List<Sharedbyme> sharedByMeList) {
-     ProfileData profileData = new ProfileData(
-        id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
+
+
+         ProfileData profileData = new ProfileData(
+        id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),name:variable.Self
+        ,userId:PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),);
     LinkedData linkedData = new LinkedData(roleName: variable.Self, nickName:variable.Self);
 
     if (sharedByMeList == null) {
@@ -275,7 +279,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     child: Row(
                       children: <Widget>[
                         SizedBoxWidget(width: 20),
-                        Text(user.name, style: TextStyle(fontSize: 12)),
+                        Text(user.name==null?'Self':user.name, style: TextStyle(fontSize: 12)),
                       ],
                     ),
                     value: user,

@@ -107,7 +107,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
         }
       },
         onTap: () {
-          if (widget.allowSelect) {
+          if (widget.allowSelect || widget.isNotesSelect || widget.isAudioSelect) {
             bool condition;
             if (widget.mediaMeta.contains(data.id)) {
               condition = false;

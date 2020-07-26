@@ -93,6 +93,7 @@ class _MyRecordsState extends State<MyRecords> {
   CategoryData categoryDataObjClone = new CategoryData();
 
   List<String> selectedMedia = new List();
+  
 
   @override
   void initState() {
@@ -581,6 +582,8 @@ class _CustomTabsState extends State<CustomTabView>
   List<MediaData> mediaData = new List();
 
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  bool containsAudio = false;
+  String audioPath = '';
 
   @override
   void initState() {
@@ -1301,8 +1304,8 @@ class _CustomTabsState extends State<CustomTabView>
             categoryName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     new CommonDialogBox().getDialogBoxForNotes(
         context,
-        false,
-        null,
+        containsAudio,
+        audioPath,
         (containsAudio, audioPath) {
           setState(() {
             audioPath = audioPath;

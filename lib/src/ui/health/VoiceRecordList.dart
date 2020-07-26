@@ -111,7 +111,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
         }
       },
         onTap: () {
-          if (widget.isAudioSelect) {
+          if (widget.isAudioSelect|| widget.isNotesSelect || widget.allowSelect) {
             bool condition;
             if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
               condition = false;

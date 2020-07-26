@@ -112,7 +112,7 @@ class _BillsListState extends State<BillsList> {
         }
       },
       onTap: () {
-          if (widget.allowSelect) {
+          if (widget.allowSelect || widget.isNotesSelect || widget.isAudioSelect) {
             bool condition;
             if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
               condition = false;

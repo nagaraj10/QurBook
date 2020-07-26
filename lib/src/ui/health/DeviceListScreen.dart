@@ -104,7 +104,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
         }
       },
         onTap: () {
-          if (widget.allowSelect) {
+          if (widget.allowSelect || widget.isNotesSelect || widget.isAudioSelect) {
             bool condition;
             if (widget.mediaMeta.contains(data.id)) {
               condition = false;

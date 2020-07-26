@@ -104,7 +104,7 @@ class _OtherDocsState extends State<OtherDocsList> {
   getCardWidgetForOtherDocs(MediaMetaInfo mediaMetaInfoObj, int i) {
     return InkWell(
         onLongPress: () {
-          if (widget.allowSelect) {
+          if (widget.allowSelect || widget.isNotesSelect || widget.isAudioSelect) {
             mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
             setState(() {});
@@ -113,7 +113,7 @@ class _OtherDocsState extends State<OtherDocsList> {
           }
         },
         onTap: () {
-          if (widget.allowSelect) {
+          if (widget.allowSelect || widget.isNotesSelect || widget.isAudioSelect) {
             bool condition;
             if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
               condition = false;

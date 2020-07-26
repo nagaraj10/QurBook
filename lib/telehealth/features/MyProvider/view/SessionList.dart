@@ -31,13 +31,14 @@ class SessionListState extends State<SessionList>{
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 200,
+      height:200,
       child: ListView.builder(
           itemCount: widget.sessionData.length,
           itemBuilder: (BuildContext context, int index) {
             sessionTimings = commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionStartTime)+" - "
                 +commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionEndTime);
             return Container(
+              height:70,
               alignment: Alignment.center,
               child: new Row(
                 crossAxisAlignment: CrossAxisAlignment.start,

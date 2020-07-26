@@ -195,7 +195,7 @@ class CommonWidgets {
                   ),
                   Column(
                     mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
                     children: <Widget>[
                       Row(
@@ -210,13 +210,18 @@ class CommonWidgets {
                           Expanded(
                             // flex: 4,
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 getTextForDoctors('${docs.name}'),
-                                getDoctoSpecialist('${docs.specialization}'),
+                                              docs.specialization!=null?
+                getDoctoSpecialist('${docs.specialization}'):SizedBox() ,
                                 getDoctorsAddress('${docs.city}'),
-                                Row(children: getLanguages(docs)),
+
+                              (docs.languages != null && docs.languages.length > 0)?
+       getTextForDoctors('Can Speak'):SizedBox(),
+                                    (docs.languages != null && docs.languages.length > 0) ?
+ Row(children: getLanguages(docs)):SizedBox(),
                               ],
                             ),
                           ),

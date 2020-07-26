@@ -2233,6 +2233,7 @@ print(params);
     }
 
     setFileName(fileNameClone.text);
+    categoryName=Constants.STR_NOTES;
     StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
       return new AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

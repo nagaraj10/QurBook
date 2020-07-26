@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:expandable/expandable.dart';
-import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -12,6 +11,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Doctor
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/ExpansionTileWidget.dart' as expansion;
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
@@ -22,15 +22,16 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:flutter/material.dart';
 
 import 'DoctorSessionTimeSlot.dart';
 
-class MyProviders extends StatefulWidget {
+class MyProvidersNew extends StatefulWidget {
   @override
   _MyProvidersState createState() => _MyProvidersState();
 }
 
-class _MyProvidersState extends State<MyProviders> {
+class _MyProvidersState extends State<MyProvidersNew> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   MyProviderViewModel providerViewModel;
   DatePickerController _controller = DatePickerController();
@@ -60,20 +61,7 @@ class _MyProvidersState extends State<MyProviders> {
         appBar: AppBar(
             flexibleSpace: GradientAppBar(),
             leading: Icon(Icons.arrow_back_ios),
-            // you can put Icon as well, it accepts any widget.
-            title:
-                getTitle() /* Column(
-            children: [
-              Text("My Providers"),
-            ],
-          ),
-          actions: [
-            Icon(Icons.notifications),
-            new SwitchProfile()
-                .buildActions(context, _keyLoader, callBackToRefresh),
-            Icon(Icons.more_vert),
-          ],*/
-            ),
+            title: getTitle()),
         body: Container(
             child: Column(
           children: [
@@ -120,7 +108,10 @@ class _MyProvidersState extends State<MyProviders> {
     return Row(
       children: [
         Expanded(
-          child: Text("My Providers",style:TextStyle(fontWeight: FontWeight.w500),),
+          child: Text(
+            "My Providers",
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
         ),
         Icon(Icons.notifications),
         new SwitchProfile()
@@ -131,58 +122,36 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
-    return ExpandableNotifier(
-      child: Container(
-        padding: EdgeInsets.all(2.0),
-        margin: EdgeInsets.only(left: 20, right: 20, top: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFe3e2e2),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 5.0, // has the effect of extending the shadow
-              offset: Offset(
-                0.0, // horizontal, move right 10
-                0.0, // vertical, move down 10
-              ),
-            )
-          ],
-        ),
-        child: Expandable(
-          collapsed: collapseListItem(ctx, i, docs),
-          expanded: expandedListItem(ctx, i, docs),
-        ),
-      ),
-    );
+    return Card(
+        elevation: 5,
+        margin: EdgeInsets.only(left:15.0,right: 15.0,top:5,bottom: 5),
+        child: expansion.ExpansionTileWidget(
+
+          title: collapseListItem(ctx, i, docs),
+          children: [expandedListItem(ctx, i, docs)],
+        ));
   }
 
   Widget collapseListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
-      padding: EdgeInsets.all(10.0),
-      child: ExpandableButton(
-        child: getDoctorsWidget(i, docs),
-      ),
+      padding: EdgeInsets.all(2.0),
+      child: getDoctorsWidget(i, docs),
     );
   }
 
   Widget expandedListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(2.0),
       width: MediaQuery.of(context).size.width,
-      child: ExpandableButton(
-        child: Column(
-          children: [
-            getDoctorsWidget(i, docs),
-            commonWidgets.getSizedBox(20.0),
-            DoctorSessionTimeSlot(
-                date: _selectedValue.toString(),
-                doctorId: docs[i].id,
-                docs: docs,
-                i: i),
-          ],
-        ),
+      child: Column(
+        children: [
+          commonWidgets.getSizedBox(20.0),
+          DoctorSessionTimeSlot(
+              date: _selectedValue.toString(),
+              doctorId: docs[i].id,
+              docs: docs,
+              i: i),
+        ],
       ),
     );
   }
@@ -191,7 +160,10 @@ class _MyProvidersState extends State<MyProviders> {
     (context as Element).markNeedsBuild();
   }
 
- Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
+  Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
+    print(docs[i].name);
+    print(docs[i].id);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -214,7 +186,7 @@ class _MyProvidersState extends State<MyProviders> {
         Expanded(
           flex: 4,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
@@ -250,8 +222,6 @@ class _MyProvidersState extends State<MyProviders> {
                         .bookMarkDoctor(!(docs[i].isDefault), docs[i])
                         .then((status) {
                       if (status) {
-                        print('onClick');
-                        providerViewModel.doctorIdsList.clear();
                         setState(() {});
                       }
                     });
@@ -261,10 +231,12 @@ class _MyProvidersState extends State<MyProviders> {
               ),
               commonWidgets.getSizedBox(5.0),
               Row(children: [
-                docs[i].specialization!=null?
-                commonWidgets.getDoctoSpecialist('${docs[i].specialization}'):SizedBox(),
+                docs[i].specialization != null
+                    ? commonWidgets
+                        .getDoctoSpecialist('${docs[i].specialization}')
+                    : SizedBox(),
               ]),
-              docs[i].specialization!=null?commonWidgets.getSizedBox(5.0):SizedBox(),
+              commonWidgets.getSizedBox(5.0),
               commonWidgets.getDoctorsAddress('${docs[i].city}')
             ],
           ),
@@ -295,7 +267,7 @@ class _MyProvidersState extends State<MyProviders> {
   Widget getFees(DoctorIds doctorId) {
     return doctorId.fees != null
         ? commonWidgets.getHospitalDetails(doctorId.fees.consulting != null
-            ? variable.strRs+' '+doctorId.fees.consulting.fee
+            ? variable.strRs + ' ' + doctorId.fees.consulting.fee
             : '')
         : Text('');
   }
