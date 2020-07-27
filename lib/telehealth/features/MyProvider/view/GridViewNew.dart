@@ -43,7 +43,7 @@ class _GridViewNew extends State<GridViewNew> {
       crossAxisCount: 4,
       crossAxisSpacing: 10,
       childAspectRatio: 1.6,
-    
+      shrinkWrap: true,
       children: List.generate(widget.dateTimingsSlot.length, (index) {
         return GestureDetector(
           onTap: (){

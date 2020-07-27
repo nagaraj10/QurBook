@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -18,13 +19,14 @@ class GetTimeSlots extends StatelessWidget {
   final List<DoctorIds> docs;
   final int j;
   final DateTime selectedDate;
+  FlutterToast toast = new FlutterToast();
 
   GetTimeSlots({this.dateSlotTimingsObj,this.docs,this.j,this.selectedDate});
 
   @override
   Widget build(BuildContext context) {
-    int rowPosition;
-    int itemPosition;
+    int rowPosition=-1;
+    int itemPosition=-1;
     return Column(
       children: <Widget>[
         SessionList(
@@ -52,15 +54,7 @@ class GetTimeSlots extends StatelessWidget {
                 if(rowPosition>-1&&itemPosition>-1){
                   navigateToConfirmBook(context,rowPosition,itemPosition);
                 }else{
-                  /*Fluttertoast.showToast(
-                      msg: "Please select the time slot before you book",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.CENTER,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.blue[800],
-                      textColor: Colors.white,
-                      fontSize: 14.0
-                  );*/
+                  toast.getToast('please select your time slot beore you book',Colors.red);
                 }
               },
               child: TextWidget(text: bookNow, fontsize: 12),

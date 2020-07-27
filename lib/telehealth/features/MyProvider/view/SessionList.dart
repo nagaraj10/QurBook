@@ -31,33 +31,36 @@ class SessionListState extends State<SessionList>{
   @override
   Widget build(BuildContext context) {
     return Container(
-      height:200,
       child: ListView.builder(
+        shrinkWrap: true,
           itemCount: widget.sessionData.length,
           itemBuilder: (BuildContext context, int index) {
             sessionTimings = commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionStartTime)+" - "
                 +commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionEndTime);
             return Container(
-              height:70,
-              alignment: Alignment.center,
-              child: new Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBoxWidget(width: 10),
-                  Expanded(
-                      flex: 1,
-                      child: sessionTimings == ''
-                          ? SizedBoxWidget(width: 132,)
-                          : TextWidget(text: sessionTimings,)),
-                  Expanded(
-                      flex: 2,
-                      child: GridViewNew(widget.sessionData[index].slots,index,(rowPosition,itemPosition){
-                        selectedRow = rowPosition;
-                        selectedItem = itemPosition;
-                        widget.selectedPosition(rowPosition,itemPosition);
-                        setState(() {});
-                      },selectedRow)),
-                  SizedBoxWidget(width: 10),
+              child: Column(
+                children: <Widget>[
+                  new Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBoxWidget(width: 10),
+                      Expanded(
+                          flex: 1,
+                          child: sessionTimings == ''
+                              ? SizedBoxWidget(width: 132,)
+                              : TextWidget(text: sessionTimings,)),
+                      Expanded(
+                          flex: 2,
+                          child: GridViewNew(widget.sessionData[index].slots,index,(rowPosition,itemPosition){
+                            selectedRow = rowPosition;
+                            selectedItem = itemPosition;
+                            widget.selectedPosition(rowPosition,itemPosition);
+                            setState(() {});
+                          },selectedRow)),
+                      SizedBoxWidget(width: 10),
+                    ],
+                  ),
+                  SizedBoxWidget(height: 12.0,),
                 ],
               ),
             );

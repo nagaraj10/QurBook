@@ -12,6 +12,8 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
@@ -110,7 +112,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     providerViewModel = new MyProviderViewModel();
 
      createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-     selectedId = createdBy;
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
 
@@ -406,12 +407,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(
         message: 'Redirecting',
-        borderRadius: 10.0,
+        borderRadius: 8.0,
         backgroundColor: Colors.white,
-        progressWidget: SizedBox(
+        progressWidget: SizedBoxWithChild(
           child: CircularProgressIndicator(strokeWidth: 2.0,backgroundColor: Color(0xff138fcf)),
-          height: 20.0,
-          width: 20.0,
+          height: 15.0,
+          width: 15.0,
         ),
         elevation: 6.0,
         insetAnimCurve: Curves.easeInOut,
@@ -664,7 +665,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: TextWidget(text: 'Cancel', fontsize: 12),
+                      child: TextWidget(text: Constants.Cancel, fontsize: 12),
                     ),
                   ),
                   SizedBoxWithChild(
@@ -678,9 +679,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       textColor: Colors.blue[800],
                       padding: EdgeInsets.all(8.0),
                       onPressed: () {
-                        _displayDialog(context);
+                        if(selectedId.isNotEmpty){
+                          _displayDialog(context);
+                        }else{
+                          toast.getToast(chooseAppointmentIsFor,Colors.red);
+                        }
+                        
                       },
-                      child: TextWidget(text: parameters.payNow, fontsize: 12),
+                      child: TextWidget(text: payNow, fontsize: 12),
                     ),
                   ),
                 ],
@@ -718,7 +724,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             children: <Widget>[
                               TextWidget(
                                   text:
-                                      'You are being re-directed to a secure third party site for payment',
+                                  redirectedToPaymentMessage,
                                   fontsize: 14,
                                   fontWeight: FontWeight.w500,
                                   colors: Colors.grey[600]),
@@ -773,7 +779,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                             "false");
                                       },
                                       child:
-                                          TextWidget(text: 'Ok', fontsize: 12),
+                                          TextWidget(text: ok, fontsize: 12),
                                     ),
                                   ),
                                 ],
@@ -854,18 +860,28 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     setState(() {
       pr.show();
     });
-    
 
-    bookAppointmentCall(createdBy,createdFor,doctorSessionId,
-        scheduleDate,startTime,endTime,slotNumber,isMedicalShared,isFollowUp).then((value) {
-      if(value.status==200 && value.success==true && value.message=='Created a new  appointment(s) successfully'){
-        pr.hide();
-        goToPaymentPage();
-      }else{
-        pr.hide();
-        toast.getToast('Booking appointment failed.. Some went wrong!',Colors.red);
-      }
-    });
+    try{
+      bookAppointmentCall(createdBy,createdFor,doctorSessionId,
+          scheduleDate,startTime,endTime,slotNumber,isMedicalShared,isFollowUp).then((value) {
+            if(value.status!=null && value.success!=null && value.message!=null){
+              if(value.status==200 && value.success==true && value.message==appointmentCreatedMessage){
+                pr.hide();
+                goToPaymentPage();
+              }else{
+                pr.hide();
+                toast.getToast(value.message!=null?value.message:someWentWrong,Colors.red);
+              }
+            }else{
+              pr.hide();
+              toast.getToast(someWentWrong,Colors.red);
+            }
+      });
+    }catch(e){
+      pr.hide();
+      toast.getToast(someWentWrong,Colors.red);
+    }
+
   }
 
   goToPaymentPage() {
