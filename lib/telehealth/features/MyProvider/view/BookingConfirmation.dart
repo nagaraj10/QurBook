@@ -409,11 +409,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         message: 'Redirecting',
         borderRadius: 8.0,
         backgroundColor: Colors.white,
-        progressWidget: SizedBoxWithChild(
-          child: CircularProgressIndicator(strokeWidth: 2.0,backgroundColor: Color(0xff138fcf)),
-          height: 15.0,
-          width: 15.0,
-        ),
         elevation: 6.0,
         insetAnimCurve: Curves.easeInOut,
         progress: 0.0,
