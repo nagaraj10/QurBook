@@ -404,7 +404,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(
-        message: 'Checking available slots..',
+        message: checkSlots,
         borderRadius: 6.0,
         backgroundColor: Colors.white,
         progressWidget: SizedBoxWithChild(height: 25,width: 25,child: CircularProgressIndicator(strokeWidth: 2.0,
@@ -594,32 +594,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             SizedBoxWidget(
                               width: 25,
                             ),
-                          /*  Column(
-                              children: <Widget>[
-                                new Stack(
-                                  overflow: Overflow.visible,
-                                  children: <Widget>[
-                                    SizedBoxWithChild(
-                                      height: 22.0,
-                                      width: 22.0,
-                                      child: IconButtonWidget(
-                                        iconPath: Constants.DEVICE_ICON_LINK,
-                                        size: 18.0,
-                                        color: Colors.blue[800],
-                                        padding: new EdgeInsets.all(1.0),
-                                        onPressed: () {},
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBoxWidget(height: 2.0),
-                                TextWidget(
-                                    text: parameters.deviceReading,
-                                    fontsize: 8.0,
-                                    colors: Colors.grey),
-                              ],
-                            ),
-                         */ ],
+                         ],
                         ),
                       ],
                     ),

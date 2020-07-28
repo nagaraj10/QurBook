@@ -53,10 +53,10 @@ class _WebViewExampleState extends State<PaymentPage> {
             _toasterJavascriptChannel(context),
           ].toSet(),
           navigationDelegate: (NavigationRequest request) {
-            if (request.url.startsWith('https://www.youtube.com/')) {
+            /*if (request.url.startsWith('https://www.youtube.com/')) {
               print('blocking navigation to $request}');
               return NavigationDecision.prevent;
-            }
+            }*/
             print('allowing navigation to $request');
 
             String finalUrl= request.toString();

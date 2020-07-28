@@ -276,5 +276,7 @@ const String redirectedToPaymentMessage='You are being re-directed to a secured 
 const String ok='Ok';
 const String appointmentCreatedMessage='Created a new  appointment(s) successfully';
 const String someWentWrong='Booking appointment failed.. Some went wrong!';
+const String checkSlots='Checking available slots..';
+const String selectSlotsMsg='please select your time slot before you book';
 
 

@@ -54,7 +54,7 @@ class GetTimeSlots extends StatelessWidget {
                 if(rowPosition>-1&&itemPosition>-1){
                   navigateToConfirmBook(context,rowPosition,itemPosition);
                 }else{
-                  toast.getToast('please select your time slot beore you book',Colors.red);
+                  toast.getToast(selectSlotsMsg,Colors.red);
                 }
               },
               child: TextWidget(text: bookNow, fontsize: 12),
