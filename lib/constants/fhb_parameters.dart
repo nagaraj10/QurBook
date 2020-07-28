@@ -260,7 +260,7 @@ const String strdestinationId='destinationId';
 
 
 //Booking Confirm
-const String pleaseChoose='Please Choose';
+const String self='Self';
 const String theAppointmentIsFor='The Appointment is for';
 const String dateAndTime='Date & Time';
 const String confirmDetails='Confirmation Details';
@@ -272,7 +272,6 @@ const String deviceReading='Device Readings';
 const String payNow='Pay Now';
 const String slotsAreNotAvailable='Slot not available in this date';
 const String bookNow='Book Now';
-const String chooseAppointmentIsFor='Please choose the appointment is for';
 const String redirectedToPaymentMessage='You are being re-directed to a secured payment site';
 const String ok='Ok';
 const String appointmentCreatedMessage='Created a new  appointment(s) successfully';

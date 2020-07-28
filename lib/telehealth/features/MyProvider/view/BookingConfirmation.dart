@@ -106,12 +106,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   void initState() {
-    providerViewModel = new MyProviderViewModel();
 
-    createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-    providerViewModel = new MyProviderViewModel();
-
+     providerViewModel = new MyProviderViewModel();
      createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+     selectedId = createdBy;
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
 
@@ -272,7 +270,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           hint: Row(
             children: <Widget>[
               SizedBoxWidget(width: 20),
-              Text(parameters.pleaseChoose, style: TextStyle(fontSize: 12)),
+              Text(parameters.self, style: TextStyle(fontSize: 12)),
             ],
           ),
           items: _familyNames
@@ -406,9 +404,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   Widget build(BuildContext context) {
     pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
     pr.style(
-        message: 'Redirecting',
-        borderRadius: 8.0,
+        message: 'Checking available slots..',
+        borderRadius: 6.0,
         backgroundColor: Colors.white,
+        progressWidget: SizedBoxWithChild(height: 25,width: 25,child: CircularProgressIndicator(strokeWidth: 2.0,
+            backgroundColor: Color(new CommonUtil().getMyPrimaryColor()))),
         elevation: 6.0,
         insetAnimCurve: Curves.easeInOut,
         progress: 0.0,
@@ -416,7 +416,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         progressTextStyle: TextStyle(
             color: Colors.black, fontSize: 10.0, fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 12.0, fontWeight: FontWeight.w600)
+            color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.w600)
     );
 
     return Scaffold(
@@ -674,12 +674,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       textColor: Colors.blue[800],
                       padding: EdgeInsets.all(8.0),
                       onPressed: () {
-                        if(selectedId.isNotEmpty){
                           _displayDialog(context);
-                        }else{
-                          toast.getToast(chooseAppointmentIsFor,Colors.red);
-                        }
-                        
                       },
                       child: TextWidget(text: payNow, fontsize: 12),
                     ),
