@@ -134,6 +134,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return familyMembersModel;
   }
 
+
   getDataFromWidget() {
     slotTime = commonUtil.removeLastThreeDigits(widget
         .sessionData[widget.rowPosition].slots[widget.itemPosition].startTime);
