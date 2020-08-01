@@ -262,7 +262,7 @@ class ApiBaseHelper {
 
   Future<dynamic> getFamilyMembersList(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-
+print(authToken);
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url,
@@ -416,6 +416,7 @@ class ApiBaseHelper {
       final response = await http.post(_baseUrl + url,
           body: jsonData, headers: variable.requestHeaders);
       responseJson = _returnResponse(response);
+      print(response.body.toString());
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }

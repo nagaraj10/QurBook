@@ -54,7 +54,6 @@ class _NotesScreenListState extends State<NotesScreenList> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    _healthReportListForUserBlock.getHelthReportList(condtion: true);
 
     super.initState();
   }
@@ -107,7 +106,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
   getCardWidgetForOtherDocs(MediaMetaInfo mediaMetaInfoObj, int i) {
     return InkWell(
         onLongPress: () {
-          if (widget.isNotesSelect || widget.allowSelect || widget.isAudioSelect) {
+          if (widget.isNotesSelect) {
             mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
             setState(() {});
@@ -156,10 +155,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                       )
               ],
             ),
-            child: Stack(
-                          alignment: Alignment.centerRight,
-
-              children:[Row(
+            child: Row(
               children: <Widget>[
                 CircleAvatar(
                   radius: 25,
@@ -203,7 +199,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                 Expanded(
                   flex: 1,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       IconButton(
@@ -223,26 +219,21 @@ class _NotesScreenListState extends State<NotesScreenList> {
                             new CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
+
+                      (mediaMetaInfoObj.metaInfo.hasVoiceNotes != null &&
+                          mediaMetaInfoObj.metaInfo.hasVoiceNotes)
+                          ? Icon(
+                        Icons.mic,
+                        color: Colors.black54,
+                      )
+                          : Container(),widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                          ? Icon(Icons.done,color: Color(new CommonUtil().getMyPrimaryColor()),)
+                          : SizedBox(),
                     ],
                   ),
                 ),
               ],
-            ),widget.mediaMeta.contains(mediaMetaInfoObj.id)
-                  ? Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Color(new CommonUtil().getMyGredientColor()),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.done,
-                          size: 16.0,
-                          color: Colors.white,
-                        ),
-                      ))
-                  : SizedBox()])));
+            )));
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {

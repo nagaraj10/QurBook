@@ -1222,6 +1222,7 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelectNotes,
             widget.allowSelectVoice));
       } else {
+
         tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
       }
       /* }*/

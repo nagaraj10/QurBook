@@ -104,7 +104,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
         }
       },
         onTap: () {
-          if (widget.allowSelect || widget.isNotesSelect || widget.isAudioSelect) {
+          if (widget.allowSelect ) {
             bool condition;
             if (widget.mediaMeta.contains(data.id)) {
               condition = false;
@@ -143,11 +143,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
               )
             ],
           ),
-            child:Stack(
-                          alignment: Alignment.centerRight,
-
-              children: [
-               Row(
+            child:Row(
               children: <Widget>[
                 CircleAvatar(
                   radius: 25,
@@ -217,29 +213,24 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                           onPressed: () {
                             new CommonUtil().bookMarkRecord(data, _refresh);
                           }),
+
+                      (data.metaInfo.hasVoiceNotes != null &&
+                          data.metaInfo.hasVoiceNotes)
+                          ? Icon(
+                        Icons.mic,
+                        color: Colors.black54,
+                      )
+                          : Container(),
+                      widget.mediaMeta.contains(data.id)
+                          ? Icon(Icons.done,color: Color(new CommonUtil().getMyPrimaryColor()),)
+                          : SizedBox(),
                     
                     ],
                   ),
                 ),
               ],
             )
-           ,  widget.mediaMeta.contains(data.id)
-                  ? Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Color(new CommonUtil().getMyGredientColor()),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.done,
-                          size: 16.0,
-                          color: Colors.white,
-                        ),
-                      ))
-                  : SizedBox()
-            ],)));
+             ));
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {

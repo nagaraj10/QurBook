@@ -1073,9 +1073,12 @@ class CommonUtil {
     }
 
     filteredCategoryData.sort((a, b) {
-      return a.categoryDescription
-          .toLowerCase()
-          .compareTo(b.categoryDescription.toLowerCase());
+      if(a.categoryDescription!=null){
+        return a.categoryDescription
+            .toLowerCase()
+            .compareTo(b.categoryDescription.toLowerCase());
+      }
+
     });
     filteredCategoryData.add(categoryDataObjClone);
 

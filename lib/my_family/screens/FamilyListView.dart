@@ -224,6 +224,7 @@ class FamilyListView {
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
+                    sharedByMe[index].linkedData!=null?
                                     sharedByMe[index].linkedData.roleName !=
                                             null
                                         ? toBeginningOfSentenceCase(
@@ -231,7 +232,7 @@ class FamilyListView {
                                                 .linkedData
                                                 .roleName
                                                 .toLowerCase())
-                                        : '',
+                                        : '':'',
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(fontSize: 10),

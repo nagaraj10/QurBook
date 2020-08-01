@@ -1748,9 +1748,21 @@ print(params);
           if (savedMetaDataResponse.success) {
             PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
             PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
+            if (audioPathMain != '') {
+              saveAudioFile(context, audioPathMain,
+                  savedMetaDataResponse.response.data.mediaMetaID);
+            }else{
+              _healthReportListForUserBlock.getHelthReportList(condtion: false).then((value) {
+                PreferenceUtil.saveCompleteData(
+                    Constants.KEY_COMPLETE_DATA, value.response.data)
+                    .then((value) {
 
-            saveAudioFile(context, audioPathMain,
-                savedMetaDataResponse.response.data.mediaMetaID);
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+
+                });
+              });
+            }
           }
         });
       }

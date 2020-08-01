@@ -325,10 +325,11 @@ class _MyFamilyState extends State<MyFamily> {
                     SizedBox(height: 10.0),
                     Text(
                       position == 0
+
                           ? myProfile.response.data.generalInfo.countryCode +
                               "-" +
                               myProfile.response.data.generalInfo.phoneNumber
-                          : data.profileData.isVirtualUser
+                          : data.profileData.isVirtualUser!=null
                               ? PreferenceUtil.getProfileData(
                                           Constants.KEY_PROFILE)
                                       .response

@@ -30,11 +30,23 @@ class CommonWidgets {
     );
   }
 
+  Widget getMCVerified(bool condition,String value)
+  {
+    return Text(
+      value != null ? value : '',
+      style: TextStyle(
+          fontWeight: FontWeight.w600, fontSize: fhbStyles.fnt_doc_name,color: condition?Colors.green:Colors.red),
+      softWrap: true,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
   Widget getSizedBox(double height) {
     return SizedBox(height: height);
   }
 
   Widget getDoctoSpecialist(String phoneNumber) {
+    print('specialization'+phoneNumber);
     return Text(
       (phoneNumber != null && phoneNumber != 'null') ? phoneNumber : '',
       style: TextStyle(

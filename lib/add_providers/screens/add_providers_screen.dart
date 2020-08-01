@@ -88,7 +88,7 @@ class AddProvidersState extends State<AddProviders> {
   final FocusNode _doctorFocus = FocusNode();
   bool isSwitched = true;
 
-  bool isPreferred;
+  bool isPreferred=false;
   bool myprovidersPreferred;
   BitmapDescriptor markerIcon;
 
@@ -1139,7 +1139,7 @@ class AddProvidersState extends State<AddProviders> {
         new CommonUtil().getMedicalPreference();
 
         setState(() {
-          selectedFamilyMemberName = profileData.response.data.generalInfo.name;
+          selectedFamilyMemberName = profileData.response.data.generalInfo.qualifiedFullName.firstName;
         });
       });
     });

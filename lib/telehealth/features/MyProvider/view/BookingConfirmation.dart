@@ -182,14 +182,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             case Status.COMPLETED:
               //_healthReportListForUserBlock = null;
               print(snapshot.data.toString());
-              familyData = snapshot.data.data.response.data;
+              if(snapshot.data.data.response.data!=null){
+                familyData = snapshot.data.data.response.data;
 
-              print(familyData.sharedbyme.length.toString());
 
-              PreferenceUtil.saveFamilyData(
-                  Constants.KEY_FAMILYMEMBER, snapshot.data.data.response.data);
+                PreferenceUtil.saveFamilyData(
+                    Constants.KEY_FAMILYMEMBER, snapshot.data.data.response.data);
+
+              }
               return dropDownButton(
-                  snapshot.data.data.response.data.sharedbyme);
+                  snapshot.data.data.response.data!=null?snapshot.data.data.response.data.sharedbyme:null);
               break;
           }
         } else {
@@ -943,13 +945,33 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ),
               commonWidgets.getSizedBox(5.0),
               Row(children: [
-                Expanded(
-                  child: commonWidgets.getDoctoSpecialist(
-                      '${widget.docs[widget.i].specialization}'),
-                )
+                Expanded(child:
+                widget.docs[widget.i].specialization != null
+                    ? commonWidgets
+                    .getDoctoSpecialist('${widget.docs[widget.i].specialization}')
+                    : SizedBox()),
+                widget.docs[widget.i].fees != null
+                    ? widget.docs[widget.i].fees.consulting != null
+                    ? (widget.docs[widget.i].fees.consulting != null &&
+                    widget.docs[widget.i].fees.consulting != '')
+                    ? commonWidgets.getDoctoSpecialist(
+                    '${widget.docs[widget.i].fees.consulting.fee}')
+                    : SizedBox()
+                    : SizedBox()
+                    : SizedBox(),
+                commonWidgets.getSizeBoxWidth(10.0),
+
               ]),
               commonWidgets.getSizedBox(5.0),
-              commonWidgets.getDoctorsAddress('${widget.docs[widget.i].city}')
+
+              Row(
+                mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(child:commonWidgets.getDoctorsAddress('${widget.docs[widget.i].city}')),
+                  widget.docs[widget.i].isMCIVerified?commonWidgets.getMCVerified(widget.docs[widget.i].isMCIVerified,'Verified'):commonWidgets.getMCVerified(widget.docs[widget.i].isMCIVerified,'Not Verified'),
+                  commonWidgets.getSizeBoxWidth(10.0),
+
+                ],)
             ],
           ),
         ),
@@ -1010,7 +1032,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return position;
 
     }else{
-          return position+1;
+          return position;
 
     }
   }

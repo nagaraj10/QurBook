@@ -397,7 +397,7 @@ const String Auth_token_slots =
 
 Map<String, String> requestHeadersTimeSlot = {
   'accept': 'application/json',
-  'Authorization': Auth_token_slots,
+  'Authorization': authToken,
   'Content-Type': 'application/json'
 };
 

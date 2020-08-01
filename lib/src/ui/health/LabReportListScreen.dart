@@ -111,7 +111,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
         }
       },
       onTap: () {
-          if (widget.allowSelect || widget.isNotesSelect || widget.isAudioSelect) {
+          if (widget.allowSelect) {
             bool condition;
             if (widget.mediaMeta.contains(mediaMetaInfo.id)) {
               condition = false;
@@ -149,10 +149,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                     )
             ],
           ),
-          child:Stack(
-                        alignment: Alignment.centerRight,
-
-            children: [
+          child:
              Row(
             children: <Widget>[
               mediaMetaInfo.metaInfo.laboratory != null
@@ -255,28 +252,22 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                           new CommonUtil()
                               .bookMarkRecord(mediaMetaInfo, _refresh);
                         }),
+
+                    (mediaMetaInfo.metaInfo.hasVoiceNotes != null &&
+                        mediaMetaInfo.metaInfo.hasVoiceNotes)
+                        ? Icon(
+                      Icons.mic,
+                      color: Colors.black54,
+                    )
+                        : Container(), widget.mediaMeta.contains(mediaMetaInfo.id)
+                        ? Icon(Icons.done,color: Color(new CommonUtil().getMyPrimaryColor()),)
+                        : SizedBox(),
                   ],
                 ),
               ),
             ],
           ),
-            widget.mediaMeta.contains(mediaMetaInfo.id)
-                  ? Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Color(new CommonUtil().getMyGredientColor()),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.done,
-                          size: 16.0,
-                          color: Colors.white,
-                        ),
-                      ))
-                  : SizedBox()
-          ],)),
+           ),
     );
   }
 

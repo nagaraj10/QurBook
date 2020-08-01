@@ -139,6 +139,7 @@ class DoctorIds {
     isDefault = json[parameters.strisDefault];
     doctorPatientMappingId = json[parameters.strdoctorPatientMappingId];
     gender = json[parameters.strGender];
+    specialization=json[parameters.strSpecilization];
   }
 
   Map<String, dynamic> toJson() {
@@ -189,6 +190,7 @@ class DoctorIds {
     data[parameters.strisDefault] = this.isDefault;
     data[parameters.strdoctorPatientMappingId] = this.doctorPatientMappingId;
     data[parameters.strGender] = this.gender;
+    data[parameters.strSpecilization]=this.specialization;
     return data;
   }
 }

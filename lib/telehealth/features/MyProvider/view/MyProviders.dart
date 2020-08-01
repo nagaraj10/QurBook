@@ -23,7 +23,6 @@ import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
-
 import 'DoctorSessionTimeSlot.dart';
 
 class MyProviders extends StatefulWidget {
@@ -121,7 +120,10 @@ class _MyProvidersState extends State<MyProviders> {
     return Row(
       children: [
         Expanded(
-          child: Text("My Providers",style:TextStyle(fontWeight: FontWeight.w500),),
+          child: Text(
+            "My Providers",
+            style: TextStyle(fontWeight: FontWeight.w500),
+          ),
         ),
         Icon(Icons.notifications),
         new SwitchProfile()
@@ -192,7 +194,7 @@ class _MyProvidersState extends State<MyProviders> {
     (context as Element).markNeedsBuild();
   }
 
- Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
+  Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -261,12 +263,36 @@ class _MyProvidersState extends State<MyProviders> {
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
+
               Row(children: [
-                docs[i].specialization!=null?
-                commonWidgets.getDoctoSpecialist('${docs[i].specialization}'):SizedBox(),
+                Expanded(child:
+                docs[i].specialization != null
+                    ? commonWidgets
+                        .getDoctoSpecialist('${docs[i].specialization}')
+                    : SizedBox()),
+                docs[i].fees != null
+                    ? docs[i].fees.consulting != null
+                        ? (docs[i].fees.consulting != null &&
+                                docs[i].fees.consulting != '')
+                            ? commonWidgets.getDoctoSpecialist(
+                                '${docs[i].fees.consulting.fee}')
+                            : SizedBox()
+                        : SizedBox()
+                    : SizedBox(),
+                commonWidgets.getSizeBoxWidth(10.0),
+
               ]),
-              docs[i].specialization!=null?commonWidgets.getSizedBox(5.0):SizedBox(),
-              commonWidgets.getDoctorsAddress('${docs[i].city}')
+              commonWidgets.getSizedBox(5.0),
+
+              Row(
+                mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                children: [
+                Expanded(child:commonWidgets.getDoctorsAddress('${docs[i].city}')),
+                docs[i].isMCIVerified?commonWidgets.getMCVerified(docs[i].isMCIVerified,'Verified'):commonWidgets.getMCVerified(docs[i].isMCIVerified,'Not Verified'),
+                  commonWidgets.getSizeBoxWidth(10.0),
+
+              ],)
+
             ],
           ),
         ),
@@ -296,7 +322,7 @@ class _MyProvidersState extends State<MyProviders> {
   Widget getFees(DoctorIds doctorId) {
     return doctorId.fees != null
         ? commonWidgets.getHospitalDetails(doctorId.fees.consulting != null
-            ? variable.strRs+' '+doctorId.fees.consulting.fee
+            ? variable.strRs + ' ' + doctorId.fees.consulting.fee
             : '')
         : Text('');
   }
@@ -324,12 +350,18 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   Widget providerListWidget(List<DoctorIds> doctorList) {
-    return  (doctorList!=null && doctorList.length>0)?new ListView.builder(
-      itemBuilder: (BuildContext ctx, int i) =>
-          doctorsListItem(ctx, i, isSearch ? doctorData : doctorList),
-      itemCount:
-          isSearch ? doctorData.length : providerViewModel.doctorIdsList.length,
-    ):Container(child: Center(child:
-      Text(variable.strNoDoctordata),),);
+    return (doctorList != null && doctorList.length > 0)
+        ? new ListView.builder(
+            itemBuilder: (BuildContext ctx, int i) =>
+                doctorsListItem(ctx, i, isSearch ? doctorData : doctorList),
+            itemCount: isSearch
+                ? doctorData.length
+                : providerViewModel.doctorIdsList.length,
+          )
+        : Container(
+            child: Center(
+              child: Text(variable.strNoDoctordata),
+            ),
+          );
   }
 }

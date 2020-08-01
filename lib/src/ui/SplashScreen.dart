@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
       var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
       if (!isFirstTime) {
         PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, variable.strtrue);
-        PageNavigator.goToPermanent(context, router.rt_IntroSlider);
+        PageNavigator.goToPermanent(context, router.rt_WebCognito);
       } else {
         String authToken =
             PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);

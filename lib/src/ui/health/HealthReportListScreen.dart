@@ -123,7 +123,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
       },
       onTap: () {
         print(widget.allowSelect);
-          if (widget.allowSelect || widget.isNotesSelect || widget.isAudioSelect) {
+          if (widget.allowSelect) {
             bool condition;
             if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
               condition = false;
@@ -159,10 +159,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               )
             ],
           ),
-            child: Stack(
-                          alignment: Alignment.centerRight,
-
-              children: [
+            child:
               Row(
               children: <Widget>[
                 ClipOval(
@@ -219,8 +216,6 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      /*   Icon(Icons.more_horiz, color: Colors.grey, size: 20),
-                      SizedBox(height: 20), */
                       IconButton(
                           icon: mediaMetaInfoObj.isBookmarked
                               ? ImageIcon(
@@ -236,29 +231,21 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                 ),
                           onPressed: () {
                             new CommonUtil().bookMarkRecord(mediaMetaInfoObj, _refresh);
-                          }),
+                          }),(mediaMetaInfoObj.metaInfo.hasVoiceNotes != null &&
+                          mediaMetaInfoObj.metaInfo.hasVoiceNotes)
+                          ? Icon(
+                        Icons.mic,
+                        color: Colors.black54,
+                      )
+                          : Container(),widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                          ? Icon(Icons.done,color: Color(new CommonUtil().getMyPrimaryColor()),)
+                          : SizedBox(),
                     ],
                   ),
                 ),
               ],
             ),
-            widget.mediaMeta.contains(mediaMetaInfoObj.id)
-                  ? Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Color(new CommonUtil().getMyGredientColor()),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.done,
-                          size: 16.0,
-                          color: Colors.white,
-                        ),
-                      ))
-                  : SizedBox()
-            ],)));
+           ));
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {

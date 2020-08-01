@@ -112,7 +112,7 @@ class _BillsListState extends State<BillsList> {
         }
       },
       onTap: () {
-          if (widget.allowSelect || widget.isNotesSelect || widget.isAudioSelect) {
+          if (widget.allowSelect) {
             bool condition;
             if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
               condition = false;
@@ -148,9 +148,7 @@ class _BillsListState extends State<BillsList> {
               )
             ],
           ),
-          child: Stack(
-            alignment: Alignment.centerRight,
-            children: [
+          child:
               Row(
                 children: <Widget>[
                   CircleAvatar(
@@ -222,30 +220,16 @@ class _BillsListState extends State<BillsList> {
                                 Icons.mic,
                                 color: Colors.black54,
                               )
-                            : Container()
+                            : Container(),
+                        widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                            ? Icon(Icons.done,color: Color(new CommonUtil().getMyPrimaryColor()),)
+                            : SizedBox(),
                       ],
                     ),
                   ),
                 ],
               ),
-              widget.mediaMeta.contains(mediaMetaInfoObj.id)
-                  ? Container(
-                      width: 30,
-                      height: 30,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Color(new CommonUtil().getMyGredientColor()),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          Icons.done,
-                          size: 16.0,
-                          color: Colors.white,
-                        ),
-                      ))
-                  : SizedBox()
-            ],
-          )),
+              ),
     );
   }
 
