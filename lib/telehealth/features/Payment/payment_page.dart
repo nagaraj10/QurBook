@@ -10,21 +10,23 @@ import 'package:myfhb/telehealth/features/Payment/result_page.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentPage extends StatefulWidget {
-  PaymentPage({Key key}) : super(key: key);
+  final String redirectUrl;
+
+  PaymentPage({Key key, @required this.redirectUrl}) : super(key: key);
+
   @override
   _WebViewExampleState createState() => _WebViewExampleState();
 }
 
 class _WebViewExampleState extends State<PaymentPage> {
-
-  String PAYMENT_URL = 'https://test.instamojo.com/@mohamed_faisal/lb504fbac5f6b4fc3aa30d6d664d00ca1/';
+  String PAYMENT_URL;
 
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
-
+      Completer<WebViewController>();
 
   @override
   void initState() {
+    PAYMENT_URL = widget.redirectUrl;
   }
 
   @override
@@ -59,21 +61,20 @@ class _WebViewExampleState extends State<PaymentPage> {
             }*/
             print('allowing navigation to $request');
 
-            String finalUrl= request.toString();
+            String finalUrl = request.toString();
 
-              //success payment
+            //success payment
             if (finalUrl.contains('status=Y')) {
               callResultPage(true);
 
               //failure payment
-            } else if(finalUrl.contains('status=N'))  {
+            } else if (finalUrl.contains('status=N')) {
               callResultPage(false);
             }
             return NavigationDecision.navigate;
           },
           onPageStarted: (String url) {
             print('Page started loading: $url');
-
           },
           onPageFinished: (String url) {
             print('Page finished loading: $url');
@@ -84,11 +85,13 @@ class _WebViewExampleState extends State<PaymentPage> {
     );
   }
 
-  void callResultPage(bool status){
+  void callResultPage(bool status) {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => ResultPage(status: status,)));
+            builder: (context) => ResultPage(
+                  status: status,
+                )));
   }
 
   JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
@@ -100,7 +103,6 @@ class _WebViewExampleState extends State<PaymentPage> {
           );
         });
   }
-
 }
 
 enum MenuOptions {
@@ -190,7 +192,7 @@ class SampleMenu extends StatelessWidget {
   void _onListCookies(
       WebViewController controller, BuildContext context) async {
     final String cookies =
-    await controller.evaluateJavascript('document.cookie');
+        await controller.evaluateJavascript('document.cookie');
     Scaffold.of(context).showSnackBar(SnackBar(
       content: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -241,7 +243,7 @@ class SampleMenu extends StatelessWidget {
     }
     final List<String> cookieList = cookies.split(';');
     final Iterable<Text> cookieWidgets =
-    cookieList.map((String cookie) => Text(cookie));
+        cookieList.map((String cookie) => Text(cookie));
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
@@ -266,8 +268,7 @@ class NavigationControls extends StatelessWidget {
             snapshot.connectionState == ConnectionState.done;
         final WebViewController controller = snapshot.data;
         return Row(
-          children: <Widget>[
-          ],
+          children: <Widget>[],
         );
       },
     );

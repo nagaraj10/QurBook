@@ -17,7 +17,7 @@ class MyProviderViewModel extends ChangeNotifier {
   SessionData sessionList = new SessionData();
   List<DateSlotTimings> dateSlotTimings = new List();
   List<TelehealthProviderModel> teleHealthProviderModel = new List();
-  BookAppointmentOld bookAppointment = BookAppointmentOld();
+  BookAppointmentModel bookAppointment = BookAppointmentModel();
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
@@ -72,10 +72,10 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<BookAppointmentOld> putBookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,String startTime,String endTime,String slotNumber,String isMedicalShared,String isFollowUp) async {
+  Future<BookAppointmentModel> putBookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,String slotNumber,String isMedicalShared,String isFollowUp) async {
     try {
-      BookAppointmentOld bookAppointmentModel =
-      await _providersListRepository.bookAppointment(createdBy,createdFor,doctorSessionId,scheduleDate,startTime,endTime,slotNumber,isMedicalShared,isFollowUp);
+      BookAppointmentModel bookAppointmentModel =
+      await _providersListRepository.bookAppointment(createdBy,createdFor,doctorSessionId,scheduleDate,slotNumber,isMedicalShared,isFollowUp);
       bookAppointment = bookAppointmentModel;
       return bookAppointment;
     } catch (e) {}

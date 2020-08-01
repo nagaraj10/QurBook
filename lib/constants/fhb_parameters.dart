@@ -278,5 +278,6 @@ const String appointmentCreatedMessage='Created a new  appointment(s) successful
 const String someWentWrong='Booking appointment failed.. Some went wrong!';
 const String checkSlots='Checking available slots..';
 const String selectSlotsMsg='please select your time slot before you book';
+const String noUrl='Something went wrong ..please try again..';
 
 

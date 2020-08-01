@@ -134,7 +134,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return familyMembersModel;
   }
 
-
   getDataFromWidget() {
     slotTime = commonUtil.removeLastThreeDigits(widget
         .sessionData[widget.rowPosition].slots[widget.itemPosition].startTime);
@@ -740,8 +739,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                             selectedId,
                                             doctorSessionId,
                                             scheduleDate,
-                                            apiStartTime,
-                                            apiEndTime,
                                             slotNumber,
                                             "false",
                                             "false");
@@ -767,7 +764,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   ////NEW BOOKING APPOINTMENT API
 
-  /*Future<BookAppointmentModel> bookAppointmentCall(String createdBy,String createdFor,String doctorSessionId,
+  Future<BookAppointmentModel> bookAppointmentCall(String createdBy,String createdFor,String doctorSessionId,
       String scheduleDate,String slotNumber,String isMedicalShared,String isFollowUp) async {
 
     BookAppointmentModel bookAppointmentModel = await providerViewModel.putBookAppointment(createdBy,createdFor,doctorSessionId,
@@ -780,23 +777,42 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,
       String slotNumber,String isMedicalShared,String isFollowUp){
 
-    bookAppointmentCall(createdBy,createdFor,doctorSessionId,
-        scheduleDate,slotNumber,isMedicalShared,isFollowUp).then((value) {
-          print(value.response);
-      if(value.status==200 && value.success==true){
-        toast.getToast('Your appointment has been booked... Go To Payment..',Colors.green);
-      }else{
-        print(value.response.toString());
-        print(value.message);
-        toast.getToast('Booking appointment failed.. Some went wrong!',Colors.red);
-      }
+    setState(() {
+      pr.show();
     });
 
-  }*/
+    try{
+      bookAppointmentCall(createdBy,createdFor,doctorSessionId,
+          scheduleDate,slotNumber,isMedicalShared,isFollowUp).then((value) {
+        if(value.status!=null && value.success!=null && value.message!=null){
+          if(value.status==200 && value.success==true && value.message==appointmentCreatedMessage){
+            pr.hide();
+            if(value.response.data.paymentInfo.longurl!=null){
+              goToPaymentPage(value.response.data.paymentInfo.longurl);
+            }else{
+              pr.hide();
+              toast.getToast(noUrl,Colors.red);
+            }
+
+          }else{
+            pr.hide();
+            toast.getToast(value.message!=null?value.message:someWentWrong,Colors.red);
+          }
+        }else{
+          pr.hide();
+          toast.getToast(someWentWrong,Colors.red);
+        }
+      });
+    }catch(e){
+      pr.hide();
+      toast.getToast(someWentWrong,Colors.red);
+    }
+
+  }
 
   //////OLD API
 
-  Future<BookAppointmentOld> bookAppointmentCall(
+/*  Future<BookAppointmentOld> bookAppointmentCall(
       String createdBy,
       String createdFor,
       String doctorSessionId,
@@ -819,10 +835,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             isFollowUp);
 
     return bookAppointmentModel;
-  }
+  }*/
 
 
-  bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,String startTime,String endTime,
+/*  bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,String startTime,String endTime,
       String slotNumber,String isMedicalShared,String isFollowUp){
 
     setState(() {
@@ -850,11 +866,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       toast.getToast(someWentWrong,Colors.red);
     }
 
-  }
+  }*/
 
-  goToPaymentPage() {
+  goToPaymentPage(String longurl) {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => PaymentPage()));
+        context, MaterialPageRoute(builder: (context) => PaymentPage(redirectUrl: longurl)));
   }
 
   Widget getTitle(String title) {

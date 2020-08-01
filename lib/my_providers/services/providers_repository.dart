@@ -70,24 +70,26 @@ class ProvidersListRepository {
     return DoctorTimeSlotsModel.fromJson(response);
   }
 
-  Future<BookAppointmentOld> bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,
-      String startTime,String endTime, String slotNumber,String isMedicalShared,String isFollowUp) async {
+  Future<BookAppointmentModel> bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,
+      String slotNumber,String isMedicalShared,String isFollowUp) async {
 
 
     ///NEW
-    /*var slotInput = {};
+    var slotInput = {};
+    //var parentAppoint = {};
     slotInput["createdBy"] = createdBy;
     slotInput["createdFor"] = createdFor;
     slotInput["doctorSessionId"] = doctorSessionId;
     slotInput["scheduledDate"] = scheduleDate;
     slotInput["slotNumber"] = slotNumber;
-    slotInput["isMedicalRecordsShared"] = isMedicalShared;
-    slotInput["isFollowUp"] = isFollowUp;
-    slotInput["healthRecordReference"] = [""];*/
-
-
+    slotInput["isMedicalRecordsShared"] = false;
+    slotInput["isFollowUp"] = false;
+    slotInput["healthRecordReference"] = [];
+    slotInput["parentAppointment"] = {};
+   /* parentAppoint["id"] = '';
+    parentAppoint["bookingID"] = {};*/
     ///OLD
-    var slotInput = {};
+    /*var slotInput = {};
     slotInput["createdBy"] = createdBy;
     slotInput["createdFor"] = createdFor;
     slotInput["doctorSessionId"] = doctorSessionId;
@@ -95,11 +97,11 @@ class ProvidersListRepository {
     slotInput["plannedEndDateTime"] = scheduleDate+" "+endTime;
     slotInput["slotNumber"] = slotNumber;
     slotInput["isMedicalRecordsShared"] = false;
-    slotInput["isFollowUp"] = false;
+    slotInput["isFollowUp"] = false;*/
 
     var jsonString = convert.jsonEncode(slotInput);
     print(jsonString);
     final response = await _helper.bookAppointment(qr_bookAppmnt,jsonString);
-    return BookAppointmentOld.fromJson(response);
+    return BookAppointmentModel.fromJson(response);
   }
 }
