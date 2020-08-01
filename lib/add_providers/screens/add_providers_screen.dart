@@ -599,7 +599,7 @@ class AddProvidersState extends State<AddProviders> {
                       : Center(
                           child: Text(
                             selectedFamilyMemberName == null
-                                ? myProfile.response.data.generalInfo.name[0]
+                                ? myProfile.response.data.generalInfo.qualifiedFullName.lastName
                                     .toUpperCase()
                                 : selectedFamilyMemberName[0].toUpperCase(),
                             style: TextStyle(

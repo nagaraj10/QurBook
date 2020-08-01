@@ -76,8 +76,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               : _textFieldController.text.toString());
     }
 
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
+   /* WidgetsBinding.instance
+        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());*/
   }
 
   @override

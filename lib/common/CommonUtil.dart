@@ -59,6 +59,13 @@ class CommonUtil {
   static String BASE_URL_FROM_RES="";
   static String BASE_COVER_IMAGE="";
   static String BASE_URL_V2='';
+  static String COGNITO_AUTH_TOKEN = '';
+  static String COGNITO_AUTH_CODE = '';
+
+
+
+
+
 
   static Future<dynamic> getResourceLoader() async {
     final Future<Secret> secret = SecretLoader(secretPath: "secrets.json").load();

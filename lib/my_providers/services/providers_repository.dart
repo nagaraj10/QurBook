@@ -27,9 +27,11 @@ class ProvidersListRepository {
   }
 
   Future<TelehealthProviderModel> getTelehealthDoctorsList() async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
     final response = await _helper.getTelehealthDoctorsList(
         query.qr_Userprofile +
-            "bde140db-0ffc-4be6-b4c0-5e44b9f54535" +
+            userID +
             query.qr_slash +
             query.qr_sections +
             query.qr_medicalPreferences);

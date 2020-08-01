@@ -6,7 +6,6 @@ import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
 
-
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -21,14 +20,14 @@ class _SplashScreenState extends State<SplashScreen> {
       var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
       if (!isFirstTime) {
         PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, variable.strtrue);
-        PageNavigator.goToPermanent(context,router.rt_IntroSlider );
+        PageNavigator.goToPermanent(context, router.rt_IntroSlider);
       } else {
         String authToken =
             PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
         if (authToken != null) {
           PageNavigator.goToPermanent(context, router.rt_Dashboard);
         } else {
-          PageNavigator.goToPermanent(context, router.rt_SignIn);
+          PageNavigator.goToPermanent(context, router.rt_WebCognito);
         }
       }
     });

@@ -18,7 +18,6 @@ import 'common/CommonUtil.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
-
 var firstCamera;
 List<CameraDescription> listOfCameras;
 
@@ -46,8 +45,7 @@ Future<void> main() async {
 
   // Get a specific camera from the list of available cameras.
   firstCamera = cameras[0];
-
-  routes =await  router.setRouter(listOfCameras);
+  routes = await router.setRouter(listOfCameras);
   PreferenceUtil.init();
 
   await DatabaseUtil.getDBLength().then((length) {
@@ -72,24 +70,23 @@ Future<void> main() async {
     MyFHB(),
   );
 
-  await saveToPreference();
+  // await saveToPreference();
 }
 
 void saveToPreference() async {
-  PreferenceUtil.saveString(
-          Constants.KEY_USERID_MAIN, Constants.userID)
+  PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, Constants.userID)
       .then((onValue) {
-    PreferenceUtil.saveString(
-            Constants.KEY_USERID, Constants.userID)
+    PreferenceUtil.saveString(Constants.KEY_USERID, Constants.userID)
         .then((onValue) {
-      PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.Auth_token)
+      PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN,'')
           .then((onValue) {
         PreferenceUtil.saveString(Constants.MOB_NUM, Constants.mobileNumber)
             .then((onValue) {
-          PreferenceUtil.saveString(Constants.COUNTRY_CODE, Constants.countryCode)
+          PreferenceUtil.saveString(
+                  Constants.COUNTRY_CODE, Constants.countryCode)
               .then((onValue) {
-            PreferenceUtil.saveInt(
-                    CommonConstants.KEY_COUNTRYCODE, int.parse(Constants.countryCode))
+            PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
+                    int.parse(Constants.countryCode))
                 .then((value) {});
           });
         });
@@ -109,6 +106,8 @@ void setValues(List<dynamic> values) {
   CommonUtil.BASE_URL_FROM_RES = values[7];
   CommonUtil.BASE_COVER_IMAGE = values[8];
   CommonUtil.BASE_URL_V2 = values[9];
+  CommonUtil.COGNITO_AUTH_CODE = values[10];
+  CommonUtil.COGNITO_AUTH_TOKEN = values[11];
 }
 
 class MyFHB extends StatefulWidget {
@@ -172,10 +171,11 @@ class _MyFHBState extends State<MyFHB> {
   Future<void> gettingResponseFromNative() async {
     String res = '';
     try {
-      final String result = await platform.invokeMethod(variable.strGetAppVersion);
+      final String result =
+          await platform.invokeMethod(variable.strGetAppVersion);
       res = result;
     } on PlatformException catch (e) {
-      res = variable.strFailed+"'${e.message}'.";
+      res = variable.strFailed + "'${e.message}'.";
     }
 
     setState(() {
@@ -186,7 +186,8 @@ class _MyFHBState extends State<MyFHB> {
 
   Future<void> showSecurityWall() async {
     try {
-      final int RESULT_CODE = await secure_platform.invokeMethod(variable.strSecure);
+      final int RESULT_CODE =
+          await secure_platform.invokeMethod(variable.strSecure);
       switch (RESULT_CODE) {
         case 1003:
           //todo authorized unsuccessfull

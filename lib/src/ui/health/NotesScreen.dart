@@ -61,8 +61,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
 
   @override
   Widget build(BuildContext context) {
-    //return getWidgetToDisplayOtherDocsList(widget.completeData);
-    return getNotes();
+    return getWidgetToDisplayOtherDocsList(widget.completeData);
+    //return getNotes();
   }
 
   Widget getWidgetToDisplayOtherDocsList(CompleteData completeData) {

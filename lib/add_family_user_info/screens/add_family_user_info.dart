@@ -191,7 +191,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData
           .id; //widget.arguments.addFamilyUserInfo.id;
 
-      if (widget.arguments.sharedbyme.profileData.isVirtualUser) {
+      if (widget.arguments.sharedbyme.profileData.isVirtualUser!=null) {
         MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
         mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
         emailController.text = myProf.response.data.generalInfo.email;

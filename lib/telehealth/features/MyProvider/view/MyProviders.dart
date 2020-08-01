@@ -23,6 +23,7 @@ import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
+
 import 'DoctorSessionTimeSlot.dart';
 
 class MyProviders extends StatefulWidget {
@@ -323,11 +324,12 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   Widget providerListWidget(List<DoctorIds> doctorList) {
-    return new ListView.builder(
+    return  (doctorList!=null && doctorList.length>0)?new ListView.builder(
       itemBuilder: (BuildContext ctx, int i) =>
           doctorsListItem(ctx, i, isSearch ? doctorData : doctorList),
       itemCount:
           isSearch ? doctorData.length : providerViewModel.doctorIdsList.length,
-    );
+    ):Container(child: Center(child:
+      Text(variable.strNoDoctordata),),);
   }
 }

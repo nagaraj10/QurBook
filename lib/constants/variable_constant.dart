@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/services.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -577,3 +579,56 @@ const String strLauncher='@mipmap/ic_launcher';
 
 const String video_splash='assets/video/splash_video.mp4';
 const String strRs='Rs';
+
+//webcognito
+const source = 'myFHB';
+const sourceCode = "e13019a4-1446-441b-8af1-72c40c725548";
+const entityCode = "28858877-4710-4dd3-899f-0efe0e9255db";
+const roleCode = "285bbe41-3030-4b0e-b914-00e404a77032";
+const redirecturl = 'http://localhost:4200/callback?code=';
+//decode code
+Map<String, dynamic> parseJwtPayLoad(String token) {
+  final parts = token.split('.');
+  if (parts.length != 3) {
+    throw Exception('invalid token');
+  }
+  final payload = _decodeBase64(parts[1]);
+  final payloadMap = json.decode(payload);
+  if (payloadMap is! Map<String, dynamic>) {
+    throw Exception('invalid payload');
+  }
+  return payloadMap;
+}
+Map<String, dynamic> parseJwtHeader(String token) {
+  final parts = token.split('.');
+  if (parts.length != 3) {
+    throw Exception('invalid token');
+  }
+  final payload = _decodeBase64(parts[0]);
+  final payloadMap = json.decode(payload);
+  if (payloadMap is! Map<String, dynamic>) {
+    throw Exception('invalid payload');
+  }
+  return payloadMap;
+}
+String _decodeBase64(String str) {
+  String output = str.replaceAll('-', '+').replaceAll('_', '/');
+  switch (output.length % 4) {
+    case 0:
+      break;
+    case 2:
+      output += '==';
+      break;
+    case 3:
+      output += '=';
+      break;
+    default:
+      throw Exception('Illegal base64url string!"');
+  }
+  return utf8.decode(base64Url.decode(output));
+
+
+
+}
+
+const String strNoDoctordata = 'No Doctor List Available';

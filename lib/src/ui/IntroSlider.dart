@@ -34,7 +34,8 @@ class _IntroSliderState extends State<IntroSliderPage> {
   }
 
   void onDonePress() {
-    PageNavigator.goToPermanent(context,router.rt_Signinscreen);
+    //PageNavigator.goToPermanent(context,router.rt_Signinscreen);
+    PageNavigator.goToPermanent(context,router.rt_WebCognito);
   }
 
   Widget renderNextBtn() {

@@ -8,19 +8,19 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
+import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/ShapesPainter.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'dart:io';
+import 'dart:convert';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-
-
-
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -35,6 +35,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey _records = GlobalKey();
   final GlobalKey _family = GlobalKey();
   final GlobalKey _coverImage = GlobalKey();
+  UserModel saveuser = UserModel();
   File imageURIProfile;
 
   bool noInternet = true;
@@ -68,7 +69,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return ShowCaseWidget(
       onFinish: () {
-        PreferenceUtil.saveString(Constants.KEY_SHOWCASE_DASHBOARD,variable.strtrue);
+        PreferenceUtil.saveString(
+            Constants.KEY_SHOWCASE_DASHBOARD, variable.strtrue);
       },
       builder: Builder(
         builder: (context) {
@@ -128,13 +130,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                             EdgeInsets.all(5),
                                                         child: Image.asset(
                                                           PreferenceUtil.getStringValue(
-                                                                      Constants.keyMayaAsset) !=
+                                                                      Constants
+                                                                          .keyMayaAsset) !=
                                                                   null
                                                               ? PreferenceUtil
                                                                       .getStringValue(
-                                                                          Constants.keyMayaAsset) +
-                                                                  variable.strExtImg
-                                                              : variable.icon_mayaMain,
+                                                                          Constants
+                                                                              .keyMayaAsset) +
+                                                                  variable
+                                                                      .strExtImg
+                                                              : variable
+                                                                  .icon_mayaMain,
                                                           height: 60,
                                                           width: 60,
                                                         ),
@@ -183,7 +189,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                             ],
                                           ),
                                           onTap: () {
-
                                             moveToFamilyOrprovider(2);
                                           })),
                                   Positioned(
@@ -192,17 +197,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               2) -
                                           35,
                                       child: InkWell(
-                                        
                                         child: Column(
                                           children: <Widget>[
-                                          
-                                                   Image.asset(
-                                                   variable.icon_th,
-                                                    color: Colors.white,
-                                                    height: 25,
-                                                    width: 25,
-                                                  ),
-                                               
+                                            Image.asset(
+                                              variable.icon_th,
+                                              color: Colors.white,
+                                              height: 25,
+                                              width: 25,
+                                            ),
                                             SizedBox(
                                               height: 5,
                                             ),
@@ -222,36 +224,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     bottom: 50,
                                     right: 5,
                                     child: InkWell(
-                                      child:Column(
-                                          children: <Widget>[
-                                            FHBBasicWidget.customShowCase(
-                                                _records,
-                                                Constants.RECORDS_DESC,
-                                                Padding(
-                                                  padding: EdgeInsets.all(10.0),
-                                                  child: Image.asset(
-                                                    variable.icon_records,
-                                                    color: Colors.white,
-                                                    height: 25,
-                                                    width: 25,
-                                                  ),
-                                                ),
-                                                Constants.RECORDS_TITLE),
-                                            SizedBox(
-                                              height: 5,
+                                      child: Column(children: <Widget>[
+                                        FHBBasicWidget.customShowCase(
+                                            _records,
+                                            Constants.RECORDS_DESC,
+                                            Padding(
+                                              padding: EdgeInsets.all(10.0),
+                                              child: Image.asset(
+                                                variable.icon_records,
+                                                color: Colors.white,
+                                                height: 25,
+                                                width: 25,
+                                              ),
                                             ),
-                                            Text(
-                                              variable.strMyRecords,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 11),
-                                            )
-                                          ]
-                                      
-                                      ),
+                                            Constants.RECORDS_TITLE),
+                                        SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                          variable.strMyRecords,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 11),
+                                        )
+                                      ]),
                                       onTap: () {
-                                                                                  moveToNextScreen(1);
-
+                                        moveToNextScreen(1);
                                       },
                                     ),
                                   )
@@ -316,7 +314,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                 color: Color(CommonUtil()
                                                     .getMyPrimaryColor()),
                                                 fontSize: 13,
-                                                fontFamily: variable.font_poppins),
+                                                fontFamily:
+                                                    variable.font_poppins),
                                           ),
                                         )
                                       ],
@@ -388,19 +387,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void moveToFamilyOrprovider(int position) {
-   /* Navigator.pushNamed(
+    /* Navigator.pushNamed(
       context,
       router.rt_UserAccounts,
       arguments: UserAccountsArguments(selectedIndex: position),
     );*/
 
     Navigator.of(context).push(
-            MaterialPageRoute(
-              settings: RouteSettings(name: router.rt_UserAccounts),
-              builder: (context) => UserAccounts(arguments: UserAccountsArguments(selectedIndex: position)),
-            ),
-          );
-
+      MaterialPageRoute(
+        settings: RouteSettings(name: router.rt_UserAccounts),
+        builder: (context) => UserAccounts(
+            arguments: UserAccountsArguments(selectedIndex: position)),
+      ),
+    );
   }
 
   moveToNextScreen(int position) {
@@ -417,19 +416,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
   }
 
-   void navigateToHomeScreen(int position) {
+  void navigateToHomeScreen(int position) {
     Navigator.pushNamed(
       context,
       router.rt_HomeScreen,
       arguments: HomeScreenArguments(selectedIndex: position),
     ).then((value) {});
-   
-
-    
   }
 
-  void navigateToTelehealthScreen(int position){
-  Navigator.pushNamed(
+  void navigateToTelehealthScreen(int position) {
+    Navigator.pushNamed(
       context,
       router.rt_TelehealthProvider,
       arguments: HomeScreenArguments(selectedIndex: position),
