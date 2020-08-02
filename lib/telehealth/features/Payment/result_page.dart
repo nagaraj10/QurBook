@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 
 class ResultPage extends StatefulWidget {
   final bool status;
@@ -9,6 +10,7 @@ class ResultPage extends StatefulWidget {
 }
 
 class _ResultPage extends State<ResultPage> {
+
   bool status;
 
   @override
@@ -59,7 +61,8 @@ class _ResultPage extends State<ResultPage> {
                       textColor: Colors.white,
                       padding: EdgeInsets.all(12.0),
                       onPressed: () {
-                        Navigator.pop(context);
+                       status?Navigator.pushReplacement(
+                            context, MaterialPageRoute(builder: (context) => AppointmentsMain())):Navigator.pop(context);
                       },
                       child: Text(
                         "Done".toUpperCase(),

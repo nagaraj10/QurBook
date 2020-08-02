@@ -45,6 +45,8 @@ import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
+
+
 class BookingConfirmation extends StatefulWidget {
   final List<DoctorIds> docs;
   final int i;
@@ -91,7 +93,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       createdBy = '',
       createdFor = '',
       doctorSessionId = '',
-      scheduleDate = '';
+      scheduleDate = '',
+      fees = '';
   String apiStartTime = '', apiEndTime = '';
   ProfileData selectedUser;
   var selectedId = '';
@@ -104,9 +107,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   @override
   void initState() {
-    providerViewModel = new MyProviderViewModel();
-    createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-    selectedId = createdBy;
+
+     providerViewModel = new MyProviderViewModel();
+     createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+     selectedId = createdBy;
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
 
@@ -144,6 +148,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     doctorSessionId = widget.sessionData[widget.rowPosition].doctorSessionId;
     scheduleDate =
         commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
+
+    fees = widget.docs[widget.i].fees.consulting.fee;
+
+    print(fees);
+
   }
 
   Widget getDropdown() {
@@ -178,15 +187,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             case Status.COMPLETED:
               //_healthReportListForUserBlock = null;
               print(snapshot.data.toString());
-              if (snapshot.data.data.response.data != null) {
+              if(snapshot.data.data.response.data!=null){
                 familyData = snapshot.data.data.response.data;
 
-                PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
-                    snapshot.data.data.response.data);
+
+                PreferenceUtil.saveFamilyData(
+                    Constants.KEY_FAMILYMEMBER, snapshot.data.data.response.data);
+
               }
-              return dropDownButton(snapshot.data.data.response.data != null
-                  ? snapshot.data.data.response.data.sharedbyme
-                  : null);
+              return dropDownButton(
+                  snapshot.data.data.response.data!=null?snapshot.data.data.response.data.sharedbyme:null);
               break;
           }
         } else {
@@ -241,9 +251,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       sharedByMeList = new List();
       sharedByMeList.add(
           new Sharedbyme(profileData: profileData, linkedData: linkedData));
+      
     } else {
       sharedByMeList.insert(
           0, new Sharedbyme(profileData: profileData, linkedData: linkedData));
+      
     }
     if (_familyNames.length == 0) {
       for (int i = 0; i < sharedByMeList.length; i++) {
@@ -275,8 +287,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     child: Row(
                       children: <Widget>[
                         SizedBoxWidget(width: 20),
-                        Text(user.name == null ? 'Self' : user.name,
-                            style: TextStyle(fontSize: 12)),
+                        Text(user.name==null?'Self':user.name, style: TextStyle(fontSize: 12)),
                       ],
                     ),
                     value: user,
@@ -316,8 +327,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           ),
           /*familyData!=null
               ? dropDownButton(
-              familyData.sharedbyme):*/
-          getDropdown(),
+              familyData.sharedbyme):*/getDropdown(),
           SizedBoxWidget(
             height: 10.0,
           ),
@@ -406,12 +416,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         message: checkSlots,
         borderRadius: 6.0,
         backgroundColor: Colors.white,
-        progressWidget: SizedBoxWithChild(
-            height: 25,
-            width: 25,
-            child: CircularProgressIndicator(
-                strokeWidth: 2.0,
-                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()))),
+        progressWidget: SizedBoxWithChild(height: 25,width: 25,child: CircularProgressIndicator(strokeWidth: 2.0,
+            backgroundColor: Color(new CommonUtil().getMyPrimaryColor()))),
         elevation: 6.0,
         insetAnimCurve: Curves.easeInOut,
         progress: 0.0,
@@ -419,7 +425,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         progressTextStyle: TextStyle(
             color: Colors.black, fontSize: 10.0, fontWeight: FontWeight.w400),
         messageTextStyle: TextStyle(
-            color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.w600));
+            color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.w600)
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -500,8 +507,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                     notesIdCount > 0
                                         ? BadgesBlue(
                                             badgeValue: notesIdCount.toString(),
-                                            backColor: Color(
-                                                commonUtil.getMyPrimaryColor()))
+                                            backColor: Color(commonUtil.getMyPrimaryColor()))
                                         : SizedBox(),
                                   ],
                                 ),
@@ -542,8 +548,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                     voiceIdCount > 0
                                         ? BadgesBlue(
                                             badgeValue: voiceIdCount.toString(),
-                                            backColor: Color(
-                                                commonUtil.getMyPrimaryColor()))
+                                            backColor: Color(commonUtil.getMyPrimaryColor()))
                                         : SizedBox(),
                                   ],
                                 ),
@@ -585,8 +590,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         ? BadgesBlue(
                                             badgeValue:
                                                 recordIdCount.toString(),
-                                            backColor: Color(
-                                                commonUtil.getMyPrimaryColor()))
+                                            backColor: Color(commonUtil.getMyPrimaryColor()))
                                         : SizedBox(),
                                   ],
                                 ),
@@ -600,7 +604,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             SizedBoxWidget(
                               width: 25,
                             ),
-                          ],
+                         ],
                         ),
                       ],
                     ),
@@ -616,7 +620,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             Container(
               child: Center(
                 child: TextWidget(
-                    text: 'Pay INR 120',
+                    text: fees!=null?'Pay INR '+fees:'Pay INR 0.00',
                     fontsize: 22.0,
                     fontWeight: FontWeight.w500,
                     colors: Colors.blue[800]),
@@ -655,7 +659,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       textColor: Colors.blue[800],
                       padding: EdgeInsets.all(8.0),
                       onPressed: () {
-                        _displayDialog(context);
+                          _displayDialog(context);
                       },
                       child: TextWidget(text: payNow, fontsize: 12),
                     ),
@@ -694,7 +698,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               TextWidget(
-                                  text: redirectedToPaymentMessage,
+                                  text:
+                                  redirectedToPaymentMessage,
                                   fontsize: 14,
                                   fontWeight: FontWeight.w500,
                                   colors: Colors.grey[600]),
@@ -746,7 +751,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                             "false",
                                             "false");
                                       },
-                                      child: TextWidget(text: ok, fontsize: 12),
+                                      child:
+                                          TextWidget(text: ok, fontsize: 12),
                                     ),
                                   ),
                                 ],
@@ -766,71 +772,55 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   ////NEW BOOKING APPOINTMENT API
 
-  Future<BookAppointmentModel> bookAppointmentCall(
-      String createdBy,
-      String createdFor,
-      String doctorSessionId,
-      String scheduleDate,
-      String slotNumber,
-      String isMedicalShared,
-      String isFollowUp) async {
-    BookAppointmentModel bookAppointmentModel =
-        await providerViewModel.putBookAppointment(
-            createdBy,
-            createdFor,
-            doctorSessionId,
-            scheduleDate,
-            slotNumber,
-            isMedicalShared,
-            isFollowUp);
+  Future<BookAppointmentModel> bookAppointmentCall(String createdBy,String createdFor,String doctorSessionId,
+      String scheduleDate,String slotNumber,String isMedicalShared,String isFollowUp) async {
+
+    BookAppointmentModel bookAppointmentModel = await providerViewModel.putBookAppointment(createdBy,createdFor,doctorSessionId,
+        scheduleDate,slotNumber,isMedicalShared,isFollowUp);
 
     return bookAppointmentModel;
   }
 
-  bookAppointment(
-      String createdBy,
-      String createdFor,
-      String doctorSessionId,
-      String scheduleDate,
-      String slotNumber,
-      String isMedicalShared,
-      String isFollowUp) {
+
+  bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,
+      String slotNumber,String isMedicalShared,String isFollowUp){
+
     setState(() {
       pr.show();
     });
 
-    try {
-      bookAppointmentCall(createdBy, createdFor, doctorSessionId, scheduleDate,
-              slotNumber, isMedicalShared, isFollowUp)
-          .then((value) {
-        if (value.status != null &&
-            value.success != null &&
-            value.message != null) {
-          if (value.status == 200 &&
-              value.success == true &&
-              value.message == appointmentCreatedMessage) {
-            pr.hide();
-            if (value.response.data.paymentInfo.longurl != null) {
-              goToPaymentPage(value.response.data.paymentInfo.longurl);
-            } else {
+    try{
+      bookAppointmentCall(createdBy,createdFor,doctorSessionId,
+          scheduleDate,slotNumber,isMedicalShared,isFollowUp).then((value) {
+        if(value!=null){
+          if(value.status!=null && value.success!=null && value.message!=null){
+            if(value.status==200 && value.success==true && value.message==appointmentCreatedMessage){
               pr.hide();
-              toast.getToast(noUrl, Colors.red);
+              if(value.response.data.paymentInfo.longurl!=null){
+                goToPaymentPage(value.response.data.paymentInfo.longurl);
+              }else{
+                pr.hide();
+                toast.getToast(noUrl,Colors.red);
+              }
+
+            }else{
+              pr.hide();
+              toast.getToast(value.message!=null?value.message:someWentWrong,Colors.red);
             }
-          } else {
+          }else{
             pr.hide();
-            toast.getToast(
-                value.message != null ? value.message : someWentWrong,
-                Colors.red);
+            toast.getToast(someWentWrong,Colors.red);
           }
-        } else {
+        }else{
           pr.hide();
-          toast.getToast(someWentWrong, Colors.red);
+          toast.getToast(noUrl,Colors.red);
         }
       });
-    } catch (e) {
+    }catch(e){
       pr.hide();
-      toast.getToast(someWentWrong, Colors.red);
+      toast.getToast(someWentWrong,Colors.red);
     }
+
   }
 
   //////OLD API
@@ -859,6 +849,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     return bookAppointmentModel;
   }*/
+
 
 /*  bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,String startTime,String endTime,
       String slotNumber,String isMedicalShared,String isFollowUp){
@@ -892,9 +883,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   goToPaymentPage(String longurl) {
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => PaymentPage(redirectUrl: longurl)));
+        context, MaterialPageRoute(builder: (context) => PaymentPage(redirectUrl: longurl)));
   }
 
   Widget getTitle(String title) {
@@ -985,37 +974,33 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               ),
               commonWidgets.getSizedBox(5.0),
               Row(children: [
-                Expanded(
-                    child: widget.docs[widget.i].specialization != null
-                        ? commonWidgets.getDoctoSpecialist(
-                            '${widget.docs[widget.i].specialization}')
-                        : SizedBox()),
+                Expanded(child:
+                widget.docs[widget.i].specialization != null
+                    ? commonWidgets
+                    .getDoctoSpecialist('${widget.docs[widget.i].specialization}')
+                    : SizedBox()),
                 widget.docs[widget.i].fees != null
                     ? widget.docs[widget.i].fees.consulting != null
-                        ? (widget.docs[widget.i].fees.consulting != null &&
-                                widget.docs[widget.i].fees.consulting != '')
-                            ? commonWidgets.getDoctoSpecialist(
-                                'INR ${widget.docs[widget.i].fees.consulting.fee}')
-                            : SizedBox()
-                        : SizedBox()
+                    ? (widget.docs[widget.i].fees.consulting != null &&
+                    widget.docs[widget.i].fees.consulting != '')
+                    ? commonWidgets.getDoctoSpecialist(
+                    '${widget.docs[widget.i].fees.consulting.fee}')
+                    : SizedBox()
+                    : SizedBox()
                     : SizedBox(),
                 commonWidgets.getSizeBoxWidth(10.0),
+
               ]),
               commonWidgets.getSizedBox(5.0),
+
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment:MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                      child: commonWidgets
-                          .getDoctorsAddress('${widget.docs[widget.i].city}')),
-                  widget.docs[widget.i].isMCIVerified
-                      ? commonWidgets.getMCVerified(
-                          widget.docs[widget.i].isMCIVerified, 'Verified')
-                      : commonWidgets.getMCVerified(
-                          widget.docs[widget.i].isMCIVerified, 'Not Verified'),
+                  Expanded(child:commonWidgets.getDoctorsAddress('${widget.docs[widget.i].city}')),
+                  widget.docs[widget.i].isMCIVerified?commonWidgets.getMCVerified(widget.docs[widget.i].isMCIVerified,'Verified'):commonWidgets.getMCVerified(widget.docs[widget.i].isMCIVerified,'Not Verified'),
                   commonWidgets.getSizeBoxWidth(10.0),
-                ],
-              )
+
+                ],)
             ],
           ),
         ),
@@ -1033,6 +1018,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       });
       return filteredCategoryData;
     } else {
+
       return filteredCategoryData;
     }
   }
@@ -1067,14 +1053,16 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     List<CategoryData> categoryDataList = getCategoryList();
     for (int i = 0; i < categoryDataList.length; i++) {
       if (categoryName == categoryDataList[i].categoryName) {
-        print(categoryName + ' ****' + categoryDataList[i].categoryName);
+        print(categoryName+' ****'+categoryDataList[i].categoryName);
         position = i;
       }
     }
-    if (categoryName == Constants.STR_PRESCRIPTION) {
-      return position;
-    } else {
-      return position;
+    if(categoryName==Constants.STR_PRESCRIPTION){
+    return position;
+
+    }else{
+          return position;
+
     }
   }
 
