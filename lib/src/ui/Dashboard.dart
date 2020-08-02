@@ -44,6 +44,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
+
+    /*
     var isFirstTime =
         PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_DASHBOARD);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -54,6 +56,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               : ShowCaseWidget.of(_myContext).startShowCase(
                   [_showMaya, _provider, _records, _family, _coverImage]));
     });
+    */
     dbInitialize();
 
     callImportantsMethod();
@@ -166,15 +169,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               FHBBasicWidget.customShowCase(
                                                   _provider,
                                                   Constants.PROVIDERS_DESC,
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsets.all(10.0),
-                                                    child: Image.asset(
-                                                      variable.icon_provider,
-                                                      width: 30,
-                                                      height: 30,
-                                                      color: Colors.white,
-                                                    ),
+                                                  Image.asset(
+                                                    variable.icon_provider,
+                                                    width: 30,
+                                                    height: 30,
+                                                    color: Colors.white,
                                                   ),
                                                   Constants.PROVIDERS_TITLE),
                                               SizedBox(
@@ -228,14 +227,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                         FHBBasicWidget.customShowCase(
                                             _records,
                                             Constants.RECORDS_DESC,
-                                            Padding(
-                                              padding: EdgeInsets.all(10.0),
-                                              child: Image.asset(
-                                                variable.icon_records,
-                                                color: Colors.white,
-                                                height: 25,
-                                                width: 25,
-                                              ),
+                                            Image.asset(
+                                              variable.icon_records,
+                                              color: Colors.white,
+                                              height: 25,
+                                              width: 25,
                                             ),
                                             Constants.RECORDS_TITLE),
                                         SizedBox(

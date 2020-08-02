@@ -122,7 +122,9 @@ class _MyProvidersState extends State<MyProviders> {
         Expanded(
           child: Text(
             "My Providers",
-            style: TextStyle(fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
         Icon(Icons.notifications),
@@ -263,13 +265,12 @@ class _MyProvidersState extends State<MyProviders> {
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
-
               Row(children: [
-                Expanded(child:
-                docs[i].specialization != null
-                    ? commonWidgets
-                        .getDoctoSpecialist('${docs[i].specialization}')
-                    : SizedBox()),
+                Expanded(
+                    child: docs[i].specialization != null
+                        ? commonWidgets
+                            .getDoctoSpecialist('${docs[i].specialization}')
+                        : SizedBox()),
                 docs[i].fees != null
                     ? docs[i].fees.consulting != null
                         ? (docs[i].fees.consulting != null &&
@@ -280,19 +281,22 @@ class _MyProvidersState extends State<MyProviders> {
                         : SizedBox()
                     : SizedBox(),
                 commonWidgets.getSizeBoxWidth(10.0),
-
               ]),
               commonWidgets.getSizedBox(5.0),
-
               Row(
-                mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                Expanded(child:commonWidgets.getDoctorsAddress('${docs[i].city}')),
-                docs[i].isMCIVerified?commonWidgets.getMCVerified(docs[i].isMCIVerified,'Verified'):commonWidgets.getMCVerified(docs[i].isMCIVerified,'Not Verified'),
+                  Expanded(
+                      child:
+                          commonWidgets.getDoctorsAddress('${docs[i].city}')),
+                  docs[i].isMCIVerified
+                      ? commonWidgets.getMCVerified(
+                          docs[i].isMCIVerified, 'Verified')
+                      : commonWidgets.getMCVerified(
+                          docs[i].isMCIVerified, 'Not Verified'),
                   commonWidgets.getSizeBoxWidth(10.0),
-
-              ],)
-
+                ],
+              )
             ],
           ),
         ),

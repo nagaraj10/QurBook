@@ -4,7 +4,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 String BASEURL_COVERIMAGE = CommonUtil.BASE_COVER_IMAGE;
-String BASEURL_V2=CommonUtil.BASE_URL_V2;
+String BASEURL_V2 = CommonUtil.BASE_URL_V2;
 
 const String APP_NAME = 'myFHB';
 const String MOB_NUM = 'Mobile number';
@@ -181,16 +181,15 @@ const String KEY_FAMILYREL = 'keyFamilyrel';
 //const String Auth_token_slots='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ1MjkzNzMzNDAsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NTI1NzczMzQwLCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5ODQwOTcyMjc1IiwidXNlcklkIjoiYWQ1ZDJkMzctNGVhZi00ZDkxLTk5ZTgtYTA3ODgxZDcyNjQ5IiwiaWF0IjoxNTk0NTI1NzczLCJleHAiOjE1OTgxMjU3NzMsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImExNDUxMzNlLTA4NTctNGQyMi1iNTAwLWY3MjEyMDlmNmI5YiJ9.MGP2eiAC4pYgMsHzFig1nowJObJ9TSfjPLbuRJVQciw';
 const String ADD_NEW_FAMILY_MEMBER = 'Add new family member';
 
-
-const String keyDoctor='doctor';
-const String keyHospital='hospital';
-const String keyLab='laboratory';
-const String keyFamily='keyFamilyrel';
-const String keyTheme='my_theme';
-const String keyPriColor='pri_color';
-const String keyGreyColor='gre_color';
-const String keyMayaAsset='maya_asset';
-const String keyAudioFile='audioFile';
+const String keyDoctor = 'doctor';
+const String keyHospital = 'hospital';
+const String keyLab = 'laboratory';
+const String keyFamily = 'keyFamilyrel';
+const String keyTheme = 'my_theme';
+const String keyPriColor = 'pri_color';
+const String keyGreyColor = 'gre_color';
+const String keyMayaAsset = 'maya_asset';
+const String keyAudioFile = 'audioFile';
 const String Self = 'Self';
 const String Delink = 'Delink';
 const String Please_Wait = 'Please Wait';
@@ -208,8 +207,6 @@ const String Family_Member_Added =
     'Your family member has been added successfully';
 const String VerifyEmail = 'Tap to verify Email address';
 const String otp_assets = 'assets/icons/otp_icon.png';
-
-
 
 const String enterFirstName = 'Enter First Name';
 const String enterLastName = 'Enter Last Name';
@@ -241,26 +238,50 @@ const String RECORDS_ICON_LINK = "assets/navicons/my_records.png";
 const String VOICE_ICON_LINK = "assets/icons/Voice-notes.png";
 const String DEVICE_ICON_LINK = "assets/navicons/reading.png";
 
+const String AddAppointment = 'Add Appointment';
+const String HospitalName = 'Hospital Name';
+const String hopspitalEmpty = 'Hospital name can\'t be empty';
+const String DoctorName = 'Doctor\'s Name';
+const String DoctorNameEmpty = 'Doctor name can\'t be empty';
+const String AppointmentDateTime = 'Appointment Date & Time';
+const String WrongTime = 'wrong time picked';
+const String Reason = 'Reason';
+const String Save = 'Save';
 
+const String keyDetectedClass = 'detectedClass';
 
-const String AddAppointment='Add Appointment';
-const String HospitalName='Hospital Name';
-const String hopspitalEmpty='Hospital name can\'t be empty';
-const String DoctorName='Doctor\'s Name';
-const String DoctorNameEmpty='Doctor name can\'t be empty';
-const String AppointmentDateTime='Appointment Date & Time';
-const String WrongTime='wrong time picked';
-const String Reason='Reason';
-const String Save='Save';
-
-const String keyDetectedClass='detectedClass';
-
-const String userID='bde140db-0ffc-4be6-b4c0-5e44b9f54535';
-const String countryCode='91';
-const String mobileNumber='9176117878';
+const String userID = 'bde140db-0ffc-4be6-b4c0-5e44b9f54535';
+const String countryCode = '91';
+const String mobileNumber = '9176117878';
 
 //for security purposes
 
 const String STR_NOTES = 'Notes';
-const String STR_ONLY_ONE='Can attach only one record';
+const String STR_ONLY_ONE = 'Can attach only one record';
 
+//for appointments
+const String Appointments_Title = "Appointments";
+const String Appointments_upcoming = "Upcoming Appointments";
+
+const String Appointments_joinCall = 'Join Call';
+const String Appointments_history = "Appoinment History";
+const String Appointments_hours = "Hrs";
+const String Appointments_minutes = "Mins";
+const String Appointments_chat = "Chat";
+const String Appointments_notes = 'Notes';
+const String Appointments_records = 'Records';
+const String Appointments_receipt = 'Receipt';
+const String Appointments_reshedule = 'Reshedule';
+const String Appointments_cancel = 'Cancel';
+const String Appointments_new = 'New Appointment';
+const String Appointments_followUpStatus = 'Next follow up on';
+const String Appointments_notesImage = 'assets/icons/notes.png';
+const String Appointments_voiceNotesImage = 'assets/icons/voice-notes.png';
+const String Appointments_recordsImage = 'assets/icons/records.png';
+const String Appointments_receiptImage = 'assets/icons/receipt.png';
+const String Appointments_resheduleImage = 'assets/icons/reschedule.png';
+const String Appointments_cancelImage = 'assets/icons/wrong.png';
+const String Appointments_chatImage = 'assets/icons/chat.png';
+const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
+const String Appointments_newAppoinmentImage =
+    'assets/icons/new-appointment.svg';

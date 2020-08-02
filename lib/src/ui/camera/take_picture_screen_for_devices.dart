@@ -483,7 +483,6 @@ class TakePictureScreenForDevicesState
         cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
         materialOptions: MaterialOptions(
           actionBarColor: fhbColors.actionColor,
-         
           useDetailsView: false,
           selectCircleStrokeColor: fhbColors.colorBlack,
         ),

@@ -82,6 +82,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
     initializeData();
 
+/*
     var isFirstTime =
         PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_CAMERASCREEN);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -91,7 +92,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               ? null
               : ShowCaseWidget.of(_cameraScreenContext)
                   .startShowCase([_gallery, _attachments, _singleMultiImg]));
-    });
+    }); */
   }
 
   initFlashlight() async {
@@ -460,8 +461,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                 children: <Widget>[
                                   new IconButton(
                                       icon: new ImageIcon(
-                                        AssetImage(
-                                            variable.icon_image_single),
+                                        AssetImage(variable.icon_image_single),
                                         color: isMultipleImages
                                             ? Colors.white54
                                             : Colors.white,
@@ -494,7 +494,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     }));
   }
 
- Future<void> loadAssets() async {
+  Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();
 
     try {
@@ -505,7 +505,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
         materialOptions: MaterialOptions(
           actionBarColor: fhbColors.actionColor,
-         
           useDetailsView: false,
           selectCircleStrokeColor: fhbColors.colorBlack,
         ),
@@ -527,6 +526,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       images = resultList;
     });
   }
+
   void callDisplayPictureScreen(BuildContext context) {
     if (imagePaths.length > 0) {
       Navigator.push(

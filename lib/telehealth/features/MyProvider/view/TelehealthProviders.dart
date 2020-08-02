@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/schedules/my_appointments.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/notifications/myfhb_notifications.dart';
@@ -11,6 +12,7 @@ import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNaviga
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigationMain.dart';
 import 'package:myfhb/telehealth/features/Devices/view/Devices.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
+import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/telehealth/features/chat/view/Chat.dart';
 import 'package:myfhb/telehealth/features/telehealth/view/Telehealth.dart';
 
@@ -34,7 +36,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<BottomNavigationArguments> bottomNavigationArgumentsList = new List();
   var _widgetOptions = [
-    Telehealth(),
+    AppointmentsMain(),
     MyProvidersMain(),
     SuperMaya(),
     Chat(),
@@ -75,9 +77,9 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   }
 
   void _myFunc(int index) {
-      setState(() {
-        _selectedIndex = index;
-      });
+    setState(() {
+      _selectedIndex = index;
+    });
     /*if (index == 0) {
       Navigator.of(context).pop();
     } else {
@@ -89,7 +91,9 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
 
   void getAllValuesForBottom() {
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'TeleHealth', imageIcon: 'assets/navicons/th.png',));
+      name: 'TeleHealth',
+      imageIcon: 'assets/navicons/th.png',
+    ));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
         name: 'Providers', imageIcon: 'assets/navicons/my_providers.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(

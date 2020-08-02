@@ -13,9 +13,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
-
 class CommonWidgets {
-
   CommonUtil commonUtil = new CommonUtil();
   int rowPosition;
   int itemPosition;
@@ -30,12 +28,13 @@ class CommonWidgets {
     );
   }
 
-  Widget getMCVerified(bool condition,String value)
-  {
+  Widget getMCVerified(bool condition, String value) {
     return Text(
-      value != null ? value : '',
+      value != null ? value.toUpperCase() : "''",
       style: TextStyle(
-          fontWeight: FontWeight.w600, fontSize: fhbStyles.fnt_doc_name,color: condition?Colors.green:Colors.red),
+          fontWeight: FontWeight.w300,
+          fontSize: fhbStyles.fnt_sessionTime,
+          color: condition ? Colors.green : Colors.red),
       softWrap: true,
       overflow: TextOverflow.ellipsis,
     );
@@ -46,7 +45,7 @@ class CommonWidgets {
   }
 
   Widget getDoctoSpecialist(String phoneNumber) {
-    print('specialization'+phoneNumber);
+    print('specialization' + phoneNumber);
     return Text(
       (phoneNumber != null && phoneNumber != 'null') ? phoneNumber : '',
       style: TextStyle(
@@ -208,7 +207,6 @@ class CommonWidgets {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
-
                     children: <Widget>[
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,29 +224,32 @@ class CommonWidgets {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 getTextForDoctors('${docs.name}'),
-                                              docs.specialization!=null?
-                getDoctoSpecialist('${docs.specialization}'):SizedBox() ,
+                                docs.specialization != null
+                                    ? getDoctoSpecialist(
+                                        '${docs.specialization}')
+                                    : SizedBox(),
                                 getDoctorsAddress('${docs.city}'),
-
-                              (docs.languages != null && docs.languages.length > 0)?
-       getTextForDoctors('Can Speak'):SizedBox(),
-                                    (docs.languages != null && docs.languages.length > 0) ?
- Row(children: getLanguages(docs)):SizedBox(),
+                                (docs.languages != null &&
+                                        docs.languages.length > 0)
+                                    ? getTextForDoctors('Can Speak')
+                                    : SizedBox(),
+                                (docs.languages != null &&
+                                        docs.languages.length > 0)
+                                    ? Row(children: getLanguages(docs))
+                                    : SizedBox(),
                               ],
                             ),
                           ),
                         ],
                       ),
                       getSizedBox(20),
-                       getTextForDoctors('About'),
-                          getHospitalDetails(docs.professionalDetails != null
-                              ? docs.professionalDetails[0].aboutMe
-                              : ''),
+                      getTextForDoctors('About'),
+                      getHospitalDetails(docs.professionalDetails != null
+                          ? docs.professionalDetails[0].aboutMe
+                          : ''),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                         
-                        ],
+                        children: [],
                       )
                     ],
                   ),
@@ -350,7 +351,6 @@ class CommonWidgets {
   }
 
   Color getDoctorStatus(String s, int position) {
-    
     if (position % 2 == 0) {
       s = 'available';
     } else {
