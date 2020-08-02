@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".NotificationActivity">
+
+    <TextView
+    android:id="@+id/calling_tv"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="call from"
+    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+    android:layout_margin="10dp"
+    android:layout_centerHorizontal="true"/>
+
+    <com.mikhaellopez.circularimageview.CircularImageView
+        android:id="@+id/profile_dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@mipmap/ic_launcher"
+        app:civ_border_color="@android:color/black"
+        app:civ_border_width="1dp"
+        app:civ_shadow="false"
+        app:civ_shadow_radius="10dp"
+        app:civ_shadow_color="@android:color/black"
+        android:layout_below="@+id/calling_tv"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/recipient_name_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="patient 1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:layout_margin="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/profile_dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="100dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_decline_two"
+            android:background="@drawable/decline_btn_bg"
+            android:layout_marginStart="20dp"
+            android:onClick="decline"/>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_call_two"
+            android:background="@drawable/accept_btn_bg"
+            android:layout_marginEnd="20dp"
+            android:onClick="accept"/>
+
+
+
+    </LinearLayout>
+
+</RelativeLayout>

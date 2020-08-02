@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "41214208151",
+    "firebase_url": "https://myfhb-th.firebaseio.com",
+    "project_id": "myfhb-th",
+    "storage_bucket": "myfhb-th.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:41214208151:android:c2d3ecb810211feb3461d2",
+        "android_client_info": {
+          "package_name": "com.globalmantrainnovations.myfhb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "41214208151-mijjg7foo07pbeso3kop8vn0rho4v6c5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHmmODBPkn_KoQOOiyDA0PrDXyYj_D8PM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "41214208151-mijjg7foo07pbeso3kop8vn0rho4v6c5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

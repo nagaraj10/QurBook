@@ -278,7 +278,7 @@ packages:
       name: flutter_svg
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.16.1"
+    version: "0.18.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -327,8 +327,8 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "D:\\commonWidget"
-      relative: false
+      path: "../fhb_common"
+      relative: true
     source: path
     version: "0.0.1"
   google_api_availability:
@@ -379,7 +379,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.12"
+    version: "2.1.14"
   image_cropper:
     dependency: "direct main"
     description:
@@ -526,7 +526,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.0"
+    version: "3.1.0"
   photo_view:
     dependency: "direct main"
     description:
@@ -741,7 +741,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.6.1"
+    version: "4.3.0"
   yaml:
     dependency: transitive
     description:
@@ -751,4 +751,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.10.0-0.0.dev <2.10.0"
-  flutter: ">=1.12.13+hotfix.5 <2.0.0"
+  flutter: ">=1.18.0-6.0.pre <2.0.0"
