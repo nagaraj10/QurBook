@@ -10,6 +10,7 @@ class ResultPage extends StatefulWidget {
 }
 
 class _ResultPage extends State<ResultPage> {
+
   bool status;
 
   @override
