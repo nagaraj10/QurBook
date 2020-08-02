@@ -48,7 +48,7 @@ class SessionListState extends State<SessionList>{
                           flex: 1,
                           child: sessionTimings == ''
                               ? SizedBoxWidget(width: 132,)
-                              : TextWidget(text: sessionTimings,)),
+                              : TextWidget(text: widget.sessionData[index].slots.length>0?sessionTimings:'')),
                       Expanded(
                           flex: 2,
                           child: GridViewNew(widget.sessionData[index].slots,index,(rowPosition,itemPosition){
