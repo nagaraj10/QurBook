@@ -119,8 +119,8 @@ var doctorsData = AppointmentsModel(
         ], upcoming: [
           History(
               status: 'Orthopedic and Surgeon',
-              actualEndDateTime: '2020-08-02 24:00:00',
-              actualStartDateTime: '17.45 PM',
+              actualEndDateTime: '2020-08-02 18:45:00',
+              actualStartDateTime: '18:45 PM',
               appointmentId: '',
               bookingId: '',
               createdBy: '',
@@ -154,8 +154,8 @@ var doctorsData = AppointmentsModel(
               specialization: ''),
           History(
               status: 'Pediatrician',
-              actualEndDateTime: '2020-08-02 12:00:00',
-              actualStartDateTime: '18.00 PM',
+              actualEndDateTime: '2020-08-02 20:00:00',
+              actualStartDateTime: '20:00 PM',
               appointmentId: '',
               bookingId: '',
               createdBy: '',
@@ -189,8 +189,8 @@ var doctorsData = AppointmentsModel(
               specialization: ''),
           History(
               status: 'General Physician',
-              actualEndDateTime: '2020-08-04 12:00:00',
-              actualStartDateTime: '11.45 AM',
+              actualEndDateTime: '2020-08-04 11:45:00',
+              actualStartDateTime: '11:45 AM',
               appointmentId: '',
               bookingId: '',
               createdBy: '',

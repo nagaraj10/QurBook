@@ -424,6 +424,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
+        leading: Icon(Icons.arrow_back_ios),
         title: getTitle(parameters.confirmDetails),
       ),
       body: SingleChildScrollView(

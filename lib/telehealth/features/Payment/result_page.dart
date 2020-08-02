@@ -9,7 +9,6 @@ class ResultPage extends StatefulWidget {
 }
 
 class _ResultPage extends State<ResultPage> {
-
   bool status;
 
   @override
@@ -21,45 +20,59 @@ class _ResultPage extends State<ResultPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      body:Container(
+      body: Container(
         color: Colors.blue[600],
         child: Center(
-          child : Container(
-            child : SingleChildScrollView(
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset(
-                          status?'assets/payment/success_tick.png':'assets/payment/failure.png',width:120,height: 120,color:status?Colors.green:Colors.red),
-                      SizedBox(height: 15),
-                      Text(status?'Payment Successful':'Payment Failure',style: TextStyle(fontSize: 22,color:Colors.white,fontWeight: FontWeight.bold)),
-                      SizedBox(height: 10),
-                      Text(status?'Your appointment is now confirmed':'We unable to reach your process..',style: TextStyle(fontSize: 14,color:Colors.white,fontWeight: FontWeight.bold)),
-                      SizedBox(height: 30),
-                      FlatButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                            side: BorderSide(color: Colors.white)),
-                        color: Colors.blue[600],
-                        textColor: Colors.white,
-                        padding: EdgeInsets.all(12.0),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text(
-                          "Done".toUpperCase(),
-                          style: TextStyle(
-                            fontSize: 14.0,
-                          ),
+          child: Container(
+            child: SingleChildScrollView(
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset(
+                        status
+                            ? 'assets/payment/success_tick.png'
+                            : 'assets/payment/failure.png',
+                        width: 120,
+                        height: 120,
+                        color: status ? Colors.white : Colors.red),
+                    SizedBox(height: 15),
+                    Text(status ? 'Payment Successful' : 'Payment Failure',
+                        style: TextStyle(
+                            fontSize: 22,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                    SizedBox(height: 10),
+                    Text(
+                        status
+                            ? 'Your appointment is now confirmed'
+                            : 'We unable to reach your process..',
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)),
+                    SizedBox(height: 30),
+                    FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          side: BorderSide(color: Colors.white)),
+                      color: Colors.blue[600],
+                      textColor: Colors.white,
+                      padding: EdgeInsets.all(12.0),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Done".toUpperCase(),
+                        style: TextStyle(
+                          fontSize: 14.0,
                         ),
                       ),
-                    ]
-                ),
+                    ),
+                  ]),
             ),
           ),
         ),
       ),
     );
   }
-
 }
