@@ -276,7 +276,7 @@ class _MyProvidersState extends State<MyProviders> {
                         ? (docs[i].fees.consulting != null &&
                                 docs[i].fees.consulting != '')
                             ? commonWidgets.getDoctoSpecialist(
-                                '${docs[i].fees.consulting.fee}')
+                                'INR ${docs[i].fees.consulting.fee}')
                             : SizedBox()
                         : SizedBox()
                     : SizedBox(),
