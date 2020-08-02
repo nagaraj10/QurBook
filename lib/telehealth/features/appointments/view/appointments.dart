@@ -143,7 +143,9 @@ class _AppointmentsState extends State<Appointments> {
               icon: Icons.arrow_back_ios,
               colors: Colors.white,
               size: 20,
-              onTap: () {},
+              onTap: () {
+                Navigator.pop(context);
+              },
             ),
           ],
         ),
@@ -754,7 +756,7 @@ class _AppointmentsState extends State<Appointments> {
                     ),
                     Column(
                       children: [
-                        joinCallIcon(doc),
+                        //joinCallIcon(doc),
                         SizedBoxWidget(
                           height: 30,
                         ),

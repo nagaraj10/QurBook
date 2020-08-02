@@ -281,7 +281,7 @@ const String Appointments_recordsImage = 'assets/icons/records.png';
 const String Appointments_receiptImage = 'assets/icons/receipt.png';
 const String Appointments_resheduleImage = 'assets/icons/reschedule.png';
 const String Appointments_cancelImage = 'assets/icons/wrong.png';
-const String Appointments_chatImage = 'assets/icons/chat.png';
+const String Appointments_chatImage = 'assets/navicons/chat.png';
 const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
 const String Appointments_newAppoinmentImage =
     'assets/icons/new-appointment.svg';
