@@ -398,6 +398,8 @@ const String Auth_token_slots =
 Map<String, String> requestHeadersTimeSlot = {
   'Authorization': authToken,
   'Content-Type': 'application/json'
+
+
 };
 
 Map<String, String> auth = {

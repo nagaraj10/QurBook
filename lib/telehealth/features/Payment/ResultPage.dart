@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 
 class ResultPage extends StatefulWidget {
   final bool status;
-  ResultPage({Key key, @required this.status}) : super(key: key);
+  final String refNo;
+  ResultPage({Key key, @required this.status,this.refNo}) : super(key: key);
   @override
   _ResultPage createState() => _ResultPage();
 }
@@ -32,13 +34,13 @@ class _ResultPage extends State<ResultPage> {
                   children: <Widget>[
                     Image.asset(
                         status
-                            ? 'assets/payment/success_tick.png'
-                            : 'assets/payment/failure.png',
+                            ? PAYMENT_SUCCESS_PNG
+                            : PAYMENT_FAILURE_PNG,
                         width: 120,
                         height: 120,
                         color: status ? Colors.white : Colors.red),
                     SizedBox(height: 15),
-                    Text(status ? 'Payment Successful' : 'Payment Failure',
+                    Text(status ? PAYMENT_SUCCESS_MSG : PAYMENT_FAILURE_MSG,
                         style: TextStyle(
                             fontSize: 22,
                             color: Colors.white,
@@ -46,12 +48,18 @@ class _ResultPage extends State<ResultPage> {
                     SizedBox(height: 10),
                     Text(
                         status
-                            ? 'Your appointment is now confirmed'
-                            : 'We unable to reach your process..',
+                            ? APPOINTMENT_CONFIRM
+                            : UNABLE_PROCESS,
                         style: TextStyle(
                             fontSize: 14,
                             color: Colors.white,
                             fontWeight: FontWeight.bold)),
+                    status?Text(
+                        widget.refNo!=null?'Ref.no: '+widget.refNo:'',
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold)):SizedBox(),
                     SizedBox(height: 30),
                     FlatButton(
                       shape: RoundedRectangleBorder(

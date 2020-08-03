@@ -4,7 +4,6 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentOld.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'dart:convert' as convert;
@@ -12,6 +11,7 @@ import 'dart:convert' as convert;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
@@ -71,10 +71,9 @@ class ProvidersListRepository {
   }
 
   Future<BookAppointmentModel> bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,
-      String slotNumber,String isMedicalShared,String isFollowUp) async {
+      String slotNumber,bool isMedicalShared,String isFollowUp,List<String> healthRecords) async {
 
 
-    ///NEW
     var slotInput = {};
     //var parentAppoint = {};
     slotInput["createdBy"] = createdBy;
@@ -82,26 +81,30 @@ class ProvidersListRepository {
     slotInput["doctorSessionId"] = doctorSessionId;
     slotInput["scheduledDate"] = scheduleDate;
     slotInput["slotNumber"] = slotNumber;
-    slotInput["isMedicalRecordsShared"] = false;
+    slotInput["isMedicalRecordsShared"] = isMedicalShared;
     slotInput["isFollowUp"] = false;
-    slotInput["healthRecordReference"] = [];
+    slotInput["healthRecordReference"] = healthRecords;
     slotInput["parentAppointment"] = {};
    /* parentAppoint["id"] = '';
     parentAppoint["bookingID"] = {};*/
-    ///OLD
-    /*var slotInput = {};
-    slotInput["createdBy"] = createdBy;
-    slotInput["createdFor"] = createdFor;
-    slotInput["doctorSessionId"] = doctorSessionId;
-    slotInput["plannedStartDateTime"] = scheduleDate+" "+startTime;
-    slotInput["plannedEndDateTime"] = scheduleDate+" "+endTime;
-    slotInput["slotNumber"] = slotNumber;
-    slotInput["isMedicalRecordsShared"] = false;
-    slotInput["isFollowUp"] = false;*/
 
     var jsonString = convert.jsonEncode(slotInput);
     print(jsonString);
     final response = await _helper.bookAppointment(qr_bookAppmnt,jsonString);
     return BookAppointmentModel.fromJson(response);
+  }
+
+  Future<UpdatePaymentModel> updatePayment(String paymentId,String appointmentId,String paymentOrderId,String paymentRequestId) async {
+
+    var paymentInput = {};
+    paymentInput["paymentId"] = paymentId;
+    paymentInput["appointmentId"] = appointmentId;
+    paymentInput["paymentOrderId"] = paymentOrderId;
+    paymentInput["paymentRequestId"] = paymentRequestId;
+
+    var jsonString = convert.jsonEncode(paymentInput);
+    print(jsonString);
+    final response = await _helper.updatePayment(qr_update_payment,jsonString);
+    return UpdatePaymentModel.fromJson(response);
   }
 }

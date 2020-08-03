@@ -90,3 +90,4 @@ const String qr_slotDate='date';
 const String qr_doctorid='doctorId';
 const String qr_getSlots='doctorSlots/getAvailability';
 const String qr_bookAppmnt='appointments';
+const String qr_update_payment='appointments/update-payment-status/';
