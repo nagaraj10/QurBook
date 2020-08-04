@@ -27,6 +27,7 @@ class CallOnUI : AppCompatActivity(),
     private val gson = Gson()
     private lateinit var meetingId: String
     private lateinit var name: String
+    private lateinit var from: String
     private lateinit var audioVideo: AudioVideoFacade
     private lateinit var videoViewFragment: VideoFragment
     private  var isExistingCall: Boolean = false
@@ -42,6 +43,7 @@ class CallOnUI : AppCompatActivity(),
 
         meetingId = intent.getStringExtra(MEETING_ID_KEY) as String
         name = intent.getStringExtra(NAME_KEY) as String
+        from = intent.getStringExtra(FROM_KEY) as String
         val meetingResponseJson = intent.getStringExtra(MEETING_RESPONSE_KEY) as String
         val sessionConfig = createSessionConfiguration(meetingResponseJson)
         val meetingSession = sessionConfig?.let {
@@ -67,7 +69,7 @@ class CallOnUI : AppCompatActivity(),
         if (savedInstanceState == null) {
             //todo mo-code
             videoViewFragment =
-                    VideoFragment.newInstance(meetingId,isExistingCall,name)
+                    VideoFragment.newInstance(meetingId,isExistingCall,name,from)
             supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.main_content, videoViewFragment, getString(R.string.frag_video))
@@ -167,6 +169,7 @@ class CallOnUI : AppCompatActivity(),
         const val MEETING_RESPONSE_KEY = "MEETING_RESPONSE"
         const val MEETING_ID_KEY = "MEETING_ID"
         const val NAME_KEY = "NAME"
+        const val FROM_KEY = "FROM"
     }
 
 

@@ -92,7 +92,9 @@ class MainActivity : FlutterActivity() {
         const val MEETING_RESPONSE_KEY = "MEETING_RESPONSE"
         const val MEETING_ID_KEY = "MEETING_ID"
         const val NAME_KEY = "NAME"
+        const val FROM_KEY = "FROM"
         const val RESULT_KEY = "RESULT_KEY"
+        var FROM_VAL = ""
         val instance: MainActivity by lazy { HOLDER.INSTANCE }
     }
 
@@ -106,6 +108,8 @@ class MainActivity : FlutterActivity() {
         override fun onReceive(context: Context, intent:Intent) {
             val meetingID = intent.getStringExtra(context.getString(R.string.meetid))
             val recipientName = intent.getStringExtra(context.getString(R.string.username))
+            val callerName = intent.getStringExtra(context.getString(R.string.from))
+            FROM_VAL=callerName
             startChime(meetingID,recipientName)
         }
     }
@@ -208,6 +212,10 @@ class MainActivity : FlutterActivity() {
         nsManager = NotificationManagerCompat.from(this)
         val meet_id =intent.getStringExtra(context.getString(R.string.meetid))
         val uname =intent.getStringExtra(context.getString(R.string.username))
+        val callerName =intent.getStringExtra(context.getString(R.string.from))
+        if(callerName!=null){
+            FROM_VAL=callerName
+        }
         if(meet_id!=null && uname!=null){
             startChime(meet_id,uname)
         }
@@ -370,6 +378,7 @@ class MainActivity : FlutterActivity() {
                     intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
                     intent.putExtra(MEETING_ID_KEY, meetingId)
                     intent.putExtra(NAME_KEY, attendeeName)
+                    intent.putExtra(FROM_KEY, FROM_VAL)
                     startActivity(intent)
                 }
             }

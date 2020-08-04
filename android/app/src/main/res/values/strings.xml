@@ -29,6 +29,7 @@
     <string name="nsid">notificationId</string>
     <string name="meetid">meeting_id</string>
     <string name="username">username</string>
+    <string name="from">body</string>
     <string name="intaction_accept_call">ACCEPT_CALL</string>
     <string name="func_startchime">startChime</string>
     <string name="func_createns">createNotification</string>
