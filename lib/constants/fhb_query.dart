@@ -91,3 +91,21 @@ const String qr_doctorid='doctorId';
 const String qr_getSlots='doctorSlots/getAvailability';
 const String qr_bookAppmnt='appointments';
 const String qr_update_payment='appointments/update-payment-status/';
+
+const String qr_created_by='createdBy';
+const String qr_created_for='createdFor';
+const String qr_doctor_session_id='doctorSessionId';
+const String qr_schedule_date='scheduledDate';
+const String qr_slot_number='slotNumber';
+const String qr_is_medical_shared='isMedicalRecordsShared';
+const String qr_is_followup='isFollowUp';
+const String qr_health_record_ref='healthRecordReference';
+const String qr_parent_appointment='parentAppointment';
+
+
+const String qr_payment_id='paymentId';
+const String qr_appoint_id='appointmentId';
+const String qr_payment_order_id='paymentOrderId';
+const String qr_payment_req_id='paymentRequestId';
+
+

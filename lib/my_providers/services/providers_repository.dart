@@ -76,15 +76,15 @@ class ProvidersListRepository {
 
     var slotInput = {};
     //var parentAppoint = {};
-    slotInput["createdBy"] = createdBy;
-    slotInput["createdFor"] = createdFor;
-    slotInput["doctorSessionId"] = doctorSessionId;
-    slotInput["scheduledDate"] = scheduleDate;
-    slotInput["slotNumber"] = slotNumber;
-    slotInput["isMedicalRecordsShared"] = isMedicalShared;
-    slotInput["isFollowUp"] = false;
-    slotInput["healthRecordReference"] = healthRecords;
-    slotInput["parentAppointment"] = {};
+    slotInput[qr_created_by] = createdBy;
+    slotInput[qr_created_for] = createdFor;
+    slotInput[qr_doctor_session_id] = doctorSessionId;
+    slotInput[qr_schedule_date] = scheduleDate;
+    slotInput[qr_slot_number] = slotNumber;
+    slotInput[qr_is_medical_shared] = isMedicalShared;
+    slotInput[qr_is_followup] = false;
+    slotInput[qr_health_record_ref] = healthRecords;
+    slotInput[qr_parent_appointment] = {};
    /* parentAppoint["id"] = '';
     parentAppoint["bookingID"] = {};*/
 
@@ -97,10 +97,10 @@ class ProvidersListRepository {
   Future<UpdatePaymentModel> updatePayment(String paymentId,String appointmentId,String paymentOrderId,String paymentRequestId) async {
 
     var paymentInput = {};
-    paymentInput["paymentId"] = paymentId;
-    paymentInput["appointmentId"] = appointmentId;
-    paymentInput["paymentOrderId"] = paymentOrderId;
-    paymentInput["paymentRequestId"] = paymentRequestId;
+    paymentInput[qr_payment_id] = paymentId;
+    paymentInput[qr_appoint_id] = appointmentId;
+    paymentInput[qr_payment_order_id] = paymentOrderId;
+    paymentInput[qr_payment_req_id] = paymentRequestId;
 
     var jsonString = convert.jsonEncode(paymentInput);
     print(jsonString);
