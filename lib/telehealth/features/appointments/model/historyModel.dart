@@ -35,14 +35,14 @@ class History {
   List<HealthRecord> healthRecord;
   String plannedStartDateTime;
   String plannedEndDateTime;
-  String slotNumber;
-  String isRefunded;
+  int slotNumber;
+  bool isRefunded;
   String bookingId;
   String sharedMedicalRecordsId;
-  String isMedicalRecordsShared;
+  bool isMedicalRecordsShared;
   String specialization;
   String location;
-  String doctorPic;
+  int doctorPic;
   String doctorName;
   String doctorId;
   String doctorSessionId;
@@ -59,8 +59,8 @@ class History {
     createdOn = json["createdOn"];
     createdBy = json["createdBy"];
     lastModifiedBy = json["lastModifiedBy"];
-    healthRecord = json["healthRecord"] != null ? List<HealthRecord>.from(
-        json["healthRecord"].map((x) => HealthRecord.fromJson(x))) : null;
+//    healthRecord = json["healthRecord"] != null ? List<HealthRecord>.from(
+//        json["healthRecord"].map((x) => HealthRecord.fromJson(x))) : null;
     plannedStartDateTime = json["plannedStartDateTime"];
     plannedEndDateTime = json["plannedEndDateTime"];
     slotNumber = json["slotNumber"];

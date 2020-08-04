@@ -7,24 +7,20 @@ import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart'
 import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
 
 class SessionList extends StatefulWidget {
-
   final List<SessionsTime> sessionData;
-  Function(int,int) selectedPosition;
+  Function(int, int) selectedPosition;
 
-  SessionList({this.sessionData,this.selectedPosition});
+  SessionList({this.sessionData, this.selectedPosition});
 
   @override
   State<StatefulWidget> createState() {
-
     return SessionListState();
   }
-
 }
 
-class SessionListState extends State<SessionList>{
-
+class SessionListState extends State<SessionList> {
   CommonUtil commonUtil = new CommonUtil();
-  String sessionTimings='';
+  String sessionTimings = '';
   int selectedRow = -1;
   int selectedItem = -1;
 
@@ -32,16 +28,21 @@ class SessionListState extends State<SessionList>{
   Widget build(BuildContext context) {
     return Container(
       child: ListView.builder(
-        shrinkWrap: true,
+          shrinkWrap: true,
           itemCount: widget.sessionData.length,
           itemBuilder: (BuildContext context, int index) {
-            sessionTimings = commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionStartTime)+" - "
-                +commonUtil.removeLastThreeDigits(widget.sessionData[index].sessionEndTime);
+            sessionTimings = commonUtil.removeLastThreeDigits(
+                    widget.sessionData[index].sessionStartTime) +
+                " - " +
+                commonUtil.removeLastThreeDigits(
+                    widget.sessionData[index].sessionEndTime);
             return Container(
               child: Column(
                 children: <Widget>[
                   Visibility(
-                    visible: widget.sessionData[index].slots.length>0?true:false,
+                    visible: widget.sessionData[index].slots.length > 0
+                        ? true
+                        : false,
                     child: new Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -49,29 +50,32 @@ class SessionListState extends State<SessionList>{
                         Expanded(
                             flex: 1,
                             child: sessionTimings == ''
-                                ? SizedBoxWidget(width: 132,)
+                                ? SizedBoxWidget(
+                                    width: 132,
+                                  )
                                 : TextWidget(text: sessionTimings)),
                         Expanded(
                             flex: 2,
-                            child: GridViewNew(widget.sessionData[index].slots,index,(rowPosition,itemPosition){
+                            child: GridViewNew(
+                                widget.sessionData[index].slots, index,
+                                (rowPosition, itemPosition) {
                               selectedRow = rowPosition;
                               selectedItem = itemPosition;
-                              widget.selectedPosition(rowPosition,itemPosition);
+                              widget.selectedPosition(
+                                  rowPosition, itemPosition);
                               setState(() {});
-                            },selectedRow)),
+                            }, selectedRow)),
                         SizedBoxWidget(width: 10),
                       ],
                     ),
                   ),
-                  SizedBoxWidget(height: 12.0,),
+                  SizedBoxWidget(
+                    height: 12.0,
+                  ),
                 ],
               ),
             );
-          }
-      ),
+          }),
     );
   }
-
-
-
 }
