@@ -5,17 +5,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/mockData.dart';
+import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/telehealth/features/appointments/services/apiServices.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
 
 class Appointments extends StatefulWidget {
   @override
@@ -25,161 +27,49 @@ class Appointments extends StatefulWidget {
 class _AppointmentsState extends State<Appointments> {
   TextEditingController _searchQueryController = TextEditingController();
   final GlobalKey<State> _key = new GlobalKey<State>();
+  AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
   var items = List<String>();
+  AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
   List<History> upcomingInfo = List();
+
   List<History> historyInfo = List();
-  bool onSearch = false;
+  bool isSearch = false;
+  List<History> upcomingTimeInfo = List();
+
   List<String> hours = List();
   List<String> minutes = List();
   ApiFetch api = ApiFetch();
 
   @override
   void initState() {
-    upcomingInfo = doctorsData.response.data.upcoming;
-    historyInfo = doctorsData.response.data.history;
-    Timer.periodic(Duration(seconds: 1), (Timer t) => _getTime());
+
+    Timer.periodic(Duration(seconds: 1), (Timer t) {
+      hours = appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).hours;
+      minutes =
+          appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).minutes;
+      if (hours.length != 0 && minutes.length != 0) {
+        setState(() {
+          hours;
+          minutes;
+        });
+      } else {
+        setState(() {
+          hours = List.filled(appointmentsViewModel
+              .appointmentsModel.response.data.upcoming.length,'00');
+          minutes = List.filled(appointmentsViewModel
+              .appointmentsModel.response.data.upcoming.length,'00');
+        });
+      }
+    });
+
     super.initState();
-  }
-
-  void filterSearchResults(String query) {
-    List<History> dummySearchListUpcoming = List<History>();
-    List<History> dummySearchListHistory = List<History>();
-    List<History> docInfo = List();
-    dummySearchListUpcoming = doctorsData.response.data.upcoming;
-    dummySearchListHistory = doctorsData.response.data.history;
-
-    if (query.isNotEmpty) {
-      dummySearchListUpcoming = doctorsData.response.data.upcoming
-          .where((element) =>
-              element.doctorName
-                  .toLowerCase()
-                  .trim()
-                  .contains(query.toLowerCase().trim()) ||
-              element.status
-                  .toLowerCase()
-                  .trim()
-                  .contains(query.toLowerCase().trim()) ||
-              element.location
-                  .toLowerCase()
-                  .trim()
-                  .contains(query.toLowerCase().trim()))
-          .toList();
-      dummySearchListHistory = doctorsData.response.data.history
-          .where((element) =>
-              element.doctorName
-                  .toLowerCase()
-                  .trim()
-                  .contains(query.toLowerCase().trim()) ||
-              element.status
-                  .toLowerCase()
-                  .trim()
-                  .contains(query.toLowerCase().trim()) ||
-              element.location
-                  .toLowerCase()
-                  .trim()
-                  .contains(query.toLowerCase().trim()))
-          .toList();
-      setState(() {
-        upcomingInfo = dummySearchListUpcoming;
-        historyInfo = dummySearchListHistory;
-      });
-      return;
-    } else {
-      setState(() {
-        upcomingInfo = doctorsData.response.data.upcoming;
-        historyInfo = doctorsData.response.data.upcoming;
-      });
-    }
-  }
-
-  String _getTime() {
-    List<String> dummySearchList = List<String>();
-    List<String> dummyHour = List<String>();
-    List<String> dummyMinutes = List<String>();
-    dummySearchList
-        .addAll(upcomingInfo.map((e) => e.actualEndDateTime).toList());
-    for (int i = 0; i < dummySearchList.length; i++) {
-      DateTime dob = DateTime.parse(dummySearchList[i]);
-      Duration dur = dob.difference(DateTime.now());
-      String differenceInHours = dur.inHours >= 0 && dur.inHours <= 24
-          ? (dur.inHours.remainder(24)).round().toString().padLeft(2, '0')
-          : '00';
-      String differenceInMinutes = dur.inHours >= 0 && dur.inHours <= 24
-          ? (dur.inMinutes.remainder(60)).toString().padLeft(2, '0')
-          : '00';
-      dummyMinutes.add(
-          int.parse(differenceInMinutes) <= 0 ? '00' : differenceInMinutes);
-//      print(minutes.toList());
-      dummyHour.add(
-          dur.inHours.remainder(24).toInt() <= 0 ? '00' : differenceInHours);
-    }
-    if (upcomingInfo.length > 0) {
-      setState(() {
-        minutes = dummyMinutes;
-//      print(minutes.toList());
-        hours = dummyHour;
-      });
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBar(), body: body(), floatingActionButton: floatingButton());
-  }
-
-  Widget appBar() {
-    return AppBar(
-        flexibleSpace: GradientAppBar(),
-        leading: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            SizedBoxWidget(
-              height: 0,
-              width: 30,
-            ),
-            IconWidget(
-              icon: Icons.arrow_back_ios,
-              colors: Colors.white,
-              size: 20,
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-        title: getTitle());
-  }
-
-  Widget getTitle() {
-    return Row(
-      children: [
-        Expanded(
-          child: TextWidget(
-            text: Constants.Appointments_Title,
-            colors: Colors.white,
-            overflow: TextOverflow.visible,
-            fontWeight: FontWeight.w600,
-            fontsize: 18,
-            softwrap: true,
-          ),
-        ),
-        IconWidget(
-          icon: Icons.notifications,
-          colors: Colors.white,
-          size: 22,
-          onTap: () {},
-        ),
-        new SwitchProfile().buildActions(context, _key, callBackToRefresh),
-        IconWidget(
-          icon: Icons.more_vert,
-          colors: Colors.white,
-          size: 24,
-          onTap: () {},
-        ),
-      ],
-    );
+        body: body(),
+        floatingActionButton: commonWidget.floatingButton());
   }
 
   Widget search() {
@@ -210,10 +100,23 @@ class _AppointmentsState extends State<Appointments> {
                     ),
                     style: TextStyle(color: Colors.black54, fontSize: 16.0),
                     onChanged: (value) {
-//                      if (value.trim().length > 2) {
-//                        Future.delayed(Duration(seconds: 2));
-                      filterSearchResults(value);
-//                      }
+                      if (value.trim().length > 1) {
+                        setState(() {
+                          isSearch = true;
+                          upcomingInfo = appointmentsViewModel
+                              .filterSearchResults(value)
+                              .upcoming;
+                          historyInfo = appointmentsViewModel
+                              .filterSearchResults(value)
+                              .history;
+                        });
+                      } else {
+                        setState(() {
+                          isSearch = false;
+                          upcomingInfo.clear();
+                          historyInfo.clear();
+                        });
+                      }
                     },
                   ),
                 ),
@@ -227,30 +130,9 @@ class _AppointmentsState extends State<Appointments> {
     (context as Element).markNeedsBuild();
   }
 
-  Widget floatingButton() {
-    return FloatingActionButton(
-      mini: true,
-      backgroundColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50),
-        side: BorderSide(
-            width: 2, color: Color(new CommonUtil().getMyPrimaryColor())),
-      ),
-      elevation: 0.0,
-      onPressed: () {},
-      child: IconWidget(
-        icon: Icons.add,
-        colors: Color(new CommonUtil().getMyPrimaryColor()),
-        size: 24,
-        onTap: () {},
-      ),
-    );
-  }
-
   Widget body() {
     return SingleChildScrollView(
       child: Container(
-//          height: MediaQuery.of(context).size.height,
           padding: EdgeInsets.only(left: 20, right: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -260,54 +142,7 @@ class _AppointmentsState extends State<Appointments> {
                 height: 20,
               ),
               search(),
-              SizedBoxWidget(
-                width: 0,
-                height: 10,
-              ),
-              (upcomingInfo.length == hours.length)
-                  ? Padding(
-                      padding: EdgeInsets.only(left: 5, right: 5),
-                      child: TextWidget(
-                        text: Constants.Appointments_upcoming,
-                        colors: Color(CommonUtil().getMyPrimaryColor()),
-                        overflow: TextOverflow.visible,
-                        fontWeight: FontWeight.w500,
-                        fontsize: 14,
-                        softwrap: true,
-                      ),
-                    )
-                  : Container(),
-              SizedBoxWidget(
-                width: 0,
-                height: 10,
-              ),
-              (upcomingInfo.length == hours.length)
-                  ? getDoctorsAppoinmentsList(upcomingInfo, hours, minutes)
-                  : Container(),
-              SizedBoxWidget(
-                width: 0,
-                height: 10,
-              ),
-              (historyInfo.length != 0)
-                  ? Padding(
-                      padding: EdgeInsets.only(left: 5, right: 5),
-                      child: TextWidget(
-                        text: Constants.Appointments_history,
-                        colors: Color(CommonUtil().getMyPrimaryColor()),
-                        overflow: TextOverflow.visible,
-                        fontWeight: FontWeight.w500,
-                        fontsize: 14,
-                        softwrap: true,
-                      ),
-                    )
-                  : Container(),
-              SizedBoxWidget(
-                width: 0,
-                height: 10,
-              ),
-              (historyInfo.length != 0)
-                  ? getDoctorsHistoryList(historyInfo)
-                  : Container(),
+              getDoctorsAppoinmentsList()
             ],
           )),
     );
@@ -320,232 +155,114 @@ class _AppointmentsState extends State<Appointments> {
       '/telehealth-providers',
       arguments: HomeScreenArguments(selectedIndex: 1),
     ).then((value) {});
-//    Navigator.push(
-//        context,
-//        MaterialPageRoute(
-//            builder: (BuildContext context) => TelehealthProviders(
-//                  bottomindex: 1,
-//                  arguments: HomeScreenArguments(selectedIndex: 1),
-//                )));
   }
 
-  Widget getDoctorsAppoinmentsList(info, hour, minute) {
-    return ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (BuildContext ctx, int i) =>
-          doctorsAppointmentsListCard(info[i], hour[i], minute[i]),
-      itemCount: info.length,
-    );
-  }
+  Widget getDoctorsAppoinmentsList() {
 
-  Widget docName(doc) {
-    return Row(
-      children: [
-        Container(
-          constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
-          child: Row(
-            children: [
-              TextWidget(
-                text: doc,
-                fontWeight: FontWeight.w500,
-                fontsize: fhbStyles.fnt_doc_name,
-                softwrap: false,
-                overflow: TextOverflow.ellipsis,
-                colors: Colors.black,
-              ),
-              SizedBox(
-                width: 0,
-                height: 8.0,
-              ),
-              IconWidget(
-                  colors: Color(new CommonUtil().getMyPrimaryColor()),
-                  icon: Icons.info,
-                  size: 10,
-                  onTap: () {}),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget docStatus(doc) {
-    return Container(
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
-      child: TextWidget(
-        text: doc,
-        colors: Colors.black26,
-        fontsize: fhbStyles.fnt_doc_specialist,
-        softwrap: false,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
-  }
-
-  Widget docLoc(doc) {
-    return Container(
-      constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
-      child: TextWidget(
-        text: doc,
-        overflow: TextOverflow.ellipsis,
-        softwrap: false,
-        fontWeight: FontWeight.w200,
-        colors: Colors.black87,
-        fontsize: fhbStyles.fnt_city,
-      ),
-    );
-  }
-
-  Widget docTimeSlot(History doc, hour, minute) {
-    return ((hour == '00' && minute == '00') ||
-            hours.length == 0 ||
-            minutes.length == 0 ||
-            upcomingInfo.length == 0)
-        ? Container()
-        : Row(
-            children: [
-              ClipRect(
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Color(new CommonUtil().getMyPrimaryColor())),
-                  ),
-                  height: 29,
-                  width: 25,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(2.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextWidget(
-                        fontsize: 10,
-                        text: hour,
-                        fontWeight: FontWeight.w500,
-                        colors: Colors.grey,
-                      ),
-                      TextWidget(
-                        fontsize: 5,
-                        text: Constants.Appointments_hours,
-                        fontWeight: FontWeight.w500,
-                        colors: Color(new CommonUtil().getMyPrimaryColor()),
-                      ),
-                    ],
-                  ),
+    return FutureBuilder(
+        future: appointmentsViewModel.fetchAppointments(),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            AppointmentsModel appointmentsData = snapshot.data;
+//            if(hours==null || minutes==null){
+//              hours = List.filled(appointmentsData
+//                  .response.data.upcoming.length, '00');
+//              minutes = List.filled(appointmentsData
+//                  .response.data.upcoming.length, '00');
+//            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                SizedBoxWidget(
+                  width: 0,
+                  height: 10,
                 ),
-              ),
-              SizedBoxWidget(width: 2.0),
-              ClipRect(
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                        color: Color(new CommonUtil().getMyPrimaryColor())),
-                  ),
-                  height: 29,
-                  width: 25,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(2.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      TextWidget(
-                        fontsize: 10,
-                        text: minute,
-                        fontWeight: FontWeight.w500,
-                        colors: Colors.grey,
-                      ),
-                      TextWidget(
-                        fontsize: 5,
-                        text: Constants.Appointments_minutes,
-                        fontWeight: FontWeight.w500,
-                        colors: Color(new CommonUtil().getMyPrimaryColor()),
-                      ),
-                    ],
-                  ),
+                isSearch
+                    ? minutes.length == upcomingInfo.length
+                        ? commonWidget.title(Constants.Appointments_upcoming)
+                        : Container()
+                    : appointmentsData.response.data.upcoming.length != 0 &&
+                            minutes.length ==
+                                appointmentsData.response.data.upcoming.length
+                        ? commonWidget.title(Constants.Appointments_upcoming)
+                        : Container(),
+                SizedBoxWidget(
+                  width: 0,
+                  height: 10,
                 ),
-              )
-            ],
-          );
-  }
-
-  Widget docIcons(doc) {
-    return Row(
-      children: [
-        iconWithText(
-            Constants.Appointments_notesImage,
-            Color(new CommonUtil().getMyPrimaryColor()),
-            Constants.Appointments_notes,
-            () {}),
-        SizedBoxWidget(width: 15.0),
-        iconWithText(
-            Constants.Appointments_voiceNotesImage,
-            Color(new CommonUtil().getMyPrimaryColor()),
-            Constants.STR_VOICE_NOTES,
-            () {}),
-        SizedBoxWidget(width: 15.0),
-        iconWithText(
-            Constants.Appointments_recordsImage,
-            Color(new CommonUtil().getMyPrimaryColor()),
-            Constants.Appointments_records,
-            () {}),
-      ],
-    );
-  }
-
-  Widget joinCallIcon(doc) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Container(
-        height: 20,
-        width: 70,
-        child: OutlineButton(
-          shape: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
-          borderSide:
-              BorderSide(color: Color(new CommonUtil().getMyPrimaryColor())),
-          onPressed: () {},
-          child: TextWidget(
-            text: Constants.Appointments_joinCall,
-            colors: Color(new CommonUtil().getMyPrimaryColor()),
-            fontsize: 8,
-          ),
-          color: Color(new CommonUtil().getMyPrimaryColor()),
-        ),
-      ),
-    );
-  }
-
-  Widget count(doc) {
-    return ClipOval(
-      child: Container(
-        decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.blue[200],
-              width: 3,
-            ),
-            borderRadius: BorderRadius.circular(50.0),
-            gradient: LinearGradient(
-              colors: <Color>[
-                Color(new CommonUtil().getMyPrimaryColor()),
-                Color(new CommonUtil().getMyGredientColor())
+                isSearch
+                    ? minutes.length == upcomingInfo.length
+                        ? ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext ctx, int i) =>
+                                doctorsAppointmentsListCard(
+                                    isSearch
+                                        ? upcomingInfo[i]
+                                        : appointmentsData
+                                            .response.data.upcoming[i],
+                                    hours[i],
+                                    minutes[i]),
+                            itemCount: !isSearch
+                                ? appointmentsData.response.data.upcoming.length
+                                : upcomingInfo.length,
+                          )
+                        : Container()
+                    : minutes.length ==
+                            appointmentsData.response.data.upcoming.length
+                        ? ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext ctx, int i) =>
+                                doctorsAppointmentsListCard(
+                                    isSearch
+                                        ? upcomingInfo[i]
+                                        : appointmentsData
+                                            .response.data.upcoming[i],
+                                    hours[i],
+                                    minutes[i]),
+                            itemCount: !isSearch
+                                ? appointmentsData.response.data.upcoming.length
+                                : upcomingInfo.length,
+                          )
+                        : Container(),
+                SizedBoxWidget(
+                  width: 0,
+                  height: 10,
+                ),
+                isSearch
+                    ? historyInfo.length != 0
+                        ? commonWidget.title(Constants.Appointments_history)
+                        : Container()
+                    : commonWidget.title(Constants.Appointments_history),
+                SizedBoxWidget(
+                  width: 0,
+                  height: 10,
+                ),
+                new ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext ctx, int i) =>
+                      doctorsHistoryListCard(isSearch
+                          ? historyInfo[i]
+                          : appointmentsData.response.data.history[i]),
+                  itemCount: isSearch
+                      ? historyInfo.length
+                      : appointmentsData.response.data.history.length,
+                )
               ],
-            )),
-        height: 40,
-        width: 40,
-        alignment: Alignment.center,
-        child: TextWidget(
-          fontsize: 20,
-          text: doc,
-          fontWeight: FontWeight.w600,
-          colors: Colors.white,
-        ),
-      ),
-    );
+            );
+          } else {
+            return new Center(
+              child: new CircularProgressIndicator(
+                backgroundColor: Colors.grey,
+              ),
+            );
+          }
+        });
   }
 
-  Widget doctorsAppointmentsListCard(History doc, hour, minute) {
+  Widget doctorsAppointmentsListCard(History doc, String hour, String minute) {
     return Card(
         color: Colors.white,
         elevation: 0.5,
@@ -568,59 +285,72 @@ class _AppointmentsState extends State<Appointments> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            docName(doc.doctorName),
+                            commonWidget.docName(context, doc.doctorName),
                             SizedBoxWidget(height: 3.0, width: 0),
-                            docStatus(doc.status),
+                            commonWidget.docStatus(context, doc.specialization),
                             SizedBox(height: 3.0),
-                            docLoc(doc.location),
+                            commonWidget.docLoc(context, doc.location),
                             SizedBox(height: 5.0),
-                            docTimeSlot(doc, hour, minute),
+                            commonWidget.docTimeSlot(
+                                context, doc, hour, minute),
                             SizedBoxWidget(height: 10.0),
-                            docIcons(doc)
+                            commonWidget.docIcons(doc)
                           ],
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        //joinCallIcon(doc),
-                        SizedBoxWidget(
-                          height: 30,
-                        ),
-                        count(doc.slotNumber),
-                        TextWidget(
-                          fontsize: 10,
-                          text: doc.actualStartDateTime,
-                          fontWeight: FontWeight.w600,
-                          colors: Color(new CommonUtil().getMyPrimaryColor()),
-                        ),
-                        TextWidget(
-                          fontsize: 8,
-                          text: '${doc.followupDate}',
-                          fontWeight: FontWeight.w400,
-                          colors: Colors.black26,
-                        ),
-                      ],
+                    Container(
+                      constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width / 6.5),
+                      child: Column(
+                        children: [
+                          //joinCallIcon(doc),
+                          SizedBoxWidget(
+                            height: 30,
+                          ),
+                          commonWidget.count(doc.slotNumber),
+                          TextWidget(
+                            fontsize: 10,
+                            text: DateFormat("hh:mm a")
+                                    .format(DateTime.parse(
+                                        doc.plannedStartDateTime))
+                                    .toString() ??
+                                '',
+                            fontWeight: FontWeight.w600,
+                            colors: Color(new CommonUtil().getMyPrimaryColor()),
+                          ),
+                          TextWidget(
+                            fontsize: 8,
+                            text: DateFormat.yMMMEd()
+                                .format(
+                                    DateTime.parse(doc.plannedStartDateTime))
+                                .toString(),
+                            fontWeight: FontWeight.w400,
+                            colors: Colors.black26,
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 )),
             SizedBoxWidget(height: 10.0),
             Container(height: 1, color: Colors.black26),
-//            SizedBoxWidget(height: 10.0),
             Container(
               alignment: Alignment.center,
               padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
               child: Row(
                 children: [
-                  iconWithText(Constants.Appointments_receiptImage,
+                  commonWidget.iconWithText(Constants.Appointments_receiptImage,
                       Colors.black38, Constants.Appointments_receipt, () {}),
                   SizedBoxWidget(width: 15.0),
-                  iconWithText(Constants.Appointments_resheduleImage,
-                      Colors.black38, Constants.Appointments_reshedule, () {
+                  commonWidget.iconWithText(
+                      Constants.Appointments_resheduleImage,
+                      Colors.black38,
+                      Constants.Appointments_reshedule, () {
                     navigateToProviderScreen();
                   }),
                   SizedBoxWidget(width: 15.0),
-                  iconWithText(Constants.Appointments_cancelImage,
+                  commonWidget.iconWithText(Constants.Appointments_cancelImage,
                       Colors.black38, Constants.Appointments_cancel, () {
                     api.cancel();
                   }),
@@ -660,65 +390,6 @@ class _AppointmentsState extends State<Appointments> {
         ));
   }
 
-  Widget iconWithText(String imageText, Color color, String text, onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Column(
-        children: [
-          Container(
-            height: 20,
-            width: 20,
-            child: Image.asset(
-              imageText,
-              color: color,
-            ),
-          ),
-          SizedBoxWidget(
-            height: 5.0,
-          ),
-          TextWidget(
-            fontsize: 8,
-            text: text,
-            fontWeight: FontWeight.w400,
-            colors: color,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget svgWithText(String imageText, Color color, String text) {
-    return Column(
-      children: [
-        Container(
-            height: 20,
-            width: 20,
-            child: SvgPicture.asset(
-              imageText,
-              color: color,
-            )),
-        SizedBoxWidget(
-          height: 5.0,
-        ),
-        TextWidget(
-          fontsize: 8,
-          text: text,
-          fontWeight: FontWeight.w400,
-          colors: color,
-        ),
-      ],
-    );
-  }
-
-  Widget getDoctorsHistoryList(info) {
-    return new ListView.builder(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemBuilder: (BuildContext ctx, int i) => doctorsHistoryListCard(info[i]),
-      itemCount: info.length,
-    );
-  }
-
   Widget doctorsHistoryListCard(History doc) {
     return Card(
         color: Colors.white,
@@ -729,7 +400,7 @@ class _AppointmentsState extends State<Appointments> {
                 padding: EdgeInsets.all(8),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -742,44 +413,55 @@ class _AppointmentsState extends State<Appointments> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            docName(doc.doctorName),
+                            commonWidget.docName(context, doc.doctorName),
                             SizedBoxWidget(height: 3.0, width: 0),
-                            docStatus(doc.status),
+                            commonWidget.docStatus(
+                                context, doc.specialization ?? ''),
                             SizedBox(height: 3.0),
-                            docLoc(doc.location),
+                            commonWidget.docLoc(context, doc.location),
                             SizedBoxWidget(height: 5.0),
                             SizedBoxWidget(height: 15.0),
-                            docIcons(doc)
+                            commonWidget.docIcons(doc)
                           ],
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        //joinCallIcon(doc),
-                        SizedBoxWidget(
-                          height: 30,
-                        ),
-                        count(doc.slotNumber),
-                        TextWidget(
-                          fontsize: 9,
-                          text: Constants.Appointments_followUpStatus,
-                          fontWeight: FontWeight.w400,
-                          colors: Colors.black38,
-                        ),
-                        TextWidget(
-                          fontsize: 10,
-                          text: '${doc.followupDate}',
-                          fontWeight: FontWeight.w500,
-                          colors: Colors.black,
-                        ),
-                        TextWidget(
-                          fontsize: 15,
-                          text: doc.followupFee,
-                          fontWeight: FontWeight.w600,
-                          colors: Color(new CommonUtil().getMyPrimaryColor()),
-                        ),
-                      ],
+                    Container(
+                      constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width / 6.5),
+                      child: Column(
+                        children: [
+                          //joinCallIcon(doc),
+                          SizedBoxWidget(
+                            height: 30,
+                          ),
+                          commonWidget.count(doc.slotNumber),
+                          TextWidget(
+                            fontsize: 9,
+                            text: Constants.Appointments_followUpStatus,
+                            overflow: TextOverflow.visible,
+                            fontWeight: FontWeight.w400,
+                            colors: Colors.black38,
+                          ),
+                          TextWidget(
+                            fontsize: 10,
+                            text: DateFormat.yMMMEd()
+                                    .format(DateTime.parse(
+                                        doc.plannedStartDateTime))
+                                    .toString() ??
+                                '',
+                            fontWeight: FontWeight.w500,
+                            overflow: TextOverflow.visible,
+                            colors: Colors.black,
+                          ),
+                          TextWidget(
+                            fontsize: 15,
+                            text: doc.followupFee ?? '',
+                            fontWeight: FontWeight.w600,
+                            colors: Color(new CommonUtil().getMyPrimaryColor()),
+                          ),
+                        ],
+                      ),
                     )
                   ],
                 )),
@@ -791,17 +473,22 @@ class _AppointmentsState extends State<Appointments> {
               padding: EdgeInsets.only(left: 60, top: 10, bottom: 10),
               child: Row(
                 children: [
-                  iconWithText(Constants.Appointments_chatImage, Colors.black38,
-                      Constants.Appointments_chat, () {}),
+                  commonWidget.iconWithText(Constants.Appointments_chatImage,
+                      Colors.black38, Constants.Appointments_chat, () {}),
                   SizedBoxWidget(width: 15.0),
-                  iconWithText(Constants.Appointments_prescriptionImage,
-                      Colors.black38, Constants.STR_PRESCRIPTION, () {}),
+                  commonWidget.iconWithText(
+                      Constants.Appointments_prescriptionImage,
+                      Colors.black38,
+                      Constants.STR_PRESCRIPTION,
+                      () {}),
                   SizedBoxWidget(width: 15.0),
-                  iconWithText(Constants.Appointments_receiptImage,
+                  commonWidget.iconWithText(Constants.Appointments_receiptImage,
                       Colors.black38, Constants.Appointments_receipt, () {}),
                   SizedBoxWidget(width: 15.0),
-                  svgWithText(Constants.Appointments_newAppoinmentImage,
-                      Colors.black38, Constants.Appointments_new),
+                  commonWidget.svgWithText(
+                      Constants.Appointments_newAppoinmentImage,
+                      Colors.black38,
+                      Constants.Appointments_new),
                 ],
               ),
             )

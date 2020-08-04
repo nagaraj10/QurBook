@@ -13,7 +13,7 @@ class DoctorsData {
     history = json["history"] != null
         ? List<History>.from(json["history"].map((x) => History.fromJson(x)))
         : null;
-    upcoming = json["upcoming"]
+    upcoming = json["upcoming"]!=null
         ? List<History>.from(json["upcoming"].map((x) => History.fromJson(x)))
         : null;
   }

@@ -11,7 +11,7 @@ class AppointmentsModel {
     this.response,
   });
 
-  String status;
+  int status;
   bool success;
   String message;
   Response response;
@@ -42,7 +42,7 @@ class Response {
     this.data,
   });
 
-  String count;
+  int count;
   DoctorsData data;
 
   Response.fromJson(Map<String, dynamic> json) {
