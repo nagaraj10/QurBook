@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentOld.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
@@ -18,6 +18,7 @@ class MyProviderViewModel extends ChangeNotifier {
   List<DateSlotTimings> dateSlotTimings = new List();
   List<TelehealthProviderModel> teleHealthProviderModel = new List();
   BookAppointmentModel bookAppointment = BookAppointmentModel();
+  UpdatePaymentModel updatePaymentModel = UpdatePaymentModel();
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
@@ -72,12 +73,22 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<BookAppointmentModel> putBookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,String slotNumber,String isMedicalShared,String isFollowUp) async {
+  Future<BookAppointmentModel> putBookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,
+      String slotNumber,bool isMedicalShared,String isFollowUp,List<String> healthRecords) async {
     try {
       BookAppointmentModel bookAppointmentModel =
-      await _providersListRepository.bookAppointment(createdBy,createdFor,doctorSessionId,scheduleDate,slotNumber,isMedicalShared,isFollowUp);
+      await _providersListRepository.bookAppointment(createdBy,createdFor,doctorSessionId,scheduleDate,slotNumber,isMedicalShared,isFollowUp,healthRecords);
       bookAppointment = bookAppointmentModel;
       return bookAppointment;
+    } catch (e) {}
+  }
+
+  Future<UpdatePaymentModel> updatePaymentStatus(String paymentId,String appointmentId,String paymentOrderId,String paymentRequestId) async {
+    try {
+      UpdatePaymentModel updatePaymentModel =
+      await _providersListRepository.updatePayment(paymentId,appointmentId,paymentOrderId,paymentRequestId);
+      updatePaymentModel = updatePaymentModel;
+      return updatePaymentModel;
     } catch (e) {}
   }
 }

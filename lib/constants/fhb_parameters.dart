@@ -1,5 +1,7 @@
 library fhb_parmeters;
 
+import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
+
 const String strStatus = 'status';
 const String strSuccess = 'success';
 const String strMessage = 'message';
@@ -279,5 +281,20 @@ const String someWentWrong='Booking appointment failed.. Some went wrong!';
 const String checkSlots='Checking available slots..';
 const String selectSlotsMsg='please select your time slot before you book';
 const String noUrl='Something went wrong ..please try again..';
+
+//Payment
+const String PAYMENT_STATUS='payment_status';
+const String CREDIT='Credit';
+const String PAYMENT_ID='payment_id';
+const String PAYMENT_REQ_ID='payment_request_id';
+const String CHECK_URL='http://www.example.com/redirect';
+const String TITLE_BAR='Payment';
+const String PAYSUC='PAYSUC';
+const String PAYMENT_SUCCESS_PNG='assets/payment/success_tick.png';
+const String PAYMENT_FAILURE_PNG='assets/payment/failure.png';
+const String PAYMENT_SUCCESS_MSG='Payment Successful';
+const String PAYMENT_FAILURE_MSG='Payment Failure';
+const String APPOINTMENT_CONFIRM='Your appointment is now confirmed';
+const String UNABLE_PROCESS='We unable to reach your process..';
 
 

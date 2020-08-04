@@ -88,10 +88,10 @@ class AppointmentInfo {
   String statusId;
   String slotNumber;
   bool isMedicalRecordsShared;
-  String sharedMedicalRecordsId;
-  bool isFollowUpFee;
+  bool isActive;
   String lastModifiedBy;
   String id;
+  bool isFollowUpFee;
   String createdOn;
   String lastModifiedOn;
 
@@ -107,10 +107,10 @@ class AppointmentInfo {
         this.statusId,
         this.slotNumber,
         this.isMedicalRecordsShared,
-        this.sharedMedicalRecordsId,
-        this.isFollowUpFee,
+        this.isActive,
         this.lastModifiedBy,
         this.id,
+        this.isFollowUpFee,
         this.createdOn,
         this.lastModifiedOn});
 
@@ -126,10 +126,10 @@ class AppointmentInfo {
     statusId = json['statusId'];
     slotNumber = json['slotNumber'];
     isMedicalRecordsShared = json['isMedicalRecordsShared'];
-    sharedMedicalRecordsId = json['sharedMedicalRecordsId'];
-    isFollowUpFee = json['isFollowUpFee'];
+    isActive = json['isActive'];
     lastModifiedBy = json['lastModifiedBy'];
     id = json['id'];
+    isFollowUpFee = json['isFollowUpFee'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
   }
@@ -147,10 +147,10 @@ class AppointmentInfo {
     data['statusId'] = this.statusId;
     data['slotNumber'] = this.slotNumber;
     data['isMedicalRecordsShared'] = this.isMedicalRecordsShared;
-    data['sharedMedicalRecordsId'] = this.sharedMedicalRecordsId;
-    data['isFollowUpFee'] = this.isFollowUpFee;
+    data['isActive'] = this.isActive;
     data['lastModifiedBy'] = this.lastModifiedBy;
     data['id'] = this.id;
+    data['isFollowUpFee'] = this.isFollowUpFee;
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     return data;
@@ -158,38 +158,114 @@ class AppointmentInfo {
 }
 
 class PaymentInfo {
-  String paymentId;
+  Payment payment;
   String paymentAppointmentMappingId;
   String paymentGatewayDetailId;
+  String paymentRequestId;
   String longurl;
-  String redirectUrl;
-  Null webhook;
+  String redirect;
 
   PaymentInfo(
-      {this.paymentId,
+      {this.payment,
         this.paymentAppointmentMappingId,
         this.paymentGatewayDetailId,
+        this.paymentRequestId,
         this.longurl,
-        this.redirectUrl,
-        this.webhook});
+        this.redirect});
 
   PaymentInfo.fromJson(Map<String, dynamic> json) {
-    paymentId = json['paymentId'];
+    payment =
+    json['payment'] != null ? new Payment.fromJson(json['payment']) : null;
     paymentAppointmentMappingId = json['paymentAppointmentMappingId'];
     paymentGatewayDetailId = json['paymentGatewayDetailId'];
+    paymentRequestId = json['paymentRequestId'];
     longurl = json['longurl'];
-    redirectUrl = json['redirect_url'];
-    webhook = json['webhook'];
+    redirect = json['redirect'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['paymentId'] = this.paymentId;
+    if (this.payment != null) {
+      data['payment'] = this.payment.toJson();
+    }
     data['paymentAppointmentMappingId'] = this.paymentAppointmentMappingId;
     data['paymentGatewayDetailId'] = this.paymentGatewayDetailId;
+    data['paymentRequestId'] = this.paymentRequestId;
     data['longurl'] = this.longurl;
-    data['redirect_url'] = this.redirectUrl;
-    data['webhook'] = this.webhook;
+    data['redirect'] = this.redirect;
+    return data;
+  }
+}
+
+class Payment {
+  String transactionDateTime;
+  String paidAmount;
+  String paidBy;
+  String paidTo;
+  String purpose;
+  String moduleId;
+  String paymentStatusId;
+  String createdOn;
+  String lastModifiedOn;
+  String lastModifiedBy;
+  String createdBy;
+  bool isActive;
+  Null paidDate;
+  String id;
+  Null receiptURL;
+
+  Payment(
+      {this.transactionDateTime,
+        this.paidAmount,
+        this.paidBy,
+        this.paidTo,
+        this.purpose,
+        this.moduleId,
+        this.paymentStatusId,
+        this.createdOn,
+        this.lastModifiedOn,
+        this.lastModifiedBy,
+        this.createdBy,
+        this.isActive,
+        this.paidDate,
+        this.id,
+        this.receiptURL});
+
+  Payment.fromJson(Map<String, dynamic> json) {
+    transactionDateTime = json['transactionDateTime'];
+    paidAmount = json['paidAmount'];
+    paidBy = json['paidBy'];
+    paidTo = json['paidTo'];
+    purpose = json['purpose'];
+    moduleId = json['moduleId'];
+    paymentStatusId = json['paymentStatusId'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
+    lastModifiedBy = json['lastModifiedBy'];
+    createdBy = json['createdBy'];
+    isActive = json['isActive'];
+    paidDate = json['paidDate'];
+    id = json['id'];
+    receiptURL = json['receiptURL'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['transactionDateTime'] = this.transactionDateTime;
+    data['paidAmount'] = this.paidAmount;
+    data['paidBy'] = this.paidBy;
+    data['paidTo'] = this.paidTo;
+    data['purpose'] = this.purpose;
+    data['moduleId'] = this.moduleId;
+    data['paymentStatusId'] = this.paymentStatusId;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    data['lastModifiedBy'] = this.lastModifiedBy;
+    data['createdBy'] = this.createdBy;
+    data['isActive'] = this.isActive;
+    data['paidDate'] = this.paidDate;
+    data['id'] = this.id;
+    data['receiptURL'] = this.receiptURL;
     return data;
   }
 }
