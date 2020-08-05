@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/src/model/home_screen_arguments.dart';
 
 class ResultPage extends StatefulWidget {
   final bool status;
@@ -69,8 +70,12 @@ class _ResultPage extends State<ResultPage> {
                       textColor: Colors.white,
                       padding: EdgeInsets.all(12.0),
                       onPressed: () {
-                       status?Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (context) => AppointmentsMain())):Navigator.pop(context);
+                       status?Navigator.pushNamed(
+                         context,
+                         router.rt_TelehealthProvider,
+                         arguments: HomeScreenArguments(selectedIndex: 0),
+                       ).then((value) {}):
+                       Navigator.pop(context);
                       },
                       child: Text(
                         "Done".toUpperCase(),

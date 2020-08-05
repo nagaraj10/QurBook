@@ -15,14 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "41214208151-c5itipa4rr82lhdtqp8d0j6sun091fda.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.globalmantrainnovations.myfhb",
-            "certificate_hash": "8ef06e354d8663d7f5a7bc9635c2f5d88f124661"
-          }
-        },
-        {
           "client_id": "41214208151-mijjg7foo07pbeso3kop8vn0rho4v6c5.apps.googleusercontent.com",
           "client_type": 3
         }
