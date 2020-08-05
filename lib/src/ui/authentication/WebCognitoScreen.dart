@@ -204,7 +204,7 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId)
           .then((onValue) {});
       PreferenceUtil.save("user_details", saveuser);
-    }
+
     // redirecting to dashboard screen using userid
     Future.delayed(Duration(seconds: 3), () {
       Navigator.push(
@@ -213,6 +213,14 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
               builder: (BuildContext context) => DashboardScreen()));
       //Navigator.pop(context, 'code:${mURL}');
     });
+    }else{
+      Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: new Text(res.body.toString()),
+        ),
+      );
+
+    }
   }
 
   getAuthCode() async {

@@ -15,7 +15,6 @@ class MyProfileRepository {
     }
     String userID = PreferenceUtil.getStringValue(profileKey);
     final response = await _helper.getProfileInfo(query.qr_Userprofile +
-        query.qr_slash +
         userID +
         query.qr_slash +
         query.qr_sections +
@@ -32,7 +31,6 @@ class MyProfileRepository {
     String userID = PreferenceUtil.getStringValue(profileKey);
 
     final response = await _helper.getProfileInfo(query.qr_Userprofile +
-        query.qr_slash +
         userID +
         query.qr_slash); //?sections=generalInfo"
     return ProfileCompleteData.fromJson(response);

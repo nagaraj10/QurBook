@@ -357,13 +357,13 @@ class AddProvidersState extends State<AddProviders> {
           doctorController.text = widget.arguments.data.name != null
               ? toBeginningOfSentenceCase(widget.arguments.data.name)
               : '';
-          isPreferred = widget.arguments.data.isUserDefined;
+          isPreferred = widget.arguments.data.isUserDefined ?? false;
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
           doctorController.text = widget.arguments.hospitalData.name != null
               ? toBeginningOfSentenceCase(widget.arguments.hospitalData.name)
               : '';
-          isPreferred = widget.arguments.hospitalData.isUserDefined;
+          isPreferred = widget.arguments.hospitalData.isUserDefined ?? false;
 
           latitude = widget.arguments.hospitalData.latitude == null
               ? 0.0
@@ -380,7 +380,7 @@ class AddProvidersState extends State<AddProviders> {
           doctorController.text = widget.arguments.labData.name != null
               ? toBeginningOfSentenceCase(widget.arguments.labData.name)
               : '';
-          isPreferred = widget.arguments.labData.isUserDefined;
+          isPreferred = widget.arguments.labData.isUserDefined ?? false;
 
           latitude = widget.arguments.labData.latitude == null
               ? 0.0
@@ -548,7 +548,7 @@ class AddProvidersState extends State<AddProviders> {
 
   Widget _showUser() {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-
+print(selectedFamilyMemberName);
     return InkWell(
         onTap: () {
           if (widget.arguments.fromClass != CommonConstants.myProviders) {
