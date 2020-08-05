@@ -43,7 +43,8 @@ class NotificationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_notification)
         setupActivity()
         val tv = findViewById<TextView>(R.id.recipient_name_tv)
-        tv.text = "${intent.getStringExtra(UNAME)}"
+        FROM_VAL=intent.getStringExtra(FROM)
+        tv.text = "${intent.getStringExtra(FROM)}"
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val nsID:Int=intent.getIntExtra(NS_ID,0)
         nsManager.cancel(nsID)
@@ -76,8 +77,10 @@ class NotificationActivity : AppCompatActivity() {
 
     companion object {
         const val UNAME = "username"
+        const val FROM = "body"
         const val MID = "meeting_id"
         const val NS_ID = "notificationId"
+        var FROM_VAL = ""
     }
 
     fun startChime(mid:String,name:String) {
@@ -170,6 +173,7 @@ class NotificationActivity : AppCompatActivity() {
                     intent.putExtra(MainActivity.MEETING_RESPONSE_KEY, meetingResponseJson)
                     intent.putExtra(MainActivity.MEETING_ID_KEY, meetingId)
                     intent.putExtra(MainActivity.NAME_KEY, attendeeName)
+                    intent.putExtra(MainActivity.FROM_KEY, FROM_VAL)
                     startActivity(intent)
                     finish()
                 }

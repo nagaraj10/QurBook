@@ -129,7 +129,7 @@ class VideoFragment : Fragment, View.OnClickListener,
         // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.fragment_video, container, false)
         initialiseView(v)
-        val name = arguments?.getString(MainActivity.NAME_KEY)
+        val name = arguments?.getString(MainActivity.FROM_KEY)
         _callername?.text=name
 
         Handler(Looper.myLooper()).postDelayed({
@@ -200,7 +200,7 @@ class VideoFragment : Fragment, View.OnClickListener,
 
     private fun startOnGoingNS() {
         val serviceIntent = Intent(activity, AVServices::class.java)
-        serviceIntent.putExtra("name", arguments?.getString(MainActivity.NAME_KEY))
+        serviceIntent.putExtra("name", arguments?.getString(MainActivity.FROM_KEY))
         activity?.let { ContextCompat.startForegroundService(it, serviceIntent) }
     }
 
@@ -280,12 +280,13 @@ class VideoFragment : Fragment, View.OnClickListener,
         private var isHideControl = false
         private var isExistingCall = false
 
-        fun newInstance(meetingId: String,isCallAlive:Boolean=false,name:String): VideoFragment {
+        fun newInstance(meetingId: String,isCallAlive:Boolean=false,name:String,from:String): VideoFragment {
             val fragment = VideoFragment()
             isExistingCall=isCallAlive
             fragment.arguments = Bundle().apply {
                 putString(MainActivity.MEETING_ID_KEY, meetingId)
                 putString(MainActivity.NAME_KEY, name)
+                putString(MainActivity.FROM_KEY, from)
             }
             return fragment
         }

@@ -6,13 +6,18 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:myfhb/telehealth/features/Payment/result_page.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/Payment/ResultPage.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentPage extends StatefulWidget {
   final String redirectUrl;
+  final String paymentId;
+  final String appointmentId;
 
-  PaymentPage({Key key, @required this.redirectUrl}) : super(key: key);
+  PaymentPage({Key key, @required this.redirectUrl,@required this.paymentId,@required this.appointmentId}) : super(key: key);
 
   @override
   _WebViewExampleState createState() => _WebViewExampleState();
@@ -20,28 +25,31 @@ class PaymentPage extends StatefulWidget {
 
 class _WebViewExampleState extends State<PaymentPage> {
   String PAYMENT_URL;
+  String paymentId;
+  String appointmentId;
+  MyProviderViewModel providerViewModel;
 
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
   @override
   void initState() {
+    providerViewModel = new MyProviderViewModel();
     PAYMENT_URL = widget.redirectUrl;
+    paymentId = widget.paymentId;
+    appointmentId = widget.appointmentId;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Payment'),
-        // This drop down menu demonstrates that Flutter widgets can be shown over the web view.
+        title: const Text(TITLE_BAR),
         actions: <Widget>[
           NavigationControls(_controller.future),
           //SampleMenu(_controller.future),
         ],
       ),
-      // We're using a Builder here so we have a context that is below the Scaffold
-      // to allow calling Scaffold.of(context) so we can show a snackbar.
       body: Builder(builder: (BuildContext context) {
         return WebView(
           initialUrl: PAYMENT_URL,
@@ -49,27 +57,27 @@ class _WebViewExampleState extends State<PaymentPage> {
           onWebViewCreated: (WebViewController webViewController) {
             _controller.complete(webViewController);
           },
-          // TODO(iskakaushik): Remove this when collection literals makes it to stable.
           // ignore: prefer_collection_literals
           javascriptChannels: <JavascriptChannel>[
             _toasterJavascriptChannel(context),
           ].toSet(),
           navigationDelegate: (NavigationRequest request) {
-            /*if (request.url.startsWith('https://www.youtube.com/')) {
-              print('blocking navigation to $request}');
-              return NavigationDecision.prevent;
-            }*/
             print('allowing navigation to $request');
+            String finalUrl = request.url.toString();
+            print(finalUrl);
 
-            String finalUrl = request.toString();
+            if (finalUrl.contains(CHECK_URL)) {
+              Uri uri = Uri.parse(finalUrl);
+              String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
+              if(paymentStatus!=null && paymentStatus==CREDIT){
+                String paymentOrderId = uri.queryParameters[PAYMENT_ID];
+                String paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
 
-            //success payment
-            if (finalUrl.contains('status=Y')) {
-              callResultPage(true);
+                updatePayment(paymentId,appointmentId,paymentOrderId,paymentRequestId);
 
-              //failure payment
-            } else if (finalUrl.contains('status=N')) {
-              callResultPage(false);
+              }else{
+                callResultPage(false,'');
+              }
             }
             return NavigationDecision.navigate;
           },
@@ -85,12 +93,13 @@ class _WebViewExampleState extends State<PaymentPage> {
     );
   }
 
-  void callResultPage(bool status) {
+  void callResultPage(bool status,String refNo) {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => ResultPage(
                   status: status,
+                  refNo: refNo,
                 )));
   }
 
@@ -103,6 +112,26 @@ class _WebViewExampleState extends State<PaymentPage> {
           );
         });
   }
+
+  updatePayment(String paymentId,String appointmentId,String paymentOrderId,String paymentRequestId) {
+    updatePaymentStatus(paymentId,appointmentId,paymentOrderId,paymentRequestId).then((value) {
+      if (value.status == 200 && value.success == true && value.response.data.paymentStatus.code==PAYSUC) {
+          callResultPage(true,value.response.data.paymentOrderId);
+      } else {
+       callResultPage(false,'');
+      }
+
+    });
+  }
+
+  Future<UpdatePaymentModel> updatePaymentStatus(
+      String paymentId,String appointmentId,String paymentOrderId,String paymentRequestId) async {
+    UpdatePaymentModel updatePaymentModel =
+    await providerViewModel.updatePaymentStatus(paymentId,appointmentId,paymentOrderId,paymentRequestId);
+
+    return updatePaymentModel;
+  }
+
 }
 
 enum MenuOptions {

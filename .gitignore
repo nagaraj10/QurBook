@@ -28,7 +28,7 @@
 .pub-cache/
 .pub/
 /build/
-/secrets.json
+#/secrets.json
 
 # Web related
 lib/generated_plugin_registrant.dart
