@@ -9,6 +9,7 @@ import 'package:myfhb/src/resources/repository/AuthenticationRepository.dart';
 import 'package:myfhb/src/utils/Validators.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class AddFamilyOTPBloc with Validators implements BaseBloc {
   AuthenticationRepository _authenticationRepository;
@@ -45,11 +46,14 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
   Future<AddFamilyOTPResponse> verifyAddFamilyOtp(
       String enteredMobNumber, String selectedCountryCode, String otp) async {
     var verifyOTP = {};
-    verifyOTP[variable.strSrcName] = CommonConstants.strTrident;
+    //verifyOTP[variable.strSrcName] = CommonConstants.strTrident;
     verifyOTP[variable.strCountryCode] = '+' + selectedCountryCode;
     verifyOTP[variable.strPhoneNumber] = enteredMobNumber;
     verifyOTP[variable.strOTP] = otp;
     verifyOTP[variable.strOperation] = CommonConstants.user_linking;
+    verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
+    verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
+    verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
 
     var jsonString = convert.jsonEncode(verifyOTP);
 

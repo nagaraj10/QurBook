@@ -9,6 +9,7 @@ import 'package:loading/loading.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/bot/ConversationModel.dart';
@@ -195,12 +196,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
     String jsonString = convert.jsonEncode(reqJson);
 
-    
+    HeaderRequest headerRequest=new HeaderRequest();
 
     var response = await http.post(
       mayaUrl,
       body: jsonString,
-      headers: variable.requestHeadersWithoutToken,
+      headers: await headerRequest.getRequesHeaderWithoutToken(),
     );
 
     if (response.statusCode == 200) {

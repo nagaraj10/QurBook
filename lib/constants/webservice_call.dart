@@ -192,9 +192,9 @@ class WebserviceCall {
         variable.qr_email +
         email;
 
-    query = 
+    /*query =
         variable.qr_sections +
-        query;
+        query;*/
 
     return query;
   }

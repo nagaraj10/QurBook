@@ -912,8 +912,8 @@ class _MyFamilyState extends State<MyFamily> {
           CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
           var signInData = {};
-          signInData[variable.strCountryCode] = "+" + _selected.dialingCode;
-          signInData[variable.strPhoneNumber] = mobileNoController.text;
+          signInData[variable.strCountryCode] = '+'+_selected.dialingCode;
+          signInData[variable.strPhoneNumber] = mobileNoController.text.replaceAll('+91','');
           signInData[variable.strisPrimaryUser] = isPrimaryNoSelected;
           signInData[variable.strFirstName] = firstNameController.text;
           signInData[variable.strMiddleName]= middleNameController.text.length > 0

@@ -38,7 +38,10 @@ class RecordInfoCard {
               children: <Widget>[
                 ClipOval(
                     child: metaInfo.doctor != null
-                        ? getDoctorProfileImageWidget(metaInfo)
+                        ? Container(
+                        width: 50,
+                        height: 50,
+                        color: Color(fhbColors.bgColorContainer))//getDoctorProfileImageWidget(metaInfo)
                         : Container(
                             width: 50,
                             height: 50,

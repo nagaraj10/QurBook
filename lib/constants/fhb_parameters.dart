@@ -298,3 +298,7 @@ const String APPOINTMENT_CONFIRM='Your appointment is now confirmed';
 const String UNABLE_PROCESS='We unable to reach your process..';
 
 
+const String strSourceCode='sourceCode';
+const String strEntityCode='entityCode';
+const String strRoleCode='roleCode';
+

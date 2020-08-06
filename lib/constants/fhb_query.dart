@@ -57,7 +57,7 @@ const String qr_generalInfo='generalInfo';
 const String qr_gender='gender=';
 const String qr_bloodgroup='bloodGroup=';
 const String qr_dateOfBirth='dateOfBirth=';
-const String qr_name='name';
+const String qr_name='name=';
 const String qr_firstName='firstName=';
 const String qr_middleName='middleName=';
 const String qr_lastname='lastName=';

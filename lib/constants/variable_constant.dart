@@ -149,16 +149,16 @@ const String icon_download = 'assets/icons/record_download.png';
 const String icon_delete = 'assets/icons/record_delete.png';
 const String icon_stetho = 'assets/icons/stetho.png';
 const String icon_otp = 'assets/icons/otp_icon.png';
-const String icon_multi='assets/icons/img_multi.png';
-const String icon_image_single='assets/icons/img_single.png';
-const String icon_digit_reco='assets/settings/digit_recognition.png';
-const String icon_device_recon='assets/settings/device_recognition.png';
-const String icon_provider='assets/navicons/my_providers.png';
-const String icon_records='assets/navicons/records.png';
-const String icon_th='assets/navicons/th.png';
-const String icon_home='assets/navicons/home.png';
-const String icon_schedule='assets/navicons/schedule.png';
-const String icon_more='assets/navicons/more.png';
+const String icon_multi = 'assets/icons/img_multi.png';
+const String icon_image_single = 'assets/icons/img_single.png';
+const String icon_digit_reco = 'assets/settings/digit_recognition.png';
+const String icon_device_recon = 'assets/settings/device_recognition.png';
+const String icon_provider = 'assets/navicons/my_providers.png';
+const String icon_records = 'assets/navicons/records.png';
+const String icon_th = 'assets/navicons/th.png';
+const String icon_home = 'assets/navicons/home.png';
+const String icon_schedule = 'assets/navicons/schedule.png';
+const String icon_more = 'assets/navicons/more.png';
 
 //for File
 const String file_termsandconditions =
@@ -172,7 +172,7 @@ const String file_terms = 'assets/help_docs/termsandconditions.html';
 
 //for Family Font
 const String font_poppins = 'Poppins';
-const String font_roboto='Roboto';
+const String font_roboto = 'Roboto';
 
 //for class bookmark_record
 const String strBookmarkRecord = 'bookmark record';
@@ -365,46 +365,9 @@ const String strUpdateData = 'Updating Data';
 const String strgetMediaTypes = 'Getting Media Types';
 const String strGetProfileData = 'Getting ProfileData';
 
-String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-
-Map<String, String> requestHeadersWithoutToken = {
-  'Content-type': 'application/json',
-  'Accept': 'application/json',
-};
-
-Map<String, String> requestHeadersAuthContent = {
-  'Content-type': 'application/json',
-  'Authorization': authToken,
-};
-
-Map<String, String> requestHeaders = {
-  'Content-type': 'application/json',
-  'Accept': 'application/json',
-  'Authorization': authToken,
-};
-
-Map<String, String> requestHeadersAuthAccept = {
-  'accept': 'application/json',
-  'Authorization': authToken,
-};
-
-Map<String, String> requestHeadersAuthStar = {
-  'accept': '*/*',
-  'Authorization': authToken,
-};
-const String Auth_token_slots =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjb3VudHJ5Q29kZSI6Iis5MSIsImV4cGlyeURhdGUiOjE1OTQ1MjkzNzMzNDAsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNlc3Npb25EYXRlIjoxNTk0NTI1NzczMzQwLCJzZXNzaW9uUm9sZXMiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJzb3VyY2VJbmZvIjp7InN1YlNvdXJjZUlkIjoiMjRlMTViZTMtOTY5NS00NGY3LTgyMjktMzRmZjRlZjgxMzk2IiwiZW50aXR5SWQiOiI5MmJkYzdiMS1kNTAwLTQ5MDEtYmZlOC04ZTE5YTA5ZmZhZDQiLCJyb2xlSWQiOiI4ZjQ1ZjQ0Mi02ODVhLTRiOGItODZlNy1iOTNlNjlkODA5NmQiLCJpc0RldmljZSI6ZmFsc2UsImRldmljZUlkIjoiIn0sInN1YmplY3QiOiI5ODQwOTcyMjc1IiwidXNlcklkIjoiYWQ1ZDJkMzctNGVhZi00ZDkxLTk5ZTgtYTA3ODgxZDcyNjQ5IiwiaWF0IjoxNTk0NTI1NzczLCJleHAiOjE1OTgxMjU3NzMsImF1ZCI6ImUxMzAxOWE0LTE0NDYtNDQxYi04YWYxLTcyYzQwYzcyNTU0OCIsImlzcyI6IkZIQiIsImp0aSI6ImExNDUxMzNlLTA4NTctNGQyMi1iNTAwLWY3MjEyMDlmNmI5YiJ9.MGP2eiAC4pYgMsHzFig1nowJObJ9TSfjPLbuRJVQciw';
-
-Map<String, String> requestHeadersTimeSlot = {
-  'Authorization': authToken,
-  'Content-Type': 'application/json'
+String authToken;
 
 
-};
-
-Map<String, String> auth = {
-  'authorization': authToken,
-};
 
 const String straccept = 'accept';
 const String strContentType = 'Content-Type';
@@ -467,8 +430,8 @@ const String strEnterLastName = 'Enter LastName';
 const voice_platform = const MethodChannel('flutter.native/voiceIntent');
 const version_platform = const MethodChannel('flutter.native/versioncode');
 const tts_platform = const MethodChannel('flutter.native/textToSpeech');
-const security=const MethodChannel('flutter.native/security');
-const String strWaitLoading='wait! Its loading';
+const security = const MethodChannel('flutter.native/security');
+const String strWaitLoading = 'wait! Its loading';
 
 const String _wordsFromMaya = 'waiting for maya to speak';
 const String strhiMaya = 'Hi Maya';
@@ -486,100 +449,100 @@ const String strCropping = 'cropping...';
 
 List<String> documentList = ['Hospital IDS', 'Insurance IDs', 'Other IDs'];
 const String strFalse = 'false';
-const String strSkip='Skip';
-const String strImgNtClear='Image not clear';
+const String strSkip = 'Skip';
+const String strImgNtClear = 'Image not clear';
 
 
 //for device screen
-const String strGlucUnit='mgdl';
-const String strbfood='Before Food';
-const String strafood='After Food';
-const String strpulseUnit='%spo2';
-const String strpulse='pulse';
-const String strbpunit='mmHg';
-const String strbpdp='dp';
+const String strGlucUnit = 'mgdl';
+const String strbfood = 'Before Food';
+const String strafood = 'After Food';
+const String strpulseUnit = '%spo2';
+const String strpulse = 'pulse';
+const String strbpunit = 'mmHg';
+const String strbpdp = 'dp';
 
-const String strBefore='Before';
-const String strNo='No';
+const String strBefore = 'Before';
+const String strNo = 'No';
 
-const String strdflit='assets/device_detection.tflite';
-const String file_device ="assets/devicelabels.txt";
-const String strOthers='Others';
-const String strDeviceFound='We find the device is';
-const String strChoose='Choose';
-const String strYES='YES';
-const String strNO='NO';
-const String strConfirm='Confirm';
+const String strdflit = 'assets/device_detection.tflite';
+const String file_device = "assets/devicelabels.txt";
+const String strOthers = 'Others';
+const String strDeviceFound = 'We find the device is';
+const String strChoose = 'Choose';
+const String strYES = 'YES';
+const String strNO = 'NO';
+const String strConfirm = 'Confirm';
 
-const String strBP='BP';
-const String strWS='WS';
-const String strDT='DT';
-const String strPO='PO';
-const String strGL='GL';
+const String strBP = 'BP';
+const String strWS = 'WS';
+const String strDT = 'DT';
+const String strPO = 'PO';
+const String strGL = 'GL';
 
 
-const String strBPMonitor='BP Monitor';
-const String strWeighingScale='Weighing Scale';
-const String strThermo='Thermometer';
+const String strBPMonitor = 'BP Monitor';
+const String strWeighingScale = 'Weighing Scale';
+const String strThermo = 'Thermometer';
 
-const String strtrue='true';
-const String strAllowDigit='Allow digit recognition';
-const String strScanDevices='scans for the values from device images';
-const String strAllowDevice='Allow device recognition';
-const String strScanAuto='scans and auto-detects devices';
+const String strtrue = 'true';
+const String strAllowDigit = 'Allow digit recognition';
+const String strScanDevices = 'scans for the values from device images';
+const String strAllowDevice = 'Allow device recognition';
+const String strScanAuto = 'scans and auto-detects devices';
 
 //for homescreen and dashboard
-const String strMyInfo='My Info';
-const String strMyFamily='My Family';
-const String strMyProvider='My Provider';
-const String  strExtImg='.png';
-const String strTelehealth='TeleHealth';
-const String strMyRecords='My Records';
-const String strhome='Home';
-const String strSchedule='Schedules';
-const String strMore='More';
-const String strClose='Close';
+const String strMyInfo = 'My Info';
+const String strMyFamily = 'My Family';
+const String strMyProvider = 'My Provider';
+const String strExtImg = '.png';
+const String strTelehealth = 'TeleHealth';
+const String strMyRecords = 'My Records';
+const String strhome = 'Home';
+const String strSchedule = 'Schedules';
+const String strMore = 'More';
+const String strClose = 'Close';
 
 //introslider
 
- List<String> slideIcons = [
-    'assets/slide_icons/slide1.png',
-    'assets/slide_icons/slide2.png',
-    'assets/slide_icons/slide3.png',
-    'assets/slide_icons/slide4.png',
-    'assets/slide_icons/slide5.png'
-  ];
-  const String strDONE='DONE';
-  const String strSKIP='SKIP';
+List<String> slideIcons = [
+  'assets/slide_icons/slide1.png',
+  'assets/slide_icons/slide2.png',
+  'assets/slide_icons/slide3.png',
+  'assets/slide_icons/slide4.png',
+  'assets/slide_icons/slide5.png'
+];
+const String strDONE = 'DONE';
+const String strSKIP = 'SKIP';
 
-  const String strSearchRecords='Search your records';
-const String strOK='OK';
-const String strCANCEL='CANCEL';
-const String strOKAY='OKAY';
-const String strValidPhoneNumber='Enter a valid mobile number';
-const String strGetAppVersion='getAppVersion';
-const String strSecure='secureMe';
-const String strpop='SystemNavigator.pop';
-const String strFailed='Failed to Invoke: ';
+const String strSearchRecords = 'Search your records';
+const String strOK = 'OK';
+const String strCANCEL = 'CANCEL';
+const String strOKAY = 'OKAY';
+const String strValidPhoneNumber = 'Enter a valid mobile number';
+const String strGetAppVersion = 'getAppVersion';
+const String strSecure = 'secureMe';
+const String strpop = 'SystemNavigator.pop';
+const String strFailed = 'Failed to Invoke: ';
 
-const String strformateedAddress='formateedAddress';
-const String strformateedPhoneNumber='formateedPhoneNumber';
-const String st_pausedplayer='paused player';
+const String strformateedAddress = 'formateedAddress';
+const String strformateedPhoneNumber = 'formateedPhoneNumber';
+const String st_pausedplayer = 'paused player';
 
-const String strNoData='No data Available';
-const String strViewPDF='View PDF';
-const String strLogout='Logout';
-const String strLogoutMsg='Stay Healthy.. See you Soon. \nMaya will be waiting to serve you.';
-const String strYes='Yes';
-const String strRelaoding='Relaoding';
-const String strStartNow='Start now';
-const String strAccounts='Accounts';
-const String strDevices='Devices';
+const String strNoData = 'No data Available';
+const String strViewPDF = 'View PDF';
+const String strLogout = 'Logout';
+const String strLogoutMsg = 'Stay Healthy.. See you Soon. \nMaya will be waiting to serve you.';
+const String strYes = 'Yes';
+const String strRelaoding = 'Relaoding';
+const String strStartNow = 'Start now';
+const String strAccounts = 'Accounts';
+const String strDevices = 'Devices';
 
-const String strLauncher='@mipmap/ic_launcher';
+const String strLauncher = '@mipmap/ic_launcher';
 
-const String video_splash='assets/video/splash_video.mp4';
-const String strRs='Rs';
+const String video_splash = 'assets/video/splash_video.mp4';
+const String strRs = 'Rs';
 
 //webcognito
 const source = 'myFHB';
@@ -587,6 +550,8 @@ const sourceCode = "e13019a4-1446-441b-8af1-72c40c725548";
 const entityCode = "28858877-4710-4dd3-899f-0efe0e9255db";
 const roleCode = "285bbe41-3030-4b0e-b914-00e404a77032";
 const redirecturl = 'http://localhost:4200/callback?code=';
+const String strNoDoctordata = 'No Doctor List Available';
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   final parts = token.split('.');
@@ -600,6 +565,7 @@ Map<String, dynamic> parseJwtPayLoad(String token) {
   }
   return payloadMap;
 }
+
 Map<String, dynamic> parseJwtHeader(String token) {
   final parts = token.split('.');
   if (parts.length != 3) {
@@ -612,6 +578,7 @@ Map<String, dynamic> parseJwtHeader(String token) {
   }
   return payloadMap;
 }
+
 String _decodeBase64(String str) {
   String output = str.replaceAll('-', '+').replaceAll('_', '/');
   switch (output.length % 4) {
@@ -627,9 +594,7 @@ String _decodeBase64(String str) {
       throw Exception('Illegal base64url string!"');
   }
   return utf8.decode(base64Url.decode(output));
-
-
-
 }
 
-const String strNoDoctordata = 'No Doctor List Available';
+
+

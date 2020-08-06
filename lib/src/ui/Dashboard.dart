@@ -383,19 +383,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void moveToFamilyOrprovider(int position) {
-    /* Navigator.pushNamed(
+     Navigator.pushNamed(
       context,
       router.rt_UserAccounts,
       arguments: UserAccountsArguments(selectedIndex: position),
-    );*/
+    );
 
-    Navigator.of(context).push(
+   /* Navigator.of(context).push(
       MaterialPageRoute(
         settings: RouteSettings(name: router.rt_UserAccounts),
         builder: (context) => UserAccounts(
             arguments: UserAccountsArguments(selectedIndex: position)),
       ),
-    );
+    );*/
   }
 
   moveToNextScreen(int position) {

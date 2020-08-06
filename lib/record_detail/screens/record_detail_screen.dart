@@ -15,6 +15,7 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/record_detail/bloc/deleteRecordBloc.dart';
+import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/screens/record_info_card.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
@@ -71,7 +72,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   int _current = 0;
   int index = 0;
   int length = 0;
-  List<dynamic> imagesPathMain = new List();
+  List<ImageDocumentResponse> imagesPathMain = new List();
   PermissionStatus permissionStatus = PermissionStatus.undetermined;
   final Permission _storagePermission =
       Platform.isAndroid ? Permission.storage : Permission.photos;
@@ -84,6 +85,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   var pdfFile;
   List<MediaMasterIds> mediMasterId = new List();
+
   @override
   void initState() {
     super.initState();
@@ -429,11 +431,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
-          case CommonConstants.categoryDescriptionNotes:
+      case CommonConstants.categoryDescriptionNotes:
         return RecordInfoCard().getCardForBillsAndOthers(
             widget.data.metaInfo, widget.data.createdOn);
         break;
-
 
       default:
         return RecordInfoCard().getCardForPrescription(
@@ -526,7 +527,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       _healthReportListForUserBlock
           .switchDataToOtherUser(userId, widget.data.id)
           .then((moveMetaDataResponse) {
-           
         if (moveMetaDataResponse.success) {
           _healthReportListForUserBlock.getHelthReportList().then((value) {
             PreferenceUtil.saveCompleteData(
@@ -536,7 +536,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new FHBBasicWidget()
                   .showInSnackBar(moveMetaDataResponse.message, scaffold_state);
             });
-
 
             Navigator.pop(context);
             Navigator.pop(context);
@@ -765,7 +764,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
           break;
 
-          case Constants.STR_NOTES:
+        case Constants.STR_NOTES:
           String fileName = widget.data.metaInfo.fileName;
 
           new CommonDialogBox().getDialogBoxForNotes(
@@ -998,7 +997,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     createdDate = dateFormatter.format(parsedDate);
   }
 
-  Widget getCarousalImage(List<dynamic> imagesPath) {
+  Widget getCarousalImage(List<ImageDocumentResponse> imagesPath) {
     if (imagesPath != null && imagesPath.length > 0) {
       index = _current + 1;
       _current = 0;
@@ -1030,12 +1029,17 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                           return Builder(
                             builder: (BuildContext context) {
                               return Container(
+                                  height: double.infinity,
+                                  child: Image.network(
+                                      imgUrl.response.data.fileContent, height: 50,
+                                    width: 50,));
+                              /*Container(
                                 height: double.infinity,
                                 child: Image.memory(
                                   Uint8List.fromList(imgUrl),
                                   fit: BoxFit.fill,
                                 ),
-                              );
+                              );*/
                             },
                           );
                         }).toList(),
@@ -1079,7 +1083,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 
-  Widget getDocumentImageWidgetClone() {
+  Widget getDocumentImageWidgetCloneOld() {
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
@@ -1092,6 +1096,56 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     return StreamBuilder<ApiResponse<List<dynamic>>>(
       stream: _healthReportListForUserBlock.imageListStream,
       builder: (context, AsyncSnapshot<ApiResponse<List<dynamic>>> snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return Center(
+                  child: SizedBox(
+                child: CircularProgressIndicator(),
+                width: 30,
+                height: 30,
+              ));
+              break;
+
+            case Status.ERROR:
+              return Center(
+                  child: Text(Constants.STR_ERROR_LOADING_IMAGE,
+                      style: TextStyle(color: Colors.red)));
+              break;
+
+            case Status.COMPLETED:
+              /* if (ispdfPresent) {
+                pdfFile = snapshot.data.data;
+              } else {*/
+              //imagesPathMain.addAll(snapshot.data.data);
+              /* }*/
+              return Container() ;//getCarousalImage(snapshot.data.data);
+              break;
+          }
+        } else {
+          return Container(
+            width: 100,
+            height: 100,
+          );
+        }
+      },
+    );
+  }
+
+  Widget getDocumentImageWidgetClone() {
+    if (_healthReportListForUserBlock != null) {
+      _healthReportListForUserBlock = null;
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    } else {
+      _healthReportListForUserBlock = new HealthReportListForUserBlock();
+    }
+
+    _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
+
+    return StreamBuilder<ApiResponse<List<ImageDocumentResponse>>>(
+      stream: _healthReportListForUserBlock.imageListStream,
+      builder: (context,
+          AsyncSnapshot<ApiResponse<List<ImageDocumentResponse>>> snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:

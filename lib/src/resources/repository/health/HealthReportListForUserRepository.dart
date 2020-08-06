@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
 import 'package:myfhb/record_detail/model/UpdateMediaResponse.dart';
 import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
@@ -111,12 +112,22 @@ class HealthReportListForUserRepository {
     return UpdateMediaResponse.fromJson(response);
   }
 
-  Future<List<dynamic>> getDocumentImageList(
+  Future<List<dynamic>> getDocumentImageListOld(
       List<MediaMasterIds> metaMasterIdList) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.getDocumentImageList(
        query.qr_mediameta + userID + query.qr_slash+query.qr_rawMedia, metaMasterIdList);
     return response;
+  }
+
+  Future<List<ImageDocumentResponse>> getDocumentImageList(
+      List<MediaMasterIds> metaMasterIdList) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var imagesList = new List<ImageDocumentResponse>();
+
+     imagesList = await _helper.getDocumentImageList(
+        query.qr_mediameta + userID + query.qr_slash+query.qr_rawMedia, metaMasterIdList);
+    return imagesList;
   }
 }

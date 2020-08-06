@@ -33,7 +33,7 @@ class GeneralInfo {
       this.createdOn,
       this.lastModifiedOn,
       this.dateOfBirth,
-      this.profilePicThumbnail});
+      this.profilePicThumbnail,this.qualifiedFullName});
 
   GeneralInfo.fromJson(Map<String, dynamic> json) {
     name = json[parameters.strName];

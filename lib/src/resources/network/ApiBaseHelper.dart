@@ -8,12 +8,15 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/HeaderRequest.dart';
+
 
 import 'AppException.dart';
 
@@ -23,11 +26,13 @@ class ApiBaseHelper {
 
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
+  HeaderRequest headerRequest=new HeaderRequest();
+
   Future<dynamic> signIn(String url, String jsonData) async {
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
-          body: jsonData, headers: variable.requestHeadersWithoutToken);
+          body: jsonData, headers: await headerRequest.getRequesHeaderWithoutToken());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -40,7 +45,7 @@ class ApiBaseHelper {
 
     try {
       final response = await http.post(_baseUrl + url,
-          body: otpVerifyData, headers: variable.requestHeadersWithoutToken);
+          body: otpVerifyData, headers: await headerRequest.getRequesHeaderWithoutToken());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -50,10 +55,12 @@ class ApiBaseHelper {
 
   Future<dynamic> verifyAddFamilyOTP(String url, String otpVerifyData) async {
     var responseJson;
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     try {
       final response = await http.post(_baseUrl + url,
-          body: otpVerifyData, headers: variable.requestHeadersAuthContent);
+          body: otpVerifyData,
+          headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -61,12 +68,13 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> deleteHealthRecord(
-      String url, String healthRecordData) async {
+  Future<dynamic> deleteHealthRecord(String url,
+      String healthRecordData) async {
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
-          body: healthRecordData, headers: variable.requestHeadersAuthContent);
+          body: healthRecordData,
+          headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -79,7 +87,8 @@ class ApiBaseHelper {
 
     try {
       final response = await http.post(_baseUrl + url,
-          body: bookmarkData, headers: variable.requestHeadersAuthContent);
+          body: bookmarkData,
+          headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -91,7 +100,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.put(_baseUrl + url,
-          body: '', headers: variable.requestHeadersAuthContent);
+          body: '', headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -101,6 +110,8 @@ class ApiBaseHelper {
 
   Future<dynamic> updateTeleHealthProviders(String url, String query) async {
     Dio dio = new Dio();
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
     var responseJson;
 
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
@@ -122,8 +133,9 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
-          body: jsonData, headers: variable.requestHeaders);
+          body: jsonData, headers: await headerRequest.getRequestHeader());
       responseJson = _returnResponse(response);
+      print(responseJson.toString());
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -134,7 +146,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url,
-          headers: variable.requestHeadersAuthAccept);
+          headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -154,7 +166,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url,
-          headers: variable.requestHeadersAuthContent);
+          headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -168,18 +180,18 @@ class ApiBaseHelper {
    * Created by Parvathi M on 7th Jan 2020
    */
 
-   Future<dynamic> getHealthRecordList(String url, {bool condition}) async {
+  Future<dynamic> getHealthRecordList(String url, {bool condition}) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
       if (condition) {
         String baseURL = "https://dev.healthbook.vsolgmi.com/hb/api/v3/";
-        final response = await http.get(baseURL + url, headers: variable.auth);
+        final response = await http.get(baseURL + url, headers: await headerRequest.getAuth());
         responseJson = _returnResponse(response);
       } else {
         final response = await http.get(_baseUrl + url,
-            headers: variable.requestHeadersAuthAccept);
+            headers: await headerRequest.getRequestHeadersAuthAccept());
         responseJson = _returnResponse(response);
       }
     } on SocketException {
@@ -194,7 +206,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url,
-          headers: variable.requestHeadersAuthAccept);
+          headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -208,7 +220,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url,
-          headers: variable.requestHeadersAuthStar);
+          headers: await headerRequest.getRequestHeaderWithStar());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -222,7 +234,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url,
-          headers: variable.requestHeadersAuthAccept);
+          headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -237,7 +249,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url,
-          headers: variable.requestHeadersAuthAccept);
+          headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -251,7 +263,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url + param,
-          headers: variable.requestHeadersAuthAccept);
+          headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -262,11 +274,11 @@ class ApiBaseHelper {
 
   Future<dynamic> getFamilyMembersList(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-print(authToken);
+    print(authToken);
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url,
-          headers: variable.requestHeadersAuthAccept);
+          headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -280,7 +292,7 @@ print(authToken);
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url,
-          headers: variable.requestHeadersAuthAccept);
+          headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -293,7 +305,7 @@ print(authToken);
       case 200:
         var responseJson;
         if (response.headers[variable.strcontenttype] ==
-                variable.file_img_jpg ||
+            variable.file_img_jpg ||
             response.headers[variable.strcontenttype] ==
                 variable.file_img_png ||
             response.headers[variable.strcontenttype] ==
@@ -353,7 +365,7 @@ print(authToken);
     var response;
     try {
       response = await http.post(_baseUrl + url,
-          body: jsonBody, headers: variable.requestHeaders);
+          body: jsonBody, headers: await headerRequest.getRequestHeader());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -374,11 +386,14 @@ print(authToken);
       dio.options.headers[variable.straccept] = variable.strAcceptVal;
       dio.options.headers[variable.strcontenttype] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
-      String fileNoun = file.path.split('/').last;
+      String fileNoun = file.path
+          .split('/')
+          .last;
 
       FormData formData = new FormData.fromMap({
         parameters.strmediaMetaId: metaID,
-        parameters.strfile: await MultipartFile.fromFile(file.path, filename: fileNoun)
+        parameters.strfile: await MultipartFile.fromFile(
+            file.path, filename: fileNoun)
       });
       response = await dio.post(_baseUrl + url, data: formData);
 
@@ -388,8 +403,8 @@ print(authToken);
     }
   }
 
-  Future<dynamic> signUpPage(
-      String url, Map<String, dynamic> mapForSignUp) async {
+  Future<dynamic> signUpPage(String url,
+      Map<String, dynamic> mapForSignUp) async {
     var responseJson;
     try {
       Dio dio = new Dio();
@@ -409,12 +424,10 @@ print(authToken);
   }
 
   Future<dynamic> addUserLinking(String url, String jsonData) async {
-   
-
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
-          body: jsonData, headers: variable.requestHeaders);
+          body: jsonData, headers: await headerRequest.getRequestHeader());
       responseJson = _returnResponse(response);
       print(response.body.toString());
     } on SocketException {
@@ -424,12 +437,10 @@ print(authToken);
   }
 
   Future<dynamic> addUserDeLinking(String url, String jsonData) async {
-  
-
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
-          body: jsonData, headers: variable.requestHeaders);
+          body: jsonData, headers: await headerRequest.getRequestHeader());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -437,12 +448,14 @@ print(authToken);
     return responseJson;
   }
 
-  Future<dynamic> updateFamilyUserProfile(String url,String query) async {
+  Future<dynamic> updateFamilyUserProfile(String url, String query) async {
     Dio dio = new Dio();
     var responseJson;
 
     dio.options.headers[variable.strContentType] = variable.strcntVal;
     dio.options.headers[variable.strAuthorization] = authToken;
+    dio.options.headers[variable.straccept] = variable.strAcceptVal;
+
 
     Map<String, dynamic> mapForSignUp = new Map();
     mapForSignUp[parameters.strSections] = query;
@@ -453,7 +466,6 @@ print(authToken);
     //responseJson = _returnResponse(response.data);
 
     return response.data;
-
 
 
     /*var responseJson;
@@ -467,14 +479,13 @@ print(authToken);
     return responseJson;*/
   }
 
-  Future<dynamic> updateRelationShipUserInFamilyLinking(
-      String url, String jsonData) async {
-    
-
+  Future<dynamic> updateRelationShipUserInFamilyLinking(String url,
+      String jsonData) async {
     var responseJson;
     try {
       final response = await http.put(_baseUrl + url,
-          body: jsonData, headers: variable.requestHeadersAuthContent);
+          body: jsonData,
+          headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -485,11 +496,11 @@ print(authToken);
   Future<dynamic> getCustomRoles(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-   
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url, headers: variable.requestHeadersAuthStar);
+      final response = await http.get(
+          _baseUrl + url, headers: await headerRequest.getRequestHeaderWithStar());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -497,22 +508,24 @@ print(authToken);
     return responseJson;
   }
 
-  Future<dynamic> saveImageToServerClone1(
-      String url, File file, String jsonBody) async {
+  Future<dynamic> saveImageToServerClone1(String url, File file,
+      String jsonBody) async {
     var response;
     try {
       String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
       Dio dio = new Dio();
 
-       dio.options.headers[variable.straccept] = variable.strAcceptVal;
+      dio.options.headers[variable.straccept] = variable.strAcceptVal;
       dio.options.headers[variable.strcontenttype] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
-      String fileNoun = file.path.split('/').last;
+      String fileNoun = file.path
+          .split('/')
+          .last;
 
       FormData formData = new FormData.fromMap({
         parameters.strprofilePic:
-            await MultipartFile.fromFile(file.path, filename: fileNoun)
+        await MultipartFile.fromFile(file.path, filename: fileNoun)
       });
       response = await dio.put(_baseUrl + url, data: formData);
 
@@ -523,13 +536,11 @@ print(authToken);
   }
 
   Future<dynamic> moveMetaDataToOtherUser(String url, String jsonBody) async {
-   
-
     var responseJson;
     var response;
     try {
       response = await http.post(_baseUrl + url,
-          body: jsonBody, headers: variable.requestHeaders);
+          body: jsonBody, headers: await headerRequest.getRequestHeader());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -542,12 +553,12 @@ print(authToken);
   Future<dynamic> updateMediaData(String url, String jsonBody) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-  
+
     var responseJson;
     var response;
     try {
       response = await http.put(_baseUrl + url,
-          body: jsonBody, headers: variable.requestHeaders);
+          body: jsonBody, headers: await headerRequest.getRequestHeader());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -557,18 +568,16 @@ print(authToken);
     return responseJson;
   }
 
-  Future<List<dynamic>> getDocumentImageList(
-      String url, List<MediaMasterIds> metaMasterIdList) async {
+  Future<List<dynamic>> getDocumentImageListOld(String url,
+      List<MediaMasterIds> metaMasterIdList) async {
     var imagesList = new List<dynamic>();
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     for (int i = 0; i < metaMasterIdList.length; i++) {
-     
-
       var responseJson;
       try {
         final response = await http.get(_baseUrl + url + metaMasterIdList[i].id,
-            headers: variable.requestHeadersAuthAccept);
+            headers: await headerRequest.getRequestHeadersAuthAccept());
         responseJson = _returnResponse(response);
       } on SocketException {
         throw FetchDataException('No Internet connection');
@@ -579,15 +588,36 @@ print(authToken);
     return imagesList;
   }
 
+  Future<List<ImageDocumentResponse>> getDocumentImageList(String url,
+      List<MediaMasterIds> metaMasterIdList) async {
+    var imagesList = new List<ImageDocumentResponse>();
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    for (int i = 0; i < metaMasterIdList.length; i++) {
+      var responseJson;
+      try {
+        final response = await http.get(_baseUrl + url + metaMasterIdList[i].id,
+            headers: await headerRequest.getRequestHeadersAuthAccept());
+        responseJson = _returnResponse(response);
+      } on SocketException {
+        throw FetchDataException('No Internet connection');
+      }
+
+      imagesList.add(ImageDocumentResponse.fromJson(responseJson));
+    }
+
+    return imagesList;
+  }
+
   Future<dynamic> signoutPage(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-   
 
     var responseJson;
     var response;
     try {
-      response = await http.put(_baseUrl + url, headers: variable.requestHeadersAuthAccept);
+      response = await http.put(
+          _baseUrl + url, headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -600,12 +630,12 @@ print(authToken);
   Future<dynamic> getSearchMediaFromServer(String url, String param) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-   
 
     var responseJson;
     try {
       final response =
-          await http.get(_baseUrl + url + param, headers: variable.requestHeadersAuthAccept);
+      await http.get(
+          _baseUrl + url + param, headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -624,11 +654,14 @@ print(authToken);
 
       dio.options.headers[variable.strContentType] = variable.strAcceptVal;
       dio.options.headers[variable.strAuthorization] = authToken;
-      String fileNoun = file.path.split('/').last;
+      String fileNoun = file.path
+          .split('/')
+          .last;
 
       FormData formData = new FormData.fromMap({
         parameters.strmediaMetaInfo: metaID,
-        parameters.strfile: await MultipartFile.fromFile(file.path, filename: fileNoun)
+        parameters.strfile: await MultipartFile.fromFile(
+            file.path, filename: fileNoun)
       });
       response = await dio.post(_baseUrl + url, data: formData);
 
@@ -641,11 +674,11 @@ print(authToken);
   Future<dynamic> verifyEmail(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-   
 
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url, headers: variable.requestHeadersAuthAccept);
+      final response = await http.post(
+          _baseUrl + url, headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -657,13 +690,13 @@ print(authToken);
   Future<dynamic> verifyOTPFromEmail(String url, String otpVerifyData) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    
 
     var responseJson;
 
     try {
       final response = await http.post(_baseUrl + url,
-          body: otpVerifyData, headers: variable.requestHeadersAuthContent);
+          body: otpVerifyData,
+          headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -674,11 +707,12 @@ print(authToken);
   Future<dynamic> getDoctorsFromId(String url, String param) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-   
+
     var responseJson;
     try {
       final response =
-          await http.get(_baseUrl + url + param, headers: variable.requestHeadersAuthAccept);
+      await http.get(
+          _baseUrl + url + param, headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -690,11 +724,12 @@ print(authToken);
   Future<dynamic> getHospitalAndLabUsingId(String url, String param) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-   
+
     var responseJson;
     try {
       final response =
-          await http.get(_baseUrl + url + param, headers: variable.requestHeadersAuthAccept);
+      await http.get(
+          _baseUrl + url + param, headers: await headerRequest.getRequestHeadersAuthAccept());
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -704,11 +739,11 @@ print(authToken);
   }
 
   Future<dynamic> getTelehealthDoctorsList(String url) async {
-   
     var responseJson;
     try {
       final response =
-          await http.get(_baseUrlV2 + url, headers: variable.requestHeadersAuthAccept);
+      await http.get(
+          _baseUrlV2 + url, headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
       print(responseJson);
     } on SocketException {
@@ -718,12 +753,11 @@ print(authToken);
   }
 
   Future<dynamic> bookMarkDoctor(String url, String jsonBody) async {
-    
     var responseJson;
     try {
       final response = await http.post(_baseUrlV2 + url,
-          headers: variable.requestHeaders, body: jsonBody);
-      
+          headers: await headerRequest.getRequestHeader(), body: jsonBody);
+
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -732,13 +766,11 @@ print(authToken);
   }
 
   Future<dynamic> getTimeSlotsList(String url, String jsonBody) async {
-   
-
     var responseJson;
     try {
       final response = await http.post(_baseUrlV2 + url,
-          headers: variable.requestHeadersTimeSlot, body: jsonBody);
-      
+          headers: await headerRequest.getRequestHeadersTimeSlot(), body: jsonBody);
+
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -754,13 +786,10 @@ print(authToken);
   }
 
   Future<dynamic> bookAppointment(String url, String jsonBody) async {
-
-
     var responseJson;
     try {
       final response = await http.post(_baseUrlV2 + url,
-          headers: variable.requestHeadersTimeSlot, body: jsonBody);
-      print(variable.requestHeadersTimeSlot.toString());
+          headers: await headerRequest.getRequestHeadersTimeSlot(), body: jsonBody);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -769,15 +798,11 @@ print(authToken);
   }
 
 
-
   Future<dynamic> updatePayment(String url, String jsonBody) async {
-
-
     var responseJson;
     try {
       final response = await http.post(_baseUrlV2 + url,
-          headers: variable.requestHeadersTimeSlot, body: jsonBody);
-      print(variable.requestHeadersTimeSlot.toString());
+          headers: await headerRequest.getRequestHeadersTimeSlot(), body: jsonBody);
 
       responseJson = _returnResponse(response);
     } on SocketException {

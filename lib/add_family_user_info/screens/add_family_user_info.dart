@@ -324,7 +324,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               }
 
               for (String bloodRange in variable.bloodRangeArray) {
-                if (bloodGroupSplitName[1][0] == bloodRange) {
+                if (bloodGroupSplitName[1] == bloodRange) {
                   selectedBloodRange = bloodRange;
                 }
               }
@@ -997,7 +997,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (selectedBloodGroup != null && selectedBloodRange != null) {
           addFamilyUserInfoBloc.bloodGroup =
-              selectedBloodGroup + '_' + selectedBloodRange;
+              selectedBloodGroup + ' ' + selectedBloodRange;
         }
 
         addFamilyUserInfoBloc.profilePic = MySliverAppBar.imageURI;

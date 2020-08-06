@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
 import 'package:myfhb/record_detail/model/UpdateMediaResponse.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
@@ -56,9 +57,9 @@ class HealthReportListForUserBlock implements BaseBloc {
   Stream<ApiResponse<UpdateMediaResponse>> get metaDataUpdateStream =>
       _metaDataUpdateController.stream;
 
-  StreamSink<ApiResponse<List<dynamic>>> get imageListSink =>
+  StreamSink<ApiResponse<List<ImageDocumentResponse>>> get imageListSink =>
       _imageListController.sink;
-  Stream<ApiResponse<List<dynamic>>> get imageListStream =>
+  Stream<ApiResponse<List<ImageDocumentResponse>>> get imageListStream =>
       _imageListController.stream;
 
   @override
@@ -89,7 +90,7 @@ class HealthReportListForUserBlock implements BaseBloc {
     _metaDataUpdateController =
         StreamController<ApiResponse<UpdateMediaResponse>>();
 
-    _imageListController = StreamController<ApiResponse<List<dynamic>>>();
+    _imageListController = StreamController<ApiResponse<List<ImageDocumentResponse>>>();
   }
 
   Future<UserHealthResponseList> getHelthReportList({bool condtion}) async {
@@ -190,9 +191,26 @@ class HealthReportListForUserBlock implements BaseBloc {
     return updateMediaResponse;
   }
 
-  Future<List<dynamic>> getDocumentImageList(
+  /*Future<List<dynamic>> getDocumentImageListOld(
       List<MediaMasterIds> metaMasterIdList) async {
     List<dynamic> userHealthResponseList;
+    imageListSink.add(ApiResponse.loading(variable.strUpdateData));
+
+    try {
+      userHealthResponseList = await _healthReportListForUserRepository
+          .getDocumentImageList(metaMasterIdList);
+
+      imageListSink.add(ApiResponse.completed(userHealthResponseList));
+    } catch (e) {
+      imageListSink.add(ApiResponse.error(e.toString()));
+    }
+
+    return userHealthResponseList;
+  }*/
+
+  Future<List<ImageDocumentResponse>> getDocumentImageList(
+      List<MediaMasterIds> metaMasterIdList) async {
+    List<ImageDocumentResponse> userHealthResponseList;
     imageListSink.add(ApiResponse.loading(variable.strUpdateData));
 
     try {

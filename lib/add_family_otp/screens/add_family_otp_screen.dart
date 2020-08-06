@@ -18,6 +18,8 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'dart:convert' as convert;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 
 
 class AddFamilyOTPScreen extends StatefulWidget {
@@ -485,7 +487,11 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             : '';
     signInData[variable.strLastName] = widget.arguments.enteredLastName;
     signInData[variable.strRelation] = widget.arguments.relationShip.id;
+    signInData[variable.strOperation] = CommonConstants.user_linking;
 
+    signInData[parameters.strSourceId] = parameters.strSrcIdVal;
+    signInData[parameters.strEntityId] =parameters.strEntityIdVal;
+    signInData[parameters.strRoleId] = parameters.strRoleIdVal;
     var jsonString = convert.jsonEncode(signInData);
 
     if (widget.arguments.isPrimaryNoSelected) {
