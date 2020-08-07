@@ -17,16 +17,16 @@ class WebCognitoScreen extends StatefulWidget {
 }
 
 class _WebCognitoScreenState extends State<WebCognitoScreen> {
- // var _url ='https://myfhb-dev-v3.auth.us-east-2.amazoncognito.com/login?client_id=6llcfsioe822tngnnvdndtv7ti&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:4200/callback';
+  var _url =
+      'https://myfhb-dev-v3.auth.us-east-2.amazoncognito.com/login?client_id=6llcfsioe822tngnnvdndtv7ti&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:4200/callback';
 
-  var _url='';
   final _key = UniqueKey();
   bool _loading = true;
   var _isPageCompleted = false;
   bool showSpinner = true;
   _WebCognitoScreenState();
   UserModel saveuser = UserModel();
-  String authcode='';
+  String authcode;
   String last_name;
   String first_name;
   String special;
@@ -45,58 +45,16 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
     // TODO: implement initState
     super.initState();
     PreferenceUtil.init();
-    getAuthCode();
+   // attemptLogIn();
   }
 
   @override
   Widget build(BuildContext context) {
-    return (authcode!=null && authcode!='')?getWeBViewWidget():_url!=''?getWeBViewWidget():getLoginURL();
-    // }
-  }
-
-  getLoginURL() {
-   return  new FutureBuilder<String>(
-      future: attemptLogIn(),
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Scaffold(
-            body: Center(child: new CircularProgressIndicator()),
-          );
-        } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
-        } else {
-          return getWeBViewWidget();
-        }
-      },
-    );
-  }
-
-
-  Widget getWeBViewWidget(){
+    print(_url);
     return Scaffold(
         body: Column(
           children: [
-            Expanded(
-                child: WebView(
-                  key: _key,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  initialUrl: _url,
-                  debuggingEnabled: true,
-                  navigationDelegate: (NavigationRequest req) {
-                    if (req.url.startsWith(redirecturl)) {
-                      print('blocking navigation to ${req.url}');
-                      getCode(req.url);
-                      return NavigationDecision.prevent;
-                    }
-                    return NavigationDecision.navigate;
-                    showSpinner = false;
-                  },
-                  onPageFinished: (url) {
-                    setState(() {
-                      showSpinner = false;
-                    });
-                  },
-                )),
+            getLoginURL(),
             showSpinner
                 ? Center(
               child: CircularProgressIndicator(
@@ -106,6 +64,31 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
                 : Container(color: Colors.transparent),
             //Expanded(child: Text('$mycode')),
           ],
+        ));
+    // }
+  }
+
+  Widget getWebViewWidget(){
+    return Expanded(
+        child: WebView(
+          key: _key,
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: _url,
+          debuggingEnabled: true,
+          navigationDelegate: (NavigationRequest req) {
+            if (req.url.startsWith(redirecturl)) {
+              print('blocking navigation to ${req.url}');
+              getCode(req.url);
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+            showSpinner = false;
+          },
+          onPageFinished: (url) {
+            setState(() {
+              showSpinner = false;
+            });
+          },
         ));
   }
   Future<String> attemptLogIn() async {
@@ -124,12 +107,11 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       print(_data);
       String url = _data['loginUrl'];
       _url = _data["result"]['loginUrl'];
-      print(_url);
-      //return res.body;
+return url;      //return res.body;
     }
   }
 
-// added cognito login and signup
+  // added cognito login and signup
   void getCode(String url) {
     var mURL = url;
     List slicedURL = mURL.split('=');
@@ -142,6 +124,8 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
   save(String key, dynamic value) async {
     PreferenceUtil.saveString(key, value);
   }
+
+
 
   Future<String> getAuthToken(String code) async {
     Map<String, dynamic> postImage = new Map();
@@ -165,13 +149,13 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       saveuser.userId = userId;
       print(userId);
       id_token_string = parseJwtPayLoad(decodesstring)['token']
-          ['ProviderPayload']['id_token'];
+      ['ProviderPayload']['id_token'];
       print(id_token_string);
 
       token1 = parseJwtPayLoad(decodesstring)['token']['ProviderPayload'];
       print(token1);
       String countrycode =
-          parseJwtPayLoad(decodesstring)['token']['countryCode'];
+      parseJwtPayLoad(decodesstring)['token']['countryCode'];
       print(countrycode);
       var id_tokens = parseJwtPayLoad(id_token_string);
       print(id_tokens);
@@ -203,14 +187,14 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       PreferenceUtil.save("user_details", saveuser);
 
       authToken=decodesstring;
-    // redirecting to dashboard screen using userid
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => DashboardScreen()));
-      //Navigator.pop(context, 'code:${mURL}');
-    });
+      // redirecting to dashboard screen using userid
+      Future.delayed(Duration(seconds: 3), () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => DashboardScreen()));
+        //Navigator.pop(context, 'code:${mURL}');
+      });
     }else{
       Scaffold.of(context).showSnackBar(
         SnackBar(
@@ -222,17 +206,29 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
   }
 
   getAuthCode() async {
-    try{
-      authcode = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-
-    }catch(e){
-
-    }
-      //getAuthToken(authcode);
+    setState(() {
+      authcode = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      getAuthToken(authcode);
       //TODO: More restoring of settings would go here...
-
+    });
   }
 
 
+  getLoginURL() {
+    new FutureBuilder<String>(
+      future: attemptLogIn(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return new Scaffold(
+            body: Center(child: new CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasError) {
+          return new Text('Error: ${snapshot.error}');
+        } else {
+          return getWebViewWidget();
+        }
+      },
+    );
+  }
 
 }

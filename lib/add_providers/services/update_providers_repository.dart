@@ -13,7 +13,9 @@ class UpdateProvidersRepository {
   Future<UpdateProvidersId> updateDoctorsIdWithUserDetails(
       String providerId, bool isPreferred) async {
     // final response = await _helper .updateProviders("userProfiles/$userID/?sections=${query}");
-    final response = await _helper.updateTeleHealthProviders(webserviceCall.getUrlToUpdateDoctor(),
+    String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    final response = await _helper.updateTeleHealthProviders(webserviceCall.getUrlToUpdateDoctor(userID),
         webserviceCall.getQueryToUpdateDoctor(isPreferred, providerId));
 
     return UpdateProvidersId.fromJson(response);

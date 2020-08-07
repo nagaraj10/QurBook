@@ -26,9 +26,8 @@ class WebserviceCall {
     return query;
   }
 
-  String getUrlToUpdateDoctor() {
+  String getUrlToUpdateDoctor(String userID) {
     String query;
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     query = variable.qr_Userprofile + userID + variable.qr_slash;
 
     return query;
