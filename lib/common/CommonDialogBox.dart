@@ -229,9 +229,9 @@ class CommonDialogBox {
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath);
-                  })
-                :  containsAudioMain
+              onPostDataToServer(context, imagePath);
+            })
+                : containsAudioMain
                 ? fhbBasicWidget.getAudioIconWithFile(
                 audioPathMain,
                 containsAudioMain,
@@ -255,7 +255,9 @@ class CommonDialogBox {
                       audioPathMain = audioPath;
                       containsAudioMain = containsAudio;
                       updateAudioUI(containsAudioMain, audioPathMain);
-                    }),
+                      setState(() {});
+
+                        }),
                 fhbBasicWidget.getSaveButton(() {
                   onPostDataToServer(context, imagePath);
                 })
@@ -446,6 +448,7 @@ class CommonDialogBox {
                             audioPathMain = audioPath;
                             containsAudioMain = containsAudio;
                             updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
                           }),
                           fhbBasicWidget.getSaveButton(() {
                             onPostDataToServer(context, imagePath);
@@ -551,6 +554,7 @@ class CommonDialogBox {
                             audioPathMain = audioPath;
                             containsAudioMain = containsAudio;
                             updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
                           }),
                           fhbBasicWidget.getSaveButton(() {
                             onPostDataToServer(context, imagePath);
@@ -730,6 +734,7 @@ class CommonDialogBox {
                             audioPathMain = audioPath;
                             containsAudioMain = containsAudio;
                             updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
                           }),
                           fhbBasicWidget.getSaveButton(() {
                             onPostDataToServer(context, imagePath);
@@ -896,6 +901,7 @@ class CommonDialogBox {
                               audioPathMain = audioPath;
                               containsAudioMain = containsAudio;
                               updateAudioUI(containsAudioMain, audioPathMain);
+                              setState(() {});
                             }),
                             fhbBasicWidget.getSaveButton(() {
                               onPostDataToServer(context, imagePath);
@@ -1016,6 +1022,7 @@ class CommonDialogBox {
                             audioPathMain = audioPath;
                             containsAudioMain = containsAudio;
                             updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
                           }),
                           fhbBasicWidget.getSaveButton(() {
                             onPostDataToServer(context, imagePath);
@@ -1165,6 +1172,7 @@ class CommonDialogBox {
                             audioPathMain = audioPath;
                             containsAudioMain = containsAudio;
                             updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
                           }),
                           fhbBasicWidget.getSaveButton(() {
                             onPostDataToServer(context, imagePath);
@@ -1303,6 +1311,7 @@ class CommonDialogBox {
                             audioPathMain = audioPath;
                             containsAudioMain = containsAudio;
                             updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
                           }),
                           fhbBasicWidget.getSaveButton(() {
                             onPostDataToServer(context, imagePath);
@@ -1454,6 +1463,7 @@ class CommonDialogBox {
                             audioPathMain = audioPath;
                             containsAudioMain = containsAudio;
                             updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
                           }),
                           fhbBasicWidget.getSaveButton(() {
                             onPostDataToServer(context, imagePath);
@@ -2061,6 +2071,7 @@ print(params);
                             audioPathMain = audioPath;
                             containsAudioMain = containsAudio;
                             updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
                           }),
                           fhbBasicWidget.getSaveButton(() {
                             onPostDataToServer(context, null);
@@ -2309,6 +2320,7 @@ print(params);
                             audioPathMain = audioPath;
                             containsAudioMain = containsAudio;
                             updateAudioUI(containsAudioMain, audioPathMain);
+                            setState(() {});
                           }),
                           fhbBasicWidget.getSaveButton(() {
                             onPostDataToServer(context, imagePath);

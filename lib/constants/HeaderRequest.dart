@@ -53,10 +53,9 @@ class HeaderRequest{
     Map<String, String> requestHeaders = new Map();
 
     requestHeaders['Content-type'] = 'application/json';
-    requestHeaders['application/json'] = 'application/json';
+    requestHeaders['accept'] = 'application/json';
 
-    requestHeaders['Authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    requestHeaders['Authorization'] = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     return requestHeaders;
   }

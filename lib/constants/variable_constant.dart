@@ -210,7 +210,7 @@ const String strve = 've';
 
 List<String> assetSample = [
   'assets/samples/sample.aac',
-  'assets/samples/sample.aac',
+  'assets/samples/sample.mp3',
   'assets/samples/sample.opus',
   'assets/samples/sample.caf',
   'assets/samples/sample.mp3',

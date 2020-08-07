@@ -59,8 +59,7 @@ class HealthReportListForUserRepository {
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
-    var response = await _helper.saveMediaData(
-       query.qr_mediameta+ id + query.qr_slash +query.qr_savedmedia, jsonString);
+    var response = await _helper.saveMediaData(query.qr_mediameta+ id + query.qr_slash +query.qr_savedmedia, jsonString);
     return SavedMetaDataResponse.fromJson(response);
   }
 

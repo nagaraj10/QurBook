@@ -360,19 +360,12 @@ class ApiBaseHelper {
 
   Future<dynamic> saveMediaData(String url, String jsonBody) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    Map<String, String> requestHeaders = new Map();
 
-    requestHeaders['Content-type'] = 'application/json';
-    requestHeaders['application/json'] = 'application/json';
-
-    requestHeaders['Authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    print(headerRequest.getRequestHeader());
     var responseJson;
     var response;
     try {
       response = await http.post(_baseUrl + url,
-          body: jsonBody, headers: requestHeaders);
+          body: jsonBody, headers: await headerRequest.getRequestHeader());
 
       responseJson = _returnResponse(response);
     } on SocketException {
