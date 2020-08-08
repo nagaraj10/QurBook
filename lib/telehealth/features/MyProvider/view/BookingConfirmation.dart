@@ -155,7 +155,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     scheduleDate =
         commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
 
-    fees = widget.docs[widget.i].fees.consulting.fee;
+    try{
+      fees = widget.docs[widget.i].fees.consulting.fee;
+
+    }catch(e)
+    {
+      fees='';
+    }
 
     print(fees);
   }
