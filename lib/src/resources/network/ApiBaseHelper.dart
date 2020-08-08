@@ -21,8 +21,7 @@ import 'package:myfhb/constants/HeaderRequest.dart';
 import 'AppException.dart';
 
 class ApiBaseHelper {
-  final String _baseUrl = Constants.BASEURL_V2;
-  final String _baseUrlV2 = Constants.BASEURL_V2;
+  final String _baseUrl = Constants.BASE_URL;
 
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -336,7 +335,7 @@ class ApiBaseHelper {
             Constants.STR_OTPMISMATCHED) {
           return responseJson;
         } else {
-          SnackbarToLogout();
+          //SnackbarToLogout();
         }
         break;
 
@@ -347,7 +346,7 @@ class ApiBaseHelper {
             Constants.STR_OTPMISMATCHEDFOREMAIL) {
           return responseJson;
         } else {
-          SnackbarToLogout();
+         // SnackbarToLogout();
         }
         break;
 
@@ -743,7 +742,7 @@ class ApiBaseHelper {
     try {
       final response =
       await http.get(
-          _baseUrlV2 + url, headers: await headerRequest.getRequestHeadersAuthAccept());
+          _baseUrl + url, headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
       print(responseJson);
     } on SocketException {
@@ -755,7 +754,7 @@ class ApiBaseHelper {
   Future<dynamic> bookMarkDoctor(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrlV2 + url,
+      final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeader(), body: jsonBody);
 
       responseJson = _returnResponse(response);
@@ -768,7 +767,7 @@ class ApiBaseHelper {
   Future<dynamic> getTimeSlotsList(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrlV2 + url,
+      final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(), body: jsonBody);
 
       responseJson = _returnResponse(response);
@@ -788,7 +787,7 @@ class ApiBaseHelper {
   Future<dynamic> bookAppointment(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrlV2 + url,
+      final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(), body: jsonBody);
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -801,7 +800,7 @@ class ApiBaseHelper {
   Future<dynamic> updatePayment(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrlV2 + url,
+      final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(), body: jsonBody);
 
       responseJson = _returnResponse(response);
