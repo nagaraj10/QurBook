@@ -109,3 +109,9 @@ const String qr_payment_order_id='paymentOrderId';
 const String qr_payment_req_id='paymentRequestId';
 
 
+//device Integration
+
+const String qr_devicehealthrecord = 'devicehealthrecord/';
+const String qr_savedevicedata='saveDeviceHealthRecord';
+const String qr_getByRecordDataType='getDeviceRecordByDeviceDatatype';
+

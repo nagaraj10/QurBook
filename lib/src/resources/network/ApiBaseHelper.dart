@@ -811,4 +811,40 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> saveDeviceData(String url, String jsonBody) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    var response;
+    try {
+      //print("Posting to localDb from saveDeviceData");
+      response = await http.post(_baseUrl + url,
+          body: jsonBody, headers: await headerRequest.getRequestHeader());
+      responseJson = _returnResponse(response);
+      //print(responseJson);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+
+    return responseJson;
+  }
+
+  Future<dynamic> getByRecordDataType(String url, String jsonBody) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    var response;
+    try {
+      print("Posting to localDb");
+      response = await http.post(_baseUrl + url,
+          body: jsonBody, headers: await headerRequest.getRequestHeader());
+
+      responseJson = _returnResponse(response);
+      print(responseJson);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
 }
