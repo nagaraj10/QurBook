@@ -108,4 +108,14 @@ const String qr_appoint_id='appointmentId';
 const String qr_payment_order_id='paymentOrderId';
 const String qr_payment_req_id='paymentRequestId';
 
+const String qr_input='?input=';
+const String qr_key='key=';
+const String qr_type='type=';
+const String qr_placequery='radius=500&language=en&components=country:IN&sessiontoken=';
+const String qr_ques='?';
+const String qr_latlng='latlng=';
+const String qr_placedid='place_id=';
+const String qr_lang_ko='language=ko';
+const String qr_sessiontoken='sessiontoken=';
+
 

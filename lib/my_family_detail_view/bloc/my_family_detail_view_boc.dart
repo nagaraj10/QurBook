@@ -33,7 +33,6 @@ class MyFamilyDetailViewBloc implements BaseBloc {
 
   @override
   void dispose() {
-    // TODO: implement dispose
 
     _healthReportListController?.close();
     _categoryController?.close();

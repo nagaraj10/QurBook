@@ -412,7 +412,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
   }
 
-  // 1
+
   Widget _showMobileNoTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -450,7 +450,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-  // 2
+
   Widget _showNameTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -595,7 +595,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-  // 3
+
   Widget _showRelationShipTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -631,7 +631,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-  // 4
+
   Widget _showEmailAddTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -668,7 +668,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-  // 5
+
   Widget _showGenderTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -705,7 +705,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-  // 6
+
   Widget _showBloodGroupTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -745,7 +745,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             )));
   }
 
-  // 6
+
   Widget _showBloodRangeTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -785,7 +785,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             )));
   }
 
-  // 7
+
   Widget _showDateOfBirthTextField() {
     return GestureDetector(
       onTap: dateOfBirthTapped,

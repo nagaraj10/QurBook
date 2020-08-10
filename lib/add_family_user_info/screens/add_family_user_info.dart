@@ -1018,10 +1018,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               widget.arguments.sharedbyme.profileData.phoneNumber;
 
           if (doValidation()) {
-            if (addFamilyUserInfoBloc.profileBanner != null) {
-              PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                  addFamilyUserInfoBloc.profileBanner.path);
-            }
+           saveProfileImage();
             CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait); //
 
             var signInData = {};
@@ -1071,14 +1068,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         } else if (widget.arguments.fromClass == CommonConstants.user_update) {
           if (doValidation()) {
-            if (addFamilyUserInfoBloc.profileBanner != null) {
-              PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                  addFamilyUserInfoBloc.profileBanner.path);
-            }
-            if (addFamilyUserInfoBloc.profileBanner != null) {
-              PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                  addFamilyUserInfoBloc.profileBanner.path);
-            }
+            saveProfileImage();
             CommonUtil.showLoadingDialog(context, _keyLoader,variable.Please_Wait);
 
             addFamilyUserInfoBloc.updateSelfProfile().then((value) {
@@ -1112,10 +1102,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           addFamilyUserInfoBloc.relationship = relationShipController.text;
 
           if (doValidation()) {
-            if (addFamilyUserInfoBloc.profileBanner != null) {
-              PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                  addFamilyUserInfoBloc.profileBanner.path);
-            }
+            saveProfileImage();
             CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait); //
 
             addFamilyUserInfoBloc.updateUserProfile().then((value) {
@@ -1148,6 +1135,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .showInSnackBar(Constants.STR_NO_CONNECTIVITY, scaffold_state);
       }
     });
+  }
+
+  void saveProfileImage(){
+    if (addFamilyUserInfoBloc.profileBanner != null) {
+      PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+          addFamilyUserInfoBloc.profileBanner.path);
+    }
   }
 
   bool doValidation() {

@@ -49,15 +49,13 @@ Future<void> main() async {
   PreferenceUtil.init();
 
   await DatabaseUtil.getDBLength().then((length) {
-    if (length > 0) {
-    } else {
+    if (length == 0) {
       DatabaseUtil.insertCountryMetricsData();
     }
   });
 
   await DatabaseUtil.getDBLengthUnit().then((length) {
-    if (length > 0) {
-    } else {
+    if (length == 0) {
       DatabaseUtil.insertUnitsForDevices();
     }
   });
@@ -78,8 +76,7 @@ void saveToPreference() async {
       .then((onValue) {
     PreferenceUtil.saveString(Constants.KEY_USERID, Constants.userID)
         .then((onValue) {
-      PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN,'')
-          .then((onValue) {
+      PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, '').then((onValue) {
         PreferenceUtil.saveString(Constants.MOB_NUM, Constants.mobileNumber)
             .then((onValue) {
           PreferenceUtil.saveString(
