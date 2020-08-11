@@ -307,6 +307,7 @@ const String strRoleCode='roleCode';
 //parameters for device Integration
 
 const String strsourceGoogle = "Google Fit";
+const String strsourceHK = "Apple Health";
 const String strdevicesourceName = "sourceType";
 const String strdeviceType = "deviceType";
 const String strdeviceDataType = "deviceDataType";
@@ -329,14 +330,17 @@ const String strParamDiastolic = "diastolic";
 const String strGlucometer = "Glucometer";
 const String strGlusoceLevel = "Blood Glucose";
 const String strParamBGLevel = "bloodGlucoseLevel";
-const String strParamBGUnit = "bgUnitId";
-const String strParamBGMealContext = "mealContextId";
-const String strParamBGMealType = "mealTypeId";
+const String strParamBGUnit = "bgUnit";
+const String strMGDL= "mg/dL";
+const String strParamBGMealContext = "mealContext";
+const String strParamBGMealType = "mealType";
 //Temperature
 const String strThermometer = "Thermometer";
 const String strTemperature = "Body Temperature";
 const String strParamTemp = "temperature";
 const String strParamTempUnit = "temperatureUnitId";
+const String strParamUnitCelsius = "Celsius";
+const String strParamUnitFarenheit = "Farenheit";
 //Weight
 const String strWeighingScale ="Weighing Scale";
 const String strWeight = "Weight";
@@ -350,8 +354,6 @@ const String strParamHeartRate = "bpm";
 //PulseOxymeter
 const String strOxymeter ="Pulse Oximeter";
 const String strOxgenSaturation = "Oxygen Saturation";
-
-
 //Google Fit Params
 
 
