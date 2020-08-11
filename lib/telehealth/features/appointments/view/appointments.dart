@@ -1,7 +1,7 @@
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
@@ -10,14 +10,13 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/mockData.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/telehealth/features/appointments/services/apiServices.dart';
 
 class Appointments extends StatefulWidget {
   @override
@@ -31,18 +30,16 @@ class _AppointmentsState extends State<Appointments> {
   var items = List<String>();
   AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
   List<History> upcomingInfo = List();
-
+  List<String> bookingIds = new List();
   List<History> historyInfo = List();
   bool isSearch = false;
   List<History> upcomingTimeInfo = List();
 
   List<String> hours = List();
   List<String> minutes = List();
-  ApiFetch api = ApiFetch();
 
   @override
   void initState() {
-
     Timer.periodic(Duration(seconds: 1), (Timer t) {
       hours = appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).hours;
       minutes =
@@ -54,10 +51,14 @@ class _AppointmentsState extends State<Appointments> {
         });
       } else {
         setState(() {
-          hours = List.filled(appointmentsViewModel
-              .appointmentsModel.response.data.upcoming.length,'00');
-          minutes = List.filled(appointmentsViewModel
-              .appointmentsModel.response.data.upcoming.length,'00');
+          hours = List.filled(
+              appointmentsViewModel
+                  .appointmentsModel.response.data.upcoming.length,
+              '00');
+          minutes = List.filled(
+              appointmentsViewModel
+                  .appointmentsModel.response.data.upcoming.length,
+              '00');
         });
       }
     });
@@ -68,8 +69,7 @@ class _AppointmentsState extends State<Appointments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: body(),
-        floatingActionButton: commonWidget.floatingButton());
+        body: body(), floatingActionButton: commonWidget.floatingButton());
   }
 
   Widget search() {
@@ -130,6 +130,30 @@ class _AppointmentsState extends State<Appointments> {
     (context as Element).markNeedsBuild();
   }
 
+  Future<CancelAppointmentModel> cancelAppointment(
+      List<History> appointments) async {
+    for (int i = 0; i < appointments.length; i++) {
+      bookingIds.add(appointments[i].bookingId);
+    }
+    CancelAppointmentModel cancelAppointment =
+        await appointmentsViewModel.fetchCancelAppointment(bookingIds);
+
+    return cancelAppointment;
+  }
+
+  FlutterToast toast = new FlutterToast();
+
+  getCancelAppoitment(List<History> appointments) {
+    cancelAppointment(appointments).then((value) {
+      Navigator.pop(context);
+      if (value.status == 200 && value.success == true) {
+        toast.getToast(Constants.YOUR_BOOKING_SUCCESS, Colors.green);
+      } else {
+        toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
+      }
+    });
+  }
+
   Widget body() {
     return SingleChildScrollView(
       child: Container(
@@ -158,7 +182,6 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   Widget getDoctorsAppoinmentsList() {
-
     return FutureBuilder(
         future: appointmentsViewModel.fetchAppointments(),
         builder: (context, AsyncSnapshot snapshot) {
@@ -234,7 +257,9 @@ class _AppointmentsState extends State<Appointments> {
                     ? historyInfo.length != 0
                         ? commonWidget.title(Constants.Appointments_history)
                         : Container()
-                    : commonWidget.title(Constants.Appointments_history),
+                    : appointmentsData.response.data.history.length != 0
+                        ? commonWidget.title(Constants.Appointments_history)
+                        : Container(),
                 SizedBoxWidget(
                   width: 0,
                   height: 10,
@@ -352,7 +377,7 @@ class _AppointmentsState extends State<Appointments> {
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
                       Colors.black38, Constants.Appointments_cancel, () {
-                    api.cancel();
+                    getCancelAppoitment([doc]);
                   }),
                   SizedBoxWidget(width: 15.0),
                 ],

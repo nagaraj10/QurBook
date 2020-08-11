@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -16,9 +17,17 @@ import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/HeaderRequest.dart';
+import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 
 
 import 'AppException.dart';
+
+import 'AppException.dart';
+import 'dart:async';
+import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/src/resources/network/AppException.dart';
+import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
+
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
@@ -346,7 +355,7 @@ class ApiBaseHelper {
             Constants.STR_OTPMISMATCHEDFOREMAIL) {
           return responseJson;
         } else {
-         // SnackbarToLogout();
+          // SnackbarToLogout();
         }
         break;
 
@@ -803,6 +812,57 @@ class ApiBaseHelper {
       final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(), body: jsonBody);
 
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<AppointmentsModel> fetchAppointments() async {
+    String userId=PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    return await http.get(
+      _baseUrl+qr_appointment_fetch+userId,
+      headers: await headerRequest.getAuth(),
+    ).then((http.Response response) {
+      if (response.statusCode == 200) {
+        var resReturnCode =
+        AppointmentsModel.fromJson(jsonDecode(response.body));
+        if (resReturnCode.status == 200) {
+          return AppointmentsModel.fromJson(jsonDecode(response.body));
+        } else {
+          throw Exception(variable.strFailed);
+        }
+      } else {
+        throw Exception(variable.strFailed);
+      }
+    });
+  }
+
+  Future<CancelAppointmentModel> getCancelAppointment(
+      List<String> doctorIds) async {
+    var inputBody = {};
+    inputBody[CANCEL_SOURCE] = PATIENT;
+    inputBody[BOOKING_IDS] = doctorIds;
+
+    var jsonString = convert.jsonEncode(inputBody);
+    print(jsonString);
+    final response =
+    await getApiForCancelAppointment(qr_appointment_cancel, jsonString);
+    return CancelAppointmentModel.fromJson(response);
+  }
+
+  Future<dynamic> getApiForCancelAppointment(
+      String url, String jsonBody) async {
+
+    var responseJson;
+    try {
+//      print(authtoken);
+//      print(url);
+//      print(jsonBody);
+      final response = await http.put(_baseUrl + url,
+          headers: await headerRequest.getRequestHeader(), body: jsonBody);
+      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
