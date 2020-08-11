@@ -1,17 +1,20 @@
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/doctorsData.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
-import 'package:myfhb/telehealth/features/appointments/services/apiServices.dart';
 import 'package:myfhb/telehealth/features/appointments/model/timeModel.dart';
 
 class AppointmentsViewModel extends ChangeNotifier {
+  ApiBaseHelper _helper=ApiBaseHelper();
   AppointmentsModel appointmentsModel;
+  CancelAppointmentModel cancelAppointmentModel = new CancelAppointmentModel();
 
   Future<AppointmentsModel> fetchAppointments() async {
     try {
       AppointmentsModel myAppointmentsModel =
-          await ApiFetch().fetchAppointments();
+      await _helper.fetchAppointments();
 
       appointmentsModel = myAppointmentsModel;
       return appointmentsModel;
@@ -19,16 +22,15 @@ class AppointmentsViewModel extends ChangeNotifier {
   }
 
   DoctorsData filterSearchResults(String query) {
-//    print('ggg+hhh');
     List<History> dummySearchListUpcoming = List<History>();
     List<History> dummySearchListHistory = List<History>();
     DoctorsData data = DoctorsData();
     AppointmentsModel appointments = appointmentsModel;
     dummySearchListUpcoming = appointments.response.data.upcoming
         .where((element) => element.doctorName
-            .toLowerCase()
-            .trim()
-            .contains(query.toLowerCase().trim())||element.location
+        .toLowerCase()
+        .trim()
+        .contains(query.toLowerCase().trim())||element.location
         .toLowerCase()
         .trim()
         .contains(query.toLowerCase().trim()))
@@ -45,7 +47,6 @@ class AppointmentsViewModel extends ChangeNotifier {
         .toList();
     data = DoctorsData(
         upcoming: dummySearchListUpcoming, history: dummySearchListHistory);
-//    print(data.upcoming.length);
     return DoctorsData(
         upcoming: dummySearchListUpcoming, history: dummySearchListHistory);
   }
@@ -53,13 +54,13 @@ class AppointmentsViewModel extends ChangeNotifier {
   Time getStaticValue(){
     List<String> hours;
     List<String> minutes;
-      hours = List.filled(appointmentsModel
-          .response.data.upcoming.length, '00');
-      minutes = List.filled(appointmentsModel
-          .response.data.upcoming.length, '00');
-      Time time;
-      time = Time(minutes: minutes, hours: hours);
-      return time;
+    hours = List.filled(appointmentsModel
+        .response.data.upcoming.length, '00');
+    minutes = List.filled(appointmentsModel
+        .response.data.upcoming.length, '00');
+    Time time;
+    time = Time(minutes: minutes, hours: hours);
+    return time;
   }
 
   Time getTimeSlot(List<History> upcoming,bool isSearch) {
@@ -90,22 +91,24 @@ class AppointmentsViewModel extends ChangeNotifier {
         dummyHour.add(
             dur.inHours.remainder(24).toInt() <= 0 ? '00' : differenceInHours);
       }
-
-
-//      setState(() {
       minutes = dummyMinutes;
-//      print(minutes.toList());
       hours = dummyHour;
-//      });
-
-
       time = Time(minutes: minutes, hours: hours);
 
       return time;
     }else{
 
-      print('gg');
     }
+  }
+
+  Future<CancelAppointmentModel> fetchCancelAppointment(
+      List<String> bookingId) async {
+    try {
+      CancelAppointmentModel cancelAppointment =
+      await _helper.getCancelAppointment(bookingId);
+      cancelAppointmentModel = cancelAppointment;
+      return cancelAppointmentModel;
+    } catch (e) {}
   }
 
 }
