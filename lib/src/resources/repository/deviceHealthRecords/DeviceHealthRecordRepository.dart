@@ -21,9 +21,8 @@ class DeviceHealthRecord {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<dynamic> queryByRecordDatatype(String jsonString) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    //print("trying to post");
-    //String userID = "117bdb52-4f2b-4a3e-8ae6-f0278ba1535b";
+    print(jsonString);
+    String userID = "117bdb52-4f2b-4a3e-8ae6-f0278ba1535b";
 
     var response = await _helper.getByRecordDataType(
         query.qr_devicehealthrecord +
@@ -35,9 +34,8 @@ class DeviceHealthRecord {
   }
 
   Future<dynamic> postDeviceData(String jsonString) async {
-    //String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    //print("Posting from postDeviceData");
     String userID = "117bdb52-4f2b-4a3e-8ae6-f0278ba1535b";
+    //"117bdb52-4f2b-4a3e-8ae6-f0278ba1535b";
     var response = await _helper.saveDeviceData(
         query.qr_devicehealthrecord +
             userID +
@@ -47,4 +45,13 @@ class DeviceHealthRecord {
     return response;
   }
 
+  Future<dynamic> getLastsynctime() async {
+    String userID = "117bdb52-4f2b-4a3e-8ae6-f0278ba1535b";
+
+    var response = await _helper.getLastsynctime(query.qr_devicehealthrecord +
+        userID +
+        query.qr_slash +
+        query.qr_getLastSyncTime);
+    return response;
+  }
 }

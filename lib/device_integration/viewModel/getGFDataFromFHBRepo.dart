@@ -14,10 +14,11 @@ class GetGFDataFromFHBRepo {
     return dateString.toIso8601String();
   }
 
-Future<dynamic> _getDataByDataType(String params) async {
+  Future<dynamic> _getDataByDataType(String params) async {
     try {
       print("trying to query");
       _deviceHealthRecord = DeviceHealthRecord();
+      print(params);
       var response = await _deviceHealthRecord.queryByRecordDatatype(params);
       print("response from querty $response");
       return response;
@@ -26,30 +27,25 @@ Future<dynamic> _getDataByDataType(String params) async {
     }
   }
 
-Future<void> getLatestData( String dataType) async{
-    String startTime = "1577904931000";
-    String endTime = "1580410531000";
+  Future<void> getLatestData(String dataType) async {
+    String startTime = "1596911400000";
+    String endTime = "1597084200000";
 
-    if(dataType == strDataTypeBP){
+    if (dataType == strDataTypeBP) {
       getBPData(startTime, endTime, strsourceGoogle);
-    }
-    else if (dataType == strGlusoceLevel){
+    } else if (dataType == strGlusoceLevel) {
       getBloodGlucoseData(startTime, endTime, strsourceGoogle);
-    }
-    else if (dataType == strWeight){
+    } else if (dataType == strWeight) {
       getWeightData(startTime, endTime, strsourceGoogle);
-    }
-    else if (dataType == strHeartRate){
+    } else if (dataType == strHeartRate) {
       getHeartRateData(startTime, endTime, strsourceGoogle);
-    }
-    else if (dataType == strTemperature){
+    } else if (dataType == strTemperature) {
       getBodyTemperatureData(startTime, endTime, strsourceGoogle);
     }
-
-}
+  }
 
   Future<String> getBPData(
-    String startDate, String endDate, String source) async {
+      String startDate, String endDate, String source) async {
     body.clear();
     body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
     body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
@@ -58,16 +54,14 @@ Future<void> getLatestData( String dataType) async{
     body[strdeviceDataType] = strDataTypeBP;
     String params = json.encode(body);
     try {
-          print("db query to get BP Data $params");
-         var response = await _getDataByDataType(params); 
-         print("response for BPData $response");
-    } catch (e) {
-    }
-
+      print("db query to get BP Data $params");
+      var response = await _getDataByDataType(params);
+      print("response for BPData $response");
+    } catch (e) {}
   }
 
   Future<String> getHeartRateData(
-    String startDate, String endDate, String source) async {
+      String startDate, String endDate, String source) async {
     body.clear();
     body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
     body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
@@ -76,15 +70,13 @@ Future<void> getLatestData( String dataType) async{
     body[strdeviceDataType] = strHeartRate;
     String params = json.encode(body);
     try {
-          print("db query to get BP Data $params");
-         var response = await _getDataByDataType(params); 
-    } catch (e) {
-    }
-
+      print("db query to get HeartRate Data $params");
+      var response = await _getDataByDataType(params);
+    } catch (e) {}
   }
 
   Future<String> getOxygenSaturationData(
-    String startDate, String endDate, String source) async {
+      String startDate, String endDate, String source) async {
     body.clear();
     body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
     body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
@@ -93,15 +85,13 @@ Future<void> getLatestData( String dataType) async{
     body[strdeviceDataType] = strDataTypeBP;
     String params = json.encode(body);
     try {
-          print("db query to get BP Data $params");
-         var response = await _getDataByDataType(params); 
-    } catch (e) {
-    }
-
+      print("db query to get Oxygen Saturation Data $params");
+      var response = await _getDataByDataType(params);
+    } catch (e) {}
   }
 
   Future<String> getWeightData(
-    String startDate, String endDate, String source) async {
+      String startDate, String endDate, String source) async {
     body.clear();
     body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
     body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
@@ -110,15 +100,13 @@ Future<void> getLatestData( String dataType) async{
     body[strdeviceDataType] = strWeight;
     String params = json.encode(body);
     try {
-          print("db query to get BP Data $params");
-         var response = await _getDataByDataType(params); 
-    } catch (e) {
-    }
-
+      print("db query to get weight Data $params");
+      var response = await _getDataByDataType(params);
+    } catch (e) {}
   }
 
   Future<String> getBloodGlucoseData(
-    String startDate, String endDate, String source) async {
+      String startDate, String endDate, String source) async {
     body.clear();
     body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
     body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
@@ -127,15 +115,13 @@ Future<void> getLatestData( String dataType) async{
     body[strdeviceDataType] = strGlusoceLevel;
     String params = json.encode(body);
     try {
-          print("db query to get BP Data $params");
-         var response = await _getDataByDataType(params); 
-    } catch (e) {
-    }
-
+      print("db query to get Blood Glucose Data $params");
+      var response = await _getDataByDataType(params);
+    } catch (e) {}
   }
 
   Future<String> getBodyTemperatureData(
-    String startDate, String endDate, String source) async {
+      String startDate, String endDate, String source) async {
     body.clear();
     body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
     body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
@@ -144,11 +130,8 @@ Future<void> getLatestData( String dataType) async{
     body[strdeviceDataType] = strTemperature;
     String params = json.encode(body);
     try {
-          print("db query to get BP Data $params");
-         var response = await _getDataByDataType(params); 
-    } catch (e) {
-    }
-
+      print("db query to get Body Temperature Data $params");
+      var response = await _getDataByDataType(params);
+    } catch (e) {}
   }
-
 }
