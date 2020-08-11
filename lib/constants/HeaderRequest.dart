@@ -68,4 +68,16 @@ class HeaderRequest{
 
     return requestHeadersAuthAccept;
   }
+
+  Future<Map<String, String>> getRequestHeadersForProvider() async {
+    Map<String, String> requestHeadersAuthContent = new Map();
+
+    requestHeadersAuthContent['Content-type'] = 'application/json';
+    requestHeadersAuthContent['Authorization'] =
+    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    requestHeadersAuthContent['accept'] = 'multipart/form-data';
+
+
+    return requestHeadersAuthContent;
+  }
 }

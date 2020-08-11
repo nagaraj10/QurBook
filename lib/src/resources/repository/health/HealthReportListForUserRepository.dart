@@ -22,7 +22,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 class HealthReportListForUserRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-   Future<UserHealthResponseList> getHealthReportList({bool condition}) async {
+  Future<UserHealthResponseList> getHealthReportList({bool condition}) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper
@@ -49,7 +49,7 @@ class HealthReportListForUserRepository {
 
     try {
       String familyId =
-          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+      PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
       if (familyId.length > 0) {
         id = familyId;
       } else {
@@ -116,7 +116,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.getDocumentImageList(
-       query.qr_mediameta + userID + query.qr_slash+query.qr_rawMedia, metaMasterIdList);
+        query.qr_mediameta + userID + query.qr_slash+query.qr_rawMedia, metaMasterIdList);
     return response;
   }
 
@@ -125,7 +125,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var imagesList = new List<ImageDocumentResponse>();
 
-     imagesList = await _helper.getDocumentImageList(
+    imagesList = await _helper.getDocumentImageList(
         query.qr_mediameta + userID + query.qr_slash+query.qr_rawMedia, metaMasterIdList);
     return imagesList;
   }

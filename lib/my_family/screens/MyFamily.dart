@@ -76,6 +76,9 @@ class _MyFamilyState extends State<MyFamily> {
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
     _familyListBloc.getCustomRoles();
+
+    PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
+
   }
 
   @override
@@ -551,7 +554,7 @@ class _MyFamilyState extends State<MyFamily> {
                                           isPrimaryNoSelected = true;
                                           mobileNoController.text =
                                               PreferenceUtil.getStringValue(
-                                                  Constants.MOB_NUM);
+                                                  Constants.MOB_NUM).replaceAll('+91','');
                                         }
                                       });
                                     },

@@ -481,7 +481,10 @@ class _MyRecordsState extends State<MyRecords> {
           dataObj.categoryName != Constants.STR_FEEDBACK &&
           dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
           dataObj.categoryName != Constants.STR_WEARABLES) {
-        filteredCategoryData.add(dataObj);
+        if(!filteredCategoryData.contains(dataObj)){
+          filteredCategoryData.add(dataObj);
+
+        }
       }
     }
 
@@ -501,6 +504,7 @@ class _MyRecordsState extends State<MyRecords> {
           .toLowerCase()
           .compareTo(b.categoryDescription.toLowerCase());
     });
+
 
     return filteredCategoryData;
   }
@@ -1279,7 +1283,7 @@ class _CustomTabsState extends State<CustomTabView>
         Padding(padding: EdgeInsets.only(top: 10)),
         dataObj.logo != null
             ? Image.network(
-                Constants.BASEURL_V2 + dataObj.logo,
+                Constants.BASE_URL + dataObj.logo,
                 width: 20,
                 height: 20,
                 color: Colors.white,

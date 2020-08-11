@@ -25,7 +25,9 @@ class UpdateProvidersRepository {
   // Hospitals
   Future<UpdateProvidersId> updateHospitalsIdWithUserDetails(
       String providerId, bool isPreferred) async {
-    final response = await _helper.updateProviders(
+    String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    final response = await _helper.updateProviders(webserviceCall.getUrlToUpdateDoctor(userID),
         webserviceCall.getQueryToUpdateHospital(isPreferred, providerId));
     return UpdateProvidersId.fromJson(response);
   }
@@ -34,7 +36,9 @@ class UpdateProvidersRepository {
   // Labs
   Future<UpdateProvidersId> updateLabsIdWithUserDetails(
       String providerId, bool isPreferred) async {
-    final response = await _helper.updateProviders(
+    String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    final response = await _helper.updateProviders(webserviceCall.getUrlToUpdateDoctor(userID),
         webserviceCall.getQueryToUpdateLab(isPreferred, providerId));
     return UpdateProvidersId.fromJson(response);
   }

@@ -104,16 +104,37 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> updateProviders(String url) async {
+  Future<dynamic> updateProvidersOld(String url) async {
     var responseJson;
     try {
-      final response = await http.put(_baseUrl + url,
-          body: '', headers: await headerRequest.getRequestHeadersAuthContent());
+      final response = await http.post(_baseUrl + url,
+          body: '', headers: await headerRequest.getRequestHeadersForProvider());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<dynamic> updateProviders(String url,String query) async {
+    Dio dio = new Dio();
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+
+    dio.options.headers[variable.straccept] = variable.strAcceptVal;
+    dio.options.headers[variable.strContentType] = variable.strcntVal;
+    dio.options.headers[variable.strAuthorization] = authToken;
+
+    Map<String, dynamic> mapForSignUp = new Map();
+    mapForSignUp[parameters.strSections] = query;
+    FormData formData = new FormData.fromMap(mapForSignUp);
+
+    var response = await dio.post(_baseUrl + url, data: formData);
+
+    //responseJson = _returnResponse(response.data);
+
+    return response.data;
   }
 
   Future<dynamic> updateTeleHealthProviders(String url, String query) async {
