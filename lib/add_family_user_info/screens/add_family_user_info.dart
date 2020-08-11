@@ -252,7 +252,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
       }
     } else {
-      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
+      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.transactionId;
       addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
         myProfile = value;
 
@@ -291,8 +291,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (firstTym) {
           firstTym = false;
           setState(() {
-            fetchedProfileData = widget
-                .arguments.sharedbyme.profileData.profilePicThumbnail.data;
+            if(widget.arguments.sharedbyme.profileData!=null){
+              fetchedProfileData = widget
+                  .arguments.sharedbyme.profileData.profilePicThumbnail.data;
+            }
+
           });
         }
       });

@@ -164,7 +164,7 @@ class ApiBaseHelper {
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      final response = await http.get(_baseUrl + url.trim(),
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {

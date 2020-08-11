@@ -189,7 +189,7 @@ class _MyRecordsState extends State<MyRecords> {
                   });
                 case Status.COMPLETED:
                   _categoryListBlock = null;
-                  rebuildAllBlocks();
+                  //rebuildAllBlocks();
                   return snapshot.data.data.response.count == 0
                       ? getEmptyCard()
                       : Container(

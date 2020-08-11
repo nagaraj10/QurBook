@@ -61,7 +61,7 @@ class AddFamilyUserInfoRepository {
           profilePic,
           '');
     } else {
-       response = await _helper.updateFamilyUserProfile(webserviceCall.getUrlToUpdateDoctor(userID),
+      response = await _helper.updateFamilyUserProfile(webserviceCall.getUrlToUpdateDoctor(userID),
           webserviceCall.getQueryToUpdateProfile(
               userID,
               name,
@@ -100,7 +100,7 @@ class AddFamilyUserInfoRepository {
       String lastName) async {
     String query = '';
 
-   
+
     var response;
 
     if (profilePic != null) {

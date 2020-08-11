@@ -95,7 +95,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               Navigator.pop(context, [1]);
             },
           ),
-          title: Text('${widget.arguments.searchWord}' + variable.strSearch)),
+          title: Text('${widget.arguments.searchWord} ' + variable.strSearch)),
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
       // until the controller has finished initializing.

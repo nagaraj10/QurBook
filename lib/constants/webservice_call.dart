@@ -11,10 +11,10 @@ class WebserviceCall {
     String query;
     if (isPreferred) {
       query =
-          "${variable.qr_MedicallPrefernce}${variable.qr_entityDoctor} ${variable.qr_add} ${providerId}${variable.qr_default} ${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qr_entityDoctor}${variable.qr_add}${providerId}${variable.qr_default}${providerId}";
     } else {
       query =
-          "${variable.qr_MedicallPrefernce}${variable.qr_entityDoctor}${variable.qr_add} ${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qr_entityDoctor}${variable.qr_add}${providerId}";
     }
 
     return query;
@@ -22,7 +22,7 @@ class WebserviceCall {
 
   String getUrlToUpdateDoctor(String userID) {
     String query;
-    query = "${variable.qr_Userprofile} ${userID}${variable.qr_slash}";
+    query = "${variable.qr_Userprofile}${userID}${variable.qr_slash}";
 
     return query;
   }
@@ -33,7 +33,7 @@ class WebserviceCall {
     String query;
     if (isPreferred) {
       query =
-          "${variable.qr_MedicallPrefernce} ${variable.qr_entityHospital}${variable.qr_add}${providerId}${variable.qr_default}${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qr_entityHospital}${variable.qr_add}${providerId}${variable.qr_default}${providerId}";
     } else {
       query =
           "${variable.qr_MedicallPrefernce}${variable.qr_entityHospital}${variable.qr_add}${providerId}";
@@ -140,7 +140,7 @@ class WebserviceCall {
       String lastName) {
     String query;
     query =
-        "${variable.qr_generalInfo}${variable.qr_DSlash}${variable.qr_gender}${gender}${variable.qr_OSlash} ${variable.qr_bloodgroup}${bloodGroup}${variable.qr_OSlash}${variable.qr_dateOfBirth}${dateOfBirth}${variable.qr_OSlash}${variable.qr_name}${name}${variable.qr_OSlash}${variable.qr_firstName}${firstName}${variable.qr_OSlash}${variable.qr_middleName}${middleName}${variable.qr_OSlash}${variable.qr_lastname}${lastName}${variable.qr_OSlash}${variable.qr_email}${email}";
+        "${variable.qr_generalInfo}${variable.qr_DSlash}${variable.qr_gender}${gender}${variable.qr_OSlash}${variable.qr_bloodgroup}${bloodGroup}${variable.qr_OSlash}${variable.qr_dateOfBirth}${dateOfBirth}${variable.qr_OSlash}${variable.qr_name}${name}${variable.qr_OSlash}${variable.qr_firstName}${firstName}${variable.qr_OSlash}${variable.qr_middleName}${middleName}${variable.qr_OSlash}${variable.qr_lastname}${lastName}${variable.qr_OSlash}${variable.qr_email}${email}";
 
     /*query =
         variable.qr_sections +
