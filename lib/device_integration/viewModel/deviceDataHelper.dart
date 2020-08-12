@@ -26,13 +26,13 @@ class DeviceDataHelper {
   }
 
   Future<void> deactivateHKT() async {
-    //todo
-    DateTime startDate = DateTime.utc(2020, 07, 01);
-    DateTime endDate = DateTime.now();
-    await _syncHealthKitData.syncHKT(startDate, endDate);
+ //     //todo
   }
 
   Future<void> syncHKT() async {
-    // todo
+   
+    DateTime startDate = DateTime.utc(2020, 07, 01);
+    DateTime endDate = DateTime.now();
+    await _syncHealthKitData.syncHKT(startDate, endDate);
   }
 }

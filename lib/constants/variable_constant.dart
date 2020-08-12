@@ -155,6 +155,7 @@ const String icon_digit_reco = 'assets/settings/digit_recognition.png';
 const String icon_device_recon = 'assets/settings/device_recognition.png';
 const String icon_provider = 'assets/navicons/my_providers.png';
 const String icon_records = 'assets/navicons/records.png';
+const String icon_digit_googleFit = 'assets/settings/googlefit.png';
 const String icon_th = 'assets/navicons/th.png';
 const String icon_home = 'assets/navicons/home.png';
 const String icon_schedule = 'assets/navicons/schedule.png';
@@ -210,7 +211,7 @@ const String strve = 've';
 
 List<String> assetSample = [
   'assets/samples/sample.aac',
-  'assets/samples/sample.aac',
+  'assets/samples/sample.mp3',
   'assets/samples/sample.opus',
   'assets/samples/sample.caf',
   'assets/samples/sample.mp3',
@@ -490,6 +491,14 @@ const String strAllowDigit = 'Allow digit recognition';
 const String strScanDevices = 'scans for the values from device images';
 const String strAllowDevice = 'Allow device recognition';
 const String strScanAuto = 'scans and auto-detects devices';
+
+//for healthKit and googleFit activation and sync
+const String strGoogleFit = "Google Fit";
+const String strAllowGoogle = "Allow app to recieve data from google Fit";
+const String strHealthKit = "Apple Health";
+const String strAllowHealth = "Allow app to recieve data from Apple Health";
+
+
 
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';

@@ -2,6 +2,8 @@ import 'package:health/health.dart';
 import 'dart:async';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'dart:convert' show json;
+import 'package:quiver/iterables.dart';
+
 
 
 class FetchHealthKitData {
@@ -85,7 +87,7 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
 
   Future<String> getBloodPressureData(var startDate, var endDate) async {
     if (await Health.requestAuthorization()) {
-      try {
+         try {
         List<HealthDataPoint> systolicData = await Health.getHealthDataFromType(
             startDate, endDate, HealthDataType.BLOOD_PRESSURE_SYSTOLIC);
         List<HealthDataPoint> diastolicData =
@@ -93,9 +95,33 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
                 startDate, endDate, HealthDataType.BLOOD_PRESSURE_DIASTOLIC);
         systolicData = Health.removeDuplicates(systolicData);
         diastolicData = Health.removeDuplicates(diastolicData);
-        systolicData.forEach((element) { });
 
+        Map<String, dynamic> healthRecord = new Map();
+        if (systolicData.isNotEmpty && diastolicData.isNotEmpty) {
+          healthRecord[strsyncStartDate] = startDate.toIso8601String();
+          healthRecord[strsyncEndDate] = endDate.toIso8601String();
+          healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
+          healthRecord[strdevicesourceName] = strsourceHK;
+          healthRecord[strdeviceType] = strBPMonitor;
+          healthRecord[strdeviceDataType] = strDataTypeBP;
+          List<dynamic> dataSet = [];
+          for (var pair in zip([systolicData, diastolicData])) {
+            if (pair[0].dateFrom == pair[1].dateFrom) {
+              Map<String, dynamic> rawData = new Map();
+              rawData[strStartTimeStamp] = pair[0].dateFrom.toIso8601String();
+              rawData[strEndTimeStamp] = pair[0].dateTo.toIso8601String();
+              rawData[strParamSystolic] = pair[0].value;
+              rawData[strParamDiastolic] = pair[1].value;
 
+              dataSet.add(rawData);
+            } else {
+              print("dates not same ignoring");
+            }
+          }
+          healthRecord[strRawData] = dataSet;
+          String params = json.encode(healthRecord);
+          print(params);
+        }
       } catch (e) {
         print(e.toString());
       }
@@ -167,10 +193,8 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
-            rawData[strParamBGLevel] = healthData.value * 100; //to do
-            if (healthData.unit == "PERCENTAGE") {
-              rawData[strParamBGUnit] = strMGDL; //to do
-            }
+            rawData[strParamOxygen] = healthData.value * 100; 
+        
             dataSet.add(rawData);
           });
           healthRecord[strRawData] = dataSet;

@@ -338,7 +338,7 @@ const String strParamBGMealType = "mealType";
 const String strThermometer = "Thermometer";
 const String strTemperature = "Body Temperature";
 const String strParamTemp = "temperature";
-const String strParamTempUnit = "temperatureUnitId";
+const String strParamTempUnit = "temperatureUnit";
 const String strParamUnitCelsius = "Celsius";
 const String strParamUnitFarenheit = "Farenheit";
 //Weight
@@ -354,6 +354,7 @@ const String strParamHeartRate = "bpm";
 //PulseOxymeter
 const String strOxymeter ="Pulse Oximeter";
 const String strOxgenSaturation = "Oxygen Saturation";
+const String strParamOxygen = "oxygenSaturation";
 //Google Fit Params
 
 

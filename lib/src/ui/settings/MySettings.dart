@@ -5,8 +5,8 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
-
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 
 class MySettings extends StatefulWidget {
   @override
@@ -16,13 +16,15 @@ class MySettings extends StatefulWidget {
 class _MySettingsState extends State<MySettings> {
   bool _isdigitRecognition = true;
   bool _isdeviceRecognition = true;
-  bool _isGoogleFit = true;
-
+  bool _isGFActive = false;
+  bool _isHKActive = false;
+  DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
   @override
   void initState() {
     super.initState();
     PreferenceUtil.init();
     setState(() {
+      _deviceDataHelper = DeviceDataHelper();
       _isdeviceRecognition =
           PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
                   variable.strFalse
@@ -33,6 +35,14 @@ class _MySettingsState extends State<MySettings> {
                   variable.strFalse
               ? false
               : true;
+      _isGFActive = PreferenceUtil.getStringValue(Constants.activateGF) ==
+              variable.strFalse
+          ? false
+          : true;
+      _isHKActive = PreferenceUtil.getStringValue(Constants.activateHK) ==
+              variable.strFalse
+          ? false
+          : true;
     });
   }
 
@@ -125,7 +135,101 @@ class _MySettingsState extends State<MySettings> {
                   height: 1,
                   color: Colors.grey[200],
                 ),
-                            ],
+                ListTile(
+                    leading: ImageIcon(
+                      AssetImage(variable.icon_digit_googleFit),
+                      //size: 30,
+                      color: Colors.black,
+                    ),
+                    title: Text(variable.strGoogleFit),
+                    subtitle: Text(
+                      variable.strAllowGoogle,
+                      style: TextStyle(fontSize: 10),
+                    ),
+                    trailing: Wrap(children: <Widget>[
+                      Transform.scale(
+                        scale: 0.8,
+                        child: IconButton(
+                          icon: Icon(Icons.sync),
+                          onPressed: () {
+                            _deviceDataHelper.syncGF();
+                          },
+                        ),
+                      ),
+                      Transform.scale(
+                        scale: 0.8,
+                        child: Switch(
+                          value: _isGFActive,
+                          activeColor:
+                              Color(new CommonUtil().getMyPrimaryColor()),
+                          onChanged: (bool newValue) {
+                            newValue == true
+                                ? _deviceDataHelper.activateGF()
+                                : _deviceDataHelper.deactivateGF();
+                            setState(() {
+                              _isGFActive = newValue;
+
+                              PreferenceUtil.saveString(
+                                  Constants.activateGF, _isGFActive.toString());
+                            });
+                          },
+                        ),
+                      )
+                    ])),
+                Container(
+                  height: 1,
+                  color: Colors.grey[200],
+                ),
+                ListTile(
+                    leading: Icon(
+                      //AssetImage(variable.icon_digit_appleHealth),
+                      //size: 30,
+                      //color: Colors.black,
+                      Icons.favorite,
+                      color: Colors.pink,
+                    ),
+                    title: Text(variable.strHealthKit),
+                    subtitle: Text(
+                      variable.strAllowHealth,
+                      style: TextStyle(fontSize: 10),
+                    ),
+                    trailing: Wrap(
+                      children: <Widget>[
+                        Transform.scale(
+                          scale: 0.8,
+                          child: IconButton(
+                            icon: Icon(Icons.sync),
+                            onPressed: () {
+                              _deviceDataHelper.syncHKT();
+                            },
+                          ),
+                        ),
+                        Transform.scale(
+                          scale: 0.8,
+                          child: Switch(
+                            value: _isHKActive,
+                            activeColor:
+                                Color(new CommonUtil().getMyPrimaryColor()),
+                            onChanged: (bool newValue) {
+                              newValue == true
+                                  ? _deviceDataHelper.activateHKT()
+                                  : _deviceDataHelper.deactivateHKT();
+                              setState(() {
+                                _isHKActive = newValue;
+
+                                PreferenceUtil.saveString(Constants.activateHK,
+                                    _isHKActive.toString());
+                              });
+                            },
+                          ),
+                        )
+                      ],
+                    )),
+                Container(
+                  height: 1,
+                  color: Colors.grey[200],
+                ),
+              ],
             ),
           )
         ],
