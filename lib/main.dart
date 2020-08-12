@@ -29,6 +29,14 @@ Future<void> main() async {
   // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Obtain a list of the available cameras on the device.
+  final cameras = await availableCameras();
+  listOfCameras = cameras;
+
+  // Get a specific camera from the list of available cameras.
+  firstCamera = cameras[0];
+  routes = await router.setRouter(listOfCameras);
+
   //get secret from resource
   List<dynamic> resList = [];
   await CommonUtil.getResourceLoader().then((value) {
@@ -39,13 +47,6 @@ Future<void> main() async {
     setValues(resList);
   });
 
-  // Obtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
-  listOfCameras = cameras;
-
-  // Get a specific camera from the list of available cameras.
-  firstCamera = cameras[0];
-  routes = await router.setRouter(listOfCameras);
   PreferenceUtil.init();
 
   await DatabaseUtil.getDBLength().then((length) {

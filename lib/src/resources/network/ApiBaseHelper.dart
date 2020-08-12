@@ -134,6 +134,7 @@ class ApiBaseHelper {
 
     //responseJson = _returnResponse(response.data);
 
+    print(response.data);
     return response.data;
   }
 
@@ -422,7 +423,7 @@ class ApiBaseHelper {
       FormData formData = new FormData.fromMap({
         parameters.strmediaMetaId: metaID,
         parameters.strfile: await MultipartFile.fromFile(
-            file.path, filename: fileNoun)
+            file.path, filename: fileNoun.trim())
       });
       response = await dio.post(_baseUrl + url, data: formData);
 

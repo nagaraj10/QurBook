@@ -39,8 +39,7 @@ class WebserviceCall {
           "${variable.qr_MedicallPrefernce}${variable.qr_entityHospital}${variable.qr_add}${providerId}";
     }
 
-    query =
-        "${variable.qr_Userprofile}${userID}${variable.qr_sections}${query}";
+    //query ="${variable.qr_Userprofile}${userID}${variable.qr_sections}${query}";
 
     return query;
   }
@@ -51,14 +50,13 @@ class WebserviceCall {
     String query;
     if (isPreferred) {
       query =
-          "${variable.qr_MedicallPrefernce}${variable.qr_entityHospital}${variable.qr_add}${providerId}${variable.qr_default}${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qy_entitylab}${variable.qr_add}${providerId}${variable.qr_default}${providerId}";
     } else {
       query =
-          "${variable.qr_MedicallPrefernce}${variable.qr_entityHospital}${variable.qr_add}${providerId}";
+          "${variable.qr_MedicallPrefernce}${variable.qy_entitylab}${variable.qr_add}${providerId}";
     }
 
-    query =
-        "${variable.qr_Userprofile}${userID}${variable.qr_sections}${query}";
+    //query ="${variable.qr_Userprofile}${userID}${variable.qr_sections}${query}";
 
     return query;
   }

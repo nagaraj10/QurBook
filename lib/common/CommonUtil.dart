@@ -239,7 +239,7 @@ class CommonUtil {
         _healthReportListForUserBlock
             .getDocumentImage(mediMasterId[i].id)
             .then((snapshot) {
-          if (snapshot.isNotEmpty && k < mediMasterId.length) {
+          if (snapshot!=null && k < mediMasterId.length) {
             k++;
             imageList.add(snapshot);
           } else {}

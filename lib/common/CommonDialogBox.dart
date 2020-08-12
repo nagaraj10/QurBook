@@ -1049,17 +1049,16 @@ class CommonDialogBox {
       if (fileNameClone == '') {
         if (categoryName == CommonConstants.strDevice) {
           fileName = new TextEditingController(
-              text: deviceName +
-                  '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+              text: deviceName+'_${DateTime.now().toUtc().millisecondsSinceEpoch}');
         } else {
           fileName = new TextEditingController(
-              text: categoryName +
-                  '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+              text: categoryName+'_${DateTime.now().toUtc().millisecondsSinceEpoch}');
         }
       } else {
         fileName.text = fileNameClone;
       }
     }
+    print('*************'+fileName.text);
 
   }
 
@@ -1792,7 +1791,7 @@ class CommonDialogBox {
     int k = 0;
     for (int i = 0; i < imagePathMain.length; i++) {
       _healthReportListForUserBlock
-          .saveImage(imagePathMain[i], mediaMetaID, '')
+          .saveImage(imagePathMain[i].trim(), mediaMetaID, '')
           .then((postImageResponse) {
 
         if ((audioPathMain != '' && k == imagePathMain.length) ||

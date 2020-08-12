@@ -44,7 +44,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
   bool isPlaying = false;
 
- 
+
 
   @override
   void initState() {
@@ -86,13 +86,13 @@ class AudioWidgetState extends State<AudioWidget> {
                   onPressed: isPlaying
                       ? onPausePlayerPressed()
                       : flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
-                          ? onPausePlayerPressed()
-                          : onStartPlayerPressed(),
+                      ? onPausePlayerPressed()
+                      : onStartPlayerPressed(),
                   padding: EdgeInsets.all(4.0),
                   child: onStartPlayerPressed() != null
                       ? Icon(
-                          Icons.play_arrow,
-                        )
+                    Icons.play_arrow,
+                  )
                       : Icon(Icons.pause),
                 ),
               ),
@@ -117,12 +117,12 @@ class AudioWidgetState extends State<AudioWidget> {
             flex: 2,
             child: Center(
                 child: Text(
-              this._playerTxt,
-              style: TextStyle(
-                fontSize: 12.0,
-                color: Colors.black,
-              ),
-            )),
+                  this._playerTxt,
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    color: Colors.black,
+                  ),
+                )),
           ),
           Expanded(
               flex: 1,
@@ -159,7 +159,7 @@ class AudioWidgetState extends State<AudioWidget> {
       if (_path[_codec.index] == null) return null;
     }
     return (flutterSound.audioState == t_AUDIO_STATE.IS_STOPPED ||
-            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED)
+        flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED)
         ? startPlayer
         : null;
   }
@@ -212,7 +212,7 @@ class AudioWidgetState extends State<AudioWidget> {
         }
       });
     } catch (err) {
-      
+
     }
 
     setState(() {});
@@ -229,7 +229,7 @@ class AudioWidgetState extends State<AudioWidget> {
       File file = File(path);
       file.openRead();
       var contents = await file.readAsBytes();
-      
+
       return contents;
     } catch (e) {
       return null;
@@ -238,7 +238,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
   onPausePlayerPressed() {
     return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
-            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
+        flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
         ? pausePlayer
         : startPlayer;
   }
@@ -248,7 +248,7 @@ class AudioWidgetState extends State<AudioWidget> {
     try {
       if (flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED) {
         result = await flutterSound.resumePlayer();
-        
+
       } else {
         result = await flutterSound.pausePlayer();
       }
@@ -264,7 +264,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
   onStopPlayerPressed() {
     return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
-            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
+        flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
         ? stopPlayer
         : null;
   }
@@ -272,7 +272,7 @@ class AudioWidgetState extends State<AudioWidget> {
   void stopPlayer() async {
     try {
       String result = await flutterSound.stopPlayer();
-      
+
       if (_playerSubscription != null) {
         _playerSubscription.cancel();
         _playerSubscription = null;

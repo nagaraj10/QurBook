@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
@@ -40,6 +41,8 @@ import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:audioplayer/audioplayer.dart';
+typedef void OnError(Exception exception);
 
 class RecordDetailScreen extends StatefulWidget {
   final MediaMetaInfo data;
@@ -85,6 +88,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   var pdfFile;
   List<MediaMasterIds> mediMasterId = new List();
+
 
   @override
   void initState() {
@@ -1031,8 +1035,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               return Container(
                                   height: double.infinity,
                                   child: Image.network(
-                                      imgUrl.response.data.fileContent, height: 50,
-                                    width: 50,));
+                                      imgUrl.response.data.fileContent,height: 200,width: 200,));
                               /*Container(
                                 height: double.infinity,
                                 child: Image.memory(
@@ -1216,21 +1219,39 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     }
     _healthReportListForUserBlock.getDocumentImage(audioMediaId).then((res) {
-      return downloadMedia(res, context);
+      return downloadMedia(res.response.data.fileContent, context);
     });
   }
 
-  downloadMedia(List data, BuildContext context) {
+  downloadMedia(String url, BuildContext context) async {
     var path;
-    FHBUtils.createFolderInAppDocDir(variable.stAudioPath).then((filePath) {
+    FHBUtils.createFolderInAppDocDir(variable.stAudioPath).then((filePath)async {
+      final bytes =await  _loadFileBytes(url,
+          onError: (Exception exception) =>
+              print('audio_provider.load => exception ${exception}'));
+
+
       path = '$filePath${widget.data.metaInfo.fileName}.mp3';
-      new File(path).writeAsBytesSync(data);
+      new File(path).writeAsBytes(bytes);
+      //await path.writeAsBytes(bytes);
+
       containsAudio = true;
       audioPath = path;
       isAudioDownload = true;
       setState(() {});
     });
   }
+
+  Future<Uint8List> _loadFileBytes(String url, {OnError onError}) async {
+    Uint8List bytes;
+    try {
+      bytes = await readBytes(url);
+    } on ClientException {
+      rethrow;
+    }
+    return bytes;
+  }
+
 
   showProgressIndicator(MediaMetaInfo data) {
     showAudioWidgetIfVoiceNotesAvailable(data);

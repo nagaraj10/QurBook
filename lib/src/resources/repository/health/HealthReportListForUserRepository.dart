@@ -32,16 +32,16 @@ class HealthReportListForUserRepository {
 
   Future<dynamic> getDoctorProfile(String doctorsId) async {
     final response = await _helper
-        .getDoctorProfilePic(query.qr_doctors + doctorsId +query.qr_slash+query.qr_getprofilepic+query.qr_slash+query.qr_isOriginalPicRequiredTrue);
+        .getDoctorProfilePic(query.qr_doctors + doctorsId +query.qr_slash+query.qr_getprofilepic+query.qr_isOriginalPicRequiredTrue);
     return response;
   }
 
-  Future<dynamic> getDocumentImage(String metaMasterID) async {
+  Future<ImageDocumentResponse> getDocumentImage(String metaMasterID) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.getDocumentImage(
         query.qr_mediameta+ userID + query.qr_slash+query.qr_rawMedia+metaMasterID);
-    return response;
+    return ImageDocumentResponse.fromJson(response);
   }
 
   Future<SavedMetaDataResponse> postMediaData(String jsonString) async {
@@ -82,8 +82,8 @@ class HealthReportListForUserRepository {
 
     var response = await _helper.saveImageToServerClone(
         query.qr_mediamaster + userID +query.qr_slash+query.qr_savedmediamaster,
-        File(fileName),
-        fileName,
+        File(fileName.trim()),
+        fileName.trim(),
         metaID,
         jsonData);
     return PostImageResponse.fromJson(response);
