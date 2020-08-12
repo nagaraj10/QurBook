@@ -7,10 +7,11 @@ import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 
 
 class ImageSlider extends StatefulWidget {
-  final List<dynamic> imageList;
+  final List<ImageDocumentResponse> imageList;
 
   ImageSlider({this.imageList});
 
@@ -57,13 +58,14 @@ class _ImageSliderState extends State<ImageSlider> {
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 
-  showPhotoView(List imageList) {
+  showPhotoView(List<ImageDocumentResponse> imageList) {
     return Container(
         child: PhotoViewGallery.builder(
       scrollPhysics: const BouncingScrollPhysics(),
       builder: (BuildContext context, int index) {
         return PhotoViewGalleryPageOptions(
-            imageProvider: MemoryImage(imageList[index]),
+            imageProvider: NetworkImage(
+                imageList[index].response.data.fileContent),
             initialScale: PhotoViewComputedScale.contained * 1.0,
             minScale: PhotoViewComputedScale.contained * 1.0,
             maxScale: PhotoViewComputedScale.contained * 2.0
