@@ -62,12 +62,18 @@ class SyncGoogleFitData {
 
     print("Start time $startTime");
 
-    // String startTime = "1577894746000";
-    // String endTime = "1585497946000";
+    //startTime = "1596220200000";
+    //endTime = "1597257000000";
 
     String bpParams = await _gfHelper.getBPSummary(startTime, endTime);
     response = await postGFData(bpParams);
-    print("response from BP Sync $response");
+    print(bpParams);
+    if (bpParams != null) {
+      response = await postGFData(bpParams);
+      print("response from Blood Pressure Sync $response");
+    } else {
+      print("There is no Blood Pressure data available to sync in Google Fit");
+    }
 
     response = "";
 
@@ -75,29 +81,32 @@ class SyncGoogleFitData {
     //endTime = "1597084200000";
 
     String weightParams = await _gfHelper.getWeightSummary(startTime, endTime);
-
-    print("WightParam : $weightParams");
+    print(weightParams);
     if (weightParams != null) {
       response = await postGFData(weightParams);
       print("response from Weight Sync $response");
+    } else {
+      print("There is no weight data available to sync in Google Fit");
     }
 
     response = "";
     String heartRateParams =
         await _gfHelper.getHeartRateSummary(startTime, endTime);
-    //print("Hear Rate Param : $heartRateParams");
-    response = await postGFData(heartRateParams);
-    print("Response form Heart Sync $response");
+    print(heartRateParams);
+    if (heartRateParams != null) {
+      response = await postGFData(heartRateParams);
+      print("response from Heart Rate Sync $response");
+    } else {
+      print("There is no Heart Rate data available to sync in Google Fit");
+    }
   }
 
   Future<dynamic> postGFData(String params) async {
     try {
-      //print("trying to postGFData");
       _deviceHealthRecord = DeviceHealthRecord();
-      //var lastsyncDetails = await _deviceHealthRecord.getLastsynctime();
-      //print(lastsyncDetails);
+
       var response = await _deviceHealthRecord.postDeviceData(params);
-      //print("response from PostGFData $response");
+
       return response;
     } catch (e) {
       throw "Sync Google Fit Data to FHB Backend Failed $e";
@@ -113,14 +122,14 @@ class SyncGoogleFitData {
 
       print("body $lastsyncDetails");
 
-      //var response = lastsyncDetails.body;
       String jsonstr = json.encode(lastsyncDetails);
-
       LastSync lastSync = lastSyncFromJson(jsonstr);
-      if (lastSync.response.data.count == 0) return null;
-      print(
-          "last sync time ${lastSync.response.data.healthRecordInfo[0].lastSyncDateTime}");
-      return lastSync.response.data.healthRecordInfo[0].lastSyncDateTime;
+
+      if (!lastSync.isSuccess) return null;
+
+      print("last sync time ${lastSync.result[0].lastSyncDateTime}");
+
+      return lastSync.result[0].lastSyncDateTime;
     } catch (e) {
       throw "Failed to get Get lastsynctime from FHB DB $e";
     }

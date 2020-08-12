@@ -123,6 +123,7 @@ class FetchGoogleFitData {
           dataSet.add(rawData);
         }
       }
+      if (dataSet.isEmpty) return null;
       healthRecord[strRawData] = dataSet;
       String params = json.encode(healthRecord);
       return params;
@@ -164,6 +165,7 @@ class FetchGoogleFitData {
           dataSet.add(rawData);
         }
       }
+      if (dataSet.isEmpty) return null;
       healthRecord[strRawData] = dataSet;
       String params = json.encode(healthRecord);
       return params;

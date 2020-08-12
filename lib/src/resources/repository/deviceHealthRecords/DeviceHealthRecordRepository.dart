@@ -34,24 +34,38 @@ class DeviceHealthRecord {
   }
 
   Future<dynamic> postDeviceData(String jsonString) async {
-    String userID = "117bdb52-4f2b-4a3e-8ae6-f0278ba1535b";
+    //String userID = "117bdb52-4f2b-4a3e-8ae6-f0278ba1535b"; LocalDB
+    String userID = "49cdc4be-afd9-419e-b3f9-1bd35207c74f";
     //"117bdb52-4f2b-4a3e-8ae6-f0278ba1535b";
-    var response = await _helper.saveDeviceData(
+    /*var response = await _helper.saveDeviceData(
         query.qr_devicehealthrecord +
             userID +
             query.qr_slash +
             query.qr_savedevicedata,
-        jsonString);
+        jsonString);*/
+
+    var response = await _helper.saveDeviceData(
+        query.qr_slash + query.qr_deviceInfo, jsonString);
     return response;
   }
 
   Future<dynamic> getLastsynctime() async {
-    String userID = "117bdb52-4f2b-4a3e-8ae6-f0278ba1535b";
+    String userID = "49cdc4be-afd9-419e-b3f9-1bd35207c74f";
 
-    var response = await _helper.getLastsynctime(query.qr_devicehealthrecord +
+    /*var response = await _helper.getLastsynctime(query.qr_devicehealthrecord +
         userID +
         query.qr_slash +
-        query.qr_getLastSyncTime);
+        query.qr_getLastSyncTime);*/
+
+    var response = await _helper.getLastsynctime(query.qr_slash +
+        query.qr_deviceInfo +
+        query.qr_slash +
+        query.qr_user +
+        query.qr_slash +
+        userID +
+        query.qr_slash +
+        query.qr_lastSync);
+
     return response;
   }
 }

@@ -6,99 +6,49 @@ String lastSyncToJson(LastSync data) => json.encode(data.toJson());
 
 class LastSync {
   LastSync({
-    this.status,
-    this.success,
-    this.message,
-    this.response,
+    this.isSuccess,
+    this.result,
   });
 
-  int status;
-  bool success;
-  String message;
-  Response response;
+  bool isSuccess;
+  List<Result> result;
 
   factory LastSync.fromJson(Map<String, dynamic> json) => LastSync(
-        status: json["status"],
-        success: json["success"],
-        message: json["message"],
-        response: Response.fromJson(json["response"]),
+        isSuccess: json["isSuccess"],
+        result:
+            List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "status": status,
-        "success": success,
-        "message": message,
-        "response": response.toJson(),
+        "isSuccess": isSuccess,
+        "result": List<dynamic>.from(result.map((x) => x.toJson())),
       };
 }
 
-class Response {
-  Response({
-    this.count,
-    this.data,
-  });
-
-  int count;
-  Data data;
-
-  factory Response.fromJson(Map<String, dynamic> json) => Response(
-        count: json["count"],
-        data: Data.fromJson(json["data"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "count": count,
-        "data": data.toJson(),
-      };
-}
-
-class Data {
-  Data({
-    this.count,
-    this.healthRecordInfo,
-  });
-
-  int count;
-  List<HealthRecordInfo> healthRecordInfo;
-
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        count: json["count"],
-        healthRecordInfo: List<HealthRecordInfo>.from(
-            json["healthRecordInfo"].map((x) => HealthRecordInfo.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "count": count,
-        "healthRecordInfo":
-            List<dynamic>.from(healthRecordInfo.map((x) => x.toJson())),
-      };
-}
-
-class HealthRecordInfo {
-  HealthRecordInfo({
+class Result {
+  Result({
     this.lastSyncDateTime,
-    this.sourcetype,
-    this.devicetype,
     this.devicedatatype,
+    this.devicetype,
+    this.sourcetype,
   });
 
   DateTime lastSyncDateTime;
-  String sourcetype;
-  String devicetype;
   String devicedatatype;
+  String devicetype;
+  String sourcetype;
 
-  factory HealthRecordInfo.fromJson(Map<String, dynamic> json) =>
-      HealthRecordInfo(
+  factory Result.fromJson(Map<String, dynamic> json) => Result(
         lastSyncDateTime: DateTime.parse(json["lastSyncDateTime"]),
-        sourcetype: json["sourcetype"],
-        devicetype: json["devicetype"],
         devicedatatype: json["devicedatatype"],
+        devicetype: json["devicetype"],
+        sourcetype: json["sourcetype"],
       );
 
   Map<String, dynamic> toJson() => {
         "lastSyncDateTime": lastSyncDateTime.toIso8601String(),
-        "sourcetype": sourcetype,
-        "devicetype": devicetype,
         "devicedatatype": devicedatatype,
+        "devicetype": devicetype,
+        "sourcetype": sourcetype,
       };
 }

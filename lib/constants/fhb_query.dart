@@ -112,3 +112,9 @@ const String qr_devicehealthrecord = 'devicehealthrecord/';
 const String qr_savedevicedata = 'saveDeviceHealthRecord';
 const String qr_getByRecordDataType = 'getDeviceRecordByDeviceDatatype';
 const String qr_getLastSyncTime = 'getLastSyncTime';
+
+const String qr_lastSync = 'lastSync';
+const String qr_lastMeasureSync = 'lastMeasureSync';
+const String qr_deviceInterval = 'deviceInterval';
+const String qr_deviceInfo = 'device-information';
+const String qr_user = 'user';

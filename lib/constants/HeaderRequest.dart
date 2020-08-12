@@ -1,14 +1,11 @@
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-class HeaderRequest{
-
-
-
+class HeaderRequest {
   Future<Map<String, String>> getAuth() async {
     Map<String, String> auth = new Map();
     auth['authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     return auth;
   }
@@ -26,7 +23,7 @@ class HeaderRequest{
     Map<String, String> requestHeadersAuthStar = new Map();
     requestHeadersAuthStar['accept'] = '*/*';
     requestHeadersAuthStar['Authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     return requestHeadersAuthStar;
   }
@@ -35,16 +32,17 @@ class HeaderRequest{
     Map<String, String> requestHeadersTimeSlot = new Map();
 
     requestHeadersTimeSlot['Authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     requestHeadersTimeSlot['Content-Type'] = 'application/json';
     return requestHeadersTimeSlot;
   }
+
   Future<Map<String, String>> getRequestHeadersAuthContent() async {
     Map<String, String> requestHeadersAuthContent = new Map();
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['Authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     return requestHeadersAuthContent;
   }
@@ -53,10 +51,10 @@ class HeaderRequest{
     Map<String, String> requestHeaders = new Map();
 
     requestHeaders['Content-type'] = 'application/json';
-    requestHeaders['application/json'] = 'application/json';
+    requestHeaders['accept'] = 'application/json';
 
     requestHeaders['Authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     return requestHeaders;
   }
@@ -65,7 +63,7 @@ class HeaderRequest{
     Map<String, String> requestHeadersAuthAccept = new Map();
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['Authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     return requestHeadersAuthAccept;
   }
