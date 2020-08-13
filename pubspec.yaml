@@ -32,11 +32,11 @@ dependencies:
   intl: ^0.16.1
   shimmer: ^1.0.1
   cached_network_image: ^2.0.0
-  camera: ^0.5.7+3
+  camera: ^0.5.8+5
   path_provider: ^1.6.0
   path: ^1.6.4
   gradient_bottom_navigation_bar: ^1.0.0+4
-  flutter_svg: ^0.17.4
+  flutter_svg: ^0.18.0
   flutter_arc_speed_dial: ^1.0.2
   curved_navigation_bar: ^0.3.1
   shared_preferences: ^0.5.6
@@ -64,7 +64,7 @@ dependencies:
   flutter_local_notifications: ^1.4.2
   random_color: ^1.0.5
   image_gallery_saver: ^1.2.2
-  permission_handler: ^5.0.0+hotfix.3
+  permission_handler: ^3.0.0
   connectivity: ^0.4.8+2
   launch_review: ^2.0.0
   intro_slider: ^2.2.9
@@ -79,6 +79,7 @@ dependencies:
   expandable: ^4.1.4
   fluttertoast: ^7.0.1
   progress_dialog: ^1.2.4
+  audioplayer: ^0.8.1
   
 
 dev_dependencies:

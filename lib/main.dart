@@ -12,6 +12,7 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/connectivity_bloc.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
@@ -43,6 +44,8 @@ import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.da
 import 'package:myfhb/my_providers/screens/my_provider.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
 import 'package:myfhb/schedules/add_appointments.dart';
+
+
 
 
 var firstCamera;
@@ -197,6 +200,7 @@ class _MyFHBState extends State<MyFHB> {
     super.initState();
     gettingResponseFromNative();
     showSecurityWall();
+   // requeatPermissionForAudioAndCamera();
   }
 
   @override
@@ -265,5 +269,31 @@ class _MyFHBState extends State<MyFHB> {
           break;
       }
     } on PlatformException catch (e, s) {}
+  }
+
+  void requeatPermissionForAudioAndCamera() async{
+  /*  final Permission cameraPermission = Permission.camera;
+    var cameraPermissionResult = await cameraPermission.status;
+
+    final Permission audioPermission = Permission.microphone;
+    var audioPermissionResult = await cameraPermission.status;
+
+    print(cameraPermissionResult.toString());
+    print(audioPermissionResult.toString());
+
+
+    if(cameraPermissionResult == PermissionStatus.denied || cameraPermissionResult == PermissionStatus.undetermined ){
+      cameraPermission.request();
+    }
+
+    if(audioPermissionResult == PermissionStatus.denied || audioPermissionResult == PermissionStatus.undetermined ){
+      audioPermission.request();
+    }
+
+
+    print(cameraPermissionResult.toString());
+    print(audioPermissionResult.toString());
+
+   */
   }
 }

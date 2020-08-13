@@ -310,23 +310,23 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(variable.Add,
+                    Text(variable.strNoData,
                         style: new TextStyle(
                           color: ColorUtils.blackcolor,
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,
                         )),
                     SizedBox(width: 5),
-                    Text(value,
+                    /*Text(value,
                         style: new TextStyle(
                           color: Theme.of(context).primaryColor,
                           fontSize: 15.0,
                           fontWeight: FontWeight.w500,
-                        )),
+                        )),*/
                   ],
                 ),
                 SizedBox(height: 10),
-                _showAddButton()
+                //_showAddButton()
               ],
             )),
             color: Colors.white,

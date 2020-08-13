@@ -76,9 +76,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   int index = 0;
   int length = 0;
   List<ImageDocumentResponse> imagesPathMain = new List();
-  PermissionStatus permissionStatus = PermissionStatus.undetermined;
-  final Permission _storagePermission =
-      Platform.isAndroid ? Permission.storage : Permission.photos;
+ // PermissionStatus permissionStatus = PermissionStatus.unknown;
+  //final PermissionHandler _storagePermission = Platform.isAndroid ? Permission.storage : Permission.photos;
   bool firsTym = true;
   bool ispdfPresent = false;
 
@@ -267,12 +266,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 color: Colors.black,
                               ),
                               onPressed: () async {
-                                requestPermission(_storagePermission)
+                                saveImageToGallery(imagesPathMain, contxt);
+
+                                /*requestPermission(_storagePermission)
                                     .then((status) {
                                   if (status == PermissionStatus.granted) {
-                                    saveImageToGallery(imagesPathMain, contxt);
                                   }
-                                });
+                                });*/
                               }),
                           IconButton(
                               icon: ImageIcon(
@@ -367,8 +367,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void _listenForPermissionStatus() async {
-    final status = await _storagePermission.status;
-    setState(() => permissionStatus = status);
+   // final status = await _storagePermission.status;
+    //setState(() => permissionStatus = status);
   }
 
   void saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
@@ -1185,7 +1185,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     );
   }
 
-  Future<PermissionStatus> requestPermission(
+  /*Future<PermissionStatus> requestPermission(
       Permission storagePermission) async {
     final status = await storagePermission.request();
 
@@ -1194,7 +1194,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     });
 
     return status;
-  }
+  }*/
 
   showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
     if (data.metaInfo.hasVoiceNotes) {
