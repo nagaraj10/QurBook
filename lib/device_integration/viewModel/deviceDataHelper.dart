@@ -14,11 +14,7 @@ class DeviceDataHelper {
   }
 
   Future<void> syncGF() async {
-    String startTime = "1577894746000";
-    String endTime = "1585497946000";
-
-    // to do get start Time and end time from last sync time
-    await _syncGoogleFitData.syncGFData(startTime, endTime);
+    await _syncGoogleFitData.syncGFData();
   }
 
   Future<void> activateHKT() async {
@@ -26,13 +22,10 @@ class DeviceDataHelper {
   }
 
   Future<void> deactivateHKT() async {
- //     //todo
+    //     //todo
   }
 
   Future<void> syncHKT() async {
-   
-    DateTime startDate = DateTime.utc(2020, 07, 01);
-    DateTime endDate = DateTime.now();
-    await _syncHealthKitData.syncHKT(startDate, endDate);
+    await _syncHealthKitData.syncHKTData();
   }
 }

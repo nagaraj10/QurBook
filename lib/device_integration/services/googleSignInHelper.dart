@@ -15,7 +15,7 @@ class GoogleSignInHelper {
     });
   }
 
-  Future<bool> isSignedIn() async{
+  Future<bool> isSignedIn() async {
     bool signedIn = await _googleSignIn.isSignedIn();
     return signedIn;
   }
@@ -35,9 +35,13 @@ class GoogleSignInHelper {
     List<String> Scopes = [];
     Scopes.add("https://www.googleapis.com/auth/fitness.body.read");
     Scopes.add("https://www.googleapis.com/auth/fitness.blood_pressure.read");
+    Scopes.add("https://www.googleapis.com/auth/fitness.body_temperature.read");
+    Scopes.add(
+        "https://www.googleapis.com/auth/fitness.oxygen_saturation.read");
+    Scopes.add("https://www.googleapis.com/auth/fitness.blood_glucose.read");
     try {
       if (m_currentUser != null) {
-         await _googleSignIn.requestScopes(Scopes);
+        await _googleSignIn.requestScopes(Scopes);
       }
     } catch (error) {
       throw error;

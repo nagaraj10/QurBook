@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -16,12 +17,18 @@ import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/HeaderRequest.dart';
+import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 
 import 'AppException.dart';
 
+import 'AppException.dart';
+import 'dart:async';
+import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/src/resources/network/AppException.dart';
+import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
+
 class ApiBaseHelper {
-  final String _baseUrl = Constants.BASEURL_V2;
-  final String _baseUrlV2 = Constants.BASEURL_V2;
+  final String _baseUrl = Constants.BASE_URL;
 
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -97,17 +104,38 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> updateProviders(String url) async {
+  Future<dynamic> updateProvidersOld(String url) async {
     var responseJson;
     try {
-      final response = await http.put(_baseUrl + url,
-          body: '',
-          headers: await headerRequest.getRequestHeadersAuthContent());
+      final response = await http.post(_baseUrl + url,
+          body: '', headers: await headerRequest.getRequestHeadersForProvider());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<dynamic> updateProviders(String url,String query) async {
+    Dio dio = new Dio();
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+
+    dio.options.headers[variable.straccept] = variable.strAcceptVal;
+    dio.options.headers[variable.strContentType] = variable.strcntVal;
+    dio.options.headers[variable.strAuthorization] = authToken;
+
+    Map<String, dynamic> mapForSignUp = new Map();
+    mapForSignUp[parameters.strSections] = query;
+    FormData formData = new FormData.fromMap(mapForSignUp);
+
+    var response = await dio.post(_baseUrl + url, data: formData);
+
+    //responseJson = _returnResponse(response.data);
+
+    print(response.data);
+    return response.data;
   }
 
   Future<dynamic> updateTeleHealthProviders(String url, String query) async {
@@ -167,7 +195,7 @@ class ApiBaseHelper {
 
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
+      final response = await http.get(_baseUrl + url.trim(),
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -339,7 +367,7 @@ class ApiBaseHelper {
             Constants.STR_OTPMISMATCHED) {
           return responseJson;
         } else {
-          SnackbarToLogout();
+          //SnackbarToLogout();
         }
         break;
 
@@ -350,7 +378,7 @@ class ApiBaseHelper {
             Constants.STR_OTPMISMATCHEDFOREMAIL) {
           return responseJson;
         } else {
-          SnackbarToLogout();
+          // SnackbarToLogout();
         }
         break;
 
@@ -393,8 +421,6 @@ class ApiBaseHelper {
 
       FormData formData = new FormData.fromMap({
         parameters.strmediaMetaId: metaID,
-        parameters.strfile:
-            await MultipartFile.fromFile(file.path, filename: fileNoun)
       });
       response = await dio.post(_baseUrl + url, data: formData);
 
@@ -725,8 +751,9 @@ class ApiBaseHelper {
   Future<dynamic> getTelehealthDoctorsList(String url) async {
     var responseJson;
     try {
-      final response = await http.get(_baseUrlV2 + url,
-          headers: await headerRequest.getRequestHeadersAuthAccept());
+      final response = 
+      await http.get(
+        _baseUrl + url, headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
       print(responseJson);
     } on SocketException {
@@ -738,7 +765,7 @@ class ApiBaseHelper {
   Future<dynamic> bookMarkDoctor(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrlV2 + url,
+      final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeader(), body: jsonBody);
 
       responseJson = _returnResponse(response);
@@ -751,9 +778,8 @@ class ApiBaseHelper {
   Future<dynamic> getTimeSlotsList(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrlV2 + url,
-          headers: await headerRequest.getRequestHeadersTimeSlot(),
-          body: jsonBody);
+      final response = await http.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(), body: jsonBody);
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -772,9 +798,8 @@ class ApiBaseHelper {
   Future<dynamic> bookAppointment(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrlV2 + url,
-          headers: await headerRequest.getRequestHeadersTimeSlot(),
-          body: jsonBody);
+      final response = await http.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(), body: jsonBody);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -785,10 +810,60 @@ class ApiBaseHelper {
   Future<dynamic> updatePayment(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrlV2 + url,
-          headers: await headerRequest.getRequestHeadersTimeSlot(),
-          body: jsonBody);
+      final response = await http.post(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(), body: jsonBody);
 
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<AppointmentsModel> fetchAppointments() async {
+    String userId=PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    return await http.get(
+      _baseUrl+qr_appointment_fetch+userId,
+      headers: await headerRequest.getAuth(),
+    ).then((http.Response response) {
+      if (response.statusCode == 200) {
+        var resReturnCode =
+            AppointmentsModel.fromJson(jsonDecode(response.body));
+        if (resReturnCode.status == 200) {
+          return AppointmentsModel.fromJson(jsonDecode(response.body));
+        } else {
+          throw Exception(variable.strFailed);
+        }
+      } else {
+        throw Exception(variable.strFailed);
+      }
+    });
+  }
+
+  Future<CancelAppointmentModel> getCancelAppointment(
+      List<String> doctorIds) async {
+    var inputBody = {};
+    inputBody[CANCEL_SOURCE] = PATIENT;
+    inputBody[BOOKING_IDS] = doctorIds;
+
+    var jsonString = convert.jsonEncode(inputBody);
+    print(jsonString);
+    final response =
+        await getApiForCancelAppointment(qr_appointment_cancel, jsonString);
+    return CancelAppointmentModel.fromJson(response);
+  }
+
+  Future<dynamic> getApiForCancelAppointment(
+      String url, String jsonBody) async {
+        
+    var responseJson;
+    try {
+//      print(authtoken);
+//      print(url);
+//      print(jsonBody);
+      final response = await http.put(_baseUrl + url,
+          headers: await headerRequest.getRequestHeader(), body: jsonBody);
+      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -797,40 +872,29 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> saveDeviceData(String url, String jsonBody) async {
-    //String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-
     var header = await headerRequest.getRequestHeader();
-    //header['Authorization'] =
-    //    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6eyJQcm92aWRlclBheWxvYWQiOnsiaWRfdG9rZW4iOiJleUpyYVdRaU9pSktVSFpHWVZrd2NtTkRZemsxYVUxdGJWUkJZMGRUZDFoV2FVTlhkVlpHTWxCQk5WTTJXWEZYZDFsclBTSXNJbUZzWnlJNklsSlRNalUySW4wLmV5SmhkRjlvWVhOb0lqb2ljSE0yUVRJdFgzVlpabXhhVEZWbFVrVjZVRFZ3ZHlJc0luTjFZaUk2SWpKbU1HTmhORE0yTFRoaE4yTXRORE5qT1MxaU5EUmpMVFV5TTJFM1pUVm1OVE5oWlNJc0ltVnRZV2xzWDNabGNtbG1hV1ZrSWpwMGNuVmxMQ0ppYVhKMGFHUmhkR1VpT2lJd09DMHdPQzB4T1Rrd0lpd2lhWE56SWpvaWFIUjBjSE02WEM5Y0wyTnZaMjVwZEc4dGFXUndMblZ6TFdWaGMzUXRNaTVoYldGNmIyNWhkM011WTI5dFhDOTFjeTFsWVhOMExUSmZabmQxVm05blYzZG9JaXdpY0dodmJtVmZiblZ0WW1WeVgzWmxjbWxtYVdWa0lqcG1ZV3h6WlN3aVkyOW5ibWwwYnpwMWMyVnlibUZ0WlNJNklqSm1NR05oTkRNMkxUaGhOMk10TkROak9TMWlORFJqTFRVeU0yRTNaVFZtTlROaFpTSXNJbWRwZG1WdVgyNWhiV1VpT2lKcVlXZGhiaUlzSW1GMVpDSTZJalpzYkdObWMybHZaVGd5TW5SdVoyNXVkbVJ1WkhSMk4zUnBJaXdpZEc5clpXNWZkWE5sSWpvaWFXUWlMQ0poZFhSb1gzUnBiV1VpT2pFMU9UVTNNRFU1TnpFc0luQm9iMjVsWDI1MWJXSmxjaUk2SWlzNU1Ua3hOell4TVRjNE1qSWlMQ0psZUhBaU9qRTFPVFUzTURrMU56RXNJbWxoZENJNk1UVTVOVGN3TlRrM01pd2labUZ0YVd4NVgyNWhiV1VpT2lKaVlXSjFJaXdpWlcxaGFXd2lPaUpoWkc5dWFXRnFZV2RoYmtCbmJXRnBiQzVqYjIwaWZRLkZ1WXBZZkc2OFNUSWNNcmpSX1NOVHZYbnhyU1RuTVNpV0J1ZGRDbkZUSHZQdzNoYlN1WHZlYVJwQUxKOXp0ak5DTjVjQ1F1MHllc3RMYl9GbjVTQU4zMWMyTzJvX1NMRmQwRk5VTWg0aXpReWMwS3IwTGtEZ2NvcHN2cWo3Rmk0Vk52WGJsVlZrcWU5d0pteE1HcmJvVmtBQWdQVXNwejNETWRacFNIY2FNZmVPUUNiUWpmVWlJVkI4UC1WQkJBQ2FlVV84aHI3TjFqWWoxWGduRVFqSUpiWWlpSEJBTkgtaWhxbGpWQl9SckFndTgtU2otR0Vma1NyUVprQXlFNTFqbWg2cUxGaWdMc3E1bHpCY3oycjNYVW9KTkhhMXJCTDd5bFo3R2dGSUhPbUdQNWdORk1ZZHZJNURVbnFkME1UX2wtTjE3b3M0WXc0MEZ0TGNHZHFSQSIsImFjY2Vzc190b2tlbiI6ImV5SnJhV1FpT2lKd01rSnJUM0p2ZFZReFZGaDJSSGRNU0V4U1pFRnZNRkExU21sTGNuQnFaRGhJVFVoWWQwTmNMM05OUlQwaUxDSmhiR2NpT2lKU1V6STFOaUo5LmV5SnpkV0lpT2lJeVpqQmpZVFF6TmkwNFlUZGpMVFF6WXprdFlqUTBZeTAxTWpOaE4yVTFaalV6WVdVaUxDSjBiMnRsYmw5MWMyVWlPaUpoWTJObGMzTWlMQ0p6WTI5d1pTSTZJbUYzY3k1amIyZHVhWFJ2TG5OcFoyNXBiaTUxYzJWeUxtRmtiV2x1SUhCb2IyNWxJRzl3Wlc1cFpDQndjbTltYVd4bElHVnRZV2xzSWl3aVlYVjBhRjkwYVcxbElqb3hOVGsxTnpBMU9UY3hMQ0pwYzNNaU9pSm9kSFJ3Y3pwY0wxd3ZZMjluYm1sMGJ5MXBaSEF1ZFhNdFpXRnpkQzB5TG1GdFlYcHZibUYzY3k1amIyMWNMM1Z6TFdWaGMzUXRNbDltZDNWV2IyZFhkMmdpTENKbGVIQWlPakUxT1RVM01EazFOekVzSW1saGRDSTZNVFU1TlRjd05UazNNaXdpZG1WeWMybHZiaUk2TWl3aWFuUnBJam9pTldJd05EazJabVV0WmpZellpMDBNVGswTFRnelpXSXRPREpoT0RVNU1XSTRPV1ZtSWl3aVkyeHBaVzUwWDJsa0lqb2lObXhzWTJaemFXOWxPREl5ZEc1bmJtNTJaRzVrZEhZM2RHa2lMQ0oxYzJWeWJtRnRaU0k2SWpKbU1HTmhORE0yTFRoaE4yTXRORE5qT1MxaU5EUmpMVFV5TTJFM1pUVm1OVE5oWlNKOS5xRjNJMVExTUo1LVhvOTVJLXd0Qi1EQTRuU3dKOFMwclh0R0taLWMyZ1pVNW5HTUdXTW5jRVJ1T2pSV0dBX29jckdIdXRwTFdiSWlZY0ROYmV0cmF1em1qem1vUGt6ZWdTdEZFNF9OVkxsUC1mMVp5c3hSWV80dGJfZ0xLNDVuc2N0ME5CUzc3SWptSWtBMHRuNkVNZ2g4QmFmLUM2b01vQ0MtUnNWN3ZxRzVEX2pTSUJ0VGhMUzhUakpXUFJjWnliY0E0OGJGaUVtWWp5ZjJ0R0lTRzh5Y19WUWxkV2xZX3Nsb1JsTHJKajVOaEExVzZHenZUQXNEN0tVakRxMEYyclgxalNRWWp4R2pyaE1vTmRqUUhlX25ELWstZUJRQ2U5aXRYdG43T0VPemdyQVpsU01vNHdFdUVXQjFfTGN3ZkFyNmpVb3l3bDRtR3BxSW5NcUw5WlEiLCJyZWZyZXNoX3Rva2VuIjoiZXlKamRIa2lPaUpLVjFRaUxDSmxibU1pT2lKQk1qVTJSME5OSWl3aVlXeG5Jam9pVWxOQkxVOUJSVkFpZlEuR0swU0Fmb2J2bllWbjBESGN2TlNBdEc3UU54N3Y1eUstTmNxSXhFRmFHanR6YTJwM0J0QTVuQkQwX2tvX3NsN1BiMF9iMmJEOEtEYWpZVllXajJhT3lVanM5YVlPV2MybUxSMUptX3VITk1FRGVFTUttanZmQW5iTjhyWldWZ2RaZWttSk9uakphTnZqSFVhTnF6RXhtRDN4dGJ2dWxYSi03Yk5nSDRENXk1cUV2eXFmUzh0ZUIyZWdVNVJIU3A3N3czSFVDY0haSVg2VUhxRmgxY2laTHVQWjdTYVItVXJhRDJhVlFZb1BGMjdsX0FrWkFLLWZXZjIzcWJydF9ZT2NhRTM4bTg1QWFOMzdHek5NWVhvSzFCYzZtYlNrNFB3RFhaR3dEbkktdW12SUVfRXIwVGZiU3pfT3liVTZqVHFJbzh3X1dXNWZ0aUpWWnJPU1QxMVBRLnI5RlBRVHJrMlVwb1VDUlIuX19yVDl3bEJaSzNGNFoyT01NXzRYUXdJcEY5M040aFlQaVpULVFYTVQtbDc4b1ZQWGRfZXhieUIxaF9wd1JfWHp2blMwU1FLN3ZPWWdCRlp6WUlFQi1lRkZvVGNpTU1oODNiZVRWOEQwZkNZMm40bDE1TF9ETWVmMnNIRU1vZ1g1Y3ZqV0NvOTJZRkxhVE84WktqOGJJZ190NW01WlVhQ3lRR1AwQkVZdm5XOUY2WWxWS3RSSTZOeUcwSGc3aHloQTNHbnZTc3Zkb1UwVWlpTUxyU3ZGbl8zNHA1a2oyS3p1TWh6b2ZZR3NJTEx0VzZJempFZTFCaW8yTF9Cb21iWjFGX0RGZjZqcnBobjMydVlMMzlCUkl4SUF0eTEtUDlZLTFnX1FiYktMLWFhOEZyY20yb05CZ2FFa2NDTnliN1R0RzJKT0s4eko1bElWcUtYRU00MG1PTDl0T0ZWSHZJZThYWXA4cVkycmVVbVN4WEMxUjlsWmJkSkRRT0wzWnIzR0JMcFAtakRJOEpROXh3Q2pqSVJndUJ4cGIwNWowZE5JREVITjBJN0V4Z1hBT1p5YlRMVTBORVFvd211YkZkSWUwWTQxeEhnbjA5MDM3MmxPMkZFMThfZVNnWVlBUFFaUUtLYkt3cjloOElWOGJCV3hZYWVWanlTRDktSmlWaHpEYlg1N1FZQzQxTWNodkV3RTY0eldfT0Z0Q0wzY2hGNEhkZWlOYVBlMWdFN2l1YnNCczhfeEJzXzNIMXYySnY1c0lhVVhBendsQVBoYmdGZVNlVGRndXBZRnpQRGF0bUZVZGVZRFlZQUg2eHZnTW44LVVlamxmQjNiaEV1YkgwY2dYR01fVmJ6TEJ4NW9NNG5zLWp3bHU4Q1B2X1ZDZDBOanlGeDBFQ3I5cWJrUUJvYzlDM1lkQU4wdDB1QzF4WjhSZGh1N3VranBybVowcVI3aXMwRjhlUDJudC1McE9Xb0JDbExPZHJvNUFZRGV5ZVJlZ0lNUkdLVTRTOTNOMGVZSWFZTkthdDhKU3RUWGY0amxDREVrMXh2cDlCQUgtOHk1amNVSmtKN01yQWt5NnVmY19qT2tBdGNrQlE2Yzl4X2ZXVzVxQV9uRDFkS1hXdkpJcUIwQWNkR0g1eWJfS0JMU29hdG1ETDZMT2p5aHpvRk9qX3hNaG5HSVptaTd2c3pkZ0R6MWRwVUZILW0zbFdoYWF4UUJUbjFpNnNEbHNWQnpaUXdBZmdaYXRfbWpyRGNBbDBMaXBianpEOXZLaC1GNmN3ZnZfdmdBYXgxTmtqZkNycEJucVZjdF9JcHhrTVQtSmFjektCWUt5OWtDR0tXSkxyOHNybUJscVVTZWtVMlhyQ0hUT05xQmZLeEpSX3NWWmtoUHBFaHhZWVZWNDhHZk9ack53MXl1aG51M01rZ05BNlRyc3pDOHNkT3Jzc0wxdkIySGJmV1gwZ3g2cUw1bkdPejl6aFRreGxUVVg0OXdhSEFzbEdJcXIyVmJNUTFTcjZZOHJ1aGhJMXViME90aF9yVlpTV09MZ0hUVlpHMGRLUnpkNVlla3BhSU5iMlVYYWpGbUhiZFpBVmxiSTJQTTRkUGFnaVdKX1piRjY0SzNFeUxDUXExdzhjajRQa1E5MXQ5eHEwYnhCbFBYajItaEx4bXMwdUVfV29JWlA2MUYxLXl2dk5VTXEtNWVsRnNfcS0zXzQ5bTNsdzhiWTZwazRRanZ6QzRVbzZpUWtzbXlzSUlfWmFneVM4Lmt1WExqTFI5XzhGNGpONTBDS0M0ZkEiLCJleHBpcmVzX2luIjozNjAwLCJ0b2tlbl90eXBlIjoiQmVhcmVyIn0sImNvdW50cnlDb2RlIjoiKzkxIiwiZXhwaXJ5RGF0ZSI6MTU5ODkwODA2MTAyOSwicm9sZUlkIjoiOGY0NWY0NDItNjg1YS00YjhiLTg2ZTctYjkzZTY5ZDgwOTZkIiwic2Vzc2lvbkRhdGUiOjE1OTU3MDU5NzQwMTMsInNlc3Npb25Sb2xlcyI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNvdXJjZUluZm8iOnsic3ViU291cmNlSWQiOiIyNGUxNWJlMy05Njk1LTQ0ZjctODIyOS0zNGZmNGVmODEzOTYiLCJlbnRpdHlJZCI6IjkyYmRjN2IxLWQ1MDAtNDkwMS1iZmU4LThlMTlhMDlmZmFkNCIsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsImlzRGV2aWNlIjpmYWxzZSwiZGV2aWNlSWQiOiIifSwic3ViamVjdCI6ImFkb25pYWphZ2FuQGdtYWlsLmNvbSIsInVzZXJJZCI6ImFjOWQxMTRkLThlMDEtNGMwOS04ZDc0LTg4Yjk5MGRlZDRjMyIsInBob25lTnVtYmVyIjoiOTE3NjExNzgyMiJ9LCJpYXQiOjE1OTU3MDU5NzV9.JrIzllRP3NCWPwQB6qX37XGs68BWF0BKjLiqfDylB_8";
-
     var responseJson;
-    var response;
     try {
-      response = await http.post(
-          "https://dev.healthbook.vsolgmi.com/asgard" + url,
+      final response = await http.post(
+          //_baseUrl + url,
+          "https://dev.healthbook.vsolgmi.com/asgard/" + url,
           body: jsonBody,
           headers: header);
+      print(response.body);
       responseJson = _returnResponse(response);
-      //print(responseJson);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
-
     return responseJson;
   }
 
   Future<dynamic> getByRecordDataType(String url, String jsonBody) async {
-    //String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-
     var header = await headerRequest.getRequestHeader();
-    //header['Authorization'] =
-    //    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6eyJQcm92aWRlclBheWxvYWQiOnsiaWRfdG9rZW4iOiJleUpyYVdRaU9pSktVSFpHWVZrd2NtTkRZemsxYVUxdGJWUkJZMGRUZDFoV2FVTlhkVlpHTWxCQk5WTTJXWEZYZDFsclBTSXNJbUZzWnlJNklsSlRNalUySW4wLmV5SmhkRjlvWVhOb0lqb2ljSE0yUVRJdFgzVlpabXhhVEZWbFVrVjZVRFZ3ZHlJc0luTjFZaUk2SWpKbU1HTmhORE0yTFRoaE4yTXRORE5qT1MxaU5EUmpMVFV5TTJFM1pUVm1OVE5oWlNJc0ltVnRZV2xzWDNabGNtbG1hV1ZrSWpwMGNuVmxMQ0ppYVhKMGFHUmhkR1VpT2lJd09DMHdPQzB4T1Rrd0lpd2lhWE56SWpvaWFIUjBjSE02WEM5Y0wyTnZaMjVwZEc4dGFXUndMblZ6TFdWaGMzUXRNaTVoYldGNmIyNWhkM011WTI5dFhDOTFjeTFsWVhOMExUSmZabmQxVm05blYzZG9JaXdpY0dodmJtVmZiblZ0WW1WeVgzWmxjbWxtYVdWa0lqcG1ZV3h6WlN3aVkyOW5ibWwwYnpwMWMyVnlibUZ0WlNJNklqSm1NR05oTkRNMkxUaGhOMk10TkROak9TMWlORFJqTFRVeU0yRTNaVFZtTlROaFpTSXNJbWRwZG1WdVgyNWhiV1VpT2lKcVlXZGhiaUlzSW1GMVpDSTZJalpzYkdObWMybHZaVGd5TW5SdVoyNXVkbVJ1WkhSMk4zUnBJaXdpZEc5clpXNWZkWE5sSWpvaWFXUWlMQ0poZFhSb1gzUnBiV1VpT2pFMU9UVTNNRFU1TnpFc0luQm9iMjVsWDI1MWJXSmxjaUk2SWlzNU1Ua3hOell4TVRjNE1qSWlMQ0psZUhBaU9qRTFPVFUzTURrMU56RXNJbWxoZENJNk1UVTVOVGN3TlRrM01pd2labUZ0YVd4NVgyNWhiV1VpT2lKaVlXSjFJaXdpWlcxaGFXd2lPaUpoWkc5dWFXRnFZV2RoYmtCbmJXRnBiQzVqYjIwaWZRLkZ1WXBZZkc2OFNUSWNNcmpSX1NOVHZYbnhyU1RuTVNpV0J1ZGRDbkZUSHZQdzNoYlN1WHZlYVJwQUxKOXp0ak5DTjVjQ1F1MHllc3RMYl9GbjVTQU4zMWMyTzJvX1NMRmQwRk5VTWg0aXpReWMwS3IwTGtEZ2NvcHN2cWo3Rmk0Vk52WGJsVlZrcWU5d0pteE1HcmJvVmtBQWdQVXNwejNETWRacFNIY2FNZmVPUUNiUWpmVWlJVkI4UC1WQkJBQ2FlVV84aHI3TjFqWWoxWGduRVFqSUpiWWlpSEJBTkgtaWhxbGpWQl9SckFndTgtU2otR0Vma1NyUVprQXlFNTFqbWg2cUxGaWdMc3E1bHpCY3oycjNYVW9KTkhhMXJCTDd5bFo3R2dGSUhPbUdQNWdORk1ZZHZJNURVbnFkME1UX2wtTjE3b3M0WXc0MEZ0TGNHZHFSQSIsImFjY2Vzc190b2tlbiI6ImV5SnJhV1FpT2lKd01rSnJUM0p2ZFZReFZGaDJSSGRNU0V4U1pFRnZNRkExU21sTGNuQnFaRGhJVFVoWWQwTmNMM05OUlQwaUxDSmhiR2NpT2lKU1V6STFOaUo5LmV5SnpkV0lpT2lJeVpqQmpZVFF6TmkwNFlUZGpMVFF6WXprdFlqUTBZeTAxTWpOaE4yVTFaalV6WVdVaUxDSjBiMnRsYmw5MWMyVWlPaUpoWTJObGMzTWlMQ0p6WTI5d1pTSTZJbUYzY3k1amIyZHVhWFJ2TG5OcFoyNXBiaTUxYzJWeUxtRmtiV2x1SUhCb2IyNWxJRzl3Wlc1cFpDQndjbTltYVd4bElHVnRZV2xzSWl3aVlYVjBhRjkwYVcxbElqb3hOVGsxTnpBMU9UY3hMQ0pwYzNNaU9pSm9kSFJ3Y3pwY0wxd3ZZMjluYm1sMGJ5MXBaSEF1ZFhNdFpXRnpkQzB5TG1GdFlYcHZibUYzY3k1amIyMWNMM1Z6TFdWaGMzUXRNbDltZDNWV2IyZFhkMmdpTENKbGVIQWlPakUxT1RVM01EazFOekVzSW1saGRDSTZNVFU1TlRjd05UazNNaXdpZG1WeWMybHZiaUk2TWl3aWFuUnBJam9pTldJd05EazJabVV0WmpZellpMDBNVGswTFRnelpXSXRPREpoT0RVNU1XSTRPV1ZtSWl3aVkyeHBaVzUwWDJsa0lqb2lObXhzWTJaemFXOWxPREl5ZEc1bmJtNTJaRzVrZEhZM2RHa2lMQ0oxYzJWeWJtRnRaU0k2SWpKbU1HTmhORE0yTFRoaE4yTXRORE5qT1MxaU5EUmpMVFV5TTJFM1pUVm1OVE5oWlNKOS5xRjNJMVExTUo1LVhvOTVJLXd0Qi1EQTRuU3dKOFMwclh0R0taLWMyZ1pVNW5HTUdXTW5jRVJ1T2pSV0dBX29jckdIdXRwTFdiSWlZY0ROYmV0cmF1em1qem1vUGt6ZWdTdEZFNF9OVkxsUC1mMVp5c3hSWV80dGJfZ0xLNDVuc2N0ME5CUzc3SWptSWtBMHRuNkVNZ2g4QmFmLUM2b01vQ0MtUnNWN3ZxRzVEX2pTSUJ0VGhMUzhUakpXUFJjWnliY0E0OGJGaUVtWWp5ZjJ0R0lTRzh5Y19WUWxkV2xZX3Nsb1JsTHJKajVOaEExVzZHenZUQXNEN0tVakRxMEYyclgxalNRWWp4R2pyaE1vTmRqUUhlX25ELWstZUJRQ2U5aXRYdG43T0VPemdyQVpsU01vNHdFdUVXQjFfTGN3ZkFyNmpVb3l3bDRtR3BxSW5NcUw5WlEiLCJyZWZyZXNoX3Rva2VuIjoiZXlKamRIa2lPaUpLVjFRaUxDSmxibU1pT2lKQk1qVTJSME5OSWl3aVlXeG5Jam9pVWxOQkxVOUJSVkFpZlEuR0swU0Fmb2J2bllWbjBESGN2TlNBdEc3UU54N3Y1eUstTmNxSXhFRmFHanR6YTJwM0J0QTVuQkQwX2tvX3NsN1BiMF9iMmJEOEtEYWpZVllXajJhT3lVanM5YVlPV2MybUxSMUptX3VITk1FRGVFTUttanZmQW5iTjhyWldWZ2RaZWttSk9uakphTnZqSFVhTnF6RXhtRDN4dGJ2dWxYSi03Yk5nSDRENXk1cUV2eXFmUzh0ZUIyZWdVNVJIU3A3N3czSFVDY0haSVg2VUhxRmgxY2laTHVQWjdTYVItVXJhRDJhVlFZb1BGMjdsX0FrWkFLLWZXZjIzcWJydF9ZT2NhRTM4bTg1QWFOMzdHek5NWVhvSzFCYzZtYlNrNFB3RFhaR3dEbkktdW12SUVfRXIwVGZiU3pfT3liVTZqVHFJbzh3X1dXNWZ0aUpWWnJPU1QxMVBRLnI5RlBRVHJrMlVwb1VDUlIuX19yVDl3bEJaSzNGNFoyT01NXzRYUXdJcEY5M040aFlQaVpULVFYTVQtbDc4b1ZQWGRfZXhieUIxaF9wd1JfWHp2blMwU1FLN3ZPWWdCRlp6WUlFQi1lRkZvVGNpTU1oODNiZVRWOEQwZkNZMm40bDE1TF9ETWVmMnNIRU1vZ1g1Y3ZqV0NvOTJZRkxhVE84WktqOGJJZ190NW01WlVhQ3lRR1AwQkVZdm5XOUY2WWxWS3RSSTZOeUcwSGc3aHloQTNHbnZTc3Zkb1UwVWlpTUxyU3ZGbl8zNHA1a2oyS3p1TWh6b2ZZR3NJTEx0VzZJempFZTFCaW8yTF9Cb21iWjFGX0RGZjZqcnBobjMydVlMMzlCUkl4SUF0eTEtUDlZLTFnX1FiYktMLWFhOEZyY20yb05CZ2FFa2NDTnliN1R0RzJKT0s4eko1bElWcUtYRU00MG1PTDl0T0ZWSHZJZThYWXA4cVkycmVVbVN4WEMxUjlsWmJkSkRRT0wzWnIzR0JMcFAtakRJOEpROXh3Q2pqSVJndUJ4cGIwNWowZE5JREVITjBJN0V4Z1hBT1p5YlRMVTBORVFvd211YkZkSWUwWTQxeEhnbjA5MDM3MmxPMkZFMThfZVNnWVlBUFFaUUtLYkt3cjloOElWOGJCV3hZYWVWanlTRDktSmlWaHpEYlg1N1FZQzQxTWNodkV3RTY0eldfT0Z0Q0wzY2hGNEhkZWlOYVBlMWdFN2l1YnNCczhfeEJzXzNIMXYySnY1c0lhVVhBendsQVBoYmdGZVNlVGRndXBZRnpQRGF0bUZVZGVZRFlZQUg2eHZnTW44LVVlamxmQjNiaEV1YkgwY2dYR01fVmJ6TEJ4NW9NNG5zLWp3bHU4Q1B2X1ZDZDBOanlGeDBFQ3I5cWJrUUJvYzlDM1lkQU4wdDB1QzF4WjhSZGh1N3VranBybVowcVI3aXMwRjhlUDJudC1McE9Xb0JDbExPZHJvNUFZRGV5ZVJlZ0lNUkdLVTRTOTNOMGVZSWFZTkthdDhKU3RUWGY0amxDREVrMXh2cDlCQUgtOHk1amNVSmtKN01yQWt5NnVmY19qT2tBdGNrQlE2Yzl4X2ZXVzVxQV9uRDFkS1hXdkpJcUIwQWNkR0g1eWJfS0JMU29hdG1ETDZMT2p5aHpvRk9qX3hNaG5HSVptaTd2c3pkZ0R6MWRwVUZILW0zbFdoYWF4UUJUbjFpNnNEbHNWQnpaUXdBZmdaYXRfbWpyRGNBbDBMaXBianpEOXZLaC1GNmN3ZnZfdmdBYXgxTmtqZkNycEJucVZjdF9JcHhrTVQtSmFjektCWUt5OWtDR0tXSkxyOHNybUJscVVTZWtVMlhyQ0hUT05xQmZLeEpSX3NWWmtoUHBFaHhZWVZWNDhHZk9ack53MXl1aG51M01rZ05BNlRyc3pDOHNkT3Jzc0wxdkIySGJmV1gwZ3g2cUw1bkdPejl6aFRreGxUVVg0OXdhSEFzbEdJcXIyVmJNUTFTcjZZOHJ1aGhJMXViME90aF9yVlpTV09MZ0hUVlpHMGRLUnpkNVlla3BhSU5iMlVYYWpGbUhiZFpBVmxiSTJQTTRkUGFnaVdKX1piRjY0SzNFeUxDUXExdzhjajRQa1E5MXQ5eHEwYnhCbFBYajItaEx4bXMwdUVfV29JWlA2MUYxLXl2dk5VTXEtNWVsRnNfcS0zXzQ5bTNsdzhiWTZwazRRanZ6QzRVbzZpUWtzbXlzSUlfWmFneVM4Lmt1WExqTFI5XzhGNGpONTBDS0M0ZkEiLCJleHBpcmVzX2luIjozNjAwLCJ0b2tlbl90eXBlIjoiQmVhcmVyIn0sImNvdW50cnlDb2RlIjoiKzkxIiwiZXhwaXJ5RGF0ZSI6MTU5ODkwODA2MTAyOSwicm9sZUlkIjoiOGY0NWY0NDItNjg1YS00YjhiLTg2ZTctYjkzZTY5ZDgwOTZkIiwic2Vzc2lvbkRhdGUiOjE1OTU3MDU5NzQwMTMsInNlc3Npb25Sb2xlcyI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNvdXJjZUluZm8iOnsic3ViU291cmNlSWQiOiIyNGUxNWJlMy05Njk1LTQ0ZjctODIyOS0zNGZmNGVmODEzOTYiLCJlbnRpdHlJZCI6IjkyYmRjN2IxLWQ1MDAtNDkwMS1iZmU4LThlMTlhMDlmZmFkNCIsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsImlzRGV2aWNlIjpmYWxzZSwiZGV2aWNlSWQiOiIifSwic3ViamVjdCI6ImFkb25pYWphZ2FuQGdtYWlsLmNvbSIsInVzZXJJZCI6ImFjOWQxMTRkLThlMDEtNGMwOS04ZDc0LTg4Yjk5MGRlZDRjMyIsInBob25lTnVtYmVyIjoiOTE3NjExNzgyMiJ9LCJpYXQiOjE1OTU3MDU5NzV9.JrIzllRP3NCWPwQB6qX37XGs68BWF0BKjLiqfDylB_8";
-
     var responseJson;
-    var response;
     try {
-      response = await http.post(
-          "https://dev.healthbook.vsolgmi.com/asgard" + url,
+      final response = await http.post(
+          //_baseUrl + url,
+          "https://dev.healthbook.vsolgmi.com/asgard/" + url,
           body: jsonBody,
           headers: header);
 
@@ -845,13 +909,11 @@ class ApiBaseHelper {
   Future<dynamic> getLastsynctime(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     var header = await headerRequest.getRequestHeader();
-    //header['Authorization'] =
-    //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6eyJQcm92aWRlclBheWxvYWQiOnsiaWRfdG9rZW4iOiJleUpyYVdRaU9pSktVSFpHWVZrd2NtTkRZemsxYVUxdGJWUkJZMGRUZDFoV2FVTlhkVlpHTWxCQk5WTTJXWEZYZDFsclBTSXNJbUZzWnlJNklsSlRNalUySW4wLmV5SmhkRjlvWVhOb0lqb2ljSE0yUVRJdFgzVlpabXhhVEZWbFVrVjZVRFZ3ZHlJc0luTjFZaUk2SWpKbU1HTmhORE0yTFRoaE4yTXRORE5qT1MxaU5EUmpMVFV5TTJFM1pUVm1OVE5oWlNJc0ltVnRZV2xzWDNabGNtbG1hV1ZrSWpwMGNuVmxMQ0ppYVhKMGFHUmhkR1VpT2lJd09DMHdPQzB4T1Rrd0lpd2lhWE56SWpvaWFIUjBjSE02WEM5Y0wyTnZaMjVwZEc4dGFXUndMblZ6TFdWaGMzUXRNaTVoYldGNmIyNWhkM011WTI5dFhDOTFjeTFsWVhOMExUSmZabmQxVm05blYzZG9JaXdpY0dodmJtVmZiblZ0WW1WeVgzWmxjbWxtYVdWa0lqcG1ZV3h6WlN3aVkyOW5ibWwwYnpwMWMyVnlibUZ0WlNJNklqSm1NR05oTkRNMkxUaGhOMk10TkROak9TMWlORFJqTFRVeU0yRTNaVFZtTlROaFpTSXNJbWRwZG1WdVgyNWhiV1VpT2lKcVlXZGhiaUlzSW1GMVpDSTZJalpzYkdObWMybHZaVGd5TW5SdVoyNXVkbVJ1WkhSMk4zUnBJaXdpZEc5clpXNWZkWE5sSWpvaWFXUWlMQ0poZFhSb1gzUnBiV1VpT2pFMU9UVTNNRFU1TnpFc0luQm9iMjVsWDI1MWJXSmxjaUk2SWlzNU1Ua3hOell4TVRjNE1qSWlMQ0psZUhBaU9qRTFPVFUzTURrMU56RXNJbWxoZENJNk1UVTVOVGN3TlRrM01pd2labUZ0YVd4NVgyNWhiV1VpT2lKaVlXSjFJaXdpWlcxaGFXd2lPaUpoWkc5dWFXRnFZV2RoYmtCbmJXRnBiQzVqYjIwaWZRLkZ1WXBZZkc2OFNUSWNNcmpSX1NOVHZYbnhyU1RuTVNpV0J1ZGRDbkZUSHZQdzNoYlN1WHZlYVJwQUxKOXp0ak5DTjVjQ1F1MHllc3RMYl9GbjVTQU4zMWMyTzJvX1NMRmQwRk5VTWg0aXpReWMwS3IwTGtEZ2NvcHN2cWo3Rmk0Vk52WGJsVlZrcWU5d0pteE1HcmJvVmtBQWdQVXNwejNETWRacFNIY2FNZmVPUUNiUWpmVWlJVkI4UC1WQkJBQ2FlVV84aHI3TjFqWWoxWGduRVFqSUpiWWlpSEJBTkgtaWhxbGpWQl9SckFndTgtU2otR0Vma1NyUVprQXlFNTFqbWg2cUxGaWdMc3E1bHpCY3oycjNYVW9KTkhhMXJCTDd5bFo3R2dGSUhPbUdQNWdORk1ZZHZJNURVbnFkME1UX2wtTjE3b3M0WXc0MEZ0TGNHZHFSQSIsImFjY2Vzc190b2tlbiI6ImV5SnJhV1FpT2lKd01rSnJUM0p2ZFZReFZGaDJSSGRNU0V4U1pFRnZNRkExU21sTGNuQnFaRGhJVFVoWWQwTmNMM05OUlQwaUxDSmhiR2NpT2lKU1V6STFOaUo5LmV5SnpkV0lpT2lJeVpqQmpZVFF6TmkwNFlUZGpMVFF6WXprdFlqUTBZeTAxTWpOaE4yVTFaalV6WVdVaUxDSjBiMnRsYmw5MWMyVWlPaUpoWTJObGMzTWlMQ0p6WTI5d1pTSTZJbUYzY3k1amIyZHVhWFJ2TG5OcFoyNXBiaTUxYzJWeUxtRmtiV2x1SUhCb2IyNWxJRzl3Wlc1cFpDQndjbTltYVd4bElHVnRZV2xzSWl3aVlYVjBhRjkwYVcxbElqb3hOVGsxTnpBMU9UY3hMQ0pwYzNNaU9pSm9kSFJ3Y3pwY0wxd3ZZMjluYm1sMGJ5MXBaSEF1ZFhNdFpXRnpkQzB5TG1GdFlYcHZibUYzY3k1amIyMWNMM1Z6TFdWaGMzUXRNbDltZDNWV2IyZFhkMmdpTENKbGVIQWlPakUxT1RVM01EazFOekVzSW1saGRDSTZNVFU1TlRjd05UazNNaXdpZG1WeWMybHZiaUk2TWl3aWFuUnBJam9pTldJd05EazJabVV0WmpZellpMDBNVGswTFRnelpXSXRPREpoT0RVNU1XSTRPV1ZtSWl3aVkyeHBaVzUwWDJsa0lqb2lObXhzWTJaemFXOWxPREl5ZEc1bmJtNTJaRzVrZEhZM2RHa2lMQ0oxYzJWeWJtRnRaU0k2SWpKbU1HTmhORE0yTFRoaE4yTXRORE5qT1MxaU5EUmpMVFV5TTJFM1pUVm1OVE5oWlNKOS5xRjNJMVExTUo1LVhvOTVJLXd0Qi1EQTRuU3dKOFMwclh0R0taLWMyZ1pVNW5HTUdXTW5jRVJ1T2pSV0dBX29jckdIdXRwTFdiSWlZY0ROYmV0cmF1em1qem1vUGt6ZWdTdEZFNF9OVkxsUC1mMVp5c3hSWV80dGJfZ0xLNDVuc2N0ME5CUzc3SWptSWtBMHRuNkVNZ2g4QmFmLUM2b01vQ0MtUnNWN3ZxRzVEX2pTSUJ0VGhMUzhUakpXUFJjWnliY0E0OGJGaUVtWWp5ZjJ0R0lTRzh5Y19WUWxkV2xZX3Nsb1JsTHJKajVOaEExVzZHenZUQXNEN0tVakRxMEYyclgxalNRWWp4R2pyaE1vTmRqUUhlX25ELWstZUJRQ2U5aXRYdG43T0VPemdyQVpsU01vNHdFdUVXQjFfTGN3ZkFyNmpVb3l3bDRtR3BxSW5NcUw5WlEiLCJyZWZyZXNoX3Rva2VuIjoiZXlKamRIa2lPaUpLVjFRaUxDSmxibU1pT2lKQk1qVTJSME5OSWl3aVlXeG5Jam9pVWxOQkxVOUJSVkFpZlEuR0swU0Fmb2J2bllWbjBESGN2TlNBdEc3UU54N3Y1eUstTmNxSXhFRmFHanR6YTJwM0J0QTVuQkQwX2tvX3NsN1BiMF9iMmJEOEtEYWpZVllXajJhT3lVanM5YVlPV2MybUxSMUptX3VITk1FRGVFTUttanZmQW5iTjhyWldWZ2RaZWttSk9uakphTnZqSFVhTnF6RXhtRDN4dGJ2dWxYSi03Yk5nSDRENXk1cUV2eXFmUzh0ZUIyZWdVNVJIU3A3N3czSFVDY0haSVg2VUhxRmgxY2laTHVQWjdTYVItVXJhRDJhVlFZb1BGMjdsX0FrWkFLLWZXZjIzcWJydF9ZT2NhRTM4bTg1QWFOMzdHek5NWVhvSzFCYzZtYlNrNFB3RFhaR3dEbkktdW12SUVfRXIwVGZiU3pfT3liVTZqVHFJbzh3X1dXNWZ0aUpWWnJPU1QxMVBRLnI5RlBRVHJrMlVwb1VDUlIuX19yVDl3bEJaSzNGNFoyT01NXzRYUXdJcEY5M040aFlQaVpULVFYTVQtbDc4b1ZQWGRfZXhieUIxaF9wd1JfWHp2blMwU1FLN3ZPWWdCRlp6WUlFQi1lRkZvVGNpTU1oODNiZVRWOEQwZkNZMm40bDE1TF9ETWVmMnNIRU1vZ1g1Y3ZqV0NvOTJZRkxhVE84WktqOGJJZ190NW01WlVhQ3lRR1AwQkVZdm5XOUY2WWxWS3RSSTZOeUcwSGc3aHloQTNHbnZTc3Zkb1UwVWlpTUxyU3ZGbl8zNHA1a2oyS3p1TWh6b2ZZR3NJTEx0VzZJempFZTFCaW8yTF9Cb21iWjFGX0RGZjZqcnBobjMydVlMMzlCUkl4SUF0eTEtUDlZLTFnX1FiYktMLWFhOEZyY20yb05CZ2FFa2NDTnliN1R0RzJKT0s4eko1bElWcUtYRU00MG1PTDl0T0ZWSHZJZThYWXA4cVkycmVVbVN4WEMxUjlsWmJkSkRRT0wzWnIzR0JMcFAtakRJOEpROXh3Q2pqSVJndUJ4cGIwNWowZE5JREVITjBJN0V4Z1hBT1p5YlRMVTBORVFvd211YkZkSWUwWTQxeEhnbjA5MDM3MmxPMkZFMThfZVNnWVlBUFFaUUtLYkt3cjloOElWOGJCV3hZYWVWanlTRDktSmlWaHpEYlg1N1FZQzQxTWNodkV3RTY0eldfT0Z0Q0wzY2hGNEhkZWlOYVBlMWdFN2l1YnNCczhfeEJzXzNIMXYySnY1c0lhVVhBendsQVBoYmdGZVNlVGRndXBZRnpQRGF0bUZVZGVZRFlZQUg2eHZnTW44LVVlamxmQjNiaEV1YkgwY2dYR01fVmJ6TEJ4NW9NNG5zLWp3bHU4Q1B2X1ZDZDBOanlGeDBFQ3I5cWJrUUJvYzlDM1lkQU4wdDB1QzF4WjhSZGh1N3VranBybVowcVI3aXMwRjhlUDJudC1McE9Xb0JDbExPZHJvNUFZRGV5ZVJlZ0lNUkdLVTRTOTNOMGVZSWFZTkthdDhKU3RUWGY0amxDREVrMXh2cDlCQUgtOHk1amNVSmtKN01yQWt5NnVmY19qT2tBdGNrQlE2Yzl4X2ZXVzVxQV9uRDFkS1hXdkpJcUIwQWNkR0g1eWJfS0JMU29hdG1ETDZMT2p5aHpvRk9qX3hNaG5HSVptaTd2c3pkZ0R6MWRwVUZILW0zbFdoYWF4UUJUbjFpNnNEbHNWQnpaUXdBZmdaYXRfbWpyRGNBbDBMaXBianpEOXZLaC1GNmN3ZnZfdmdBYXgxTmtqZkNycEJucVZjdF9JcHhrTVQtSmFjektCWUt5OWtDR0tXSkxyOHNybUJscVVTZWtVMlhyQ0hUT05xQmZLeEpSX3NWWmtoUHBFaHhZWVZWNDhHZk9ack53MXl1aG51M01rZ05BNlRyc3pDOHNkT3Jzc0wxdkIySGJmV1gwZ3g2cUw1bkdPejl6aFRreGxUVVg0OXdhSEFzbEdJcXIyVmJNUTFTcjZZOHJ1aGhJMXViME90aF9yVlpTV09MZ0hUVlpHMGRLUnpkNVlla3BhSU5iMlVYYWpGbUhiZFpBVmxiSTJQTTRkUGFnaVdKX1piRjY0SzNFeUxDUXExdzhjajRQa1E5MXQ5eHEwYnhCbFBYajItaEx4bXMwdUVfV29JWlA2MUYxLXl2dk5VTXEtNWVsRnNfcS0zXzQ5bTNsdzhiWTZwazRRanZ6QzRVbzZpUWtzbXlzSUlfWmFneVM4Lmt1WExqTFI5XzhGNGpONTBDS0M0ZkEiLCJleHBpcmVzX2luIjozNjAwLCJ0b2tlbl90eXBlIjoiQmVhcmVyIn0sImNvdW50cnlDb2RlIjoiKzkxIiwiZXhwaXJ5RGF0ZSI6MTU5ODkwODA2MTAyOSwicm9sZUlkIjoiOGY0NWY0NDItNjg1YS00YjhiLTg2ZTctYjkzZTY5ZDgwOTZkIiwic2Vzc2lvbkRhdGUiOjE1OTU3MDU5NzQwMTMsInNlc3Npb25Sb2xlcyI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsInNvdXJjZUluZm8iOnsic3ViU291cmNlSWQiOiIyNGUxNWJlMy05Njk1LTQ0ZjctODIyOS0zNGZmNGVmODEzOTYiLCJlbnRpdHlJZCI6IjkyYmRjN2IxLWQ1MDAtNDkwMS1iZmU4LThlMTlhMDlmZmFkNCIsInJvbGVJZCI6IjhmNDVmNDQyLTY4NWEtNGI4Yi04NmU3LWI5M2U2OWQ4MDk2ZCIsImlzRGV2aWNlIjpmYWxzZSwiZGV2aWNlSWQiOiIifSwic3ViamVjdCI6ImFkb25pYWphZ2FuQGdtYWlsLmNvbSIsInVzZXJJZCI6ImFjOWQxMTRkLThlMDEtNGMwOS04ZDc0LTg4Yjk5MGRlZDRjMyIsInBob25lTnVtYmVyIjoiOTE3NjExNzgyMiJ9LCJpYXQiOjE1OTU3MDU5NzV9.JrIzllRP3NCWPwQB6qX37XGs68BWF0BKjLiqfDylB_8";
     var responseJson;
-    var response;
     try {
-      response = await http.get(
-          "https://dev.healthbook.vsolgmi.com/asgard" + url,
+      final response = await http.get(
+          //_baseUrl+url,
+          "https://dev.healthbook.vsolgmi.com/asgard/" + url,
           headers: header);
 
       responseJson = _returnResponse(response);
