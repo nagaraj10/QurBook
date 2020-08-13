@@ -227,10 +227,7 @@ class MainActivity : FlutterActivity() {
                     val mid = call.argument<String>(getString(R.string.arg_mid))
                     val name = call.argument<String>(getString(R.string.arg_name))
                     if (mid != null && name!=null) {
-                        Toast.makeText(this,"Meeting id:${mid} and name:${name}",Toast.LENGTH_LONG).show()
                         startChime(mid,name)
-                    }else{
-                        Toast.makeText(this,getString(R.string.msg_err_meetid),Toast.LENGTH_LONG).show()
                     }
                     //result.success("activity started")
                 }else {
@@ -290,7 +287,6 @@ class MainActivity : FlutterActivity() {
                     val token = task.result?.token
                     mToken=task.result?.token
                     Log.d(TAG, "My CToken:\n $mToken")
-                    Toast.makeText(baseContext, "My CToken:\n$mToken", Toast.LENGTH_SHORT).show()
                 })
         return mToken
     }
