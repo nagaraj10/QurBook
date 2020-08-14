@@ -4,19 +4,17 @@ import 'package:myfhb/constants/fhb_parameters.dart';
 import 'dart:convert' show json;
 import 'package:quiver/iterables.dart';
 
-
-
 class FetchHealthKitData {
   Future<bool> activateHKT() async {
     try {
-      return await Health.requestAuthorization();
+      bool ret = await Health.requestAuthorization();
+      return ret;
     } catch (e) {
       throw "Authorization failed with error $e";
     }
   }
 
-Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
-
+  Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
     if (await Health.requestAuthorization()) {
       try {
         Map<String, dynamic> healthRecord = new Map();
@@ -43,6 +41,7 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
           print(params);
+          return params;
         }
       } catch (exception) {
         throw "Unable to fetch weight from Hk $exception";
@@ -51,7 +50,6 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
   }
 
   Future<String> getHeartRateData(var startDate, var endDate) async {
-
     if (await Health.requestAuthorization()) {
       try {
         List<HealthDataPoint> healthData = await Health.getHealthDataFromType(
@@ -78,6 +76,7 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
           print(params);
+          return params;
         }
       } catch (exception) {
         print(exception.toString());
@@ -87,7 +86,7 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
 
   Future<String> getBloodPressureData(var startDate, var endDate) async {
     if (await Health.requestAuthorization()) {
-         try {
+      try {
         List<HealthDataPoint> systolicData = await Health.getHealthDataFromType(
             startDate, endDate, HealthDataType.BLOOD_PRESSURE_SYSTOLIC);
         List<HealthDataPoint> diastolicData =
@@ -121,6 +120,7 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
           print(params);
+          return params;
         }
       } catch (e) {
         print(e.toString());
@@ -128,9 +128,7 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
     }
   }
 
- 
   Future<String> getBloodGlucoseData(var startDate, var endDate) async {
-
     if (await Health.requestAuthorization()) {
       try {
         /// Fetch BloodGlucose data
@@ -161,6 +159,7 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
           print(params);
+          return params;
         }
       } catch (exception) {
         print(exception.toString());
@@ -169,7 +168,6 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
   }
 
   Future<String> getBloodOxygenData(var startDate, var endDate) async {
-
     if (await Health.requestAuthorization()) {
       //print("Blood_Oxygen Summary");
       try {
@@ -193,13 +191,14 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
-            rawData[strParamOxygen] = healthData.value * 100; 
-        
+            rawData[strParamOxygen] = healthData.value * 100;
+
             dataSet.add(rawData);
           });
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
           print(params);
+          return params;
         }
       } catch (exception) {
         print(exception.toString());
@@ -208,7 +207,6 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
   }
 
   Future<String> getBodyTemperature(var startDate, var endDate) async {
-
     if (await Health.requestAuthorization()) {
       //print("Body_Temperature Summary");
       try {
@@ -242,6 +240,7 @@ Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
           print(params);
+          return params;
         }
       } catch (exception) {
         print(exception.toString());

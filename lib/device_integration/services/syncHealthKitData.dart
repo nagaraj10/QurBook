@@ -28,7 +28,7 @@ class SyncHealthKitData {
   }
 
   Future<void> syncHKTData() async {
-    var response = "";
+    var response;
     DateTime startDate = DateTime.utc(2020, 07, 01);
     DateTime endDate = DateTime.now();
 
@@ -57,42 +57,51 @@ class SyncHealthKitData {
 
     try {
       String weightParams = await _hkHelper.getWeightData(startDate, endDate);
-      response = await postHKData(weightParams);
-      print('post weight data response $response');
-
+      if (weightParams != null) {
+        response = await postHKData(weightParams);
+        print('post weight data response $response');
+      }
       response = "";
       String bloodGlucoseParams =
           await _hkHelper.getBloodGlucoseData(startDate, endDate);
-      response = await postHKData(bloodGlucoseParams);
-      print('post Glucose data response $response');
+      if (bloodGlucoseParams != null) {
+        response = await postHKData(bloodGlucoseParams);
+        print('post Glucose data response $response');
+      }
 
       response = "";
       String bpParams =
           await _hkHelper.getBloodPressureData(startDate, endDate);
-      response = await postHKData(bpParams);
-      print('post BP data response $response');
-
+      if (bpParams != null) {
+        response = await postHKData(bpParams);
+        print('post BP data response $response');
+      }
       response = '';
       String bloodOxygenParams =
           await _hkHelper.getBloodOxygenData(startDate, endDate);
-      response = await postHKData(bloodOxygenParams);
-      print('post blood Oxygen data response $response');
-
+      if (bloodOxygenParams != null) {
+        response = await postHKData(bloodOxygenParams);
+        print('post blood Oxygen data response $response');
+      }
       response = '';
 
       String bodyTemperatureParams =
           await _hkHelper.getBodyTemperature(startDate, endDate);
-
-      response = await postHKData(bodyTemperatureParams);
-      print('post body temp data response $response');
-
+      if (bodyTemperatureParams != null) {
+        response = await postHKData(bodyTemperatureParams);
+        print('post body temp data response $response');
+      }
       response = '';
 
       String heartRateParams =
           await _hkHelper.getHeartRateData(startDate, endDate);
-      response = await postHKData(heartRateParams);
-      print('post heart rate data response $response');
-    } catch (e) {}
+      if (heartRateParams != null) {
+        response = await postHKData(heartRateParams);
+        print('post heart rate data response $response');
+      }
+    } catch (e) {
+      print("Unable to post data to FHB $e");
+    }
 
     // todo
   }
@@ -101,6 +110,7 @@ class SyncHealthKitData {
     try {
       _deviceHealthRecord = DeviceHealthRecord();
       var response = await _deviceHealthRecord.postDeviceData(params);
+      print("reponse from FHB DB is ${response}");
       return response;
     } catch (e) {
       throw "Sync HealthKit Fit Data to FHB Backend Failed $e";
