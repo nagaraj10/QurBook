@@ -1,47 +1,44 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PDFViewer.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/record_detail/bloc/deleteRecordBloc.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/screens/record_info_card.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/imageSlider.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:carousel_slider/carousel_slider.dart';
-export 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'dart:typed_data';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:audioplayer/audioplayer.dart';
+export 'package:myfhb/my_family/models/relationship_response_list.dart';
+
 typedef void OnError(Exception exception);
 
 class RecordDetailScreen extends StatefulWidget {
@@ -87,7 +84,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   var pdfFile;
   List<MediaMasterIds> mediMasterId = new List();
-
 
   @override
   void initState() {
@@ -1035,7 +1031,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               return Container(
                                   height: double.infinity,
                                   child: Image.network(
-                                      imgUrl.response.data.fileContent,height: 200,width: 200,));
+                                    imgUrl.response.data.fileContent,
+                                    height: 200,
+                                    width: 200,
+                                  ));
                               /*Container(
                                 height: double.infinity,
                                 child: Image.memory(
@@ -1122,7 +1121,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               } else {*/
               //imagesPathMain.addAll(snapshot.data.data);
               /* }*/
-              return Container() ;//getCarousalImage(snapshot.data.data);
+              return Container(); //getCarousalImage(snapshot.data.data);
               break;
           }
         } else {
@@ -1225,11 +1224,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   downloadMedia(String url, BuildContext context) async {
     var path;
-    FHBUtils.createFolderInAppDocDir(variable.stAudioPath).then((filePath)async {
-      final bytes =await  _loadFileBytes(url,
+    FHBUtils.createFolderInAppDocDir(variable.stAudioPath)
+        .then((filePath) async {
+      final bytes = await _loadFileBytes(url,
           onError: (Exception exception) =>
               print('audio_provider.load => exception ${exception}'));
-
 
       path = '$filePath${widget.data.metaInfo.fileName}.mp3';
       new File(path).writeAsBytes(bytes);
@@ -1251,7 +1250,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
     return bytes;
   }
-
 
   showProgressIndicator(MediaMetaInfo data) {
     showAudioWidgetIfVoiceNotesAvailable(data);

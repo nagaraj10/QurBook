@@ -1,39 +1,30 @@
 package com.globalmantrainnovations.myfhb
 
 import android.app.Activity
-import android.content.pm.PackageManager
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.widget.Toast
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.util.*
 import kotlin.collections.ArrayList
+import android.content.Intent
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.EventChannel.EventSink
 import android.app.KeyguardManager
 import android.content.*
-import android.media.RingtoneManager
 import android.os.Bundle
 import android.speech.tts.UtteranceProgressListener
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import androidx.core.app.NotificationManagerCompat
-import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
-import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.iid.FirebaseInstanceId
-import kotlinx.coroutines.*
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.lang.Runnable
-import java.net.HttpURLConnection
-import java.net.URL
+import android.view.WindowManager
+import com.globalmantrainnovations.myfhb.services.AVServices
 
 
 class MainActivity : FlutterActivity() {
@@ -42,6 +33,11 @@ class MainActivity : FlutterActivity() {
     private val VOICE_CHANNEL = "flutter.native/voiceIntent"
     private val TTS_CHANNEL = "flutter.native/textToSpeech"
     private val SECURITY_CHANNEL = "flutter.native/security"
+    private val ROUTE_CHANNEL="navigation.channel"
+    private val ONGOING_NS_CHANNEL="ongoing_ns.channel"
+    val STREAM = "com.example.agoraflutterquickstart/stream"
+    private var sharedValue: String? = null
+    private lateinit var mEventChannel:EventSink
     private val REQ_CODE = 112
     private val INTENT_AUTHENTICATE = 155
     private var voiceText = ""
@@ -64,60 +60,27 @@ class MainActivity : FlutterActivity() {
     internal var TAG = this@MainActivity::class.toString()
     private val SMS_CONSENT_REQUEST = 2  // Set to an unused request code
 
-    private val CHIME_CHANNEL="flutter.native/chime"
-    private val NS_CHANNEL="flutter.native/ns"
-    private val NS_MISSED_CALL_CHANNEL="flutter.native/missed_call_ns"
-    private val logger = ConsoleLogger(LogLevel.INFO)
-    private val uiScope = CoroutineScope(Dispatchers.Main)
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
-    private lateinit var chaimeResult: MethodChannel.Result
-    private lateinit var nsResult: MethodChannel.Result
-    private var isAppInForeground:Boolean = false
-    lateinit var nsManager: NotificationManagerCompat
-    private val WEBRTC_PERMISSION_REQUEST_CODE = 1
-    private val MEETING_REGION = "us-east-1"
-    private object HOLDER {
-        val INSTANCE = MainActivity()
-    }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        this.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
-    private val WEBRTC_PERM = arrayOf(
-            android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
-            android.Manifest.permission.RECORD_AUDIO
-    )
-
-    private var meetingID: String? = null
-    private var yourName: String? = null
-
-    companion object {
-        const val MEETING_RESPONSE_KEY = "MEETING_RESPONSE"
-        const val MEETING_ID_KEY = "MEETING_ID"
-        const val NAME_KEY = "NAME"
-        const val FROM_KEY = "FROM"
-        const val RESULT_KEY = "RESULT_KEY"
-        var FROM_VAL = ""
-        val instance: MainActivity by lazy { HOLDER.INSTANCE }
-    }
-
-
-     override fun onCreate(savedInstanceState: Bundle?) {
-       super.onCreate(savedInstanceState)
-       //this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-    }
-
-    var broadcastReceiver: BroadcastReceiver = object:BroadcastReceiver() {
-        override fun onReceive(context: Context, intent:Intent) {
-            val meetingID = intent.getStringExtra(context.getString(R.string.meetid))
-            val recipientName = intent.getStringExtra(context.getString(R.string.username))
-            val callerName = intent.getStringExtra(context.getString(R.string.from))
-            FROM_VAL=callerName
-            startChime(meetingID,recipientName)
+        val action = intent.action
+        val type = intent.type
+        if (Intent.ACTION_SEND == action && type != null) {
+            if ("text/plain" == type) {
+                handleSendText(intent); // Handle text being sent
+            }
         }
+        //registerReceiver(smsBroadcastReceiver,
+        //IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
+
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        unregisterReceiver(broadcastReceiver)
-    }
+
+    /* override fun onStop() {
+         super.onStop()
+         unregisterReceiver(smsBroadcastReceiver)
+     }*/
 
 
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
@@ -132,6 +95,7 @@ class MainActivity : FlutterActivity() {
 
         val appSignatureHelper = AppSignatureHelper(applicationContext)
         appSignatureHelper.appSignatures;
+        Log.v("App signature fm native","${appSignatureHelper.appSignatures}");
 
         val smsVerificationReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -159,8 +123,49 @@ class MainActivity : FlutterActivity() {
             }
         }
 
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ROUTE_CHANNEL).setMethodCallHandler { call, result ->
+            try {
+                if(call.method!!.contentEquals("getMyRoute")){
+                    result.success(sharedValue)
+                    sharedValue=null
+                }else {
+                    result.notImplemented()
+                }
+            }catch (e:Exception){
+                print(e.printStackTrace())
+            }
+
+        }
+
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ONGOING_NS_CHANNEL).setMethodCallHandler { call, result ->
+            try {
+                if(call.method!!.contentEquals("startOnGoingNS")){
+                    val passedName = call.argument<String>("name")
+                    val passedMode = call.argument<String>("mode")
+                    startOnGoingNS(passedName!!,passedMode!!)
+                }else {
+                    result.notImplemented()
+                }
+            }catch (e:Exception){
+                print(e.printStackTrace())
+            }
+
+        }
+
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger,STREAM).setStreamHandler(
+                object : EventChannel.StreamHandler {
+                    override fun onListen(arguments: Any?, events: EventSink?) {
+                        mEventChannel=events!!
+                    }
+
+                    override fun onCancel(arguments: Any?) {
+                    }
+                }
+        )
+
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VERSION_CODES_CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == Constants.APP_VERSION) {
+            if (call.method == "getAppVersion") {
                 //logics to get version code
                 val appVersion = getAppVersion();
                 result.success(appVersion);
@@ -170,37 +175,47 @@ class MainActivity : FlutterActivity() {
         }
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, LISTEN4SMS).setMethodCallHandler { call, result ->
-            if (call.method == Constants.LISTEN_SMS) {
-                //call fucn for listen SMS
+            if (call.method == "listenForSMS") {
                 listenForSMS()
             } else {
                 result.notImplemented()
             }
         }
 
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SECURITY_CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == Constants.KEY_GAURD) {
-                //logics to show security mehods
+            if (call.method == "secureMe") {
+                //logics to show security methods
                 _securityResult=result
-                secureMe();
+                secureMe()
             } else {
                 result.notImplemented()
             }
         }
 
+
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VOICE_CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == Constants.VOICE_ASST) {
+            if (call.method == "speakWithVoiceAssistant") {
                 _result=result
+//                val rec_Permisson = ContextCompat.checkSelfPermission(this,android.Manifest.permission.RECORD_AUDIO)
+////                if(rec_Permisson==PackageManager.PERMISSION_GRANTED && tts?.isSpeaking()!=true){
+////                    speakWithVoiceAssistant()
+////                    //result.success(voiceText)
+////                }else{
+////                    Log.i("RECORD_PERMISSION","we cant record without your permission.")
+////                    requestPermissionFromUSer()
+////                }
                 speakWithVoiceAssistant()
 
             } else {
                 result.notImplemented()
             }
         }
-        
+
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger,TTS_CHANNEL).setMethodCallHandler{ call, result ->
             _TTSResult=result
-            if(call.method==Constants.TEXT2SPEECH){
+            if(call.method=="textToSpeech"){
                 val msg = call.argument<String>("message")
                 val iscls = call.argument<Boolean>("isClose")
                 textToSpeech(msg!!,iscls!!)
@@ -208,287 +223,60 @@ class MainActivity : FlutterActivity() {
                 result.notImplemented()
             }
         }
-
-        nsManager = NotificationManagerCompat.from(this)
-        val meet_id =intent.getStringExtra(context.getString(R.string.meetid))
-        val uname =intent.getStringExtra(context.getString(R.string.username))
-        val callerName =intent.getStringExtra(context.getString(R.string.from))
-        if(callerName!=null){
-            FROM_VAL=callerName
-        }
-        if(meet_id!=null && uname!=null){
-            startChime(meet_id,uname)
-        }
-        registerReceiver(broadcastReceiver, IntentFilter(context.getString(R.string.intaction_accept_call)))
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHIME_CHANNEL).setMethodCallHandler { call, result ->
-            try {
-                if (call.method == getString(R.string.func_startchime)) {
-                    chaimeResult=result
-                    val mid = call.argument<String>(getString(R.string.arg_mid))
-                    val name = call.argument<String>(getString(R.string.arg_name))
-                    if (mid != null && name!=null) {
-                        startChime(mid,name)
-                    }
-                    //result.success("activity started")
-                }else {
-                    result.notImplemented()
-                }
-            }catch (e:Exception){
-                print(e.printStackTrace())
-            }
-
-        }
-
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NS_CHANNEL).setMethodCallHandler { call, result ->
-            try {
-                if(call.method ==getString(R.string.func_createns)){
-                    val ns_title = call.argument<String>(getString(R.string.pro_ns_title))
-                    val ns_body = call.argument<String>(getString(R.string.pro_ns_body))
-                    if (ns_title != null && ns_body !=null) {
-                        //createNotification(title = ns_title,body=ns_body)
-                    }
-                }else {
-                    result.notImplemented()
-                }
-            }catch (e:Exception){
-                print(e.printStackTrace())
-            }
-
-        }
-
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, NS_MISSED_CALL_CHANNEL).setMethodCallHandler { call, result ->
-            try {
-                if(call.method ==getString(R.string.func_showms_ns)){
-                    nsResult=result
-                    val data: Map<String, String>? = call.argument<Map<String,String>>(getString(R.string.pro_data))
-                    data?.let { showMissedCallNS(it) }
-                }else {
-                    result.notImplemented()
-                }
-            }catch (e:Exception){
-                print(e.printStackTrace())
-            }
-
-        }
-
-        getCurrentNewToken()
-
     }
 
-    fun getCurrentNewToken(): String? {
-        var mToken:String?=null
-        FirebaseInstanceId.getInstance().instanceId
-                .addOnCompleteListener(OnCompleteListener { task ->
-                    if (!task.isSuccessful) {
-                        return@OnCompleteListener
-                    }
-
-                    // Get new Instance ID token
-                    val token = task.result?.token
-                    mToken=task.result?.token
-                    Log.d(TAG, "My CToken:\n $mToken")
-                })
-        return mToken
+    private fun startOnGoingNS(name:String,mode:String){
+        if(mode == "start"){
+            val serviceIntent = Intent(this, AVServices::class.java)
+            serviceIntent.putExtra("name",name)
+            startService(serviceIntent)
+        }else if(mode=="stop"){
+            val serviceIntent = Intent(this, AVServices::class.java)
+            stopService(serviceIntent)
+        }
     }
 
-    fun startChime(mid:String,name:String) {
-        joinMeeting(mid,name)
+    fun handleSendText(intent: Intent) {
+        sharedValue = intent.getStringExtra(Intent.EXTRA_TEXT)
+        if (::mEventChannel.isInitialized){mEventChannel.success(sharedValue)}
+        Log.d(TAG, "passed text from intent filter ${sharedValue!!}")
     }
 
-    private fun joinMeeting(mid:String,name:String) {
-        meetingID = mid
-        yourName = name
-
-        if (meetingID.isNullOrBlank()) {
-            Toast.makeText(
-                    this,
-                    getString(R.string.user_notification_meeting_id_invalid),
-                    Toast.LENGTH_LONG
-            ).show()
-        } else if (yourName.isNullOrBlank()) {
-            Toast.makeText(
-                    this,
-                    getString(R.string.user_notification_attendee_name_invalid),
-                    Toast.LENGTH_LONG
-            ).show()
-        } else {
-            if (hasPermissionsAlready()) {
-                authenticate(getString(R.string.test_url), meetingID, yourName)
-            } else {
-                ActivityCompat.requestPermissions(this, WEBRTC_PERM, WEBRTC_PERMISSION_REQUEST_CODE)
+    override fun onStart() {
+        super.onStart()
+        Log.i(TAG, "onStart: invoked")
+        val action = intent.action
+        val type = intent.type
+        if (Intent.ACTION_SEND == action && type != null) {
+            if ("text/plain" == type) {
+                handleSendText(intent); // Handle text being sent
             }
         }
     }
 
-    private fun hasPermissionsAlready(): Boolean {
-        return WEBRTC_PERM.all {
-            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-        }
+    override fun onResume() {
+        super.onResume()
+        Log.i(TAG, "onResume: invoked")
     }
 
-    override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissionsList: Array<String>,
-            grantResults: IntArray
-    ) {
-        when (requestCode) {
-            WEBRTC_PERMISSION_REQUEST_CODE -> {
-                val isMissingPermission: Boolean =
-                        grantResults.isEmpty() || grantResults.any { PackageManager.PERMISSION_GRANTED != it }
-
-                if (isMissingPermission) {
-                    Toast.makeText(
-                            this,
-                            getString(R.string.user_notification_permission_error),
-                            Toast.LENGTH_LONG
-                    )
-                            .show()
-                    return
-                }
-                authenticate(getString(R.string.test_url), meetingID, yourName)
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        Log.i(TAG, "onNewIntent: invoked")
+        val action = intent.action
+        val type = intent.type
+        if (Intent.ACTION_SEND == action && type != null) {
+            if ("text/plain" == type) {
+                handleSendText(intent); // Handle text being sent
             }
         }
     }
 
-    private fun authenticate(
-            meetingUrl: String,
-            meetingId: String?,
-
-            attendeeName: String?
-    ) =
-            uiScope.launch {
-                //authenticationProgressBar?.visibility = View.VISIBLE
-                logger.info(TAG, "Joining meeting. meetingUrl: $meetingUrl, meetingId: $meetingId, attendeeName: $attendeeName")
-                val meetingResponseJson: String? = joinMeeting(meetingUrl, meetingId, attendeeName)
-
-                //authenticationProgressBar?.visibility = View.INVISIBLE
-
-                if (meetingResponseJson == null) {
-                    Toast.makeText(
-                            applicationContext,
-                            getString(R.string.user_notification_meeting_start_error),
-                            Toast.LENGTH_LONG
-                    ).show()
-                } else {
-                    val intent = Intent(applicationContext, CallOnUI::class.java)
-                    intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
-                    intent.putExtra(MEETING_ID_KEY, meetingId)
-                    intent.putExtra(NAME_KEY, attendeeName)
-                    intent.putExtra(FROM_KEY, FROM_VAL)
-                    startActivity(intent)
-                }
-            }
-
-    private suspend fun joinMeeting(
-            meetingUrl: String,
-            meetingId: String?,
-            attendeeName: String?
-    ): String? {
-        return withContext(ioDispatcher) {
-            val serverUrl =
-                    URL(
-                            "${meetingUrl}join?title=${encodeURLParam(
-                                    meetingId
-                            )}&name=${encodeURLParam(
-                                    attendeeName
-                            )}&region=${encodeURLParam(
-                                    MEETING_REGION
-                            )}"
-                    )
-
-            try {
-                val response = StringBuffer()
-                val conn: HttpURLConnection = serverUrl.openConnection() as HttpURLConnection
-                conn.connectTimeout = 15000
-                conn.readTimeout = 15000
-                with(conn) {
-                    requestMethod = "POST"
-                    doInput = true
-                    doOutput = true
-                    BufferedReader(InputStreamReader(inputStream)).use {
-                        var inputLine = it.readLine()
-                        while (inputLine != null) {
-                            response.append(inputLine)
-                            inputLine = it.readLine()
-                        }
-                        it.close()
-                    }
-
-                    if (responseCode == 201) {
-                        response.toString()
-                    } else {
-                        logger.error(TAG, "Unable to join meeting. Response code: $responseCode")
-                        null
-                    }
-                }
-            } catch (exception: Exception) {
-                logger.error(TAG, "There was an exception while joining the meeting: $exception")
-                null
-            }
-        }
-    }
-
-    fun showMissedCallNS(data:Map<String, String> = HashMap()) {
-        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
-        val NS_ID = 9091
-        val MEETING_ID = data.get(getString(R.string.meetid))
-        val USER_NAME = data.get(getString(R.string.username))
-        var alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        /*if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
-            val channel1 = NotificationChannel(
-                    CHANNEL_INCOMING,
-                    "channel 2",
-                    NotificationManager.IMPORTANCE_HIGH
-            )
-            channel1.description = "This is channel is for missed call"
-            val manager = getSystemService(NotificationManager::class.java)
-            manager.createNotificationChannel(channel1)
-        }
-
-//        var activityIntent = Intent(this, NotificationActivity::class.java)
-//                .putExtra("name", "mohan")
-//                .putExtra("id", "1234")
-//        var contentIntent = PendingIntent.getActivity(this,
-//                0, activityIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-
-        val declineIntent = Intent(applicationContext, DeclineReciver::class.java)
-        declineIntent.putExtra("notificationId", NS_ID)
-        val declinePendingIntent = PendingIntent.getBroadcast(applicationContext, 0, declineIntent, 0)
-
-        val acceptIntent = Intent(applicationContext, NotificationActivity::class.java)
-                .putExtra("username", USER_NAME)
-                .putExtra("meeting_id", MEETING_ID)
-                .putExtra("notificationId", NS_ID)
-        val acceptPendingIntent = PendingIntent.getActivity(this, 0, acceptIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-
-        val fullScreenIntent = Intent(this, NotificationActivity::class.java)
-                .putExtra("username", USER_NAME)
-                .putExtra("meeting_id", MEETING_ID)
-                .putExtra("notificationId", NS_ID)
-        val fullScreenPendingIntent = PendingIntent.getActivity(this, 0,
-                fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
-
-        var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Missed Call From")
-                .setContentText("Mohan")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_REMINDER)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setContentIntent(fullScreenPendingIntent)
-                .addAction(R.drawable.ic_missed_call, "call back", acceptPendingIntent)
-                .addAction(R.drawable.ic_clear, "cancel", declinePendingIntent)
-                .setAutoCancel(true)
-                //.setFullScreenIntent(fullScreenPendingIntent,true)
-                .setSound(alarmSound)
-                .build()
-
-
-        nsManager.notify(NS_ID,notification)*/
-
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i(TAG, "onDestroy: invoked")
+        val serviceIntent = Intent(this, AVServices::class.java)
+        stopService(serviceIntent)
     }
 
     private fun speakWithVoiceAssistant() {
@@ -498,11 +286,21 @@ class MainActivity : FlutterActivity() {
         //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         GetSrcTargetLanguages()
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en_US")
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Need to speak")
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
         try {
             startActivityForResult(intent, REQ_CODE)
-        } catch (a: ActivityNotFoundException){}
+        } catch (a: ActivityNotFoundException) {
+            // Toast.makeText(applicationContext,
+            //         "Sorry your device not supported",
+            //         Toast.LENGTH_SHORT).show()
+            //CalledFromListen = false
+        }
+        /* tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
+             if (status != TextToSpeech.ERROR) {
+                 tts!!.language = Locale(langDest)
+             }
+         })*/
     }
 
     private fun listenForSMS(){
@@ -540,10 +338,16 @@ class MainActivity : FlutterActivity() {
     private fun secureMe(){
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             val km: KeyguardManager = getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
-            if (km.isKeyguardSecure) {
-                val authIntent: Intent = km.createConfirmDeviceCredentialIntent(Constants.KEY_GAURD_TITLE, Constants.KEY_GAURD_TITLE_DESC)
+            if (km.isKeyguardSecure()) {
+                val authIntent: Intent = km.createConfirmDeviceCredentialIntent("myFHB", "Please Authorize to use the Application")
                 startActivityForResult(authIntent, INTENT_AUTHENTICATE)
+            }else{
+                _securityResult.success(1004)
+                return
             }
+        }else{
+            _securityResult.success(1000)
+            return
         }
     }
 
@@ -559,13 +363,21 @@ class MainActivity : FlutterActivity() {
 
         tts!!.setOnUtteranceProgressListener(object : UtteranceProgressListener(){
             override fun onDone(p0: String?) {
+                //Toast.makeText(context,"listening Done",Toast.LENGTH_LONG).show()
+                Log.d("Message","listening Done")
                 runOnUiThread(Runnable { _TTSResult.success(1) })
 
             }
 
-            override fun onError(p0: String?) {}
+            override fun onError(p0: String?) {
+                Log.d("Message","listening Error")
+                //runOnUiThread(Runnable { _TTSResult.success(-1) })
+            }
 
-            override fun onStart(p0: String?) {}
+            override fun onStart(p0: String?) {
+                //runOnUiThread(Runnable { _TTSResult.success(0) })
+                Log.d("Message","listening start")
+            }
 
         })
 
@@ -603,14 +415,15 @@ class MainActivity : FlutterActivity() {
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     val result: ArrayList<*> = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     val finalWords = result[0].toString()
+                    //Toast.makeText(applicationContext, "You said:\n$finalWords", Toast.LENGTH_LONG).show()
                     _result.success(finalWords)
                 }
             }
             INTENT_AUTHENTICATE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    _securityResult.success(Constants.KEY_GAURD_AUTH_SUCC)
+                    _securityResult.success(1002)
                 }else{
-                    _securityResult.success(Constants.KEY_GAURD_AUTH_FAIL)
+                    _securityResult.success(1003)
                 }
             }
             /*SMS_CONSENT_REQUEST ->
