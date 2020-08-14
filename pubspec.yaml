@@ -32,7 +32,7 @@ dependencies:
   intl: ^0.16.1
   shimmer: ^1.0.1
   cached_network_image: ^2.0.0
-  camera: ^0.5.7+3
+  camera: ^0.5.8+5
   path_provider: ^1.6.0
   path: ^1.6.4
   gradient_bottom_navigation_bar: ^1.0.0+4
@@ -82,6 +82,7 @@ dependencies:
   agora_rtc_engine: 1.0.5
   firebase_messaging: ^6.0.15
   flutter_switch: ^0.1.1
+  audioplayer: ^0.8.1
 
 dev_dependencies:
   flutter_test:

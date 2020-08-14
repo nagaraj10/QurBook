@@ -21,8 +21,8 @@ class _SuperMayaState extends State<SuperMaya> {
   final GlobalKey _micKey = GlobalKey();
   BuildContext _myContext;
 
-  PermissionStatus permissionStatus = PermissionStatus.undetermined;
-  final Permission _micpermission = Permission.microphone;
+ // PermissionStatus permissionStatus = PermissionStatus.undetermined;
+ // final Permission _micpermission = Permission.microphone;
 
   @override
   void initState() {
@@ -40,18 +40,18 @@ class _SuperMayaState extends State<SuperMaya> {
   }
 
   void _listenForPermissionStatus() async {
-    final status = await _micpermission.status;
-    setState(() => permissionStatus = status);
+   // final status = await _micpermission.status;
+    //setState(() => permissionStatus = status);
   }
 
-  Future<PermissionStatus> requestPermission(Permission micPermission) async {
-    final status = await micPermission.request();
+/* Future<PermissionStatus> requestPermission(Permission micPermission) async {
+   final status = await micPermission.request();
     setState(() {
       
       permissionStatus = status;
     });
     return status;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -117,18 +117,19 @@ class _SuperMayaState extends State<SuperMaya> {
                                   ],
                                 ),
                                 onPressed: () {
-                                  requestPermission(_micpermission)
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return ChatScreen();
+                                      },
+                                    ),
+                                  );
+                                 /* requestPermission(_micpermission)
                                       .then((status) {
                                     if (status == PermissionStatus.granted) {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return ChatScreen();
-                                          },
-                                        ),
-                                      );
+
                                     } 
-                                  });
+                                  });*/
                                 }),
                             variable.strMaya)),
                   ],

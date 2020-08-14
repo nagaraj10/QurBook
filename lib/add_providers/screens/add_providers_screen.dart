@@ -39,6 +39,7 @@ import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
@@ -856,14 +857,19 @@ print(selectedFamilyMemberName);
            /* Navigator.of(context)
               .popUntil(ModalRoute.withName(router.rt_UserAccounts));*/
 
+             // PageNavigator.goToPermanent(context,router.rt_SignIn);
 
-               Navigator.popUntil(context, (Route<dynamic> route) {
-                bool shouldPop = false;
-                if (route.settings.name == router.rt_UserAccounts) {
-                  shouldPop = true;
-                }
-                return shouldPop;
-              });
+             // Navigator.pop(context);
+             /* Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (BuildContext context) => UserAccounts()),
+                ModalRoute.withName(router.rt_UserAccounts),
+              );*/
+
+
+
+             // Navigator.popUntil(context,ModalRoute.withName(router.rt_UserAccounts));
+              Navigator.pop(context, 1);
             }
             return Container();
           } else {

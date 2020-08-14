@@ -361,4 +361,30 @@ class _MyFHBState extends State<MyFHB> {
       }
     } on PlatformException catch (e, s) {}
   }
+
+  void requeatPermissionForAudioAndCamera() async{
+  /*  final Permission cameraPermission = Permission.camera;
+    var cameraPermissionResult = await cameraPermission.status;
+
+    final Permission audioPermission = Permission.microphone;
+    var audioPermissionResult = await cameraPermission.status;
+
+    print(cameraPermissionResult.toString());
+    print(audioPermissionResult.toString());
+
+
+    if(cameraPermissionResult == PermissionStatus.denied || cameraPermissionResult == PermissionStatus.undetermined ){
+      cameraPermission.request();
+    }
+
+    if(audioPermissionResult == PermissionStatus.denied || audioPermissionResult == PermissionStatus.undetermined ){
+      audioPermission.request();
+    }
+
+
+    print(cameraPermissionResult.toString());
+    print(audioPermissionResult.toString());
+
+   */
+  }
 }

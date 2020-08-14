@@ -33,6 +33,7 @@ import 'package:myfhb/src/ui/health/NotesScreen.dart';
 import 'package:myfhb/src/ui/health/OtherDocsList.dart';
 import 'package:myfhb/src/ui/health/VoiceRecordList.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 import '../../constants/fhb_constants.dart';
@@ -93,7 +94,6 @@ class _MyRecordsState extends State<MyRecords> {
   CategoryData categoryDataObjClone = new CategoryData();
 
   List<String> selectedMedia = new List();
-  
 
   @override
   void initState() {
@@ -311,9 +311,9 @@ class _MyRecordsState extends State<MyRecords> {
       initPosition: initPosition,
       itemCount: categoryData.length,
       fromSearch: fromSearch,
-      allowSelect: widget.allowSelect??false,
-      allowSelectVoice: widget.isAudioSelect??false,
-      allowSelectNotes: widget.isNotesSelect??false,
+      allowSelect: widget.allowSelect ?? false,
+      allowSelectVoice: widget.isAudioSelect ?? false,
+      allowSelectNotes: widget.isNotesSelect ?? false,
       selectedMedia: widget.selectedMedias,
       onPositionChange: (index) {
         try {
@@ -481,9 +481,8 @@ class _MyRecordsState extends State<MyRecords> {
           dataObj.categoryName != Constants.STR_FEEDBACK &&
           dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
           dataObj.categoryName != Constants.STR_WEARABLES) {
-        if(!filteredCategoryData.contains(dataObj)){
+        if (!filteredCategoryData.contains(dataObj)) {
           filteredCategoryData.add(dataObj);
-
         }
       }
     }
@@ -504,7 +503,6 @@ class _MyRecordsState extends State<MyRecords> {
           .toLowerCase()
           .compareTo(b.categoryDescription.toLowerCase());
     });
-
 
     return filteredCategoryData;
   }
@@ -727,45 +725,7 @@ class _CustomTabsState extends State<CustomTabView>
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    categoryName = widget.categoryData
-                        .elementAt(_currentPosition)
-                        .categoryName;
-                    categoryID =
-                        widget.categoryData.elementAt(_currentPosition).id;
-
-                    if (categoryName == Constants.STR_VOICERECORDS) {
-                      new FHBBasicWidget().showInSnackBar(
-                          Constants.MSG_NO_CAMERA_VOICERECORDS,
-                          widget.scaffold_state);
-                    } else if (categoryName == Constants.STR_NOTES) {
-                      openNotesDialog();
-                    } else {
-                      PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
-                          .then((onValue) {
-                        PreferenceUtil.saveString(
-                                Constants.KEY_CATEGORYNAME, categoryName)
-                            .then((onValue) {
-                          PreferenceUtil.saveString(
-                                  Constants.KEY_CATEGORYID, categoryID)
-                              .then((value) {
-                            if (categoryName == STR_DEVICES) {
-                              PreferenceUtil.saveString(
-                                  Constants.stop_detecting, variable.strNO);
-                              PreferenceUtil.saveString(
-                                  Constants.stop_detecting, variable.strNO);
-
-                              Navigator.pushNamed(
-                                      context, router.rt_TakePictureForDevices)
-                                  .then((value) {});
-                            } else {
-                              Navigator.pushNamed(
-                                      context, router.rt_TakePictureScreen)
-                                  .then((value) {});
-                            }
-                          });
-                        });
-                      });
-                    }
+                    onCameraClicked();
                   },
                 ),
                 Constants.CAMERA_TITLE),
@@ -808,16 +768,20 @@ class _CustomTabsState extends State<CustomTabView>
       ),
       Align(
         alignment: Alignment.bottomCenter,
-        child:(widget.selectedMedia!=null && widget.selectedMedia.length>0)? OutlineButton(
-          onPressed: () {
-            Navigator.of(context).pop({'metaId': widget.selectedMedia});
-          },
-          child: Text('Associate'),
-          textColor: Color(new CommonUtil().getMyPrimaryColor()),
-          color: Colors.white,
-          borderSide: BorderSide(color: Color(new CommonUtil().getMyPrimaryColor())),
-          shape: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-        ):SizedBox(),
+        child: (widget.selectedMedia != null && widget.selectedMedia.length > 0)
+            ? OutlineButton(
+                onPressed: () {
+                  Navigator.of(context).pop({'metaId': widget.selectedMedia});
+                },
+                child: Text('Associate'),
+                textColor: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Colors.white,
+                borderSide: BorderSide(
+                    color: Color(new CommonUtil().getMyPrimaryColor())),
+                shape:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+              )
+            : SizedBox(),
       )
     ]);
   }
@@ -1226,7 +1190,6 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelectNotes,
             widget.allowSelectVoice));
       } else {
-
         tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
       }
       /* }*/
@@ -1328,4 +1291,55 @@ class _CustomTabsState extends State<CustomTabView>
         false,
         fileName);
   }
+
+  void onCameraClicked() async {
+    final PermissionHandler cameraPermission = PermissionHandler();
+    var permissionStatus = await cameraPermission.checkPermissionStatus(PermissionGroup.camera);
+
+    if (permissionStatus == PermissionStatus.denied ||
+        permissionStatus == PermissionStatus.unknown) {
+      await _handleCameraAndMic();
+    } else {
+      categoryName =
+          widget.categoryData.elementAt(_currentPosition).categoryName;
+      categoryID = widget.categoryData.elementAt(_currentPosition).id;
+
+      if (categoryName == Constants.STR_VOICERECORDS) {
+        new FHBBasicWidget().showInSnackBar(
+            Constants.MSG_NO_CAMERA_VOICERECORDS, widget.scaffold_state);
+      } else if (categoryName == Constants.STR_NOTES) {
+        openNotesDialog();
+      } else {
+        PreferenceUtil.saveString(Constants.KEY_DEVICENAME, null)
+            .then((onValue) {
+          PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, categoryName)
+              .then((onValue) {
+            PreferenceUtil.saveString(Constants.KEY_CATEGORYID, categoryID)
+                .then((value) {
+              if (categoryName == STR_DEVICES) {
+                PreferenceUtil.saveString(
+                    Constants.stop_detecting, variable.strNO);
+                PreferenceUtil.saveString(
+                    Constants.stop_detecting, variable.strNO);
+
+                Navigator.pushNamed(context, router.rt_TakePictureForDevices)
+                    .then((value) {});
+              } else {
+                Navigator.pushNamed(context, router.rt_TakePictureScreen)
+                    .then((value) {});
+              }
+            });
+          });
+        });
+      }
+    }
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
+  }
+
+
 }
