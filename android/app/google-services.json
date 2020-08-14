@@ -1,42 +1,88 @@
 {
   "project_info": {
-    "project_number": "41214208151",
-    "firebase_url": "https://myfhb-th.firebaseio.com",
-    "project_id": "myfhb-th",
-    "storage_bucket": "myfhb-th.appspot.com"
+    "project_number": "588661578434",
+    "firebase_url": "https://myfhbfitness.firebaseio.com",
+    "project_id": "myfhbfitness",
+    "storage_bucket": "myfhbfitness.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:41214208151:android:c2d3ecb810211feb3461d2",
+        "mobilesdk_app_id": "1:588661578434:android:b58f5ba6e25330f598f95b",
         "android_client_info": {
-          "package_name": "com.globalmantrainnovations.myfhb"
+          "package_name": "com.example.go_fhb_flutter"
         }
       },
       "oauth_client": [
         {
-          "client_id": "41214208151-mijjg7foo07pbeso3kop8vn0rho4v6c5.apps.googleusercontent.com",
+          "client_id": "588661578434-oki6qk1fmmbu2ads4ihdla1gup3npto1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.go_fhb_flutter",
+            "certificate_hash": "347d53b3eefe60f15ece110122865268d05bddc3"
+          }
+        },
+        {
+          "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAHmmODBPkn_KoQOOiyDA0PrDXyYj_D8PM"
+          "current_key": "AIzaSyATmXYdNEYYPxrO-DLWppZZJg7e9efo-0I"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "41214208151-mijjg7foo07pbeso3kop8vn0rho4v6c5.apps.googleusercontent.com",
+              "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
               "client_type": 3
-            },
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588661578434:android:4d5ad5024dd2403298f95b",
+        "android_client_info": {
+          "package_name": "com.globalmantrainnovations.myfhb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "588661578434-f7jv3mlclgh7el6q0d48cdgo81erbi3e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.globalmantrainnovations.myfhb",
+            "certificate_hash": "347d53b3eefe60f15ece110122865268d05bddc3"
+          }
+        },
+        {
+          "client_id": "588661578434-luv1nkojeo5isb9pgbedeqbu7hv80fdt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.globalmantrainnovations.myfhb",
+            "certificate_hash": "c7f27710afa65295bb30064511ba46f8c51042f8"
+          }
+        },
+        {
+          "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATmXYdNEYYPxrO-DLWppZZJg7e9efo-0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
             {
-              "client_id": "41214208151-7ubtv4vo90juh286ptsfjnoa1pm1gl2e.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.trident.voipapp"
-              }
+              "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
+              "client_type": 3
             }
           ]
         }
