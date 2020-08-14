@@ -212,6 +212,7 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       //Navigator.pop(context, 'code:${mURL}');
     });
     }else{
+      print(res.body.toString());
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: new Text(res.body.toString()),

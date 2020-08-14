@@ -1021,7 +1021,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               widget.arguments.sharedbyme.profileData.phoneNumber;
 
           if (doValidation()) {
-           saveProfileImage();
+
             CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait); //
 
             var signInData = {};
@@ -1049,6 +1049,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       PreferenceUtil.saveFamilyData(
                               Constants.KEY_FAMILYMEMBER, value.response.data)
                           .then((value) {
+                        saveProfileImage();
                         MySliverAppBar.imageURI = null;
                         fetchedProfileData = null;
 
@@ -1071,11 +1072,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         } else if (widget.arguments.fromClass == CommonConstants.user_update) {
           if (doValidation()) {
-            saveProfileImage();
+
             CommonUtil.showLoadingDialog(context, _keyLoader,variable.Please_Wait);
 
             addFamilyUserInfoBloc.updateSelfProfile().then((value) {
               if (value.success && value.status == 200) {
+                saveProfileImage();
                 getUserProfileData();
               } else {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
@@ -1105,7 +1107,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           addFamilyUserInfoBloc.relationship = relationShipController.text;
 
           if (doValidation()) {
-            saveProfileImage();
+
             CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait); //
 
             addFamilyUserInfoBloc.updateUserProfile().then((value) {
@@ -1114,6 +1116,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   PreferenceUtil.saveFamilyData(
                           Constants.KEY_FAMILYMEMBER, value.response.data)
                       .then((value) {
+                    saveProfileImage();
                     MySliverAppBar.imageURI = null;
                     fetchedProfileData = null;
 
@@ -1140,10 +1143,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     });
   }
 
-  void saveProfileImage(){
+  void saveProfileImage() async{
     if (addFamilyUserInfoBloc.profileBanner != null) {
-      PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+     await PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
           addFamilyUserInfoBloc.profileBanner.path);
+    }
+    if(addFamilyUserInfoBloc.profilePic !=null){
+    await PreferenceUtil.saveString(Constants.KEY_PROFILE_IMAGE,
+          addFamilyUserInfoBloc.profilePic.path);
     }
   }
 

@@ -22,7 +22,7 @@ class WebserviceCall {
 
   String getUrlToUpdateDoctor(String userID) {
     String query;
-    query = "${variable.qr_Userprofile}${userID}${variable.qr_slash}";
+    query = '${variable.qr_Userprofile}${userID}${variable.qr_slash}';
 
     return query;
   }

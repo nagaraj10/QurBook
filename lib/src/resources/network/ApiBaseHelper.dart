@@ -547,17 +547,20 @@ class ApiBaseHelper {
       Dio dio = new Dio();
 
       dio.options.headers[variable.straccept] = variable.strAcceptVal;
-      dio.options.headers[variable.strcontenttype] = variable.strcntVal;
+      dio.options.headers[variable.strContentType] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
       String fileNoun = file.path
           .split('/')
           .last;
 
-      FormData formData = new FormData.fromMap({
-        parameters.strprofilePic:
-        await MultipartFile.fromFile(file.path, filename: fileNoun)
-      });
-      response = await dio.put(_baseUrl + url, data: formData);
+      Map<String, dynamic> mapForSignUp = new Map();
+      mapForSignUp[parameters.strSections] = url;
+      mapForSignUp[parameters.strprofilePic]=await MultipartFile.fromFile(file.path, filename: fileNoun);
+
+      FormData formData = new FormData.fromMap(
+        mapForSignUp
+      );
+      response = await dio.post(_baseUrl+jsonBody, data: formData);
 
       return response.data;
     } on SocketException {

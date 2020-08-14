@@ -59,7 +59,7 @@ class AddFamilyUserInfoRepository {
               middleName,
               lastName),
           profilePic,
-          '');
+          webserviceCall.getUrlToUpdateDoctor(userID));
     } else {
       response = await _helper.updateFamilyUserProfile(webserviceCall.getUrlToUpdateDoctor(userID),
           webserviceCall.getQueryToUpdateProfile(
@@ -118,7 +118,7 @@ class AddFamilyUserInfoRepository {
               middleName,
               lastName),
           profilePic,
-          '');
+          webserviceCall.getUrlToUpdateDoctor(userID));
     } else {
       response = await _helper.updateFamilyUserProfile(webserviceCall.getUrlToUpdateDoctor(userID),
           webserviceCall.getQueryToUpdateProfile(

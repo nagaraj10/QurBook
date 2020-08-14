@@ -103,7 +103,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   List<CategoryData> categoryDataList = new List();
   List<CategoryData> filteredCategoryData = new List();
-
+  CategoryData categoryDataObjClone = new CategoryData();
   @override
   void initState() {
     providerViewModel = new MyProviderViewModel();
@@ -1002,6 +1002,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
         filteredCategoryData =
             new CommonUtil().fliterCategories(categoryDataList);
+
+        filteredCategoryData.add(categoryDataObjClone);
+
       });
       return filteredCategoryData;
     } else {
@@ -1038,7 +1041,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     int position = 0;
     List<CategoryData> categoryDataList = getCategoryList();
     for (int i = 0; i < categoryDataList.length; i++) {
-      if (categoryName == categoryDataList[i].categoryName) {
+         if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;
       }

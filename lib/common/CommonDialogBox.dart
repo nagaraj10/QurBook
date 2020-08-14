@@ -1728,8 +1728,13 @@ class CommonDialogBox {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
 
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                if(categoryName == Constants.STR_NOTES){
+                  Navigator.of(context).pop();
+                }else{
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                }
+
               });
             }
           });
@@ -1764,8 +1769,13 @@ class CommonDialogBox {
                     Constants.KEY_COMPLETE_DATA, value.response.data)
                     .then((value) {
 
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                      if(categoryName == Constants.STR_NOTES){
+                        Navigator.of(context).pop();
+                      }else{
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      }
+
 
                 });
               });
@@ -1808,8 +1818,14 @@ class CommonDialogBox {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
 
-                Navigator.of(context).pop();
-                Navigator.of(context).pop(true);
+                if(categoryName == Constants.STR_NOTES){
+                  Navigator.of(context).pop();
+                }else{
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop(true);
+                }
+
+
               });
             });
           });
@@ -1821,8 +1837,13 @@ class CommonDialogBox {
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
 
-              Navigator.of(context).pop();
-              Navigator.of(context).pop(true);
+              if(categoryName == Constants.STR_NOTES){
+                Navigator.of(context).pop();
+              }else{
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
+              }
+
             });
           });
         } else if (k == imagePathMain.length && modeOfSave == true) {
@@ -1833,8 +1854,13 @@ class CommonDialogBox {
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
 
-              Navigator.of(context).pop();
-              Navigator.of(context).pop(true);
+              if(categoryName == Constants.STR_NOTES){
+                Navigator.of(context).pop();
+              }else{
+                Navigator.of(context).pop();
+                Navigator.of(context).pop(true);
+              }
+
             });
           });
         }
@@ -1857,15 +1883,25 @@ class CommonDialogBox {
               .then((value) {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-            Navigator.of(context).pop();
-            Navigator.of(context).pop(true);
+            if(categoryName == Constants.STR_NOTES){
+              Navigator.of(context).pop();
+            }else{
+              Navigator.of(context).pop();
+              Navigator.of(context).pop(true);
+            }
+
           });
         });
       });
     }else{
-      Navigator.of(context).pop();
-      Navigator.of(context).pop();
 
+
+      if(categoryName == Constants.STR_NOTES){
+        Navigator.of(context).pop();
+      }else{
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+      }
 
     }
   }

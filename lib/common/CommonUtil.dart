@@ -63,6 +63,7 @@ class CommonUtil {
   static String COGNITO_AUTH_CODE = '';
 
 
+  CategoryData categoryDataObjClone = new CategoryData();
 
 
 
@@ -1051,7 +1052,6 @@ class CommonUtil {
 
   List<CategoryData> fliterCategories(List<CategoryData> data) {
     List<CategoryData> filteredCategoryData = new List();
-    CategoryData categoryDataObjClone = new CategoryData();
 
     for (CategoryData dataObj in data) {
       if (/*dataObj.isDisplay &&*/
@@ -1065,12 +1065,14 @@ class CommonUtil {
     for (CategoryData categoryDataObj in filteredCategoryData) {
       if (categoryDataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
-
+        categoryDataObjClone=categoryDataObj;
         filteredCategoryData.removeAt(i);
         break;
       }
       i++;
     }
+    filteredCategoryData.add(categoryDataObjClone);
+
 
     filteredCategoryData.sort((a, b) {
       if(a.categoryDescription!=null){
@@ -1080,7 +1082,6 @@ class CommonUtil {
       }
 
     });
-    filteredCategoryData.add(categoryDataObjClone);
 
 
     return filteredCategoryData;
