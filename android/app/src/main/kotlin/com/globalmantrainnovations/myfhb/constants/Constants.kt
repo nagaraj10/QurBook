@@ -1,4 +1,4 @@
-package com.globalmantrainnovations.myfhb
+package com.globalmantrainnovations.myfhb.constants
 
 object Constants {
     val APP_VERSION = "getAppVersion"

@@ -38,6 +38,12 @@ import AVFoundation
         // Google Api Key
         GMSServices.provideAPIKey("AIzaSyCQ26mjgJ8T00uCWigel-zWQKU6fkhsGX4")
         
+        // 1
+        // Local Notification
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+        }
+        
         // 2
         // Speech Recognization
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
@@ -58,7 +64,7 @@ import AVFoundation
             
             print("STT : ", result);
             
-//            self!.showLoading();
+            //            self!.showLoading();
             Loading.sharedInstance.showLoader()
             
             self?.STT_Result = result;
@@ -182,7 +188,7 @@ import AVFoundation
                     //                    isFinal = true
                     print("Timer called")
                     Loading.sharedInstance.hideLoader()
-
+                    
                     print(self.message)
                     
                     timer.invalidate()

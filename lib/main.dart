@@ -1,22 +1,31 @@
+import 'dart:async';
+import 'dart:io' show Platform;
+
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/add_address/screens/add_address_screen.dart';
+import 'package:myfhb/add_family_otp/screens/add_family_otp_screen.dart';
+import 'package:myfhb/add_family_user_info/screens/add_family_user_info.dart';
+import 'package:myfhb/add_providers/screens/add_providers_screen.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/confirm_location/screens/confirm_location_screen.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
-
-import 'package:myfhb/schedules/add_reminders.dart';
-import 'package:myfhb/src/ui/SplashScreen.dart';
-import 'package:myfhb/src/ui/connectivity_bloc.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:provider/provider.dart';
-import 'common/CommonConstants.dart';
-import 'common/CommonUtil.dart';
-
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/feedback/Feedbacks.dart';
+import 'package:myfhb/feedback/FeedbacksSucess.dart';
+import 'package:myfhb/my_family/screens/MyFamily.dart';
+import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
+import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
+import 'package:myfhb/my_providers/screens/my_provider.dart';
+import 'package:myfhb/schedules/add_appointments.dart';
+import 'package:myfhb/schedules/add_reminders.dart';
+import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/ui/IntroSlider.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
@@ -29,21 +38,20 @@ import 'package:myfhb/src/ui/camera/take_picture_screen_for_devices.dart';
 import 'package:myfhb/src/ui/dashboard.dart';
 import 'package:myfhb/src/ui/settings/MySettings.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
-import 'package:myfhb/search_providers/screens/search_specific_list.dart';
-import 'package:myfhb/add_address/screens/add_address_screen.dart';
-import 'package:myfhb/add_family_otp/screens/add_family_otp_screen.dart';
-import 'package:myfhb/add_family_user_info/screens/add_family_user_info.dart';
-import 'package:myfhb/add_providers/screens/add_providers_screen.dart';
-import 'package:myfhb/confirm_location/screens/confirm_location_screen.dart';
-import 'package:myfhb/feedback/Feedbacks.dart';
-import 'package:myfhb/feedback/FeedbacksSucess.dart';
-import 'package:myfhb/my_family/screens/MyFamily.dart';
-import 'package:myfhb/my_family_detail/screens/my_family_detail_screen.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'package:myfhb/my_providers/screens/my_provider.dart';
-import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
-import 'package:myfhb/schedules/add_appointments.dart';
+import 'package:myfhb/video_call/model/CallArguments.dart';
+import 'package:myfhb/video_call/pages/call.dart';
+import 'package:myfhb/video_call/pages/index.dart';
+import 'package:myfhb/video_call/push_notification_provider.dart';
+import 'package:myfhb/video_call/utils/callstatus.dart';
+import 'package:provider/provider.dart';
 
+import 'common/CommonConstants.dart';
+import 'common/CommonUtil.dart';
+import 'src/ui/SplashScreen.dart';
+import 'src/ui/authentication/SignInScreen.dart';
+import 'src/ui/connectivity_bloc.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -52,19 +60,16 @@ List<CameraDescription> listOfCameras;
 var routes;
 
 Future<void> main() async {
-  // Ensure that plugin services are initialized so that `availableCameras()`
-  // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Obtain a list of the available cameras on the device.
   final cameras = await availableCameras();
   listOfCameras = cameras;
 
   // Get a specific camera from the list of available cameras.
   firstCamera = cameras[0];
- // routes = await router.setRouter(listOfCameras);
+  // routes = await router.setRouter(listOfCameras);
 
-  routes=<String, WidgetBuilder>{
+  routes = <String, WidgetBuilder>{
     router.rt_Splash: (BuildContext context) => SplashScreen(),
     router.rt_SignIn: (BuildContext context) => SignInScreen(),
     router.rt_Dashboard: (BuildContext context) => DashboardScreen(),
@@ -81,34 +86,39 @@ Future<void> main() async {
     router.rt_AddAddress: (BuildContext context) =>
         AddAddressScreen(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_SearchProvider: (BuildContext context) => SearchSpecificList(
-      arguments: ModalRoute.of(context).settings.arguments,
-      toPreviousScreen: false,
-    ),
+          arguments: ModalRoute.of(context).settings.arguments,
+          toPreviousScreen: false,
+        ),
     router.rt_TakePicture: (BuildContext context) => TakePictureScreen(
-      camera: firstCamera,
-    ),
+          camera: firstCamera,
+        ),
     router.rt_TakePictureForDevices: (BuildContext context) =>
         TakePictureScreenForDevices(cameras: listOfCameras),
     router.rt_ConfirmLocation: (BuildContext context) => ConfirmLocationScreen(
         arguments: ModalRoute.of(context).settings.arguments),
     router.rt_AudioScreen: (BuildContext context) => AudioRecordScreen(),
     // "/sign_up_screen": (BuildContext context) => SignUpScreen(),
-    router.rt_AddFamilyOtp: (BuildContext context) =>
-        AddFamilyOTPScreen(arguments: ModalRoute.of(context).settings.arguments),
-    router.rt_AddFamilyUserInfo: (BuildContext context) => AddFamilyUserInfoScreen(
+    router.rt_AddFamilyOtp: (BuildContext context) => AddFamilyOTPScreen(
         arguments: ModalRoute.of(context).settings.arguments),
-    router.rt_FamilyDetailScreen: (BuildContext context) => MyFamilyDetailScreen(
+    router.rt_AddFamilyUserInfo: (BuildContext context) =>
+        AddFamilyUserInfoScreen(
+            arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_FamilyDetailScreen: (BuildContext context) =>
+        MyFamilyDetailScreen(
+            arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_FamilyInsurance: (BuildContext context) => MyFamilyDetailView(
         arguments: ModalRoute.of(context).settings.arguments),
-    router.rt_FamilyInsurance: (BuildContext context) =>
-        MyFamilyDetailView(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_AddReminders: (BuildContext context) => AddReminder(),
     router.rt_AddAppointments: (BuildContext context) => AddAppointments(),
     router.rt_IntroSlider: (BuildContext context) => IntroSliderPage(),
     router.rt_Feedbacks: (BuildContext context) => Feedbacks(),
     router.rt_FeedbackSucess: (BuildContext context) => FeedbackSuccess(),
     router.rt_WebCognito: (BuildContext context) => WebCognitoScreen(),
-    router.rt_TelehealthProvider: (BuildContext context) =>
-        TelehealthProviders(arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_TelehealthProvider: (BuildContext context) => TelehealthProviders(
+        arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_CallPage: (BuildContext context) =>
+        CallPage(arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_IndexPage: (BuildContext context) => IndexPage()
   };
   //get secret from resource
   List<dynamic> resList = [];
@@ -192,11 +202,86 @@ class _MyFHBState extends State<MyFHB> {
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static const secure_platform = variable.security;
 
+  static const nav_platform = const MethodChannel('navigation.channel');
+  String navRoute = '';
+
+  /// event channel for listening ns
+  static const stream =
+      const EventChannel('com.example.agoraflutterquickstart/stream');
+  StreamSubscription _timerSubscription = null;
+  String _msg = 'waiting for message';
+  ValueNotifier<String> _msgListener = ValueNotifier('');
+
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
   @override
   void initState() {
+    // TODO: implement initState
+
     super.initState();
-    gettingResponseFromNative();
-    showSecurityWall();
+
+    getMyRoute();
+    _enableTimer();
+
+    if (Platform.isIOS) {
+      // Push Notifications
+      final provider = PushNotificationsProvider();
+      provider.initNotification();
+
+      provider.pushController.listen((event) {
+        Get.key.currentState.pushNamed(router.rt_CallPage,
+            arguments: CallArguments(
+                role: ClientRole.Broadcaster, channelName: 'Test'));
+      });
+    }
+
+    ////    gettingResponseFromNative();
+////    showSecurityWall();
+  }
+
+  @override
+  void dispose() {
+    _disableTimer();
+    super.dispose();
+  }
+
+  void _enableTimer() {
+    if (_timerSubscription == null) {
+      _timerSubscription = stream.receiveBroadcastStream().listen(_updateTimer);
+    }
+  }
+
+  void _disableTimer() {
+    if (_timerSubscription != null) {
+      _timerSubscription.cancel();
+      _timerSubscription = null;
+    }
+  }
+
+  void _updateTimer(msg) {
+    debugPrint("Current Message $msg");
+    setState(() => _msg = msg);
+    _msgListener.value = _msg;
+  }
+
+  getMyRoute() async {
+    var route = await nav_platform.invokeMethod("getMyRoute");
+    if (route != null) {
+      setState(() {
+        navRoute = route;
+      });
+    }
+  }
+
+  Widget chooseMyRoute(String route) {
+    if (route.isEmpty) {
+      return SplashScreen();
+    } else {
+      return CallPage(
+        channelName: route,
+        role: ClientRole.Broadcaster,
+      );
+    }
   }
 
   @override
@@ -214,15 +299,15 @@ class _MyFHBState extends State<MyFHB> {
 
     flutterLocalNotificationsPlugin.initialize(platform,
         onSelectNotification: notificationAction);
-    return baseWidget();
-  }
 
-  Widget baseWidget() {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(
             create: (_) => ConnectivityBloc(),
-          )
+          ),
+          ChangeNotifierProvider<CallStatus>(
+            create: (_) => CallStatus(),
+          ),
         ],
         child: MaterialApp(
           title: Constants.APP_NAME,
@@ -231,7 +316,17 @@ class _MyFHBState extends State<MyFHB> {
             primaryColor: Color(myPrimaryColor),
             accentColor: Colors.white,
           ),
-          home: SplashScreen(),
+          home: ValueListenableBuilder(
+            builder: (BuildContext context, String val, Widget child) {
+              return val.isEmpty
+                  ? chooseMyRoute(navRoute)
+                  : CallPage(
+                      channelName: val,
+                      role: ClientRole.Broadcaster,
+                    );
+            },
+            valueListenable: _msgListener,
+          ),
           routes: routes,
           debugShowCheckedModeBanner: false,
           navigatorKey: Get.key,

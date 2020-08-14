@@ -1,26 +1,23 @@
+import 'dart:io';
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/ShapesPainter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase_widget.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/src/ui/user/UserAccounts.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -383,13 +380,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void moveToFamilyOrprovider(int position) {
-     Navigator.pushNamed(
+    Navigator.pushNamed(
       context,
       router.rt_UserAccounts,
       arguments: UserAccountsArguments(selectedIndex: position),
     );
 
-   /* Navigator.of(context).push(
+    /* Navigator.of(context).push(
       MaterialPageRoute(
         settings: RouteSettings(name: router.rt_UserAccounts),
         builder: (context) => UserAccounts(
@@ -420,12 +417,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ).then((value) {});
   }
 
-  void navigateToTelehealthScreen(int position) {
+  void navigateToTelehealthScreen(int position) async {
+    // await for camera and mic permissions before pushing video page
     Navigator.pushNamed(
       context,
       router.rt_TelehealthProvider,
       arguments: HomeScreenArguments(selectedIndex: position),
     ).then((value) {});
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    // You can request multiple permissions at once.
+    await [
+      Permission.camera,
+      Permission.microphone,
+    ].request();
   }
 
   bool checkPagesForEveryIndex(int position) {
