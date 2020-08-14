@@ -19,7 +19,7 @@ class GetGFDataFromFHBRepo {
       print("trying to query");
       _deviceHealthRecord = DeviceHealthRecord();
       print(params);
-      var response = await _deviceHealthRecord.queryByRecordDatatype(params);
+      var response = await _deviceHealthRecord.queryBydeviceInterval(params);
       print("response from querty $response");
       return response;
     } catch (e) {
@@ -27,7 +27,7 @@ class GetGFDataFromFHBRepo {
     }
   }
 
-  Future<void> getLatestData(String dataType) async {
+  /*Future<void> getLatestData(String dataType) async {
     String startTime = "1596911400000";
     String endTime = "1597084200000";
 
@@ -42,15 +42,19 @@ class GetGFDataFromFHBRepo {
     } else if (dataType == strTemperature) {
       getBodyTemperatureData(startTime, endTime, strsourceGoogle);
     }
-  }
+  }*/
 
   Future<String> getBPData(
-      String startDate, String endDate, String source) async {
+      /*String startDate, String endDate, String source*/) async {
     body.clear();
-    body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
-    body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
-    body[strdevicesourceName] = source;
-    body[strdeviceType] = strBPMonitor;
+    var currentdate = DateTime.now();
+    var startT = new DateTime(currentdate.year, currentdate.month - 1,
+        currentdate.day, currentdate.hour, currentdate.minute);
+
+    body[strStartTimeStamp] = startT.toIso8601String();
+    body[strEndTimeStamp] = currentdate.toIso8601String();
+    //body[strdevicesourceName] = source;
+    //body[strdeviceType] = strBPMonitor;
     body[strdeviceDataType] = strDataTypeBP;
     String params = json.encode(body);
     try {
@@ -61,14 +65,18 @@ class GetGFDataFromFHBRepo {
   }
 
   Future<String> getHeartRateData(
-      String startDate, String endDate, String source) async {
+      /*String startDate, String endDate, String source*/) async {
     body.clear();
-    body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
-    body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
-    body[strdevicesourceName] = source;
-    body[strdeviceType] = strOxymeter;
+    var currentdate = DateTime.now();
+    var startT = new DateTime(currentdate.year, currentdate.month - 2,
+        currentdate.day, currentdate.hour, currentdate.minute);
+
+    body[strStartTimeStamp] = startT.toIso8601String();
+    body[strEndTimeStamp] = currentdate.toIso8601String();
+    //body[strdevicesourceName] = source;
+    //body[strdeviceType] = strOxymeter;
     body[strdeviceDataType] = strHeartRate;
-    String params = json.encode(body);
+    String params = json.encode(body).toString();
     try {
       print("db query to get HeartRate Data $params");
       var response = await _getDataByDataType(params);
@@ -76,12 +84,16 @@ class GetGFDataFromFHBRepo {
   }
 
   Future<String> getOxygenSaturationData(
-      String startDate, String endDate, String source) async {
+      /*String startDate, String endDate, String source*/) async {
     body.clear();
-    body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
-    body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
-    body[strdevicesourceName] = source;
-    body[strdeviceType] = strBPMonitor;
+    var currentdate = DateTime.now();
+    var startT = new DateTime(currentdate.year, currentdate.month - 2,
+        currentdate.day, currentdate.hour, currentdate.minute);
+
+    body[strStartTimeStamp] = startT.toIso8601String();
+    body[strEndTimeStamp] = currentdate.toIso8601String();
+    //body[strdevicesourceName] = source;
+    //body[strdeviceType] = strBPMonitor;
     body[strdeviceDataType] = strDataTypeBP;
     String params = json.encode(body);
     try {
@@ -91,12 +103,16 @@ class GetGFDataFromFHBRepo {
   }
 
   Future<String> getWeightData(
-      String startDate, String endDate, String source) async {
+      /*String startDate, String endDate, String source*/) async {
     body.clear();
-    body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
-    body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
-    body[strdevicesourceName] = source;
-    body[strdeviceType] = strWeighingScale;
+    var currentdate = DateTime.now();
+    var startT = new DateTime(currentdate.year, currentdate.month - 2,
+        currentdate.day, currentdate.hour, currentdate.minute);
+
+    body[strStartTimeStamp] = startT.toIso8601String();
+    body[strEndTimeStamp] = currentdate.toIso8601String();
+    //body[strdevicesourceName] = source;
+    //body[strdeviceType] = strWeighingScale;
     body[strdeviceDataType] = strWeight;
     String params = json.encode(body);
     try {
@@ -106,12 +122,16 @@ class GetGFDataFromFHBRepo {
   }
 
   Future<String> getBloodGlucoseData(
-      String startDate, String endDate, String source) async {
+      /*String startDate, String endDate, String source*/) async {
     body.clear();
-    body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
-    body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
-    body[strdevicesourceName] = source;
-    body[strdeviceType] = strGlucometer;
+    var currentdate = DateTime.now();
+    var startT = new DateTime(currentdate.year, currentdate.month - 2,
+        currentdate.day, currentdate.hour, currentdate.minute);
+
+    body[strStartTimeStamp] = startT.toIso8601String();
+    body[strEndTimeStamp] = currentdate.toIso8601String();
+    //body[strdevicesourceName] = source;
+    //body[strdeviceType] = strGlucometer;
     body[strdeviceDataType] = strGlusoceLevel;
     String params = json.encode(body);
     try {
@@ -121,17 +141,33 @@ class GetGFDataFromFHBRepo {
   }
 
   Future<String> getBodyTemperatureData(
-      String startDate, String endDate, String source) async {
+      /*String startDate, String endDate, String source*/) async {
     body.clear();
-    body[strStartTimeStamp] = getFormatedDateFromMillis(startDate);
-    body[strEndTimeStamp] = getFormatedDateFromMillis(endDate);
-    body[strdevicesourceName] = source;
-    body[strdeviceType] = strThermometer;
+    var currentdate = DateTime.now();
+    var startT = new DateTime(currentdate.year, currentdate.month - 2,
+        currentdate.day, currentdate.hour, currentdate.minute);
+
+    body[strStartTimeStamp] = startT.toIso8601String();
+    body[strEndTimeStamp] = currentdate.toIso8601String();
+    //body[strdevicesourceName] = source;
+    //body[strdeviceType] = strThermometer;
     body[strdeviceDataType] = strTemperature;
     String params = json.encode(body);
     try {
       print("db query to get Body Temperature Data $params");
       var response = await _getDataByDataType(params);
     } catch (e) {}
+  }
+
+  Future<dynamic> getLatestDeviceHealthRecord() async {
+    try {
+      if (_deviceHealthRecord == null)
+        _deviceHealthRecord = DeviceHealthRecord();
+      var response = await _deviceHealthRecord.getlastMeasureSync();
+      print("response from getLatestDeviceHealthRecord $response");
+      return response;
+    } catch (e) {
+      throw "Get latest device record from FHB Backend Failed $e";
+    }
   }
 }

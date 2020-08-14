@@ -831,7 +831,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getLastsynctime(String url) async {
+  Future<dynamic> getDeviceInfo(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     var header = await headerRequest.getRequestHeader();
     var responseJson;
