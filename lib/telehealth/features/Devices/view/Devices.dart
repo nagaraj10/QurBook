@@ -9,7 +9,9 @@ class Devices extends StatefulWidget {
 class DevicesState extends State<Devices> {
   @override
   Widget build(BuildContext context) {
-     return Center(child: Text(variable.strDevices,));
-
+    return Center(
+        child: Text(
+      variable.strDevices,
+    ));
   }
 }

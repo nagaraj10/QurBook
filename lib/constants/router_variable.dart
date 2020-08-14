@@ -29,6 +29,7 @@ const String rt_myprovider='/my-providers';
 const String rt_AudioScreen='/audio-record-screen';
 const String rt_Splash='/splashscreen';
 const String rt_WebCognito='/webcognito';
+const String rt_ShowDevice='/showDevice';
 
 
 

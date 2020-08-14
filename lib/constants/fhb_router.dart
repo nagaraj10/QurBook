@@ -1,5 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/device_integration/view/screens/Show_Devices.dart';
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
 import 'package:myfhb/schedules/add_appointments.dart';
@@ -33,60 +35,60 @@ import '../my_family_detail/screens/my_family_detail_screen.dart';
 import '../telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 
+setRouter(List<CameraDescription> listOfCameras) async {
+  var firstCamera = listOfCameras[0];
 
+  var fhb_router = <String, WidgetBuilder>{
+    router.rt_Splash: (BuildContext context) => SplashScreen(),
+    router.rt_SignIn: (BuildContext context) => SignInScreen(),
+    router.rt_Dashboard: (BuildContext context) => DashboardScreen(),
+    router.rt_HomeScreen: (BuildContext context) =>
+        HomeScreen(arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_UserAccounts: (BuildContext context) =>
+        UserAccounts(arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_AppSettings: (BuildContext context) => ChangeNotifierProvider(
+          create: (context) => DevicesViewModel(),
+          child: MySettings(),
+        ),
+    router.rt_MyRecords: (BuildContext context) => MyRecords(),
+    router.rt_MyFamily: (BuildContext context) => MyFamily(),
+    router.rt_myprovider: (BuildContext context) => MyProvider(),
+    router.rt_AddProvider: (BuildContext context) =>
+        AddProviders(arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_AddAddress: (BuildContext context) =>
+        AddAddressScreen(arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_SearchProvider: (BuildContext context) => SearchSpecificList(
+          arguments: ModalRoute.of(context).settings.arguments,
+          toPreviousScreen: false,
+        ),
+    router.rt_TakePicture: (BuildContext context) => TakePictureScreen(
+          camera: firstCamera,
+        ),
+    router.rt_TakePictureForDevices: (BuildContext context) =>
+        TakePictureScreenForDevices(cameras: listOfCameras),
+    router.rt_ConfirmLocation: (BuildContext context) => ConfirmLocationScreen(
+        arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_AudioScreen: (BuildContext context) => AudioRecordScreen(),
+    // "/sign_up_screen": (BuildContext context) => SignUpScreen(),
+    router.rt_AddFamilyOtp: (BuildContext context) => AddFamilyOTPScreen(
+        arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_AddFamilyUserInfo: (BuildContext context) =>
+        AddFamilyUserInfoScreen(
+            arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_FamilyDetailScreen: (BuildContext context) =>
+        MyFamilyDetailScreen(
+            arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_FamilyInsurance: (BuildContext context) => MyFamilyDetailView(
+        arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_AddReminders: (BuildContext context) => AddReminder(),
+    router.rt_AddAppointments: (BuildContext context) => AddAppointments(),
+    router.rt_IntroSlider: (BuildContext context) => IntroSliderPage(),
+    router.rt_Feedbacks: (BuildContext context) => Feedbacks(),
+    router.rt_FeedbackSucess: (BuildContext context) => FeedbackSuccess(),
+    router.rt_WebCognito: (BuildContext context) => WebCognitoScreen(),
+    router.rt_TelehealthProvider: (BuildContext context) => TelehealthProviders(
+        arguments: ModalRoute.of(context).settings.arguments),
+  };
 
-setRouter(List<CameraDescription> listOfCameras)async{
-
-  var firstCamera=listOfCameras[0];
-
-  var fhb_router= <String, WidgetBuilder>{
-  router.rt_Splash: (BuildContext context) => SplashScreen(),
- router.rt_SignIn: (BuildContext context) => SignInScreen(),
-  router.rt_Dashboard: (BuildContext context) => DashboardScreen(),
-  router.rt_HomeScreen: (BuildContext context) =>
-      HomeScreen(arguments: ModalRoute.of(context).settings.arguments),
-  router.rt_UserAccounts: (BuildContext context) =>
-      UserAccounts(arguments: ModalRoute.of(context).settings.arguments),
-  router.rt_AppSettings: (BuildContext context) => MySettings(),
-  router.rt_MyRecords: (BuildContext context) => MyRecords(),
-  router.rt_MyFamily: (BuildContext context) => MyFamily(),
-  router.rt_myprovider: (BuildContext context) => MyProvider(),
-  router.rt_AddProvider: (BuildContext context) =>
-      AddProviders(arguments: ModalRoute.of(context).settings.arguments),
-  router.rt_AddAddress: (BuildContext context) =>
-      AddAddressScreen(arguments: ModalRoute.of(context).settings.arguments),
-  router.rt_SearchProvider: (BuildContext context) => SearchSpecificList(
-        arguments: ModalRoute.of(context).settings.arguments,
-        toPreviousScreen: false,
-      ),
-  router.rt_TakePicture: (BuildContext context) => TakePictureScreen(
-        camera: firstCamera,
-      ),
-  router.rt_TakePictureForDevices: (BuildContext context) =>
-      TakePictureScreenForDevices(cameras: listOfCameras),
-  router.rt_ConfirmLocation: (BuildContext context) => ConfirmLocationScreen(
-      arguments: ModalRoute.of(context).settings.arguments),
-  router.rt_AudioScreen: (BuildContext context) => AudioRecordScreen(),
-  // "/sign_up_screen": (BuildContext context) => SignUpScreen(),
-  router.rt_AddFamilyOtp: (BuildContext context) =>
-      AddFamilyOTPScreen(arguments: ModalRoute.of(context).settings.arguments),
-  router.rt_AddFamilyUserInfo: (BuildContext context) => AddFamilyUserInfoScreen(
-      arguments: ModalRoute.of(context).settings.arguments),
-  router.rt_FamilyDetailScreen: (BuildContext context) => MyFamilyDetailScreen(
-      arguments: ModalRoute.of(context).settings.arguments),
-  router.rt_FamilyInsurance: (BuildContext context) =>
-      MyFamilyDetailView(arguments: ModalRoute.of(context).settings.arguments),
-  router.rt_AddReminders: (BuildContext context) => AddReminder(),
-  router.rt_AddAppointments: (BuildContext context) => AddAppointments(),
-  router.rt_IntroSlider: (BuildContext context) => IntroSliderPage(),
-  router.rt_Feedbacks: (BuildContext context) => Feedbacks(),
-  router.rt_FeedbackSucess: (BuildContext context) => FeedbackSuccess(),
-  router.rt_WebCognito: (BuildContext context) => WebCognitoScreen(),
-  router.rt_TelehealthProvider: (BuildContext context) =>
-      TelehealthProviders(arguments: ModalRoute.of(context).settings.arguments),
-};
-
-return fhb_router;
-
+  return fhb_router;
 }
-

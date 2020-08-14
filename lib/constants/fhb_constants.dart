@@ -1,6 +1,9 @@
 library fhb_constants;
 
+import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/device_integration/model/Values_Screen.dart';
+import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
 String BASEURL_COVERIMAGE = CommonUtil.BASE_COVER_IMAGE;
@@ -287,3 +290,177 @@ const String Appointments_chatImage = 'assets/navicons/chat.png';
 const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
 const String Appointments_newAppoinmentImage =
     'assets/icons/new-appointment.svg';
+List<DeviceData> getDeviceValues() {
+  List<DeviceData> devicelist = new List<DeviceData>();
+  devicelist.add(DeviceData(
+      title: 'BP Monitor',
+      icon: 'assets/bp_m.png',
+      status: 0,
+      isSelected: false,
+      value_name: 'bloodPressure',
+      value1: 'SYS',
+      value2: 'DIS',
+      color: Colors.redAccent));
+  devicelist.add(DeviceData(
+      title: 'Glucometer',
+      icon: 'assets/gulco.png',
+      status: 0,
+      isSelected: false,
+      value_name: 'bloodGlucose',
+      value1: 'GL',
+      value2: '',
+      color: Colors.orange));
+  devicelist.add(DeviceData(
+      title: 'Pulse Oximeter',
+      icon: 'assets/pulse_oxim.png',
+      status: 0,
+      isSelected: false,
+      value_name: 'oxygenSaturation',
+      value1: 'OS',
+      value2: '',
+      color: Colors.black26));
+  devicelist.add(DeviceData(
+      title: 'Thermometer',
+      icon: 'assets/fever.png',
+      status: 0,
+      isSelected: false,
+      value_name: 'bodyTemperature',
+      value1: 'TEMP',
+      value2: '',
+      color: Colors.deepOrangeAccent));
+  devicelist.add(DeviceData(
+      title: 'Weighing Scale',
+      icon: 'assets/weight.png',
+      status: 0,
+      isSelected: false,
+      value_name: 'bodyWeight',
+      value1: 'WT',
+      value2: '',
+      color: Colors.lightGreen));
+  return devicelist;
+}
+
+List<Values> getBPValues() {
+  List<Values> listValues = new List<Values>();
+  listValues.add(Values(
+      time: '9.04AM',
+      title1: 'Systolic',
+      value1: '120/80',
+      title2: 'Diastolic',
+      value2: '120/80',
+      title3: 'Pulse',
+      value3: '145',
+      icon: 'assets/maya_india.png',
+      date: ''));
+  listValues.add(Values(
+      time: '4.00PM',
+      title1: 'Systolic',
+      value1: '125/90',
+      title2: 'Diastolic',
+      value2: '150/70',
+      title3: 'Pulse',
+      value3: '175',
+      icon: 'assets/camera.png',
+      date: ''));
+  return listValues;
+}
+
+List<Values> getSugarValues() {
+  List<Values> listValues = new List<Values>();
+  listValues.add(Values(
+      time: '9.04AM',
+      title1: 'Normal',
+      value1: '70',
+      title2: 'Pre-Diabetes',
+      value2: '101',
+      title3: 'Diabetes',
+      value3: '126',
+      icon: 'assets/maya_india.png',
+      date: ''));
+  listValues.add(Values(
+      time: '4.00PM',
+      title1: 'Normal',
+      value1: '100',
+      title2: 'Pre-Diabetes',
+      value2: '125',
+      title3: 'Diabetes',
+      value3: '200',
+      icon: 'assets/camera.png',
+      date: ''));
+  return listValues;
+}
+
+List<Values> getWeightValues() {
+  List<Values> listValues = new List<Values>();
+  listValues.add(Values(
+      time: '9.04AM',
+      title1: 'Min',
+      value1: '108/75KG',
+      title2: 'Normal',
+      value2: '120/79KG',
+      title3: 'Max',
+      value3: '133/84KG',
+      icon: 'assets/maya_india.png',
+      date: ''));
+  listValues.add(Values(
+      time: '4.00PM',
+      title1: 'Min',
+      value1: '110/77KG',
+      title2: 'Normal',
+      value2: '122/81KG',
+      title3: 'Max',
+      value3: '135/86KG',
+      icon: 'assets/camera.png',
+      date: ''));
+  return listValues;
+}
+
+List<Values> getFeverValues() {
+  List<Values> listValues = new List<Values>();
+  listValues.add(Values(
+      time: '9.04AM',
+      title1: 'Hypothermia',
+      value1: '95.0F',
+      title2: 'Normal',
+      value2: '97.7 - 99.5F',
+      title3: 'Fever/Hyperthermia',
+      value3: '95.5 or 100.9F',
+      icon: 'assets/maya_india.png',
+      date: ''));
+  listValues.add(Values(
+      time: '4.00PM',
+      title1: 'Hypothermia',
+      value1: '96.0F',
+      title2: 'Normal',
+      value2: '98.7 - 100.5F',
+      title3: 'Fever/Hyperthermia',
+      value3: '94.5 or 105.9F',
+      icon: 'assets/camera.png',
+      date: ''));
+  return listValues;
+}
+
+List<Values> getGlucoseValues() {
+  List<Values> listValues = new List<Values>();
+  listValues.add(Values(
+      time: '9.04AM',
+      title1: 'Excellent',
+      value1: '2.6',
+      title2: 'Good',
+      value2: '4.7',
+      title3: 'Poor',
+      value3: '6.3',
+      icon: 'assets/maya_india.png',
+      date: ''));
+  listValues.add(Values(
+      time: '4.00PM',
+      title1: 'Excellent',
+      value1: '2.6',
+      title2: 'Good',
+      value2: '4.7',
+      title3: 'Poor',
+      value3: '6.3',
+      icon: 'assets/camera.png',
+      date: ''));
+  return listValues;
+}

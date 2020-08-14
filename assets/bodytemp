@@ -1,0 +1,16 @@
+{
+    "isSuccess": true,
+    "result": [{
+        "sourceType": "Google Fit",
+        "startDateTime": "2020-08-07T19:00:00.000Z",
+        "endDateTime": "2020-08-07T20:00:00.000Z",
+        "temperature": "98.6",
+        "temperatureUnit": "Farenheit"
+    }, {
+        "sourceType": "Apple Health",
+        "startDateTime": "2020-08-06T06:00:00.000Z",
+        "endDateTime": "2020-08-06T06:00:00.000Z",
+        "temperature": "90.0",
+        "temperatureUnit": "Farenheit"
+    }]
+}

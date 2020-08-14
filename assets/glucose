@@ -1,0 +1,30 @@
+{
+    "isSuccess": true,
+    "result": [{
+        "sourceType": "Google Fit",
+        "startDateTime": "2020-08-07T19:00:00.000Z",
+        "endDateTime": "2020-08-07T20:00:00.000Z",
+        "bloodGlucoseLevel": 145,
+        "bgUnit": "mg/dL",
+        "mealContext": "Before Meal",
+        "mealType": "Breakfast"
+    }, 
+	{
+        "sourceType": "Google Fit",
+        "startDateTime": "2020-08-01T06:00:00.000Z",
+        "endDateTime": "2020-08-01T06:00:00.000Z",
+        "bloodGlucoseLevel": 90,
+        "bgUnit": "mg/dL",
+        "mealContext": "Before Meal",
+        "mealType": "Breakfast"
+    }, 
+	{
+        "sourceType": "Google Fit",
+        "startDateTime": "2020-08-01T06:00:00.000Z",
+        "endDateTime": "2020-08-01T06:00:00.000Z",
+        "bloodGlucoseLevel": 95,
+        "bgUnit": "mg/dL",
+        "mealContext": "After Meal",
+        "mealType": "Dinner"
+    }]
+}

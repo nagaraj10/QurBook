@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-
 const String strAPP_NAME = 'MyFHB';
 const String strAppPackage = 'com.globalmantrainnovations.myfhb';
 const String strHealthRecordChannel = 'Health Record channel';
@@ -160,6 +159,7 @@ const String icon_th = 'assets/navicons/th.png';
 const String icon_home = 'assets/navicons/home.png';
 const String icon_schedule = 'assets/navicons/schedule.png';
 const String icon_more = 'assets/navicons/more.png';
+const String icon_chat = 'assets/navicons/chat.png';
 
 //for File
 const String file_termsandconditions =
@@ -368,8 +368,6 @@ const String strGetProfileData = 'Getting ProfileData';
 
 String authToken;
 
-
-
 const String straccept = 'accept';
 const String strContentType = 'Content-Type';
 const String strAuthorization = 'Authorization';
@@ -422,7 +420,6 @@ const String strEmailOpt = 'Email address (optional)';
 const String strSendOtp = 'Send OTP';
 const String strEmailAddress = 'Email address';
 
-
 List<String> genderList = ['Male', 'Female', 'Others'];
 const String strEnterMobileNum = 'Enter MobileNumber';
 const String strEnterFirstname = 'Enter First Name';
@@ -453,7 +450,6 @@ const String strFalse = 'false';
 const String strSkip = 'Skip';
 const String strImgNtClear = 'Image not clear';
 
-
 //for device screen
 const String strGlucUnit = 'mgdl';
 const String strbfood = 'Before Food';
@@ -481,7 +477,6 @@ const String strDT = 'DT';
 const String strPO = 'PO';
 const String strGL = 'GL';
 
-
 const String strBPMonitor = 'BP Monitor';
 const String strWeighingScale = 'Weighing Scale';
 const String strThermo = 'Thermometer';
@@ -497,8 +492,6 @@ const String strGoogleFit = "Google Fit";
 const String strAllowGoogle = "Allow app to recieve data from google Fit";
 const String strHealthKit = "Apple Health";
 const String strAllowHealth = "Allow app to recieve data from Apple Health";
-
-
 
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
@@ -541,7 +534,8 @@ const String st_pausedplayer = 'paused player';
 const String strNoData = 'No data Available';
 const String strViewPDF = 'View PDF';
 const String strLogout = 'Logout';
-const String strLogoutMsg = 'Stay Healthy.. See you Soon. \nMaya will be waiting to serve you.';
+const String strLogoutMsg =
+    'Stay Healthy.. See you Soon. \nMaya will be waiting to serve you.';
 const String strYes = 'Yes';
 const String strRelaoding = 'Relaoding';
 const String strStartNow = 'Start now';
@@ -604,6 +598,3 @@ String _decodeBase64(String str) {
   }
   return utf8.decode(base64Url.decode(output));
 }
-
-
-
