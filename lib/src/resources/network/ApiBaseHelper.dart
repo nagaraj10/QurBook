@@ -887,7 +887,7 @@ class ApiBaseHelper {
 //      print(jsonBody);
       final response = await http.put(_baseUrl + url,
           headers: await headerRequest.getRequestHeader(), body: jsonBody);
-      print(response.body);
+//      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

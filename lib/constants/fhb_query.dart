@@ -121,5 +121,5 @@ const String qr_sessiontoken='sessiontoken=';
 const String CANCEL_SOURCE = "cancellationSource";
 const String BOOKING_IDS = "bookingIds";
 const String PATIENT = "patient";
-const String qr_appointment_cancel = "/appointments/cancellation/";
+const String qr_appointment_cancel = "/appointments/cancellation";
 const String qr_appointment_fetch='/appointments/getPatientDetails?patientId=';
