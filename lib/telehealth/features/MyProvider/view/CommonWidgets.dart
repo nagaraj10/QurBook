@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
@@ -20,7 +21,7 @@ class CommonWidgets {
 
   Widget getTextForDoctors(String docName) {
     return Text(
-      docName != null ? docName : '',
+      docName != null ? toBeginningOfSentenceCase(docName) : '',
       style: TextStyle(
           fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
       softWrap: true,
@@ -47,7 +48,7 @@ class CommonWidgets {
   Widget getDoctoSpecialist(String phoneNumber) {
     print('specialization' + phoneNumber);
     return Text(
-      (phoneNumber != null && phoneNumber != 'null') ? phoneNumber : '',
+      (phoneNumber != null && phoneNumber != 'null') ? toBeginningOfSentenceCase(phoneNumber) : '',
       style: TextStyle(
           color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_doc_specialist),
       softWrap: false,
@@ -57,7 +58,7 @@ class CommonWidgets {
 
   Widget getDoctorsAddress(String address) {
     return Text(
-      address != null ? address : '',
+      address != null ? toBeginningOfSentenceCase(address) : '',
       overflow: TextOverflow.ellipsis,
       softWrap: false,
       style: TextStyle(
@@ -71,7 +72,7 @@ class CommonWidgets {
     return Container(
       padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 15.0),
       child: Text(
-        address,
+        toBeginningOfSentenceCase(address),
         style: TextStyle(
             color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_abt_doc),
         softWrap: true,

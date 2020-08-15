@@ -19,7 +19,8 @@ import 'package:myfhb/src/ui/dashboard.dart';
 import 'package:myfhb/src/ui/settings/MySettings.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:provider/provider.dart';
+import 'package:myfhb/video_call/pages/call.dart';
+import 'package:provider/provider.dart' as provider;
 
 import '../add_address/screens/add_address_screen.dart';
 import '../add_family_otp/screens/add_family_otp_screen.dart';
@@ -84,6 +85,8 @@ setRouter(List<CameraDescription> listOfCameras)async{
   router.rt_WebCognito: (BuildContext context) => WebCognitoScreen(),
   router.rt_TelehealthProvider: (BuildContext context) =>
       TelehealthProviders(arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_CallPage: (BuildContext context) =>
+        CallPage(arguments: ModalRoute.of(context).settings.arguments)
 };
 
 return fhb_router;

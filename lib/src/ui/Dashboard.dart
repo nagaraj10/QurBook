@@ -18,6 +18,7 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/ShapesPainter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase_widget.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -333,13 +334,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ).then((value) {});
   }
 
-  Future<void> _handleCameraAndMic() async {
+ /* Future<void> _handleCameraAndMic() async {
     // You can request multiple permissions at once.
     await [
       Permission.camera,
       Permission.microphone,
     ].request();
-  }
+  }*/
 
   bool checkPagesForEveryIndex(int position) {
     bool condition = false;
