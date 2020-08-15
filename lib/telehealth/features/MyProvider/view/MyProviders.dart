@@ -184,7 +184,7 @@ class _MyProvidersState extends State<MyProviders> {
             DoctorSessionTimeSlot(
                 date: _selectedValue.toString(),
                 doctorId: docs[i].id,
-                docs: docs,
+                docs: docs,isReshedule: false,
                 i: i),
           ],
         ),

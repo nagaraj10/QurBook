@@ -119,7 +119,12 @@ const String qr_lang_ko='language=ko';
 const String qr_sessiontoken='sessiontoken=';
 
 const String CANCEL_SOURCE = "cancellationSource";
+const String RESHEDULE_SOURCE="rescheduleSource";
 const String BOOKING_IDS = "bookingIds";
+const String BOOKING_ID = "bookingId";
+const String RESHEDULED_DATE="rescheduledDate";
+const String SLOTMUNBER="slotNumber";
 const String PATIENT = "patient";
+const String qr_appoinment_reshedule="appointments/reschedule";
 const String qr_appointment_cancel = "/appointments/cancellation";
 const String qr_appointment_fetch='/appointments/getPatientDetails?patientId=';

@@ -16,6 +16,7 @@ import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleAppointments.dart';
+import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -175,20 +176,14 @@ class _AppointmentsState extends State<Appointments> {
     );
   }
 
-  void navigateToProviderScreen(doc) {
+  void navigateToProviderScreen(doc,isReshedule) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => ResheduleAppointments(
-            doc: doc,
+          builder: (context) => ResheduleMain(
+            doc: doc,isReshedule: isReshedule,
           )),
     );
-//    Navigator.of(context).pop();
-//    Navigator.pushNamed(
-//      context,
-//      '/telehealth-providers',
-//      arguments: HomeScreenArguments(selectedIndex: 1),
-//    ).then((value) {});
   }
 
   Widget getDoctorsAppoinmentsList() {
@@ -390,7 +385,7 @@ class _AppointmentsState extends State<Appointments> {
                       Constants.Appointments_resheduleImage,
                       Colors.black38,
                       Constants.Appointments_reshedule, () {
-                    navigateToProviderScreen(doc);
+                    navigateToProviderScreen(doc,true);
                   }),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
@@ -526,12 +521,18 @@ class _AppointmentsState extends State<Appointments> {
                           () {}),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_receiptImage,
-                      Colors.black38, Constants.Appointments_receipt, () {}),
+                      Colors.black38, Constants.Appointments_receipt, () {
+                      }),
                   SizedBoxWidget(width: 15.0),
-                  commonWidget.svgWithText(
-                      Constants.Appointments_newAppoinmentImage,
-                      Colors.black38,
-                      Constants.Appointments_new),
+                  GestureDetector(
+                    onTap: (){
+                      navigateToProviderScreen(doc,false);
+                    },
+                    child: commonWidget.svgWithText(
+                        Constants.Appointments_newAppoinmentImage,
+                        Colors.black38,
+                        Constants.Appointments_new),
+                  ),
                 ],
               ),
             )

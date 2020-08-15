@@ -3,19 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/DoctorSessionTimeSlot.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/appointments/model/mockData.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
-import 'package:myfhb/telehealth/features/appointments/view/doctorSessionTimeSlot.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
 class ResheduleAppointments extends StatefulWidget {
   History doc;
+  bool isReshedule;
 
-  ResheduleAppointments({this.doc});
+  ResheduleAppointments({this.doc, this.isReshedule});
 
   @override
   _ResheduleAppointmentsState createState() => _ResheduleAppointmentsState();
@@ -23,15 +27,36 @@ class ResheduleAppointments extends StatefulWidget {
 
 class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   DateTime _selectedValue = DateTime.now();
-  CommonWidgets _commonWidgets = CommonWidgets();
+  CommonWidgets commonWidgets = CommonWidgets();
   AppointmentsCommonWidget appointmentsCommonWidget =
       AppointmentsCommonWidget();
+  MyProviderViewModel providerViewModel = MyProviderViewModel();
+  List<DoctorIds> doctorIdsList = new List();
+  DoctorIds docs = DoctorIds();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    providerViewModel.fetchProviderDoctors().then((value) => setState(() {
+          doctorIdsList = value;
+          docs = doctorIdsList
+              .firstWhere((element) => element.id == widget.doc.doctorId);
+          print(widget.doc.slotNumber);
+        }));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(),
-      body: doctorsListItem(context),
+      body: docs.name == null
+          ? Center(
+              child: new CircularProgressIndicator(
+                backgroundColor: Colors.grey,
+              ),
+            )
+          : doctorsListItem(context, 0, [docs]),
     );
   }
 
@@ -67,9 +92,10 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     );
   }
 
-  Widget doctorsListItem(BuildContext ctx) {
-    return Container(
-        height: MediaQuery.of(context).size.height/2,
+  Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
+    return ExpandableNotifier(
+      initialExpanded: false,
+      child: Container(
         padding: EdgeInsets.all(2.0),
         margin: EdgeInsets.only(left: 20, right: 20, top: 8),
         decoration: BoxDecoration(
@@ -87,28 +113,25 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
             )
           ],
         ),
-        child: expandedListItem(ctx));
-  }
-
-  Widget expandedListItem(BuildContext ctx) {
-    return Container(
-      padding: EdgeInsets.all(10.0),
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        children: [
-          getDoctorsWidget(),
-          _commonWidgets.getSizedBox(20.0),
-          DoctorSessionTimeSlot(
-              date: _selectedValue.toString(),
-              doctorId: '',
-              docs: docIDs,
-              i: 0),
-        ],
+        child: Expandable(
+          collapsed: collapseListItem(ctx, i, docs),
+          expanded: expandedListItem(ctx, i, docs),
+        ),
       ),
     );
   }
 
-  Widget getDoctorsWidget() {
+  Widget collapseListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
+    return Container(
+      height: 100,
+      padding: EdgeInsets.all(10.0),
+      child: ExpandableButton(
+        child: getDoctorsWidget(i, docs),
+      ),
+    );
+  }
+
+  Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -117,13 +140,12 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
           children: <Widget>[
             Container(
               alignment: Alignment.center,
-              child: _commonWidgets.getClipOvalImageNew(
-                  null, fhbStyles.cardClipImage),
+              child: commonWidgets.getClipOvalImageNew(
+                  docs[i].profilePicThumbnail, fhbStyles.cardClipImage),
             ),
-
           ],
         ),
-        _commonWidgets.getSizeBoxWidth(10.0),
+        commonWidgets.getSizeBoxWidth(10.0),
         Expanded(
           flex: 4,
           child: Column(
@@ -135,63 +157,74 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                   Expanded(
                       child: Row(
                     children: [
-                      _commonWidgets
-                          .getTextForDoctors('${widget.doc.doctorName}'),
-                      _commonWidgets.getSizeBoxWidth(10.0),
-                      _commonWidgets.getIcon(
+                      commonWidgets.getTextForDoctors('${docs[i].name}'),
+                      commonWidgets.getSizeBoxWidth(10.0),
+                      commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
                           icon: Icons.info,
                           onTap: () {
                             print('on Info pressed');
-                                showDoctorDetailView(
-                                    widget.doc, context);
+                            commonWidgets.showDoctorDetailView(
+                                docs[i], context);
                           }),
                     ],
                   )),
-//                  docs[i].isActive
-//                      ?
-                  _commonWidgets.getIcon(
-                      width: fhbStyles.imageWidth,
-                      height: fhbStyles.imageHeight,
-                      icon: Icons.check_circle,
-                      onTap: () {
-                        print('on check  pressed');
-                      }),
-                  _commonWidgets.getSizeBoxWidth(15.0),
-
-
-                  GestureDetector(
-                      onTap: () {},
-                      child: ImageIcon(
-                        AssetImage('assets/icons/record_fav.png'),
-                        color: Colors.black,
-                        size: fhbStyles.imageWidth,
-                      )),
-                  _commonWidgets.getSizeBoxWidth(10.0),
+                  docs[i].isActive
+                      ? commonWidgets.getIcon(
+                          width: fhbStyles.imageWidth,
+                          height: fhbStyles.imageHeight,
+                          icon: Icons.check_circle,
+                          onTap: () {
+                            print('on check  pressed');
+                          })
+                      : SizedBox(),
+                  commonWidgets.getSizeBoxWidth(15.0),
+                  commonWidgets.getBookMarkedIcon(docs[i], () {
+                    providerViewModel
+                        .bookMarkDoctor(!(docs[i].isDefault), docs[i])
+                        .then((status) {
+                      if (status) {
+                        print('onClick');
+                        providerViewModel.doctorIdsList.clear();
+                        setState(() {});
+                      }
+                    });
+                  }),
+                  commonWidgets.getSizeBoxWidth(10.0),
                 ],
               ),
-              _commonWidgets.getSizedBox(5.0),
+              commonWidgets.getSizedBox(5.0),
               Row(children: [
                 Expanded(
-                    child: widget.doc.specialization != null
-                        ? _commonWidgets
-                            .getDoctoSpecialist('${widget.doc.specialization}')
+                    child: docs[i].specialization != null
+                        ? commonWidgets
+                            .getDoctoSpecialist('${docs[i].specialization}')
                         : SizedBox()),
-                _commonWidgets.getDoctoSpecialist('INR ${300}'),
-
-                _commonWidgets.getSizeBoxWidth(10.0),
+                docs[i].fees != null
+                    ? docs[i].fees.consulting != null
+                        ? (docs[i].fees.consulting != null &&
+                                docs[i].fees.consulting != '')
+                            ? commonWidgets.getDoctoSpecialist(
+                                'INR ${docs[i].fees.consulting.fee}')
+                            : SizedBox()
+                        : SizedBox()
+                    : SizedBox(),
+                commonWidgets.getSizeBoxWidth(10.0),
               ]),
-              _commonWidgets.getSizedBox(5.0),
+              commonWidgets.getSizedBox(5.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                      child: _commonWidgets
-                          .getDoctorsAddress('${widget.doc.location}')),
-                  _commonWidgets.getMCVerified(true, 'Verified'),
-
-                  _commonWidgets.getSizeBoxWidth(10.0),
+                      child:
+                          commonWidgets.getDoctorsAddress('${docs[i].city}')),
+                  docs[i].isMCIVerified
+                      ? commonWidgets.getMCVerified(
+                          docs[i].isMCIVerified, 'Verified')
+                      : commonWidgets.getMCVerified(
+                          docs[i].isMCIVerified, 'Not Verified'),
+                  commonWidgets.getSizeBoxWidth(10.0),
                 ],
               )
             ],
@@ -200,78 +233,26 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
       ],
     );
   }
-  Widget showDoctorDetailView(History docs, BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            content: Container(
-              width: MediaQuery.of(context).size.width - 20,
-              child: Stack(
-                overflow: Overflow.visible,
-                children: <Widget>[
-                  Positioned(
-                    top: -1.0,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.close,
-                        color: Colors.black,
-                        size: 20,
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: _commonWidgets.getClipOvalImageNew(
-                                null, fhbStyles.detailClipImage),
-                          ),
-                          _commonWidgets.getSizeBoxWidth(10.0),
-                          Expanded(
-                            // flex: 4,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                            _commonWidgets.getTextForDoctors('${docs.doctorName}'),
-                                _commonWidgets.getDoctoSpecialist(
-                                    '${docs.specialization}'),
 
-                                _commonWidgets.getDoctorsAddress('${docs.location}'),
-                                _commonWidgets.getTextForDoctors('Can Speak'),
-
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      _commonWidgets.getSizedBox(20),
-                      _commonWidgets.getTextForDoctors('About'),
-                      _commonWidgets.getHospitalDetails('5 yrs Exp'),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [],
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
+  Widget expandedListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
+    return Container(
+      padding: EdgeInsets.all(10.0),
+      width: MediaQuery.of(context).size.width,
+      child: ExpandableButton(
+        child: Column(
+          children: [
+            getDoctorsWidget(i, docs),
+            commonWidgets.getSizedBox(20.0),
+            DoctorSessionTimeSlot(
+                isReshedule: widget.isReshedule,
+                date: _selectedValue.toString(),
+                doctorId: docs[i].id,
+                docs: docs,
+                doctorsData: widget.doc,
+                i: i),
+          ],
+        ),
+      ),
+    );
   }
-
-
 }
-
