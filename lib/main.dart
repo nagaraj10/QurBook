@@ -11,6 +11,7 @@ import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_router.dart' as router;
+import 'package:myfhb/constants/router_variable.dart' as routervariable;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
@@ -20,14 +21,12 @@ import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/pages/call.dart';
 import 'package:myfhb/video_call/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
-import 'package:myfhb/constants/router_variable.dart' as routervariable;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart' as provider;
-
 
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
 import 'src/ui/SplashScreen.dart';
-import 'src/ui/authentication/SignInScreen.dart';
 import 'src/ui/connectivity_bloc.dart';
 
 var firstCamera;
@@ -38,7 +37,7 @@ var routes;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await _handleCameraAndMic();
   final cameras = await availableCameras();
   listOfCameras = cameras;
 
@@ -79,6 +78,12 @@ Future<void> main() async {
   );
 
   // await saveToPreference();
+}
+
+Future<void> _handleCameraAndMic() async {
+  await PermissionHandler().requestPermissions(
+    [PermissionGroup.camera, PermissionGroup.microphone],
+  );
 }
 
 void saveToPreference() async {
@@ -186,8 +191,16 @@ class _MyFHBState extends State<MyFHB> {
 
   void _updateTimer(msg) {
     debugPrint("Current Message $msg");
-    setState(() => _msg = msg);
+    //setState(() => _msg = msg);
     _msgListener.value = _msg;
+    final String c_msg = msg as String;
+    if (c_msg.isNotEmpty || c_msg != null) {
+      Get.key.currentState.pushNamed(routervariable.rt_CallPage,
+          arguments: CallArguments(
+            role: ClientRole.Broadcaster,
+            channelName: '$msg',
+          ));
+    }
   }
 
   getMyRoute() async {
@@ -288,8 +301,8 @@ class _MyFHBState extends State<MyFHB> {
     } on PlatformException catch (e, s) {}
   }
 
-  void requeatPermissionForAudioAndCamera() async{
-  /*  final Permission cameraPermission = Permission.camera;
+  void requeatPermissionForAudioAndCamera() async {
+    /*  final Permission cameraPermission = Permission.camera;
     var cameraPermissionResult = await cameraPermission.status;
 
     final Permission audioPermission = Permission.microphone;
