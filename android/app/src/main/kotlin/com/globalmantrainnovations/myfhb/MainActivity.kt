@@ -245,13 +245,6 @@ class MainActivity : FlutterActivity() {
     override fun onStart() {
         super.onStart()
         Log.i(TAG, "onStart: invoked")
-        val action = intent.action
-        val type = intent.type
-        if (Intent.ACTION_SEND == action && type != null) {
-            if ("text/plain" == type) {
-                handleSendText(intent); // Handle text being sent
-            }
-        }
     }
 
     override fun onResume() {
