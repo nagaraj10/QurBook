@@ -28,7 +28,7 @@ packages:
       name: async
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.4.2"
+    version: "2.4.1"
   audioplayer:
     dependency: "direct main"
     description:
@@ -105,7 +105,7 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.14.13"
+    version: "1.14.12"
   connectivity:
     dependency: "direct main"
     description:
@@ -299,7 +299,7 @@ packages:
       name: flutter_svg
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.18.0"
+    version: "0.17.4"
   flutter_switch:
     dependency: "direct main"
     description:
@@ -355,7 +355,7 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "../fhb_common"
+      path: "../myfhb-flutter-common"
       relative: true
     source: path
     version: "0.0.1"
@@ -407,7 +407,7 @@ packages:
       name: image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.14"
+    version: "2.1.12"
   image_cropper:
     dependency: "direct main"
     description:
@@ -477,7 +477,7 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.8"
+    version: "0.12.6"
   meta:
     dependency: transitive
     description:
@@ -554,7 +554,7 @@ packages:
       name: petitparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.4"
+    version: "2.4.0"
   photo_view:
     dependency: "direct main"
     description:
@@ -671,7 +671,7 @@ packages:
       name: stack_trace
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.9.5"
+    version: "1.9.3"
   stream_channel:
     dependency: transitive
     description:
@@ -706,7 +706,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.17"
+    version: "0.2.16"
   tflite:
     dependency: "direct main"
     description:
@@ -720,7 +720,7 @@ packages:
       name: typed_data
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.1.6"
   uuid:
     dependency: "direct main"
     description:
@@ -769,7 +769,7 @@ packages:
       name: xml
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.0"
+    version: "3.6.1"
   yaml:
     dependency: transitive
     description:
@@ -779,4 +779,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=2.9.0-14.0.dev <3.0.0"
-  flutter: ">=1.18.0-6.0.pre <2.0.0"
+  flutter: ">=1.16.0 <2.0.0"

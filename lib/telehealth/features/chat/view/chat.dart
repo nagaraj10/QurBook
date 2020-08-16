@@ -13,6 +13,9 @@ import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../common/CommonUtil.dart';
+import '../../../../common/CommonUtil.dart';
+
 class Chat extends StatefulWidget {
   final String peerId;
   final String peerAvatar;
@@ -49,7 +52,7 @@ class ChatState extends State<Chat> {
   Widget _patientChatBar() {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Color(0xff138fcf),
+      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
       flexibleSpace: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -80,6 +83,8 @@ class ChatState extends State<Chat> {
                       child: _patientDetailOrSearch(),
                     ),
                   ),
+
+                  /*
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.08,
                   ),
@@ -98,6 +103,7 @@ class ChatState extends State<Chat> {
                         color: Colors.white,
                       )),*/
                   moreOptionsPopup()
+                  */
                 ],
               ),
             ),
@@ -391,7 +397,8 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                     child: Text(
                       document['content'],
-                      style: TextStyle(color: primaryColor),
+                      style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor())),
                     ),
                   ),
                 )
@@ -523,8 +530,7 @@ class ChatScreenState extends State<ChatScreen> {
                           ),
                           padding: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
-                            color: Color(0xff138fcf),
-                            // Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(25),
                               bottomLeft: Radius.circular(25),
@@ -870,11 +876,11 @@ class ChatScreenState extends State<ChatScreen> {
                       child: FlatButton(
                           onPressed: () {
                             print('checked');
-                           getImage();
+                            getImage();
                           },
                           child: new Icon(
                             Icons.attach_file,
-                            color: Color(0xff138fcf),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             size: 24,
                           )),
                     )
@@ -887,10 +893,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () {},
                 elevation: 2.0,
                 fillColor: Colors.white,
-                child: Icon(
-                  Icons.mic,
-                  size: 25.0,
-                ),
+                child: Icon(Icons.mic,
+                    size: 25.0, color: Color(CommonUtil().getMyPrimaryColor())),
                 padding: EdgeInsets.all(12.0),
                 shape: CircleBorder(),
               ),

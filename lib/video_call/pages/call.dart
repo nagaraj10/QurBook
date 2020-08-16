@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/video_call/Prescription/view/new_prescription.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/settings.dart';
-import 'index.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -19,8 +20,11 @@ class CallPage extends StatefulWidget {
   ClientRole role;
   CallArguments arguments;
 
+  ///check call is made from NS
+  bool isAppExists;
+
   /// Creates a call page with given channel name.
-  CallPage({this.channelName, this.role, this.arguments});
+  CallPage({this.channelName, this.role, this.arguments, this.isAppExists});
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -30,6 +34,7 @@ class _CallPageState extends State<CallPage> {
   static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
+  bool _isHideMyVideo = false;
 
   ///create method channel for on going NS for call
   static const platform = const MethodChannel('ongoing_ns.channel');
@@ -188,13 +193,7 @@ class _CallPageState extends State<CallPage> {
           children: <Widget>[_videoView(views[0])],
         ));
       case 2:
-        return Container(
-            child: Column(
-          children: <Widget>[
-            _expandedVideoRow([views[0]]),
-            _expandedVideoRow([views[1]])
-          ],
-        ));
+        return customVideoView(views);
       case 3:
         return Container(
             child: Column(
@@ -216,55 +215,101 @@ class _CallPageState extends State<CallPage> {
     return Container();
   }
 
+  Widget customVideoView(List<Widget> attendees) {
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        _expandedVideoRow([attendees[1]]),
+        SizedBox(
+          width: 150,
+          height: 200,
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: _expandedVideoRow([attendees[0]]),
+          ),
+        ),
+      ],
+    );
+  }
+
   /// Toolbar layout
-  Widget _toolbar({CallStatus callStatus}) {
+  Widget _toolbar({
+    CallStatus callStatus,
+  }) {
     if (widget.role == ClientRole.Audience) return Container();
     return Container(
-      alignment: Alignment.bottomCenter,
+      alignment: Alignment.bottomLeft,
       padding: const EdgeInsets.symmetric(vertical: 48),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          RawMaterialButton(
-            onPressed: _onToggleMute,
-            child: Icon(
-              muted ? Icons.mic_off : Icons.mic,
-              color: muted ? Colors.white : Colors.blueAccent,
-              size: 20.0,
+      child: Container(
+        color: Colors.black.withOpacity(0.5),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            IconButton(
+              onPressed: _onToggleVideo,
+              icon: Icon(
+                _isHideMyVideo ? Icons.videocam_off : Icons.videocam,
+                color: Colors.white,
+                size: 20.0,
+              ),
             ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: muted ? Colors.blueAccent : Colors.white,
-            padding: const EdgeInsets.all(12.0),
-          ),
-          RawMaterialButton(
-            onPressed: () {
-              callStatus.enCall();
-              _onCallEnd(context);
-            },
-            child: Icon(
-              Icons.call_end,
-              color: Colors.white,
-              size: 35.0,
+            IconButton(
+              onPressed: _onToggleMute,
+              icon: Icon(
+                muted ? Icons.mic_off : Icons.mic,
+                color: Colors.white,
+                size: 20.0,
+              ),
             ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: Colors.redAccent,
-            padding: const EdgeInsets.all(15.0),
-          ),
-          RawMaterialButton(
-            onPressed: _onSwitchCamera,
-            child: Icon(
-              Icons.switch_camera,
-              color: Colors.blueAccent,
-              size: 20.0,
+            IconButton(
+              onPressed: _onToggleMute,
+              icon: Icon(
+                Icons.chat_bubble_outline,
+                color: Colors.white,
+                size: 20.0,
+              ),
             ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: Colors.white,
-            padding: const EdgeInsets.all(12.0),
-          )
-        ],
+            IconButton(
+              onPressed: _onToggleMute,
+              icon: Icon(
+                Icons.attach_file,
+                color: Colors.white,
+                size: 20.0,
+              ),
+            ),
+
+            Container(
+              color: Colors.redAccent,
+              child: IconButton(
+                onPressed: () {
+                  callStatus.enCall();
+                  //iCallStatus.callNotAlive();
+                  _onCallEnd(context);
+                  Get.offAll(SplashScreen());
+                },
+                icon: Icon(
+                  Icons.call_end,
+                  color: Colors.white,
+                  size: 30.0,
+                ),
+                padding: const EdgeInsets.all(15.0),
+              ),
+            ),
+//            RawMaterialButton(
+//              onPressed: _onSwitchCamera,
+//              child: Icon(
+//                Icons.switch_camera,
+//                color: Colors.blueAccent,
+//                size: 20.0,
+//              ),
+//              shape: CircleBorder(),
+//              elevation: 2.0,
+//              fillColor: Colors.white,
+//              padding: const EdgeInsets.all(12.0),
+//            )
+          ],
+        ),
       ),
     );
   }
@@ -323,6 +368,8 @@ class _CallPageState extends State<CallPage> {
     //put this line in myFHB
     //goToHomePage(context);
     Navigator.pop(context);
+    //Get.offAll(SplashScreen());
+    //widget.isAppExists ? Navigator.pop(context) : Get.offAll(SplashScreen());
   }
 
   void _onToggleMute() {
@@ -330,6 +377,15 @@ class _CallPageState extends State<CallPage> {
       muted = !muted;
     });
     AgoraRtcEngine.muteLocalAudioStream(muted);
+  }
+
+  void _onToggleVideo() {
+    setState(() {
+      _isHideMyVideo = !_isHideMyVideo;
+    });
+//    _isHideMyVideo
+//        ? AgoraRtcEngine.disableVideo()
+//        : AgoraRtcEngine.enableVideo();
   }
 
   void _onSwitchCamera() {
@@ -340,7 +396,8 @@ class _CallPageState extends State<CallPage> {
   Widget build(BuildContext context) {
     ///update call status through provider
     final callStatus = Provider.of<CallStatus>(context, listen: false);
-
+//    final instantCallStatus =
+//        Provider.of<InstantCallStatus>(context, listen: false);
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
@@ -349,7 +406,7 @@ class _CallPageState extends State<CallPage> {
           child: Stack(
             children: <Widget>[
               _viewRows(),
-              _panel(),
+              //_panel(),
               _toolbar(callStatus: callStatus),
               _prescription(context, callStatus: callStatus)
             ],
@@ -400,7 +457,10 @@ class _CallPageState extends State<CallPage> {
                         onPressed: () {
                           //put this line in myFHB
                           //goToHomePage(context);
-                          Navigator.pop(context);
+                          Future.value(true);
+                          widget.isAppExists
+                              ? Get.to(SplashScreen())
+                              : Get.to(SplashScreen());
                         }),
                     FlatButton(
                         child: Text('No'),
@@ -420,7 +480,7 @@ class _CallPageState extends State<CallPage> {
       context,
       MaterialPageRoute(
           builder: (context) =>
-              IndexPage()), //todo this need to change with home page in myFHB
+              SplashScreen()), //todo this need to change with home page in myFHB
       (Route<dynamic> route) => false,
     );
   }

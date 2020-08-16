@@ -2,6 +2,8 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
@@ -13,6 +15,8 @@ import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.d
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
+import 'package:myfhb/telehealth/features/appointments/view/resheduleAppointments.dart';
+import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -136,7 +140,7 @@ class _AppointmentsState extends State<Appointments> {
       bookingIds.add(appointments[i].bookingId);
     }
     CancelAppointmentModel cancelAppointment =
-        await appointmentsViewModel.fetchCancelAppointment(bookingIds);
+    await appointmentsViewModel.fetchCancelAppointment(bookingIds);
 
     return cancelAppointment;
   }
@@ -172,13 +176,14 @@ class _AppointmentsState extends State<Appointments> {
     );
   }
 
-  void navigateToProviderScreen() {
-    Navigator.of(context).pop();
-    Navigator.pushNamed(
+  void navigateToProviderScreen(doc,isReshedule) {
+    Navigator.push(
       context,
-      '/telehealth-providers',
-      arguments: HomeScreenArguments(selectedIndex: 1),
-    ).then((value) {});
+      MaterialPageRoute(
+          builder: (context) => ResheduleMain(
+            doc: doc,isReshedule: isReshedule,
+          )),
+    );
   }
 
   Widget getDoctorsAppoinmentsList() {
@@ -202,64 +207,64 @@ class _AppointmentsState extends State<Appointments> {
                 ),
                 isSearch
                     ? minutes.length == upcomingInfo.length
-                        ? commonWidget.title(Constants.Appointments_upcoming)
-                        : Container()
+                    ? commonWidget.title(Constants.Appointments_upcoming)
+                    : Container()
                     : appointmentsData.response.data.upcoming.length != 0 &&
-                            minutes.length ==
-                                appointmentsData.response.data.upcoming.length
-                        ? commonWidget.title(Constants.Appointments_upcoming)
-                        : Container(),
+                    minutes.length ==
+                        appointmentsData.response.data.upcoming.length
+                    ? commonWidget.title(Constants.Appointments_upcoming)
+                    : Container(),
                 SizedBoxWidget(
                   width: 0,
                   height: 10,
                 ),
                 isSearch
                     ? minutes.length == upcomingInfo.length
-                        ? ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext ctx, int i) =>
-                                doctorsAppointmentsListCard(
-                                    isSearch
-                                        ? upcomingInfo[i]
-                                        : appointmentsData
-                                            .response.data.upcoming[i],
-                                    hours[i],
-                                    minutes[i]),
-                            itemCount: !isSearch
-                                ? appointmentsData.response.data.upcoming.length
-                                : upcomingInfo.length,
-                          )
-                        : Container()
+                    ? ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext ctx, int i) =>
+                      doctorsAppointmentsListCard(
+                          isSearch
+                              ? upcomingInfo[i]
+                              : appointmentsData
+                              .response.data.upcoming[i],
+                          hours[i],
+                          minutes[i]),
+                  itemCount: !isSearch
+                      ? appointmentsData.response.data.upcoming.length
+                      : upcomingInfo.length,
+                )
+                    : Container()
                     : minutes.length ==
-                            appointmentsData.response.data.upcoming.length
-                        ? ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext ctx, int i) =>
-                                doctorsAppointmentsListCard(
-                                    isSearch
-                                        ? upcomingInfo[i]
-                                        : appointmentsData
-                                            .response.data.upcoming[i],
-                                    hours[i],
-                                    minutes[i]),
-                            itemCount: !isSearch
-                                ? appointmentsData.response.data.upcoming.length
-                                : upcomingInfo.length,
-                          )
-                        : Container(),
+                    appointmentsData.response.data.upcoming.length
+                    ? ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext ctx, int i) =>
+                      doctorsAppointmentsListCard(
+                          isSearch
+                              ? upcomingInfo[i]
+                              : appointmentsData
+                              .response.data.upcoming[i],
+                          hours[i],
+                          minutes[i]),
+                  itemCount: !isSearch
+                      ? appointmentsData.response.data.upcoming.length
+                      : upcomingInfo.length,
+                )
+                    : Container(),
                 SizedBoxWidget(
                   width: 0,
                   height: 10,
                 ),
                 isSearch
                     ? historyInfo.length != 0
-                        ? commonWidget.title(Constants.Appointments_history)
-                        : Container()
+                    ? commonWidget.title(Constants.Appointments_history)
+                    : Container()
                     : appointmentsData.response.data.history.length != 0
-                        ? commonWidget.title(Constants.Appointments_history)
-                        : Container(),
+                    ? commonWidget.title(Constants.Appointments_history)
+                    : Container(),
                 SizedBoxWidget(
                   width: 0,
                   height: 10,
@@ -277,10 +282,18 @@ class _AppointmentsState extends State<Appointments> {
                 )
               ],
             );
-          } else {
-            return new Center(
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
               child: new CircularProgressIndicator(
                 backgroundColor: Colors.grey,
+              ),
+            );
+          } else {
+            return Container(
+              height: MediaQuery.of(context).size.height / 2,
+              alignment: Alignment.center,
+              child: Center(
+                child: Text(variable.strNoAppointments),
               ),
             );
           }
@@ -337,9 +350,9 @@ class _AppointmentsState extends State<Appointments> {
                           TextWidget(
                             fontsize: 10,
                             text: DateFormat("hh:mm a")
-                                    .format(DateTime.parse(
-                                        doc.plannedStartDateTime))
-                                    .toString() ??
+                                .format(DateTime.parse(
+                                doc.plannedStartDateTime))
+                                .toString() ??
                                 '',
                             fontWeight: FontWeight.w600,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),
@@ -348,7 +361,7 @@ class _AppointmentsState extends State<Appointments> {
                             fontsize: 8,
                             text: DateFormat.yMMMEd()
                                 .format(
-                                    DateTime.parse(doc.plannedStartDateTime))
+                                DateTime.parse(doc.plannedStartDateTime))
                                 .toString(),
                             fontWeight: FontWeight.w400,
                             colors: Colors.black26,
@@ -372,13 +385,13 @@ class _AppointmentsState extends State<Appointments> {
                       Constants.Appointments_resheduleImage,
                       Colors.black38,
                       Constants.Appointments_reshedule, () {
-                    navigateToProviderScreen();
+                    navigateToProviderScreen(doc,true);
                   }),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
                       Colors.black38, Constants.Appointments_cancel, () {
-                    getCancelAppoitment([doc]);
-                  }),
+                        getCancelAppoitment([doc]);
+                      }),
                   SizedBoxWidget(width: 15.0),
                 ],
               ),
@@ -471,9 +484,9 @@ class _AppointmentsState extends State<Appointments> {
                           TextWidget(
                             fontsize: 10,
                             text: DateFormat.yMMMEd()
-                                    .format(DateTime.parse(
-                                        doc.plannedStartDateTime))
-                                    .toString() ??
+                                .format(DateTime.parse(
+                                doc.plannedStartDateTime))
+                                .toString() ??
                                 '',
                             fontWeight: FontWeight.w500,
                             overflow: TextOverflow.visible,
@@ -505,15 +518,21 @@ class _AppointmentsState extends State<Appointments> {
                       Constants.Appointments_prescriptionImage,
                       Colors.black38,
                       Constants.STR_PRESCRIPTION,
-                      () {}),
+                          () {}),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_receiptImage,
-                      Colors.black38, Constants.Appointments_receipt, () {}),
+                      Colors.black38, Constants.Appointments_receipt, () {
+                      }),
                   SizedBoxWidget(width: 15.0),
-                  commonWidget.svgWithText(
-                      Constants.Appointments_newAppoinmentImage,
-                      Colors.black38,
-                      Constants.Appointments_new),
+                  GestureDetector(
+                    onTap: (){
+                      navigateToProviderScreen(doc,false);
+                    },
+                    child: commonWidget.svgWithText(
+                        Constants.Appointments_newAppoinmentImage,
+                        Colors.black38,
+                        Constants.Appointments_new),
+                  ),
                 ],
               ),
             )

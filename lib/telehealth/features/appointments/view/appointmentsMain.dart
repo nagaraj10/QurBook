@@ -4,7 +4,9 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointments.dart';
+import 'package:myfhb/telehealth/features/appointments/view/resheduleAppointments.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -28,6 +30,7 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
       ),
     );
   }
+
   Widget appBar() {
     return AppBar(
         flexibleSpace: GradientAppBar(),
@@ -85,5 +88,4 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
   void callBackToRefresh() {
     (context as Element).markNeedsBuild();
   }
-
 }

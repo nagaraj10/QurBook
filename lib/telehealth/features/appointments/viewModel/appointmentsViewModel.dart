@@ -4,12 +4,14 @@ import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.d
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/doctorsData.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/timeModel.dart';
 
 class AppointmentsViewModel extends ChangeNotifier {
   ApiBaseHelper _helper=ApiBaseHelper();
   AppointmentsModel appointmentsModel;
   CancelAppointmentModel cancelAppointmentModel = new CancelAppointmentModel();
+  Reshedule resheduleAppointmentModel = new Reshedule();
 
   Future<AppointmentsModel> fetchAppointments() async {
     try {
@@ -110,5 +112,16 @@ class AppointmentsViewModel extends ChangeNotifier {
       return cancelAppointmentModel;
     } catch (e) {}
   }
+
+  Future<Reshedule> resheduleAppointment(
+      List<String> bookingId,String slotNumber,String resheduleDate) async {
+    try {
+      Reshedule resheduleAp =
+      await _helper.resheduleAppointment(bookingId,slotNumber,resheduleDate);
+      resheduleAppointmentModel = resheduleAp;
+      return resheduleAppointmentModel;
+    } catch (e) {}
+  }
+
 
 }

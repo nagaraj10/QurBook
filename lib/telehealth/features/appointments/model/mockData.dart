@@ -1,3 +1,4 @@
+import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/doctorsData.dart';
 import 'package:myfhb/telehealth/features/appointments/model/healthRecord.dart';
@@ -223,3 +224,44 @@ var doctorsData = AppointmentsModel(
               slotNumber: 7,
               specialization: '')
         ])));
+
+List<DoctorIds> docIDs = [
+  DoctorIds(
+      lastModifiedBy: '',
+      createdBy: '',
+      id: '',
+      isActive: true,
+      lastModifiedOn: '',
+      profilePicThumbnail: null,
+      profilePic: null,
+      name: '',
+      gender: '',
+      email: '',
+      specialization: '',
+      addressLine1: '',
+      addressLine2: '',
+      city: '',
+      cityId: '',
+      description: '',
+      dob: '',
+      doctorPatientMappingId: '',
+      fees: null,
+      firstName: '',
+      genderId: '',
+      googleMapUrl: '',
+      isDefault: true,
+      isMCIVerified: true,
+      isTelehealthEnabled: true,
+      isUserDefined: true,
+      languages: null,
+      lastName: '',
+      phoneNumber1: '',
+      phoneNumber2: '',
+      phoneNumber3: '',
+      phoneNumber4: '',
+      pinCode: '',
+      professionalDetails: null,
+      state: '',
+      stateId: '',
+      website: '')
+];
