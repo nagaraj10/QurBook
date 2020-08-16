@@ -125,26 +125,22 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Stack(
-          children: <Widget>[
-            Center(
-              child: FlatButton(
-                  onPressed: handleSignIn,
-                  child: Text(
-                    'SIGN IN WITH GOOGLE',
-                    style: TextStyle(fontSize: 16.0),
-                  ),
-                  color: Color(0xffdd4b39),
-                  highlightColor: Color(0xffff7f7f),
-                  splashColor: Colors.transparent,
-                  textColor: Colors.white,
-                  padding: EdgeInsets.fromLTRB(30.0, 15.0, 30.0, 15.0)),
+      children: <Widget>[
+        Center(
+          child: FlatButton(
+            onPressed: handleSignIn,
+            child: Text(
+              'Chat',
+              style: TextStyle(fontSize: 14.0, color: Colors.grey[400]),
             ),
+          ),
+        ),
 
-            // Loading
-            Positioned(
-              child: isLoading ? const Loading() : Container(),
-            ),
-          ],
-        ));
+        // Loading
+        Positioned(
+          child: isLoading ? const Loading() : Container(),
+        ),
+      ],
+    ));
   }
 }

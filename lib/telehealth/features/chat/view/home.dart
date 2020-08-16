@@ -17,6 +17,8 @@ import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/view/settings.dart';
 
+import '../../../../common/CommonUtil.dart';
+
 class HomeScreen extends StatefulWidget {
   final String currentUserId;
 
@@ -240,8 +242,9 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: () {}),
         elevation: 0.0,
-        backgroundColor: Color(0xff138fcf),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         title: Text(
           'Chat',
           style: TextStyle(color: Colors.white),
@@ -316,143 +319,157 @@ class HomeScreenState extends State<HomeScreen> {
       return Container();
     } else {
       return Column(
+        children: <Widget>[
+          Container(
+              child: Row(
             children: <Widget>[
-              Container(
-                  child: Row(
-                    children: <Widget>[
-                      InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Chat(
-                                    peerId: document.documentID,
-                                    peerAvatar: document['photoUrl'],
-                                    peerName: document['nickname'],
-                                  )));
-                        },
-                        child: Row(
-                          children: <Widget>[
-                            SizedBox(width: MediaQuery.of(context).size.width * 0.025),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.15,
-                              height: MediaQuery.of(context).size.width * 0.15,
-                              child: ClipOval(
-                                child: document['photoUrl'] != null
-                                    ? CachedNetworkImage(
-                                  placeholder: (context, url) => Container(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 1.0,
-                                      valueColor:
-                                      AlwaysStoppedAnimation<Color>(themeColor),
-                                    ),
-                                    width: 50.0,
-                                    height: 50.0,
-                                    padding: EdgeInsets.all(15.0),
+              InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => Chat(
+                                peerId: document.documentID,
+                                peerAvatar: document['photoUrl'],
+                                peerName: document['nickname'],
+                              )));
+                },
+                child: Row(
+                  children: <Widget>[
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.025),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.15,
+                      height: MediaQuery.of(context).size.width * 0.15,
+                      child: ClipOval(
+                        child: document['photoUrl'] != null
+                            ? CachedNetworkImage(
+                                placeholder: (context, url) => Container(
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 1.0,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        themeColor),
                                   ),
-                                  imageUrl: document['photoUrl'],
                                   width: 50.0,
                                   height: 50.0,
-                                  fit: BoxFit.cover,
-                                )
-                                    : Icon(
-                                  Icons.account_circle,
-                                  size: 50.0,
-                                  color: greyColor,
+                                  padding: EdgeInsets.all(15.0),
                                 ),
+                                imageUrl: document['photoUrl'],
+                                width: 50.0,
+                                height: 50.0,
+                                fit: BoxFit.cover,
+                              )
+                            : Icon(
+                                Icons.account_circle,
+                                size: 50.0,
+                                color: greyColor,
                               ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.055,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(),
-                                  child: Text(
-                                    toBeginningOfSentenceCase(document['nickname']),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                        fontFamily: 'Poppins'),
-                                  ),
-                                ),
-                                SizedBox(height: 1,),
-                                Text(
-                                  '#1232443',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      fontFamily: 'Poppins',
-                                      color: Colors.grey[700]),
-                                ),
-                                SizedBox(height: 1,),
-                                Container(
-                                  constraints: BoxConstraints(
-                                      maxWidth: MediaQuery.of(context).size.width * 0.5),
-                                  padding: const EdgeInsets.only(),
-                                  child: Text(
-                                    'Last message',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.grey[600],
-                                        fontSize: 12,
-                                        fontFamily: 'Poppins'),
-                                  ),
-                                ),
-                                SizedBox(height: 1,),
-                                Padding(
-                                  padding: const EdgeInsets.only(),
-                                  child: Text(
-                                    'Last visit date June 07,2020',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w300,
-                                        color: Colors.grey[600],
-                                        fontSize: 12,
-                                        fontFamily: 'Poppins'),
-                                  ),
-                                ),
-                                SizedBox(height: 1,),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 15),
-                                  child: Text(
-                                    'Next appointment date Jul 15,2020',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.grey[800],
-                                        fontSize: 12,
-                                        fontFamily: 'Poppins'),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.035,
-                            ),
-                          ],
-                        ),
                       ),
-                      SizedBox(width: 10,),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.videocam,
-                          color: Colors.blue[400],
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.055,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(),
+                          child: Text(
+                            toBeginningOfSentenceCase(document['nickname']),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                                fontFamily: 'Poppins'),
+                          ),
                         ),
-                      ),
-                    ],
-                  )),
-              Container(
-                color: Colors.grey,
-                height: 0.5,
-                margin: EdgeInsets.only(bottom: 6),
-              )
+                        SizedBox(
+                          height: 1,
+                        ),
+                        Text(
+                          '#1232443',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                              fontFamily: 'Poppins',
+                              color: Colors.grey[700]),
+                        ),
+                        SizedBox(
+                          height: 1,
+                        ),
+                        Container(
+                          constraints: BoxConstraints(
+                              maxWidth:
+                                  MediaQuery.of(context).size.width * 0.5),
+                          padding: const EdgeInsets.only(),
+                          child: Text(
+                            'Last message',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                                fontFamily: 'Poppins'),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 1,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(),
+                          child: Text(
+                            'Last visit date June 07,2020',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                                fontFamily: 'Poppins'),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 1,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: Text(
+                            'Next appointment date Jul 15,2020',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.grey[800],
+                                fontSize: 12,
+                                fontFamily: 'Poppins'),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.035,
+                    ),
+                  ],
+                ),
+              ),
+
+              /*
+              SizedBox(
+                width: 10,
+              ),
+
+              GestureDetector(
+                onTap: () {},
+                child: Icon(
+                  Icons.videocam,
+                  color: Colors.blue[400],
+                ),
+              ),*/
             ],
-          );
+          )),
+          Container(
+            color: Colors.grey,
+            height: 0.5,
+            margin: EdgeInsets.only(bottom: 6),
+          )
+        ],
+      );
     }
   }
 
