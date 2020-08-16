@@ -267,10 +267,19 @@ class _MyProvidersState extends State<MyProviders> {
               commonWidgets.getSizedBox(5.0),
               Row(children: [
                 Expanded(
-                    child: docs[i].specialization != null
-                        ? commonWidgets
-                            .getDoctoSpecialist('${docs[i].specialization}')
-                        : SizedBox()),
+                    child: docs[i].professionalDetails != null
+                            ? docs[i].professionalDetails[0].specialty != null
+                                ? docs[i]
+                                            .professionalDetails[0]
+                                            .specialty
+                                            .name !=
+                                        null
+                                    ? commonWidgets.getDoctoSpecialist(
+                                        '${docs[i].professionalDetails[0].specialty.name}')
+                                    : SizedBox()
+                                : SizedBox()
+                            : SizedBox()
+                        ),
                 docs[i].fees != null
                     ? docs[i].fees.consulting != null
                         ? (docs[i].fees.consulting != null &&
