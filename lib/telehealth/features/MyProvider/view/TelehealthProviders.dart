@@ -16,6 +16,8 @@ import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dar
 import 'package:myfhb/telehealth/features/chat/view/login.dart';
 import 'package:myfhb/telehealth/features/telehealth/view/Telehealth.dart';
 
+import '../../../../src/ui/MyRecord.dart';
+
 class TelehealthProviders extends StatefulWidget {
   static _TelehealthProvidersState of(BuildContext context) =>
       context.findAncestorStateOfType<State<TelehealthProviders>>();
@@ -40,7 +42,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
     MyProvidersMain(),
     SuperMaya(),
     LoginScreen(),
-    Devices()
+    MyRecords()
   ];
 
   void _onItemTapped(int index) {
@@ -95,14 +97,14 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       imageIcon: 'assets/navicons/th.png',
     ));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'Providers', imageIcon: 'assets/navicons/my_providers.png'));
+        name: 'My Providers', imageIcon: 'assets/navicons/my_providers.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-      name: 'Maya',
+      name: 'Sheela',
       imageIcon: 'assets/maya/maya_us_main.png',
     ));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
         name: 'Chat', imageIcon: 'assets/navicons/chat.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'Devices', imageIcon: 'assets/navicons/device.png'));
+        name: 'My Records', imageIcon: 'assets/navicons/records.png'));
   }
 }

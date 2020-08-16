@@ -106,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               color: Colors.black54,
                             )),
                         title: Text(
-                          variable.strMyProvider,
+                          'My Providers',
                           style: TextStyle(color: Colors.black54),
                         )),
                     BottomNavigationBarItem(
@@ -121,7 +121,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ),
                         ),
                         title: Text(
-                          variable.strMaya,
+                          'Sheela',
                           style: TextStyle(color: Colors.black54),
                         )),
                     BottomNavigationBarItem(
@@ -334,7 +334,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ).then((value) {});
   }
 
- /* Future<void> _handleCameraAndMic() async {
+  /* Future<void> _handleCameraAndMic() async {
     // You can request multiple permissions at once.
     await [
       Permission.camera,

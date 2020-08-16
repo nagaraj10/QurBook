@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
@@ -184,7 +185,8 @@ class _MyProvidersState extends State<MyProviders> {
             DoctorSessionTimeSlot(
                 date: _selectedValue.toString(),
                 doctorId: docs[i].id,
-                docs: docs,isReshedule: false,
+                docs: docs,
+                isReshedule: false,
                 i: i),
           ],
         ),
@@ -265,11 +267,36 @@ class _MyProvidersState extends State<MyProviders> {
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
+
+              /*
               Row(children: [
                 Expanded(
-                    child: docs[i].specialization != null
-                        ? commonWidgets
-                            .getDoctoSpecialist('${docs[i].specialization}')
+                    child: docs[i].professionalDetails != null
+                        ? docs[i].professionalDetails[0].specialty != null
+                            ? docs[i].professionalDetails[0].specialty.name !=
+                                    null
+                                ? commonWidgets.getDoctoSpecialist(
+                                    '${docs[i].professionalDetails[0].specialty.name}')
+                                : SizedBox()
+                            : SizedBox()
+                        : SizedBox()),
+                commonWidgets.get(
+                  text: docs[i].fees != null
+                      ? 'INR ${docs[i].fees.consulting.fee}'
+                      : 'INR 0.00',
+                ),
+              ]), */
+
+              Row(children: [
+                Expanded(
+                    child: docs[i].professionalDetails != null
+                        ? docs[i].professionalDetails[0].specialty != null
+                            ? docs[i].professionalDetails[0].specialty.name !=
+                                    null
+                                ? commonWidgets.getDoctoSpecialist(
+                                    '${docs[i].professionalDetails[0].specialty.name}')
+                                : SizedBox()
+                            : SizedBox()
                         : SizedBox()),
                 docs[i].fees != null
                     ? docs[i].fees.consulting != null
