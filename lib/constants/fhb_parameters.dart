@@ -275,6 +275,7 @@ const String payNow='Pay Now';
 const String slotsAreNotAvailable='Slot not available in this date';
 const String bookNow='Book Now';
 const String redirectedToPaymentMessage='You are being re-directed to a secured payment site';
+const String cancellationAppointmentConfirmation='Are you sure you want to cancel this appointment';
 const String ok='Ok';
 const String appointmentCreatedMessage='Created a new  appointment(s) successfully';
 const String someWentWrong='Booking appointment failed.. Some went wrong!';

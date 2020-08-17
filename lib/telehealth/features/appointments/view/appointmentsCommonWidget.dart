@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
@@ -10,13 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:path/path.dart';
 
-class AppointmentsCommonWidget{
-  Widget docName(BuildContext context,doc) {
+class AppointmentsCommonWidget {
+  Widget docName(BuildContext context, doc) {
     return Row(
       children: [
         Container(
           constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2),
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
           child: Row(
             children: [
               TextWidget(
@@ -26,10 +27,6 @@ class AppointmentsCommonWidget{
                 softwrap: false,
                 overflow: TextOverflow.ellipsis,
                 colors: Colors.black,
-              ),
-              SizedBox(
-                width: 0,
-                height: 8.0,
               ),
               IconWidget(
                   colors: Color(new CommonUtil().getMyPrimaryColor()),
@@ -43,21 +40,23 @@ class AppointmentsCommonWidget{
     );
   }
 
-  Widget docStatus(BuildContext context,doc) {
+  Widget docStatus(BuildContext context, doc) {
     return Container(
-      constraints:
-      BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
+      constraints: BoxConstraints(
+          maxWidth: MediaQuery.of(context).size.width >=400
+              ? MediaQuery.of(context).size.width / 1.5
+              : MediaQuery.of(context).size.width / 2.1),
       child: TextWidget(
         text: doc == null ? '' : doc,
         colors: Colors.black26,
-        fontsize: fhbStyles.fnt_doc_specialist,
+        fontsize: 10.5,//fhbStyles.fnt_doc_specialist,
         softwrap: false,
         overflow: TextOverflow.ellipsis,
       ),
     );
   }
 
-  Widget docLoc(BuildContext context,doc) {
+  Widget docLoc(BuildContext context, doc) {
     return Container(
       constraints:
       BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
@@ -72,10 +71,10 @@ class AppointmentsCommonWidget{
     );
   }
 
-  Widget docTimeSlot(BuildContext context,History doc, hour, minute) {
+  Widget docTimeSlot(BuildContext context, History doc, hour, minute) {
     return ((hour == '00' && minute == '00') ||
         hour.length == 0 ||
-        minute.length == 0 )
+        minute.length == 0)
         ? Container()
         : Row(
       children: [
@@ -142,41 +141,57 @@ class AppointmentsCommonWidget{
     );
   }
 
-  Widget docIcons(doc) {
+  Widget docIcons(History doc) {
+    String notesCount=doc.healthRecord.notes==null?null:1.toString();
+    String voiceNotesCount=doc.healthRecord.voice==null?null:1.toString();
+    String rxCount=doc.healthRecord.rx==null?null:1.toString();
     return Row(
       children: [
         iconWithText(
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_notes,
-                () {}),
+                () {},notesCount),
         SizedBoxWidget(width: 15.0),
         iconWithText(
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.STR_VOICE_NOTES,
-                () {}),
+                () {},voiceNotesCount),
         SizedBoxWidget(width: 15.0),
         iconWithText(
             Constants.Appointments_recordsImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records,
-                () {}),
+                () {},rxCount),
       ],
     );
   }
-  Widget iconWithText(String imageText, Color color, String text, onTap) {
+
+  Widget iconWithText(
+      String imageText, Color color, String text, onTap, count) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
         children: [
-          Container(
-            height: 20,
-            width: 20,
-            child: Image.asset(
-              imageText,
-              color: color,
-            ),
+          Stack(
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Container(
+                height: 20,
+                width: 20,
+                child: Image.asset(
+                  imageText,
+                  color: color,
+                ),
+              ),
+              (count == null || count == 0)
+                  ? Container()
+                  : BadgesBlue(
+                backColor: Colors.blue,
+                badgeValue: count,
+              )
+            ],
           ),
           SizedBoxWidget(
             height: 5.0,
@@ -285,16 +300,16 @@ class AppointmentsCommonWidget{
     );
   }
 
-Widget title(String text){
+  Widget title(String text) {
     return Padding(
         padding: EdgeInsets.only(left: 5, right: 5),
-  child: TextWidget(
-  text: text,
-  colors: Color(CommonUtil().getMyPrimaryColor()),
-  overflow: TextOverflow.visible,
-  fontWeight: FontWeight.w500,
-  fontsize: 14,
-  softwrap: true,
-  ));
-}
+        child: TextWidget(
+          text: text,
+          colors: Color(CommonUtil().getMyPrimaryColor()),
+          overflow: TextOverflow.visible,
+          fontWeight: FontWeight.w500,
+          fontsize: 14,
+          softwrap: true,
+        ));
+  }
 }

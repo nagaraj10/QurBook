@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
@@ -8,15 +9,14 @@ import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart
 import 'package:myfhb/telehealth/features/appointments/model/timeModel.dart';
 
 class AppointmentsViewModel extends ChangeNotifier {
-  ApiBaseHelper _helper=ApiBaseHelper();
+  ApiBaseHelper _helper = ApiBaseHelper();
   AppointmentsModel appointmentsModel;
   CancelAppointmentModel cancelAppointmentModel = new CancelAppointmentModel();
   Reshedule resheduleAppointmentModel = new Reshedule();
 
   Future<AppointmentsModel> fetchAppointments() async {
     try {
-      AppointmentsModel myAppointmentsModel =
-      await _helper.fetchAppointments();
+      AppointmentsModel myAppointmentsModel = await _helper.fetchAppointments();
 
       appointmentsModel = myAppointmentsModel;
       return appointmentsModel;
@@ -29,23 +29,27 @@ class AppointmentsViewModel extends ChangeNotifier {
     DoctorsData data = DoctorsData();
     AppointmentsModel appointments = appointmentsModel;
     dummySearchListUpcoming = appointments.response.data.upcoming
-        .where((element) => element.doctorName
+        .where((element) =>
+    element.doctorName
         .toLowerCase()
         .trim()
-        .contains(query.toLowerCase().trim())||element.location
-        .toLowerCase()
-        .trim()
-        .contains(query.toLowerCase().trim()))
+        .contains(query.toLowerCase().trim()) ||
+        element.location
+            .toLowerCase()
+            .trim()
+            .contains(query.toLowerCase().trim()))
         .toList();
 
     dummySearchListHistory = appointments.response.data.history
-        .where((element) => element.doctorName
+        .where((element) =>
+    element.doctorName
         .toLowerCase()
         .trim()
-        .contains(query.toLowerCase().trim())||element.location
-        .toLowerCase()
-        .trim()
-        .contains(query.toLowerCase().trim()))
+        .contains(query.toLowerCase().trim()) ||
+        element.location
+            .toLowerCase()
+            .trim()
+            .contains(query.toLowerCase().trim()))
         .toList();
     data = DoctorsData(
         upcoming: dummySearchListUpcoming, history: dummySearchListHistory);
@@ -53,22 +57,21 @@ class AppointmentsViewModel extends ChangeNotifier {
         upcoming: dummySearchListUpcoming, history: dummySearchListHistory);
   }
 
-  Time getStaticValue(){
+  Time getStaticValue() {
     List<String> hours;
     List<String> minutes;
-    hours = List.filled(appointmentsModel
-        .response.data.upcoming.length, '00');
-    minutes = List.filled(appointmentsModel
-        .response.data.upcoming.length, '00');
+    hours = List.filled(appointmentsModel.response.data.upcoming.length, '00');
+    minutes =
+        List.filled(appointmentsModel.response.data.upcoming.length, '00');
     Time time;
     time = Time(minutes: minutes, hours: hours);
     return time;
   }
 
-  Time getTimeSlot(List<History> upcoming,bool isSearch) {
-    if(appointmentsModel!=null) {
-      List<History> upcomingInfo = isSearch ? upcoming : appointmentsModel
-          .response.data.upcoming;
+  Time getTimeSlot(List<History> upcoming, bool isSearch) {
+    if (appointmentsModel != null) {
+      List<History> upcomingInfo =
+      isSearch ? upcoming : appointmentsModel.response.data.upcoming;
       List<String> dummySearchList = List<String>();
       List<String> dummyHour = List<String>();
       List<String> dummyMinutes = List<String>();
@@ -76,12 +79,15 @@ class AppointmentsViewModel extends ChangeNotifier {
       List<String> minutes;
       Time time;
 
-
       dummySearchList
           .addAll(upcomingInfo.map((e) => e.plannedStartDateTime).toList());
       for (int i = 0; i < dummySearchList.length; i++) {
-        DateTime dob = DateTime.parse(dummySearchList[i]);
-        Duration dur = dob.difference(DateTime.now());
+        DateTime dob = DateTime.tryParse(dummySearchList[i]);
+        DateTime dob1 =
+        DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(dummySearchList[i]);
+        DateTime dob2 =
+        DateFormat("yyyy-MM-dd HH:mm:ss").parse('${DateTime.now()}');
+        Duration dur = dob1.difference(dob2);
         String differenceInHours = dur.inHours >= 0 && dur.inHours <= 24
             ? (dur.inHours.remainder(24)).round().toString().padLeft(2, '0')
             : '00';
@@ -89,18 +95,20 @@ class AppointmentsViewModel extends ChangeNotifier {
             ? (dur.inMinutes.remainder(60)).toString().padLeft(2, '0')
             : '00';
         dummyMinutes.add(
-            int.parse(differenceInMinutes) <= 0 ? '00' : differenceInMinutes);
+            dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
+                ? '00'
+                : differenceInMinutes);
         dummyHour.add(
-            dur.inHours.remainder(24).toInt() <= 0 ? '00' : differenceInHours);
+            dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
+                ? '00'
+                : differenceInHours);
       }
       minutes = dummyMinutes;
       hours = dummyHour;
       time = Time(minutes: minutes, hours: hours);
 
       return time;
-    }else{
-
-    }
+    } else {}
   }
 
   Future<CancelAppointmentModel> fetchCancelAppointment(
@@ -114,14 +122,12 @@ class AppointmentsViewModel extends ChangeNotifier {
   }
 
   Future<Reshedule> resheduleAppointment(
-      List<String> bookingId,String slotNumber,String resheduleDate) async {
+      List<String> bookingId, String slotNumber, String resheduleDate) async {
     try {
-      Reshedule resheduleAp =
-      await _helper.resheduleAppointment(bookingId,slotNumber,resheduleDate);
+      Reshedule resheduleAp = await _helper.resheduleAppointment(
+          bookingId, slotNumber, resheduleDate);
       resheduleAppointmentModel = resheduleAp;
       return resheduleAppointmentModel;
     } catch (e) {}
   }
-
-
 }
