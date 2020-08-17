@@ -18,7 +18,7 @@ class WebCognitoScreen extends StatefulWidget {
 
 class _WebCognitoScreenState extends State<WebCognitoScreen> {
   var _url =
-      'https://myfhb-testing.auth.us-east-2.amazoncognito.com/login?client_id=28mvfn7sc4cf5smjs2dscdbuje&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:4200/callback';
+      'https://myfhb-dev-v3.auth.us-east-2.amazoncognito.com/login?client_id=6llcfsioe822tngnnvdndtv7ti&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:4200/callback';
 
   final _key = UniqueKey();
   bool _loading = true;
@@ -206,21 +206,22 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
           .then((onValue) {});
       PreferenceUtil.save("user_details", saveuser);
 
-      authToken = decodesstring;
-      // redirecting to dashboard screen using userid
-      Future.delayed(Duration(seconds: 3), () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => DashboardScreen()));
-        //Navigator.pop(context, 'code:${mURL}');
-      });
-    } else {
+      authToken=decodesstring;
+    // redirecting to dashboard screen using userid
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => DashboardScreen()));
+      //Navigator.pop(context, 'code:${mURL}');
+    });
+    }else{
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: new Text(res.body.toString()),
         ),
       );
+
     }
   }
 
@@ -231,4 +232,7 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       //TODO: More restoring of settings would go here...
     });
   }
+
+
+
 }
