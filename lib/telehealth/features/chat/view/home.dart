@@ -11,27 +11,29 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/main.dart';
+import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/view/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import '../../../../common/CommonUtil.dart';
 
-class HomeScreen extends StatefulWidget {
-  final String currentUserId;
+class ChatHomeScreen extends StatefulWidget {
 
-  HomeScreen({Key key, @required this.currentUserId}) : super(key: key);
+  ChatHomeScreen({Key key}) : super(key: key);
 
   @override
-  State createState() => HomeScreenState(currentUserId: currentUserId);
+  State createState() => HomeScreenState();
 }
 
-class HomeScreenState extends State<HomeScreen> {
-  HomeScreenState({Key key, @required this.currentUserId});
+class HomeScreenState extends State<ChatHomeScreen> {
+  HomeScreenState({Key key});
 
-  final String currentUserId;
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -43,13 +45,25 @@ class HomeScreenState extends State<HomeScreen> {
     const Choice(title: 'Log out', icon: Icons.exit_to_app),
   ];
 
+  String patientId='';
+  String patientName='';
+
   @override
   void initState() {
     super.initState();
     registerNotification();
     configLocalNotification();
+
+    getPatientDetails();
+
   }
 
+  Future<void> getPatientDetails() async {
+     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+     patientName = myProfile.response.data.generalInfo.name;
+  }
   void registerNotification() {
     firebaseMessaging.requestNotificationPermissions();
 
@@ -71,7 +85,7 @@ class HomeScreenState extends State<HomeScreen> {
       print('token: $token');
       Firestore.instance
           .collection('users')
-          .document(currentUserId)
+          .document(patientId)
           .updateData({'pushToken': token});
     }).catchError((err) {
       Fluttertoast.showToast(msg: err.message.toString());
@@ -319,7 +333,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildItem(BuildContext context, DocumentSnapshot document) {
-    if (document['id'] == currentUserId) {
+    if (document['id'] == patientId) {
       return Container();
     } else {
       return Column(

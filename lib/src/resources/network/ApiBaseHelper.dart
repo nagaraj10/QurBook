@@ -9,6 +9,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
@@ -830,6 +831,7 @@ class ApiBaseHelper {
 
   Future<AppointmentsModel> fetchAppointments() async {
     String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    print('patient_id: '+userId);
     return await http
         .get(
       _baseUrl + qr_appointment_fetch + userId,
@@ -840,6 +842,7 @@ class ApiBaseHelper {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
         if (resReturnCode.status == 200) {
+          print(response.body);
           return AppointmentsModel.fromJson(jsonDecode(response.body));
         } else {
           throw Exception(variable.strFailed);

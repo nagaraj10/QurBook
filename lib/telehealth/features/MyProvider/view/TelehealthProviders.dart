@@ -5,6 +5,7 @@ import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/notifications/myfhb_notifications.dart';
 import 'package:myfhb/schedules/my_schedules.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/ui/bot/ChatScreen.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavigationArguments.dart';
@@ -13,6 +14,7 @@ import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNaviga
 import 'package:myfhb/telehealth/features/Devices/view/Devices.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
+import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/telehealth/features/chat/view/login.dart';
 import 'package:myfhb/telehealth/features/telehealth/view/Telehealth.dart';
 
@@ -41,7 +43,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
     AppointmentsMain(),
     MyProvidersMain(),
     SuperMaya(),
-    LoginScreen(),
+    ChatHomeScreen(),
     MyRecords()
   ];
 

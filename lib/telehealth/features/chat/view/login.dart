@@ -44,7 +44,7 @@ class LoginScreenState extends State<LoginScreen> {
         context,
         MaterialPageRoute(
             builder: (context) =>
-                HomeScreen(currentUserId: prefs.getString('id'))),
+                ChatHomeScreen(/*currentUserId: prefs.getString('id')*/)),
       );
     }
 
@@ -112,7 +112,7 @@ class LoginScreenState extends State<LoginScreen> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  HomeScreen(currentUserId: firebaseUser.uid)));
+                  ChatHomeScreen(/*currentUserId: firebaseUser.uid*/)));
     } else {
       Fluttertoast.showToast(msg: "Sign in fail");
       this.setState(() {

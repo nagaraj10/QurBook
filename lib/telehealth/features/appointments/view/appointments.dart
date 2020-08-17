@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
@@ -11,6 +13,10 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/my_family/models/ProfileData.dart';
+import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
@@ -19,9 +25,11 @@ import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWi
 import 'package:myfhb/telehealth/features/appointments/view/resheduleAppointments.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Appointments extends StatefulWidget {
   @override
@@ -42,6 +50,8 @@ class _AppointmentsState extends State<Appointments> {
 
   List<String> hours = List();
   List<String> minutes = List();
+
+  SharedPreferences prefs;
 
   @override
   void initState() {
@@ -527,7 +537,14 @@ class _AppointmentsState extends State<Appointments> {
               child: Row(
                 children: [
                   commonWidget.iconWithText(Constants.Appointments_chatImage,
-                      Colors.black38, Constants.Appointments_chat, () {}, null),
+                      Colors.black38, Constants.Appointments_chat, () {
+
+                    //chat integration start
+                        String doctorId = doc.doctorId;
+                        String doctorName = doc.doctorName;
+                        storePatientDetailsToFCM(doctorId,doctorName);
+
+                      }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
                       Constants.Appointments_prescriptionImage,
@@ -648,4 +665,88 @@ class _AppointmentsState extends State<Appointments> {
           );
         });
   }
+
+  String getPatientName() {
+
+    MyProfile myProfile =
+    PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+   String patientName = myProfile.response.data.generalInfo.name;
+
+    return patientName;
+  }
+
+  void storePatientDetailsToFCM(String doctorId,String doctorName){
+
+    Firestore.instance
+        .collection('users')
+        .document(doctorId)
+        .setData({
+      'nickname': doctorName!=null?doctorName:'',
+      'photoUrl': '',
+      //'photoUrl': 'http://lorempixel.com/640/360',
+      'id':doctorId,
+      'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+      'chattingWith': null
+    });
+
+    storeDoctorDetailsToFCM(doctorId, doctorName);
+
+  }
+
+  Future<void> storeDoctorDetailsToFCM(String doctorId,String doctorName) async {
+    prefs = await SharedPreferences.getInstance();
+
+    String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String patientName = getPatientName();
+
+    final QuerySnapshot result = await Firestore.instance
+        .collection('users')
+        .where('id', isEqualTo: patientId)
+        .getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+
+    if (documents.length == 0) {
+      // Update data to server if new user
+      Firestore.instance
+          .collection('users')
+          .document(patientId)
+          .setData({
+        'nickname': patientName!=null?patientName:'',
+        'photoUrl': '',
+        //'photoUrl': 'https://loremflickr.com/640/360',
+        'id': patientId,
+        'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+        'chattingWith': null
+      });
+
+      // Write data to local
+      await prefs.setString('id', patientId);
+      await prefs.setString('nickname', patientName);
+      await prefs.setString('photoUrl','');
+    } else {
+      // Write data to local
+      await prefs.setString('id', documents[0]['id']);
+      await prefs.setString('nickname', documents[0]['nickname']);
+      await prefs.setString('photoUrl', documents[0]['photoUrl']);
+      await prefs.setString('aboutMe', documents[0]['aboutMe']);
+    }
+
+    goToChatPage(doctorId,doctorName);
+
+  }
+
+  void goToChatPage(String doctorId,String doctorName){
+
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Chat(
+              peerId: doctorId,
+              peerAvatar: '',
+              //peerAvatar: 'http://lorempixel.com/640/360',
+              peerName: doctorName,
+            )));
+
+  }
+
 }
