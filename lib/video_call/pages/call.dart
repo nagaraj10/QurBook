@@ -1,15 +1,17 @@
 import 'dart:async';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:myfhb/video_call/Prescription/view/new_prescription.dart';
+import 'package:flutter_timer/flutter_timer.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/settings.dart';
-import 'index.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -19,8 +21,11 @@ class CallPage extends StatefulWidget {
   ClientRole role;
   CallArguments arguments;
 
+  ///check call is made from NS
+  bool isAppExists;
+
   /// Creates a call page with given channel name.
-  CallPage({this.channelName, this.role, this.arguments});
+  CallPage({this.channelName, this.role, this.arguments, this.isAppExists});
 
   @override
   _CallPageState createState() => _CallPageState();
@@ -30,6 +35,11 @@ class _CallPageState extends State<CallPage> {
   static final _users = <int>[];
   final _infoStrings = <String>[];
   bool muted = false;
+  bool _isHideMyVideo = false;
+  bool _isHideControl = true;
+  bool _isTimerRun = true;
+  bool _isRemoteAudio = false;
+  bool _isFirstTime = true;
 
   ///create method channel for on going NS for call
   static const platform = const MethodChannel('ongoing_ns.channel');
@@ -42,6 +52,7 @@ class _CallPageState extends State<CallPage> {
     AgoraRtcEngine.leaveChannel();
     AgoraRtcEngine.destroy();
     cancelOnGoingNS();
+    _isTimerRun = false;
     super.dispose();
   }
 
@@ -52,6 +63,7 @@ class _CallPageState extends State<CallPage> {
     if (widget.arguments != null) {
       widget.channelName = widget.arguments.channelName;
       widget.role = widget.arguments.role;
+      widget.isAppExists = widget.arguments.isAppExists;
     }
 
     // initialize agora sdk
@@ -59,8 +71,8 @@ class _CallPageState extends State<CallPage> {
   }
 
   cancelOnGoingNS() async {
-    await platform
-        .invokeMethod("startOnGoingNS", {'name': 'mohan Raj', 'mode': 'stop'});
+    await platform.invokeMethod(
+        "startOnGoingNS", {'name': 'Dr.Parvathi Krishnan', 'mode': 'stop'});
   }
 
   Future<void> initialize() async {
@@ -85,7 +97,7 @@ class _CallPageState extends State<CallPage> {
       //todo name has to be change with dynamic
 
       await platform.invokeMethod(
-          "startOnGoingNS", {'name': 'mohan Raj', 'mode': 'start'});
+          "startOnGoingNS", {'name': 'Dr.Parvathi Krishnan', 'mode': 'start'});
     });
   }
 
@@ -188,13 +200,7 @@ class _CallPageState extends State<CallPage> {
           children: <Widget>[_videoView(views[0])],
         ));
       case 2:
-        return Container(
-            child: Column(
-          children: <Widget>[
-            _expandedVideoRow([views[0]]),
-            _expandedVideoRow([views[1]])
-          ],
-        ));
+        return customVideoView(views);
       case 3:
         return Container(
             child: Column(
@@ -216,55 +222,100 @@ class _CallPageState extends State<CallPage> {
     return Container();
   }
 
+  Widget customVideoView(List<Widget> attendees) {
+    return Stack(
+      alignment: Alignment.bottomRight,
+      children: [
+        _expandedVideoRow([attendees[1]]),
+        SizedBox(
+          width: 150,
+          height: 200,
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            child: Stack(
+              children: [
+                _expandedVideoRow([attendees[0]]),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: IconButton(
+                    onPressed: _onSwitchCamera,
+                    icon: Icon(
+                      Icons.switch_camera,
+                      color: Colors.white,
+                      size: 30.0,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   /// Toolbar layout
   Widget _toolbar({CallStatus callStatus}) {
     if (widget.role == ClientRole.Audience) return Container();
     return Container(
-      alignment: Alignment.bottomCenter,
+      alignment: Alignment.bottomLeft,
       padding: const EdgeInsets.symmetric(vertical: 48),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          RawMaterialButton(
-            onPressed: _onToggleMute,
-            child: Icon(
-              muted ? Icons.mic_off : Icons.mic,
-              color: muted ? Colors.white : Colors.blueAccent,
-              size: 20.0,
+      child: Container(
+        color: Colors.black.withOpacity(0.5),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            IconButton(
+              onPressed: _onToggleVideo,
+              icon: Icon(
+                _isHideMyVideo ? Icons.videocam_off : Icons.videocam,
+                color: Colors.white,
+                size: 20.0,
+              ),
             ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: muted ? Colors.blueAccent : Colors.white,
-            padding: const EdgeInsets.all(12.0),
-          ),
-          RawMaterialButton(
-            onPressed: () {
-              callStatus.enCall();
-              _onCallEnd(context);
-            },
-            child: Icon(
-              Icons.call_end,
-              color: Colors.white,
-              size: 35.0,
+            IconButton(
+              onPressed: _onToggleMute,
+              icon: Icon(
+                muted ? Icons.mic_off : Icons.mic,
+                color: Colors.white,
+                size: 20.0,
+              ),
             ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: Colors.redAccent,
-            padding: const EdgeInsets.all(15.0),
-          ),
-          RawMaterialButton(
-            onPressed: _onSwitchCamera,
-            child: Icon(
-              Icons.switch_camera,
-              color: Colors.blueAccent,
-              size: 20.0,
+            IconButton(
+              onPressed: null,
+              icon: Icon(
+                Icons.chat_bubble_outline,
+                color: Colors.white,
+                size: 20.0,
+              ),
             ),
-            shape: CircleBorder(),
-            elevation: 2.0,
-            fillColor: Colors.white,
-            padding: const EdgeInsets.all(12.0),
-          )
-        ],
+            IconButton(
+              onPressed: null,
+              icon: Icon(
+                Icons.attach_file,
+                color: Colors.white,
+                size: 20.0,
+              ),
+            ),
+            Container(
+              color: Colors.redAccent,
+              child: IconButton(
+                onPressed: () {
+//                  callStatus.enCall();
+//                  iCallStatus.callNotAlive();
+                  _onCallEnd(context);
+                },
+                icon: Icon(
+                  Icons.call_end,
+                  color: Colors.white,
+                  size: 30.0,
+                ),
+                padding: const EdgeInsets.all(15.0),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -320,9 +371,7 @@ class _CallPageState extends State<CallPage> {
   }
 
   void _onCallEnd(BuildContext context) async {
-    //put this line in myFHB
-    //goToHomePage(context);
-    Navigator.pop(context);
+    widget.isAppExists ? Navigator.pop(context) : Get.offAll(DashboardScreen());
   }
 
   void _onToggleMute() {
@@ -332,28 +381,106 @@ class _CallPageState extends State<CallPage> {
     AgoraRtcEngine.muteLocalAudioStream(muted);
   }
 
+  void _onToggleVideo() {
+    setState(() {
+      _isHideMyVideo = !_isHideMyVideo;
+    });
+    AgoraRtcEngine.muteLocalVideoStream(_isHideMyVideo);
+  }
+
   void _onSwitchCamera() {
     AgoraRtcEngine.switchCamera();
   }
 
   @override
   Widget build(BuildContext context) {
+    /// hide/show app bar and controller
+//    if (_isFirstTime) {
+//      _isFirstTime = false;
+//      Future.delayed(const Duration(seconds: 5), () {
+//        setState(() {
+//          _isHideControl = false;
+//        });
+//      });
+//    }
+
     ///update call status through provider
     final callStatus = Provider.of<CallStatus>(context, listen: false);
-
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
-        backgroundColor: Colors.black,
         body: Center(
           child: Stack(
             children: <Widget>[
               _viewRows(),
-              _panel(),
+              customAppbar(),
               _toolbar(callStatus: callStatus),
-              _prescription(context, callStatus: callStatus)
+              //_panel(),
+//              Visibility(
+//                child: customAppbar(),
+//                visible: _isHideControl,
+//              ),
+//              Visibility(
+//                child: _toolbar(callStatus: callStatus),
+//                visible: _isHideControl,
+//              ),
+              //_prescription(context, callStatus: callStatus)
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget customAppbar() {
+    return Container(
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.symmetric(vertical: 40),
+      child: Container(
+        color: Colors.black.withOpacity(0.5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.only(left: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Dr.Parvathi Krishnan',
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      //todo this has to be uncomment in future
+//                      SizedBox(
+//                        width: 10,
+//                      ),
+//                      Icon(
+//                        Icons.mic,
+//                        color: Colors.white,
+//                        size: 20,
+//                      ),
+                    ],
+                  ),
+                  TikTikTimer(
+                    backgroundColor: Colors.transparent,
+                    initialDate: DateTime.now(),
+                    running: _isTimerRun,
+                    width: 50,
+                    timerTextStyle:
+                        TextStyle(color: Colors.white, fontSize: 12),
+                    isRaised: false,
+                    tracetime: (time) {
+                      // print(time.getCurrentSecond);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -398,9 +525,9 @@ class _CallPageState extends State<CallPage> {
                     FlatButton(
                         child: Text('Yes'),
                         onPressed: () {
-                          //put this line in myFHB
-                          //goToHomePage(context);
-                          Navigator.pop(context);
+                          widget.isAppExists
+                              ? Navigator.of(context).pop(true)
+                              : Get.offAll(DashboardScreen());
                         }),
                     FlatButton(
                         child: Text('No'),
@@ -414,39 +541,4 @@ class _CallPageState extends State<CallPage> {
           );
         });
   }
-
-  void goToHomePage() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-          builder: (context) =>
-              IndexPage()), //todo this need to change with home page in myFHB
-      (Route<dynamic> route) => false,
-    );
-  }
-}
-
-Widget _prescription(BuildContext context, {CallStatus callStatus}) {
-  return Container(
-    alignment: Alignment.topRight,
-    child: Container(
-      margin: EdgeInsets.only(top: 80, right: 20),
-      color: Colors.white,
-      height: 40,
-      width: 40,
-      child: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            callStatus.startCall();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => NewPrescription(
-                        isDuplicatedPrescription: false,
-                        duplicatedMedicines: [],
-                      )),
-            );
-          }),
-    ),
-  );
 }

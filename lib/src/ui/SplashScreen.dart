@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     PreferenceUtil.init();
-    Future.delayed(const Duration(seconds: 0), () {
+    Future.delayed(const Duration(seconds: 3), () {
       var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
       if (!isFirstTime) {
         PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, variable.strtrue);

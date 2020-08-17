@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 import './call.dart';
 
@@ -42,6 +41,7 @@ class IndexState extends State<IndexPage> {
 
   @override
   Widget build(BuildContext context) {
+    makeCall(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Agora Flutter QuickStart'),
@@ -139,6 +139,16 @@ class IndexState extends State<IndexPage> {
         ),
       );
     }
+  }
+
+  void makeCall(BuildContext context) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (BuildContext context) => CallPage(
+                  role: ClientRole.Broadcaster,
+                  channelName: 'Goundamani',
+                )));
   }
 
   /*Future<void> _handleCameraAndMic() async {

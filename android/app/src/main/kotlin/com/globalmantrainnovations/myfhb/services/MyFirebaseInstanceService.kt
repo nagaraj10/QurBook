@@ -8,6 +8,7 @@ import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -20,7 +21,8 @@ import com.google.firebase.messaging.RemoteMessage
 
 
 class MyFirebaseInstanceService : FirebaseMessagingService() {
-    val CHANNEL_INCOMING = "incoming_call"
+    val CHANNEL_INCOMING = "cha_call"
+    val CHANNEL_ACK = "cha_ack"
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d(TAG, "Token: $token")
@@ -50,6 +52,15 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     }
 
     private fun createNotification(title:String="", body:String="", data:Map<String, String> = HashMap()) {
+        //todo segregate the NS according their type
+        val NS_TYPE=data[getString(R.string.type)]
+        when(NS_TYPE){
+            "Incoming_call"->createNotification4Call(data)
+            "Acknowledgements"->createNotification4Ack(data)
+        }
+    }
+
+    private fun createNotification4Call(data:Map<String, String> = HashMap()){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = 9090
         val MEETING_ID = data[getString(R.string.meetid)]
@@ -77,12 +88,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)
-            val channel1 = NotificationChannel(CHANNEL_INCOMING, getString(R.string.channel1), NotificationManager.IMPORTANCE_HIGH)
-            channel1.description = getString(R.string.channel_incoming_desc)
+            val channelCall = NotificationChannel(CHANNEL_INCOMING, getString(R.string.channel_call), NotificationManager.IMPORTANCE_HIGH)
+            channelCall.description = getString(R.string.channel_incoming_desc)
             val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
-            channel1.setSound(_sound,attributes)
-            manager.createNotificationChannel(channel1)
+            channelCall.setSound(_sound,attributes)
+            manager.createNotificationChannel(channelCall)
         }
 
 
@@ -93,7 +104,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .setContentText(data["body"])
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_CALL)
-                .setDefaults(Notification.DEFAULT_SOUND)
+                .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(fullScreenPendingIntent)
                 .addAction(R.drawable.ic_call, getString(R.string.ns_act_accept), acceptPendingIntent)
                 .addAction(R.drawable.ic_decline, getString(R.string.ns_act_decline), declinePendingIntent)
@@ -112,4 +123,39 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
     }
 
+    private fun createNotification4Ack(data:Map<String, String> = HashMap()){
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = 9091
+        val MEETING_ID = data[getString(R.string.meetid)]
+        val USER_NAME = data[getString(R.string.username)]
+        val NS_TIMEOUT = 30 * 1000L
+
+
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelAck = NotificationChannel(CHANNEL_ACK, getString(R.string.channel_ack), NotificationManager.IMPORTANCE_DEFAULT)
+            channelAck.description = getString(R.string.channel_ack_desc)
+            manager.createNotificationChannel(channelAck)
+        }
+
+
+        var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
+                .setSmallIcon(R.mipmap.app_ns_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
+                .setContentTitle(data["title"])
+                .setContentText(data["body"])
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setDefaults(Notification.DEFAULT_SOUND)
+                .setAutoCancel(true)
+                .setTimeoutAfter(NS_TIMEOUT)
+                .setOnlyAlertOnce(true)
+                .build()
+
+        //notification.flags=Notification.FLAG_INSISTENT
+        nsManager.notify(NS_ID,notification)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
+            AutoDismissNotification().setAlarm(this,NS_ID,NS_TIMEOUT)
+        }
+    }
 }

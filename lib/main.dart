@@ -132,7 +132,6 @@ class _MyFHBState extends State<MyFHB> {
   String _responseFromNative = variable.strWaitLoading;
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static const secure_platform = variable.security;
-
   static const nav_platform = const MethodChannel('navigation.channel');
   String navRoute = '';
 
@@ -195,31 +194,22 @@ class _MyFHBState extends State<MyFHB> {
     _msgListener.value = _msg;
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
-      Get.key.currentState.pushNamed(routervariable.rt_CallPage,
-          arguments: CallArguments(
-            role: ClientRole.Broadcaster,
-            channelName: '$msg',
-          ));
+      Get.to(CallPage(
+        //channelName: navRoute,
+        channelName: 'Test',
+        role: ClientRole.Broadcaster,
+        isAppExists: true,
+      ));
     }
   }
 
   getMyRoute() async {
     var route = await nav_platform.invokeMethod("getMyRoute");
     if (route != null) {
+      print('native nav_route $route');
       setState(() {
         navRoute = route;
       });
-    }
-  }
-
-  Widget chooseMyRoute(String route) {
-    if (route.isEmpty) {
-      return SplashScreen();
-    } else {
-      return CallPage(
-        channelName: route,
-        role: ClientRole.Broadcaster,
-      );
     }
   }
 
@@ -238,10 +228,9 @@ class _MyFHBState extends State<MyFHB> {
 
     flutterLocalNotificationsPlugin.initialize(platform,
         onSelectNotification: notificationAction);
-
     return provider.MultiProvider(
         providers: [
-          provider.ChangeNotifierProvider(
+          provider.ChangeNotifierProvider<ConnectivityBloc>(
             create: (_) => ConnectivityBloc(),
           ),
           provider.ChangeNotifierProvider<CallStatus>(
@@ -255,17 +244,13 @@ class _MyFHBState extends State<MyFHB> {
             primaryColor: Color(myPrimaryColor),
             accentColor: Colors.white,
           ),
-          home: ValueListenableBuilder(
-            builder: (BuildContext context, String val, Widget child) {
-              return val.isEmpty
-                  ? chooseMyRoute(navRoute)
-                  : CallPage(
-                      channelName: val,
-                      role: ClientRole.Broadcaster,
-                    );
-            },
-            valueListenable: _msgListener,
-          ),
+          home: navRoute.isEmpty
+              ? SplashScreen()
+              : CallPage(
+                  isAppExists: false,
+                  role: ClientRole.Broadcaster,
+                  channelName: navRoute,
+                ),
           routes: routes,
           debugShowCheckedModeBanner: false,
           navigatorKey: Get.key,
