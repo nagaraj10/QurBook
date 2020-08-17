@@ -15,47 +15,50 @@ import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Telehe
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GetTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
 import '../../SearchWidget/view/SearchWidget.dart';
 
-
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 
 class DoctorSessionTimeSlot extends StatefulWidget {
-
   final String doctorId;
   final String date;
   final List<DoctorIds> docs;
   final int i;
+  History doctorsData;
+  bool isReshedule;
 
-  DoctorSessionTimeSlot({this.doctorId,this.date,this.docs,this.i});
+  DoctorSessionTimeSlot(
+      {this.doctorId,
+      this.date,
+      this.docs,
+      this.i,
+      this.isReshedule,
+      this.doctorsData});
 
   @override
   State<StatefulWidget> createState() {
     return DoctorSessionTimeSlotState();
   }
-
 }
 
 class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = new CommonWidgets();
-  DateTime _selectedValue= DateTime.now();
+  DateTime _selectedValue = DateTime.now();
   DatePickerController _controller = DatePickerController();
-
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Column(
       children: <Widget>[
         Container(
@@ -83,55 +86,64 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
         getTimeSlots(),
       ],
     );
-
   }
 
-  Widget getTimeSlots(){
-
+  Widget getTimeSlots() {
     providerViewModel = Provider.of<MyProviderViewModel>(context);
 
     return new FutureBuilder<SessionData>(
-      future: providerViewModel.fetchTimeSlots(_selectedValue.toString(), widget.doctorId),
+      future: providerViewModel.fetchTimeSlots(
+          _selectedValue.toString(), widget.doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return new Center(
-              child:
-                  new Column(
-                    children: <Widget>[
-                      SizedBoxWidget(height: 20.0),
-                      new SizedBox(
-                        child: CircularProgressIndicator(strokeWidth: 2.0,backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
-                        height: 20.0,
-                        width: 20.0,
-                      ),
-                      SizedBoxWidget(height: 120.0),
-                    ],
-                  )
-
-            );
+                child: new Column(
+              children: <Widget>[
+                SizedBoxWidget(height: 20.0),
+                new SizedBox(
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2.0,
+                      backgroundColor:
+                          Color(new CommonUtil().getMyPrimaryColor())),
+                  height: 20.0,
+                  width: 20.0,
+                ),
+                SizedBoxWidget(height: 120.0),
+              ],
+            ));
           } else if (snapshot.hasError) {
             return new Text('Error: ${snapshot.error}');
           } else {
             return Container(
               margin: EdgeInsets.only(left: 5, top: 12),
-              child: GetTimeSlots(dateSlotTimingsObj: snapshot.data,docs: widget.docs,j: widget.i,selectedDate: _selectedValue),
+              child: GetTimeSlots(
+                dateSlotTimingsObj: snapshot.data,
+                docs: widget.docs,
+                j: widget.i,
+                selectedDate: _selectedValue,
+                isReshedule: widget.isReshedule,
+                doctorsData: widget.doctorsData,
+              ),
             );
           }
         } else {
           return Column(
-              children: <Widget>[
-                SizedBoxWidget(height: 8,),
-                new Text(slotsAreNotAvailable,style: TextStyle(fontSize: 10.0),),
-                SizedBoxWidget(height: 8,),
-              ],
-        );
-
+            children: <Widget>[
+              SizedBoxWidget(
+                height: 8,
+              ),
+              new Text(
+                slotsAreNotAvailable,
+                style: TextStyle(fontSize: 10.0),
+              ),
+              SizedBoxWidget(
+                height: 8,
+              ),
+            ],
+          );
         }
       },
     );
-
   }
-
-
 }

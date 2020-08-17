@@ -120,11 +120,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   addHealthRecords() {
-
     healthRecords.addAll(recordIds);
     healthRecords.addAll(notesId);
     healthRecords.addAll(voiceIds);
-
   }
 
   Future<FamilyMembersList> getList() async {
@@ -155,12 +153,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     scheduleDate =
         commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
 
-    try{
+    try {
       fees = widget.docs[widget.i].fees.consulting.fee;
-
-    }catch(e)
-    {
-      fees='';
+    } catch (e) {
+      fees = '';
     }
 
     print(fees);
@@ -764,10 +760,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                             doctorSessionId,
                                             scheduleDate,
                                             slotNumber,
-                                            (healthRecords!=null && healthRecords.length>0)?true:false,
+                                            (healthRecords != null &&
+                                                    healthRecords.length > 0)
+                                                ? true
+                                                : false,
                                             "false",
-                                            (healthRecords!=null && healthRecords.length>0)?healthRecords:[]);
-
+                                            (healthRecords != null &&
+                                                    healthRecords.length > 0)
+                                                ? healthRecords
+                                                : []);
                                       },
                                       child: TextWidget(text: ok, fontsize: 12),
                                     ),
@@ -794,7 +795,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       String scheduleDate,
       String slotNumber,
       bool isMedicalShared,
-      String isFollowUp,List<String> healthRecords) async {
+      String isFollowUp,
+      List<String> healthRecords) async {
     BookAppointmentModel bookAppointmentModel =
         await providerViewModel.putBookAppointment(
             createdBy,
@@ -803,7 +805,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             scheduleDate,
             slotNumber,
             isMedicalShared,
-            isFollowUp,healthRecords);
+            isFollowUp,
+            healthRecords);
 
     return bookAppointmentModel;
   }
@@ -823,7 +826,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     try {
       bookAppointmentCall(createdBy, createdFor, doctorSessionId, scheduleDate,
-              slotNumber, isMedicalShared, isFollowUp,healthRecords)
+              slotNumber, isMedicalShared, isFollowUp, healthRecords)
           .then((value) {
         if (value != null) {
           if (value.status != null &&
@@ -834,8 +837,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 value.message == appointmentCreatedMessage) {
               pr.hide();
               if (value.response.data.paymentInfo.longurl != null) {
-                goToPaymentPage(value.response.data.paymentInfo.longurl,
-                    value.response.data.paymentInfo.payment.id,value.response.data.appointmentInfo.id);
+                goToPaymentPage(
+                    value.response.data.paymentInfo.longurl,
+                    value.response.data.paymentInfo.payment.id,
+                    value.response.data.appointmentInfo.id);
               } else {
                 pr.hide();
                 toast.getToast(noUrl, Colors.red);
@@ -861,12 +866,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     }
   }
 
-
-  goToPaymentPage(String longurl,String paymentId,String appointmentId) {
+  goToPaymentPage(String longurl, String paymentId, String appointmentId) {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => PaymentPage(redirectUrl: longurl,paymentId: paymentId,appointmentId: appointmentId)));
+            builder: (context) => PaymentPage(
+                redirectUrl: longurl,
+                paymentId: paymentId,
+                appointmentId: appointmentId)));
   }
 
   Widget getTitle(String title) {
@@ -958,10 +965,24 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               commonWidgets.getSizedBox(5.0),
               Row(children: [
                 Expanded(
+                    child: widget.docs[widget.i].professionalDetails != null
+                        ? widget.docs[widget.i].professionalDetails[0]
+                                    .specialty !=
+                                null
+                            ? widget.docs[widget.i].professionalDetails[0]
+                                        .specialty.name !=
+                                    null
+                                ? commonWidgets.getDoctoSpecialist(
+                                    '${widget.docs[widget.i].professionalDetails[0].specialty.name}')
+                                : SizedBox()
+                            : SizedBox()
+                        : SizedBox()),
+                /*
+                Expanded(
                     child: widget.docs[widget.i].specialization != null
                         ? commonWidgets.getDoctoSpecialist(
                             '${widget.docs[widget.i].specialization}')
-                        : SizedBox()),
+                        : SizedBox()),*/
                 widget.docs[widget.i].fees != null
                     ? widget.docs[widget.i].fees.consulting != null
                         ? (widget.docs[widget.i].fees.consulting != null &&
@@ -1004,7 +1025,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             new CommonUtil().fliterCategories(categoryDataList);
 
         filteredCategoryData.add(categoryDataObjClone);
-
       });
       return filteredCategoryData;
     } else {
@@ -1041,7 +1061,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     int position = 0;
     List<CategoryData> categoryDataList = getCategoryList();
     for (int i = 0; i < categoryDataList.length; i++) {
-         if (categoryName == categoryDataList[i].categoryName) {
+      if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;
       }

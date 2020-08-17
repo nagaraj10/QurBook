@@ -150,7 +150,7 @@ class _MyProvidersState extends State<MyProvidersNew> {
               date: _selectedValue.toString(),
               doctorId: docs[i].id,
               docs: docs,
-              i: i),
+              i: i,isReshedule: false,),
         ],
       ),
     );

@@ -14,17 +14,16 @@ class BottomBarWidget extends StatelessWidget {
       {this.name, this.icon, this.pageIndex, this.selectedPageIndex});
   @override
   Widget build(BuildContext context) {
-    
     return Padding(
         padding: EdgeInsets.all(5),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            name == variable.strMaya
+            name == 'Sheela'
                 ? Image.asset(
                     icon,
-                    height: 32,
-                    width: 32,
+                    height: 25,
+                    width: 25,
                   )
                 : ImageIcon(
                     AssetImage(icon),

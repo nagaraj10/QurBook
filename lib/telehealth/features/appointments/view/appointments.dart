@@ -2,6 +2,8 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
@@ -13,6 +15,8 @@ import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.d
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
+import 'package:myfhb/telehealth/features/appointments/view/resheduleAppointments.dart';
+import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -172,13 +176,15 @@ class _AppointmentsState extends State<Appointments> {
     );
   }
 
-  void navigateToProviderScreen() {
-    Navigator.of(context).pop();
-    Navigator.pushNamed(
+  void navigateToProviderScreen(doc, isReshedule) {
+    Navigator.push(
       context,
-      '/telehealth-providers',
-      arguments: HomeScreenArguments(selectedIndex: 1),
-    ).then((value) {});
+      MaterialPageRoute(
+          builder: (context) => ResheduleMain(
+                doc: doc,
+                isReshedule: isReshedule,
+              )),
+    );
   }
 
   Widget getDoctorsAppoinmentsList() {
@@ -277,10 +283,18 @@ class _AppointmentsState extends State<Appointments> {
                 )
               ],
             );
-          } else {
-            return new Center(
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
               child: new CircularProgressIndicator(
                 backgroundColor: Colors.grey,
+              ),
+            );
+          } else {
+            return Container(
+              height: MediaQuery.of(context).size.height / 2,
+              alignment: Alignment.center,
+              child: Center(
+                child: Text(variable.strNoAppointments),
               ),
             );
           }
@@ -372,7 +386,7 @@ class _AppointmentsState extends State<Appointments> {
                       Constants.Appointments_resheduleImage,
                       Colors.black38,
                       Constants.Appointments_reshedule, () {
-                    navigateToProviderScreen();
+                    navigateToProviderScreen(doc, true);
                   }),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
@@ -510,10 +524,15 @@ class _AppointmentsState extends State<Appointments> {
                   commonWidget.iconWithText(Constants.Appointments_receiptImage,
                       Colors.black38, Constants.Appointments_receipt, () {}),
                   SizedBoxWidget(width: 15.0),
-                  commonWidget.svgWithText(
-                      Constants.Appointments_newAppoinmentImage,
-                      Colors.black38,
-                      Constants.Appointments_new),
+                  GestureDetector(
+                    onTap: () {
+                      navigateToProviderScreen(doc, false);
+                    },
+                    child: commonWidget.svgWithText(
+                        Constants.Appointments_newAppoinmentImage,
+                        Colors.black38,
+                        Constants.Appointments_new),
+                  ),
                 ],
               ),
             )

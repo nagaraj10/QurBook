@@ -438,7 +438,7 @@ const String strtapToSpeak = 'Tap to Speak';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strdevice = 'device';
 
-const String strIntromaya = 'Hi, I am Maya your voice health assistant.';
+const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';
 const String strpdf = 'pdf';
 const String strCropper = 'Cropper';
@@ -547,6 +547,7 @@ const entityCode = "28858877-4710-4dd3-899f-0efe0e9255db";
 const roleCode = "285bbe41-3030-4b0e-b914-00e404a77032";
 const redirecturl = 'http://localhost:4200/callback?code=';
 const String strNoDoctordata = 'No Doctor List Available';
+const String strNoAppointments = 'No Appoinments Available';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
