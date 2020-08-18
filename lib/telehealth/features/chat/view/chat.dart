@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
@@ -257,6 +258,7 @@ class ChatScreenState extends State<ChatScreen> {
   var chatEnterMessageController = TextEditingController();
   final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
+  List<String> recordIds = new List();
 
   @override
   void initState() {
@@ -875,8 +877,12 @@ class ChatScreenState extends State<ChatScreen> {
                       height: 50,
                       child: FlatButton(
                           onPressed: () {
-                            print('checked');
-                            getImage();
+                            FetchRecords(
+                                0,
+                                false,
+                                false,
+                                true,
+                                recordIds);
                           },
                           child: new Icon(
                             Icons.attach_file,
@@ -1007,5 +1013,37 @@ class ChatScreenState extends State<ChatScreen> {
               },
             ),
     );
+  }
+
+  void FetchRecords(int position, bool allowSelect, bool isAudioSelect,
+      bool isNotesSelect, List<String> mediaIds) async {
+    print(allowSelect);
+    print(isAudioSelect);
+    print(isNotesSelect);
+    print(position);
+
+    await Navigator.of(context)
+        .push(MaterialPageRoute(
+      builder: (context) => MyRecords(
+        categoryPosition: position,
+        allowSelect: allowSelect,
+        isAudioSelect: isAudioSelect,
+        isNotesSelect: isNotesSelect,
+        selectedMedias: mediaIds,
+      ),
+    ))
+        .then((results) {
+      if (results.containsKey('metaId')) {
+        var metaIds = results['metaId'];
+        print(metaIds.toString());
+
+        if (allowSelect) {
+          recordIds = results['metaId'].cast<String>();
+        }
+        //print(recordIdCount);
+        setState(() {});
+        print(metaIds.toString());
+      }
+    });
   }
 }
