@@ -15,7 +15,6 @@ import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../common/CommonUtil.dart';
-import '../../../../common/CommonUtil.dart';
 
 class Chat extends StatefulWidget {
   final String peerId;
