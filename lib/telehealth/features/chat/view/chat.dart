@@ -8,13 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../common/CommonUtil.dart';
-import '../../../../common/CommonUtil.dart';
+import '../constants/const.dart';
 
 class Chat extends StatefulWidget {
   final String peerId;
@@ -52,7 +50,7 @@ class ChatState extends State<Chat> {
   Widget _patientChatBar() {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+      backgroundColor: Color(0xff138fcf),
       flexibleSpace: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -83,8 +81,6 @@ class ChatState extends State<Chat> {
                       child: _patientDetailOrSearch(),
                     ),
                   ),
-
-                  /*
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.08,
                   ),
@@ -103,7 +99,6 @@ class ChatState extends State<Chat> {
                         color: Colors.white,
                       )),*/
                   moreOptionsPopup()
-                  */
                 ],
               ),
             ),
@@ -212,8 +207,8 @@ class ChatState extends State<Chat> {
             )),
             PopupMenuItem(
                 child: GestureDetector(child: Text('$popUpChoiceTwo'))),
-            PopupMenuItem(
-                child: GestureDetector(child: Text('$popUpCHoiceThree')))
+            /*PopupMenuItem(
+                child: GestureDetector(child: Text('$popUpCHoiceThree'))) */
           ]);
 
   void showSearch() {
@@ -397,8 +392,7 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                     child: Text(
                       document['content'],
-                      style: TextStyle(
-                          color: Color(CommonUtil().getMyPrimaryColor())),
+                      style: TextStyle(color: themeColor),
                     ),
                   ),
                 )
@@ -530,7 +524,8 @@ class ChatScreenState extends State<ChatScreen> {
                           ),
                           padding: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(0xff138fcf),
+                            // Color(new CommonUtil().getMyPrimaryColor()),
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(25),
                               bottomLeft: Radius.circular(25),
@@ -880,7 +875,7 @@ class ChatScreenState extends State<ChatScreen> {
                           },
                           child: new Icon(
                             Icons.attach_file,
-                            color: Color(CommonUtil().getMyPrimaryColor()),
+                            color: Color(0xff138fcf),
                             size: 24,
                           )),
                     )
@@ -893,8 +888,10 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () {},
                 elevation: 2.0,
                 fillColor: Colors.white,
-                child: Icon(Icons.mic,
-                    size: 25.0, color: Color(CommonUtil().getMyPrimaryColor())),
+                child: Icon(
+                  Icons.mic,
+                  size: 25.0,
+                ),
                 padding: EdgeInsets.all(12.0),
                 shape: CircleBorder(),
               ),

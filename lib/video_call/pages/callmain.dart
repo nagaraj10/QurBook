@@ -58,7 +58,6 @@ class CallMain extends StatelessWidget {
   }
 
   Future userAlert() {
-
     return showDialog(
         context: globalContext,
         barrierDismissible: false,
