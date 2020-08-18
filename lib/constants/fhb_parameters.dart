@@ -319,7 +319,8 @@ const String strsyncEndDate = 'endDateTime';
 const String strlastSyncDateTime = 'lastSyncDateTime';
 const String strStartTimeStamp = "startDateTime"; 
 const String strEndTimeStamp = "endDateTime";
-
+const String strisSuccess = "isSuccess";
+const String strsourcetype = "sourcetype";
 
 //Data Params for device readings
 //BP
@@ -414,3 +415,13 @@ const String hktHeartRateUnit = "BEATS_PER_MINUTE";
 const String hktGlucoseUnit = "MILLIGRAM_PER_DECILITER";
 const String hktTemperatureUnit1 = "DEGREE_CELSIUS";
 const String hktTemperatureUnit2 = "FARENHEIT";
+
+//myFHB response variables
+const String strBGlucose = "bloodGlucose";
+const String strBP = "bloodPressure";
+const String strTemp = "bodyTemperature";
+const String strWgt = "bodyWeight";
+const String strHRate = "heartRate";
+const String strOxygen = "oxygenSaturation";
+
+const String strentities = "entities";

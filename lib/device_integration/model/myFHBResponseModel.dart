@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:myfhb/constants/fhb_parameters.dart';
+
 LastSync lastSyncFromJson(String str) => LastSync.fromJson(json.decode(str));
 
 String lastSyncToJson(LastSync data) => json.encode(data.toJson());
@@ -14,14 +16,14 @@ class LastSync {
   List<Result> result;
 
   factory LastSync.fromJson(Map<String, dynamic> json) => LastSync(
-        isSuccess: json["isSuccess"],
+        isSuccess: json[strisSuccess],
         result:
-            List<Result>.from(json["result"].map((x) => Result.fromJson(x))),
+            List<Result>.from(json[strresult].map((x) => Result.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "isSuccess": isSuccess,
-        "result": List<dynamic>.from(result.map((x) => x.toJson())),
+        strisSuccess: isSuccess,
+        strresult: List<dynamic>.from(result.map((x) => x.toJson())),
       };
 }
 
@@ -39,16 +41,16 @@ class Result {
   String sourcetype;
 
   factory Result.fromJson(Map<String, dynamic> json) => Result(
-        lastSyncDateTime: DateTime.parse(json["lastSyncDateTime"]),
-        devicedatatype: json["devicedatatype"],
-        devicetype: json["devicetype"],
-        sourcetype: json["sourcetype"],
+        lastSyncDateTime: DateTime.parse(json[strlastSyncDateTime]),
+        devicedatatype: json[strdeviceDataType.toLowerCase()],
+        devicetype: json[strdeviceType.toLowerCase()],
+        sourcetype: json[strsourcetype],
       );
 
   Map<String, dynamic> toJson() => {
-        "lastSyncDateTime": lastSyncDateTime.toIso8601String(),
-        "devicedatatype": devicedatatype,
-        "devicetype": devicetype,
-        "sourcetype": sourcetype,
+        strlastSyncDateTime: lastSyncDateTime.toIso8601String(),
+        strdeviceDataType.toLowerCase(): devicedatatype,
+        strdeviceType.toLowerCase(): devicetype,
+        strsourcetype: sourcetype,
       };
 }

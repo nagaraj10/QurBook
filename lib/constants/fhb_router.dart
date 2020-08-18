@@ -31,6 +31,10 @@ import '../my_family/screens/MyFamily.dart';
 import '../my_family_detail/screens/my_family_detail_screen.dart';
 import '../telehealth/features/MyProvider/view/TelehealthProviders.dart';
 
+import 'package:myfhb/device_integration/view/screens/Show_Devices.dart';
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
+import 'package:provider/provider.dart';
+
 setRouter(List<CameraDescription> listOfCameras) async {
   var firstCamera = listOfCameras[0];
 
@@ -42,7 +46,10 @@ setRouter(List<CameraDescription> listOfCameras) async {
         HomeScreen(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_UserAccounts: (BuildContext context) =>
         UserAccounts(arguments: ModalRoute.of(context).settings.arguments),
-    router.rt_AppSettings: (BuildContext context) => MySettings(),
+    router.rt_AppSettings: (BuildContext context) => ChangeNotifierProvider(
+          create: (context) => DevicesViewModel(),
+          child: MySettings(),
+        ),
     router.rt_MyRecords: (BuildContext context) => MyRecords(),
     router.rt_MyFamily: (BuildContext context) => MyFamily(),
     router.rt_myprovider: (BuildContext context) => MyProvider(),

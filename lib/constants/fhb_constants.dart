@@ -80,6 +80,12 @@ const String allowDeviceRecognition = 'allowDeviceRecognition';
 const String allowDigitRecognition = 'allowDigitRecognition';
 const String activateGF = "activateGF"; // activate googleFit
 const String activateHK = "activateHK"; // activate appleHealth
+const String bpMon = "bpMon";
+const String glMon = "GLMon";
+const String oxyMon = "OxyMon";
+const String thMon = "THMon";
+const String wsMon = "WSMon";
+
 const String audioFileType = 'audio/mp3';
 const String MSG_VERIFYEMAIL_VERIFIED =
     'Email is already verified by other user.';
