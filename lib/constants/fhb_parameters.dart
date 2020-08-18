@@ -14,7 +14,7 @@ const String strCountryCode = 'countryCode';
 const String strPhoneNumber = 'phoneNumber';
 const String strGender = 'gender';
 const String strGenderID = 'genderId';
-const String strdob = 'dob';
+const String strdob='dob';
 const String strName = 'name';
 const String strIstemper = 'isTempUser';
 const String strIsEmailVerified = 'isEmailVerified';
@@ -392,3 +392,25 @@ const String gfscopeglucoseRead =
 
 const String gfAggregateURL =
     "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate";
+
+// Google Fit Response variables
+const String gfbucket = "bucket";
+const String gfstartTimeMillis = "startTimeMillis";
+const String gfendTimeMillis = "endTimeMillis";
+const String gfdataset = "dataset";
+const String gfdataSourceId = "dataSourceId";
+const String gfpoint = "point";
+const String gfstartTimeNanos = "startTimeNanos";
+const String gforiginDataSourceId = "originDataSourceId";
+const String gfendTimeNanos = "endTimeNanos";
+const String gfvalue = "value";
+const String gfdataTypeName = "dataTypeName";
+const String gfmapVal = "mapVal";
+const String gffpVal = "fpVal";
+
+//HealthKit Response variables
+const String hktWeightUnit = "KILOGRAMS";
+const String hktHeartRateUnit = "BEATS_PER_MINUTE";
+const String hktGlucoseUnit = "MILLIGRAM_PER_DECILITER";
+const String hktTemperatureUnit1 = "DEGREE_CELSIUS";
+const String hktTemperatureUnit2 = "FARENHEIT";

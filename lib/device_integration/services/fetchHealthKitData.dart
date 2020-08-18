@@ -33,7 +33,7 @@ class FetchHealthKitData {
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
             rawData[strParamWeight] = healthData.value;
-            if (healthData.unit == "KILOGRAMS") {
+            if (healthData.unit == hktWeightUnit) {
               rawData[strParamWeightUnit] = strValueWeightUnit;
             }
             dataSet.add(rawData);
@@ -68,7 +68,7 @@ class FetchHealthKitData {
             Map<String, dynamic> rawData = new Map();
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
-            if (healthData.unit == "BEATS_PER_MINUTE") {
+            if (healthData.unit == hktHeartRateUnit) {
               rawData[strParamHeartRate] = healthData.value;
             }
             dataSet.add(rawData);
@@ -151,7 +151,7 @@ class FetchHealthKitData {
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
             rawData[strParamBGLevel] = healthData.value;
-            if (healthData.unit == "MILLIGRAM_PER_DECILITER") {
+            if (healthData.unit == hktGlucoseUnit) {
               rawData[strParamBGUnit] = strMGDL;
             }
             dataSet.add(rawData);
@@ -230,9 +230,9 @@ class FetchHealthKitData {
             rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
             rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
             rawData[strParamTemp] = healthData.value;
-            if (healthData.unit == "DEGREE_CELSIUS") {
+            if (healthData.unit == hktTemperatureUnit1) {
               rawData[strParamTempUnit] = strParamUnitCelsius;
-            } else if (healthData.unit == "FARENHEIT") {
+            } else if (healthData.unit == hktTemperatureUnit2) {
               rawData[strParamTempUnit] = strParamUnitFarenheit;
             }
             dataSet.add(rawData);

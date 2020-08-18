@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:myfhb/constants/fhb_parameters.dart';
 
 GoogleFitResponseModel ResponseFromJson(String str) =>
     GoogleFitResponseModel.fromJson(json.decode(str));
@@ -15,11 +16,11 @@ class GoogleFitResponseModel {
   factory GoogleFitResponseModel.fromJson(Map<String, dynamic> json) =>
       GoogleFitResponseModel(
         bucket:
-            List<Bucket>.from(json["bucket"].map((x) => Bucket.fromJson(x))),
+            List<Bucket>.from(json[gfbucket].map((x) => Bucket.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "bucket": List<dynamic>.from(bucket.map((x) => x.toJson())),
+        gfbucket: List<dynamic>.from(bucket.map((x) => x.toJson())),
       };
 }
 
@@ -35,16 +36,16 @@ class Bucket {
   List<Dataset> dataset;
 
   factory Bucket.fromJson(Map<String, dynamic> json) => Bucket(
-        startTimeMillis: json["startTimeMillis"],
-        endTimeMillis: json["endTimeMillis"],
+        startTimeMillis: json[gfstartTimeMillis],
+        endTimeMillis: json[gfendTimeMillis],
         dataset:
-            List<Dataset>.from(json["dataset"].map((x) => Dataset.fromJson(x))),
+            List<Dataset>.from(json[gfdataset].map((x) => Dataset.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "startTimeMillis": startTimeMillis,
-        "endTimeMillis": endTimeMillis,
-        "dataset": List<dynamic>.from(dataset.map((x) => x.toJson())),
+        gfstartTimeMillis: startTimeMillis,
+        gfendTimeMillis: endTimeMillis,
+        gfdataset: List<dynamic>.from(dataset.map((x) => x.toJson())),
       };
 }
 
@@ -58,13 +59,13 @@ class Dataset {
   List<Point> point;
 
   factory Dataset.fromJson(Map<String, dynamic> json) => Dataset(
-        dataSourceId: json["dataSourceId"],
-        point: List<Point>.from(json["point"].map((x) => Point.fromJson(x))),
+        dataSourceId: json[gfdataSourceId],
+        point: List<Point>.from(json[gfpoint].map((x) => Point.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "dataSourceId": dataSourceId,
-        "point": List<dynamic>.from(point.map((x) => x.toJson())),
+        gfdataSourceId: dataSourceId,
+        gfpoint: List<dynamic>.from(point.map((x) => x.toJson())),
       };
 }
 
@@ -84,19 +85,19 @@ class Point {
   String dataTypeName;
 
   factory Point.fromJson(Map<String, dynamic> json) => Point(
-        startTimeNanos: json["startTimeNanos"],
-        originDataSourceId: json["originDataSourceId"],
-        endTimeNanos: json["endTimeNanos"],
-        value: List<Value>.from(json["value"].map((x) => Value.fromJson(x))),
-        dataTypeName: json["dataTypeName"],
+        startTimeNanos: json[gfstartTimeNanos],
+        originDataSourceId: json[gforiginDataSourceId],
+        endTimeNanos: json[gfendTimeNanos],
+        value: List<Value>.from(json[gfvalue].map((x) => Value.fromJson(x))),
+        dataTypeName: json[gfdataTypeName],
       );
 
   Map<String, dynamic> toJson() => {
-        "startTimeNanos": startTimeNanos,
-        "originDataSourceId": originDataSourceId,
-        "endTimeNanos": endTimeNanos,
-        "value": List<dynamic>.from(value.map((x) => x.toJson())),
-        "dataTypeName": dataTypeName,
+        gfstartTimeNanos: startTimeNanos,
+        gforiginDataSourceId: originDataSourceId,
+        gfendTimeNanos: endTimeNanos,
+        gfvalue: List<dynamic>.from(value.map((x) => x.toJson())),
+        gfdataTypeName: dataTypeName,
       };
 }
 
@@ -115,13 +116,13 @@ class Value {
   var fpVal;
 
   factory Value.fromJson(Map<String, dynamic> json) => Value(
-        mapVal: List<dynamic>.from(json["mapVal"].map((x) => x)),
-        fpVal: json["fpVal"],
+        mapVal: List<dynamic>.from(json[gfmapVal].map((x) => x)),
+        fpVal: json[gffpVal],
       );
 
   Map<String, dynamic> toJson() => {
-        "mapVal": List<dynamic>.from(mapVal.map((x) => x)),
-        "fpVal": fpVal,
+        gfmapVal: List<dynamic>.from(mapVal.map((x) => x)),
+        gffpVal: fpVal,
       };
 }
 

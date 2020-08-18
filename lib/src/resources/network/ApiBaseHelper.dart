@@ -29,6 +29,7 @@ import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
+  final String _baseUrlV2 = Constants.BASEURL_V2;
 
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
