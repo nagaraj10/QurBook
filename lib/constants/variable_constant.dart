@@ -155,6 +155,7 @@ const String icon_digit_reco = 'assets/settings/digit_recognition.png';
 const String icon_device_recon = 'assets/settings/device_recognition.png';
 const String icon_provider = 'assets/navicons/my_providers.png';
 const String icon_records = 'assets/navicons/records.png';
+const String icon_chat = 'assets/navicons/chat.png';
 const String icon_digit_googleFit = 'assets/settings/googlefit.png';
 const String icon_th = 'assets/navicons/th.png';
 const String icon_home = 'assets/navicons/home.png';

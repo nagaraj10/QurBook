@@ -14,7 +14,7 @@ const String strCountryCode = 'countryCode';
 const String strPhoneNumber = 'phoneNumber';
 const String strGender = 'gender';
 const String strGenderID = 'genderId';
-const String strdob='dob';
+const String strdob = 'dob';
 const String strName = 'name';
 const String strIstemper = 'isTempUser';
 const String strIsEmailVerified = 'isEmailVerified';
@@ -377,4 +377,17 @@ List<String> dataTypes = [gfWeight, gfHeartRate, gfBloodPressure, gfBloodGlucose
 List<String> dataSource =[gfWeightSource, gfHeartRateSource, gfBloodPressureSource, gfBloodGlucoseSource, gfOxygenSaturationSource,gfBodyTemperatureSource ];
 Map<String , String > dataSourceID = new Map.fromIterables(dataTypes,dataSource);
 
+//Google Fit Scopes
+const String gfscopeBodyRead =
+    "https://www.googleapis.com/auth/fitness.body.read";
+const String gfscopepressureRead =
+    "https://www.googleapis.com/auth/fitness.blood_pressure.read";
+const String gfscopetempRead =
+    "https://www.googleapis.com/auth/fitness.body_temperature.read";
+const String gfscopesaturationRead =
+    "https://www.googleapis.com/auth/fitness.oxygen_saturation.read";
+const String gfscopeglucoseRead =
+    "https://www.googleapis.com/auth/fitness.blood_glucose.read";
 
+const String gfAggregateURL =
+    "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate";

@@ -19,33 +19,14 @@ class GetGFDataFromFHBRepo {
       print("trying to query");
       _deviceHealthRecord = DeviceHealthRecord();
       print(params);
-      var response = await _deviceHealthRecord.queryBydeviceInterval(params);
-      print("response from querty $response");
+      final response = await _deviceHealthRecord.queryBydeviceInterval(params);
       return response;
     } catch (e) {
       print("unable to post the data $e");
     }
   }
 
-  /*Future<void> getLatestData(String dataType) async {
-    String startTime = "1596911400000";
-    String endTime = "1597084200000";
-
-    if (dataType == strDataTypeBP) {
-      getBPData(startTime, endTime, strsourceGoogle);
-    } else if (dataType == strGlusoceLevel) {
-      getBloodGlucoseData(startTime, endTime, strsourceGoogle);
-    } else if (dataType == strWeight) {
-      getWeightData(startTime, endTime, strsourceGoogle);
-    } else if (dataType == strHeartRate) {
-      getHeartRateData(startTime, endTime, strsourceGoogle);
-    } else if (dataType == strTemperature) {
-      getBodyTemperatureData(startTime, endTime, strsourceGoogle);
-    }
-  }*/
-
-  Future<String> getBPData(
-      /*String startDate, String endDate, String source*/) async {
+  Future<dynamic> getBPData() async {
     body.clear();
     var currentdate = DateTime.now();
     var startT = new DateTime(currentdate.year, currentdate.month - 1,
@@ -53,110 +34,117 @@ class GetGFDataFromFHBRepo {
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
-    //body[strdevicesourceName] = source;
-    //body[strdeviceType] = strBPMonitor;
     body[strdeviceDataType] = strDataTypeBP;
     String params = json.encode(body);
     try {
       print("db query to get BP Data $params");
       var response = await _getDataByDataType(params);
       print("response for BPData $response");
-    } catch (e) {}
+      String res = json.encode(response);
+      return res;
+    } catch (e) {
+      throw "Failed to retrieve BP data $e";
+    }
   }
 
-  Future<String> getHeartRateData(
-      /*String startDate, String endDate, String source*/) async {
+  Future<dynamic> getHeartRateData() async {
     body.clear();
     var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month - 2,
-        currentdate.day, currentdate.hour, currentdate.minute);
+    var startT = new DateTime(currentdate.year, currentdate.month,
+        currentdate.day - 10, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
-    //body[strdevicesourceName] = source;
-    //body[strdeviceType] = strOxymeter;
     body[strdeviceDataType] = strHeartRate;
     String params = json.encode(body).toString();
     try {
       print("db query to get HeartRate Data $params");
       var response = await _getDataByDataType(params);
-    } catch (e) {}
+      String res = json.encode(response);
+      return res;
+    } catch (e) {
+      throw "Failed to retrieve Heart Rate data $e";
+    }
   }
 
-  Future<String> getOxygenSaturationData(
-      /*String startDate, String endDate, String source*/) async {
+  Future<dynamic> getOxygenSaturationData() async {
     body.clear();
     var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month - 2,
-        currentdate.day, currentdate.hour, currentdate.minute);
+    var startT = new DateTime(currentdate.year, currentdate.month,
+        currentdate.day - 2, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
-    //body[strdevicesourceName] = source;
-    //body[strdeviceType] = strBPMonitor;
-    body[strdeviceDataType] = strDataTypeBP;
+    body[strdeviceDataType] = strOxgenSaturation;
     String params = json.encode(body);
     try {
       print("db query to get Oxygen Saturation Data $params");
       var response = await _getDataByDataType(params);
-    } catch (e) {}
+      String res = json.encode(response);
+      return res;
+    } catch (e) {
+      throw "Failed to retrieve Oxyegen Saturation data $e";
+    }
   }
 
-  Future<String> getWeightData(
-      /*String startDate, String endDate, String source*/) async {
+  Future<dynamic> getWeightData() async {
     body.clear();
     var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month - 2,
-        currentdate.day, currentdate.hour, currentdate.minute);
+    var startT = new DateTime(currentdate.year, currentdate.month,
+        currentdate.day - 10, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
-    //body[strdevicesourceName] = source;
-    //body[strdeviceType] = strWeighingScale;
     body[strdeviceDataType] = strWeight;
     String params = json.encode(body);
     try {
       print("db query to get weight Data $params");
       var response = await _getDataByDataType(params);
-    } catch (e) {}
+      String res = json.encode(response);
+      return res;
+    } catch (e) {
+      throw "Failed to retrieve Weight data $e";
+    }
   }
 
-  Future<String> getBloodGlucoseData(
-      /*String startDate, String endDate, String source*/) async {
+  Future<dynamic> getBloodGlucoseData() async {
     body.clear();
     var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month - 2,
-        currentdate.day, currentdate.hour, currentdate.minute);
+    var startT = new DateTime(currentdate.year, currentdate.month,
+        currentdate.day - 10, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
-    //body[strdevicesourceName] = source;
-    //body[strdeviceType] = strGlucometer;
     body[strdeviceDataType] = strGlusoceLevel;
     String params = json.encode(body);
     try {
       print("db query to get Blood Glucose Data $params");
       var response = await _getDataByDataType(params);
-    } catch (e) {}
+      String res = json.encode(response);
+      return res;
+    } catch (e) {
+      throw "Failed to retrieve Blood Glucose data $e";
+    }
   }
 
-  Future<String> getBodyTemperatureData(
-      /*String startDate, String endDate, String source*/) async {
+  Future<dynamic> getBodyTemperatureData() async {
     body.clear();
     var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month - 2,
-        currentdate.day, currentdate.hour, currentdate.minute);
+    var startT = new DateTime(currentdate.year, currentdate.month,
+        currentdate.day - 10, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
-    //body[strdevicesourceName] = source;
-    //body[strdeviceType] = strThermometer;
     body[strdeviceDataType] = strTemperature;
     String params = json.encode(body);
     try {
       print("db query to get Body Temperature Data $params");
       var response = await _getDataByDataType(params);
-    } catch (e) {}
+      String res = json.encode(response);
+      return res;
+    } catch (e) {
+      throw "Failed to retrieve Temperature data $e";
+    }
   }
 
   Future<dynamic> getLatestDeviceHealthRecord() async {

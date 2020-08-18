@@ -802,7 +802,7 @@ class ApiBaseHelper {
     try {
       final response = await http.post(
           //_baseUrl + url,
-          "https://dev.healthbook.vsolgmi.com/asgard/" + url,
+          _baseUrlV2 + url,
           body: jsonBody,
           headers: header);
       print(response.body);
@@ -817,11 +817,8 @@ class ApiBaseHelper {
     var header = await headerRequest.getRequestHeader();
     var responseJson;
     try {
-      final response = await http.post(
-          //_baseUrl + url,
-          "https://dev.healthbook.vsolgmi.com/asgard/" + url,
-          body: jsonBody,
-          headers: header);
+      final response =
+          await http.post(_baseUrlV2 + url, body: jsonBody, headers: header);
 
       responseJson = _returnResponse(response);
       print(responseJson);
@@ -836,11 +833,7 @@ class ApiBaseHelper {
     var header = await headerRequest.getRequestHeader();
     var responseJson;
     try {
-      final response = await http.get(
-          //_baseUrl+url,
-          "https://dev.healthbook.vsolgmi.com/asgard/" + url,
-          headers: header);
-
+      final response = await http.get(_baseUrlV2 + url, headers: header);
       responseJson = _returnResponse(response);
       print(responseJson);
     } on SocketException {

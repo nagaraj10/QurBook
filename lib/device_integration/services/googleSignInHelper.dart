@@ -1,12 +1,12 @@
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import "package:http/http.dart" as http;
 import 'dart:io';
 
 class GoogleSignInHelper {
   GoogleSignInAccount m_currentUser;
   GoogleSignIn _googleSignIn = GoogleSignIn();
-  final String _url =
-      "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate";
+  final String _url = gfAggregateURL;
 
   GoogleSignInHelper() {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
@@ -33,12 +33,11 @@ class GoogleSignInHelper {
 
   Future<void> handleScopes() async {
     List<String> Scopes = [];
-    Scopes.add("https://www.googleapis.com/auth/fitness.body.read");
-    Scopes.add("https://www.googleapis.com/auth/fitness.blood_pressure.read");
-    Scopes.add("https://www.googleapis.com/auth/fitness.body_temperature.read");
-    Scopes.add(
-        "https://www.googleapis.com/auth/fitness.oxygen_saturation.read");
-    Scopes.add("https://www.googleapis.com/auth/fitness.blood_glucose.read");
+    Scopes.add(gfscopeBodyRead);
+    Scopes.add(gfscopepressureRead);
+    Scopes.add(gfscopetempRead);
+    Scopes.add(gfscopesaturationRead);
+    Scopes.add(gfscopeglucoseRead);
     try {
       if (m_currentUser != null) {
         await _googleSignIn.requestScopes(Scopes);

@@ -287,3 +287,6 @@ const String Appointments_chatImage = 'assets/navicons/chat.png';
 const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
 const String Appointments_newAppoinmentImage =
     'assets/icons/new-appointment.svg';
+
+//For Google Fit Integration
+const String asgurduserID = '49cdc4be-afd9-419e-b3f9-1bd35207c74f';

@@ -32,6 +32,12 @@
 	<string>This example listens for speech on the device microphone on your request.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This example recognizes words as you speak them and displays them. </string>
+	<key>UIBackgroundModes</key>
+ 	<array>
+ 		<string>audio</string>
+ 		<string>fetch</string>
+ 		<string>remote-notification</string>
+ 	</array>
 	<key>NSHealthShareUsageDescription</key>
     <string>Read heart rate monitor data.</string>
     <key>NSHealthUpdateUsageDescription</key>
