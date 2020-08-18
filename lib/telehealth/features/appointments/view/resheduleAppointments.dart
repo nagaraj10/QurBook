@@ -10,7 +10,6 @@ import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewMod
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/appointments/model/mockData.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
@@ -29,21 +28,23 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   DateTime _selectedValue = DateTime.now();
   CommonWidgets commonWidgets = CommonWidgets();
   AppointmentsCommonWidget appointmentsCommonWidget =
-      AppointmentsCommonWidget();
+  AppointmentsCommonWidget();
   MyProviderViewModel providerViewModel = MyProviderViewModel();
   List<DoctorIds> doctorIdsList = new List();
   DoctorIds docs = DoctorIds();
+  bool noData=false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     providerViewModel.fetchProviderDoctors().then((value) => setState(() {
-          doctorIdsList = value;
-          docs = doctorIdsList
-              .firstWhere((element) => element.id == widget.doc.doctorId);
-          print(widget.doc.slotNumber);
-        }));
+      doctorIdsList = value;
+      docs = doctorIdsList
+          .firstWhere((element) => element.id == widget.doc.doctorId);
+      noData=docs.name==null?true:false;
+      print(widget.doc.slotNumber);
+    }));
   }
 
   @override
@@ -51,12 +52,17 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     return Scaffold(
       appBar: appBar(),
       body: docs.name == null
-          ? Center(
-              child: new CircularProgressIndicator(
-                backgroundColor: Colors.grey,
-              ),
-            )
-          : doctorsListItem(context, 0, [docs]),
+          ?Center(
+        child: new CircularProgressIndicator(
+          backgroundColor: Colors.grey,
+        ),
+      )
+          : Container(
+          child: Column(
+            children: <Widget>[
+              Expanded(child: doctorsListItem(context, 0, [docs])),
+            ],
+          )),
     );
   }
 
@@ -93,37 +99,40 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   }
 
   Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
-    return ExpandableNotifier(
-      initialExpanded: false,
-      child: Container(
-        padding: EdgeInsets.all(2.0),
-        margin: EdgeInsets.only(left: 20, right: 20, top: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFFe3e2e2),
-              blurRadius: 16, // has the effect of softening the shadow
-              spreadRadius: 5.0, // has the effect of extending the shadow
-              offset: Offset(
-                0.0, // horizontal, move right 10
-                0.0, // vertical, move down 10
-              ),
-            )
-          ],
-        ),
-        child: Expandable(
-          collapsed: collapseListItem(ctx, i, docs),
-          expanded: expandedListItem(ctx, i, docs),
-        ),
-      ),
+    return ListView.builder(
+      itemCount: 1,
+      itemBuilder: (BuildContext ctx, int i) => ExpandableNotifier(
+          initialExpanded: false,
+          child: Container(
+            padding: EdgeInsets.all(2.0),
+            margin: EdgeInsets.only(left: 20, right: 20, top: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFFe3e2e2),
+                  blurRadius: 16,
+                  // has the effect of softening the shadow
+                  spreadRadius: 5.0,
+                  // has the effect of extending the shadow
+                  offset: Offset(
+                    0.0, // horizontal, move right 10
+                    0.0, // vertical, move down 10
+                  ),
+                )
+              ],
+            ),
+            child: Expandable(
+              collapsed: collapseListItem(ctx, i, docs),
+              expanded: expandedListItem(ctx, i, docs),
+            ),
+          )),
     );
   }
 
   Widget collapseListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
-      height: 100,
       padding: EdgeInsets.all(10.0),
       child: ExpandableButton(
         child: getDoctorsWidget(i, docs),
@@ -143,6 +152,11 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               child: commonWidgets.getClipOvalImageNew(
                   docs[i].profilePicThumbnail, fhbStyles.cardClipImage),
             ),
+            new Positioned(
+              bottom: 0.0,
+              right: 2.0,
+              child: commonWidgets.getDoctorStatusWidget(docs[i], i),
+            )
           ],
         ),
         commonWidgets.getSizeBoxWidth(10.0),
@@ -156,28 +170,28 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                 children: [
                   Expanded(
                       child: Row(
-                    children: [
-                      commonWidgets.getTextForDoctors('${docs[i].name}'),
-                      commonWidgets.getSizeBoxWidth(10.0),
-                      commonWidgets.getIcon(
-                          width: fhbStyles.imageWidth,
-                          height: fhbStyles.imageHeight,
-                          icon: Icons.info,
-                          onTap: () {
-                            print('on Info pressed');
-                            commonWidgets.showDoctorDetailView(
-                                docs[i], context);
-                          }),
-                    ],
-                  )),
+                        children: [
+                          commonWidgets.getTextForDoctors('${docs[i].name}'),
+                          commonWidgets.getSizeBoxWidth(10.0),
+                          commonWidgets.getIcon(
+                              width: fhbStyles.imageWidth,
+                              height: fhbStyles.imageHeight,
+                              icon: Icons.info,
+                              onTap: () {
+                                print('on Info pressed');
+                                commonWidgets.showDoctorDetailView(
+                                    docs[i], context);
+                              }),
+                        ],
+                      )),
                   docs[i].isActive
                       ? commonWidgets.getIcon(
-                          width: fhbStyles.imageWidth,
-                          height: fhbStyles.imageHeight,
-                          icon: Icons.check_circle,
-                          onTap: () {
-                            print('on check  pressed');
-                          })
+                      width: fhbStyles.imageWidth,
+                      height: fhbStyles.imageHeight,
+                      icon: Icons.check_circle,
+                      onTap: () {
+                        print('on check  pressed');
+                      })
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
                   commonWidgets.getBookMarkedIcon(docs[i], () {
@@ -195,20 +209,42 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
+//              Row(children: [
+//                Expanded(
+//                    child: docs[i].specialization != null
+//                        ? commonWidgets
+//                            .getDoctoSpecialist('${docs[i].specialization}')
+//                        : SizedBox()),
+//                docs[i].fees != null
+//                    ? docs[i].fees.consulting != null
+//                        ? (docs[i].fees.consulting != null &&
+//                                docs[i].fees.consulting != '')
+//                            ? commonWidgets.getDoctoSpecialist(
+//                                'INR ${docs[i].fees.consulting.fee}')
+//                            : SizedBox()
+//                        : SizedBox()
+//                    : SizedBox(),
+//                commonWidgets.getSizeBoxWidth(10.0),
+//              ]),
               Row(children: [
                 Expanded(
-                    child: docs[i].specialization != null
-                        ? commonWidgets
-                            .getDoctoSpecialist('${docs[i].specialization}')
+                    child: docs[i].professionalDetails != null
+                        ? docs[i].professionalDetails[0].specialty != null
+                        ? docs[i].professionalDetails[0].specialty.name !=
+                        null
+                        ? commonWidgets.getDoctoSpecialist(
+                        '${docs[i].professionalDetails[0].specialty.name}')
+                        : SizedBox()
+                        : SizedBox()
                         : SizedBox()),
                 docs[i].fees != null
                     ? docs[i].fees.consulting != null
-                        ? (docs[i].fees.consulting != null &&
-                                docs[i].fees.consulting != '')
-                            ? commonWidgets.getDoctoSpecialist(
-                                'INR ${docs[i].fees.consulting.fee}')
-                            : SizedBox()
-                        : SizedBox()
+                    ? (docs[i].fees.consulting != null &&
+                    docs[i].fees.consulting != '')
+                    ? commonWidgets.getDoctoSpecialist(
+                    'INR ${docs[i].fees.consulting.fee}')
+                    : SizedBox()
+                    : SizedBox()
                     : SizedBox(),
                 commonWidgets.getSizeBoxWidth(10.0),
               ]),
@@ -218,12 +254,12 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                 children: [
                   Expanded(
                       child:
-                          commonWidgets.getDoctorsAddress('${docs[i].city}')),
+                      commonWidgets.getDoctorsAddress('${docs[i].city}')),
                   docs[i].isMCIVerified
                       ? commonWidgets.getMCVerified(
-                          docs[i].isMCIVerified, 'Verified')
+                      docs[i].isMCIVerified, 'Verified')
                       : commonWidgets.getMCVerified(
-                          docs[i].isMCIVerified, 'Not Verified'),
+                      docs[i].isMCIVerified, 'Not Verified'),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               )

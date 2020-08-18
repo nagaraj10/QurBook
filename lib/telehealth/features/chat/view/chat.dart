@@ -8,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constants/const.dart';
+import '../../../../common/CommonUtil.dart';
 
 class Chat extends StatefulWidget {
   final String peerId;
@@ -50,7 +52,7 @@ class ChatState extends State<Chat> {
   Widget _patientChatBar() {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: Color(0xff138fcf),
+      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
       flexibleSpace: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -81,6 +83,8 @@ class ChatState extends State<Chat> {
                       child: _patientDetailOrSearch(),
                     ),
                   ),
+
+                  /*
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.08,
                   ),
@@ -99,6 +103,7 @@ class ChatState extends State<Chat> {
                         color: Colors.white,
                       )),*/
                   moreOptionsPopup()
+                  */
                 ],
               ),
             ),
@@ -207,8 +212,8 @@ class ChatState extends State<Chat> {
             )),
             PopupMenuItem(
                 child: GestureDetector(child: Text('$popUpChoiceTwo'))),
-            /*PopupMenuItem(
-                child: GestureDetector(child: Text('$popUpCHoiceThree'))) */
+            PopupMenuItem(
+                child: GestureDetector(child: Text('$popUpCHoiceThree')))
           ]);
 
   void showSearch() {
@@ -252,6 +257,7 @@ class ChatScreenState extends State<ChatScreen> {
   var chatEnterMessageController = TextEditingController();
   final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
+  List<String> recordIds = new List();
 
   @override
   void initState() {
@@ -392,7 +398,8 @@ class ChatScreenState extends State<ChatScreen> {
                     ),
                     child: Text(
                       document['content'],
-                      style: TextStyle(color: themeColor),
+                      style: TextStyle(
+                          color: Color(CommonUtil().getMyPrimaryColor())),
                     ),
                   ),
                 )
@@ -524,8 +531,7 @@ class ChatScreenState extends State<ChatScreen> {
                           ),
                           padding: const EdgeInsets.all(15.0),
                           decoration: BoxDecoration(
-                            color: Color(0xff138fcf),
-                            // Color(new CommonUtil().getMyPrimaryColor()),
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(25),
                               bottomLeft: Radius.circular(25),
@@ -870,12 +876,16 @@ class ChatScreenState extends State<ChatScreen> {
                       height: 50,
                       child: FlatButton(
                           onPressed: () {
-                            print('checked');
-                            getImage();
+                            FetchRecords(
+                                0,
+                                false,
+                                false,
+                                true,
+                                recordIds);
                           },
                           child: new Icon(
                             Icons.attach_file,
-                            color: Color(0xff138fcf),
+                            color: Color(CommonUtil().getMyPrimaryColor()),
                             size: 24,
                           )),
                     )
@@ -888,10 +898,8 @@ class ChatScreenState extends State<ChatScreen> {
                 onPressed: () {},
                 elevation: 2.0,
                 fillColor: Colors.white,
-                child: Icon(
-                  Icons.mic,
-                  size: 25.0,
-                ),
+                child: Icon(Icons.mic,
+                    size: 25.0, color: Color(CommonUtil().getMyPrimaryColor())),
                 padding: EdgeInsets.all(12.0),
                 shape: CircleBorder(),
               ),
@@ -1004,5 +1012,37 @@ class ChatScreenState extends State<ChatScreen> {
               },
             ),
     );
+  }
+
+  void FetchRecords(int position, bool allowSelect, bool isAudioSelect,
+      bool isNotesSelect, List<String> mediaIds) async {
+    print(allowSelect);
+    print(isAudioSelect);
+    print(isNotesSelect);
+    print(position);
+
+    await Navigator.of(context)
+        .push(MaterialPageRoute(
+      builder: (context) => MyRecords(
+        categoryPosition: position,
+        allowSelect: allowSelect,
+        isAudioSelect: isAudioSelect,
+        isNotesSelect: isNotesSelect,
+        selectedMedias: mediaIds,
+      ),
+    ))
+        .then((results) {
+      if (results.containsKey('metaId')) {
+        var metaIds = results['metaId'];
+        print(metaIds.toString());
+
+        if (allowSelect) {
+          recordIds = results['metaId'].cast<String>();
+        }
+        //print(recordIdCount);
+        setState(() {});
+        print(metaIds.toString());
+      }
+    });
   }
 }
