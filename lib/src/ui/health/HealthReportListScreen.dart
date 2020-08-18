@@ -164,11 +164,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               children: <Widget>[
                 ClipOval(
                     child: mediaMetaInfoObj.metaInfo.doctor != null
-                        // ? getDoctorProfileImageWidget(data)
-                        ? Container(
-                            width: 50,
-                            height: 50,
-                            color: const Color(fhbColors.bgColorContainer))
+                         ? getDoctorProfileImageWidget(mediaMetaInfoObj)
                         : Container(
                             width: 50,
                             height: 50,

@@ -15,6 +15,8 @@ import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:intl/intl.dart';
+import 'dart:io';
 
 
 
@@ -29,7 +31,7 @@ class MoreMenuScreen extends StatefulWidget {
 class _MoreMenuScreenState extends State<MoreMenuScreen> {
   MyProfile myProfile =
       PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-
+  File profileImage;
  
   String selectedMaya = PreferenceUtil.getStringValue(Constants.keyMayaAsset) != null
       ? PreferenceUtil.getStringValue(Constants.keyMayaAsset)
@@ -42,6 +44,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   int selectedGradientColor = PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
       ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
       : 0xff753aec;
+
+  @override
+  void initState() {
+    String profileImageFile=PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+    if (profileImageFile != null) {
+      profileImage = File(profileImageFile);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +75,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               padding: EdgeInsets.only(top: 20, bottom: 20),
               child: ListTile(
                 leading: ClipOval(
-                  child: FHBBasicWidget().getProfilePicWidget(
+                  child: profileImage!=null?
+                  Image.file(profileImage,
+                      width: 50, height: 50, fit: BoxFit.cover):
+                  FHBBasicWidget().getProfilePicWidget(
                       myProfile.response.data.generalInfo.profilePicThumbnail),
                 ),
                 title: Column(

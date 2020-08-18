@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-
 const String strAPP_NAME = 'MyFHB';
 const String strAppPackage = 'com.globalmantrainnovations.myfhb';
 const String strHealthRecordChannel = 'Health Record channel';
@@ -180,7 +179,7 @@ const String font_roboto = 'Roboto';
 const String strBookmarkRecord = 'bookmark record';
 
 //for feedback
-const String strChat = 'chat';
+const String strChat = 'Chat';
 const String strFeedBack = 'Feedback';
 const String strFeedbackExp =
     'We would like to hear from you on your experience with MyFHB';
@@ -369,8 +368,6 @@ const String strGetProfileData = 'Getting ProfileData';
 
 String authToken;
 
-
-
 const String straccept = 'accept';
 const String strContentType = 'Content-Type';
 const String strAuthorization = 'Authorization';
@@ -423,7 +420,6 @@ const String strEmailOpt = 'Email address (optional)';
 const String strSendOtp = 'Send OTP';
 const String strEmailAddress = 'Email address';
 
-
 List<String> genderList = ['Male', 'Female', 'Others'];
 const String strEnterMobileNum = 'Enter MobileNumber';
 const String strEnterFirstname = 'Enter First Name';
@@ -443,7 +439,7 @@ const String strtapToSpeak = 'Tap to Speak';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strdevice = 'device';
 
-const String strIntromaya = 'Hi, I am Maya your voice health assistant.';
+const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';
 const String strpdf = 'pdf';
 const String strCropper = 'Cropper';
@@ -453,7 +449,6 @@ List<String> documentList = ['Hospital IDS', 'Insurance IDs', 'Other IDs'];
 const String strFalse = 'false';
 const String strSkip = 'Skip';
 const String strImgNtClear = 'Image not clear';
-
 
 //for device screen
 const String strGlucUnit = 'mgdl';
@@ -481,7 +476,6 @@ const String strWS = 'WS';
 const String strDT = 'DT';
 const String strPO = 'PO';
 const String strGL = 'GL';
-
 
 const String strBPMonitor = 'BP Monitor';
 const String strWeighingScale = 'Weighing Scale';
@@ -542,7 +536,8 @@ const String st_pausedplayer = 'paused player';
 const String strNoData = 'No data Available';
 const String strViewPDF = 'View PDF';
 const String strLogout = 'Logout';
-const String strLogoutMsg = 'Stay Healthy.. See you Soon. \nMaya will be waiting to serve you.';
+const String strLogoutMsg =
+    'Stay Healthy.. See you Soon. \nMaya will be waiting to serve you.';
 const String strYes = 'Yes';
 const String strRelaoding = 'Relaoding';
 const String strStartNow = 'Start now';
@@ -561,6 +556,7 @@ const entityCode = "28858877-4710-4dd3-899f-0efe0e9255db";
 const roleCode = "285bbe41-3030-4b0e-b914-00e404a77032";
 const redirecturl = 'http://localhost:4200/callback?code=';
 const String strNoDoctordata = 'No Doctor List Available';
+const String strNoAppointments = 'No Appoinments Available';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
@@ -605,6 +601,3 @@ String _decodeBase64(String str) {
   }
   return utf8.decode(base64Url.decode(output));
 }
-
-
-

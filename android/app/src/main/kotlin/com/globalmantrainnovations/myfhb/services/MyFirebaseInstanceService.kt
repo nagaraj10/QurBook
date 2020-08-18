@@ -7,17 +7,11 @@ import android.app.PendingIntent
 import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Icon
 import android.media.AudioAttributes
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.util.Log
-import androidx.annotation.ColorRes
-import androidx.annotation.RequiresApi
-import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.globalmantrainnovations.myfhb.NotificationActivity
@@ -27,7 +21,8 @@ import com.google.firebase.messaging.RemoteMessage
 
 
 class MyFirebaseInstanceService : FirebaseMessagingService() {
-    val CHANNEL_INCOMING = "incoming_call"
+    val CHANNEL_INCOMING = "cha_call"
+    val CHANNEL_ACK = "cha_ack"
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d(TAG, "Token: $token")
@@ -57,11 +52,19 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     }
 
     private fun createNotification(title:String="", body:String="", data:Map<String, String> = HashMap()) {
+        //todo segregate the NS according their type
+        val NS_TYPE=data[getString(R.string.type)]
+        when(NS_TYPE){
+            "Incoming_call"->createNotification4Call(data)
+            "Acknowledgements"->createNotification4Ack(data)
+        }
+    }
+
+    private fun createNotification4Call(data:Map<String, String> = HashMap()){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = 9090
-        val MEETING_ID = data.get(getString(R.string.meetid))
-        val USER_NAME = data.get(getString(R.string.username))
-        val FROM = data.get(getString(R.string.from))
+        val MEETING_ID = data[getString(R.string.meetid)]
+        val USER_NAME = data[getString(R.string.username)]
         val NS_TIMEOUT = 30 * 1000L
         val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
 
@@ -74,11 +77,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptIntent.putExtra(getString(R.string.meetid), "$MEETING_ID")
         acceptIntent.putExtra(getString(R.string.username), "$USER_NAME")
-        acceptIntent.putExtra(getString(R.string.from), FROM)
         val acceptPendingIntent = PendingIntent.getBroadcast(applicationContext, 0, acceptIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val fullScreenIntent = Intent(this, NotificationActivity::class.java)
-                .putExtra(getString(R.string.from), FROM)
                 .putExtra(getString(R.string.username), USER_NAME)
                 .putExtra(getString(R.string.meetid), MEETING_ID)
                 .putExtra(getString(R.string.nsid), NS_ID)
@@ -87,38 +88,23 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)
-            val channel1 = NotificationChannel(CHANNEL_INCOMING, getString(R.string.channel1), NotificationManager.IMPORTANCE_HIGH)
-            channel1.description = getString(R.string.channel_incoming_desc)
+            val channelCall = NotificationChannel(CHANNEL_INCOMING, getString(R.string.channel_call), NotificationManager.IMPORTANCE_HIGH)
+            channelCall.description = getString(R.string.channel_incoming_desc)
             val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
-            channel1.setSound(_sound,attributes)
-            manager.createNotificationChannel(channel1)
+            channelCall.setSound(_sound,attributes)
+            manager.createNotificationChannel(channelCall)
         }
-
-        //ns action button customisation
-        /*val actAccept = Notification.Action.Builder(
-                Icon.createWithResource(this,R.drawable.ic_call),
-                getActionText(R.string.ns_act_accept,android.R.color.holo_green_dark),
-                acceptPendingIntent
-
-        ).build()
-
-        val actDecline = Notification.Action.Builder(
-                Icon.createWithResource(this,R.drawable.ic_decline),
-                getActionText(R.string.ns_act_accept,android.R.color.holo_red_dark),
-                declinePendingIntent
-
-        ).build()*/
 
 
         var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
                 .setSmallIcon(R.mipmap.app_ns_icon)
                 .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
-                .setContentTitle(data.get("title"))
-                .setContentText(data.get("body"))
+                .setContentTitle(data["title"])
+                .setContentText(data["body"])
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_CALL)
-                //.setDefaults(Notification.DEFAULT_SOUND)
+                .setDefaults(Notification.DEFAULT_ALL)
                 .setContentIntent(fullScreenPendingIntent)
                 .addAction(R.drawable.ic_call, getString(R.string.ns_act_accept), acceptPendingIntent)
                 .addAction(R.drawable.ic_decline, getString(R.string.ns_act_decline), declinePendingIntent)
@@ -127,7 +113,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .setSound(_sound)
                 .setOngoing(true)
                 .setTimeoutAfter(NS_TIMEOUT)
-                .setOnlyAlertOnce(true)
+                .setOnlyAlertOnce(false)
                 .build()
 
         notification.flags=Notification.FLAG_INSISTENT
@@ -137,16 +123,39 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
     }
 
-    private fun getActionText(@StringRes stringRes: Int, @ColorRes colorRes: Int): Spannable? {
-        val spannable: Spannable = SpannableString(this.getText(stringRes))
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            // This will only work for cases where the Notification.Builder has a fullscreen intent set
-            // Notification.Builder that does not have a full screen intent will take the color of the
-            // app and the following leads to a no-op.
-            spannable.setSpan(
-                    ForegroundColorSpan(this.getColor(colorRes)), 0, spannable.length, 0)
-        }
-        return spannable
-    }
+    private fun createNotification4Ack(data:Map<String, String> = HashMap()){
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = 9091
+        val MEETING_ID = data[getString(R.string.meetid)]
+        val USER_NAME = data[getString(R.string.username)]
+        val NS_TIMEOUT = 30 * 1000L
 
+
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelAck = NotificationChannel(CHANNEL_ACK, getString(R.string.channel_ack), NotificationManager.IMPORTANCE_DEFAULT)
+            channelAck.description = getString(R.string.channel_ack_desc)
+            manager.createNotificationChannel(channelAck)
+        }
+
+
+        var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
+                .setSmallIcon(R.mipmap.app_ns_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
+                .setContentTitle(data["title"])
+                .setContentText(data["body"])
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setDefaults(Notification.DEFAULT_SOUND)
+                .setAutoCancel(true)
+                .setTimeoutAfter(NS_TIMEOUT)
+                .setOnlyAlertOnce(true)
+                .build()
+
+        //notification.flags=Notification.FLAG_INSISTENT
+        nsManager.notify(NS_ID,notification)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
+            AutoDismissNotification().setAlarm(this,NS_ID,NS_TIMEOUT)
+        }
+    }
 }

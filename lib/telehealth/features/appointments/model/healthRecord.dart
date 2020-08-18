@@ -5,20 +5,21 @@ class HealthRecord {
     this.prescription,
     this.notes,
     this.voice,
-    this.others,
+    this.rx,
   });
 
+  dynamic rx;
   List<Notes> prescription;
   Notes notes;
   Notes voice;
-  List<String> others;
 
   HealthRecord.fromJson(Map<String, dynamic> json) {
-    prescription = List<Notes>.from(
-        json["prescription"].map((x) => Notes.fromJson(x)));
-    notes = Notes.fromJson(json["notes"]);
-    voice = Notes.fromJson(json["voice"]);
-    others = List<String>.from(json["others"].map((x) => x));
+    prescription = json["prescription"] == null
+        ? null
+        : List<Notes>.from(json["prescription"].map((x) => Notes.fromJson(x)));
+    notes = json["notes"] == null ? null : Notes.fromJson(json["notes"]);
+    voice = json["voice"] == null ? null : Notes.fromJson(json["voice"]);
+    rx = json["rx"] == null ? null : json["rx"];
   }
 
   Map<String, dynamic> toJson() {
@@ -27,7 +28,7 @@ class HealthRecord {
     List<dynamic>.from(prescription.map((x) => x.toJson()));
     data["notes"] = notes.toJson();
     data["voice"] = voice.toJson();
-    data["others"] = List<dynamic>.from(others.map((x) => x));
+    data["rx"] = List<dynamic>.from(rx.map((x) => x));
     return data;
   }
 }

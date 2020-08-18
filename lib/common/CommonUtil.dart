@@ -6,7 +6,7 @@ import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart'
-    as familyMember;
+as familyMember;
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
@@ -63,6 +63,7 @@ class CommonUtil {
   static String COGNITO_AUTH_CODE = '';
 
 
+  CategoryData categoryDataObjClone = new CategoryData();
 
 
 
@@ -122,7 +123,7 @@ class CommonUtil {
     for (MediaMetaInfo mediaMetaInfo in completeData.mediaMetaInfo) {
       if (mediaMetaInfo.metaInfo.categoryInfo != null) {
         if (mediaMetaInfo.metaInfo.categoryInfo.categoryDescription ==
-                categoryDescription &&
+            categoryDescription &&
             mediaMetaInfo.metaInfo.mediaTypeInfo.description ==
                 mediaTypeDescription) {
           mediaMetaInfoObj.add(mediaMetaInfo);
@@ -144,7 +145,7 @@ class CommonUtil {
     for (MediaMetaInfo mediaMetaInfo in completeData.mediaMetaInfo) {
       if (mediaMetaInfo.metaInfo.categoryInfo != null) {
         if (mediaMetaInfo.metaInfo.categoryInfo.categoryDescription ==
-                categoryDescription &&
+            categoryDescription &&
             mediaMetaInfo.metaInfo.mediaTypeInfo.description ==
                 mediaTypeDescription) {
           mediaMetaInfoObj.add(mediaMetaInfo);
@@ -233,13 +234,13 @@ class CommonUtil {
     List<dynamic> imageList = new List();
     if (data.mediaMasterIds.isNotEmpty) {
       List<MediaMasterIds> mediMasterId =
-          new CommonUtil().getMetaMasterIdList(data);
+      new CommonUtil().getMetaMasterIdList(data);
       int k = 0;
       for (int i = 0; i < mediMasterId.length; i++) {
         _healthReportListForUserBlock
             .getDocumentImage(mediMasterId[i].id)
             .then((snapshot) {
-          if (snapshot.isNotEmpty && k < mediMasterId.length) {
+          if (snapshot!=null && k < mediMasterId.length) {
             k++;
             imageList.add(snapshot);
           } else {}
@@ -249,9 +250,9 @@ class CommonUtil {
         return imageList;
       }
 
-   
+
     } else {
-     
+
 
       return new List();
     }
@@ -316,13 +317,13 @@ class CommonUtil {
   List<MediaMasterIds> getMetaMasterIdList(MediaMetaInfo data) {
     List<MediaMasterIds> mediaMasterIdsList = new List();
     if (data.mediaMasterIds.length > 0) {
-      
+
       for (MediaMasterIds mediaMasterIds in data.mediaMasterIds) {
         if (mediaMasterIds.fileType == "image/jpg" ||
             mediaMasterIds.fileType == "image/png")
           mediaMasterIdsList.add(mediaMasterIds);
       }
-    } 
+    }
 
     return mediaMasterIdsList.length > 0 ? mediaMasterIdsList : new List();
   }
@@ -365,13 +366,13 @@ class CommonUtil {
       _isRecordBookmarked = true;
     }
     HealthReportListForUserBlock _healthReportListForUserBlock =
-        new HealthReportListForUserBlock();
+    new HealthReportListForUserBlock();
     _bookmarkRecordBloc
         .bookMarcRecord(mediaIds, _isRecordBookmarked)
         .then((bookmarkRecordResponse) {
       _healthReportListForUserBlock.getHelthReportList().then((value) {
         PreferenceUtil.saveCompleteData(
-                Constants.KEY_COMPLETE_DATA, value.response.data)
+            Constants.KEY_COMPLETE_DATA, value.response.data)
             .then((value) {
           if (bookmarkRecordResponse.success) {
             _refresh();
@@ -389,30 +390,30 @@ class CommonUtil {
     });
   }
 
-  
+
   Sharedbyme getProfileDetails() {
     MyProfile myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     GeneralInfo generalInfo = myProfile.response.data.generalInfo;
-    
+
     LinkedData linkedData =
-        new LinkedData(roleName: variable.Self, nickName: variable.Self);
+    new LinkedData(roleName: variable.Self, nickName: variable.Self);
     ProfilePicThumbnailMain profilePicThumbnail =
-        generalInfo.profilePicThumbnail != null
-            ? new ProfilePicThumbnailMain(
-                type: generalInfo.profilePicThumbnail.type,
-                data: generalInfo.profilePicThumbnail.data)
-            : null;
+    generalInfo.profilePicThumbnail != null
+        ? new ProfilePicThumbnailMain(
+        type: generalInfo.profilePicThumbnail.type,
+        data: generalInfo.profilePicThumbnail.data)
+        : null;
 
     QualifiedFullName qualifiedFullName =
-        generalInfo.qualifiedFullName != null
-            ? new QualifiedFullName(
-                firstName: generalInfo.qualifiedFullName.firstName,
-                middleName: generalInfo.qualifiedFullName.middleName,
-                lastName: generalInfo.qualifiedFullName.lastName)
-            : null;
+    generalInfo.qualifiedFullName != null
+        ? new QualifiedFullName(
+        firstName: generalInfo.qualifiedFullName.firstName,
+        middleName: generalInfo.qualifiedFullName.middleName,
+        lastName: generalInfo.qualifiedFullName.lastName)
+        : null;
 
-    
+
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
@@ -429,7 +430,7 @@ class CommonUtil {
         isEmailVerified: generalInfo.isEmailVerified,
         isTempUser: generalInfo.isTempUser);
 
-    return new 
+    return new
     Sharedbyme(
         profileData: profileData, linkedData: linkedData);
   }
@@ -450,10 +451,10 @@ class CommonUtil {
           if (medicalPreferences.preferences.doctorIds != null &&
               medicalPreferences.preferences.doctorIds.length > 0) {
             medicalPreferences.preferences.doctorIds.sort(
-                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+                    (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
 
             for (DoctorIds doctorIds
-                in medicalPreferences.preferences.doctorIds) {
+            in medicalPreferences.preferences.doctorIds) {
               if (doctorIds.isDefault) {
                 PreferenceUtil.savePrefereDoctors(
                     Constants.KEY_PREFERRED_DOCTOR, doctorIds);
@@ -469,10 +470,10 @@ class CommonUtil {
             PreferenceUtil.savePrefereHospital(
                 Constants.KEY_PREFERRED_HOSPITAL, null);
             medicalPreferences.preferences.hospitalIds.sort(
-                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+                    (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
 
             for (HospitalIds hospitalIds
-                in medicalPreferences.preferences.hospitalIds) {
+            in medicalPreferences.preferences.hospitalIds) {
               if (hospitalIds.isDefault) {
                 PreferenceUtil.savePrefereHospital(
                     Constants.KEY_PREFERRED_HOSPITAL, hospitalIds);
@@ -488,10 +489,10 @@ class CommonUtil {
           if (medicalPreferences.preferences.laboratoryIds != null &&
               medicalPreferences.preferences.laboratoryIds.length > 0) {
             medicalPreferences.preferences.laboratoryIds.sort(
-                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+                    (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
 
             for (LaboratoryIds laboratoryIds
-                in medicalPreferences.preferences.laboratoryIds) {
+            in medicalPreferences.preferences.laboratoryIds) {
               if (laboratoryIds.isDefault) {
                 PreferenceUtil.savePreferedLab(
                     Constants.KEY_PREFERRED_LAB, laboratoryIds);
@@ -522,7 +523,7 @@ class CommonUtil {
         : 0xff0a72e8;
   }
 
- int getMyPrimaryColor() {
+  int getMyPrimaryColor() {
     return PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
         ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
         : 0xff015eea;
@@ -567,11 +568,11 @@ class CommonUtil {
     for (Data dataObj in data) {
       List<MediaMasterIds> mediaMasterIdsList = new List();
       if(dataObj.mediaMasterIds!=null && dataObj.mediaMasterIds.length>0){
-      for (MediaMasterIds mediaMasterIds
-          in dataObj.mediaMasterIds) {
-        mediaMasterIdsList.add(new MediaMasterIds(
-            id: mediaMasterIds.id, fileType: mediaMasterIds.fileType));
-      }
+        for (MediaMasterIds mediaMasterIds
+        in dataObj.mediaMasterIds) {
+          mediaMasterIdsList.add(new MediaMasterIds(
+              id: mediaMasterIds.id, fileType: mediaMasterIds.fileType));
+        }
       }
 
 
@@ -579,7 +580,7 @@ class CommonUtil {
           id: dataObj.metaInfo.categoryInfo.id,
           isActive: true,
           categoryDescription:
-              dataObj.metaInfo.categoryInfo.categoryDescription,
+          dataObj.metaInfo.categoryInfo.categoryDescription,
           categoryName: dataObj.metaInfo.categoryInfo.categoryName,
           isCreate: dataObj.metaInfo.categoryInfo.isCreate,
           isDelete: dataObj.metaInfo.categoryInfo.isDelete,
@@ -601,7 +602,7 @@ class CommonUtil {
           isDisplay: dataObj.metaInfo.mediaTypeInfo.isDisplay,
           isEdit: dataObj.metaInfo.mediaTypeInfo.isEdit,
           isManualTranscription:
-              dataObj.metaInfo.mediaTypeInfo.isManualTranscription,
+          dataObj.metaInfo.mediaTypeInfo.isManualTranscription,
           isRead: dataObj.metaInfo.mediaTypeInfo.isRead,
           lastModifiedOn: dataObj.metaInfo.mediaTypeInfo.lastModifiedOn,
           logo: dataObj.metaInfo.mediaTypeInfo.logo,
@@ -674,7 +675,7 @@ class CommonUtil {
       if (dataObj.metaInfo.deviceReadings != null &&
           dataObj.metaInfo.deviceReadings.length > 0) {
         for (DeviceReadings deviceReadingsObj
-            in dataObj.metaInfo.deviceReadings) {
+        in dataObj.metaInfo.deviceReadings) {
           deviceReadings.add(new DeviceReadings(
               parameter: deviceReadingsObj.parameter,
               unit: deviceReadingsObj.unit,
@@ -820,43 +821,43 @@ class CommonUtil {
   }
 
   networkUI() {
-  Get.bottomSheet(
-    Container(
-      constraints: BoxConstraints(maxHeight: 120),
-      child: Card(
-        elevation: 10.0,
-        //margin: EdgeInsets.only(left: 3.0,right: 3.0),
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20.0),
-                topLeft: Radius.circular(20.0))),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ImageIcon(
-              AssetImage(variable.icon_wifi),
-              color: Color(CommonUtil().getMyPrimaryColor()),
-              size: 50.0,
-            ),
-            Text(
-              variable.strNoInternet,
-              style: TextStyle(
+    Get.bottomSheet(
+      Container(
+        constraints: BoxConstraints(maxHeight: 120),
+        child: Card(
+          elevation: 10.0,
+          //margin: EdgeInsets.only(left: 3.0,right: 3.0),
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20.0),
+                  topLeft: Radius.circular(20.0))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ImageIcon(
+                AssetImage(variable.icon_wifi),
                 color: Color(CommonUtil().getMyPrimaryColor()),
-                fontSize: 16.0,
+                size: 50.0,
               ),
-            ),
-          ],
+              Text(
+                variable.strNoInternet,
+                style: TextStyle(
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-    backgroundColor: Colors.transparent,
-    isDismissible: false,
-    enableDrag: false,
-  );
-}
-  
-  
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+    );
+  }
+
+
   Widget customSnack(bool isOffline) {
     return Container(
       height: 20.0,
@@ -923,7 +924,7 @@ class CommonUtil {
     return splitStr.join(' ');
   }
 
-  
+
   Future<void> getAllCustomRoles() async {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
     try {
@@ -942,7 +943,7 @@ class CommonUtil {
     }
   }
 
- 
+
   Future<MyProfile> getUserProfileData() async {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
 
@@ -983,7 +984,7 @@ class CommonUtil {
     }
   }
 
- 
+
 
   Future<void> getMediaTypes() async {
     MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
@@ -1049,13 +1050,12 @@ class CommonUtil {
     return updatedDate;
   }
 
-   List<CategoryData> fliterCategories(List<CategoryData> data) {
+  List<CategoryData> fliterCategories(List<CategoryData> data) {
     List<CategoryData> filteredCategoryData = new List();
-      CategoryData categoryDataObjClone = new CategoryData();
 
     for (CategoryData dataObj in data) {
       if (/*dataObj.isDisplay &&*/
-          dataObj.categoryName != Constants.STR_FEEDBACK &&
+      dataObj.categoryName != Constants.STR_FEEDBACK &&
           dataObj.categoryName != Constants.STR_CLAIMSRECORD && dataObj.categoryName != Constants.STR_WEARABLES) {
         filteredCategoryData.add(dataObj);
       }
@@ -1065,12 +1065,14 @@ class CommonUtil {
     for (CategoryData categoryDataObj in filteredCategoryData) {
       if (categoryDataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
-        
+        categoryDataObjClone=categoryDataObj;
         filteredCategoryData.removeAt(i);
         break;
       }
       i++;
     }
+    filteredCategoryData.add(categoryDataObjClone);
+
 
     filteredCategoryData.sort((a, b) {
       if(a.categoryDescription!=null){
@@ -1080,7 +1082,6 @@ class CommonUtil {
       }
 
     });
-    filteredCategoryData.add(categoryDataObjClone);
 
 
     return filteredCategoryData;

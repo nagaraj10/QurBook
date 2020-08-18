@@ -24,15 +24,11 @@ class DeviceReadings {
   }
 
   Map<String, dynamic> toJson() {
-    try{
-
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+     final Map<String, dynamic> data = new Map<String, dynamic>();
     data[parameters.strParameters] = this.parameter;
     data[parameters.strunit] = this.unit;
     data[parameters.strvalue] = this.value;
     return data;
-     }catch(e){
-      
-    }
+
   }
 }

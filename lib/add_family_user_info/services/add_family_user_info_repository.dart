@@ -59,9 +59,9 @@ class AddFamilyUserInfoRepository {
               middleName,
               lastName),
           profilePic,
-          '');
+          webserviceCall.getUrlToUpdateDoctor(userID));
     } else {
-       response = await _helper.updateFamilyUserProfile(webserviceCall.getUrlToUpdateDoctor(),
+      response = await _helper.updateFamilyUserProfile(webserviceCall.getUrlToUpdateDoctor(userID),
           webserviceCall.getQueryToUpdateProfile(
               userID,
               name,
@@ -100,7 +100,7 @@ class AddFamilyUserInfoRepository {
       String lastName) async {
     String query = '';
 
-   
+
     var response;
 
     if (profilePic != null) {
@@ -118,9 +118,9 @@ class AddFamilyUserInfoRepository {
               middleName,
               lastName),
           profilePic,
-          '');
+          webserviceCall.getUrlToUpdateDoctor(userID));
     } else {
-      response = await _helper.updateFamilyUserProfile(webserviceCall.getUrlToUpdateDoctor(),
+      response = await _helper.updateFamilyUserProfile(webserviceCall.getUrlToUpdateDoctor(userID),
           webserviceCall.getQueryToUpdateProfile(
               userID,
               name,

@@ -8,16 +8,7 @@ class LabsListRepository {
   Future<LabsListResponse> getLabsFromSearch(String param) async {
     int limit = 10;
     final response = await _helper.getHospitalListFromSearch(
-        query.qr_lab +
-            query.qr_SearchBy +
-            query.qr_keyword +
-            param +
-            query.qr_And +
-            query.qr_sortBy +
-            query.qr_name_asc +
-            query.qr_And +
-            query.qr_limit +
-            limit.toString(),
+        "${query.qr_lab}${query.qr_SearchBy}${query.qr_keyword}${param}${query.qr_And}${query.qr_sortBy}${query.qr_name_asc}${query.qr_And}${query.qr_limit}${limit.toString()}",
         param);
     return LabsListResponse.fromJson(response);
   }

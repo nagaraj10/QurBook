@@ -38,15 +38,11 @@ class MetaInfo {
         ? new CategoryInfo.fromJson(json[parameters.strcategoryInfo])
         : null;
     dateOfVisit = json[parameters.strdateOfVisit];
-    try{
     if (json[parameters.strdeviceReadings] != null) {
       deviceReadings = new List<DeviceReadings>();
       json[parameters.strdeviceReadings].forEach((v) {
         deviceReadings.add(new DeviceReadings.fromJson(v));
       });
-    }
-     }catch(e){
-
     }
     doctor =
         json[parameters.strdoctor] != null ? new Doctor.fromJson(json[parameters.strdoctor]) : null;

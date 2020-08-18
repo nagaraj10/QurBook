@@ -1,45 +1,46 @@
+import 'dart:core';
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PDFViewer.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/record_detail/bloc/deleteRecordBloc.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/screens/record_info_card.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/imageSlider.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:carousel_slider/carousel_slider.dart';
-export 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
-import 'dart:typed_data';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+export 'package:myfhb/my_family/models/relationship_response_list.dart';
+
+typedef void OnError(Exception exception);
 
 class RecordDetailScreen extends StatefulWidget {
   final MediaMetaInfo data;
@@ -73,9 +74,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   int index = 0;
   int length = 0;
   List<ImageDocumentResponse> imagesPathMain = new List();
-  PermissionStatus permissionStatus = PermissionStatus.undetermined;
-  final Permission _storagePermission =
-      Platform.isAndroid ? Permission.storage : Permission.photos;
+ // PermissionStatus permissionStatus = PermissionStatus.unknown;
+  //final PermissionHandler _storagePermission = Platform.isAndroid ? Permission.storage : Permission.photos;
   bool firsTym = true;
   bool ispdfPresent = false;
 
@@ -263,12 +263,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 color: Colors.black,
                               ),
                               onPressed: () async {
-                                requestPermission(_storagePermission)
+                                saveImageToGallery(imagesPathMain, contxt);
+
+                                /*requestPermission(_storagePermission)
                                     .then((status) {
                                   if (status == PermissionStatus.granted) {
-                                    saveImageToGallery(imagesPathMain, contxt);
                                   }
-                                });
+                                });*/
                               }),
                           IconButton(
                               icon: ImageIcon(
@@ -363,8 +364,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void _listenForPermissionStatus() async {
-    final status = await _storagePermission.status;
-    setState(() => permissionStatus = status);
+   // final status = await _storagePermission.status;
+    //setState(() => permissionStatus = status);
   }
 
   void saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
@@ -1031,8 +1032,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               return Container(
                                   height: double.infinity,
                                   child: Image.network(
-                                      imgUrl.response.data.fileContent, height: 50,
-                                    width: 50,));
+                                    imgUrl.response.data.fileContent,
+                                    height: 200,
+                                    width: 200,
+                                  ));
                               /*Container(
                                 height: double.infinity,
                                 child: Image.memory(
@@ -1119,7 +1122,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               } else {*/
               //imagesPathMain.addAll(snapshot.data.data);
               /* }*/
-              return Container() ;//getCarousalImage(snapshot.data.data);
+              return Container(); //getCarousalImage(snapshot.data.data);
               break;
           }
         } else {
@@ -1182,7 +1185,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     );
   }
 
-  Future<PermissionStatus> requestPermission(
+  /*Future<PermissionStatus> requestPermission(
       Permission storagePermission) async {
     final status = await storagePermission.request();
 
@@ -1191,7 +1194,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     });
 
     return status;
-  }
+  }*/
 
   showAudioWidgetIfVoiceNotesAvailable(MediaMetaInfo data) {
     if (data.metaInfo.hasVoiceNotes) {
@@ -1216,20 +1219,37 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     }
     _healthReportListForUserBlock.getDocumentImage(audioMediaId).then((res) {
-      return downloadMedia(res, context);
+      return downloadMedia(res.response.data.fileContent, context);
     });
   }
 
-  downloadMedia(List data, BuildContext context) {
+  downloadMedia(String url, BuildContext context) async {
     var path;
-    FHBUtils.createFolderInAppDocDir(variable.stAudioPath).then((filePath) {
+    FHBUtils.createFolderInAppDocDir(variable.stAudioPath)
+        .then((filePath) async {
+      final bytes = await _loadFileBytes(url,
+          onError: (Exception exception) =>
+              print('audio_provider.load => exception ${exception}'));
+
       path = '$filePath${widget.data.metaInfo.fileName}.mp3';
-      new File(path).writeAsBytesSync(data);
+      new File(path).writeAsBytes(bytes);
+      //await path.writeAsBytes(bytes);
+
       containsAudio = true;
       audioPath = path;
       isAudioDownload = true;
       setState(() {});
     });
+  }
+
+  Future<Uint8List> _loadFileBytes(String url, {OnError onError}) async {
+    Uint8List bytes;
+    try {
+      bytes = await readBytes(url);
+    } on ClientException {
+      rethrow;
+    }
+    return bytes;
   }
 
   showProgressIndicator(MediaMetaInfo data) {

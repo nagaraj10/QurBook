@@ -128,9 +128,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     } catch (e) {}
   }
 
-  Future<dynamic> getDocumentImage(String metaMasterId) async {
+  Future<ImageDocumentResponse> getDocumentImage(String metaMasterId) async {
     try {
-      var userHealthResponseList = await _healthReportListForUserRepository
+      ImageDocumentResponse userHealthResponseList = await _healthReportListForUserRepository
           .getDocumentImage(metaMasterId);
       return userHealthResponseList;
     } catch (e) {}

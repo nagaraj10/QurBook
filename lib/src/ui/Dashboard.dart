@@ -1,26 +1,24 @@
+import 'dart:io';
+
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/ShapesPainter.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase_widget.dart';
-import 'dart:io';
-import 'dart:convert';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/src/ui/user/UserAccounts.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:permission_handler/permission_handler.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -80,248 +78,155 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _myContext = context;
           return Scaffold(
               key: scaffold_state,
-              body: Stack(
-                children: <Widget>[
-                  Container(
+              bottomNavigationBar: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  selectedFontSize: 10,
+                  unselectedFontSize: 10,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              navigateToTelehealthScreen(0);
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_th),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strTelehealth,
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              moveToFamilyOrprovider(2);
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_provider),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          'My Providers',
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                          onTap: () {
+                            moveToNextScreen(2);
+                          },
+                          child: Image.asset(
+                            variable.icon_maya,
+                            height: 25,
+                            width: 25,
+                          ),
+                        ),
+                        title: Text(
+                          'Sheela',
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {},
+                            child: ImageIcon(
+                              AssetImage(variable.icon_chat),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strChat,
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              moveToNextScreen(1);
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_records),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strMyRecords,
+                          style: TextStyle(color: Colors.black54),
+                        ))
+                  ]),
+              body: Center(
+                  child: Container(
                       decoration: imageURIProfile != null
                           ? BoxDecoration(
                               image: DecorationImage(
                                   image: new FileImage(imageURIProfile),
                                   fit: BoxFit.cover))
                           : BoxDecoration(color: Colors.white),
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            color: Colors.black.withOpacity(0.1),
+                      child: Stack(children: <Widget>[
+                        Container(
+                          color: Colors.black.withOpacity(0.1),
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: 20,
                           ),
-                          CustomPaint(
-                              painter: ShapesPainter(),
-                              child: Container(
-                                  child: Stack(
-                                children: <Widget>[
-                                  Positioned(
-                                      bottom: -20,
-                                      left: (MediaQuery.of(context).size.width /
-                                              2) -
-                                          60,
-                                      child: InkWell(
-                                        child: AvatarGlow(
-                                          startDelay:
-                                              Duration(milliseconds: 1000),
-                                          glowColor: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
-                                          endRadius: 60.0,
-                                          duration:
-                                              Duration(milliseconds: 2000),
-                                          repeat: true,
-                                          showTwoGlows: true,
-                                          repeatPauseDuration:
-                                              Duration(milliseconds: 100),
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            shadowColor: Colors.transparent,
-                                            shape: CircleBorder(),
-                                            child:
-                                                FHBBasicWidget.customShowCase(
-                                                    _showMaya,
-                                                    Constants.MAYA_DESC,
-                                                    CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(5),
-                                                        child: Image.asset(
-                                                          PreferenceUtil.getStringValue(
-                                                                      Constants
-                                                                          .keyMayaAsset) !=
-                                                                  null
-                                                              ? PreferenceUtil
-                                                                      .getStringValue(
-                                                                          Constants
-                                                                              .keyMayaAsset) +
-                                                                  variable
-                                                                      .strExtImg
-                                                              : variable
-                                                                  .icon_mayaMain,
-                                                          height: 60,
-                                                          width: 60,
-                                                        ),
-                                                      ),
-                                                      radius: 30.0,
-                                                    ),
-                                                    Constants.MAYA_TITLE),
-                                          ),
-                                          shape: BoxShape.circle,
-                                          animate: true,
-                                          curve: Curves.fastOutSlowIn,
-                                        ),
-                                        onTap: () {
-                                          moveToNextScreen(2);
-                                        },
-                                      )),
-                                  Positioned(
-                                      bottom: 50,
-                                      left: 5,
-                                      child: InkWell(
-                                          child: Column(
-                                            children: <Widget>[
-                                              FHBBasicWidget.customShowCase(
-                                                  _provider,
-                                                  Constants.PROVIDERS_DESC,
-                                                  Image.asset(
-                                                    variable.icon_provider,
-                                                    width: 30,
-                                                    height: 30,
+                          alignment: Alignment.topRight,
+                          child: imageURIProfile != null
+                              ? IconButton(
+                                  icon: Icon(
+                                    Icons.more_vert,
+                                    color: Colors.black87,
+                                    size: 30,
+                                  ),
+                                  onPressed: () {
+                                    saveMediaDialog(context, false);
+                                  },
+                                )
+                              : Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      FHBBasicWidget.customShowCase(
+                                          _coverImage,
+                                          Constants.COVER_IMG_DESC,
+                                          Container(
+                                              height: 60,
+                                              width: 60,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(30),
+                                                  gradient:
+                                                      LinearGradient(colors: [
+                                                    Color(CommonUtil()
+                                                        .getMyPrimaryColor()),
+                                                    Color(CommonUtil()
+                                                        .getMyGredientColor())
+                                                  ])),
+                                              child: IconButton(
+                                                  icon: Icon(
+                                                    Icons.add_a_photo,
                                                     color: Colors.white,
                                                   ),
-                                                  Constants.PROVIDERS_TITLE),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text(
-                                                variable.strMyProvider,
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 11),
-                                              )
-                                            ],
-                                          ),
-                                          onTap: () {
-                                            moveToFamilyOrprovider(2);
-                                          })),
-                                  Positioned(
-                                      bottom: 130,
-                                      left: (MediaQuery.of(context).size.width /
-                                              2) -
-                                          35,
-                                      child: InkWell(
-                                        child: Column(
-                                          children: <Widget>[
-                                            Image.asset(
-                                              variable.icon_th,
-                                              color: Colors.white,
-                                              height: 25,
-                                              width: 25,
-                                            ),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              variable.strTelehealth,
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 11),
-                                            )
-                                          ],
-                                        ),
-                                        onTap: () {
-                                          navigateToTelehealthScreen(1);
-                                        },
-                                      )),
-                                  Positioned(
-                                    bottom: 50,
-                                    right: 5,
-                                    child: InkWell(
-                                      child: Column(children: <Widget>[
-                                        FHBBasicWidget.customShowCase(
-                                            _records,
-                                            Constants.RECORDS_DESC,
-                                            Image.asset(
-                                              variable.icon_records,
-                                              color: Colors.white,
-                                              height: 25,
-                                              width: 25,
-                                            ),
-                                            Constants.RECORDS_TITLE),
-                                        SizedBox(
-                                          height: 5,
-                                        ),
-                                        Text(
-                                          variable.strMyRecords,
+                                                  onPressed: () {
+                                                    saveMediaDialog(
+                                                        context, false);
+                                                  })),
+                                          Constants.COVER_IMG_TITLE),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 10, left: 40, right: 40),
+                                        child: Text(
+                                          Constants.NO_DATA_DASHBOARD,
+                                          textAlign: TextAlign.center,
+                                          maxLines: 2,
                                           style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 11),
-                                        )
-                                      ]),
-                                      onTap: () {
-                                        moveToNextScreen(1);
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ))),
-                          Container(
-                            margin: EdgeInsets.only(
-                              top: 20,
-                            ),
-                            alignment: Alignment.topRight,
-                            child: imageURIProfile != null
-                                ? IconButton(
-                                    icon: Icon(
-                                      Icons.more_vert,
-                                      color: Colors.black87,
-                                      size: 30,
-                                    ),
-                                    onPressed: () {
-                                      saveMediaDialog(context, false);
-                                    },
-                                  )
-                                : Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        FHBBasicWidget.customShowCase(
-                                            _coverImage,
-                                            Constants.COVER_IMG_DESC,
-                                            Container(
-                                                height: 60,
-                                                width: 60,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    gradient:
-                                                        LinearGradient(colors: [
-                                                      Color(CommonUtil()
-                                                          .getMyPrimaryColor()),
-                                                      Color(CommonUtil()
-                                                          .getMyGredientColor())
-                                                    ])),
-                                                child: IconButton(
-                                                    icon: Icon(
-                                                      Icons.add_a_photo,
-                                                      color: Colors.white,
-                                                    ),
-                                                    onPressed: () {
-                                                      saveMediaDialog(
-                                                          context, false);
-                                                    })),
-                                            Constants.COVER_IMG_TITLE),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 10, left: 40, right: 40),
-                                          child: Text(
-                                            Constants.NO_DATA_DASHBOARD,
-                                            textAlign: TextAlign.center,
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
-                                                fontSize: 13,
-                                                fontFamily:
-                                                    variable.font_poppins),
-                                          ),
-                                        )
-                                      ],
-                                    ),
+                                              color: Color(CommonUtil()
+                                                  .getMyPrimaryColor()),
+                                              fontSize: 13,
+                                              fontFamily:
+                                                  variable.font_poppins),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                          )
-                        ],
-                      )),
-                ],
-              ));
+                                ),
+                        )
+                      ]))));
         },
       ),
     );
@@ -383,13 +288,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void moveToFamilyOrprovider(int position) {
-     Navigator.pushNamed(
+    Navigator.pushNamed(
       context,
       router.rt_UserAccounts,
       arguments: UserAccountsArguments(selectedIndex: position),
     );
 
-   /* Navigator.of(context).push(
+    /* Navigator.of(context).push(
       MaterialPageRoute(
         settings: RouteSettings(name: router.rt_UserAccounts),
         builder: (context) => UserAccounts(
@@ -420,13 +325,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ).then((value) {});
   }
 
-  void navigateToTelehealthScreen(int position) {
+  void navigateToTelehealthScreen(int position) async {
+    // await for camera and mic permissions before pushing video page
     Navigator.pushNamed(
       context,
       router.rt_TelehealthProvider,
       arguments: HomeScreenArguments(selectedIndex: position),
     ).then((value) {});
   }
+
+  /* Future<void> _handleCameraAndMic() async {
+    // You can request multiple permissions at once.
+    await [
+      Permission.camera,
+      Permission.microphone,
+    ].request();
+  }*/
 
   bool checkPagesForEveryIndex(int position) {
     bool condition = false;

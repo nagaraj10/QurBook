@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:io' show Platform;
+
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,16 +11,23 @@ import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_router.dart' as router;
-
+import 'package:myfhb/constants/router_variable.dart' as routervariable;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/schedules/add_reminders.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
-import 'package:myfhb/src/ui/connectivity_bloc.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:provider/provider.dart';
+import 'package:myfhb/video_call/model/CallArguments.dart';
+import 'package:myfhb/video_call/pages/callmain.dart';
+import 'package:myfhb/video_call/push_notification_provider.dart';
+import 'package:myfhb/video_call/utils/callstatus.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart' as provider;
+
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'src/ui/SplashScreen.dart';
+import 'src/ui/connectivity_bloc.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -25,9 +36,14 @@ List<CameraDescription> listOfCameras;
 var routes;
 
 Future<void> main() async {
-  // Ensure that plugin services are initialized so that `availableCameras()`
-  // can be called before `runApp()`
   WidgetsFlutterBinding.ensureInitialized();
+  await _handleCameraAndMic();
+  final cameras = await availableCameras();
+  listOfCameras = cameras;
+
+  // Get a specific camera from the list of available cameras.
+  firstCamera = cameras[0];
+  routes = await router.setRouter(listOfCameras);
 
   //get secret from resource
   List<dynamic> resList = [];
@@ -39,25 +55,16 @@ Future<void> main() async {
     setValues(resList);
   });
 
-  // Obtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
-  listOfCameras = cameras;
-
-  // Get a specific camera from the list of available cameras.
-  firstCamera = cameras[0];
-  routes = await router.setRouter(listOfCameras);
   PreferenceUtil.init();
 
   await DatabaseUtil.getDBLength().then((length) {
-    if (length > 0) {
-    } else {
+    if (length == 0) {
       DatabaseUtil.insertCountryMetricsData();
     }
   });
 
   await DatabaseUtil.getDBLengthUnit().then((length) {
-    if (length > 0) {
-    } else {
+    if (length == 0) {
       DatabaseUtil.insertUnitsForDevices();
     }
   });
@@ -73,13 +80,18 @@ Future<void> main() async {
   // await saveToPreference();
 }
 
+Future<void> _handleCameraAndMic() async {
+  await PermissionHandler().requestPermissions(
+    [PermissionGroup.camera, PermissionGroup.microphone],
+  );
+}
+
 void saveToPreference() async {
   PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, Constants.userID)
       .then((onValue) {
     PreferenceUtil.saveString(Constants.KEY_USERID, Constants.userID)
         .then((onValue) {
-      PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN,'')
-          .then((onValue) {
+      PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, '').then((onValue) {
         PreferenceUtil.saveString(Constants.MOB_NUM, Constants.mobileNumber)
             .then((onValue) {
           PreferenceUtil.saveString(
@@ -105,9 +117,8 @@ void setValues(List<dynamic> values) {
   CommonUtil.GOOGLE_STATIC_MAP_URL = values[6];
   CommonUtil.BASE_URL_FROM_RES = values[7];
   CommonUtil.BASE_COVER_IMAGE = values[8];
-  CommonUtil.BASE_URL_V2 = values[9];
-  CommonUtil.COGNITO_AUTH_CODE = values[10];
-  CommonUtil.COGNITO_AUTH_TOKEN = values[11];
+  CommonUtil.COGNITO_AUTH_CODE = values[9];
+  CommonUtil.COGNITO_AUTH_TOKEN = values[10];
 }
 
 class MyFHB extends StatefulWidget {
@@ -121,12 +132,85 @@ class _MyFHBState extends State<MyFHB> {
   String _responseFromNative = variable.strWaitLoading;
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   static const secure_platform = variable.security;
+  static const nav_platform = const MethodChannel('navigation.channel');
+  String navRoute = '';
+
+  /// event channel for listening ns
+  static const stream =
+      const EventChannel('com.example.agoraflutterquickstart/stream');
+  StreamSubscription _timerSubscription = null;
+  String _msg = 'waiting for message';
+  ValueNotifier<String> _msgListener = ValueNotifier('');
+
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
+    // TODO: implement initState
+
     super.initState();
-    gettingResponseFromNative();
-    showSecurityWall();
+
+    getMyRoute();
+    _enableTimer();
+
+    if (Platform.isIOS) {
+      // Push Notifications
+      final provider = PushNotificationsProvider();
+      provider.initNotification();
+
+      provider.pushController.listen((event) {
+        Get.key.currentState.pushNamed(routervariable.rt_CallMain,
+            arguments: CallArguments(
+                role: ClientRole.Broadcaster, channelName: 'Test'));
+      });
+    }
+
+    ////    gettingResponseFromNative();
+////    showSecurityWall();
+  }
+
+  @override
+  void dispose() {
+    _disableTimer();
+    super.dispose();
+  }
+
+  void _enableTimer() {
+    if (_timerSubscription == null) {
+      _timerSubscription = stream.receiveBroadcastStream().listen(_updateTimer);
+    }
+  }
+
+  void _disableTimer() {
+    if (_timerSubscription != null) {
+      _timerSubscription.cancel();
+      _timerSubscription = null;
+    }
+  }
+
+  void _updateTimer(msg) {
+    debugPrint("Current Message $msg");
+    //setState(() => _msg = msg);
+    _msgListener.value = _msg;
+    final String c_msg = msg as String;
+    if (c_msg.isNotEmpty || c_msg != null) {
+      Get.to(CallMain(
+        //channelName: navRoute,
+        channelName: 'Test',
+        role: ClientRole.Broadcaster,
+        isAppExists: true,
+      ));
+    }
+  }
+
+  getMyRoute() async {
+    var route = await nav_platform.invokeMethod("getMyRoute");
+    if (route != null) {
+      print('native nav_route $route');
+      setState(() {
+        navRoute = route;
+      });
+    }
   }
 
   @override
@@ -144,15 +228,14 @@ class _MyFHBState extends State<MyFHB> {
 
     flutterLocalNotificationsPlugin.initialize(platform,
         onSelectNotification: notificationAction);
-    return baseWidget();
-  }
-
-  Widget baseWidget() {
-    return MultiProvider(
+    return provider.MultiProvider(
         providers: [
-          ChangeNotifierProvider(
+          provider.ChangeNotifierProvider<ConnectivityBloc>(
             create: (_) => ConnectivityBloc(),
-          )
+          ),
+          provider.ChangeNotifierProvider<CallStatus>(
+            create: (_) => CallStatus(),
+          ),
         ],
         child: MaterialApp(
           title: Constants.APP_NAME,
@@ -161,7 +244,13 @@ class _MyFHBState extends State<MyFHB> {
             primaryColor: Color(myPrimaryColor),
             accentColor: Colors.white,
           ),
-          home: SplashScreen(),
+          home: navRoute.isEmpty
+              ? SplashScreen()
+              : CallMain(
+                  isAppExists: false,
+                  role: ClientRole.Broadcaster,
+                  channelName: navRoute,
+                ),
           routes: routes,
           debugShowCheckedModeBanner: false,
           navigatorKey: Get.key,
@@ -195,5 +284,31 @@ class _MyFHBState extends State<MyFHB> {
           break;
       }
     } on PlatformException catch (e, s) {}
+  }
+
+  void requeatPermissionForAudioAndCamera() async {
+    /*  final Permission cameraPermission = Permission.camera;
+    var cameraPermissionResult = await cameraPermission.status;
+
+    final Permission audioPermission = Permission.microphone;
+    var audioPermissionResult = await cameraPermission.status;
+
+    print(cameraPermissionResult.toString());
+    print(audioPermissionResult.toString());
+
+
+    if(cameraPermissionResult == PermissionStatus.denied || cameraPermissionResult == PermissionStatus.undetermined ){
+      cameraPermission.request();
+    }
+
+    if(audioPermissionResult == PermissionStatus.denied || audioPermissionResult == PermissionStatus.undetermined ){
+      audioPermission.request();
+    }
+
+
+    print(cameraPermissionResult.toString());
+    print(audioPermissionResult.toString());
+
+   */
   }
 }

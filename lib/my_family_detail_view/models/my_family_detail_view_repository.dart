@@ -9,10 +9,10 @@ class MyFamilyDetailViewRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<UserHealthResponseList> getHealthReportList(String userID) async {
-  String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+  //String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.getHealthRecordList(
-        query.qr_mediameta + userID + query.qr_slash + query.qr_getMediaData);
+        query.qr_mediameta + userID + query.qr_slash + query.qr_getMediaData,condition: false);
     return UserHealthResponseList.fromJson(response);
   }
 

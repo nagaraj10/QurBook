@@ -9,14 +9,13 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.globalmantrainnovations.myfhb.CallOnUI
-import com.globalmantrainnovations.myfhb.MyApp
+import com.globalmantrainnovations.myfhb.MainActivity
 import com.globalmantrainnovations.myfhb.R
 
 class AVServices : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val input = intent.getStringExtra("name")
-        val notificationIntent = Intent(this, CallOnUI::class.java)
+        val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

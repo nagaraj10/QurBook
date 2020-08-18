@@ -37,7 +37,7 @@ class _UserAccountsState extends State<UserAccounts>
   TabController _sliverTabController;
   int selectedTab = 0;
   bool _isEditable = false;
-  File imageURIProfile;
+  File imageURIProfile,profileImage;
 
   @override
   void initState() {
@@ -71,6 +71,12 @@ class _UserAccountsState extends State<UserAccounts>
     if (profilebanner != null) {
       imageURIProfile = File(profilebanner);
     }
+
+    String profileImageFile=PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+    if (profileImageFile != null) {
+      profileImage = File(profileImageFile);
+    }
+
 
     return Scaffold(
       backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
@@ -139,7 +145,10 @@ class _UserAccountsState extends State<UserAccounts>
                           height: 30,
                           width: 30,
                           child: ClipOval(
-                            child: FHBBasicWidget().getProfilePicWidget(
+                            child:profileImage!=null?
+                            Image.file(profileImage,
+                                fit: BoxFit.cover, width: 100, height: 100):
+                            FHBBasicWidget().getProfilePicWidget(
                                 myProfile.response.data.generalInfo
                                     .profilePicThumbnail),
                           ),

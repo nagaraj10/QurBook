@@ -60,9 +60,14 @@ class ProfileData {
     isTempUser = json[parameters.strIstemper];
     isVirtualUser = json[parameters.strisVirtualUser];
     createdBy = json[parameters.strCreatedBy];
-    profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
-        ? new ProfilePicThumbnailMain.fromJson(json[parameters.strprofilePicThumbnail])
-        : null;
+    try{
+      profilePicThumbnail = json[parameters.strprofilePicThumbnail] != null
+          ? new ProfilePicThumbnailMain.fromJson(json[parameters.strprofilePicThumbnail])
+          : null;
+
+    }catch(e){
+
+    }
     qualifiedFullName = json[parameters.strqualifiedFullName] != null
         ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
         : null;

@@ -98,7 +98,7 @@ class FHBUtils {
 
   String getFormattedDateForUser(String strDate) {
     String formattedDate =
-        DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate));
+        DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate));
     return formattedDate;
   }
 
