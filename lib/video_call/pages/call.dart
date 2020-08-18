@@ -4,12 +4,7 @@ import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_timer/flutter_timer.dart';
-import 'package:get/get.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
-import 'package:myfhb/video_call/utils/callstatus.dart';
-import 'package:provider/provider.dart';
 
 import '../utils/settings.dart';
 
@@ -34,12 +29,6 @@ class CallPage extends StatefulWidget {
 class _CallPageState extends State<CallPage> {
   static final _users = <int>[];
   final _infoStrings = <String>[];
-  bool muted = false;
-  bool _isHideMyVideo = false;
-  bool _isHideControl = true;
-  bool _isTimerRun = true;
-  bool _isRemoteAudio = false;
-  bool _isFirstTime = true;
 
   ///create method channel for on going NS for call
   static const platform = const MethodChannel('ongoing_ns.channel');
@@ -52,7 +41,6 @@ class _CallPageState extends State<CallPage> {
     AgoraRtcEngine.leaveChannel();
     AgoraRtcEngine.destroy();
     cancelOnGoingNS();
-    _isTimerRun = false;
     super.dispose();
   }
 
@@ -254,72 +242,6 @@ class _CallPageState extends State<CallPage> {
     );
   }
 
-  /// Toolbar layout
-  Widget _toolbar({CallStatus callStatus}) {
-    if (widget.role == ClientRole.Audience) return Container();
-    return Container(
-      alignment: Alignment.bottomLeft,
-      padding: const EdgeInsets.symmetric(vertical: 48),
-      child: Container(
-        color: Colors.black.withOpacity(0.5),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            IconButton(
-              onPressed: _onToggleVideo,
-              icon: Icon(
-                _isHideMyVideo ? Icons.videocam_off : Icons.videocam,
-                color: Colors.white,
-                size: 20.0,
-              ),
-            ),
-            IconButton(
-              onPressed: _onToggleMute,
-              icon: Icon(
-                muted ? Icons.mic_off : Icons.mic,
-                color: Colors.white,
-                size: 20.0,
-              ),
-            ),
-            IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.chat_bubble_outline,
-                color: Colors.white,
-                size: 20.0,
-              ),
-            ),
-            IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.attach_file,
-                color: Colors.white,
-                size: 20.0,
-              ),
-            ),
-            Container(
-              color: Colors.redAccent,
-              child: IconButton(
-                onPressed: () {
-//                  callStatus.enCall();
-//                  iCallStatus.callNotAlive();
-                  _onCallEnd(context);
-                },
-                icon: Icon(
-                  Icons.call_end,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                padding: const EdgeInsets.all(15.0),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   /// Info panel to show logs
   Widget _panel() {
     return Container(
@@ -370,175 +292,12 @@ class _CallPageState extends State<CallPage> {
     );
   }
 
-  void _onCallEnd(BuildContext context) async {
-    widget.isAppExists ? Navigator.pop(context) : Get.offAll(DashboardScreen());
-  }
-
-  void _onToggleMute() {
-    setState(() {
-      muted = !muted;
-    });
-    AgoraRtcEngine.muteLocalAudioStream(muted);
-  }
-
-  void _onToggleVideo() {
-    setState(() {
-      _isHideMyVideo = !_isHideMyVideo;
-    });
-    AgoraRtcEngine.muteLocalVideoStream(_isHideMyVideo);
-  }
-
   void _onSwitchCamera() {
     AgoraRtcEngine.switchCamera();
   }
 
   @override
   Widget build(BuildContext context) {
-    /// hide/show app bar and controller
-//    if (_isFirstTime) {
-//      _isFirstTime = false;
-//      Future.delayed(const Duration(seconds: 5), () {
-//        setState(() {
-//          _isHideControl = false;
-//        });
-//      });
-//    }
-
-    ///update call status through provider
-    final callStatus = Provider.of<CallStatus>(context, listen: false);
-    return WillPopScope(
-      onWillPop: _onBackPressed,
-      child: Scaffold(
-        body: Center(
-          child: Stack(
-            children: <Widget>[
-              _viewRows(),
-              customAppbar(),
-              _toolbar(callStatus: callStatus),
-              //_panel(),
-//              Visibility(
-//                child: customAppbar(),
-//                visible: _isHideControl,
-//              ),
-//              Visibility(
-//                child: _toolbar(callStatus: callStatus),
-//                visible: _isHideControl,
-//              ),
-              //_prescription(context, callStatus: callStatus)
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget customAppbar() {
-    return Container(
-      alignment: Alignment.topLeft,
-      padding: const EdgeInsets.symmetric(vertical: 40),
-      child: Container(
-        color: Colors.black.withOpacity(0.5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(left: 10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        'Dr.Parvathi Krishnan',
-                        style: TextStyle(color: Colors.white, fontSize: 20),
-                      ),
-                      //todo this has to be uncomment in future
-//                      SizedBox(
-//                        width: 10,
-//                      ),
-//                      Icon(
-//                        Icons.mic,
-//                        color: Colors.white,
-//                        size: 20,
-//                      ),
-                    ],
-                  ),
-                  TikTikTimer(
-                    backgroundColor: Colors.transparent,
-                    initialDate: DateTime.now(),
-                    running: _isTimerRun,
-                    width: 50,
-                    timerTextStyle:
-                        TextStyle(color: Colors.white, fontSize: 12),
-                    isRaised: false,
-                    tracetime: (time) {
-                      // print(time.getCurrentSecond);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<bool> _onBackPressed() {
-    return userAlert() ?? false;
-  }
-
-  Future userAlert() {
-    print('show dialog invoked');
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) {
-          return AlertDialog(
-            title: Center(
-              child: Text(
-                'warning!',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black.withOpacity(0.8)),
-              ),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  child: Text(
-                    'Do you want exit from call?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.black.withOpacity(0.5)),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    FlatButton(
-                        child: Text('Yes'),
-                        onPressed: () {
-                          widget.isAppExists
-                              ? Navigator.of(context).pop(true)
-                              : Get.offAll(DashboardScreen());
-                        }),
-                    FlatButton(
-                        child: Text('No'),
-                        onPressed: () {
-                          Navigator.of(context).pop(false);
-                        }),
-                  ],
-                ),
-              ],
-            ),
-          );
-        });
+    return _viewRows();
   }
 }

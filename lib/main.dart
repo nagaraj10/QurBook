@@ -18,7 +18,7 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
-import 'package:myfhb/video_call/pages/call.dart';
+import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -159,7 +159,7 @@ class _MyFHBState extends State<MyFHB> {
       provider.initNotification();
 
       provider.pushController.listen((event) {
-        Get.key.currentState.pushNamed(routervariable.rt_CallPage,
+        Get.key.currentState.pushNamed(routervariable.rt_CallMain,
             arguments: CallArguments(
                 role: ClientRole.Broadcaster, channelName: 'Test'));
       });
@@ -194,7 +194,7 @@ class _MyFHBState extends State<MyFHB> {
     _msgListener.value = _msg;
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
-      Get.to(CallPage(
+      Get.to(CallMain(
         //channelName: navRoute,
         channelName: 'Test',
         role: ClientRole.Broadcaster,
@@ -246,7 +246,7 @@ class _MyFHBState extends State<MyFHB> {
           ),
           home: navRoute.isEmpty
               ? SplashScreen()
-              : CallPage(
+              : CallMain(
                   isAppExists: false,
                   role: ClientRole.Broadcaster,
                   channelName: navRoute,
