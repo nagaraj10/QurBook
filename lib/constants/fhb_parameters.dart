@@ -308,6 +308,7 @@ const String strRoleCode='roleCode';
 //parameters for device Integration
 
 const String strsourceGoogle = "Google Fit";
+const String strsourceSheela = "SHEELA";
 const String strsourceHK = "Apple Health";
 const String strdevicesourceName = "sourceType";
 const String strdeviceType = "deviceType";
@@ -317,7 +318,7 @@ const String strRawData = "rawHealthData";
 const String strsyncStartDate = 'startDateTime';
 const String strsyncEndDate = 'endDateTime';
 const String strlastSyncDateTime = 'lastSyncDateTime';
-const String strStartTimeStamp = "startDateTime"; 
+const String strStartTimeStamp = "startDateTime";
 const String strEndTimeStamp = "endDateTime";
 const String strisSuccess = "isSuccess";
 const String strsourcetype = "sourcetype";
@@ -333,7 +334,7 @@ const String strGlucometer = "Glucometer";
 const String strGlusoceLevel = "Blood Glucose";
 const String strParamBGLevel = "bloodGlucoseLevel";
 const String strParamBGUnit = "bgUnit";
-const String strMGDL= "mg/dL";
+const String strMGDL = "mg/dL";
 const String strParamBGMealContext = "mealContext";
 const String strParamBGMealType = "mealType";
 //Temperature
@@ -344,40 +345,59 @@ const String strParamTempUnit = "temperatureUnit";
 const String strParamUnitCelsius = "Celsius";
 const String strParamUnitFarenheit = "Farenheit";
 //Weight
-const String strWeighingScale ="Weighing Scale";
+const String strWeighingScale = "Weighing Scale";
 const String strWeight = "Weight";
 const String strParamWeight = "weight";
 const String strParamWeightUnit = "weightUnit";
 const String strValueWeightUnit = "Kg";
 
 //HeartRate
-const String strHeartRate = "Heart Rate"; 
+const String strHeartRate = "Heart Rate";
 const String strParamHeartRate = "bpm";
 //PulseOxymeter
-const String strOxymeter ="Pulse Oximeter";
+const String strOxymeter = "Pulse Oximeter";
 const String strOxgenSaturation = "Oxygen Saturation";
 const String strParamOxygen = "oxygenSaturation";
 //Google Fit Params
 
-
-// Google Fit 
+// Google Fit
 const String gfWeight = "com.google.weight";
 const String gfHeartRate = "com.google.heart_rate.bpm";
 const String gfBloodPressure = "com.google.blood_pressure";
-const String gfBloodGlucose ="com.google.blood_glucose";
+const String gfBloodGlucose = "com.google.blood_glucose";
 const String gfOxygenSaturation = "com.google.oxygen_saturation";
 const String gfBodyTemperature = "google.body.temperature";
 
-const String gfWeightSource = "derived:com.google.weight:com.google.android.gms:merge_weight";
-const String gfHeartRateSource = "derived:com.google.heart_rate.bpm:com.google.android.gms:merge_heart_rate_bpm";
-const String gfBloodPressureSource = "derived:com.google.blood_pressure:com.google.android.gms:merged";
-const String gfBloodGlucoseSource = "derived:com.google.blood_glucose:com.google.android.gms:merged";
-const String gfOxygenSaturationSource = "derived:com.google.oxygen_saturation:com.google.android.gms:merged";
-const String  gfBodyTemperatureSource = "derived:com.google.body.temperature:com.google.android.gms:merged";
+const String gfWeightSource =
+    "derived:com.google.weight:com.google.android.gms:merge_weight";
+const String gfHeartRateSource =
+    "derived:com.google.heart_rate.bpm:com.google.android.gms:merge_heart_rate_bpm";
+const String gfBloodPressureSource =
+    "derived:com.google.blood_pressure:com.google.android.gms:merged";
+const String gfBloodGlucoseSource =
+    "derived:com.google.blood_glucose:com.google.android.gms:merged";
+const String gfOxygenSaturationSource =
+    "derived:com.google.oxygen_saturation:com.google.android.gms:merged";
+const String gfBodyTemperatureSource =
+    "derived:com.google.body.temperature:com.google.android.gms:merged";
 
-List<String> dataTypes = [gfWeight, gfHeartRate, gfBloodPressure, gfBloodGlucose , gfOxygenSaturation, gfBodyTemperature];
-List<String> dataSource =[gfWeightSource, gfHeartRateSource, gfBloodPressureSource, gfBloodGlucoseSource, gfOxygenSaturationSource,gfBodyTemperatureSource ];
-Map<String , String > dataSourceID = new Map.fromIterables(dataTypes,dataSource);
+List<String> dataTypes = [
+  gfWeight,
+  gfHeartRate,
+  gfBloodPressure,
+  gfBloodGlucose,
+  gfOxygenSaturation,
+  gfBodyTemperature
+];
+List<String> dataSource = [
+  gfWeightSource,
+  gfHeartRateSource,
+  gfBloodPressureSource,
+  gfBloodGlucoseSource,
+  gfOxygenSaturationSource,
+  gfBodyTemperatureSource
+];
+Map<String, String> dataSourceID = new Map.fromIterables(dataTypes, dataSource);
 
 //Google Fit Scopes
 const String gfscopeBodyRead =

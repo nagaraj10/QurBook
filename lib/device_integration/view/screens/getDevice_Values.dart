@@ -390,5 +390,11 @@ Widget TypeIcon(String type) {
       height: 40.0,
       width: 40.0,
     );
+  } else if (type == strsourceSheela) {
+    return Image.asset(
+      'assets/maya/maya_us.png',
+      height: 40.0,
+      width: 40.0,
+    );
   }
 }

@@ -1,0 +1,52 @@
+import 'package:myfhb/constants/fhb_parameters.dart';
+
+class BodyWeight {
+  BodyWeight({
+    this.isSuccess,
+    this.entities,
+  });
+
+  bool isSuccess;
+  List<BodyWeightEntity> entities;
+
+  factory BodyWeight.fromJson(Map<String, dynamic> json) => BodyWeight(
+        isSuccess: json[strisSuccess],
+        entities: List<BodyWeightEntity>.from(
+            json[strentities].map((x) => BodyWeightEntity.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        strisSuccess: isSuccess,
+        strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
+      };
+}
+
+class BodyWeightEntity {
+  BodyWeightEntity({
+    this.lastsyncdatetime,
+    this.weight,
+    this.weightunit,
+    this.source,
+  });
+
+  DateTime lastsyncdatetime;
+  String weight;
+  String weightunit;
+  String source;
+
+  factory BodyWeightEntity.fromJson(Map<String, dynamic> json) =>
+      BodyWeightEntity(
+        lastsyncdatetime:
+            DateTime.parse(json[strlastSyncDateTime.toLowerCase()]),
+        weight: json[strParamWeight],
+        weightunit: json[strParamWeightUnit],
+        source: json[strSource],
+      );
+
+  Map<String, dynamic> toJson() => {
+        strlastSyncDateTime.toLowerCase(): lastsyncdatetime.toIso8601String(),
+        strParamWeight: weight,
+        strParamWeightUnit: weightunit,
+        strSource: source,
+      };
+}

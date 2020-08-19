@@ -126,6 +126,7 @@ flutter:
     - assets/help_docs/
     - assets/video/
     - assets/slide_icons/
+    - assets/devices/
     - assets/
     - secrets.json
     - assets/payment/failure.png

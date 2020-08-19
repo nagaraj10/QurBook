@@ -18,7 +18,12 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/ShapesPainter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase_widget.dart';
+import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/device_integration/view/screens/getDevice_Values.dart';
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
+import 'package:myfhb/device_integration/view/screens/Widget_View.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -35,13 +40,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey _coverImage = GlobalKey();
   UserModel saveuser = UserModel();
   File imageURIProfile;
+  String date;
+  String devicevalue1;
+  String devicevalue2;
 
+  DeviceData deviceDataG = DeviceData(
+      title: 'Glucometer',
+      icon: 'assets/devices/gulco.png',
+      status: 0,
+      isSelected: false,
+      value_name: 'bloodGlucose',
+      value1: 'GL',
+      value2: '',
+      color: Colors.orange);
+  List<DeviceData> deviceDataL; // = [deviceData,deviceDataG];
+  List<DeviceData> testList;
   bool noInternet = true;
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
+    deviceDataL = new List();
+    deviceDataL.add(deviceDataG);
+    testList = new List();
 
     /*
     var isFirstTime =
@@ -68,6 +90,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
+    testList = CommonUtil().getDeviceList();
+    print("HEre is the dynamic generated list${testList.toString()}");
     return ShowCaseWidget(
       onFinish: () {
         PreferenceUtil.saveString(
@@ -106,7 +131,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               color: Colors.black54,
                             )),
                         title: Text(
-                          'My Providers',
+                          variable.strMyProvider,
                           style: TextStyle(color: Colors.black54),
                         )),
                     BottomNavigationBarItem(
@@ -225,6 +250,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                     ],
                                   ),
                                 ),
+                        ),
+                        Container(
+                          alignment: Alignment.bottomLeft,
+                          child: ChangeNotifierProvider(
+                            create: (context) => DevicesViewModel(),
+                            child: ShowDevicesNew(
+                                deviceData: deviceDataG, deviceData1: testList),
+                          ),
                         )
                       ]))));
         },
@@ -398,6 +431,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void callImportantsMethod() async {
     getFamilyRelationAndMediaType();
     getProfileData();
+    syncDevices();
 
     await new CommonUtil().getMedicalPreference();
   }
@@ -409,5 +443,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void getProfileData() async {
     await new CommonUtil().getUserProfileData();
+  }
+
+  void syncDevices() async {
+    await new CommonUtil().syncDevices();
   }
 }

@@ -24,10 +24,7 @@ class ShowDevicesNew extends StatefulWidget {
 }
 
 class _ShowDevicesNewState extends State<ShowDevicesNew> {
-  //List<DeviceResult> chartData = [];
-  //List<DeviceResult> devicesList;
   DevicesViewModel devicesViewModel;
-  //List<DeviceResult> deviceValues;
 
   DevResult chartData;
   DevResult devicesList;
@@ -51,36 +48,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     print("Refresh and updated the devices list");
     return Stack(
       children: <Widget>[
-        Image.asset(
-          "assets/Family-image.jpg",
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          fit: BoxFit.cover,
-        ),
         Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0.0,
             ),
-            bottomNavigationBar: Container(
-              padding: EdgeInsets.only(left: 4.0, right: 4.0),
-              height: 44.0 + MediaQuery.of(context).padding.bottom,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  IconButton(icon: Icon(Icons.star)),
-                  IconButton(icon: Icon(Icons.star)),
-                ],
-              ),
-            ),
             body: getBody(context))
       ],
     );
-
-    //return Scaffold(
-    //  body: getBody(context),
-    //);
   }
 
   Widget getBody(BuildContext context) {
@@ -110,6 +86,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             return ListView.builder(
                 shrinkWrap: true,
                 //itemCount: widget.deviceData1.length,
+                scrollDirection: Axis.horizontal,
                 itemCount: finalList.length,
                 // padding: const EdgeInsets.symmetric(vertical: 4.0) ,
                 itemBuilder: (context, i) {

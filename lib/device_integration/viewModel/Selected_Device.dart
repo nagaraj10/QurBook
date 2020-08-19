@@ -24,34 +24,56 @@ class _SelectedDeviceState extends State<SelectedDevice> {
   }
 
   Widget projectWidget(BuildContext context) {
-    //print(widget.deviceValues.length);
-    //for (int i = 0; i < widget.deviceValues.length; i++) {
-    if (widget.deviceData.value_name == strBP) {
-      date = widget.deviceValues.bloodPressure.entities[0].lastsyncdatetime;
-      devicevalue1 = widget.deviceValues.bloodPressure.entities[0].systolic;
-      devicevalue2 = widget.deviceValues.bloodPressure.entities[0].diastolic;
-      return getDeviceData(date, devicevalue1, devicevalue2);
-    } else if (widget.deviceData.value_name == strBGlucose) {
-      date = widget.deviceValues.bloodGlucose.entities[0].lastsyncdatetime;
-      /* devicevalue1 =
-            widget.deviceValues[1].bloodGlucose.entities[0].bloodGlucoseLevel;*/
-      return getDeviceData(date, devicevalue1, '');
-    } else if (widget.deviceData.value_name == strOxygen) {
-      date = widget.deviceValues.oxygenSaturation.entities[0].lastsyncdatetime;
-      devicevalue1 =
-          widget.deviceValues.oxygenSaturation.entities[0].oxygenSaturation;
-      return getDeviceData(date, devicevalue1, '');
-    } else if (widget.deviceData.value_name == strTemp) {
-      date = widget.deviceValues.bodyTemperature.entities[0].lastsyncdatetime;
-      devicevalue1 =
-          widget.deviceValues.bodyTemperature.entities[0].temperature;
-      return getDeviceData(date, devicevalue1, '');
-    } else {
-      date = widget.deviceValues.bodyWeight.entities[0].lastsyncdatetime;
-      devicevalue1 = widget.deviceValues.bodyWeight.entities[0].weight;
-      return getDeviceData(date, devicevalue1, '');
+    switch (widget.deviceData.value_name) {
+      case strBP:
+        {
+          if (widget.deviceValues.bloodPressure.entities.isNotEmpty) {
+            date =
+                widget.deviceValues.bloodPressure.entities[0].lastsyncdatetime;
+            devicevalue1 =
+                widget.deviceValues.bloodPressure.entities[0].systolic;
+            devicevalue2 =
+                widget.deviceValues.bloodPressure.entities[0].diastolic;
+          }
+          return getDeviceData(date, devicevalue1, devicevalue2);
+        }
+      case strBGlucose:
+        {
+          if (widget.deviceValues.bloodPressure.entities.isNotEmpty) {
+            date =
+                widget.deviceValues.bloodGlucose.entities[0].lastsyncdatetime;
+          }
+          return getDeviceData(date, devicevalue1, '');
+        }
+      case strOxygen:
+        {
+          if (widget.deviceValues.bloodPressure.entities.isNotEmpty) {
+            date = widget
+                .deviceValues.oxygenSaturation.entities[0].lastsyncdatetime;
+            devicevalue1 = widget
+                .deviceValues.oxygenSaturation.entities[0].oxygenSaturation;
+          }
+          return getDeviceData(date, devicevalue1, '');
+        }
+      case strTemp:
+        {
+          if (widget.deviceValues.bloodPressure.entities.isNotEmpty) {
+            date = widget
+                .deviceValues.bodyTemperature.entities[0].lastsyncdatetime;
+            devicevalue1 =
+                widget.deviceValues.bodyTemperature.entities[0].temperature;
+          }
+          return getDeviceData(date, devicevalue1, '');
+        }
+      case strWgt:
+        {
+          if (widget.deviceValues.bloodPressure.entities.isNotEmpty) {
+            date = widget.deviceValues.bodyWeight.entities[0].lastsyncdatetime;
+            devicevalue1 = widget.deviceValues.bodyWeight.entities[0].weight;
+          }
+          return getDeviceData(date, devicevalue1, '');
+        }
     }
-    //}
   }
 
   Widget getDeviceData(String date, String value1, String value2) {
