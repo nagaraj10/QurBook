@@ -17,7 +17,7 @@ class AppointmentsCommonWidget {
       children: [
         Container(
           constraints:
-          BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
+              BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
           child: Row(
             children: [
               TextWidget(
@@ -41,25 +41,20 @@ class AppointmentsCommonWidget {
   }
 
   Widget docStatus(BuildContext context, doc) {
-    return Container(
-      constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width >=400
-              ? MediaQuery.of(context).size.width / 1.5
-              : MediaQuery.of(context).size.width / 2.1),
-      child: TextWidget(
-        text: doc == null ? '' : doc,
-        colors: Colors.black26,
-        fontsize: 10.5,//fhbStyles.fnt_doc_specialist,
-        softwrap: false,
-        overflow: TextOverflow.ellipsis,
-      ),
+    return TextWidget(
+      text: doc == null ? '' : doc,
+      colors: Colors.black26,
+      fontsize: 10.5,
+      //fhbStyles.fnt_doc_specialist,
+      softwrap: false,
+      overflow: TextOverflow.ellipsis,
     );
   }
 
   Widget docLoc(BuildContext context, doc) {
     return Container(
       constraints:
-      BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
+          BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
       child: TextWidget(
         text: doc,
         overflow: TextOverflow.ellipsis,
@@ -71,99 +66,110 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Widget docTimeSlot(BuildContext context, History doc, hour, minute) {
-    return ((hour == '00' && minute == '00') ||
-        hour.length == 0 ||
-        minute.length == 0)
-        ? Container()
-        : Row(
-      children: [
-        ClipRect(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color: Color(new CommonUtil().getMyPrimaryColor())),
-            ),
-            height: 29,
-            width: 25,
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(2.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                TextWidget(
-                  fontsize: 10,
-                  text: hour,
-                  fontWeight: FontWeight.w500,
-                  colors: Colors.grey,
-                ),
-                TextWidget(
-                  fontsize: 5,
-                  text: Constants.Appointments_hours,
-                  fontWeight: FontWeight.w500,
-                  colors: Color(new CommonUtil().getMyPrimaryColor()),
-                ),
-              ],
-            ),
-          ),
-        ),
-        SizedBoxWidget(width: 2.0),
-        ClipRect(
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                  color: Color(new CommonUtil().getMyPrimaryColor())),
-            ),
-            height: 29,
-            width: 25,
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(2.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                TextWidget(
-                  fontsize: 10,
-                  text: minute,
-                  fontWeight: FontWeight.w500,
-                  colors: Colors.grey,
-                ),
-                TextWidget(
-                  fontsize: 5,
-                  text: Constants.Appointments_minutes,
-                  fontWeight: FontWeight.w500,
-                  colors: Color(new CommonUtil().getMyPrimaryColor()),
-                ),
-              ],
-            ),
-          ),
-        )
-      ],
-    );
+  Widget docTimeSlot(BuildContext context, History doc, hour, minute, daysNum) {
+    return daysNum != '0'
+        ? TextWidget(
+            fontsize: 10,
+            text: daysNum+' days',
+            fontWeight: FontWeight.w500,
+            colors: Colors.black,
+          )
+        : ((hour == '00' && minute == '00') ||
+                hour.length == 0 ||
+                minute.length == 0)
+            ? Container()
+            : Row(
+                children: [
+                  ClipRect(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color(new CommonUtil().getMyPrimaryColor())),
+                      ),
+                      height: 29,
+                      width: 25,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(2.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextWidget(
+                            fontsize: 10,
+                            text: hour,
+                            fontWeight: FontWeight.w500,
+                            colors: Colors.grey,
+                          ),
+                          TextWidget(
+                            fontsize: 5,
+                            text: Constants.Appointments_hours,
+                            fontWeight: FontWeight.w500,
+                            colors: Color(new CommonUtil().getMyPrimaryColor()),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBoxWidget(width: 2.0),
+                  ClipRect(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                            color: Color(new CommonUtil().getMyPrimaryColor())),
+                      ),
+                      height: 29,
+                      width: 25,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(2.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextWidget(
+                            fontsize: 10,
+                            text: minute,
+                            fontWeight: FontWeight.w500,
+                            colors: Colors.grey,
+                          ),
+                          TextWidget(
+                            fontsize: 5,
+                            text: Constants.Appointments_minutes,
+                            fontWeight: FontWeight.w500,
+                            colors: Color(new CommonUtil().getMyPrimaryColor()),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              );
   }
 
   Widget docIcons(History doc) {
-    String notesCount=doc.healthRecord.notes==null?null:1.toString();
-    String voiceNotesCount=doc.healthRecord.voice==null?null:1.toString();
-    String rxCount=doc.healthRecord.rx==null?null:1.toString();
+    String notesCount = doc.healthRecord.notes == null ? null : 1.toString();
+    String voiceNotesCount =
+        doc.healthRecord.voice == null ? null : 1.toString();
+    String rxCount = doc.healthRecord.rx == null ? null : 1.toString();
     return Row(
       children: [
         iconWithText(
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_notes,
-                () {},notesCount),
+            () {},
+            notesCount),
         SizedBoxWidget(width: 15.0),
         iconWithText(
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.STR_VOICE_NOTES,
-                () {},voiceNotesCount),
+            () {},
+            voiceNotesCount),
         SizedBoxWidget(width: 15.0),
         iconWithText(
             Constants.Appointments_recordsImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records,
-                () {},rxCount),
+            () {},
+            rxCount),
       ],
     );
   }
@@ -188,9 +194,9 @@ class AppointmentsCommonWidget {
               (count == null || count == 0)
                   ? Container()
                   : BadgesBlue(
-                backColor: Colors.blue,
-                badgeValue: count,
-              )
+                      backColor: Colors.blue,
+                      badgeValue: count,
+                    )
             ],
           ),
           SizedBoxWidget(
@@ -239,7 +245,7 @@ class AppointmentsCommonWidget {
         child: OutlineButton(
           shape: OutlineInputBorder(borderRadius: BorderRadius.circular(5)),
           borderSide:
-          BorderSide(color: Color(new CommonUtil().getMyPrimaryColor())),
+              BorderSide(color: Color(new CommonUtil().getMyPrimaryColor())),
           onPressed: () {},
           child: TextWidget(
             text: Constants.Appointments_joinCall,

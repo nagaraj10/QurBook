@@ -30,26 +30,26 @@ class AppointmentsViewModel extends ChangeNotifier {
     AppointmentsModel appointments = appointmentsModel;
     dummySearchListUpcoming = appointments.response.data.upcoming
         .where((element) =>
-    element.doctorName
-        .toLowerCase()
-        .trim()
-        .contains(query.toLowerCase().trim()) ||
-        element.location
-            .toLowerCase()
-            .trim()
-            .contains(query.toLowerCase().trim()))
+            element.doctorName
+                .toLowerCase()
+                .trim()
+                .contains(query.toLowerCase().trim()) ||
+            element.location
+                .toLowerCase()
+                .trim()
+                .contains(query.toLowerCase().trim()))
         .toList();
 
     dummySearchListHistory = appointments.response.data.history
         .where((element) =>
-    element.doctorName
-        .toLowerCase()
-        .trim()
-        .contains(query.toLowerCase().trim()) ||
-        element.location
-            .toLowerCase()
-            .trim()
-            .contains(query.toLowerCase().trim()))
+            element.doctorName
+                .toLowerCase()
+                .trim()
+                .contains(query.toLowerCase().trim()) ||
+            element.location
+                .toLowerCase()
+                .trim()
+                .contains(query.toLowerCase().trim()))
         .toList();
     data = DoctorsData(
         upcoming: dummySearchListUpcoming, history: dummySearchListHistory);
@@ -71,12 +71,14 @@ class AppointmentsViewModel extends ChangeNotifier {
   Time getTimeSlot(List<History> upcoming, bool isSearch) {
     if (appointmentsModel != null) {
       List<History> upcomingInfo =
-      isSearch ? upcoming : appointmentsModel.response.data.upcoming;
+          isSearch ? upcoming : appointmentsModel.response.data.upcoming;
       List<String> dummySearchList = List<String>();
       List<String> dummyHour = List<String>();
+      List<String> dummyDays=List<String>();
       List<String> dummyMinutes = List<String>();
       List<String> hours;
       List<String> minutes;
+      List<String> days;
       Time time;
 
       dummySearchList
@@ -84,16 +86,18 @@ class AppointmentsViewModel extends ChangeNotifier {
       for (int i = 0; i < dummySearchList.length; i++) {
         DateTime dob = DateTime.tryParse(dummySearchList[i]);
         DateTime dob1 =
-        DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(dummySearchList[i]);
+            DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(dummySearchList[i]);
         DateTime dob2 =
-        DateFormat("yyyy-MM-dd HH:mm:ss").parse('${DateTime.now()}');
+            DateFormat("yyyy-MM-dd HH:mm:ss").parse('${DateTime.now()}');
         Duration dur = dob1.difference(dob2);
+        String daysCount = dur.inDays.toString();
         String differenceInHours = dur.inHours >= 0 && dur.inHours <= 24
             ? (dur.inHours.remainder(24)).round().toString().padLeft(2, '0')
             : '00';
         String differenceInMinutes = dur.inHours >= 0 && dur.inHours <= 24
             ? (dur.inMinutes.remainder(60)).toString().padLeft(2, '0')
             : '00';
+        dummyDays.add(daysCount);
         dummyMinutes.add(
             dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
                 ? '00'
@@ -105,8 +109,8 @@ class AppointmentsViewModel extends ChangeNotifier {
       }
       minutes = dummyMinutes;
       hours = dummyHour;
-      time = Time(minutes: minutes, hours: hours);
-
+      days=dummyDays;
+      time = Time(minutes: minutes, hours: hours, daysCount: days);
       return time;
     } else {}
   }
@@ -115,7 +119,7 @@ class AppointmentsViewModel extends ChangeNotifier {
       List<String> bookingId) async {
     try {
       CancelAppointmentModel cancelAppointment =
-      await _helper.getCancelAppointment(bookingId);
+          await _helper.getCancelAppointment(bookingId);
       cancelAppointmentModel = cancelAppointment;
       return cancelAppointmentModel;
     } catch (e) {}
@@ -127,6 +131,7 @@ class AppointmentsViewModel extends ChangeNotifier {
       Reshedule resheduleAp = await _helper.resheduleAppointment(
           bookingId, slotNumber, resheduleDate);
       resheduleAppointmentModel = resheduleAp;
+      print(resheduleAp);
       return resheduleAppointmentModel;
     } catch (e) {}
   }

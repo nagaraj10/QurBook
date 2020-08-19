@@ -73,7 +73,7 @@ Future<void> main() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
-    MyFHB(),
+   MyFHB() ,
   );
 
   // await saveToPreference();
@@ -112,6 +112,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.BASE_COVER_IMAGE = values[8];
   CommonUtil.COGNITO_AUTH_CODE = values[9];
   CommonUtil.COGNITO_AUTH_TOKEN = values[10];
+  CommonUtil.COGNITO_URL=values[11];
 }
 
 class MyFHB extends StatefulWidget {

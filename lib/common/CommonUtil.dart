@@ -1,16 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
-import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/global_search/model/Data.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/FamilyMembersResponse.dart'
+    as familyMember;
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
@@ -30,20 +26,27 @@ import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
-import 'package:myfhb/src/model/Media/DeviceModel.dart';
+import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
-import 'package:myfhb/src/model/sceretLoader.dart';
-import 'package:myfhb/src/model/secretmodel.dart';
+import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Media/DeviceModel.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/model/user/DoctorIds.dart';
 import 'package:myfhb/src/model/user/GeneralInfo.dart';
 import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
+import 'package:myfhb/src/model/sceretLoader.dart';
+import 'package:myfhb/src/model/secretmodel.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
+import 'package:myfhb/global_search/model/Data.dart';
+import 'package:get/get.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/model/user/QualifiedFullName.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class CommonUtil {
   static String MAYA_URL = "";
@@ -58,6 +61,7 @@ class CommonUtil {
   static String BASE_URL_V2 = '';
   static String COGNITO_AUTH_TOKEN = '';
   static String COGNITO_AUTH_CODE = '';
+  static String COGNITO_URL = '';
 
   CategoryData categoryDataObjClone = new CategoryData();
 
@@ -1046,11 +1050,5 @@ class CommonUtil {
     });
 
     return filteredCategoryData;
-  }
-
-  static Future<void> askPermissionForCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
   }
 }
