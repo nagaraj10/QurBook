@@ -828,12 +828,14 @@ class CommonUtil {
           ],
         ),
       ),
-      backgroundColor: Colors.transparent,
-      isDismissible: false,
-      enableDrag: false,
-    );
-  }
-
+    ),
+    backgroundColor: Colors.transparent,
+    isDismissible: false,
+    enableDrag: false,
+  );
+}
+  
+  
   Widget customSnack(bool isOffline) {
     return Container(
       height: 20.0,
