@@ -37,6 +37,7 @@ class MainActivity : FlutterActivity() {
     private val ONGOING_NS_CHANNEL="ongoing_ns.channel"
     val STREAM = "com.example.agoraflutterquickstart/stream"
     private var sharedValue: String? = null
+    private var username: String? = null
     private lateinit var mEventChannel:EventSink
     private val REQ_CODE = 112
     private val INTENT_AUTHENTICATE = 155
@@ -140,9 +141,8 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ONGOING_NS_CHANNEL).setMethodCallHandler { call, result ->
             try {
                 if(call.method!!.contentEquals("startOnGoingNS")){
-                    val passedName = call.argument<String>("name")
                     val passedMode = call.argument<String>("mode")
-                    startOnGoingNS(passedName!!,passedMode!!)
+                    startOnGoingNS(username!!,passedMode!!)
                 }else {
                     result.notImplemented()
                 }
@@ -238,6 +238,8 @@ class MainActivity : FlutterActivity() {
 
     fun handleSendText(intent: Intent) {
         sharedValue = intent.getStringExtra(Intent.EXTRA_TEXT)
+        username = intent.getStringExtra(getString(R.string.username))
+        sharedValue="$sharedValue&$username"
         if (::mEventChannel.isInitialized){mEventChannel.success(sharedValue)}
         Log.d(TAG, "passed text from intent filter ${sharedValue!!}")
     }

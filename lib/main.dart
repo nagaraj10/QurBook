@@ -21,7 +21,7 @@ import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:provider/provider.dart' as provider;
 
 import 'common/CommonConstants.dart';
@@ -37,7 +37,6 @@ var routes;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await _handleCameraAndMic();
   final cameras = await availableCameras();
   listOfCameras = cameras;
 
@@ -78,12 +77,6 @@ Future<void> main() async {
   );
 
   // await saveToPreference();
-}
-
-Future<void> _handleCameraAndMic() async {
-  await PermissionHandler().requestPermissions(
-    [PermissionGroup.camera, PermissionGroup.microphone],
-  );
 }
 
 void saveToPreference() async {
@@ -149,7 +142,7 @@ class _MyFHBState extends State<MyFHB> {
     // TODO: implement initState
 
     super.initState();
-
+    CommonUtil.askPermissionForCameraAndMic();
     getMyRoute();
     _enableTimer();
 
@@ -189,14 +182,13 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   void _updateTimer(msg) {
-    debugPrint("Current Message $msg");
-    //setState(() => _msg = msg);
     _msgListener.value = _msg;
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
+      var passedValArr = c_msg.split('&');
       Get.to(CallMain(
-        //channelName: navRoute,
-        channelName: 'Test',
+        userName: passedValArr[1],
+        channelName: 'Test', //todo this should be change with passedValArr[0]
         role: ClientRole.Broadcaster,
         isAppExists: true,
       ));
@@ -206,7 +198,6 @@ class _MyFHBState extends State<MyFHB> {
   getMyRoute() async {
     var route = await nav_platform.invokeMethod("getMyRoute");
     if (route != null) {
-      print('native nav_route $route');
       setState(() {
         navRoute = route;
       });
@@ -236,6 +227,9 @@ class _MyFHBState extends State<MyFHB> {
           provider.ChangeNotifierProvider<CallStatus>(
             create: (_) => CallStatus(),
           ),
+          provider.ChangeNotifierProvider<HideProvider>(
+            create: (_) => HideProvider(),
+          ),
         ],
         child: MaterialApp(
           title: Constants.APP_NAME,
@@ -249,7 +243,9 @@ class _MyFHBState extends State<MyFHB> {
               : CallMain(
                   isAppExists: false,
                   role: ClientRole.Broadcaster,
-                  channelName: navRoute,
+                  //channelName: navRoute.split('&')[0],
+                  channelName: 'Test',
+                  userName: navRoute.split('&')[1],
                 ),
           routes: routes,
           debugShowCheckedModeBanner: false,

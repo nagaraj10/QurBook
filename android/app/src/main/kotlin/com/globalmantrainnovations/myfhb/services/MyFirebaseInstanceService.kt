@@ -53,10 +53,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     private fun createNotification(title:String="", body:String="", data:Map<String, String> = HashMap()) {
         //todo segregate the NS according their type
-        val NS_TYPE=data[getString(R.string.type)]
+        val NS_TYPE=data[getString(R.string.type).toLowerCase()]
         when(NS_TYPE){
-            "Incoming_call"->createNotification4Call(data)
-            "Acknowledgements"->createNotification4Ack(data)
+            getString(R.string.ns_type_call)->createNotification4Call(data)
+            getString(R.string.ns_type_ack)->createNotification4Ack(data)
         }
     }
 
@@ -100,8 +100,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
                 .setSmallIcon(R.mipmap.app_ns_icon)
                 .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
-                .setContentTitle(data["title"])
-                .setContentText(data["body"])
+                .setContentTitle(data[getString(R.string.pro_ns_title)])
+                .setContentText(data[getString(R.string.pro_ns_body)])
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_CALL)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -142,20 +142,11 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
                 .setSmallIcon(R.mipmap.app_ns_icon)
                 .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
-                .setContentTitle(data["title"])
-                .setContentText(data["body"])
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setDefaults(Notification.DEFAULT_SOUND)
+                .setContentTitle(data[getString(R.string.pro_ns_title)])
+                .setContentText(data[getString(R.string.pro_ns_body)])
                 .setAutoCancel(true)
-                .setTimeoutAfter(NS_TIMEOUT)
-                .setOnlyAlertOnce(true)
+                .setDefaults(NotificationCompat.DEFAULT_SOUND)
                 .build()
-
-        //notification.flags=Notification.FLAG_INSISTENT
         nsManager.notify(NS_ID,notification)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
-            AutoDismissNotification().setAlarm(this,NS_ID,NS_TIMEOUT)
-        }
     }
 }

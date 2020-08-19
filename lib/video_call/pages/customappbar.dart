@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_timer/flutter_timer.dart';
 
 class CustomAppBar extends StatefulWidget {
+  final String userName;
+  const CustomAppBar(this.userName);
+
   @override
   _CustomAppBarState createState() => _CustomAppBarState();
 }
@@ -38,7 +41,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       Row(
                         children: [
                           Text(
-                            'Dr.Parvathi Krishnan',
+                            widget.userName,
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           //todo this has to be uncomment in future

@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "588661578434-oplufmffn1s1v2an6bgbsupged6lh703.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.go_fhb_flutter",
+            "certificate_hash": "93b2426a89498900e8d4fad8f961294cae406718"
+          }
+        },
+        {
           "client_id": "588661578434-oki6qk1fmmbu2ads4ihdla1gup3npto1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -58,6 +66,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "588661578434-grgmeu1r59qj3s6m594ifkg4i2rl9lt7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.globalmantrainnovations.myfhb",
+            "certificate_hash": "93b2426a89498900e8d4fad8f961294cae406718"
+          }
+        },
         {
           "client_id": "588661578434-f7jv3mlclgh7el6q0d48cdgo81erbi3e.apps.googleusercontent.com",
           "client_type": 1,

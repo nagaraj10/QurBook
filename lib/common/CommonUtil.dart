@@ -1,12 +1,16 @@
 import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/global_search/model/Data.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart'
-as familyMember;
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
@@ -26,55 +30,43 @@ import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/model/Media/MediaData.dart';
-import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
-import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/src/model/Media/MediaData.dart';
+import 'package:myfhb/src/model/sceretLoader.dart';
+import 'package:myfhb/src/model/secretmodel.dart';
 import 'package:myfhb/src/model/user/DoctorIds.dart';
 import 'package:myfhb/src/model/user/GeneralInfo.dart';
 import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
-import 'package:myfhb/src/model/sceretLoader.dart';
-import 'package:myfhb/src/model/secretmodel.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
-import 'package:myfhb/global_search/model/Data.dart';
-import 'package:get/get.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/model/user/QualifiedFullName.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class CommonUtil {
-  static String MAYA_URL="";
-  static String FAQ_URL="";
-  static String GOOGLE_MAP_URL="";
-  static String GOOGLE_PLACE_API_KEY="";
-  static String GOOGLE_MAP_PLACE_DETAIL_URL="";
-  static String GOOGLE_ADDRESS_FROM__LOCATION_URL="";
-  static String GOOGLE_STATIC_MAP_URL="";
-  static String BASE_URL_FROM_RES="";
-  static String BASE_COVER_IMAGE="";
-  static String BASE_URL_V2='';
+  static String MAYA_URL = "";
+  static String FAQ_URL = "";
+  static String GOOGLE_MAP_URL = "";
+  static String GOOGLE_PLACE_API_KEY = "";
+  static String GOOGLE_MAP_PLACE_DETAIL_URL = "";
+  static String GOOGLE_ADDRESS_FROM__LOCATION_URL = "";
+  static String GOOGLE_STATIC_MAP_URL = "";
+  static String BASE_URL_FROM_RES = "";
+  static String BASE_COVER_IMAGE = "";
+  static String BASE_URL_V2 = '';
   static String COGNITO_AUTH_TOKEN = '';
   static String COGNITO_AUTH_CODE = '';
 
-
   CategoryData categoryDataObjClone = new CategoryData();
 
-
-
-
   static Future<dynamic> getResourceLoader() async {
-    final Future<Secret> secret = SecretLoader(secretPath: "secrets.json").load();
+    final Future<Secret> secret =
+        SecretLoader(secretPath: "secrets.json").load();
     var valueFromRes = await secret;
     return valueFromRes.myScerets;
   }
-
-
 
   List<MediaMetaInfo> getDataForParticularCategoryDescription(
       CompleteData completeData, String categoryDescription) {
@@ -123,7 +115,7 @@ class CommonUtil {
     for (MediaMetaInfo mediaMetaInfo in completeData.mediaMetaInfo) {
       if (mediaMetaInfo.metaInfo.categoryInfo != null) {
         if (mediaMetaInfo.metaInfo.categoryInfo.categoryDescription ==
-            categoryDescription &&
+                categoryDescription &&
             mediaMetaInfo.metaInfo.mediaTypeInfo.description ==
                 mediaTypeDescription) {
           mediaMetaInfoObj.add(mediaMetaInfo);
@@ -145,7 +137,7 @@ class CommonUtil {
     for (MediaMetaInfo mediaMetaInfo in completeData.mediaMetaInfo) {
       if (mediaMetaInfo.metaInfo.categoryInfo != null) {
         if (mediaMetaInfo.metaInfo.categoryInfo.categoryDescription ==
-            categoryDescription &&
+                categoryDescription &&
             mediaMetaInfo.metaInfo.mediaTypeInfo.description ==
                 mediaTypeDescription) {
           mediaMetaInfoObj.add(mediaMetaInfo);
@@ -159,8 +151,6 @@ class CommonUtil {
     });
     return mediaMetaInfoObj;
   }
-
-
 
   MediaData getMediaTypeInfoForParticularLabel(
       String mediaId, List<MediaData> mediaDataList, String categoryName) {
@@ -234,13 +224,13 @@ class CommonUtil {
     List<dynamic> imageList = new List();
     if (data.mediaMasterIds.isNotEmpty) {
       List<MediaMasterIds> mediMasterId =
-      new CommonUtil().getMetaMasterIdList(data);
+          new CommonUtil().getMetaMasterIdList(data);
       int k = 0;
       for (int i = 0; i < mediMasterId.length; i++) {
         _healthReportListForUserBlock
             .getDocumentImage(mediMasterId[i].id)
             .then((snapshot) {
-          if (snapshot!=null && k < mediMasterId.length) {
+          if (snapshot != null && k < mediMasterId.length) {
             k++;
             imageList.add(snapshot);
           } else {}
@@ -249,11 +239,7 @@ class CommonUtil {
       if (k == mediMasterId.length) {
         return imageList;
       }
-
-
     } else {
-
-
       return new List();
     }
   }
@@ -283,8 +269,6 @@ class CommonUtil {
     }
     return mediaDataObj;
   }
-
-
 
   static Future<void> showLoadingDialog(
       BuildContext context, GlobalKey key, String msgToDisplay) async {
@@ -317,7 +301,6 @@ class CommonUtil {
   List<MediaMasterIds> getMetaMasterIdList(MediaMetaInfo data) {
     List<MediaMasterIds> mediaMasterIdsList = new List();
     if (data.mediaMasterIds.length > 0) {
-
       for (MediaMasterIds mediaMasterIds in data.mediaMasterIds) {
         if (mediaMasterIds.fileType == "image/jpg" ||
             mediaMasterIds.fileType == "image/png")
@@ -366,13 +349,13 @@ class CommonUtil {
       _isRecordBookmarked = true;
     }
     HealthReportListForUserBlock _healthReportListForUserBlock =
-    new HealthReportListForUserBlock();
+        new HealthReportListForUserBlock();
     _bookmarkRecordBloc
         .bookMarcRecord(mediaIds, _isRecordBookmarked)
         .then((bookmarkRecordResponse) {
       _healthReportListForUserBlock.getHelthReportList().then((value) {
         PreferenceUtil.saveCompleteData(
-            Constants.KEY_COMPLETE_DATA, value.response.data)
+                Constants.KEY_COMPLETE_DATA, value.response.data)
             .then((value) {
           if (bookmarkRecordResponse.success) {
             _refresh();
@@ -390,29 +373,26 @@ class CommonUtil {
     });
   }
 
-
   Sharedbyme getProfileDetails() {
     MyProfile myProfile =
-    PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     GeneralInfo generalInfo = myProfile.response.data.generalInfo;
 
     LinkedData linkedData =
-    new LinkedData(roleName: variable.Self, nickName: variable.Self);
+        new LinkedData(roleName: variable.Self, nickName: variable.Self);
     ProfilePicThumbnailMain profilePicThumbnail =
-    generalInfo.profilePicThumbnail != null
-        ? new ProfilePicThumbnailMain(
-        type: generalInfo.profilePicThumbnail.type,
-        data: generalInfo.profilePicThumbnail.data)
-        : null;
+        generalInfo.profilePicThumbnail != null
+            ? new ProfilePicThumbnailMain(
+                type: generalInfo.profilePicThumbnail.type,
+                data: generalInfo.profilePicThumbnail.data)
+            : null;
 
-    QualifiedFullName qualifiedFullName =
-    generalInfo.qualifiedFullName != null
+    QualifiedFullName qualifiedFullName = generalInfo.qualifiedFullName != null
         ? new QualifiedFullName(
-        firstName: generalInfo.qualifiedFullName.firstName,
-        middleName: generalInfo.qualifiedFullName.middleName,
-        lastName: generalInfo.qualifiedFullName.lastName)
+            firstName: generalInfo.qualifiedFullName.firstName,
+            middleName: generalInfo.qualifiedFullName.middleName,
+            lastName: generalInfo.qualifiedFullName.lastName)
         : null;
-
 
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
@@ -430,9 +410,7 @@ class CommonUtil {
         isEmailVerified: generalInfo.isEmailVerified,
         isTempUser: generalInfo.isTempUser);
 
-    return new
-    Sharedbyme(
-        profileData: profileData, linkedData: linkedData);
+    return new Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
 
   Future<void> getMedicalPreference({Function callBackToRefresh}) async {
@@ -451,10 +429,10 @@ class CommonUtil {
           if (medicalPreferences.preferences.doctorIds != null &&
               medicalPreferences.preferences.doctorIds.length > 0) {
             medicalPreferences.preferences.doctorIds.sort(
-                    (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
 
             for (DoctorIds doctorIds
-            in medicalPreferences.preferences.doctorIds) {
+                in medicalPreferences.preferences.doctorIds) {
               if (doctorIds.isDefault) {
                 PreferenceUtil.savePrefereDoctors(
                     Constants.KEY_PREFERRED_DOCTOR, doctorIds);
@@ -470,10 +448,10 @@ class CommonUtil {
             PreferenceUtil.savePrefereHospital(
                 Constants.KEY_PREFERRED_HOSPITAL, null);
             medicalPreferences.preferences.hospitalIds.sort(
-                    (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
 
             for (HospitalIds hospitalIds
-            in medicalPreferences.preferences.hospitalIds) {
+                in medicalPreferences.preferences.hospitalIds) {
               if (hospitalIds.isDefault) {
                 PreferenceUtil.savePrefereHospital(
                     Constants.KEY_PREFERRED_HOSPITAL, hospitalIds);
@@ -489,10 +467,10 @@ class CommonUtil {
           if (medicalPreferences.preferences.laboratoryIds != null &&
               medicalPreferences.preferences.laboratoryIds.length > 0) {
             medicalPreferences.preferences.laboratoryIds.sort(
-                    (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
+                (a, b) => (b.isDefault ? 1 : 0).compareTo(a.isDefault ? 1 : 0));
 
             for (LaboratoryIds laboratoryIds
-            in medicalPreferences.preferences.laboratoryIds) {
+                in medicalPreferences.preferences.laboratoryIds) {
               if (laboratoryIds.isDefault) {
                 PreferenceUtil.savePreferedLab(
                     Constants.KEY_PREFERRED_LAB, laboratoryIds);
@@ -529,13 +507,11 @@ class CommonUtil {
         : 0xff015eea;
   }
 
-
   int getMyGredientColor() {
     return PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
         ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
         : 0xff00c0fa;
   }
-
 
   List<CategoryData> getAllCategoryList(List<Data> data) {
     List<CategoryData> categoryDataList = new List();
@@ -567,20 +543,18 @@ class CommonUtil {
 
     for (Data dataObj in data) {
       List<MediaMasterIds> mediaMasterIdsList = new List();
-      if(dataObj.mediaMasterIds!=null && dataObj.mediaMasterIds.length>0){
-        for (MediaMasterIds mediaMasterIds
-        in dataObj.mediaMasterIds) {
+      if (dataObj.mediaMasterIds != null && dataObj.mediaMasterIds.length > 0) {
+        for (MediaMasterIds mediaMasterIds in dataObj.mediaMasterIds) {
           mediaMasterIdsList.add(new MediaMasterIds(
               id: mediaMasterIds.id, fileType: mediaMasterIds.fileType));
         }
       }
 
-
       CategoryInfo categoryInfo = new CategoryInfo(
           id: dataObj.metaInfo.categoryInfo.id,
           isActive: true,
           categoryDescription:
-          dataObj.metaInfo.categoryInfo.categoryDescription,
+              dataObj.metaInfo.categoryInfo.categoryDescription,
           categoryName: dataObj.metaInfo.categoryInfo.categoryName,
           isCreate: dataObj.metaInfo.categoryInfo.isCreate,
           isDelete: dataObj.metaInfo.categoryInfo.isDelete,
@@ -602,7 +576,7 @@ class CommonUtil {
           isDisplay: dataObj.metaInfo.mediaTypeInfo.isDisplay,
           isEdit: dataObj.metaInfo.mediaTypeInfo.isEdit,
           isManualTranscription:
-          dataObj.metaInfo.mediaTypeInfo.isManualTranscription,
+              dataObj.metaInfo.mediaTypeInfo.isManualTranscription,
           isRead: dataObj.metaInfo.mediaTypeInfo.isRead,
           lastModifiedOn: dataObj.metaInfo.mediaTypeInfo.lastModifiedOn,
           logo: dataObj.metaInfo.mediaTypeInfo.logo,
@@ -675,7 +649,7 @@ class CommonUtil {
       if (dataObj.metaInfo.deviceReadings != null &&
           dataObj.metaInfo.deviceReadings.length > 0) {
         for (DeviceReadings deviceReadingsObj
-        in dataObj.metaInfo.deviceReadings) {
+            in dataObj.metaInfo.deviceReadings) {
           deviceReadings.add(new DeviceReadings(
               parameter: deviceReadingsObj.parameter,
               unit: deviceReadingsObj.unit,
@@ -708,8 +682,8 @@ class CommonUtil {
           lastModifiedOn: dataObj.lastModifiedOn,
           isActive: dataObj.isActive,
           id: dataObj.id,
-          userId:dataObj.userId,
-          metaTypeId:dataObj.metaTypeId,
+          userId: dataObj.userId,
+          metaTypeId: dataObj.metaTypeId,
           isBookmarked: dataObj.isBookmarked,
           isDraft: dataObj.isDraft,
           mediaMasterIds: mediaMasterIdsList);
@@ -741,7 +715,6 @@ class CommonUtil {
       }
     }
 
-
     return categoryDataList;
   }
 
@@ -757,7 +730,6 @@ class CommonUtil {
 
     return mediaMasterId;
   }
-
 
   static customShowCase(GlobalKey _key, String desc, Widget _child,
       {String title, BuildContext context}) {
@@ -857,7 +829,6 @@ class CommonUtil {
     );
   }
 
-
   Widget customSnack(bool isOffline) {
     return Container(
       height: 20.0,
@@ -871,7 +842,7 @@ class CommonUtil {
             width: 10.0,
           ),
           Text(
-            isOffline ? variable.strBackOnline:variable.strNoConnection,
+            isOffline ? variable.strBackOnline : variable.strNoConnection,
             style: TextStyle(color: Colors.white, fontSize: 15.0),
           ),
         ],
@@ -924,7 +895,6 @@ class CommonUtil {
     return splitStr.join(' ');
   }
 
-
   Future<void> getAllCustomRoles() async {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
     try {
@@ -942,7 +912,6 @@ class CommonUtil {
       });
     }
   }
-
 
   Future<MyProfile> getUserProfileData() async {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
@@ -975,7 +944,6 @@ class CommonUtil {
     });
   }
 
-
   Future<MyProfile> getMyProfile() async {
     if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
       return PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
@@ -983,8 +951,6 @@ class CommonUtil {
       return await getUserProfileData();
     }
   }
-
-
 
   Future<void> getMediaTypes() async {
     MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
@@ -998,12 +964,12 @@ class CommonUtil {
     }
   }
 
-  String checkIfStringIsEmpty(String value){
-    return value!=null?value:'';
+  String checkIfStringIsEmpty(String value) {
+    return value != null ? value : '';
   }
 
-  bool checkIfStringisNull(String value){
-    return value!=null&&value!='null';
+  bool checkIfStringisNull(String value) {
+    return value != null && value != 'null';
   }
 
   dateConversion(DateTime dateTime) {
@@ -1014,7 +980,7 @@ class CommonUtil {
   }
 
   dateConversionToDayMonthYear(DateTime dateTime) {
-    var newFormat = DateFormat('d MMM, ''yyyy');
+    var newFormat = DateFormat('d MMM, ' 'yyyy');
     String updatedDate = newFormat.format(dateTime);
 
     return updatedDate;
@@ -1027,17 +993,14 @@ class CommonUtil {
     return updatedDate;
   }
 
-  stringToDateTime(String string){
-
+  stringToDateTime(String string) {
     DateTime dateTime = DateTime.parse(string);
 
     return dateTime;
-
   }
 
-  removeLastThreeDigits(String string){
-
-    String removedString='';
+  removeLastThreeDigits(String string) {
+    String removedString = '';
     removedString = string.substring(0, string.length - 3);
 
     return removedString;
@@ -1055,8 +1018,9 @@ class CommonUtil {
 
     for (CategoryData dataObj in data) {
       if (/*dataObj.isDisplay &&*/
-      dataObj.categoryName != Constants.STR_FEEDBACK &&
-          dataObj.categoryName != Constants.STR_CLAIMSRECORD && dataObj.categoryName != Constants.STR_WEARABLES) {
+          dataObj.categoryName != Constants.STR_FEEDBACK &&
+              dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
+              dataObj.categoryName != Constants.STR_WEARABLES) {
         filteredCategoryData.add(dataObj);
       }
     }
@@ -1065,7 +1029,7 @@ class CommonUtil {
     for (CategoryData categoryDataObj in filteredCategoryData) {
       if (categoryDataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
-        categoryDataObjClone=categoryDataObj;
+        categoryDataObjClone = categoryDataObj;
         filteredCategoryData.removeAt(i);
         break;
       }
@@ -1073,18 +1037,20 @@ class CommonUtil {
     }
     filteredCategoryData.add(categoryDataObjClone);
 
-
     filteredCategoryData.sort((a, b) {
-      if(a.categoryDescription!=null){
+      if (a.categoryDescription != null) {
         return a.categoryDescription
             .toLowerCase()
             .compareTo(b.categoryDescription.toLowerCase());
       }
-
     });
-
 
     return filteredCategoryData;
   }
 
+  static Future<void> askPermissionForCameraAndMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
+  }
 }
