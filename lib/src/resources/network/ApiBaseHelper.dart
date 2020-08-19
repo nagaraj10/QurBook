@@ -917,4 +917,26 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  Future<dynamic> postDeviceId(String url, String jsonBody) async {
+    Map<String, String> requestHeadersAuthAccept = new Map();
+    requestHeadersAuthAccept['accept'] = 'application/json';
+    requestHeadersAuthAccept['Content-type'] = 'application/json';
+
+    requestHeadersAuthAccept['Authorization'] =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
+    var responseJson;
+    try {
+      final response = await http.post(CommonUtil.COGNITO_URL + url,
+          headers: requestHeadersAuthAccept, body: jsonBody);
+      print(response.body);
+      responseJson = _returnResponse(response);
+      print(responseJson);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
 }

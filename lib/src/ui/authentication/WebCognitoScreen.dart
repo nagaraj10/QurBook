@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:device_id/device_id.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -17,16 +20,19 @@ class WebCognitoScreen extends StatefulWidget {
 }
 
 class _WebCognitoScreenState extends State<WebCognitoScreen> {
- // var _url ='https://myfhb-dev-v3.auth.us-east-2.amazoncognito.com/login?client_id=6llcfsioe822tngnnvdndtv7ti&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:4200/callback';
+  // var _url ='https://myfhb-dev-v3.auth.us-east-2.amazoncognito.com/login?client_id=6llcfsioe822tngnnvdndtv7ti&response_type=code&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://localhost:4200/callback';
+  ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
 
-  var _url='';
+  var _url = '';
   final _key = UniqueKey();
   bool _loading = true;
   var _isPageCompleted = false;
   bool showSpinner = true;
+
   _WebCognitoScreenState();
+
   UserModel saveuser = UserModel();
-  String authcode='';
+  String authcode = '';
   String last_name;
   String first_name;
   String special;
@@ -40,6 +46,7 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
   String user_mobile_no;
   var token1;
   String token2;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -50,12 +57,14 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return (authcode!=null && authcode!='')?getWeBViewWidget():_url!=''?getWeBViewWidget():getLoginURL();
+    return (authcode != null && authcode != '')
+        ? getWeBViewWidget()
+        : _url != '' ? getWeBViewWidget() : getLoginURL();
     // }
   }
 
   getLoginURL() {
-   return  new FutureBuilder<String>(
+    return new FutureBuilder<String>(
       future: attemptLogIn(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
@@ -71,43 +80,43 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
     );
   }
 
-
-  Widget getWeBViewWidget(){
+  Widget getWeBViewWidget() {
     return Scaffold(
         body: Column(
-          children: [
-            Expanded(
-                child: WebView(
-                  key: _key,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  initialUrl: _url,
-                  debuggingEnabled: true,
-                  navigationDelegate: (NavigationRequest req) {
-                    if (req.url.startsWith(redirecturl)) {
-                      print('blocking navigation to ${req.url}');
-                      getCode(req.url);
-                      return NavigationDecision.prevent;
-                    }
-                    return NavigationDecision.navigate;
-                    showSpinner = false;
-                  },
-                  onPageFinished: (url) {
-                    setState(() {
-                      showSpinner = false;
-                    });
-                  },
-                )),
-            showSpinner
-                ? Center(
-              child: CircularProgressIndicator(
-                backgroundColor: Colors.lightBlue,
-              ),
-            )
-                : Container(color: Colors.transparent),
-            //Expanded(child: Text('$mycode')),
-          ],
-        ));
+      children: [
+        Expanded(
+            child: WebView(
+          key: _key,
+          javascriptMode: JavascriptMode.unrestricted,
+          initialUrl: _url,
+          debuggingEnabled: true,
+          navigationDelegate: (NavigationRequest req) {
+            if (req.url.startsWith(redirecturl)) {
+              print('blocking navigation to ${req.url}');
+              getCode(req.url);
+              return NavigationDecision.prevent;
+            }
+            return NavigationDecision.navigate;
+            showSpinner = false;
+          },
+          onPageFinished: (url) {
+            setState(() {
+              showSpinner = false;
+            });
+          },
+        )),
+        showSpinner
+            ? Center(
+                child: CircularProgressIndicator(
+                  backgroundColor: Colors.lightBlue,
+                ),
+              )
+            : Container(color: Colors.transparent),
+        //Expanded(child: Text('$mycode')),
+      ],
+    ));
   }
+
   Future<String> attemptLogIn() async {
     Map<String, dynamic> postImage = new Map();
     postImage['source'] = source;
@@ -202,38 +211,69 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
           .then((onValue) {});
       PreferenceUtil.save("user_details", saveuser);
 
-      authToken=decodesstring;
-    // redirecting to dashboard screen using userid
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (BuildContext context) => DashboardScreen()));
-      //Navigator.pop(context, 'code:${mURL}');
-    });
-    }else{
+      authToken = decodesstring;
+      String deviceId = await DeviceId.getID;
+
+      sendDeviceToken(userId, saveuser.email, user_mobile_no, deviceId)
+          .then((value) {
+        if (value.isSuccess) {
+          Future.delayed(Duration(seconds: 3), () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => DashboardScreen()));
+            //Navigator.pop(context, 'code:${mURL}');
+          });
+        }
+      });
+      // redirecting to dashboard screen using userid
+
+    } else {
       print(res.body.toString());
       Scaffold.of(context).showSnackBar(
         SnackBar(
           content: new Text(res.body.toString()),
         ),
       );
-
     }
   }
 
   getAuthCode() async {
-    try{
+    try {
       authcode = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-
-    }catch(e){
-
-    }
-      //getAuthToken(authcode);
-      //TODO: More restoring of settings would go here...
-
+    } catch (e) {}
+    //getAuthToken(authcode);
+    //TODO: More restoring of settings would go here...
   }
 
+  Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,
+      String user_mobile_no, String deviceId) async {
+    var jsonParam;
+    Map<String, dynamic> deviceInfo = new Map();
+    Map<String, dynamic> user = new Map();
+    Map<String, dynamic> jsonData = new Map();
 
+    user['id'] = userId;
+    deviceInfo['user'] = user;
+    deviceInfo['phoneNumber'] = user_mobile_no;
+    deviceInfo['email'] = email;
+    deviceInfo['isActive'] = true;
+    deviceInfo['deviceTokenId'] = deviceId;
 
+    jsonData['deviceInfo'] = deviceInfo;
+    if (Platform.isIOS) {
+      jsonData['platformCode'] = 'IOSPLT';
+    } else {
+      jsonData['platformCode'] = 'ANDPLT';
+    }
+
+    print(jsonData.toString());
+
+    var params = json.encode(jsonData);
+
+    print(params.toString());
+
+    final response = await apiBaseHelper.postDeviceId('device-info', params);
+    return DeviceInfoSucess.fromJson(response);
+  }
 }
