@@ -18,8 +18,6 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:intl/intl.dart';
 import 'dart:io';
 
-
-
 class MoreMenuScreen extends StatefulWidget {
   final Function refresh;
 
@@ -32,22 +30,26 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   MyProfile myProfile =
       PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
   File profileImage;
- 
-  String selectedMaya = PreferenceUtil.getStringValue(Constants.keyMayaAsset) != null
-      ? PreferenceUtil.getStringValue(Constants.keyMayaAsset)
-      : variable.icon_mayaMain;
 
-  int selectedPrimaryColor = PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
-      ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-      : 0xff5e1fe0;
+  String selectedMaya =
+      PreferenceUtil.getStringValue(Constants.keyMayaAsset) != null
+          ? PreferenceUtil.getStringValue(Constants.keyMayaAsset)
+          : variable.icon_mayaMain;
 
-  int selectedGradientColor = PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
-      ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
-      : 0xff753aec;
+  int selectedPrimaryColor =
+      PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
+          ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
+          : 0xff5e1fe0;
+
+  int selectedGradientColor =
+      PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
+          ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
+          : 0xff753aec;
 
   @override
   void initState() {
-    String profileImageFile=PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+    String profileImageFile =
+        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
     if (profileImageFile != null) {
       profileImage = File(profileImageFile);
     }
@@ -75,11 +77,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               padding: EdgeInsets.only(top: 20, bottom: 20),
               child: ListTile(
                 leading: ClipOval(
-                  child: profileImage!=null?
-                  Image.file(profileImage,
-                      width: 50, height: 50, fit: BoxFit.cover):
-                  FHBBasicWidget().getProfilePicWidget(
-                      myProfile.response.data.generalInfo.profilePicThumbnail),
+                  child: profileImage != null
+                      ? Image.file(profileImage,
+                          width: 50, height: 50, fit: BoxFit.cover)
+                      : FHBBasicWidget().getProfilePicWidget(myProfile
+                          .response.data.generalInfo.profilePicThumbnail),
                 ),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,8 +151,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ],
                     )),
                     onTap: () {
-                      openWebView(Constants.FAQ,
-                          CommonUtil.FAQ_URL, false);
+                      openWebView(Constants.FAQ, CommonUtil.FAQ_URL, false);
                     },
                   ),
                   ListTile(
@@ -210,8 +211,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   InkWell(
                     onTap: () {
                       LaunchReview.launch(
-                          androidAppId: variable.strAppPackage,
-                          iOSAppId: "");
+                          androidAppId: variable.strAppPackage, iOSAppId: "");
                     },
                     child: ListTile(
                         title: Row(
@@ -245,11 +245,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       //color: Colors.green,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount:variable.mayaAssets.length,
+                        itemCount: variable.mayaAssets.length,
                         itemBuilder: (context, index) => GestureDetector(
                           onTap: () {
-                            PreferenceUtil.saveString(
-                                Constants.keyMayaAsset, variable.mayaAssets[index]);
+                            PreferenceUtil.saveString(Constants.keyMayaAsset,
+                                variable.mayaAssets[index]);
                             selectedMaya = variable.mayaAssets[index];
                             HomeScreen.of(context).refresh();
                             setState(() {});
@@ -293,10 +293,13 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               itemBuilder: (context, index) => GestureDetector(
                                 onTap: () {
                                   PreferenceUtil.saveTheme(
-                                      Constants.keyPriColor,variable. myThemes[index]);
+                                      Constants.keyPriColor,
+                                      variable.myThemes[index]);
                                   PreferenceUtil.saveTheme(
-                                      Constants.keyGreyColor,variable. myGradient[index]);
-                                  selectedPrimaryColor = variable.myThemes[index];
+                                      Constants.keyGreyColor,
+                                      variable.myGradient[index]);
+                                  selectedPrimaryColor =
+                                      variable.myThemes[index];
                                   HomeScreen.of(context).refresh();
                                   setState(() {});
                                 },
@@ -336,7 +339,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   void moveToLoginPage(SignOutResponse signOutResponse) {
     PreferenceUtil.clearAllData().then((value) {
-      PageNavigator.goToPermanent(context,router.rt_SignIn);
+      // PageNavigator.goToPermanent(context,router.rt_SignIn);
+      PageNavigator.goToPermanent(context, router.rt_WebCognito);
     });
   }
 }
