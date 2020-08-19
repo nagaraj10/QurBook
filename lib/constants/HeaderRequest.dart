@@ -22,7 +22,8 @@ class HeaderRequest {
   Future<Map<String, String>> getRequestHeaderWithStar() async {
     Map<String, String> requestHeadersAuthStar = new Map();
     requestHeadersAuthStar['accept'] = '*/*';
-    requestHeadersAuthStar['Authorization'] = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    requestHeadersAuthStar['Authorization'] =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     return requestHeadersAuthStar;
   }
@@ -52,7 +53,8 @@ class HeaderRequest {
     requestHeaders['Content-type'] = 'application/json';
     requestHeaders['accept'] = 'application/json';
 
-    requestHeaders['Authorization'] = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    requestHeaders['Authorization'] =
+        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     return requestHeaders;
   }
@@ -71,9 +73,8 @@ class HeaderRequest {
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['Authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     requestHeadersAuthContent['accept'] = 'multipart/form-data';
-
 
     return requestHeadersAuthContent;
   }

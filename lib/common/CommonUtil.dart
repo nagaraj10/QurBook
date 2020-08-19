@@ -51,31 +51,28 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 
 class CommonUtil {
-  static String MAYA_URL="";
-  static String FAQ_URL="";
-  static String GOOGLE_MAP_URL="";
-  static String GOOGLE_PLACE_API_KEY="";
-  static String GOOGLE_MAP_PLACE_DETAIL_URL="";
-  static String GOOGLE_ADDRESS_FROM__LOCATION_URL="";
-  static String GOOGLE_STATIC_MAP_URL="";
-  static String BASE_URL_FROM_RES="";
-  static String BASE_COVER_IMAGE="";
-  static String BASE_URL_V2='';
+  static String MAYA_URL = "";
+  static String FAQ_URL = "";
+  static String GOOGLE_MAP_URL = "";
+  static String GOOGLE_PLACE_API_KEY = "";
+  static String GOOGLE_MAP_PLACE_DETAIL_URL = "";
+  static String GOOGLE_ADDRESS_FROM__LOCATION_URL = "";
+  static String GOOGLE_STATIC_MAP_URL = "";
+  static String BASE_URL_FROM_RES = "";
+  static String BASE_COVER_IMAGE = "";
+  static String BASE_URL_V2 = '';
   static String COGNITO_AUTH_TOKEN = '';
   static String COGNITO_AUTH_CODE = '';
+  static String COGNITO_URL = '';
 
   CategoryData categoryDataObjClone = new CategoryData();
 
-
-
-
   static Future<dynamic> getResourceLoader() async {
-    final Future<Secret> secret = SecretLoader(secretPath: "secrets.json").load();
+    final Future<Secret> secret =
+        SecretLoader(secretPath: "secrets.json").load();
     var valueFromRes = await secret;
     return valueFromRes.myScerets;
   }
-
-
 
   List<MediaMetaInfo> getDataForParticularCategoryDescription(
       CompleteData completeData, String categoryDescription) {
@@ -160,8 +157,6 @@ class CommonUtil {
     });
     return mediaMetaInfoObj;
   }
-
-
 
   MediaData getMediaTypeInfoForParticularLabel(
       String mediaId, List<MediaData> mediaDataList, String categoryName) {
@@ -250,11 +245,7 @@ class CommonUtil {
       if (k == mediMasterId.length) {
         return imageList;
       }
-
-   
     } else {
-     
-
       return new List();
     }
   }
@@ -284,8 +275,6 @@ class CommonUtil {
     }
     return mediaDataObj;
   }
-
-
 
   static Future<void> showLoadingDialog(
       BuildContext context, GlobalKey key, String msgToDisplay) async {
@@ -318,7 +307,6 @@ class CommonUtil {
   List<MediaMasterIds> getMetaMasterIdList(MediaMetaInfo data) {
     List<MediaMasterIds> mediaMasterIdsList = new List();
     if (data.mediaMasterIds.length > 0) {
-      
       for (MediaMasterIds mediaMasterIds in data.mediaMasterIds) {
         if (mediaMasterIds.fileType == "image/jpg" ||
             mediaMasterIds.fileType == "image/png")
@@ -391,7 +379,6 @@ class CommonUtil {
     });
   }
 
-  
   Sharedbyme getProfileDetails() {
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
@@ -406,15 +393,13 @@ class CommonUtil {
                 data: generalInfo.profilePicThumbnail.data)
             : null;
 
-    QualifiedFullName qualifiedFullName =
-        generalInfo.qualifiedFullName != null
-            ? new QualifiedFullName(
-                firstName: generalInfo.qualifiedFullName.firstName,
-                middleName: generalInfo.qualifiedFullName.middleName,
-                lastName: generalInfo.qualifiedFullName.lastName)
-            : null;
+    QualifiedFullName qualifiedFullName = generalInfo.qualifiedFullName != null
+        ? new QualifiedFullName(
+            firstName: generalInfo.qualifiedFullName.firstName,
+            middleName: generalInfo.qualifiedFullName.middleName,
+            lastName: generalInfo.qualifiedFullName.lastName)
+        : null;
 
-    
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
@@ -431,9 +416,7 @@ class CommonUtil {
         isEmailVerified: generalInfo.isEmailVerified,
         isTempUser: generalInfo.isTempUser);
 
-    return new 
-    Sharedbyme(
-        profileData: profileData, linkedData: linkedData);
+    return new Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
 
   Future<void> getMedicalPreference({Function callBackToRefresh}) async {
@@ -530,13 +513,11 @@ class CommonUtil {
         : 0xff015eea;
   }
 
-
   int getMyGredientColor() {
     return PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
         ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
         : 0xff00c0fa;
   }
-
 
   List<CategoryData> getAllCategoryList(List<Data> data) {
     List<CategoryData> categoryDataList = new List();
@@ -568,14 +549,12 @@ class CommonUtil {
 
     for (Data dataObj in data) {
       List<MediaMasterIds> mediaMasterIdsList = new List();
-      if(dataObj.mediaMasterIds!=null && dataObj.mediaMasterIds.length>0){
-      for (MediaMasterIds mediaMasterIds
-          in dataObj.mediaMasterIds) {
-        mediaMasterIdsList.add(new MediaMasterIds(
-            id: mediaMasterIds.id, fileType: mediaMasterIds.fileType));
+      if (dataObj.mediaMasterIds != null && dataObj.mediaMasterIds.length > 0) {
+        for (MediaMasterIds mediaMasterIds in dataObj.mediaMasterIds) {
+          mediaMasterIdsList.add(new MediaMasterIds(
+              id: mediaMasterIds.id, fileType: mediaMasterIds.fileType));
+        }
       }
-      }
-
 
       CategoryInfo categoryInfo = new CategoryInfo(
           id: dataObj.metaInfo.categoryInfo.id,
@@ -709,8 +688,8 @@ class CommonUtil {
           lastModifiedOn: dataObj.lastModifiedOn,
           isActive: dataObj.isActive,
           id: dataObj.id,
-          userId:dataObj.userId,
-          metaTypeId:dataObj.metaTypeId,
+          userId: dataObj.userId,
+          metaTypeId: dataObj.metaTypeId,
           isBookmarked: dataObj.isBookmarked,
           isDraft: dataObj.isDraft,
           mediaMasterIds: mediaMasterIdsList);
@@ -742,7 +721,6 @@ class CommonUtil {
       }
     }
 
-
     return categoryDataList;
   }
 
@@ -758,7 +736,6 @@ class CommonUtil {
 
     return mediaMasterId;
   }
-
 
   static customShowCase(GlobalKey _key, String desc, Widget _child,
       {String title, BuildContext context}) {
@@ -851,14 +828,12 @@ class CommonUtil {
           ],
         ),
       ),
-    ),
-    backgroundColor: Colors.transparent,
-    isDismissible: false,
-    enableDrag: false,
-  );
-}
-  
-  
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+    );
+  }
+
   Widget customSnack(bool isOffline) {
     return Container(
       height: 20.0,
@@ -872,7 +847,7 @@ class CommonUtil {
             width: 10.0,
           ),
           Text(
-            isOffline ? variable.strBackOnline:variable.strNoConnection,
+            isOffline ? variable.strBackOnline : variable.strNoConnection,
             style: TextStyle(color: Colors.white, fontSize: 15.0),
           ),
         ],
@@ -1069,12 +1044,12 @@ class CommonUtil {
     }
   }
 
-  String checkIfStringIsEmpty(String value){
-    return value!=null?value:'';
+  String checkIfStringIsEmpty(String value) {
+    return value != null ? value : '';
   }
 
-  bool checkIfStringisNull(String value){
-    return value!=null&&value!='null';
+  bool checkIfStringisNull(String value) {
+    return value != null && value != 'null';
   }
 
   dateConversion(DateTime dateTime) {
@@ -1085,7 +1060,7 @@ class CommonUtil {
   }
 
   dateConversionToDayMonthYear(DateTime dateTime) {
-    var newFormat = DateFormat('d MMM, ''yyyy');
+    var newFormat = DateFormat('d MMM, ' 'yyyy');
     String updatedDate = newFormat.format(dateTime);
 
     return updatedDate;
@@ -1098,17 +1073,14 @@ class CommonUtil {
     return updatedDate;
   }
 
-  stringToDateTime(String string){
-
+  stringToDateTime(String string) {
     DateTime dateTime = DateTime.parse(string);
 
     return dateTime;
-
   }
 
-  removeLastThreeDigits(String string){
-
-    String removedString='';
+  removeLastThreeDigits(String string) {
+    String removedString = '';
     removedString = string.substring(0, string.length - 3);
 
     return removedString;
@@ -1127,7 +1099,8 @@ class CommonUtil {
     for (CategoryData dataObj in data) {
       if (/*dataObj.isDisplay &&*/
           dataObj.categoryName != Constants.STR_FEEDBACK &&
-          dataObj.categoryName != Constants.STR_CLAIMSRECORD && dataObj.categoryName != Constants.STR_WEARABLES) {
+              dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
+              dataObj.categoryName != Constants.STR_WEARABLES) {
         filteredCategoryData.add(dataObj);
       }
     }
@@ -1136,7 +1109,7 @@ class CommonUtil {
     for (CategoryData categoryDataObj in filteredCategoryData) {
       if (categoryDataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
-        categoryDataObjClone=categoryDataObj;
+        categoryDataObjClone = categoryDataObj;
         filteredCategoryData.removeAt(i);
         break;
       }
@@ -1145,16 +1118,13 @@ class CommonUtil {
     filteredCategoryData.add(categoryDataObjClone);
 
     filteredCategoryData.sort((a, b) {
-      if(a.categoryDescription!=null){
+      if (a.categoryDescription != null) {
         return a.categoryDescription
             .toLowerCase()
             .compareTo(b.categoryDescription.toLowerCase());
       }
-
     });
-
 
     return filteredCategoryData;
   }
-
 }

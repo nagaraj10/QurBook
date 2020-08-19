@@ -50,6 +50,7 @@ class _AppointmentsState extends State<Appointments> {
 
   List<String> hours = List();
   List<String> minutes = List();
+  List<String> daysCount;
 
   SharedPreferences prefs;
 
@@ -59,10 +60,13 @@ class _AppointmentsState extends State<Appointments> {
       hours = appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).hours;
       minutes =
           appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).minutes;
+      daysCount =
+          appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).daysCount;
       if (hours.length != 0 && minutes.length != 0) {
         setState(() {
           hours;
           minutes;
+          daysCount;
         });
       } else {
         setState(() {
@@ -74,6 +78,10 @@ class _AppointmentsState extends State<Appointments> {
               appointmentsViewModel
                   .appointmentsModel.response.data.upcoming.length,
               '00');
+          daysCount = List.filled(
+              appointmentsViewModel
+                  .appointmentsModel.response.data.upcoming.length,
+              '0');
         });
       }
     });
@@ -151,7 +159,7 @@ class _AppointmentsState extends State<Appointments> {
       bookingIds.add(appointments[i].bookingId);
     }
     CancelAppointmentModel cancelAppointment =
-    await appointmentsViewModel.fetchCancelAppointment(bookingIds);
+        await appointmentsViewModel.fetchCancelAppointment(bookingIds);
 
     return cancelAppointment;
   }
@@ -191,9 +199,9 @@ class _AppointmentsState extends State<Appointments> {
       context,
       MaterialPageRoute(
           builder: (context) => ResheduleMain(
-            doc: doc,
-            isReshedule: isReshedule,
-          )),
+                doc: doc,
+                isReshedule: isReshedule,
+              )),
     );
   }
 
@@ -218,64 +226,66 @@ class _AppointmentsState extends State<Appointments> {
                 ),
                 isSearch
                     ? minutes.length == upcomingInfo.length
-                    ? commonWidget.title(Constants.Appointments_upcoming)
-                    : Container()
+                        ? commonWidget.title(Constants.Appointments_upcoming)
+                        : Container()
                     : appointmentsData.response.data.upcoming.length != 0 &&
-                    minutes.length ==
-                        appointmentsData.response.data.upcoming.length
-                    ? commonWidget.title(Constants.Appointments_upcoming)
-                    : Container(),
+                            minutes.length ==
+                                appointmentsData.response.data.upcoming.length
+                        ? commonWidget.title(Constants.Appointments_upcoming)
+                        : Container(),
                 SizedBoxWidget(
                   width: 0,
                   height: 10,
                 ),
                 isSearch
                     ? minutes.length == upcomingInfo.length
-                    ? ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext ctx, int i) =>
-                      doctorsAppointmentsListCard(
-                          isSearch
-                              ? upcomingInfo[i]
-                              : appointmentsData
-                              .response.data.upcoming[i],
-                          hours[i],
-                          minutes[i]),
-                  itemCount: !isSearch
-                      ? appointmentsData.response.data.upcoming.length
-                      : upcomingInfo.length,
-                )
-                    : Container()
+                        ? ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext ctx, int i) =>
+                                doctorsAppointmentsListCard(
+                                    isSearch
+                                        ? upcomingInfo[i]
+                                        : appointmentsData
+                                            .response.data.upcoming[i],
+                                    hours[i],
+                                    minutes[i],
+                                    daysCount[i]),
+                            itemCount: !isSearch
+                                ? appointmentsData.response.data.upcoming.length
+                                : upcomingInfo.length,
+                          )
+                        : Container()
                     : minutes.length ==
-                    appointmentsData.response.data.upcoming.length
-                    ? ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext ctx, int i) =>
-                      doctorsAppointmentsListCard(
-                          isSearch
-                              ? upcomingInfo[i]
-                              : appointmentsData
-                              .response.data.upcoming[i],
-                          hours[i],
-                          minutes[i]),
-                  itemCount: !isSearch
-                      ? appointmentsData.response.data.upcoming.length
-                      : upcomingInfo.length,
-                )
-                    : Container(),
+                            appointmentsData.response.data.upcoming.length
+                        ? ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemBuilder: (BuildContext ctx, int i) =>
+                                doctorsAppointmentsListCard(
+                                    isSearch
+                                        ? upcomingInfo[i]
+                                        : appointmentsData
+                                            .response.data.upcoming[i],
+                                    hours[i],
+                                    minutes[i],
+                                    daysCount[i]),
+                            itemCount: !isSearch
+                                ? appointmentsData.response.data.upcoming.length
+                                : upcomingInfo.length,
+                          )
+                        : Container(),
                 SizedBoxWidget(
                   width: 0,
                   height: 10,
                 ),
                 isSearch
                     ? historyInfo.length != 0
-                    ? commonWidget.title(Constants.Appointments_history)
-                    : Container()
+                        ? commonWidget.title(Constants.Appointments_history)
+                        : Container()
                     : appointmentsData.response.data.history.length != 0
-                    ? commonWidget.title(Constants.Appointments_history)
-                    : Container(),
+                        ? commonWidget.title(Constants.Appointments_history)
+                        : Container(),
                 SizedBoxWidget(
                   width: 0,
                   height: 10,
@@ -311,7 +321,8 @@ class _AppointmentsState extends State<Appointments> {
         });
   }
 
-  Widget doctorsAppointmentsListCard(History doc, String hour, String minute) {
+  Widget doctorsAppointmentsListCard(
+      History doc, String hour, String minute, String days) {
     return Card(
         color: Colors.white,
         elevation: 0.5,
@@ -319,12 +330,12 @@ class _AppointmentsState extends State<Appointments> {
           children: [
             Container(
                 padding: EdgeInsets.all(8),
-                child: Row(
+                child: Stack(
 //                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Container(
-                      width:MediaQuery.of(context).size.width-149,
+//                      width:MediaQuery.of(context).size.width/1.8,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -341,35 +352,39 @@ class _AppointmentsState extends State<Appointments> {
                               doc.specialization == null
                                   ? Container()
                                   : commonWidget.docStatus(
-                                  context, doc.specialization ?? ''),
+                                      context, doc.specialization ?? ''),
                               doc.specialization == null
                                   ? Container()
                                   : SizedBox(height: 3.0),
                               commonWidget.docLoc(context, doc.location),
                               SizedBox(height: 5.0),
                               commonWidget.docTimeSlot(
-                                  context, doc, hour, minute),
-                              SizedBoxWidget(height: 10.0),
+                                  context, doc, hour, minute, days),
+                              SizedBoxWidget(height: 15.0),
                               commonWidget.docIcons(doc)
                             ],
                           ),
                         ],
                       ),
                     ),
-                    Container(
+                    Align(
+                      alignment: Alignment.topRight,
                       child: Column(
                         children: [
                           //joinCallIcon(doc),
                           SizedBoxWidget(
-                            height: 30,
+                            height: (hour == '00' || minutes == '00') ? 0 : 15,
+                          ),
+                          SizedBoxWidget(
+                            height: doc.specialization == null ? 30 : 40,
                           ),
                           commonWidget.count(doc.slotNumber),
                           TextWidget(
                             fontsize: 10,
                             text: DateFormat("hh:mm a")
-                                .format(DateTime.parse(
-                                doc.plannedStartDateTime))
-                                .toString() ??
+                                    .format(DateTime.parse(
+                                        doc.plannedStartDateTime))
+                                    .toString() ??
                                 '',
                             fontWeight: FontWeight.w600,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),
@@ -377,9 +392,9 @@ class _AppointmentsState extends State<Appointments> {
                           TextWidget(
                             fontsize: 10,
                             text: DateFormat.yMMMEd()
-                                .format(DateTime.parse(
-                                doc.plannedStartDateTime))
-                                .toString() ??
+                                    .format(DateTime.parse(
+                                        doc.plannedStartDateTime))
+                                    .toString() ??
                                 '',
                             fontWeight: FontWeight.w500,
                             overflow: TextOverflow.visible,
@@ -401,7 +416,7 @@ class _AppointmentsState extends State<Appointments> {
                       Constants.Appointments_receiptImage,
                       Colors.black38,
                       Constants.Appointments_receipt,
-                          () {},
+                      () {},
                       null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
@@ -413,8 +428,8 @@ class _AppointmentsState extends State<Appointments> {
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
                       Colors.black38, Constants.Appointments_cancel, () {
-                        _displayDialog(context, [doc]);
-                      }, null),
+                    _displayDialog(context, [doc]);
+                  }, null),
                   SizedBoxWidget(width: 15.0),
                 ],
               ),
@@ -459,9 +474,7 @@ class _AppointmentsState extends State<Appointments> {
           children: [
             Container(
                 padding: EdgeInsets.all(8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                child: Stack(
                   children: <Widget>[
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -479,7 +492,7 @@ class _AppointmentsState extends State<Appointments> {
                             doc.specialization == null
                                 ? Container()
                                 : commonWidget.docStatus(
-                                context, doc.specialization ?? ''),
+                                    context, doc.specialization ?? ''),
                             doc.specialization == null
                                 ? Container()
                                 : SizedBox(height: 3.0),
@@ -491,36 +504,42 @@ class _AppointmentsState extends State<Appointments> {
                         ),
                       ],
                     ),
-                    Container(
+                    Align(
+                      alignment: Alignment.topRight,
                       child: Column(
                         children: [
                           //joinCallIcon(doc),
                           SizedBoxWidget(
-                            height: 30,
+                            height: doc.specialization == null ? 30 : 40,
                           ),
                           commonWidget.count(doc.slotNumber),
-                          TextWidget(
-                            fontsize: 9,
-                            text: Constants.Appointments_followUpStatus,
-                            overflow: TextOverflow.visible,
-                            fontWeight: FontWeight.w400,
-                            colors: Colors.black38,
-                          ),
-                          TextWidget(
-                            fontsize: 10,
-                            text: DateFormat.yMMMEd()
-                                .format(DateTime.parse(
-                                doc.plannedStartDateTime))
-                                .toString() ??
-                                '',
-                            fontWeight: FontWeight.w500,
-                            overflow: TextOverflow.visible,
-                            colors: Colors.black,
-                          ),
+                           TextWidget(
+                                  fontsize: 9,
+                                  text: doc.followupDate == null
+                                      ? ''
+                                      :Constants.Appointments_followUpStatus,
+                                  overflow: TextOverflow.visible,
+                                  fontWeight: FontWeight.w400,
+                                  colors: Colors.black38,
+                                ),
+                           TextWidget(
+                                  fontsize: 10,
+                                  text: doc.followupDate== null
+                                      ? ""
+                                      :DateFormat.yMMMEd()
+                                          .format(DateTime.parse(
+                                              doc.followupDate))
+                                          .toString() ??
+                                      '',
+                                  fontWeight: FontWeight.w500,
+                                  overflow: TextOverflow.visible,
+                                  colors: Colors.black,
+                                ),
                           TextWidget(
                             fontsize: 15,
                             text: doc.followupFee ?? '',
                             fontWeight: FontWeight.w600,
+                            overflow: TextOverflow.visible,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),
                           ),
                         ],
@@ -538,26 +557,24 @@ class _AppointmentsState extends State<Appointments> {
                 children: [
                   commonWidget.iconWithText(Constants.Appointments_chatImage,
                       Colors.black38, Constants.Appointments_chat, () {
-
                     //chat integration start
-                        String doctorId = doc.doctorId;
-                        String doctorName = doc.doctorName;
-                        storePatientDetailsToFCM(doctorId,doctorName);
-
-                      }, null),
+                    String doctorId = doc.doctorId;
+                    String doctorName = doc.doctorName;
+                    storePatientDetailsToFCM(doctorId, doctorName);
+                  }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
                       Constants.Appointments_prescriptionImage,
                       Colors.black38,
                       Constants.STR_PRESCRIPTION,
-                          () {},
+                      () {},
                       null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
                       Constants.Appointments_receiptImage,
                       Colors.black38,
                       Constants.Appointments_receipt,
-                          () {},
+                      () {},
                       null),
                   SizedBoxWidget(width: 15.0),
                   GestureDetector(
@@ -611,7 +628,7 @@ class _AppointmentsState extends State<Appointments> {
                               ),
                               Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
+                                    MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   SizedBoxWithChild(
                                     width: 90,
@@ -619,7 +636,7 @@ class _AppointmentsState extends State<Appointments> {
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(12.0),
+                                              BorderRadius.circular(12.0),
                                           side: BorderSide(color: Colors.grey)),
                                       color: Colors.transparent,
                                       textColor: Colors.grey,
@@ -628,7 +645,7 @@ class _AppointmentsState extends State<Appointments> {
                                         Navigator.pop(context);
                                       },
                                       child: TextWidget(
-                                          text: 'Cancel', fontsize: 12),
+                                          text: parameters.no, fontsize: 12),
                                     ),
                                   ),
                                   SizedBoxWithChild(
@@ -637,7 +654,7 @@ class _AppointmentsState extends State<Appointments> {
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                          BorderRadius.circular(12.0),
+                                              BorderRadius.circular(12.0),
                                           side: BorderSide(
                                               color: Colors.blue[800])),
                                       color: Colors.transparent,
@@ -648,7 +665,7 @@ class _AppointmentsState extends State<Appointments> {
                                             getCancelAppoitment(appointments));
                                       },
                                       child: TextWidget(
-                                          text: parameters.ok, fontsize: 12),
+                                          text: parameters.yes, fontsize: 12),
                                     ),
                                   ),
                                 ],
@@ -667,33 +684,27 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   String getPatientName() {
-
-    MyProfile myProfile =
-    PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-   String patientName = myProfile.response.data.generalInfo.name;
+    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    String patientName = myProfile.response.data.generalInfo.name;
 
     return patientName;
   }
 
-  void storePatientDetailsToFCM(String doctorId,String doctorName){
-
-    Firestore.instance
-        .collection('users')
-        .document(doctorId)
-        .setData({
-      'nickname': doctorName!=null?doctorName:'',
+  void storePatientDetailsToFCM(String doctorId, String doctorName) {
+    Firestore.instance.collection('users').document(doctorId).setData({
+      'nickname': doctorName != null ? doctorName : '',
       'photoUrl': '',
       //'photoUrl': 'http://lorempixel.com/640/360',
-      'id':doctorId,
+      'id': doctorId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       'chattingWith': null
     });
 
     storeDoctorDetailsToFCM(doctorId, doctorName);
-
   }
 
-  Future<void> storeDoctorDetailsToFCM(String doctorId,String doctorName) async {
+  Future<void> storeDoctorDetailsToFCM(
+      String doctorId, String doctorName) async {
     prefs = await SharedPreferences.getInstance();
 
     String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -707,11 +718,8 @@ class _AppointmentsState extends State<Appointments> {
 
     if (documents.length == 0) {
       // Update data to server if new user
-      Firestore.instance
-          .collection('users')
-          .document(patientId)
-          .setData({
-        'nickname': patientName!=null?patientName:'',
+      Firestore.instance.collection('users').document(patientId).setData({
+        'nickname': patientName != null ? patientName : '',
         'photoUrl': '',
         //'photoUrl': 'https://loremflickr.com/640/360',
         'id': patientId,
@@ -722,7 +730,7 @@ class _AppointmentsState extends State<Appointments> {
       // Write data to local
       await prefs.setString('id', patientId);
       await prefs.setString('nickname', patientName);
-      await prefs.setString('photoUrl','');
+      await prefs.setString('photoUrl', '');
     } else {
       // Write data to local
       await prefs.setString('id', documents[0]['id']);
@@ -731,22 +739,18 @@ class _AppointmentsState extends State<Appointments> {
       await prefs.setString('aboutMe', documents[0]['aboutMe']);
     }
 
-    goToChatPage(doctorId,doctorName);
-
+    goToChatPage(doctorId, doctorName);
   }
 
-  void goToChatPage(String doctorId,String doctorName){
-
+  void goToChatPage(String doctorId, String doctorName) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => Chat(
-              peerId: doctorId,
-              peerAvatar: '',
-              //peerAvatar: 'http://lorempixel.com/640/360',
-              peerName: doctorName,
-            )));
-
+                  peerId: doctorId,
+                  peerAvatar: '',
+                  //peerAvatar: 'http://lorempixel.com/640/360',
+                  peerName: doctorName,
+                )));
   }
-
 }

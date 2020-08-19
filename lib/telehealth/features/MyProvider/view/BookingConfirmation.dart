@@ -45,6 +45,8 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class BookingConfirmation extends StatefulWidget {
+  final followUpFee;
+  bool isNewAppointment;
   final List<DoctorIds> docs;
   final int i;
   final DateTime selectedDate;
@@ -58,7 +60,9 @@ class BookingConfirmation extends StatefulWidget {
       this.selectedDate,
       this.sessionData,
       this.rowPosition,
-      this.itemPosition});
+      this.followUpFee,
+      this.itemPosition,
+      this.isNewAppointment});
 
   @override
   BookingConfirmationState createState() => BookingConfirmationState();
@@ -104,6 +108,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   List<CategoryData> categoryDataList = new List();
   List<CategoryData> filteredCategoryData = new List();
   CategoryData categoryDataObjClone = new CategoryData();
+
   @override
   void initState() {
     providerViewModel = new MyProviderViewModel();
@@ -154,7 +159,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
 
     try {
-      fees = widget.docs[widget.i].fees.consulting.fee;
+      fees = widget.isNewAppointment
+          ? widget.followUpFee
+          : widget.docs[widget.i].fees.consulting.fee;
     } catch (e) {
       fees = '';
     }

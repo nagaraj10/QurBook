@@ -848,7 +848,7 @@ class ApiBaseHelper {
   
   Future<AppointmentsModel> fetchAppointments() async {
     String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    print('patient_id: '+userId);
+//    print('patient_id: '+userId);
     return await http
         .get(
       _baseUrl + qr_appointment_fetch + userId,
@@ -859,7 +859,7 @@ class ApiBaseHelper {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
         if (resReturnCode.status == 200) {
-          print(response.body);
+//          print(response.body);
           return AppointmentsModel.fromJson(jsonDecode(response.body));
         } else {
           throw Exception(variable.strFailed);
@@ -957,8 +957,30 @@ class ApiBaseHelper {
           body: jsonBody);
 //      print(_baseUrl+url);
 //      print(jsonBody);
-//      print(response.body);
+      print(response.body);
       responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> postDeviceId(String url, String jsonBody) async {
+    Map<String, String> requestHeadersAuthAccept = new Map();
+    requestHeadersAuthAccept['accept'] = 'application/json';
+    requestHeadersAuthAccept['Content-type'] = 'application/json';
+
+    requestHeadersAuthAccept['Authorization'] =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
+    var responseJson;
+    try {
+      final response = await http.post(CommonUtil.COGNITO_URL + url,
+          headers: requestHeadersAuthAccept, body: jsonBody);
+      print(response.body);
+      responseJson = _returnResponse(response);
+      print(responseJson);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
