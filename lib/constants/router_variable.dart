@@ -29,9 +29,8 @@ const String rt_myprovider = '/my-providers';
 const String rt_AudioScreen = '/audio-record-screen';
 const String rt_Splash = '/splashscreen';
 const String rt_WebCognito = '/webcognito';
-const String rt_CallPage = '/callpage';
+const String rt_CallMain = '/callmain';
 const String rt_myApp = '/myApp';
-const String rt_IndexPage = '/indexpage';
 
 const String cn_AddProvider = 'add_providers';
 const String cn_teleheathProvider = 'tele_providers';
