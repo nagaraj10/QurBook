@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:device_id/device_id.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:flutter/material.dart';
@@ -249,6 +250,9 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
   Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,
       String user_mobile_no, String deviceId) async {
     var jsonParam;
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+    final token = await _firebaseMessaging.getToken();
     Map<String, dynamic> deviceInfo = new Map();
     Map<String, dynamic> user = new Map();
     Map<String, dynamic> jsonData = new Map();
@@ -258,7 +262,7 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
     deviceInfo['phoneNumber'] = user_mobile_no;
     deviceInfo['email'] = email;
     deviceInfo['isActive'] = true;
-    deviceInfo['deviceTokenId'] = deviceId;
+    deviceInfo['deviceTokenId'] = token;
 
     jsonData['deviceInfo'] = deviceInfo;
     if (Platform.isIOS) {
