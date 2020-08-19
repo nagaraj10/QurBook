@@ -831,7 +831,7 @@ class ApiBaseHelper {
 
   Future<AppointmentsModel> fetchAppointments() async {
     String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    print('patient_id: ' + userId);
+//    print('patient_id: '+userId);
     return await http
         .get(
       _baseUrl + qr_appointment_fetch + userId,
@@ -842,7 +842,7 @@ class ApiBaseHelper {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
         if (resReturnCode.status == 200) {
-          print(response.body);
+//          print(response.body);
           return AppointmentsModel.fromJson(jsonDecode(response.body));
         } else {
           throw Exception(variable.strFailed);
@@ -893,8 +893,8 @@ class ApiBaseHelper {
 
     var jsonString = convert.jsonEncode(inputBody);
     print(jsonString);
-    final response = await getApiForresheduleAppointment(
-        qr_appoinment_reshedule, jsonString);
+    final response =
+        await getApiForresheduleAppointment(qr_appoinment_reshedule, jsonString);
     return Reshedule.fromJson(response);
   }
 
@@ -910,7 +910,7 @@ class ApiBaseHelper {
           body: jsonBody);
 //      print(_baseUrl+url);
 //      print(jsonBody);
-//      print(response.body);
+      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

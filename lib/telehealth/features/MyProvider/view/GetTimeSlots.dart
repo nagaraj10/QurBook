@@ -78,7 +78,15 @@ class GetTimeSlots extends StatelessWidget {
                       selectedDate.toString().substring(0, 10));
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
-                    navigateToConfirmBook(context, rowPosition, itemPosition);
+                    if (doctorsData == null) {
+                      print('normal Appointmnt');
+                      navigateToConfirmBook(
+                          context, rowPosition, itemPosition, null, false);
+                    } else {
+                      print('new Appointmnt from history');
+                      navigateToConfirmBook(context, rowPosition, itemPosition,
+                          doctorsData.followupFee, true);
+                    }
                   } else {
                     toast.getToast(selectSlotsMsg, Colors.red);
                   }
@@ -95,12 +103,15 @@ class GetTimeSlots extends StatelessWidget {
     );
   }
 
-  navigateToConfirmBook(BuildContext context, int rowPos, int itemPos) {
+  navigateToConfirmBook(BuildContext context, int rowPos, int itemPos,
+      String followUpFee, bool isNewAppointment) {
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => BookingConfirmation(
               docs: docs,
+              followUpFee: followUpFee,
+              isNewAppointment: isNewAppointment,
               i: j,
               selectedDate: selectedDate,
               sessionData: dateSlotTimingsObj.sessions,
@@ -114,15 +125,16 @@ class GetTimeSlots extends StatelessWidget {
     resheduleAppointment(context, appointments, slotNumber, resheduledDate)
         .then((value) {
       Navigator.pop(context);
-      if (value.status == 200 &&
+      if (value == null) {
+        toast.getToast(Constants.SLOT_NOT_AVAILABLE, Colors.red);
+      } else if (value.status == 200 &&
           value.success == true &&
           value.message.contains('success')) {
         toast.getToast(Constants.YOUR_RESHEDULE_SUCCESS, Colors.green);
-      } else if(value.message==Constants.SLOT_NOT_AVAILABLE) {
+      } else if (value.message.contains('not available')) {
         toast.getToast(Constants.SLOT_NOT_AVAILABLE, Colors.red);
-      }else{
+      } else {
         toast.getToast(Constants.RESHEDULE_CANCEL, Colors.red);
-
       }
     });
   }
@@ -138,7 +150,6 @@ class GetTimeSlots extends StatelessWidget {
     Reshedule resheduleAppointment =
         await appointmentsViewModel.resheduleAppointment(
             bookingIds, slotNumber.toString(), resheduledDate);
-
     return resheduleAppointment;
   }
 }
