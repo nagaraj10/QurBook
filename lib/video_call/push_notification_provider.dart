@@ -58,7 +58,8 @@ class PushNotificationsProvider {
       priority: Priority.High,
       importance: Importance.Max,
     );
-    var iOS = new IOSNotificationDetails(sound: "iPHONE RINGTONE.aiff");
+
+    var iOS = new IOSNotificationDetails(sound: 'iPHONE RINGTONE.aiff');
     var platform = new NotificationDetails(android, iOS);
     await flutterLocalNotificationsPlugin.show(
         0, 'John Doe', 'Incoming Video call.....', platform,

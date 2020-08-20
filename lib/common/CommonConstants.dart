@@ -16,8 +16,7 @@ class CommonConstants {
   static const String categoryDescriptionFeedback = 'Catcode009';
   static const String categoryDescriptionVoiceRecord = 'Catcode010';
   static const String categoryDescriptionClaimsRecord = 'Catcode011';
-    static const String categoryDescriptionNotes='Catcode013';
-
+  static const String categoryDescriptionNotes = 'Catcode013';
 
   static final String CAT_JSON_GLUCOMETER = "Catcode002_Typecode001";
   static final String CAT_JSON_BP_METER = "Catcode002_Typecode002";
@@ -41,14 +40,14 @@ class CommonConstants {
   static String serach_specific_list = 'Search Specific List';
 
   /**
-   * KeyWords tp save prefernce values,error dipslay 
+   * KeyWords tp save prefernce values,error dipslay
    */
   static String keyDoctor = 'Doctors';
   static String keyHospital = 'Hospitals';
   static String keyLab = 'Lab';
 
   /**
-   * Following are the constants string used as hint text for the pop 
+   * Following are the constants string used as hint text for the pop
    * box that appears when a card is saved
    */
   //static String strMessage = 'Message';
@@ -124,8 +123,7 @@ class CommonConstants {
   static String strFileEmpty = 'Please Enter File Name';
   static String strLabEmpty = 'Please Enter Lab Name';
   static String strIDEmpty = 'Please Select ID';
-    static String strMemoEmpty = 'Please Enter Memo';
-
+  static String strMemoEmpty = 'Please Enter Memo';
 
   static String strSugarLevelEmpty = 'Please Enter Sugar Level';
 
@@ -141,6 +139,7 @@ class CommonConstants {
 
   //From senthil
 
+  static String add_family = "Add Family";
   static String mobile_number = "Mobile Number";
   static String primary_number = "Same as primary number";
   static String name = "Name";
@@ -218,8 +217,7 @@ class CommonConstants {
 
   static String KEY_COUNTRYMETRICS = 'CountryMetrics';
 
-  static String STR_RHTYPE='Rh type';
-
+  static String STR_RHTYPE = 'Rh type';
 
   static final CommonConstants _instance = new CommonConstants.internal();
   static CountryMetrics countryMetrics;
@@ -247,8 +245,6 @@ class CommonConstants {
     var db = new DatabaseHelper();
 
     unitsMeasurements = await db.getMeasurementsBasedOnUnits(units);
-
-    
 
     return unitsMeasurements;
   }

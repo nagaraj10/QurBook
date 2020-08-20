@@ -13,6 +13,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
@@ -25,9 +27,6 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
 
 class MyFamily extends StatefulWidget {
   @override
@@ -78,7 +77,6 @@ class _MyFamilyState extends State<MyFamily> {
     _familyListBloc.getCustomRoles();
 
     PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
-
   }
 
   @override
@@ -554,7 +552,8 @@ class _MyFamilyState extends State<MyFamily> {
                                           isPrimaryNoSelected = true;
                                           mobileNoController.text =
                                               PreferenceUtil.getStringValue(
-                                                  Constants.MOB_NUM).replaceAll('+91','');
+                                                      Constants.MOB_NUM)
+                                                  .replaceAll('+91', '');
                                         }
                                       });
                                     },
@@ -945,6 +944,7 @@ class _MyFamilyState extends State<MyFamily> {
                         Navigator.pushNamed(
                                 context, router.rt_AddFamilyUserInfo,
                                 arguments: AddFamilyUserInfoArguments(
+                                    fromClass: CommonConstants.add_family,
                                     enteredFirstName: firstNameController.text,
                                     enteredMiddleName:
                                         middleNameController.text,

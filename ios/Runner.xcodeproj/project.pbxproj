@@ -59,6 +59,7 @@
 		9C50E0A524E53A1700CC5B0E /* NVActivityIndicatorAnimationLineScalePulseOutRapid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C50E07C24E53A1700CC5B0E /* NVActivityIndicatorAnimationLineScalePulseOutRapid.swift */; };
 		9C50E0A624E53A1700CC5B0E /* NVActivityIndicatorAnimationBallPulseRise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C50E07D24E53A1700CC5B0E /* NVActivityIndicatorAnimationBallPulseRise.swift */; };
 		9C50E0A724E53A1700CC5B0E /* NVActivityIndicatorAnimationOrbit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C50E07E24E53A1700CC5B0E /* NVActivityIndicatorAnimationOrbit.swift */; };
+		9C94B21E24EEB1AA00DAF4D0 /* ringtone.aiff in Resources */ = {isa = PBXBuildFile; fileRef = 9C94B21D24EEB1AA00DAF4D0 /* ringtone.aiff */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -137,6 +138,7 @@
 		9C50E07C24E53A1700CC5B0E /* NVActivityIndicatorAnimationLineScalePulseOutRapid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NVActivityIndicatorAnimationLineScalePulseOutRapid.swift; sourceTree = "<group>"; };
 		9C50E07D24E53A1700CC5B0E /* NVActivityIndicatorAnimationBallPulseRise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NVActivityIndicatorAnimationBallPulseRise.swift; sourceTree = "<group>"; };
 		9C50E07E24E53A1700CC5B0E /* NVActivityIndicatorAnimationOrbit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NVActivityIndicatorAnimationOrbit.swift; sourceTree = "<group>"; };
+		9C94B21D24EEB1AA00DAF4D0 /* ringtone.aiff */ = {isa = PBXFileReference; lastKnownFileType = audio.aiff; path = ringtone.aiff; sourceTree = "<group>"; };
 		C185534C79C1EADAAC60D6A5 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		D8FBC7825C09C6218752B0F0 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -194,6 +196,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				9C94B21D24EEB1AA00DAF4D0 /* ringtone.aiff */,
 				9C50E05224E53A1700CC5B0E /* Loading.swift */,
 				9C50E05324E53A1700CC5B0E /* NVActivityIndicatorView */,
 				9C50E04E24E5381500CC5B0E /* GoogleService-Info.plist */,
@@ -361,6 +364,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
+				9C94B21E24EEB1AA00DAF4D0 /* ringtone.aiff in Resources */,
 				9C50E05124E5381500CC5B0E /* iPHONE RINGTONE.aiff in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				9C50E05024E5381500CC5B0E /* GoogleService-Info.plist in Resources */,

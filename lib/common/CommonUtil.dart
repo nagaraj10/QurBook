@@ -14,6 +14,7 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
+import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
@@ -381,9 +382,9 @@ class CommonUtil {
 
     LinkedData linkedData =
         new LinkedData(roleName: variable.Self, nickName: variable.Self);
-    ProfilePicThumbnailMain profilePicThumbnail =
+    ProfilePicThumbnail profilePicThumbnail =
         generalInfo.profilePicThumbnail != null
-            ? new ProfilePicThumbnailMain(
+            ? new ProfilePicThumbnail(
                 type: generalInfo.profilePicThumbnail.type,
                 data: generalInfo.profilePicThumbnail.data)
             : null;

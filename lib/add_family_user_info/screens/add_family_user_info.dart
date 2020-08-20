@@ -8,26 +8,27 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
+import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 
 import '../../common/CommonConstants.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
-
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments arguments;
@@ -92,7 +93,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   FocusNode lastNameFocus = FocusNode();
 
   String strErrorMsg = '';
-  CommonUtil commonUtil=new CommonUtil();
+  CommonUtil commonUtil = new CommonUtil();
+
+  String dateofBirthStr;
+  File imageURI;
+
+  final double circleRadius = 100.0;
+  final double circleBorderWidth = 2.0;
 
   @override
   void initState() {
@@ -115,8 +122,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               Constants.KEY_FAMILYREL, value.relationShipAry);
           getSelectedRelation();
         });
-
-      
       });
     }
 
@@ -169,7 +174,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else {
         firstNameController.text = '';
       }
-      if (commonUtil.checkIfStringisNull(widget.arguments.sharedbyme.profileData.bloodGroup)) {
+      if (commonUtil.checkIfStringisNull(
+          widget.arguments.sharedbyme.profileData.bloodGroup)) {
         selectedBloodGroup = widget.arguments.sharedbyme.profileData.bloodGroup;
 
         renameBloodGroup(selectedBloodGroup);
@@ -183,6 +189,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
 
       if (widget.arguments.sharedbyme.profileData.dateOfBirth != null) {
+        dateofBirthStr = new FHBUtils().getFormattedDateForUser(
+            widget.arguments.sharedbyme.profileData.dateOfBirth);
         dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
       }
@@ -191,7 +199,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData
           .id; //widget.arguments.addFamilyUserInfo.id;
 
-      if (widget.arguments.sharedbyme.profileData.isVirtualUser!=null) {
+      if (widget.arguments.sharedbyme.profileData.isVirtualUser != null) {
         MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
         mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
         emailController.text = myProf.response.data.generalInfo.email;
@@ -220,7 +228,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             : '';
       }
 
-      if (commonUtil.checkIfStringisNull(widget.arguments.sharedbyme.profileData.bloodGroup)) {
+      if (commonUtil.checkIfStringisNull(
+          widget.arguments.sharedbyme.profileData.bloodGroup)) {
         selectedBloodGroup = widget.arguments.sharedbyme.profileData.bloodGroup;
 
         renameBloodGroup(selectedBloodGroup);
@@ -238,6 +247,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .split("T"); //by space" " the string need to splited
 
         // dateOfBirthController.text = list[0];
+        dateofBirthStr = new FHBUtils().getFormattedDateForUser(
+            widget.arguments.sharedbyme.profileData.dateOfBirth);
         dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
       }
@@ -252,7 +263,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
       }
     } else {
-      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.transactionId;
+      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
       addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
         myProfile = value;
 
@@ -273,7 +284,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         relationShipController.text = widget.arguments.relationShip.roleName;
 
-        if (commonUtil.checkIfStringisNull(value.response.data.generalInfo.bloodGroup )) {
+        if (commonUtil
+            .checkIfStringisNull(value.response.data.generalInfo.bloodGroup)) {
           selectedBloodGroup = value.response.data.generalInfo.bloodGroup;
 
           renameBloodGroup(selectedBloodGroup);
@@ -285,17 +297,25 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             ? null
             : value.response.data.generalInfo.gender;
 
-        dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
-            value.response.data.generalInfo.dateOfBirth);
+        dateofBirthStr = value.response.data.generalInfo.dateOfBirth != null
+            ? new FHBUtils().getFormattedDateForUser(
+                value.response.data.generalInfo.dateOfBirth)
+            : '';
+        dateOfBirthController.text =
+            value.response.data.generalInfo.dateOfBirth != null
+                ? new FHBUtils().getFormattedDateOnlyNew(
+                    value.response.data.generalInfo.dateOfBirth)
+                : '';
 
         if (firstTym) {
           firstTym = false;
           setState(() {
-            if(widget.arguments.sharedbyme.profileData!=null){
-              fetchedProfileData = widget
-                  .arguments.sharedbyme.profileData.profilePicThumbnail.data;
+            if (widget.arguments.sharedbyme != null) {
+              if (widget.arguments.sharedbyme.profileData != null) {
+                fetchedProfileData = widget
+                    .arguments.sharedbyme.profileData.profilePicThumbnail.data;
+              }
             }
-
           });
         }
       });
@@ -372,70 +392,270 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     });
   }
 
+  Widget showProfileImage() {
+    if (widget.arguments.fromClass == CommonConstants.add_family) {
+      return imageURI != null
+          ? Container(
+              decoration: imageURI != null
+                  ? BoxDecoration(
+                      image: DecorationImage(
+                          image: new FileImage(imageURI), fit: BoxFit.cover))
+                  : BoxDecoration(color: Colors.white))
+          : Center(
+              child: Text(
+                widget.arguments.enteredFirstName != null
+                    ? widget.arguments.enteredFirstName[0].toUpperCase()
+                    : '',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 60.0,
+                  fontWeight: FontWeight.w200,
+                ),
+              ),
+            );
+    } else {
+      if (imageURI == null) {
+        if (widget.arguments.sharedbyme.profileData.profilePicThumbnail !=
+            null) {
+          return getProfilePicWidget(
+              widget.arguments.sharedbyme.profileData.profilePicThumbnail);
+        } else {
+          return Center(
+            child: Text(
+              widget.arguments.sharedbyme.profileData.qualifiedFullName
+                          .firstName !=
+                      null
+                  ? widget.arguments.sharedbyme.profileData.qualifiedFullName
+                      .firstName[0]
+                      .toUpperCase()
+                  : '',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 60.0,
+                fontWeight: FontWeight.w200,
+              ),
+            ),
+          );
+        }
+      } else {
+        return Container(
+            decoration: imageURI != null
+                ? BoxDecoration(
+                    image: DecorationImage(
+                        image: new FileImage(imageURI), fit: BoxFit.cover))
+                : BoxDecoration(color: Colors.white));
+      }
+
+//      return imageURI == null
+//          ? widget.arguments.sharedbyme.profileData != null
+//              ? widget.arguments.sharedbyme.profileData.profilePicThumbnail !=
+//                      null
+//                  ? getProfilePicWidget(widget
+//                      .arguments.sharedbyme.profileData.profilePicThumbnail)
+//                  : Center(
+//                      child: Text(
+//                        widget.arguments.sharedbyme.profileData
+//                                    .qualifiedFullName.firstName !=
+//                                null
+//                            ? widget.arguments.sharedbyme.profileData
+//                                .qualifiedFullName.firstName[0]
+//                                .toUpperCase()
+//                            : '',
+//                        style: TextStyle(
+//                          color: Colors.white,
+//                          fontSize: 60.0,
+//                          fontWeight: FontWeight.w200,
+//                        ),
+//                      ),
+//                    )
+//              : Center(
+//                  child: Text(
+//                    widget.arguments.sharedbyme.profileData.qualifiedFullName
+//                                .firstName !=
+//                            null
+//                        ? widget.arguments.sharedbyme.profileData
+//                            .qualifiedFullName.firstName[0]
+//                            .toUpperCase()
+//                        : '',
+//                    style: TextStyle(
+//                      color: Colors.white,
+//                      fontSize: 60.0,
+//                      fontWeight: FontWeight.w200,
+//                    ),
+//                  ),
+//                )
+//          : Container(
+//              decoration: imageURI != null
+//                  ? BoxDecoration(
+//                      image: DecorationImage(
+//                          image: new FileImage(imageURI), fit: BoxFit.cover))
+//                  : BoxDecoration(color: Colors.white));
+    }
+  }
+
+  Widget getProfilePicWidget(ProfilePicThumbnail profilePicThumbnail) {
+    return profilePicThumbnail != null
+        ? Image.memory(
+            Uint8List.fromList(profilePicThumbnail.data),
+            height: 30,
+            width: 30,
+            fit: BoxFit.cover,
+          )
+        : Container(
+            color: Color(fhbColors.bgColorContainer),
+            height: 30,
+            width: 30,
+          );
+  }
+
+  saveMediaDialog(BuildContext cont) {
+    return showDialog<void>(
+      context: cont,
+      builder: (BuildContext context) {
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+              title: Text('Make a Choice!'),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(1)),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    GestureDetector(
+                      child: Text('Gallery'),
+                      onTap: () {
+                        Navigator.pop(context);
+
+                        var image =
+                            ImagePicker.pickImage(source: ImageSource.gallery);
+                        image.then((value) {
+                          imageURI = value;
+
+                          (cont as Element).markNeedsBuild();
+                        });
+                      },
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                    ),
+                    GestureDetector(
+                      child: Text('Camera'),
+                      onTap: () {
+                        Navigator.pop(context);
+
+                        var image =
+                            ImagePicker.pickImage(source: ImageSource.camera);
+                        image.then((value) {
+                          imageURI = value;
+
+                          (cont as Element).markNeedsBuild();
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ));
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0.0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          )),
       key: scaffold_state,
-      body: Material(
-          child: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverPersistentHeader(
-              delegate: MySliverAppBar(
-                  arguments: widget.arguments,
-                  fromClass: widget.arguments.fromClass,
-                  expandedHeight: 200,
-                  profileData:
-                      (widget.arguments.fromClass == CommonConstants.my_family)
-                          ? widget.arguments.sharedbyme.profileData
-                                      .profilePicThumbnail !=
-                                  null
-                              ? widget.arguments.sharedbyme.profileData
-                                  .profilePicThumbnail.data
-                              : null
-                          : fetchedProfileData),
-              pinned: true,
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate(
-                [
-                  SizedBox(height: 50),
-                  _showMobileNoTextField(),
-                  //                  _showNameTextField(),
-                  _showFirstNameTextField(),
-                  _showMiddleNameTextField(),
-                  _showLastNameTextField(),
-                  widget.arguments.fromClass == CommonConstants.my_family
-                      ? relationShipResponseList != null
-                          ? Row(
-                              mainAxisSize: MainAxisSize.max,
-                              children: <Widget>[
-                                getRelationshipDetails(relationShipResponseList)
-                              ],
-                            )
-                          : getAllCustomRoles()
-                      : widget.arguments.fromClass ==
-                              CommonConstants.user_update
-                          ? new Container()
-                          : _showRelationShipTextField(),
-                  _showEmailAddTextField(),
-                  Row(
-                    children: <Widget>[getGenderDetails()],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      getBloodGroupDetails(),
-                      getBloodRangeDetails()
-                    ],
-                  ),
-                  _showDateOfBirthTextField(),
-                  _showSaveButton()
-                ],
-              ),
-            ),
-          ],
-        ),
-      )),
+      body: SingleChildScrollView(
+        child: Stack(
+            fit: StackFit.loose,
+            alignment: Alignment.topCenter,
+            children: <Widget>[
+              Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Stack(
+                      alignment: Alignment.bottomLeft,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: circleRadius / 2.0),
+                          child: Container(
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            height: 160.0,
+                            child: Stack(
+                                fit: StackFit.expand,
+                                overflow: Overflow.visible,
+                                children: [
+                                  Container(
+                                    color: Colors.black.withOpacity(0.2),
+                                  )
+                                ]),
+                          ),
+                        ),
+                        Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Container(
+                              width: circleRadius,
+                              height: circleRadius,
+                              decoration: ShapeDecoration(
+                                  shape: CircleBorder(),
+                                  color: Color(
+                                      new CommonUtil().getMyPrimaryColor())),
+                              child: Padding(
+                                padding: EdgeInsets.all(circleBorderWidth),
+                                child: InkWell(
+                                  child: ClipOval(child: showProfileImage()),
+                                  onTap: () {
+                                    saveMediaDialog(context);
+                                  },
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                    _showMobileNoTextField(),
+                    _showFirstNameTextField(),
+                    _showMiddleNameTextField(),
+                    _showLastNameTextField(),
+                    widget.arguments.fromClass == CommonConstants.my_family
+                        ? relationShipResponseList != null
+                            ? Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  getRelationshipDetails(
+                                      relationShipResponseList)
+                                ],
+                              )
+                            : getAllCustomRoles()
+                        : widget.arguments.fromClass ==
+                                CommonConstants.user_update
+                            ? new Container()
+                            : _showRelationShipTextField(),
+                    _showEmailAddTextField(),
+                    Row(
+                      children: <Widget>[getGenderDetails()],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        getBloodGroupDetails(),
+                        getBloodRangeDetails()
+                      ],
+                    ),
+                    _showDateOfBirthTextField(),
+                    _showSaveButton()
+                  ])
+            ]),
+      ),
     );
   }
 
@@ -807,7 +1027,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
-            
               break;
 
             case Status.ERROR:
@@ -982,13 +1201,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (picked != null) {
       setState(() {
         dateTime = picked ?? dateTime;
+
+        dateofBirthStr =
+            new FHBUtils().getFormattedDateForUser(dateTime.toString());
         dateOfBirthController.text =
-            FHBUtils().getFormattedDateForUser(dateTime.toString());
+            new FHBUtils().getFormattedDateOnlyNew(dateTime.toString());
       });
     }
   }
 
- 
   void _saveBtnTapped() {
     new FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
@@ -996,14 +1217,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         addFamilyUserInfoBloc.email = emailController.text;
         addFamilyUserInfoBloc.gender =
             toBeginningOfSentenceCase(selectedGender.toLowerCase());
-        addFamilyUserInfoBloc.dateOfBirth = dateOfBirthController.text;
+        addFamilyUserInfoBloc.dateOfBirth = dateofBirthStr;
 
         if (selectedBloodGroup != null && selectedBloodRange != null) {
           addFamilyUserInfoBloc.bloodGroup =
               selectedBloodGroup + ' ' + selectedBloodRange;
         }
 
-        addFamilyUserInfoBloc.profilePic = MySliverAppBar.imageURI;
+        addFamilyUserInfoBloc.profilePic = imageURI;
 
         addFamilyUserInfoBloc.firstName = firstNameController.text;
         addFamilyUserInfoBloc.middleName = middleNameController.text;
@@ -1021,8 +1242,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               widget.arguments.sharedbyme.profileData.phoneNumber;
 
           if (doValidation()) {
-
-            CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait); //
+            if (addFamilyUserInfoBloc.profileBanner != null) {
+              PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+                  addFamilyUserInfoBloc.profileBanner.path);
+            }
+            CommonUtil.showLoadingDialog(
+                context, _keyLoader, variable.Please_Wait); //
 
             var signInData = {};
             signInData[variable.strCountryCode] =
@@ -1030,9 +1255,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             signInData[variable.strPhoneNumber] =
                 widget.arguments.sharedbyme.profileData.phoneNumber;
             signInData[variable.strFirstName] = firstNameController.text;
-            signInData[variable.strMiddleName] = middleNameController.text.length == 0
-                ? ''
-                : middleNameController.text;
+            signInData[variable.strMiddleName] =
+                middleNameController.text.length == 0
+                    ? ''
+                    : middleNameController.text;
             signInData[variable.strLastName] = lastNameController.text;
             signInData[variable.strRelation] = selectedRelationShip.id;
             var jsonString = convert.jsonEncode(signInData);
@@ -1052,6 +1278,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         saveProfileImage();
                         MySliverAppBar.imageURI = null;
                         fetchedProfileData = null;
+                        imageURI = null;
 
                         Navigator.popUntil(context, (Route<dynamic> route) {
                           bool shouldPop = false;
@@ -1068,12 +1295,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             });
           } else {
             Alert.displayAlertPlain(context,
-                title: variable.strError, content: CommonConstants.all_fields_mandatory);
+                title: variable.strError,
+                content: CommonConstants.all_fields_mandatory);
           }
         } else if (widget.arguments.fromClass == CommonConstants.user_update) {
           if (doValidation()) {
-
-            CommonUtil.showLoadingDialog(context, _keyLoader,variable.Please_Wait);
+            CommonUtil.showLoadingDialog(
+                context, _keyLoader, variable.Please_Wait);
 
             addFamilyUserInfoBloc.updateSelfProfile().then((value) {
               if (value.success && value.status == 200) {
@@ -1107,8 +1335,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           addFamilyUserInfoBloc.relationship = relationShipController.text;
 
           if (doValidation()) {
-
-            CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait); //
+            if (addFamilyUserInfoBloc.profileBanner != null) {
+              PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+                  addFamilyUserInfoBloc.profileBanner.path);
+            }
+            CommonUtil.showLoadingDialog(
+                context, _keyLoader, variable.Please_Wait); //
 
             addFamilyUserInfoBloc.updateUserProfile().then((value) {
               if (value.success && value.status == 200) {
@@ -1119,6 +1351,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     saveProfileImage();
                     MySliverAppBar.imageURI = null;
                     fetchedProfileData = null;
+                    imageURI = null;
 
                     Navigator.popUntil(context, (Route<dynamic> route) {
                       bool shouldPop = false;
@@ -1133,7 +1366,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             });
           } else {
             Alert.displayAlertPlain(context,
-                title:variable.Error, content: CommonConstants.all_fields_mandatory);
+                title: variable.Error,
+                content: CommonConstants.all_fields_mandatory);
           }
         }
       } else {
@@ -1143,14 +1377,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     });
   }
 
-  void saveProfileImage() async{
+  void saveProfileImage() async {
     if (addFamilyUserInfoBloc.profileBanner != null) {
-     await PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+      await PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
           addFamilyUserInfoBloc.profileBanner.path);
     }
-    if(addFamilyUserInfoBloc.profilePic !=null){
-    await PreferenceUtil.saveString(Constants.KEY_PROFILE_IMAGE,
-          addFamilyUserInfoBloc.profilePic.path);
+    if (addFamilyUserInfoBloc.profilePic != null) {
+      await PreferenceUtil.saveString(
+          Constants.KEY_PROFILE_IMAGE, addFamilyUserInfoBloc.profilePic.path);
     }
   }
 
@@ -1331,7 +1565,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           Navigator.popUntil(context, (Route<dynamic> route) {
             bool shouldPop = false;
             if (route.settings.name == router.rt_UserAccounts) {
-            
               shouldPop = true;
             }
             return shouldPop;
@@ -1446,10 +1679,10 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                       child: Text(variable.Gallery),
                       onTap: () {
                         Navigator.pop(context);
-
                         var image =
                             ImagePicker.pickImage(source: ImageSource.gallery);
                         image.then((value) {
+                          print('file Path' + value.path);
                           if (isProfileImage) {
                             imageURI = value;
                           } else {
@@ -1459,6 +1692,26 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
 
                           (cont as Element).markNeedsBuild();
                         });
+
+//                        var image =
+//                            ImagePicker.pickImage(source: ImageSource.gallery);
+//                        image.then((value) {
+//                          imageURI = value;
+//
+//                          (cont as Element).markNeedsBuild();
+//                        });
+//                        var image =
+//                            ImagePicker.pickImage(source: ImageSource.gallery);
+//                        image.then((value) {
+//                          if (isProfileImage) {
+//                            imageURI = value;
+//                          } else {
+//                            imageURIProfile = value;
+//                            imageSet = true;
+//                          }
+//
+//                          (cont as Element).markNeedsBuild();
+//                        });
                       },
                     ),
                     Padding(
@@ -1480,6 +1733,26 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                           }
                           (cont as Element).markNeedsBuild();
                         });
+
+//                        var image =
+//                            ImagePicker.pickImage(source: ImageSource.camera);
+//                        image.then((value) {
+//                          imageURI = value;
+//
+//                          (cont as Element).markNeedsBuild();
+//                        });
+
+//                        var image =
+//                            ImagePicker.pickImage(source: ImageSource.camera);
+//                        image.then((value) {
+//                          if (isProfileImage)
+//                            imageURI = value;
+//                          else {
+//                            imageURIProfile = value;
+//                            imageSet = true;
+//                          }
+//                          (cont as Element).markNeedsBuild();
+//                        });
                       },
                     ),
                   ],

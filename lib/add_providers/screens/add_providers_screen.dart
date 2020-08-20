@@ -16,19 +16,19 @@ import 'package:myfhb/add_providers/models/add_doctors_providers_id.dart';
 import 'package:myfhb/add_providers/models/add_hospitals_providers_id.dart';
 import 'package:myfhb/add_providers/models/add_labs_providers_id.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
-import 'package:myfhb/add_providers/models/update_providers_id.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/my_providers/models/DoctorModel.dart';
 import 'package:myfhb/my_providers/models/HospitalModel.dart';
 import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
 import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
 import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
@@ -39,15 +39,7 @@ import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/ui/user/UserAccounts.dart';
-import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-
-import 'package:myfhb/search_providers/screens/search_specific_list.dart';
-
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
 
 class AddProviders extends StatefulWidget {
   DoctorsData data;
@@ -89,7 +81,7 @@ class AddProvidersState extends State<AddProviders> {
   final FocusNode _doctorFocus = FocusNode();
   bool isSwitched = true;
 
-  bool isPreferred=false;
+  bool isPreferred = false;
   bool myprovidersPreferred;
   BitmapDescriptor markerIcon;
 
@@ -141,7 +133,6 @@ class AddProvidersState extends State<AddProviders> {
     _doctorsListBlock = new DoctorsListBlock();
     _hospitalListBlock = new HospitalListBlock();
     _labsListBlock = new LabsListBlock();
-
 
     buildUI();
   }
@@ -266,7 +257,7 @@ class AddProvidersState extends State<AddProviders> {
                     InkWell(
                       onTap: () {
                         if (widget.arguments.fromClass !=
-                            CommonConstants.myProviders) {
+                            router.rt_myprovider) {
                           CommonUtil.showLoadingDialog(
                               context, _keyLoader, variable.Please_Wait);
 
@@ -336,7 +327,6 @@ class AddProvidersState extends State<AddProviders> {
             callAddDoctorProvidersStreamBuilder(addProvidersBloc),
             callAddHospitalProvidersStreamBuilder(addProvidersBloc),
             callAddLabProvidersStreamBuilder(addProvidersBloc),
-            callUpdateProvidersStreamBuilder(updateProvidersBloc),
           ],
         )),
       ),
@@ -352,20 +342,21 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   buildUI() {
-    if (widget.arguments.fromClass != CommonConstants.myProviders) {
+    if (widget.arguments.fromClass != router.rt_myprovider) {
       if (widget.arguments.hasData) {
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
           doctorController.text = widget.arguments.data.name != null
               ? toBeginningOfSentenceCase(widget.arguments.data.name)
               : '';
-          isPreferred = widget.arguments.data.isUserDefined ?? false;
+//          isPreferred = widget.arguments.data.isUserDefined ?? false;
+          isPreferred = false;
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
           doctorController.text = widget.arguments.hospitalData.name != null
               ? toBeginningOfSentenceCase(widget.arguments.hospitalData.name)
               : '';
-          isPreferred = widget.arguments.hospitalData.isUserDefined ?? false;
-
+//          isPreferred = widget.arguments.hospitalData.isUserDefined ?? false;
+          isPreferred = false;
           latitude = widget.arguments.hospitalData.latitude == null
               ? 0.0
               : double.parse(widget.arguments.hospitalData.latitude);
@@ -381,7 +372,8 @@ class AddProvidersState extends State<AddProviders> {
           doctorController.text = widget.arguments.labData.name != null
               ? toBeginningOfSentenceCase(widget.arguments.labData.name)
               : '';
-          isPreferred = widget.arguments.labData.isUserDefined ?? false;
+//          isPreferred = widget.arguments.labData.isUserDefined ?? false;
+          isPreferred = false;
 
           latitude = widget.arguments.labData.latitude == null
               ? 0.0
@@ -423,6 +415,13 @@ class AddProvidersState extends State<AddProviders> {
         myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
         addressLine1 = widget.arguments.doctorsModel.addressLine1;
         addressLine2 = widget.arguments.doctorsModel.addressLine2;
+
+        latitude = widget.arguments.doctorsModel.latitude == null
+            ? 0.0
+            : double.parse(widget.arguments.doctorsModel.latitude);
+        longtiude = widget.arguments.doctorsModel.longitude == null
+            ? 0.0
+            : double.parse(widget.arguments.doctorsModel.longitude);
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
         doctorController.text = widget.arguments.hospitalsModel.name != null
             ? toBeginningOfSentenceCase(widget.arguments.hospitalsModel.name)
@@ -549,10 +548,10 @@ class AddProvidersState extends State<AddProviders> {
 
   Widget _showUser() {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-print(selectedFamilyMemberName);
+    print(selectedFamilyMemberName);
     return InkWell(
         onTap: () {
-          if (widget.arguments.fromClass != CommonConstants.myProviders) {
+          if (widget.arguments.fromClass != router.rt_myprovider) {
             CommonUtil.showLoadingDialog(
                 context, _keyLoader, variable.Please_Wait);
 
@@ -600,7 +599,8 @@ print(selectedFamilyMemberName);
                       : Center(
                           child: Text(
                             selectedFamilyMemberName == null
-                                ? myProfile.response.data.generalInfo.qualifiedFullName.lastName
+                                ? myProfile.response.data.generalInfo
+                                    .qualifiedFullName.lastName
                                     .toUpperCase()
                                 : selectedFamilyMemberName[0].toUpperCase(),
                             style: TextStyle(
@@ -642,9 +642,8 @@ print(selectedFamilyMemberName);
         focusNode: _doctorFocus,
         textInputAction: TextInputAction.done,
         autofocus: true,
-        enabled: widget.arguments.fromClass == CommonConstants.myProviders
-            ? false
-            : true,
+        enabled:
+            widget.arguments.fromClass == router.rt_myprovider ? false : true,
         onSubmitted: (term) {
           _doctorFocus.unfocus();
         },
@@ -688,7 +687,7 @@ print(selectedFamilyMemberName);
         ),
         child: new Center(
           child: new Text(
-            widget.arguments.fromClass == CommonConstants.myProviders
+            widget.arguments.fromClass == router.rt_myprovider
                 ? variable.Update
                 : variable.Add,
             style: new TextStyle(
@@ -752,7 +751,7 @@ print(selectedFamilyMemberName);
             updateProvidersBloc.isPreferred = isPreferred;
             updateProvidersBloc.providerId =
                 snapshot.data.data.response.data.id;
-            updateProvidersBloc.updateDoctorsIdWithUserDetails();
+            updateDoctorsIdWithUserDetails();
 
             new CommonUtil().getMedicalPreference();
 
@@ -774,7 +773,7 @@ print(selectedFamilyMemberName);
             updateProvidersBloc.isPreferred = isPreferred;
             updateProvidersBloc.providerId =
                 snapshot.data.data.response.data.id;
-            updateProvidersBloc.updateHospitalsIdWithUserDetails();
+            updateHospitalsIdWithUserDetails();
 
             new CommonUtil().getMedicalPreference();
 
@@ -796,7 +795,7 @@ print(selectedFamilyMemberName);
             updateProvidersBloc.isPreferred = isPreferred;
             updateProvidersBloc.providerId =
                 snapshot.data.data.response.data.id;
-            updateProvidersBloc.updateLabsIdWithUserDetails();
+            updateLabsIdWithUserDetails();
 
             new CommonUtil().getMedicalPreference();
 
@@ -807,115 +806,212 @@ print(selectedFamilyMemberName);
         });
   }
 
-  Widget callUpdateProvidersStreamBuilder(UpdateProvidersBloc bloc) {
-    return StreamBuilder(
-        stream: widget.arguments.searchKeyWord == CommonConstants.doctors
-            ? updateProvidersBloc.doctorsStream
-            : widget.arguments.searchKeyWord == CommonConstants.hospitals
-                ? updateProvidersBloc.hospitalsStream
-                : updateProvidersBloc.labsStream,
-        builder:
-            (context, AsyncSnapshot<ApiResponse<UpdateProvidersId>> snapshot) {
-          if (!snapshot.hasData) return Container();
+  updateDoctorsIdWithUserDetails() {
+    updateProvidersBloc.updateDoctorsIdWithUserDetails().then((value) {
+      print(value.status);
+      print(value.message);
+      print(widget.fromClass);
 
-          if (snapshot.data.status == Status.COMPLETED) {
-            if (widget.arguments.fromClass ==
-                CommonConstants.serach_specific_list) {
-              widget.arguments.searchKeyWord == CommonConstants.doctors
-                  ? _doctorsListBlock
-                      .getDoctorObjUsingId(bloc.providerId)
-                      .then((doctorsListResponse) {
-                      Navigator.of(context).pop();
+      var routeClassName = '';
 
-                      Navigator.of(context).pop({
-                        Constants.keyDoctor:
-                            doctorsListResponse.response.data[0]
-                      });
-                    })
-                  : widget.arguments.searchKeyWord == CommonConstants.hospitals
-                      ? _hospitalListBlock
-                          .getHospitalObjectusingId(bloc.providerId)
-                          .then((hospitalDataResponse) {
-                          Navigator.of(context).pop();
+      if (widget.arguments.fromClass == router.cn_AddProvider ||
+          widget.arguments.fromClass == router.rt_myprovider) {
+        routeClassName = router.rt_UserAccounts;
+      } else if (widget.arguments.fromClass == router.rt_TelehealthProvider) {
+        routeClassName = router.rt_TelehealthProvider;
+      }
 
-                          Navigator.of(context).pop({
-                            Constants.keyHospital:
-                                hospitalDataResponse.response.data[0]
-                          });
-                        })
-                      : _labsListBlock
-                          .getLabsListUsingID(bloc.providerId)
-                          .then((lablistResponse) {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop({
-                            Constants.keyLab: lablistResponse.response.data[0]
-                          });
-                        });
-            } else {
-              //Navigator.pop(context, 1);
+      Navigator.popUntil(context, (Route<dynamic> route) {
+        bool shouldPop = false;
+        if (route.settings.name == routeClassName) {
+          shouldPop = true;
+        }
+        return shouldPop;
+      });
+    });
+  }
 
-           /* Navigator.of(context)
-              .popUntil(ModalRoute.withName(router.rt_UserAccounts));*/
+  updateHospitalsIdWithUserDetails() {
+    updateProvidersBloc.updateHospitalsIdWithUserDetails().then((value) {
+      var routeClassName = '';
 
-             // PageNavigator.goToPermanent(context,router.rt_SignIn);
+      if (widget.arguments.fromClass == router.cn_AddProvider ||
+          widget.arguments.fromClass == router.rt_myprovider) {
+        routeClassName = router.rt_UserAccounts;
+      } else if (widget.arguments.fromClass == router.rt_TelehealthProvider) {
+        routeClassName = router.rt_TelehealthProvider;
+      }
 
-             // Navigator.pop(context);
-             /* Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (BuildContext context) => UserAccounts()),
-                ModalRoute.withName(router.rt_UserAccounts),
-              );*/
+      Navigator.popUntil(context, (Route<dynamic> route) {
+        bool shouldPop = false;
+        if (route.settings.name == routeClassName) {
+          shouldPop = true;
+        }
+        return shouldPop;
+      });
+    });
+  }
 
+  updateLabsIdWithUserDetails() {
+    updateProvidersBloc.updateLabsIdWithUserDetails().then((value) {
+      var routeClassName = '';
 
+      if (widget.arguments.fromClass == router.cn_AddProvider ||
+          widget.arguments.fromClass == router.rt_myprovider) {
+        routeClassName = router.rt_UserAccounts;
+      } else if (widget.arguments.fromClass == router.rt_TelehealthProvider) {
+        routeClassName = router.rt_TelehealthProvider;
+      }
 
-             // Navigator.popUntil(context,ModalRoute.withName(router.rt_UserAccounts));
-              Navigator.pop(context, 1);
-            }
-            return Container();
-          } else {
-            return Container();
-          }
-        });
+      Navigator.popUntil(context, (Route<dynamic> route) {
+        bool shouldPop = false;
+        if (route.settings.name == routeClassName) {
+          shouldPop = true;
+        }
+        return shouldPop;
+      });
+    });
+  }
+
+  Widget callUpdateProvidersStreamBuilder() {
+//    return StreamBuilder(
+//        stream: widget.arguments.searchKeyWord == CommonConstants.doctors
+//            ? updateProvidersBloc.doctorsStream
+//            : widget.arguments.searchKeyWord == CommonConstants.hospitals
+//                ? updateProvidersBloc.hospitalsStream
+//                : updateProvidersBloc.labsStream,
+//        builder:
+//            (context, AsyncSnapshot<ApiResponse<UpdateProvidersId>> snapshot) {
+//          if (!snapshot.hasData) return Container();
+//
+//          if (snapshot.data.status == Status.COMPLETED) {
+//            if (widget.arguments.fromClass ==
+//                CommonConstants.serach_specific_list) {
+//              Navigator.popUntil(context, (Route<dynamic> route) {
+//                bool shouldPop = false;
+//                if (route.settings.name == '/user-accounts') {
+//                  shouldPop = true;
+//                }
+//                return shouldPop;
+//              });
+//              /*
+//              widget.arguments.searchKeyWord == CommonConstants.doctors
+//                  ? _doctorsListBlock
+//                      .getDoctorObjUsingId(bloc.providerId)
+//                      .then((doctorsListResponse) {
+//
+////                      Navigator.of(context).pop();
+////
+////                      Navigator.of(context).pop({
+////                        Constants.keyDoctor:
+////                            doctorsListResponse.response.data[0]
+////                      });
+//                    })
+//                  : widget.arguments.searchKeyWord == CommonConstants.hospitals
+//                      ? _hospitalListBlock
+//                          .getHospitalObjectusingId(bloc.providerId)
+//                          .then((hospitalDataResponse) {
+//                          Navigator.popUntil(context, (Route<dynamic> route) {
+//                            bool shouldPop = false;
+//                            if (route.settings.name == '/user-accounts') {
+//                              shouldPop = true;
+//                            }
+//                            return shouldPop;
+//                          });
+////                          Navigator.of(context).pop();
+////
+////                          Navigator.of(context).pop({
+////                            Constants.keyHospital:
+////                                hospitalDataResponse.response.data[0]
+////                          });
+//                        })
+//                      : _labsListBlock
+//                          .getLabsListUsingID(bloc.providerId)
+//                          .then((lablistResponse) {
+//                          Navigator.popUntil(context, (Route<dynamic> route) {
+//                            bool shouldPop = false;
+//                            if (route.settings.name == '/user-accounts') {
+//                              shouldPop = true;
+//                            }
+//                            return shouldPop;
+//                          });
+//
+////                          Navigator.of(context).pop();
+////                          Navigator.of(context).pop({
+////                            Constants.keyLab: lablistResponse.response.data[0]
+////                          });
+//                        });*/
+//            } else {
+//              //Navigator.pop(context, 1);
+//
+//              /* Navigator.of(context)
+//              .popUntil(ModalRoute.withName(router.rt_UserAccounts));*/
+//
+//              // PageNavigator.goToPermanent(context,router.rt_SignIn);
+//
+//              // Navigator.pop(context);
+//              /* Navigator.pushAndRemoveUntil(
+//                context,
+//                MaterialPageRoute(builder: (BuildContext context) => UserAccounts()),
+//                ModalRoute.withName(router.rt_UserAccounts),
+//              );*/
+//
+//              // Navigator.popUntil(context,ModalRoute.withName(router.rt_UserAccounts));
+////              Navigator.pop(context, 1);
+//
+//              Navigator.popUntil(context, (Route<dynamic> route) {
+//                bool shouldPop = false;
+//                if (route.settings.name == '/user-accounts') {
+//                  shouldPop = true;
+//                }
+//                return shouldPop;
+//              });
+//            }
+//            return Container();
+//          } else {
+//            return Container();
+//          }
+//        });
   }
 
   void _addBtnTapped() {
     if (widget.arguments.hasData ||
-        widget.arguments.fromClass == CommonConstants.myProviders) {
-      if (widget.arguments.fromClass == CommonConstants.myProviders) {
-        if (myprovidersPreferred) {
-          // alert
-          Alert.displayAlertPlain(context,
-              title: variable.Error, content: variable.preferred_descrip);
-        } else {
-          CommonUtil.showLoadingDialog(
-              context, _keyLoader, variable.Please_Wait); //
+        widget.arguments.fromClass == router.rt_myprovider) {
+      if (widget.arguments.fromClass == router.rt_myprovider) {
+        //  if (myprovidersPreferred) {
+        // alert
+//          Alert.displayAlertPlain(context,
+//              title: variable.Error, content: variable.preferred_descrip);
+//        } else {
+        CommonUtil.showLoadingDialog(
+            context, _keyLoader, variable.Please_Wait); //
 
-          updateProvidersBloc.isPreferred = isPreferred;
+        updateProvidersBloc.isPreferred = isPreferred;
 
-          if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-            if (widget.arguments.fromClass == CommonConstants.myProviders) {
-              updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
-            } else {
-              updateProvidersBloc.providerId = widget.arguments.data.id;
-            }
-            updateProvidersBloc.updateDoctorsIdWithUserDetails();
-          } else if (widget.arguments.searchKeyWord ==
-              CommonConstants.hospitals) {
-            if (widget.arguments.fromClass == CommonConstants.myProviders) {
-              updateProvidersBloc.providerId =
-                  widget.arguments.hospitalsModel.id;
-            } else {
-              updateProvidersBloc.providerId = widget.arguments.hospitalData.id;
-            }
-            updateProvidersBloc.updateHospitalsIdWithUserDetails();
+        if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
+          if (widget.arguments.fromClass == router.rt_myprovider) {
+            updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
           } else {
-            if (widget.arguments.fromClass == CommonConstants.myProviders) {
-              updateProvidersBloc.providerId = widget.arguments.labsModel.id;
-            } else {
-              updateProvidersBloc.providerId = widget.arguments.labData.id;
-            }
-            updateProvidersBloc.updateLabsIdWithUserDetails();
+            updateProvidersBloc.providerId = widget.arguments.data.id;
           }
+
+          updateDoctorsIdWithUserDetails();
+        } else if (widget.arguments.searchKeyWord ==
+            CommonConstants.hospitals) {
+          if (widget.arguments.fromClass == router.rt_myprovider) {
+            updateProvidersBloc.providerId = widget.arguments.hospitalsModel.id;
+          } else {
+            updateProvidersBloc.providerId = widget.arguments.hospitalData.id;
+          }
+          updateHospitalsIdWithUserDetails();
+        } else {
+          if (widget.arguments.fromClass == router.rt_myprovider) {
+            updateProvidersBloc.providerId = widget.arguments.labsModel.id;
+          } else {
+            updateProvidersBloc.providerId = widget.arguments.labData.id;
+          }
+          updateLabsIdWithUserDetails();
+//          }
         }
       } else {
         CommonUtil.showLoadingDialog(
@@ -924,58 +1020,86 @@ print(selectedFamilyMemberName);
         updateProvidersBloc.isPreferred = isPreferred;
 
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-          if (widget.arguments.fromClass == CommonConstants.myProviders) {
+          if (widget.arguments.fromClass == router.rt_myprovider) {
             updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
           } else {
             updateProvidersBloc.providerId = widget.arguments.data.id;
           }
-          updateProvidersBloc.updateDoctorsIdWithUserDetails();
+          updateDoctorsIdWithUserDetails();
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
-          if (widget.arguments.fromClass == CommonConstants.myProviders) {
+          if (widget.arguments.fromClass == router.rt_myprovider) {
             updateProvidersBloc.providerId = widget.arguments.hospitalsModel.id;
           } else {
             updateProvidersBloc.providerId = widget.arguments.hospitalData.id;
           }
-          updateProvidersBloc.updateHospitalsIdWithUserDetails();
+          updateHospitalsIdWithUserDetails();
         } else {
-          if (widget.arguments.fromClass == CommonConstants.myProviders) {
+          if (widget.arguments.fromClass == router.rt_myprovider) {
             updateProvidersBloc.providerId = widget.arguments.labsModel.id;
           } else {
             updateProvidersBloc.providerId = widget.arguments.labData.id;
           }
-          updateProvidersBloc.updateLabsIdWithUserDetails();
+          updateLabsIdWithUserDetails();
         }
       }
     } else {
       var signInData = {};
 
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-        CommonUtil.showLoadingDialog(
-            context, _keyLoader, variable.Please_Wait); //
+        if (address == null || widget.arguments.placeDetail == null) {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text(variable.strError),
+                  content: Text(variable.choose_address),
+                  actions: <Widget>[
+                    IconButton(
+                        icon: Icon(Icons.check),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        })
+                  ],
+                );
+              });
+        } else {
+          CommonUtil.showLoadingDialog(
+              context, _keyLoader, variable.Please_Wait); //
 
-        signInData[variable.strName] = doctorController.text.toString();
-        signInData[variable.strSpecialization] = '';
-        signInData[variable.strDescription] = '';
-        signInData[variable.strCity] = address == null
-            ? ''
-            : address.locality == null ? '' : address.locality;
-        signInData[variable.strState] = address == null
-            ? ''
-            : address.adminArea == null ? '' : address.adminArea;
-        signInData[variable.strPhoneNumbers] =
-            widget.arguments.placeDetail == null
-                ? ''
-                : widget.arguments.placeDetail.formattedPhoneNumber == null
-                    ? ''
-                    : widget.arguments.placeDetail.formattedPhoneNumber;
-        signInData[variable.strEmail] = '';
-        signInData[variable.strIsUserDefined] = true;
+          signInData[variable.strName] = doctorController.text.toString();
+          signInData[variable.strSpecialization] = '';
+          signInData[variable.strDescription] = '';
+          signInData[variable.strCity] = address == null
+              ? ''
+              : address.locality == null ? '' : address.locality;
+          signInData[variable.strState] = address == null
+              ? ''
+              : address.adminArea == null ? '' : address.adminArea;
+          signInData[variable.strPhoneNumbers] =
+              widget.arguments.placeDetail == null
+                  ? ''
+                  : widget.arguments.placeDetail.formattedPhoneNumber == null
+                      ? ''
+                      : widget.arguments.placeDetail.formattedPhoneNumber;
+          signInData[variable.strEmail] = '';
+          signInData[variable.strIsUserDefined] = true;
+          signInData[variable.strLatitude] =
+              widget.arguments.placeDetail.lat == null
+                  ? 0.0
+                  : widget.arguments.placeDetail.lat;
 
-        var jsonString = convert.jsonEncode(signInData);
+          signInData[variable.strLongitute] =
+              widget.arguments.placeDetail.lng == null
+                  ? 0.0
+                  : widget.arguments.placeDetail.lng;
 
-        addProvidersBloc.doctorsJsonString = jsonString;
-        addProvidersBloc.addDoctors();
+          var jsonString = convert.jsonEncode(signInData);
+          print(jsonString);
+
+          addProvidersBloc.doctorsJsonString = jsonString;
+          addProvidersBloc.addDoctors();
+        }
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
         if (address == null || widget.arguments.placeDetail == null) {
           showDialog(
@@ -1022,6 +1146,14 @@ print(selectedFamilyMemberName);
               address.postalCode == null ? '' : address.postalCode;
           signInData[variable.strbranch] = '';
           signInData[variable.strIsUserDefined] = true;
+          signInData[variable.strLatitude] =
+              widget.arguments.placeDetail.lat == null
+                  ? 0.0
+                  : widget.arguments.placeDetail.lat;
+          signInData[variable.strLongitute] =
+              widget.arguments.placeDetail.lng == null
+                  ? 0.0
+                  : widget.arguments.placeDetail.lng;
           signInData[variable.strwebsite] =
               widget.arguments.placeDetail.website;
           signInData[variable.strgoogleMapUrl] =
@@ -1082,6 +1214,14 @@ print(selectedFamilyMemberName);
               : address.postalCode == null ? '' : address.postalCode;
           signInData[variable.strbranch] = '';
           signInData[variable.strIsUserDefined] = true;
+          signInData[variable.strLatitude] =
+              widget.arguments.placeDetail.lat == null
+                  ? 0.0
+                  : widget.arguments.placeDetail.lat;
+          signInData[variable.strLongitute] =
+              widget.arguments.placeDetail.lng == null
+                  ? 0.0
+                  : widget.arguments.placeDetail.lng;
           signInData[variable.strwebsite] = widget.arguments.placeDetail == null
               ? ''
               : widget.arguments.placeDetail.website == null
@@ -1145,7 +1285,8 @@ print(selectedFamilyMemberName);
         new CommonUtil().getMedicalPreference();
 
         setState(() {
-          selectedFamilyMemberName = profileData.response.data.generalInfo.qualifiedFullName.firstName;
+          selectedFamilyMemberName =
+              profileData.response.data.generalInfo.qualifiedFullName.firstName;
         });
       });
     });
