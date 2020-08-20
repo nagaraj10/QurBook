@@ -27,6 +27,7 @@ class AcceptReceiver:BroadcastReceiver() {
         launchIntent?.action = Intent.ACTION_SEND
         launchIntent?.type="text/plain"
         launchIntent?.putExtra(Intent.EXTRA_TEXT,meeting_id)
+        launchIntent?.putExtra(p0.getString(R.string.username),username)
         p0.startActivity(launchIntent)
     }
 }

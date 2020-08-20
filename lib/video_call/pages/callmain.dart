@@ -1,14 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
+import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/pages/call.dart';
 import 'package:myfhb/video_call/pages/controllers.dart';
 import 'package:myfhb/video_call/pages/customappbar.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
+import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:provider/provider.dart';
 
 class CallMain extends StatelessWidget {
@@ -17,20 +20,38 @@ class CallMain extends StatelessWidget {
   /// non-modifiable channel name of the page
   String channelName;
 
+  String userName;
+
   /// non-modifiable client role of the page
   ClientRole role;
   CallArguments arguments;
 
   ///check call is made from NS
   bool isAppExists;
-
-  CallMain({this.channelName, this.role, this.arguments, this.isAppExists});
+  bool _isFirstTime = true;
+  bool _isMute = false;
+  bool _isVideoHide = false;
+  CallMain(
+      {this.channelName,
+      this.role,
+      this.arguments,
+      this.isAppExists,
+      this.userName});
 
   @override
   Widget build(BuildContext context) {
     ///update call status through provider
     globalContext = context;
     final callStatus = Provider.of<CallStatus>(context, listen: false);
+    final hideStatus = Provider.of<HideProvider>(context, listen: false);
+
+    /// hide controller after 5 secs
+    if (_isFirstTime) {
+      _isFirstTime = false;
+      Future.delayed(Duration(seconds: 10), () {
+        hideStatus.hideMe();
+      });
+    }
     return WillPopScope(
       onWillPop: _onBackPressed,
       child: Scaffold(
@@ -44,8 +65,43 @@ class CallMain extends StatelessWidget {
                 arguments: arguments,
                 isAppExists: isAppExists,
               ),
-              CustomAppBar(),
-              MyControllers(callStatus, role, isAppExists),
+              InkWell(
+                onTap: () {
+                  if (hideStatus.isControlStatus) {
+                    hideStatus.hideMe();
+                  } else {
+                    hideStatus.showMe();
+                    Future.delayed(Duration(seconds: 10), () {
+                      hideStatus.hideMe();
+                    });
+                  }
+                },
+                child: Container(),
+              ),
+              CustomAppBar(userName),
+              Consumer<HideProvider>(
+                builder: (context, status, child) {
+                  return Visibility(
+                    visible: status.isControlStatus,
+                    child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            MyControllers(callStatus, role, isAppExists,
+                                (isMute, isVideoHide) {
+                              _isMute = isMute;
+                              _isVideoHide = isVideoHide;
+                            }, _isMute, _isVideoHide),
+                            SizedBox(
+                              height: 48,
+                            ),
+                          ],
+                        )),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -94,9 +150,9 @@ class CallMain extends StatelessWidget {
                           if (Platform.isIOS) {
                             Navigator.of(context);
                           } else {
-                            isAppExists
-                                ? Navigator.of(context).pop(true)
-                                : Get.offAll(DashboardScreen());
+                            Get.offAll(TelehealthProviders(
+                              arguments: HomeScreenArguments(selectedIndex: 0),
+                            ));
                           }
                         }),
                     FlatButton(

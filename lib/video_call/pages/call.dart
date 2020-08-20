@@ -59,8 +59,7 @@ class _CallPageState extends State<CallPage> {
   }
 
   cancelOnGoingNS() async {
-    await platform.invokeMethod(
-        "startOnGoingNS", {'name': 'Dr.Parvathi Krishnan', 'mode': 'stop'});
+    await platform.invokeMethod("startOnGoingNS", {'mode': 'stop'});
   }
 
   Future<void> initialize() async {
@@ -84,8 +83,7 @@ class _CallPageState extends State<CallPage> {
         .then((value) async {
       //todo name has to be change with dynamic
 
-      await platform.invokeMethod(
-          "startOnGoingNS", {'name': 'Dr.Parvathi Krishnan', 'mode': 'start'});
+      await platform.invokeMethod("startOnGoingNS", {'mode': 'start'});
     });
   }
 
@@ -223,17 +221,6 @@ class _CallPageState extends State<CallPage> {
             child: Stack(
               children: [
                 _expandedVideoRow([attendees[0]]),
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: IconButton(
-                    onPressed: _onSwitchCamera,
-                    icon: Icon(
-                      Icons.switch_camera,
-                      color: Colors.white,
-                      size: 30.0,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -290,10 +277,6 @@ class _CallPageState extends State<CallPage> {
         ),
       ),
     );
-  }
-
-  void _onSwitchCamera() {
-    AgoraRtcEngine.switchCamera();
   }
 
   @override

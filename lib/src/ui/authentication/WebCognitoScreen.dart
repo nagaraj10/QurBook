@@ -1,18 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:device_id/device_id.dart';
-import 'package:http/http.dart' as http;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:myfhb/common/CommonConstants.dart';
 
 class WebCognitoScreen extends StatefulWidget {
   @override
@@ -46,6 +47,7 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
   String user_mobile_no;
   var token1;
   String token2;
+  GlobalKey<ScaffoldState> _globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -82,39 +84,40 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
 
   Widget getWeBViewWidget() {
     return Scaffold(
+        key: _globalKey,
         body: Column(
-      children: [
-        Expanded(
-            child: WebView(
-          key: _key,
-          javascriptMode: JavascriptMode.unrestricted,
-          initialUrl: _url,
-          debuggingEnabled: true,
-          navigationDelegate: (NavigationRequest req) {
-            if (req.url.startsWith(redirecturl)) {
-              print('blocking navigation to ${req.url}');
-              getCode(req.url);
-              return NavigationDecision.prevent;
-            }
-            return NavigationDecision.navigate;
-            showSpinner = false;
-          },
-          onPageFinished: (url) {
-            setState(() {
-              showSpinner = false;
-            });
-          },
-        )),
-        showSpinner
-            ? Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Colors.lightBlue,
-                ),
-              )
-            : Container(color: Colors.transparent),
-        //Expanded(child: Text('$mycode')),
-      ],
-    ));
+          children: [
+            Expanded(
+                child: WebView(
+              key: _key,
+              javascriptMode: JavascriptMode.unrestricted,
+              initialUrl: _url,
+              debuggingEnabled: true,
+              navigationDelegate: (NavigationRequest req) {
+                if (req.url.startsWith(redirecturl)) {
+                  print('blocking navigation to ${req.url}');
+                  getCode(req.url);
+                  return NavigationDecision.prevent;
+                }
+                return NavigationDecision.navigate;
+                showSpinner = false;
+              },
+              onPageFinished: (url) {
+                setState(() {
+                  showSpinner = false;
+                });
+              },
+            )),
+            showSpinner
+                ? Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.lightBlue,
+                    ),
+                  )
+                : Container(color: Colors.transparent),
+            //Expanded(child: Text('$mycode')),
+          ],
+        ));
   }
 
   Future<String> attemptLogIn() async {
@@ -230,11 +233,9 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
 
     } else {
       print(res.body.toString());
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: new Text(res.body.toString()),
-        ),
-      );
+      _globalKey.currentState.showSnackBar(SnackBar(
+        content: new Text(res.body.toString()),
+      ));
     }
   }
 
@@ -249,6 +250,9 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
   Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,
       String user_mobile_no, String deviceId) async {
     var jsonParam;
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+    final token = await _firebaseMessaging.getToken();
     Map<String, dynamic> deviceInfo = new Map();
     Map<String, dynamic> user = new Map();
     Map<String, dynamic> jsonData = new Map();
@@ -258,7 +262,7 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
     deviceInfo['phoneNumber'] = user_mobile_no;
     deviceInfo['email'] = email;
     deviceInfo['isActive'] = true;
-    deviceInfo['deviceTokenId'] = deviceId;
+    deviceInfo['deviceTokenId'] = token;
 
     jsonData['deviceInfo'] = deviceInfo;
     if (Platform.isIOS) {

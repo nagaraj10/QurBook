@@ -20,15 +20,15 @@ class AVServices : Service() {
                 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
-                    CHANNEL_ID,
-                    "AV Service Channel",
+                    applicationContext.getString(R.string.avs_cha_id),
+                    getString(R.string.avs_cha_name),
                     NotificationManager.IMPORTANCE_DEFAULT
             )
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(serviceChannel)
         }
-        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("on going call with")
+        val notification = NotificationCompat.Builder(this, applicationContext.getString(R.string.avs_cha_id))
+                .setContentTitle(getString(R.string.on_going_call_msg))
                 .setContentText(input)
                 .setSmallIcon(R.mipmap.app_ns_icon)
                 .setContentIntent(pendingIntent)
@@ -44,18 +44,4 @@ class AVServices : Service() {
         return null
     }
 
-    override fun onCreate() {
-        super.onCreate()
-        Log.d(TAG, "onCreate")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy")
-    }
-
-    companion object {
-        const val TAG = "AVServices"
-        const val CHANNEL_ID = "AVServicesChannel"
-    }
 }

@@ -58,4 +58,9 @@
     <string name="frag_video">videoViewFragment</string>
     <string name="arg_mid">mid</string>
     <string name="arg_name">name</string>
+    <string name="on_going_call_msg">on going call with</string>
+    <string name="avs_cha_id">AVServicesChannel</string>
+    <string name="avs_cha_name">AV Service Channel</string>
+    <string name="ns_type_call">call</string>
+    <string name="ns_type_ack">ack</string>
 </resources>

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -15,7 +14,6 @@ import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/ShapesPainter.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
@@ -461,5 +459,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void syncDevices() async {
     await new CommonUtil().syncDevices();
+    }
+  Future<void> _handleCameraAndMic() async {
+    await PermissionHandler().requestPermissions(
+      [PermissionGroup.camera, PermissionGroup.microphone],
+    );
   }
 }
