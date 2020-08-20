@@ -15,10 +15,6 @@ import 'package:flutter/services.dart';
 import 'package:myfhb/device_integration/model/DeviceValue.dart';
 
 class ShowDevicesNew extends StatefulWidget {
-  final DeviceData deviceData;
-  final List<DeviceData> deviceData1;
-
-  ShowDevicesNew({this.deviceData, this.deviceData1}); //, this.lists2});
   @override
   _ShowDevicesNewState createState() => _ShowDevicesNewState();
 }
@@ -46,7 +42,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   Widget build(BuildContext context) {
     finalList = CommonUtil().getDeviceList();
     print("Refresh and updated the devices list");
-    return Stack(
+    return getBody(context);
+     /*Stack(
       children: <Widget>[
         Scaffold(
             backgroundColor: Colors.transparent,
@@ -56,7 +53,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             ),
             body: getBody(context))
       ],
-    );
+    );*/
   }
 
   Widget getBody(BuildContext context) {
@@ -115,10 +112,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         ),
       );
     }
-    //print(deviceValues.length);
-    print(widget.deviceData1.toString());
-    print(deviceData.toString());
-    //for (int i = 0; i < deviceValues.length; i++) {
+    
+    
     if (deviceData.value_name == 'bloodPressure') {
       date = deviceValues.bloodPressure.entities[0].lastsyncdatetime.toString();
       devicevalue1 = deviceValues.bloodPressure.entities[0].systolic.toString();

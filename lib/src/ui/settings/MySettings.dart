@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
+import 'dart:io';
 
 class MySettings extends StatefulWidget {
   @override
@@ -94,8 +95,6 @@ class _MySettingsState extends State<MySettings> {
           PreferenceUtil.getStringValue(Constants.thMon) == variable.strFalse
               ? false
               : true;
-      print(
-          'Loaded values from Saved States are $_isBPActive and $_isGLActive');
     });
   }
 
@@ -115,30 +114,6 @@ class _MySettingsState extends State<MySettings> {
             Navigator.of(context).pop();
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.arrow_forward_ios,
-              size: 20,
-            ),
-            onPressed: () {
-              if (!selectedList.isEmpty) {
-                print(selectedList.length);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ChangeNotifierProvider(
-                            create: (context) => DevicesViewModel(),
-                            child: ShowDevices(
-                              lists1: selectedList,
-                              lists2: devicesList,
-                            ),
-                          )),
-                );
-              }
-            },
-          ),
-        ],
         flexibleSpace: GradientAppBar(),
       ),
       body: Column(
@@ -261,6 +236,8 @@ class _MySettingsState extends State<MySettings> {
                         height: 1,
                         color: Colors.grey[200],
                       ),
+
+                      (Platform.isIOS) ?
                       ListTile(
                           leading: Icon(
                             //AssetImage(variable.icon_digit_appleHealth),
@@ -306,7 +283,8 @@ class _MySettingsState extends State<MySettings> {
                                 ),
                               )
                             ],
-                          )),
+                          )):SizedBox.shrink(),
+
                       Container(
                         height: 1,
                         color: Colors.grey[200],

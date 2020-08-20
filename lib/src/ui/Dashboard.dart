@@ -44,26 +44,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   String devicevalue1;
   String devicevalue2;
 
-  DeviceData deviceDataG = DeviceData(
-      title: 'Glucometer',
-      icon: 'assets/devices/gulco.png',
-      status: 0,
-      isSelected: false,
-      value_name: 'bloodGlucose',
-      value1: 'GL',
-      value2: '',
-      color: Colors.orange);
-  List<DeviceData> deviceDataL; // = [deviceData,deviceDataG];
-  List<DeviceData> testList;
   bool noInternet = true;
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    deviceDataL = new List();
-    deviceDataL.add(deviceDataG);
-    testList = new List();
 
     /*
     var isFirstTime =
@@ -90,9 +76,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
-    testList = CommonUtil().getDeviceList();
-    print("HEre is the dynamic generated list${testList.toString()}");
     return ShowCaseWidget(
       onFinish: () {
         PreferenceUtil.saveString(
@@ -102,164 +85,195 @@ class _DashboardScreenState extends State<DashboardScreen> {
         builder: (context) {
           _myContext = context;
           return Scaffold(
-              key: scaffold_state,
-              bottomNavigationBar: BottomNavigationBar(
-                  type: BottomNavigationBarType.fixed,
-                  selectedFontSize: 10,
-                  unselectedFontSize: 10,
-                  items: <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            onTap: () {
-                              navigateToTelehealthScreen(0);
-                            },
-                            child: ImageIcon(
-                              AssetImage(variable.icon_th),
-                              color: Colors.black54,
-                            )),
-                        title: Text(
-                          variable.strTelehealth,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            onTap: () {
-                              moveToFamilyOrprovider(2);
-                            },
-                            child: ImageIcon(
-                              AssetImage(variable.icon_provider),
-                              color: Colors.black54,
-                            )),
-                        title: Text(
-                          variable.strMyProvider,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    BottomNavigationBarItem(
-                        icon: InkWell(
+            key: scaffold_state,
+            bottomNavigationBar: BottomNavigationBar(
+                type: BottomNavigationBarType.fixed,
+                selectedFontSize: 10,
+                unselectedFontSize: 10,
+                items: <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                      icon: InkWell(
                           onTap: () {
-                            moveToNextScreen(2);
+                            navigateToTelehealthScreen(0);
                           },
-                          child: Image.asset(
-                            variable.icon_maya,
-                            height: 25,
-                            width: 25,
-                          ),
+                          child: ImageIcon(
+                            AssetImage(variable.icon_th),
+                            color: Colors.black54,
+                          )),
+                      title: Text(
+                        variable.strTelehealth,
+                        style: TextStyle(color: Colors.black54),
+                      )),
+                  BottomNavigationBarItem(
+                      icon: InkWell(
+                          onTap: () {
+                            moveToFamilyOrprovider(2);
+                          },
+                          child: ImageIcon(
+                            AssetImage(variable.icon_provider),
+                            color: Colors.black54,
+                          )),
+                      title: Text(
+                        variable.strMyProvider,
+                        style: TextStyle(color: Colors.black54),
+                      )),
+                  BottomNavigationBarItem(
+                      icon: InkWell(
+                        onTap: () {
+                          moveToNextScreen(2);
+                        },
+                        child: Image.asset(
+                          variable.icon_maya,
+                          height: 25,
+                          width: 25,
                         ),
-                        title: Text(
-                          'Sheela',
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            onTap: () {},
-                            child: ImageIcon(
-                              AssetImage(variable.icon_chat),
-                              color: Colors.black54,
-                            )),
-                        title: Text(
-                          variable.strChat,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            onTap: () {
-                              moveToNextScreen(1);
-                            },
-                            child: ImageIcon(
-                              AssetImage(variable.icon_records),
-                              color: Colors.black54,
-                            )),
-                        title: Text(
-                          variable.strMyRecords,
-                          style: TextStyle(color: Colors.black54),
-                        ))
-                  ]),
-              body: Center(
-                  child: Container(
-                      decoration: imageURIProfile != null
-                          ? BoxDecoration(
-                              image: DecorationImage(
-                                  image: new FileImage(imageURIProfile),
-                                  fit: BoxFit.cover))
-                          : BoxDecoration(color: Colors.white),
-                      child: Stack(children: <Widget>[
-                        Container(
-                          color: Colors.black.withOpacity(0.1),
+                      ),
+                      title: Text(
+                        'Sheela',
+                        style: TextStyle(color: Colors.black54),
+                      )),
+                  BottomNavigationBarItem(
+                      icon: InkWell(
+                          onTap: () {},
+                          child: ImageIcon(
+                            AssetImage(variable.icon_chat),
+                            color: Colors.black54,
+                          )),
+                      title: Text(
+                        variable.strChat,
+                        style: TextStyle(color: Colors.black54),
+                      )),
+                  BottomNavigationBarItem(
+                      icon: InkWell(
+                          onTap: () {
+                            moveToNextScreen(1);
+                          },
+                          child: ImageIcon(
+                            AssetImage(variable.icon_records),
+                            color: Colors.black54,
+                          )),
+                      title: Text(
+                        variable.strMyRecords,
+                        style: TextStyle(color: Colors.black54),
+                      ))
+                ]),
+            body: Container(
+              decoration: imageURIProfile != null
+                  ? BoxDecoration(
+                      image: DecorationImage(
+                          image: new FileImage(imageURIProfile),
+                          fit: BoxFit.cover))
+                  : BoxDecoration(color: Colors.white),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    height: 20,
+
+                  ),
+                  Container(
+                    alignment: Alignment.topRight,
+                   child:  (imageURIProfile!=null) ? IconButton(
+                                      icon: Icon(
+                                        Icons.more_vert,
+                                        color: Colors.black87,
+                                        size: 30,
+                                      ),
+                                      onPressed: () {
+                                        saveMediaDialog(context, false);
+                                      },
+                                    )
+                        : SizedBox.shrink()
+                  ),
+                  Container(
+                    height: 150,
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    child: Center(
+                      child: Container(
+                        child: Stack(
+                          children: <Widget>[
+                            Container(
+                              color: Colors.black.withOpacity(0.1),
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(
+                                top: 20,
+                              ),
+                              alignment: Alignment.topRight,
+                              child: imageURIProfile != null
+                                  ? SizedBox.shrink()
+                                  : Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          FHBBasicWidget.customShowCase(
+                                              _coverImage,
+                                              Constants.COVER_IMG_DESC,
+                                              Container(
+                                                  height: 60,
+                                                  width: 60,
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              30),
+                                                      gradient: LinearGradient(
+                                                          colors: [
+                                                            Color(CommonUtil()
+                                                                .getMyPrimaryColor()),
+                                                            Color(CommonUtil()
+                                                                .getMyGredientColor())
+                                                          ])),
+                                                  child: IconButton(
+                                                      icon: Icon(
+                                                        Icons.add_a_photo,
+                                                        color: Colors.white,
+                                                      ),
+                                                      onPressed: () {
+                                                        saveMediaDialog(
+                                                            context, false);
+                                                      })),
+                                              Constants.COVER_IMG_TITLE),
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                top: 10, left: 40, right: 40),
+                                            child: Text(
+                                              Constants.NO_DATA_DASHBOARD,
+                                              textAlign: TextAlign.center,
+                                              maxLines: 2,
+                                              style: TextStyle(
+                                                  color: Color(CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                                  fontSize: 13,
+                                                  fontFamily:
+                                                      variable.font_poppins),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                            ),
+                          ],
                         ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: 20,
-                          ),
-                          alignment: Alignment.topRight,
-                          child: imageURIProfile != null
-                              ? IconButton(
-                                  icon: Icon(
-                                    Icons.more_vert,
-                                    color: Colors.black87,
-                                    size: 30,
-                                  ),
-                                  onPressed: () {
-                                    saveMediaDialog(context, false);
-                                  },
-                                )
-                              : Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      FHBBasicWidget.customShowCase(
-                                          _coverImage,
-                                          Constants.COVER_IMG_DESC,
-                                          Container(
-                                              height: 60,
-                                              width: 60,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
-                                                  gradient:
-                                                      LinearGradient(colors: [
-                                                    Color(CommonUtil()
-                                                        .getMyPrimaryColor()),
-                                                    Color(CommonUtil()
-                                                        .getMyGredientColor())
-                                                  ])),
-                                              child: IconButton(
-                                                  icon: Icon(
-                                                    Icons.add_a_photo,
-                                                    color: Colors.white,
-                                                  ),
-                                                  onPressed: () {
-                                                    saveMediaDialog(
-                                                        context, false);
-                                                  })),
-                                          Constants.COVER_IMG_TITLE),
-                                      Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 10, left: 40, right: 40),
-                                        child: Text(
-                                          Constants.NO_DATA_DASHBOARD,
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                          style: TextStyle(
-                                              color: Color(CommonUtil()
-                                                  .getMyPrimaryColor()),
-                                              fontSize: 13,
-                                              fontFamily:
-                                                  variable.font_poppins),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                        ),
-                        Container(
-                          alignment: Alignment.bottomLeft,
-                          child: ChangeNotifierProvider(
-                            create: (context) => DevicesViewModel(),
-                            child: ShowDevicesNew(
-                                deviceData: deviceDataG, deviceData1: testList),
-                          ),
-                        )
-                      ]))));
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 180,
+                  ),
+                  Expanded(
+                    child: ChangeNotifierProvider(
+                      create: (context) => DevicesViewModel(),
+                      child: ShowDevicesNew(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
         },
       ),
     );

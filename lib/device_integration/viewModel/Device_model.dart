@@ -77,7 +77,7 @@ class DevicesViewModel with ChangeNotifier {
   Future<List<DeviceData>> getDevices() async {
     deviceList = [];
     deviceList = await getDeviceValues();
-    notifyListeners();
+    //notifyListeners();
     return deviceList;
   }
 
@@ -111,7 +111,7 @@ class DevicesViewModel with ChangeNotifier {
       final parsed1 = json.decode(resp.toString())[strresult] as List;
       List<BPResult> ret = parsed1.map((i) => BPResult.fromJson(i)).toList();
 
-      notifyListeners();
+      //notifyListeners();
       return ret;
     } catch (e) {
       throw 'Failed to fetch BP record summary from myFHB db $e';
@@ -127,7 +127,7 @@ class DevicesViewModel with ChangeNotifier {
         return [];
       }
       final parsed1 = json.decode(resp.toString())[strresult] as List;
-      notifyListeners();
+      //notifyListeners();
       List<GVResult> ret = parsed1.map((i) => GVResult.fromJson(i)).toList();
       return ret;
     } catch (e) {
@@ -146,7 +146,7 @@ class DevicesViewModel with ChangeNotifier {
       return [];
     }
     final parsed1 = json.decode(resp.toString())[strresult] as List;
-    notifyListeners();
+    //notifyListeners();
     List<OxyResult> ret = parsed1.map((i) => OxyResult.fromJson(i)).toList();
     return ret;
   }
@@ -160,7 +160,7 @@ class DevicesViewModel with ChangeNotifier {
         return [];
       }
       final parsed1 = json.decode(resp.toString())[strresult] as List;
-      notifyListeners();
+      //notifyListeners();
       List<TMPResult> ret = parsed1.map((i) => TMPResult.fromJson(i)).toList();
       return ret;
     } catch (e) {
@@ -177,7 +177,7 @@ class DevicesViewModel with ChangeNotifier {
         return [];
       }
       final parsed1 = json.decode(resp.toString())[strresult] as List;
-      notifyListeners();
+      //notifyListeners();
       List<WVResult> ret = parsed1.map((i) => WVResult.fromJson(i)).toList();
       return ret;
     } catch (e) {
@@ -194,7 +194,7 @@ class DevicesViewModel with ChangeNotifier {
         return [];
       }
       final parsed1 = json.decode(resp.toString())[strresult] as List;
-      notifyListeners();
+      //notifyListeners();
       List<HRResult> ret = parsed1.map((i) => HRResult.fromJson(i)).toList();
       return ret;
     } catch (e) {
@@ -205,35 +205,35 @@ class DevicesViewModel with ChangeNotifier {
   Future<List<Values>> getBPValuesList() async {
     valuesList = [];
 
-    notifyListeners();
+    //notifyListeners();
     return valuesList;
   }
 
   Future<List<Values>> getSugRValuesList() async {
     valuesList = [];
 
-    notifyListeners();
+    //notifyListeners();
     return valuesList;
   }
 
   Future<List<Values>> getGValuesList() async {
     valuesList = [];
 
-    notifyListeners();
+    //notifyListeners();
     return valuesList;
   }
 
   Future<List<Values>> getWeightValuesList() async {
     valuesList = [];
 
-    notifyListeners();
+//notifyListeners();
     return valuesList;
   }
 
   Future<List<Values>> getFeverValuesList() async {
     valuesList = [];
 
-    notifyListeners();
+    //notifyListeners();
     return valuesList;
   }
 }
