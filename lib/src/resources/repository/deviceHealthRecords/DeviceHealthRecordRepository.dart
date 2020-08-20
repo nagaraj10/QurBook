@@ -65,7 +65,6 @@ class DeviceHealthRecord {
   }
 
   Future<dynamic> queryBydeviceInterval(String jsonString) async {
-    print(jsonString);
     //String userID = "49cdc4be-afd9-419e-b3f9-1bd35207c74f";
 
     var response = await _helper.getByRecordDataType(

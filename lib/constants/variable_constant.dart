@@ -492,6 +492,7 @@ const String strGoogleFit = "Google Fit";
 const String strAllowGoogle = "Allow app to recieve data from google Fit";
 const String strHealthKit = "Apple Health";
 const String strAllowHealth = "Allow app to recieve data from Apple Health";
+const String strAddDevice = 'Tap to add device widgets to your home screen';
 
 
 

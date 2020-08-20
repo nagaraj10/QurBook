@@ -13,12 +13,12 @@ class LastSync {
   });
 
   bool isSuccess;
-  List<Result> result;
+  List<LastSyncResult> result;
 
   factory LastSync.fromJson(Map<String, dynamic> json) => LastSync(
         isSuccess: json[strisSuccess],
         result:
-            List<Result>.from(json[strresult].map((x) => Result.fromJson(x))),
+            List<LastSyncResult>.from(json[strresult].map((x) => LastSyncResult.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -27,8 +27,8 @@ class LastSync {
       };
 }
 
-class Result {
-  Result({
+class LastSyncResult {
+  LastSyncResult({
     this.lastSyncDateTime,
     this.devicedatatype,
     this.devicetype,
@@ -40,7 +40,7 @@ class Result {
   String devicetype;
   String sourcetype;
 
-  factory Result.fromJson(Map<String, dynamic> json) => Result(
+  factory LastSyncResult.fromJson(Map<String, dynamic> json) => LastSyncResult(
         lastSyncDateTime: DateTime.parse(json[strlastSyncDateTime]),
         devicedatatype: json[strdeviceDataType.toLowerCase()],
         devicetype: json[strdeviceType.toLowerCase()],
@@ -48,7 +48,7 @@ class Result {
       );
 
   Map<String, dynamic> toJson() => {
-        strlastSyncDateTime: lastSyncDateTime.toIso8601String(),
+        strlastSyncDateTime: lastSyncDateTime,
         strdeviceDataType.toLowerCase(): devicedatatype,
         strdeviceType.toLowerCase(): devicetype,
         strsourcetype: sourcetype,

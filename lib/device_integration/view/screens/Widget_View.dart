@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:path/path.dart';
@@ -13,6 +14,11 @@ import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
 import 'package:myfhb/device_integration/model/DeviceValue.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+
+
 
 class ShowDevicesNew extends StatefulWidget {
   @override
@@ -28,12 +34,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   List<DeviceData> finalList;
 
   String date;
+  DateTime dateTimeStamp;
   var devicevalue1;
   var devicevalue2;
   @override
   void initState() {
-    // TODO: implement initState
-    //devicesList = List();
     finalList = new List();
     finalList = CommonUtil().getDeviceList();
     super.initState();
@@ -75,24 +80,18 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
     return FutureBuilder<DevResult>(
         future: devicesViewModel.fetchDeviceDetails(),
-        //DefaultAssetBundle.of(context).loadString('assets/BPValues'),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             deviceValues = snapshot.data;
 
             return ListView.builder(
                 shrinkWrap: true,
-                //itemCount: widget.deviceData1.length,
                 scrollDirection: Axis.horizontal,
                 itemCount: finalList.length,
-                // padding: const EdgeInsets.symmetric(vertical: 4.0) ,
                 itemBuilder: (context, i) {
                   return Container(
-                      //child: projectWidget(context, widget.deviceData1[i]));
                       child: projectWidget(context, finalList[i]));
                 });
-
-//            return Container(child: projectWidget(context));
           } else {
             return new Center(
               child: new CircularProgressIndicator(
@@ -114,32 +113,42 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
     
     
-    if (deviceData.value_name == 'bloodPressure') {
-      date = deviceValues.bloodPressure.entities[0].lastsyncdatetime.toString();
+    if (deviceData.value_name ==parameters.strDataTypeBP) {
+      dateTimeStamp = deviceValues.bloodPressure.entities[0].lastsyncdatetime;
+      date = DateFormat(parameters.strDateYMD,variable.strenUs).format(dateTimeStamp)
+      + " " +DateFormat(parameters.strTimeHMS,variable.strenUs).format(dateTimeStamp) ;
       devicevalue1 = deviceValues.bloodPressure.entities[0].systolic.toString();
       devicevalue2 =
           deviceValues.bloodPressure.entities[0].diastolic.toString();
       return getDeviceData(
           context, date, devicevalue1, devicevalue2, deviceData);
-    } else if (deviceData.value_name == 'bloodGlucose') {
-      date = deviceValues.bloodGlucose.entities[0].lastsyncdatetime.toString();
+    } else if (deviceData.value_name ==  parameters.strGlusoceLevel) {
+      dateTimeStamp = deviceValues.bloodGlucose.entities[0].lastsyncdatetime;
+       date = DateFormat(parameters.strDateYMD,variable.strenUs).format(dateTimeStamp)
+      + " " +DateFormat(parameters.strTimeHMS,variable.strenUs).format(dateTimeStamp) ;
       devicevalue1 =
           deviceValues.bloodGlucose.entities[0].bloodGlucoseLevel.toString();
       return getDeviceData(context, date, devicevalue1, '', deviceData);
-    } else if (deviceData.value_name == 'oxygenSaturation') {
-      date =
-          deviceValues.oxygenSaturation.entities[0].lastsyncdatetime.toString();
+    } else if (deviceData.value_name == parameters.strOxgenSaturation) {
+      dateTimeStamp =
+          deviceValues.oxygenSaturation.entities[0].lastsyncdatetime;
+           date = DateFormat(parameters.strDateYMD,variable.strenUs).format(dateTimeStamp)
+      + " " +DateFormat(parameters.strTimeHMS,variable.strenUs).format(dateTimeStamp) ;
       devicevalue1 =
           deviceValues.oxygenSaturation.entities[0].oxygenSaturation.toString();
       return getDeviceData(context, date, devicevalue1, '', deviceData);
-    } else if (deviceData.value_name == 'bodyTemperature') {
-      date =
-          deviceValues.bodyTemperature.entities[0].lastsyncdatetime.toString();
+    } else if (deviceData.value_name == parameters.strTemperature) {
+      dateTimeStamp =
+          deviceValues.bodyTemperature.entities[0].lastsyncdatetime;
+           date = DateFormat(parameters.strDateYMD,variable.strenUs).format(dateTimeStamp)
+      + " " +DateFormat(parameters.strTimeHMS,variable.strenUs).format(dateTimeStamp) ;
       devicevalue1 =
           deviceValues.bodyTemperature.entities[0].temperature.toString();
       return getDeviceData(context, date, devicevalue1, '', deviceData);
-    } else {
-      date = deviceValues.bodyWeight.entities[0].lastsyncdatetime.toString();
+    } else if(deviceData.value_name == parameters.strWeight){
+      dateTimeStamp = deviceValues.bodyWeight.entities[0].lastsyncdatetime;
+       date = DateFormat(parameters.strDateYMD,variable.strenUs).format(dateTimeStamp)
+      + " " +DateFormat(parameters.strTimeHMS,variable.strenUs).format(dateTimeStamp) ;
       devicevalue1 = deviceValues.bodyWeight.entities[0].weight.toString();
       return getDeviceData(context, date, devicevalue1, '', deviceData);
     }
@@ -195,7 +204,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           child: Column(
                             children: [
                               Text(
-                                'Last Readings',
+                                parameters.strLatestTitle,
                                 style: TextStyle(
                                     color: Colors.white, fontSize: 12),
                               ),
@@ -250,37 +259,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             ),
                           ],
                         ),
-                        /* Column(
-                          children: [
-                            Text(
-                              'Pul',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11),
-                            ),
-                            Text(
-                              '99.0',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 11),
-                            ),
-                          ],
-                        ),*/
                       ],
                     ),
                   )
-                  /* Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        widget.deviceData.title,
-                        style: TextStyle(
-                          fontSize: 11.0,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                    ],
-                  ),*/
                 ],
               ),
             ),

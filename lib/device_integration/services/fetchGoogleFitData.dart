@@ -5,7 +5,7 @@ import 'package:myfhb/device_integration/model/googleFitResponseModel.dart';
 import 'dart:async';
 import 'dart:convert' show json;
 
-class FetchGoogleFitData {
+class GoogleFitData {
   GoogleSignInHelper _signInHelper;
 
   FetchGoogleFitData() {

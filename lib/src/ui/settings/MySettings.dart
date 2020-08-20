@@ -33,26 +33,12 @@ class _MySettingsState extends State<MySettings> {
   bool _isOxyActive = false;
   bool _isTHActive = false;
   bool _isWSActive = false;
-
-  // DevicesViewModel _deviceModel;
-  // List<DeviceResult> devicesList;
   List<DeviceData> selectedList;
   DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
   @override
   void initState() {
-    DevResult _student;
-    bool _loaded = false;
     selectedList = List();
-    //devicesList = List();
     _deviceModel = new DevicesViewModel();
-    /*  loadStudent(_deviceModel).then((s) => setState(() {
-          _student = s;
-          _loaded = true;
-        }));*/
-    devicesList = _student;
-    print(devicesList);
-    loadProduct(_deviceModel);
-    //getSelectedDevices(_deviceModel);
     super.initState();
     PreferenceUtil.init();
     setState(() {
@@ -240,9 +226,6 @@ class _MySettingsState extends State<MySettings> {
                       (Platform.isIOS) ?
                       ListTile(
                           leading: Icon(
-                            //AssetImage(variable.icon_digit_appleHealth),
-                            //size: 30,
-                            //color: Colors.black,
                             Icons.favorite,
                             color: Colors.pink,
                           ),
@@ -301,7 +284,7 @@ class _MySettingsState extends State<MySettings> {
               child: Column(
                 children: [
                   Text(
-                    'Tap to add device widgets to your home screen',
+                    variable.strAddDevice,
                     style: TextStyle(color: Colors.black, fontSize: 12),
                   ),
                   SizedBox(
@@ -348,8 +331,6 @@ class _MySettingsState extends State<MySettings> {
                                         switch (i) {
                                           case 0:
                                             _isBPActive = value;
-                                            print(
-                                                'saving_BpValues :$_isBPActive');
                                             PreferenceUtil.saveString(
                                                 Constants.bpMon,
                                                 _isBPActive.toString());
@@ -389,7 +370,6 @@ class _MySettingsState extends State<MySettings> {
                                                 .remove(snapshot.data[i]);
                                           }
                                         });
-                                        print("${snapshot.data[i]} : $value");
                                       },
                                       key: Key(
                                           snapshot.data[i].status.toString()));
@@ -408,11 +388,5 @@ class _MySettingsState extends State<MySettings> {
         ],
       ),
     );
-  }
-
-  Future loadProduct(DevicesViewModel devicesViewModel) async {
-    final jsonResponse = await devicesViewModel.fetchDeviceDetails();
-    print(jsonResponse.toString());
-    devicesList = jsonResponse;
   }
 }

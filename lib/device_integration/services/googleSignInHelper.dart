@@ -1,5 +1,6 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import "package:http/http.dart" as http;
 import 'dart:io';
 
@@ -11,7 +12,6 @@ class GoogleSignInHelper {
   GoogleSignInHelper() {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       m_currentUser = account;
-      print("User accout changed ${m_currentUser.displayName}");
     });
   }
 
@@ -24,7 +24,6 @@ class GoogleSignInHelper {
     try {
       if (m_currentUser == null) {
         await _googleSignIn.signIn();
-        print("handleSignIn :: Signed in");
       }
     } catch (error) {
       throw error;
@@ -52,7 +51,6 @@ class GoogleSignInHelper {
       bool signedIn = await _googleSignIn.isSignedIn();
       if (signedIn) {
         _googleSignIn.disconnect();
-        print("handleSignIn :: Signed Out");
       }
     } catch (e) {}
   }
@@ -67,8 +65,9 @@ class GoogleSignInHelper {
       }
       responseJson = response.body;
     } on SocketException {
-      throw "No Internet Connection";
+      throw variable.strNoInternet;
     }
     return responseJson;
   }
 }
+

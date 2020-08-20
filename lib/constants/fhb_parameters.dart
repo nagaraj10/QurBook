@@ -309,6 +309,16 @@ const String strRoleCode='roleCode';
 
 //parameters for device Integration
 
+
+const String strBPTitle = "BP Readings";
+const String strGLTitle = "Glucose Readings";
+const String strOxyTitle = "SPO2 Reading";
+const String strWgTitle = "Weight Measurments";
+const String strTmpTitle = "Temperature Readings";
+const String strLatestTitle = "Latest Readings";
+const String strDateYMD = "yMMMMd";
+const String strTimeHMS = "Hms";
+
 const String strsourceGoogle = "Google Fit";
 const String strsourceSheela = "SHEELA";
 const String strsourceHK = "Apple Health";

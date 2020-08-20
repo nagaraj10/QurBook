@@ -113,8 +113,6 @@ class FetchHealthKitData {
               rawData[strParamDiastolic] = pair[1].value;
 
               dataSet.add(rawData);
-            } else {
-              print("dates not same ignoring");
             }
           }
           healthRecord[strRawData] = dataSet;
@@ -158,11 +156,9 @@ class FetchHealthKitData {
           });
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
-          print(params);
           return params;
         }
       } catch (exception) {
-        print(exception.toString());
       }
     }
   }
@@ -197,11 +193,9 @@ class FetchHealthKitData {
           });
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
-          print(params);
           return params;
         }
       } catch (exception) {
-        print(exception.toString());
       }
     }
   }
@@ -240,10 +234,8 @@ class FetchHealthKitData {
           healthRecord[strRawData] = dataSet;
           String params = json.encode(healthRecord);
           print(params);
-          return params;
         }
       } catch (exception) {
-        print(exception.toString());
       }
     }
   }

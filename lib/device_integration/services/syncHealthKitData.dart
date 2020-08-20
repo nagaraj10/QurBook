@@ -29,28 +29,21 @@ class SyncHealthKitData {
 
   Future<void> syncHKTData() async {
     var response;
-    DateTime startDate = DateTime.utc(2020, 07, 01);
+    DateTime startDate;
     DateTime endDate = DateTime.now();
 
     DateTime lastSynctime = await getLastSynctime();
-
-    print("lastsynctime $lastSynctime");
 
     endDate = DateTime.now();
     var currentdate = DateTime.now();
     var startT = new DateTime(currentdate.year, currentdate.month - 2,
         currentdate.day, currentdate.hour, currentdate.minute);
 
-    print("Start time earlier $startT");
-    print("End time $endDate");
-
     if (lastSynctime == null) {
       startDate = startT;
-      print(startDate);
     } else {
       var newstartT = new DateTime(lastSynctime.year, lastSynctime.month,
           lastSynctime.day, lastSynctime.hour, lastSynctime.minute + 1);
-      print("Configured start time based on last sync time $newstartT");
 
       startDate = newstartT;
     }
@@ -59,14 +52,12 @@ class SyncHealthKitData {
       String weightParams = await _hkHelper.getWeightData(startDate, endDate);
       if (weightParams != null) {
         response = await postHKData(weightParams);
-        print('post weight data response $response');
       }
       response = "";
       String bloodGlucoseParams =
           await _hkHelper.getBloodGlucoseData(startDate, endDate);
       if (bloodGlucoseParams != null) {
         response = await postHKData(bloodGlucoseParams);
-        print('post Glucose data response $response');
       }
 
       response = "";
@@ -74,14 +65,12 @@ class SyncHealthKitData {
           await _hkHelper.getBloodPressureData(startDate, endDate);
       if (bpParams != null) {
         response = await postHKData(bpParams);
-        print('post BP data response $response');
       }
       response = '';
       String bloodOxygenParams =
           await _hkHelper.getBloodOxygenData(startDate, endDate);
       if (bloodOxygenParams != null) {
         response = await postHKData(bloodOxygenParams);
-        print('post blood Oxygen data response $response');
       }
       response = '';
 
@@ -89,7 +78,6 @@ class SyncHealthKitData {
           await _hkHelper.getBodyTemperature(startDate, endDate);
       if (bodyTemperatureParams != null) {
         response = await postHKData(bodyTemperatureParams);
-        print('post body temp data response $response');
       }
       response = '';
 
@@ -97,10 +85,8 @@ class SyncHealthKitData {
           await _hkHelper.getHeartRateData(startDate, endDate);
       if (heartRateParams != null) {
         response = await postHKData(heartRateParams);
-        print('post heart rate data response $response');
       }
     } catch (e) {
-      print("Unable to post data to FHB $e");
     }
 
     // todo
@@ -110,16 +96,13 @@ class SyncHealthKitData {
     try {
       _deviceHealthRecord = DeviceHealthRecord();
       var response = await _deviceHealthRecord.postDeviceData(params);
-      print("reponse from FHB DB is ${response}");
       return response;
     } catch (e) {
-      throw "Sync HealthKit Fit Data to FHB Backend Failed $e";
     }
   }
 
   Future<dynamic> getLastSynctime() async {
     try {
-      print("Getting Last sync time to synchronize data");
       _deviceHealthRecord = DeviceHealthRecord();
 
       var lastsyncDetails =
@@ -128,11 +111,8 @@ class SyncHealthKitData {
       LastSync lastSync = lastSyncFromJson(jsonstr);
 
       if (!lastSync.isSuccess) return null;
-      print("last sync time ${lastSync.result[0].lastSyncDateTime}");
-
       return lastSync.result[0].lastSyncDateTime;
     } catch (e) {
-      throw "Failed to get Get lastsynctime from FHB DB $e";
     }
   }
 }

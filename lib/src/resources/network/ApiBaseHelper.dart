@@ -837,7 +837,6 @@ class ApiBaseHelper {
           _baseUrlV2 + url,
           body: jsonBody,
           headers: header);
-      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -908,7 +907,6 @@ class ApiBaseHelper {
           await http.post(_baseUrlV2 + url, body: jsonBody, headers: header);
 
       responseJson = _returnResponse(response);
-      print(responseJson);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -921,8 +919,6 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.get(_baseUrlV2 + url, headers: header);
-      responseJson = _returnResponse(response);
-      print(responseJson);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

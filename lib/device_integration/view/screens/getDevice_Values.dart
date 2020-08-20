@@ -7,6 +7,7 @@ import 'package:myfhb/device_integration/model/TemperatureValues.dart';
 import 'package:myfhb/device_integration/model/WeightValues.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:provider/provider.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 
 class EachDeviceValues extends StatelessWidget {
   EachDeviceValues({this.device_name});
@@ -15,46 +16,19 @@ class EachDeviceValues extends StatelessWidget {
   Widget build(BuildContext context) {
     DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
     return Scaffold(
-      appBar: AppBar(title: Text('')),
+      appBar: AppBar(
+        title: Text(
+          getStringValue(),
+        ),
+        flexibleSpace: GradientAppBar(),
+      ),
       body: Container(
         color: Color(0xFFDCDCDC),
         child: Column(
           children: [
-            SizedBox(
-              height: 5.0,
-            ),
             Container(
-                height: 50.0,
-                color: Colors.lightBlueAccent,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      getStringValue(), //+ ' ' + 'Chart',
-                      style: TextStyle(fontSize: 20.0, color: Colors.white),
-                    ),
-                    SizedBox(
-                      width: 10.0,
-                    ),
-                    // Icon(
-                    //   Icons.refresh,
-                    //   color: Colors.black87,
-                    // )
-                  ],
-                )),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Today Aug 16th',
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
-                  ),
-                ],
-              ),
-            ),
+                height: 10.0,
+                ),
             Expanded(
               child: getValues(context, _devicesmodel),
             ),
@@ -66,11 +40,10 @@ class EachDeviceValues extends StatelessWidget {
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
     switch (device_name) {
-      case strBP:
+      case strDataTypeBP:
         {
           return FutureBuilder<List<BPResult>>(
               future: devicesViewModel.fetchBPDetails(),
-              //DefaultAssetBundle.of(context).loadString('assets/BPValues'),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return new Center(
@@ -104,7 +77,7 @@ class EachDeviceValues extends StatelessWidget {
               });
         }
         break;
-      case strBGlucose:
+      case strGlusoceLevel:
         {
           return FutureBuilder(
               future: devicesViewModel.fetchGLDetails(),
@@ -135,7 +108,7 @@ class EachDeviceValues extends StatelessWidget {
               });
         }
         break;
-      case strOxygen:
+      case strOxgenSaturation:
         {
           return FutureBuilder(
               future: devicesViewModel.fetchOXYDetails(''),
@@ -166,7 +139,7 @@ class EachDeviceValues extends StatelessWidget {
               });
         }
         break;
-      case strWgt:
+      case strWeight:
         {
           return FutureBuilder(
               future: devicesViewModel.fetchWVDetails(''),
@@ -223,7 +196,7 @@ class EachDeviceValues extends StatelessWidget {
               });
         }
         break;
-      case strTemp:
+      case strTemperature:
         {
           return FutureBuilder<List<TMPResult>>(
               future: devicesViewModel.fetchTMPDetails(),
@@ -264,29 +237,29 @@ class EachDeviceValues extends StatelessWidget {
 
   getStringValue() {
     switch (device_name) {
-      case strBP:
+      case strDataTypeBP:
         {
-          return 'BP Readings';
+          return strBPTitle;
         }
         break;
-      case strBGlucose:
+      case strGlusoceLevel:
         {
-          return 'Glucose Readings';
+          return strGLTitle;
         }
         break;
-      case strOxygen:
+      case strOxgenSaturation:
         {
-          return 'SPO2 Reading';
+          return strOxyTitle;
         }
         break;
-      case strWgt:
+      case strWeight:
         {
-          return 'Weight Values';
+          return strWgTitle;
         }
         break;
-      case strTemp:
+      case strTemperature:
         {
-          return 'Temperature Readings';
+          return strTmpTitle;
         }
         break;
       default:
