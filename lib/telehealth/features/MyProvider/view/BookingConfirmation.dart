@@ -160,7 +160,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     try {
       fees = widget.isNewAppointment
-          ? widget.followUpFee
+          ? widget.followUpFee == null
+              ? widget.docs[widget.i].fees.consulting.fee
+              : widget.followUpFee
           : widget.docs[widget.i].fees.consulting.fee;
     } catch (e) {
       fees = '';

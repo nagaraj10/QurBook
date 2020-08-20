@@ -85,8 +85,10 @@ class AppointmentsViewModel extends ChangeNotifier {
           .addAll(upcomingInfo.map((e) => e.plannedStartDateTime).toList());
       for (int i = 0; i < dummySearchList.length; i++) {
         DateTime dob = DateTime.tryParse(dummySearchList[i]);
+//        DateTime dob1 =
+//            DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(dummySearchList[i]);
         DateTime dob1 =
-            DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(dummySearchList[i]);
+        DateFormat("yyyy-MM-dd HH:mm:ss").parse(dummySearchList[i]);
         DateTime dob2 =
             DateFormat("yyyy-MM-dd HH:mm:ss").parse('${DateTime.now()}');
         Duration dur = dob1.difference(dob2);
