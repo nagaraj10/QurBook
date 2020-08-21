@@ -83,7 +83,7 @@ class ChatState extends State<Chat> {
                   AnimatedSwitcher(
                     duration: Duration(milliseconds: 10),
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.55,
+                      width: MediaQuery.of(context).size.width * 0.76,
                       child: _patientDetailOrSearch(),
                     ),
                   ),
