@@ -657,19 +657,18 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   void _addBtnTapped() {
     Navigator.pushNamed(context, router.rt_AddProvider,
-            arguments: AddProvidersArguments(
-                searchText: value,
-                fromClass: widget.arguments.fromClass == router.cn_AddProvider
-                    ? widget.arguments.fromClass
-                    : router.rt_TelehealthProvider,
-                searchKeyWord: widget.arguments.searchWord ==
-                        CommonConstants.doctors
-                    ? CommonConstants.doctors
-                    : widget.arguments.searchWord == CommonConstants.hospitals
-                        ? CommonConstants.hospitals
-                        : CommonConstants.labs,
-                hasData: false))
-        .then((results) {
+        arguments: AddProvidersArguments(
+          searchText: value,
+          fromClass: widget.arguments.fromClass == router.cn_AddProvider
+              ? widget.arguments.fromClass
+              : router.rt_TelehealthProvider,
+          searchKeyWord: widget.arguments.searchWord == CommonConstants.doctors
+              ? CommonConstants.doctors
+              : widget.arguments.searchWord == CommonConstants.hospitals
+                  ? CommonConstants.hospitals
+                  : CommonConstants.labs,
+          hasData: false,
+        )).then((results) {
       if (results != null) {
         widget.arguments.searchWord == CommonConstants.doctors
             ? passDoctorsValueSample(results, context)

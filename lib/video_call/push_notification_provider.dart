@@ -82,7 +82,9 @@ class PushNotificationsProvider {
   Future<dynamic> onLaunch(Map<String, dynamic> message) async {
     print("OnLaunch New: $message");
     final arg = 'Test';
-    _pushStreamCOntroller.sink.add(arg);
+    Future.delayed(const Duration(seconds: 3), () {
+      _pushStreamCOntroller.sink.add(arg);
+    });
   }
 
   Future<dynamic> onResume(Map<String, dynamic> message) async {

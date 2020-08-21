@@ -11,10 +11,10 @@ import 'package:myfhb/search_providers/models/search_arguments.dart';
 
 class MyProvider extends StatefulWidget {
   @override
-  _MyProviderState createState() => _MyProviderState();
+  MyProviderState createState() => MyProviderState();
 }
 
-class _MyProviderState extends State<MyProvider>
+class MyProviderState extends State<MyProvider>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
   int _activeTabIndex = 0;
@@ -30,7 +30,7 @@ class _MyProviderState extends State<MyProvider>
     _tabController.addListener(_setActiveTabIndex);
 
     _providersBloc = new ProvidersBloc();
-    _providersBloc.getMedicalPreferences1List().then((value) {
+    _providersBloc.getMedicalPreferencesList().then((value) {
       setState(() {
         myProvidersResponseList = value;
       });
@@ -39,6 +39,16 @@ class _MyProviderState extends State<MyProvider>
 
   void _setActiveTabIndex() {
     _activeTabIndex = _tabController.index;
+  }
+
+  void refreshPage() {
+    print('Refresh Page');
+//    _providersBloc = new ProvidersBloc();
+//    _providersBloc.getMedicalPreferencesList().then((value) {
+//      setState(() {
+//        myProvidersResponseList = value;
+//      });
+//    });
   }
 
   @override
@@ -59,8 +69,15 @@ class _MyProviderState extends State<MyProvider>
                     searchWord: CommonConstants.doctors,
                     fromClass: router.cn_AddProvider,
                   )).then((value) {
+                setState(() {
+                  myProvidersResponseList = null;
+                });
                 _providersBloc = new ProvidersBloc();
-                _providersBloc.getMedicalPreferencesList();
+                _providersBloc.getMedicalPreferencesList().then((value) {
+                  setState(() {
+                    myProvidersResponseList = value;
+                  });
+                });
               });
 
               break;
@@ -70,8 +87,15 @@ class _MyProviderState extends State<MyProvider>
                     searchWord: CommonConstants.hospitals,
                     fromClass: router.cn_AddProvider,
                   )).then((value) {
+                setState(() {
+                  myProvidersResponseList = null;
+                });
                 _providersBloc = new ProvidersBloc();
-                _providersBloc.getMedicalPreferencesList();
+                _providersBloc.getMedicalPreferencesList().then((value) {
+                  setState(() {
+                    myProvidersResponseList = value;
+                  });
+                });
               });
 
               break;
@@ -81,8 +105,15 @@ class _MyProviderState extends State<MyProvider>
                     searchWord: CommonConstants.labs,
                     fromClass: router.cn_AddProvider,
                   )).then((value) {
+                setState(() {
+                  myProvidersResponseList = null;
+                });
                 _providersBloc = new ProvidersBloc();
-                _providersBloc.getMedicalPreferencesList();
+                _providersBloc.getMedicalPreferencesList().then((value) {
+                  setState(() {
+                    myProvidersResponseList = value;
+                  });
+                });
               });
 
               break;

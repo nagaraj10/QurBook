@@ -26,19 +26,7 @@ class ProvidersBloc implements BaseBloc {
     _providersListRepository = ProvidersListRepository();
   }
 
-  getMedicalPreferencesList() async {
-    providersListSink
-        .add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
-    try {
-      MyProvidersResponseList myProvidersResponseList =
-          await _providersListRepository.getMedicalPreferencesList();
-      providersListSink.add(ApiResponse.completed(myProvidersResponseList));
-    } catch (e) {
-      providersListSink.add(ApiResponse.error(e.toString()));
-    }
-  }
-
-  Future<MyProvidersResponseList> getMedicalPreferences1List() async {
+  Future<MyProvidersResponseList> getMedicalPreferencesList() async {
     providersListSink
         .add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
     MyProvidersResponseList myProvidersResponseList;
