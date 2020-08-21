@@ -1,29 +1,20 @@
-import 'dart:math';
-
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/search_providers/models/search_arguments.dart';
+import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
-
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:provider/provider.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
+
 import '../../SearchWidget/view/SearchWidget.dart';
-
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-
 import 'DoctorSessionTimeSlot.dart';
 
 class MyProviders extends StatefulWidget {
@@ -107,7 +98,11 @@ class _MyProvidersState extends State<MyProviders> {
                   searchWord: CommonConstants.doctors,
                   fromClass: router.cn_teleheathProvider,
                 )).then((value) {
-              setState(() {});
+              setState(() {
+//                providerViewModel.fetchProviderDoctors().then((value) {
+//                  providerListWidget(value);
+//                });
+              });
             });
           },
           child: Icon(

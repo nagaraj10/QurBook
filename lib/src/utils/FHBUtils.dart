@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/services.dart';
 import 'package:devicelocale/devicelocale.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:myfhb/constants/db_constants.dart' as DBConstants;
 import 'package:myfhb/src/model/AppointmentModel.dart';
 import 'package:myfhb/src/model/ReminderModel.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:myfhb/constants/db_constants.dart' as DBConstants;
 
 class FHBUtils {
   static String CURRENT_DATE_CODE = 'DMY';
@@ -97,8 +97,14 @@ class FHBUtils {
   }
 
   String getFormattedDateForUser(String strDate) {
-    String formattedDate =
-        DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate));
+    String formattedDate;
+    try {
+      formattedDate =
+          DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate).toLocal());
+    } catch (e) {
+      formattedDate = strDate;
+    }
+
     return formattedDate;
   }
 
@@ -181,8 +187,7 @@ class FHBUtils {
           getMyDateFormat(val);
         }
       });
-    } on PlatformException {
-    }
+    } on PlatformException {}
   }
 
   void getMyDateFormat(String localeCode) {
@@ -221,8 +226,7 @@ class FHBUtils {
     await db
         .insert(DBConstants.TL_APPNT, appModel.toMap(),
             conflictAlgorithm: ConflictAlgorithm.replace)
-        .then((res) {
-    });
+        .then((res) {});
   }
 
   static String base64String(List<dynamic> data) {
@@ -258,7 +262,8 @@ class FHBUtils {
     // Get a reference to the database.
     final Database db = await getDb();
     // Query the table for all The Appointments.
-    final List<Map<String, dynamic>> maps = await db.query(DBConstants.TL_APPNT);
+    final List<Map<String, dynamic>> maps =
+        await db.query(DBConstants.TL_APPNT);
     // Convert the List<Map<String, dynamic> into a List<Appointment>.
     return List.generate(maps.length, (i) {
       return AppointmentModel(
@@ -280,7 +285,7 @@ class FHBUtils {
     await db.delete(
       DBConstants.TL_APPNT,
       // Use a `where` clause to delete a specific Appointment.
-      where: DBConstants.PRO_ID+" = ?",
+      where: DBConstants.PRO_ID + " = ?",
       // Pass the Appointment's id as a whereArg to prevent SQL injection.
       whereArgs: [id],
     );
@@ -291,8 +296,7 @@ class FHBUtils {
     await db
         .insert(tableName, model.toMap(),
             conflictAlgorithm: ConflictAlgorithm.replace)
-        .then((res) {
-    });
+        .then((res) {});
   }
 
   Future<void> delete(String tableName, String id) async {
@@ -303,11 +307,10 @@ class FHBUtils {
     await db.delete(
       tableName,
       // Use a `where` clause to delete a specific Appointment.
-      where: DBConstants.PRO_ID+" = ?",
+      where: DBConstants.PRO_ID + " = ?",
       // Pass the Appointment's id as a whereArg to prevent SQL injection.
       whereArgs: [id],
-    ).then((res) {
-    });
+    ).then((res) {});
   }
 
   Future<void> update(String tableName, dynamic model) async {
@@ -319,11 +322,10 @@ class FHBUtils {
       tableName,
       model.toMap(),
       // Ensure that the Dog has a matching id.
-      where: DBConstants.PRO_ID+" = ?",
+      where: DBConstants.PRO_ID + " = ?",
       // Pass the Dog's id as a whereArg to prevent SQL injection.
       whereArgs: [model.id],
-    ).then((res) {
-    });
+    ).then((res) {});
   }
 
   Future<List<dynamic>> getAll(

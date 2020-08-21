@@ -1238,8 +1238,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           addFamilyUserInfoBloc.relationship = selectedRelationShip.roleName;
           addFamilyUserInfoBloc.userId =
               widget.arguments.sharedbyme.profileData.id;
-          addFamilyUserInfoBloc.phoneNo =
-              widget.arguments.sharedbyme.profileData.phoneNumber;
+          addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
 
           if (doValidation()) {
             if (addFamilyUserInfoBloc.profileBanner != null) {
@@ -1252,8 +1251,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             var signInData = {};
             signInData[variable.strCountryCode] =
                 widget.arguments.sharedbyme.profileData.countryCode;
-            signInData[variable.strPhoneNumber] =
-                widget.arguments.sharedbyme.profileData.phoneNumber;
+            signInData[variable.strPhoneNumber] = mobileNoController.text;
             signInData[variable.strFirstName] = firstNameController.text;
             signInData[variable.strMiddleName] =
                 middleNameController.text.length == 0
