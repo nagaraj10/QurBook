@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/services.dart';
 import 'package:devicelocale/devicelocale.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:myfhb/constants/db_constants.dart' as DBConstants;
 import 'package:myfhb/src/model/AppointmentModel.dart';
 import 'package:myfhb/src/model/ReminderModel.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:myfhb/constants/db_constants.dart' as DBConstants;
 
 class FHBUtils {
   static String CURRENT_DATE_CODE = 'DMY';
@@ -97,8 +97,14 @@ class FHBUtils {
   }
 
   String getFormattedDateForUser(String strDate) {
-    String formattedDate =
-        DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate));
+    String formattedDate;
+    try {
+      formattedDate =
+          DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate).toLocal());
+    } catch (e) {
+      formattedDate = strDate;
+    }
+
     return formattedDate;
   }
 

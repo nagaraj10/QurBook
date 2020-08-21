@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/user_delinking_response.dart';
@@ -8,8 +9,6 @@ import 'package:myfhb/my_family/models/user_linking_response_list.dart';
 import 'package:myfhb/my_family/services/FamilyMemberListRepository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-
 
 class FamilyListBloc implements BaseBloc {
   FamilyMemberListRepository _familyResponseListRepository;
@@ -95,6 +94,19 @@ class FamilyListBloc implements BaseBloc {
     return familyResponseList;
   }
 
+  Future<FamilyMembersList> getFamilyMembersInfo() async {
+    FamilyMembersList familyResponseList;
+//    familyMemberListSink.add(ApiResponse.loading(variable.strFetchFamily));
+    try {
+      familyResponseList =
+          await _familyResponseListRepository.getFamilyMembersList();
+//      familyMemberListSink.add(ApiResponse.completed(familyResponseList));
+    } catch (e) {
+      familyMemberListSink.add(ApiResponse.error(e.toString()));
+    }
+    return familyResponseList;
+  }
+
   getCustomRoles() async {
     relationShipListSink.add(ApiResponse.loading(variable.strFetchRoles));
     try {
@@ -138,7 +150,8 @@ class FamilyListBloc implements BaseBloc {
 
   Future<AddFamilyOTPResponse> postUserLinkingForPrimaryNo(
       String jsonString) async {
-    userLinkingForPrimaryNoSink.add(ApiResponse.loading(variable.strPostUserLink));
+    userLinkingForPrimaryNoSink
+        .add(ApiResponse.loading(variable.strPostUserLink));
 
     AddFamilyOTPResponse addFamilyOTPResponse;
     try {

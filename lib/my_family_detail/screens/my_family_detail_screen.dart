@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
@@ -10,7 +9,8 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
@@ -20,10 +20,6 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
-
-
 
 class MyFamilyDetailScreen extends StatefulWidget {
   MyFamilyDetailArguments arguments;
@@ -87,9 +83,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   List<int> fetchedProfileData;
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
-
-  
-
 
   String selectedBloodGroup;
   String selectedBloodRange;
@@ -217,8 +210,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       lastNameController.text = '';
     }
 
-    if (sharedbyme.profileData.isVirtualUser) {
+    if (sharedbyme.profileData.isVirtualUser == true) {
       MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      print("Profile Main");
+      print(myProf);
       mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
       emailController.text = myProf.response.data.generalInfo.email;
     } else {
@@ -226,8 +221,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       emailController.text = sharedbyme.profileData.email;
     }
 
-    if (new CommonUtil().checkIfStringisNull(sharedbyme.profileData.bloodGroup)) {
-
+    if (new CommonUtil()
+        .checkIfStringisNull(sharedbyme.profileData.bloodGroup)) {
       renameBloodGroup(sharedbyme.profileData.bloodGroup);
     }
 
@@ -241,7 +236,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.profileData.dateOfBirth != null) {
-      
       dateOfBirthController.text = new FHBUtils()
           .getFormattedDateOnlyNew(sharedbyme.profileData.dateOfBirth);
     }
@@ -412,7 +406,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
   }
 
-
   Widget _showMobileNoTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -449,7 +442,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           ),
         ));
   }
-
 
   Widget _showNameTextField() {
     return Padding(
@@ -595,7 +587,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-
   Widget _showRelationShipTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -630,7 +621,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           ),
         ));
   }
-
 
   Widget _showEmailAddTextField() {
     return Padding(
@@ -668,7 +658,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-
   Widget _showGenderTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -704,7 +693,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           ),
         ));
   }
-
 
   Widget _showBloodGroupTextField() {
     return Padding(
@@ -745,7 +733,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             )));
   }
 
-
   Widget _showBloodRangeTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -785,7 +772,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             )));
   }
 
-
   Widget _showDateOfBirthTextField() {
     return GestureDetector(
       onTap: dateOfBirthTapped,
@@ -810,8 +796,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             decoration: InputDecoration(
               suffixIcon: new IconButton(
                 icon: new Icon(Icons.calendar_today),
-                onPressed: () {
-                },
+                onPressed: () {},
               ),
               labelText: CommonConstants.date_of_birth,
               hintText: CommonConstants.date_of_birth,
@@ -872,14 +857,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     );
 
     return viewInsuranceButtonWithGesture;
-
-  
   }
 
   Widget _showViewHospitalButton(Sharedbyme sharedbyme) {
     final GestureDetector viewHospitalButtonWithGesture = new GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context,router.rt_FamilyInsurance,
+        Navigator.pushNamed(context, router.rt_FamilyInsurance,
             arguments:
                 MyFamilyDetailViewArguments(index: 1, sharedbyme: sharedbyme));
       },
