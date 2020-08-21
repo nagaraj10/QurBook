@@ -381,14 +381,14 @@ class ChatScreenState extends State<ChatScreen> {
       listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
 
-      addChatList();
+      addChatList(content);
 
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
     }
   }
 
-  void addChatList(){
+  void addChatList(String content){
 
     Firestore.instance
         .collection('chat_list')
@@ -401,7 +401,7 @@ class ChatScreenState extends State<ChatScreen> {
       //'photoUrl': 'http://lorempixel.com/640/360',
       'id':peerId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-      'chattingWith': null
+      'lastMessage': content
     });
 
     Firestore.instance
@@ -415,7 +415,7 @@ class ChatScreenState extends State<ChatScreen> {
       //'photoUrl': 'http://lorempixel.com/640/360',
       'id':patientId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-      'chattingWith': null
+      'lastMessage': content,
     });
 
   }
