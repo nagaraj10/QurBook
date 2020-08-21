@@ -253,7 +253,8 @@ const String Save = 'Save';
 const String keyDetectedClass = 'detectedClass';
 
 const String userID = 'aa9cc3d2-46ab-4759-b993-f28483be087e';
-const String AuthToken='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6eyJQcm92aWRlclBheWxvYWQiOnsiaWRfdG9rZW4iOiJleUpyYVdRaU9pSkhkVXhWUWxCT2IwUmNMMVZLVFVkelMxQnlTM0JKUzA1bmVHWk5hRVV5ZWtkclZqUlNUa3hXU2xWTGN6MGlMQ0poYkdjaU9pSlNVekkxTmlKOS5leUpoZEY5b1lYTm9Jam9pVDJkV2RVVjBSVTQ1V2poSWNqTlRSM2N3U25wT1FTSXNJbk4xWWlJNkltRXpZbUUyTUdGakxXTTJPR0V0TkdKaU55MWlZalU0TFRsbVpqYzFPRE5pWldKak55SXNJbVZ0WVdsc1gzWmxjbWxtYVdWa0lqcG1ZV3h6WlN3aVltbHlkR2hrWVhSbElqb2lNVEJjTHpJNVhDOHhPVGt6SWl3aWFYTnpJam9pYUhSMGNITTZYQzljTDJOdloyNXBkRzh0YVdSd0xuVnpMV1ZoYzNRdE1TNWhiV0Y2YjI1aGQzTXVZMjl0WEM5MWN5MWxZWE4wTFRGZmRHOUtVbmhhT1d0S0lpd2ljR2h2Ym1WZmJuVnRZbVZ5WDNabGNtbG1hV1ZrSWpwbVlXeHpaU3dpWTI5bmJtbDBienAxYzJWeWJtRnRaU0k2SW1FelltRTJNR0ZqTFdNMk9HRXROR0ppTnkxaVlqVTRMVGxtWmpjMU9ETmlaV0pqTnlJc0ltZHBkbVZ1WDI1aGJXVWlPaUpRWVhKMllYUm9hU0lzSW1GMVpDSTZJakV3WjJReGRHeHhhR1ptY0RjNGJHdzFZMnBtZFdaMFlqVTJJaXdpWlhabGJuUmZhV1FpT2lJMk5EQXlOemczWXkxaE5qYzNMVFJoWTJFdE9XSTNZUzAzTm1Sa01UTm1aVGc1T1RraUxDSjBiMnRsYmw5MWMyVWlPaUpwWkNJc0ltRjFkR2hmZEdsdFpTSTZNVFU1TnpNNU9EazRNaXdpY0dodmJtVmZiblZ0WW';
+const String AuthToken =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6eyJQcm92aWRlclBheWxvYWQiOnsiaWRfdG9rZW4iOiJleUpyYVdRaU9pSkhkVXhWUWxCT2IwUmNMMVZLVFVkelMxQnlTM0JKUzA1bmVHWk5hRVV5ZWtkclZqUlNUa3hXU2xWTGN6MGlMQ0poYkdjaU9pSlNVekkxTmlKOS5leUpoZEY5b1lYTm9Jam9pVDJkV2RVVjBSVTQ1V2poSWNqTlRSM2N3U25wT1FTSXNJbk4xWWlJNkltRXpZbUUyTUdGakxXTTJPR0V0TkdKaU55MWlZalU0TFRsbVpqYzFPRE5pWldKak55SXNJbVZ0WVdsc1gzWmxjbWxtYVdWa0lqcG1ZV3h6WlN3aVltbHlkR2hrWVhSbElqb2lNVEJjTHpJNVhDOHhPVGt6SWl3aWFYTnpJam9pYUhSMGNITTZYQzljTDJOdloyNXBkRzh0YVdSd0xuVnpMV1ZoYzNRdE1TNWhiV0Y2YjI1aGQzTXVZMjl0WEM5MWN5MWxZWE4wTFRGZmRHOUtVbmhhT1d0S0lpd2ljR2h2Ym1WZmJuVnRZbVZ5WDNabGNtbG1hV1ZrSWpwbVlXeHpaU3dpWTI5bmJtbDBienAxYzJWeWJtRnRaU0k2SW1FelltRTJNR0ZqTFdNMk9HRXROR0ppTnkxaVlqVTRMVGxtWmpjMU9ETmlaV0pqTnlJc0ltZHBkbVZ1WDI1aGJXVWlPaUpRWVhKMllYUm9hU0lzSW1GMVpDSTZJakV3WjJReGRHeHhhR1ptY0RjNGJHdzFZMnBtZFdaMFlqVTJJaXdpWlhabGJuUmZhV1FpT2lJMk5EQXlOemczWXkxaE5qYzNMVFJoWTJFdE9XSTNZUzAzTm1Sa01UTm1aVGc1T1RraUxDSjBiMnRsYmw5MWMyVWlPaUpwWkNJc0ltRjFkR2hmZEdsdFpTSTZNVFU1TnpNNU9EazRNaXdpY0dodmJtVmZiblZ0WW';
 const String countryCode = '91';
 const String mobileNumber = '9176117878';
 
@@ -277,11 +278,14 @@ const String Appointments_receipt = 'Receipt';
 const String Appointments_reshedule = 'Reshedule';
 const String Appointments_cancel = 'Cancel';
 const String Appointments_new = 'New Appointment';
-const String YOUR_BOOKING_SUCCESS = "Your booking has been cancelled succesfully..";
-const String YOUR_RESHEDULE_SUCCESS = "Your booking has been resheduled succesfully..";
+const String YOUR_BOOKING_SUCCESS =
+    "Your booking has been cancelled succesfully..";
+const String YOUR_RESHEDULE_SUCCESS =
+    "Your booking has been resheduled succesfully..";
 const String BOOKING_CANCEL = "Booking cancellation failed.. Plesae try again!";
 const String RESHEDULE_CANCEL = "Resheduling failed.. Plesae try again!";
-const String RESHEDULE_SUCCESS_MESSAGE = "Appointment reschedule done successfully";
+const String RESHEDULE_SUCCESS_MESSAGE =
+    "Appointment reschedule done successfully";
 const String SLOT_NOT_AVAILABLE = "Slot is not available.. Please try again!";
 const String Appointments_followUpStatus = 'Next follow up on';
 const String Appointments_notesImage = 'assets/icons/notes.png';
@@ -295,6 +299,5 @@ const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
 const String Appointments_newAppoinmentImage =
     'assets/icons/new-appointment.svg';
 
-
 const String audioFileAACType = 'audio/aac';
-
+const String audioFileTypeAppStream = 'application/octet-stream';

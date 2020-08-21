@@ -74,7 +74,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   int index = 0;
   int length = 0;
   List<ImageDocumentResponse> imagesPathMain = new List();
- // PermissionStatus permissionStatus = PermissionStatus.unknown;
+  // PermissionStatus permissionStatus = PermissionStatus.unknown;
   //final PermissionHandler _storagePermission = Platform.isAndroid ? Permission.storage : Permission.photos;
   bool firsTym = true;
   bool ispdfPresent = false;
@@ -364,7 +364,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void _listenForPermissionStatus() async {
-   // final status = await _storagePermission.status;
+    // final status = await _storagePermission.status;
     //setState(() => permissionStatus = status);
   }
 
