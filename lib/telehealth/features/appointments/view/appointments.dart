@@ -372,6 +372,15 @@ class _AppointmentsState extends State<Appointments> {
                       child: Column(
                         children: [
                           //joinCallIcon(doc),
+                          IconButton(
+                              icon: ImageIcon(
+                                  AssetImage(Constants.Appointments_chatImage)),
+                              onPressed: () {
+                                //chat integration start
+                                String doctorId = doc.doctorId;
+                                String doctorName = doc.doctorName;
+                                storePatientDetailsToFCM(doctorId, doctorName);
+                              }),
                           SizedBoxWidget(
                             height: (hour == '00' || minutes == '00') ? 0 : 15,
                           ),
@@ -513,28 +522,28 @@ class _AppointmentsState extends State<Appointments> {
                             height: doc.specialization == null ? 30 : 40,
                           ),
                           commonWidget.count(doc.slotNumber),
-                           TextWidget(
-                                  fontsize: 9,
-                                  text: doc.followupDate == null
-                                      ? ''
-                                      :Constants.Appointments_followUpStatus,
-                                  overflow: TextOverflow.visible,
-                                  fontWeight: FontWeight.w400,
-                                  colors: Colors.black38,
-                                ),
-                           TextWidget(
-                                  fontsize: 10,
-                                  text: doc.followupDate== null
-                                      ? ""
-                                      :DateFormat.yMMMEd()
-                                          .format(DateTime.parse(
-                                              doc.followupDate))
-                                          .toString() ??
-                                      '',
-                                  fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.visible,
-                                  colors: Colors.black,
-                                ),
+                          TextWidget(
+                            fontsize: 9,
+                            text: doc.followupDate == null
+                                ? ''
+                                : Constants.Appointments_followUpStatus,
+                            overflow: TextOverflow.visible,
+                            fontWeight: FontWeight.w400,
+                            colors: Colors.black38,
+                          ),
+                          TextWidget(
+                            fontsize: 10,
+                            text: doc.followupDate == null
+                                ? ""
+                                : DateFormat.yMMMEd()
+                                        .format(
+                                            DateTime.parse(doc.followupDate))
+                                        .toString() ??
+                                    '',
+                            fontWeight: FontWeight.w500,
+                            overflow: TextOverflow.visible,
+                            colors: Colors.black,
+                          ),
                           TextWidget(
                             fontsize: 15,
                             text: doc.followupFee ?? '',
