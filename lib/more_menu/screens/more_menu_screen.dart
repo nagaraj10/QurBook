@@ -80,8 +80,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   child: profileImage != null
                       ? Image.file(profileImage,
                           width: 50, height: 50, fit: BoxFit.cover)
-                      : FHBBasicWidget().getProfilePicWidget(myProfile
-                          .response.data.generalInfo.profilePicThumbnail),
+                      : FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile
+                          .response.data.generalInfo.profilePicThumbnailURL),
                 ),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
