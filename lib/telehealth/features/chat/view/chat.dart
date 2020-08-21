@@ -287,6 +287,8 @@ class ChatScreenState extends State<ChatScreen> {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.response.data.generalInfo.name;
+    print('patient_id: '+patientId);
+    print('patient_name: '+patientName);
   }
 
   void onFocusChange() {
@@ -301,10 +303,14 @@ class ChatScreenState extends State<ChatScreen> {
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString('id') ?? '';
-    if (id.hashCode <= peerId.hashCode) {
-      groupChatId = '$id-$peerId';
-    } else {
-      groupChatId = '$peerId-$id';
+    if(id==""){
+      groupChatId = '$peerId-$patientId';
+    }else{
+      if (id.hashCode <= peerId.hashCode) {
+        groupChatId = '$id-$peerId';
+      } else {
+        groupChatId = '$peerId-$id';
+      }
     }
 
     Firestore.instance
@@ -1030,6 +1036,7 @@ class ChatScreenState extends State<ChatScreen> {
   }*/
 
   Widget buildListMessage() {
+    print('group_chat_id'+groupChatId);
     return Flexible(
       child: groupChatId == ''
           ? Center(
