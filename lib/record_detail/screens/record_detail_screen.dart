@@ -277,7 +277,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 color: Colors.black,
                               ),
                               onPressed: () {
-                                deleteRecord(widget.data.id);
+                                new FHBBasicWidget()
+                                    .showDialogWithTwoButtons(context, () {
+                                  deleteRecord(widget.data.id);
+                                }, 'Confirmation',
+                                        'Are you sure you want to delete');
                               })
                         ],
                       );
@@ -451,6 +455,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         _healthReportListForUserBlock.getHelthReportList().then((value) {
           PreferenceUtil.saveCompleteData(
               Constants.KEY_COMPLETE_DATA, value.response.data);
+          Navigator.of(context).pop();
           Navigator.of(context).pop();
         });
       }

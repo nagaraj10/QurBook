@@ -466,4 +466,41 @@ class FHBBasicWidget {
       ),
     );
   }
+
+  Future<bool> showDialogWithTwoButtons(
+      BuildContext context, Function logout, String title, String msg) {
+    return showDialog(
+          context: context,
+          child: AlertDialog(
+            title: Text(
+              title,
+              style: TextStyle(
+                  fontSize: 16, color: Color(CommonUtil().getMyPrimaryColor())),
+            ),
+            content: Text(
+              msg,
+              style: TextStyle(fontSize: 14),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text(variable.Cancel,
+                    style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()))),
+              ),
+              FlatButton(
+                onPressed: () {
+                  logout();
+                },
+                child: Text(variable.strYes,
+                    style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()))),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
 }
