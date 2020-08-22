@@ -6,12 +6,11 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/HospitalModel.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/HospitalModel.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 
 class MyProvidersHospitalsList extends StatelessWidget {
   List<HospitalsModel> hospitalsModel;
@@ -35,7 +34,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
                       arguments: AddProvidersArguments(
                           searchKeyWord: CommonConstants.hospitals,
                           hospitalsModel: eachHospitalModel,
-                          fromClass: CommonConstants.fromClass,
+                          fromClass: router.rt_myprovider,
                           hasData: true))
                   .then((value) {
                 providersBloc.getMedicalPreferencesList();
@@ -116,7 +115,6 @@ class MyProvidersHospitalsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                            
                               InkWell(
                                   child: eachHospitalModel.isDefault == true
                                       ? ImageIcon(
@@ -129,8 +127,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
                                       : Container(
                                           height: 0,
                                           width: 0,
-                                        ) 
-                                  ),
+                                        )),
                             ],
                           ),
                         )),

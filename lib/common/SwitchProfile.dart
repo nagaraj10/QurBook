@@ -62,8 +62,8 @@ class SwitchProfile {
                       ? myProfile.response.data.generalInfo
                                   .profilePicThumbnail !=
                               null
-                          ? new FHBBasicWidget().getProfilePicWidget(myProfile
-                              .response.data.generalInfo.profilePicThumbnail)
+                          ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile
+                              .response.data.generalInfo.profilePicThumbnailURL)
                           : Container(
                               height: 50,
                               width: 50,

@@ -6,12 +6,11 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 
 class MyProvidersLabsList extends StatelessWidget {
   List<LaboratoryModel> labsModel;
@@ -31,11 +30,11 @@ class MyProvidersLabsList extends StatelessWidget {
         LaboratoryModel eachLabModel = labsModel[index];
         return InkWell(
             onTap: () {
-              Navigator.pushNamed(context,router.rt_AddProvider,
+              Navigator.pushNamed(context, router.rt_AddProvider,
                       arguments: AddProvidersArguments(
                           searchKeyWord: CommonConstants.labs,
                           labsModel: eachLabModel,
-                          fromClass: CommonConstants.fromClass,
+                          fromClass: router.rt_myprovider,
                           hasData: true))
                   .then((value) {
                 providersBloc.getMedicalPreferencesList();
@@ -115,7 +114,6 @@ class MyProvidersLabsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                            
                               InkWell(
                                   child: eachLabModel.isDefault == true
                                       ? ImageIcon(
@@ -128,10 +126,7 @@ class MyProvidersLabsList extends StatelessWidget {
                                       : Container(
                                           height: 0,
                                           width: 0,
-                                        )
-
-                                 
-                                  ),
+                                        )),
                             ],
                           ),
                         )),

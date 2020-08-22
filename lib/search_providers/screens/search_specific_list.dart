@@ -2,9 +2,12 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
 import 'package:myfhb/search_providers/models/doctors_data.dart';
 import 'package:myfhb/search_providers/models/hospital_data.dart';
@@ -14,20 +17,14 @@ import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../bloc/doctors_list_block.dart';
 import '../bloc/hospital_list_block.dart';
 import '../models/doctors_list_response.dart';
 import '../models/hospital_list_response.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
 
 export '../models/hospital_list_response.dart';
-
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-
-import 'package:myfhb/constants/router_variable.dart' as router;
 
 class SearchSpecificList extends StatefulWidget {
   SearchArguments arguments;
@@ -91,7 +88,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               size: 20,
             ),
             onPressed: () {
-
               Navigator.pop(context, [1]);
             },
           ),
@@ -326,7 +322,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                   ],
                 ),
                 SizedBox(height: 10),
-                //_showAddButton()
+                _showAddButton()
               ],
             )),
             color: Colors.white,
@@ -613,7 +609,12 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         context,
         router.rt_AddProvider,
         arguments: AddProvidersArguments(
-            data: data, searchKeyWord: CommonConstants.doctors, hasData: true),
+            data: data,
+            searchKeyWord: CommonConstants.doctors,
+            fromClass: widget.arguments.fromClass == router.cn_AddProvider
+                ? widget.arguments.fromClass
+                : router.rt_TelehealthProvider,
+            hasData: true),
       ).then((value) {
         if (value == 1) {
           Navigator.pop(context);
@@ -626,6 +627,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         arguments: AddProvidersArguments(
             hospitalData: hospitalData,
             searchKeyWord: CommonConstants.hospitals,
+            fromClass: widget.arguments.fromClass == router.cn_AddProvider
+                ? widget.arguments.fromClass
+                : router.rt_TelehealthProvider,
             hasData: true),
       ).then((value) {
         if (value == 1) {
@@ -639,6 +643,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         arguments: AddProvidersArguments(
             labData: labData,
             searchKeyWord: CommonConstants.labs,
+            fromClass: widget.arguments.fromClass == router.cn_AddProvider
+                ? widget.arguments.fromClass
+                : router.rt_TelehealthProvider,
             hasData: true),
       ).then((value) {
         if (value == 1) {
@@ -650,19 +657,18 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   void _addBtnTapped() {
     Navigator.pushNamed(context, router.rt_AddProvider,
-            arguments: AddProvidersArguments(
-                searchText: value,
-                fromClass: widget.arguments.fromClass == router.cn_AddProvider
-                    ? widget.arguments.fromClass
-                    : CommonConstants.serach_specific_list,
-                searchKeyWord: widget.arguments.searchWord ==
-                        CommonConstants.doctors
-                    ? CommonConstants.doctors
-                    : widget.arguments.searchWord == CommonConstants.hospitals
-                        ? CommonConstants.hospitals
-                        : CommonConstants.labs,
-                hasData: false))
-        .then((results) {
+        arguments: AddProvidersArguments(
+          searchText: value,
+          fromClass: widget.arguments.fromClass == router.cn_AddProvider
+              ? widget.arguments.fromClass
+              : router.rt_TelehealthProvider,
+          searchKeyWord: widget.arguments.searchWord == CommonConstants.doctors
+              ? CommonConstants.doctors
+              : widget.arguments.searchWord == CommonConstants.hospitals
+                  ? CommonConstants.hospitals
+                  : CommonConstants.labs,
+          hasData: false,
+        )).then((results) {
       if (results != null) {
         widget.arguments.searchWord == CommonConstants.doctors
             ? passDoctorsValueSample(results, context)

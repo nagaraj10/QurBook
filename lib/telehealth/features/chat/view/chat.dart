@@ -8,11 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import '../../../../common/CommonUtil.dart';
 
@@ -45,6 +48,7 @@ class ChatState extends State<Chat> {
       body: ChatScreen(
         peerId: widget.peerId,
         peerAvatar: widget.peerAvatar,
+        peerName: widget.peerName,
       ),
     );
   }
@@ -79,7 +83,7 @@ class ChatState extends State<Chat> {
                   AnimatedSwitcher(
                     duration: Duration(milliseconds: 10),
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.55,
+                      width: MediaQuery.of(context).size.width * 0.76,
                       child: _patientDetailOrSearch(),
                     ),
                   ),
@@ -228,20 +232,22 @@ class ChatState extends State<Chat> {
 class ChatScreen extends StatefulWidget {
   final String peerId;
   final String peerAvatar;
+  final String peerName;
 
-  ChatScreen({Key key, @required this.peerId, @required this.peerAvatar})
+  ChatScreen({Key key, @required this.peerId, @required this.peerAvatar,@required this.peerName})
       : super(key: key);
 
   @override
   State createState() =>
-      ChatScreenState(peerId: peerId, peerAvatar: peerAvatar);
+      ChatScreenState(peerId: peerId, peerAvatar: peerAvatar,peerName: peerName);
 }
 
 class ChatScreenState extends State<ChatScreen> {
-  ChatScreenState({Key key, @required this.peerId, @required this.peerAvatar});
+  ChatScreenState({Key key, @required this.peerId, @required this.peerAvatar, @required this.peerName});
 
   String peerId;
   String peerAvatar;
+  String peerName;
   String id;
 
   var listMessage;
@@ -252,6 +258,8 @@ class ChatScreenState extends State<ChatScreen> {
   bool isLoading;
   bool isShowSticker;
   String imageUrl;
+  String patientId='';
+  String patientName='';
 
   final TextEditingController textEditingController = TextEditingController();
   var chatEnterMessageController = TextEditingController();
@@ -271,6 +279,16 @@ class ChatScreenState extends State<ChatScreen> {
     imageUrl = '';
 
     readLocal();
+    getPatientDetails();
+
+  }
+
+  Future<String> getPatientDetails() async {
+    patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    patientName = myProfile.response.data.generalInfo.name;
+    print('patient_id: '+patientId);
+    print('patient_name: '+patientName);
   }
 
   void onFocusChange() {
@@ -285,12 +303,15 @@ class ChatScreenState extends State<ChatScreen> {
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString('id') ?? '';
-    if (id.hashCode <= peerId.hashCode) {
-      groupChatId = '$id-$peerId';
-    } else {
-      groupChatId = '$peerId-$id';
+    if(id==""){
+      groupChatId = '$peerId-$patientId';
+    }else{
+      if (id.hashCode <= peerId.hashCode) {
+        groupChatId = '$id-$peerId';
+      } else {
+        groupChatId = '$peerId-$id';
+      }
     }
-
     Firestore.instance
         .collection('users')
         .document(id)
@@ -364,9 +385,44 @@ class ChatScreenState extends State<ChatScreen> {
       });
       listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+
+      addChatList(content);
+
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
     }
+  }
+
+  void addChatList(String content){
+
+    Firestore.instance
+        .collection('chat_list')
+        .document(patientId)
+        .collection('user_list')
+        .document(peerId)
+        .setData({
+      'nickname': widget.peerName!=null?widget.peerName:'',
+      'photoUrl': '',
+      //'photoUrl': 'http://lorempixel.com/640/360',
+      'id':peerId,
+      'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+      'lastMessage': content
+    });
+
+    Firestore.instance
+        .collection('chat_list')
+        .document(peerId)
+        .collection('user_list')
+        .document(patientId)
+        .setData({
+      'nickname': patientName!=null?patientName:'',
+      'photoUrl': '',
+      //'photoUrl': 'http://lorempixel.com/640/360',
+      'id':patientId,
+      'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
+      'lastMessage': content,
+    });
+
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
@@ -878,9 +934,9 @@ class ChatScreenState extends State<ChatScreen> {
                           onPressed: () {
                             FetchRecords(
                                 0,
-                                false,
-                                false,
                                 true,
+                                false,
+                                false,
                                 recordIds);
                           },
                           child: new Icon(
@@ -979,6 +1035,7 @@ class ChatScreenState extends State<ChatScreen> {
   }*/
 
   Widget buildListMessage() {
+    print('group_chat_id'+groupChatId);
     return Flexible(
       child: groupChatId == ''
           ? Center(

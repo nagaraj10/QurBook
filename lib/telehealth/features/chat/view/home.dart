@@ -18,7 +18,6 @@ import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/view/settings.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import '../../../../common/CommonUtil.dart';
@@ -54,15 +53,15 @@ class HomeScreenState extends State<ChatHomeScreen> {
     registerNotification();
     configLocalNotification();
 
-    getPatientDetails();
-
   }
 
-  Future<void> getPatientDetails() async {
+  Future<String> getPatientDetails() async {
      patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
      patientName = myProfile.response.data.generalInfo.name;
+
+     return patientId;
   }
   void registerNotification() {
     firebaseMessaging.requestNotificationPermissions();
@@ -296,39 +295,63 @@ class HomeScreenState extends State<ChatHomeScreen> {
         ],*/
       ),
       body: WillPopScope(
-        child: Stack(
-          children: <Widget>[
-            // List
-            Container(
-              child: StreamBuilder(
-                stream: Firestore.instance.collection('users').snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(themeColor),
-                      ),
-                    );
-                  } else {
-                    return ListView.builder(
-                      padding: EdgeInsets.all(10.0),
-                      itemBuilder: (context, index) =>
-                          buildItem(context, snapshot.data.documents[index]),
-                      itemCount: snapshot.data.documents.length,
-                    );
-                  }
-                },
-              ),
-            ),
-
-            // Loading
-            Positioned(
-              child: isLoading ? const Loading() : Container(),
-            )
-          ],
-        ),
+        child:checkIfDoctorIdExist(),
         onWillPop: onBackPress,
       ),
+    );
+  }
+
+  Widget checkIfDoctorIdExist() {
+    return new FutureBuilder<String>(
+      future: getPatientDetails(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return new Scaffold(
+            body: Center(child: new CircularProgressIndicator()),
+          );
+        } else if (snapshot.hasError) {
+          return new Text('Error: ${snapshot.error}');
+        } else {
+          return getChatList();
+        }
+      },
+    );
+  }
+
+  Widget getChatList(){
+    return Stack(
+      children: <Widget>[
+        // List
+        Container(
+          child: StreamBuilder(
+            stream: Firestore.instance.collection('chat_list')
+                .document(patientId)
+                .collection('user_list')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(themeColor),
+                  ),
+                );
+              } else {
+                return ListView.builder(
+                  padding: EdgeInsets.all(10.0),
+                  itemBuilder: (context, index) =>
+                      buildItem(context, snapshot.data.documents[index]),
+                  itemCount: snapshot.data.documents.length,
+                );
+              }
+            },
+          ),
+        ),
+
+        // Loading
+        Positioned(
+          child: isLoading ? const Loading() : Container(),
+        )
+      ],
     );
   }
 
@@ -421,7 +444,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   MediaQuery.of(context).size.width * 0.5),
                           padding: const EdgeInsets.only(),
                           child: Text(
-                            'Last message',
+                            document['lastMessage']!=null?document['lastMessage']:'',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
@@ -450,7 +473,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Text(
-                            'Next appointment date Jul 15,2020',
+                            'Next appointment on Jul 15,2020',
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: Colors.grey[800],
@@ -460,9 +483,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         )
                       ],
                     ),
-                    SizedBox(
+                   /* SizedBox(
                       width: MediaQuery.of(context).size.width * 0.035,
-                    ),
+                    ),*/
                   ],
                 ),
               ),

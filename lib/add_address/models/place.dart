@@ -11,7 +11,7 @@ class Place {
   Place.fromJson(Map<String, dynamic> json)
       : this.title = json[parameters.strTerms][0][parameters.strvalue],
         this.description = json[parameters.strDescription],
-        this.placeId = json[parameters.strplaceId];
+        this.placeId = json[parameters.strplace_id];
 
   Map<String, dynamic> toMap() {
     return {

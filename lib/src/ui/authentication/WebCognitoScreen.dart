@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart';
@@ -219,7 +220,7 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
 
       sendDeviceToken(userId, saveuser.email, user_mobile_no, deviceId)
           .then((value) {
-        if (value.isSuccess) {
+        if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
             Navigator.push(
                 context,
@@ -227,6 +228,13 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
                     builder: (BuildContext context) => DashboardScreen()));
             //Navigator.pop(context, 'code:${mURL}');
           });
+        } else {
+          new FHBBasicWidget().showDialogWithTwoButtons(context, () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => DashboardScreen()));
+          }, value.message, 'Confirmation Dialog');
         }
       });
       // redirecting to dashboard screen using userid

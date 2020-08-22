@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert' as convert;
 import 'dart:convert';
 import 'dart:io';
@@ -7,27 +8,20 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/my_family/models/ProfileData.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
 
 import 'AppException.dart';
-
-import 'AppException.dart';
-import 'dart:async';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/src/resources/network/AppException.dart';
-import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
@@ -546,7 +540,7 @@ class ApiBaseHelper {
       Dio dio = new Dio();
 
       dio.options.headers[variable.straccept] = variable.strAcceptVal;
-      dio.options.headers[variable.strContentType] = variable.strcntVal;
+      //dio.options.headers[variable.strContentType] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
       String fileNoun = file.path.split('/').last;
 
@@ -893,8 +887,8 @@ class ApiBaseHelper {
 
     var jsonString = convert.jsonEncode(inputBody);
     print(jsonString);
-    final response =
-        await getApiForresheduleAppointment(qr_appoinment_reshedule, jsonString);
+    final response = await getApiForresheduleAppointment(
+        qr_appoinment_reshedule, jsonString);
     return Reshedule.fromJson(response);
   }
 

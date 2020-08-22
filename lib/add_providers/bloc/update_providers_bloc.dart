@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:myfhb/add_providers/models/update_providers_id.dart';
 import 'package:myfhb/add_providers/services/update_providers_repository.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-
 
 class UpdateProvidersBloc implements BaseBloc {
   UpdateProvidersRepository updateProvidersRepository;
@@ -60,41 +59,89 @@ class UpdateProvidersBloc implements BaseBloc {
 
   // 1
   // Doctors
-  updateDoctorsIdWithUserDetails() async {
+//  updateDoctorsIdWithUserDetails() async {
+//    doctorsSink.add(ApiResponse.loading(variable.strUpdatingDoctor));
+//    try {
+//      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+//          .updateDoctorsIdWithUserDetails(providerId, isPreferred);
+//      doctorsSink.add(ApiResponse.completed(updateProvidersId));
+//    } catch (e) {
+//      doctorsSink.add(ApiResponse.error(e.toString()));
+//    }
+//  }
+
+  // 2
+  // Hospitals
+//  updateHospitalsIdWithUserDetails() async {
+//    hospitalsSink.add(ApiResponse.loading(variable.strUpdatingHospital));
+//    try {
+//      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+//          .updateHospitalsIdWithUserDetails(providerId, isPreferred);
+//      hospitalsSink.add(ApiResponse.completed(updateProvidersId));
+//    } catch (e) {
+//      hospitalsSink.add(ApiResponse.error(e.toString()));
+//    }
+//  }
+
+  // 3
+  // Labs
+//  updateLabsIdWithUserDetails() async {
+//    labsSink.add(ApiResponse.loading(variable.strUpdatingLab));
+//    try {
+//      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+//          .updateLabsIdWithUserDetails(providerId, isPreferred);
+//      labsSink.add(ApiResponse.completed(updateProvidersId));
+//    } catch (e) {
+//      labsSink.add(ApiResponse.error(e.toString()));
+//    }
+//  }
+
+  // 1
+  // Doctors
+  Future<UpdateProvidersId> updateDoctorsIdWithUserDetails() async {
     doctorsSink.add(ApiResponse.loading(variable.strUpdatingDoctor));
+    UpdateProvidersId updateProvidersId;
     try {
-      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+      updateProvidersId = await updateProvidersRepository
           .updateDoctorsIdWithUserDetails(providerId, isPreferred);
-      doctorsSink.add(ApiResponse.completed(updateProvidersId));
+//      doctorsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       doctorsSink.add(ApiResponse.error(e.toString()));
     }
+
+    return updateProvidersId;
   }
 
   // 2
   // Hospitals
-  updateHospitalsIdWithUserDetails() async {
+  Future<UpdateProvidersId> updateHospitalsIdWithUserDetails() async {
     hospitalsSink.add(ApiResponse.loading(variable.strUpdatingHospital));
+    UpdateProvidersId updateProvidersId;
     try {
-      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+      updateProvidersId = await updateProvidersRepository
           .updateHospitalsIdWithUserDetails(providerId, isPreferred);
       hospitalsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       hospitalsSink.add(ApiResponse.error(e.toString()));
     }
+
+    return updateProvidersId;
   }
 
   // 3
   // Labs
-  updateLabsIdWithUserDetails() async {
+  Future<UpdateProvidersId> updateLabsIdWithUserDetails() async {
     labsSink.add(ApiResponse.loading(variable.strUpdatingLab));
+    UpdateProvidersId updateProvidersId;
     try {
-      UpdateProvidersId updateProvidersId = await updateProvidersRepository
+      updateProvidersId = await updateProvidersRepository
           .updateLabsIdWithUserDetails(providerId, isPreferred);
       labsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       labsSink.add(ApiResponse.error(e.toString()));
     }
+
+    return updateProvidersId;
   }
 
   @override

@@ -1,15 +1,23 @@
 import 'dart:async';
 
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:myfhb/video_call/model/CallArguments.dart';
 
 class PushNotificationsProvider {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  final _pushStreamCOntroller = StreamController<String>.broadcast();
+  final _pushStreamCOntroller = StreamController<CallArguments>.broadcast();
 
-  Stream<String> get pushController => _pushStreamCOntroller.stream;
+  Stream<CallArguments> get pushController => _pushStreamCOntroller.stream;
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+  String title;
+  String body;
+  String ringtone;
+
+  var callArguments = CallArguments();
 
   static Future<dynamic> onBackgroundMessage(
       Map<String, dynamic> message) async {
@@ -58,36 +66,62 @@ class PushNotificationsProvider {
       priority: Priority.High,
       importance: Importance.Max,
     );
-    var iOS = new IOSNotificationDetails(sound: "iPHONE RINGTONE.aiff");
+
+    var iOS = new IOSNotificationDetails(sound: ringtone);
     var platform = new NotificationDetails(android, iOS);
-    await flutterLocalNotificationsPlugin.show(
-        0, 'John Doe', 'Incoming Video call.....', platform,
+    await flutterLocalNotificationsPlugin.show(0, title, body, platform,
         payload: 'Custom_Sound');
   }
 
   Future onSelectNotification(String payload) {
     debugPrint("payload : $payload");
 
-    final arg = 'Test';
-    _pushStreamCOntroller.sink.add(arg);
+    _pushStreamCOntroller.sink.add(callArguments);
   }
 
   Future<dynamic> onMessage(Map<String, dynamic> message) async {
     print("OnMessage New: $message");
+
+    title = message['aps']['alert']['title'];
+    body = message['aps']['alert']['body'];
+    ringtone = message['aps']['sound'];
+
+    final userName = message['username'];
+    final channelName = message['meetingid'];
+
+    callArguments = CallArguments(
+        role: ClientRole.Broadcaster,
+        channelName: channelName,
+        userName: userName);
 
     showLocalNotification();
   }
 
   Future<dynamic> onLaunch(Map<String, dynamic> message) async {
     print("OnLaunch New: $message");
-    final arg = 'Test';
-    _pushStreamCOntroller.sink.add(arg);
+
+    Future.delayed(const Duration(seconds: 3), () {
+      final userName = message['username'];
+      final channelName = message['meetingid'];
+
+      var callArguments = CallArguments(
+          role: ClientRole.Broadcaster,
+          channelName: channelName,
+          userName: userName);
+      _pushStreamCOntroller.sink.add(callArguments);
+    });
   }
 
   Future<dynamic> onResume(Map<String, dynamic> message) async {
     print("OnResume New: $message");
-    final arg = 'Test';
-    _pushStreamCOntroller.sink.add(arg);
+    final userName = message['username'];
+    final channelName = message['meetingid'];
+
+    var callArguments = CallArguments(
+        role: ClientRole.Broadcaster,
+        channelName: channelName,
+        userName: userName);
+    _pushStreamCOntroller.sink.add(callArguments);
   }
 
   void dispose() {
