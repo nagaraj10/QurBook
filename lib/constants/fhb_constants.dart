@@ -294,7 +294,7 @@ const String Appointments_chatImage = 'assets/navicons/chat.png';
 const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
 const String Appointments_newAppoinmentImage =
     'assets/icons/new-appointment.svg';
-
+const String PATIENT_FOLLOW_UP='Patient follow up';
 
 const String audioFileAACType = 'audio/aac';
 

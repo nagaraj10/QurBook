@@ -397,7 +397,7 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
-      path: "/Users/SENTHIL/Code/Flutter Projects/BitBucket/Common Widgets"
+      path: "D:\\ventech\\myFHB-flutter-common"
       relative: false
     source: path
     version: "0.0.1"
