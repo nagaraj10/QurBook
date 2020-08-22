@@ -16,9 +16,6 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-
-
-
 import 'CommonConstants.dart';
 
 class FHBBasicWidget {
@@ -118,10 +115,11 @@ class FHBBasicWidget {
     if (picked != null && picked != dateTime) {
       dateTime = picked ?? dateTime;
 
-      
-
       return onDateSelected(
-          dateTime, new DateFormat(variable.strDateFormatDay).format(dateTime).toString());
+          dateTime,
+          new DateFormat(variable.strDateFormatDay)
+              .format(dateTime)
+              .toString());
     }
   }
 
@@ -162,6 +160,21 @@ class FHBBasicWidget {
     return profilePicThumbnail != null
         ? Image.memory(
             Uint8List.fromList(profilePicThumbnail.data),
+            height: 50,
+            width: 50,
+            fit: BoxFit.cover,
+          )
+        : Container(
+            color: Color(fhbColors.bgColorContainer),
+            height: 50,
+            width: 50,
+          );
+  }
+
+  Widget getProfilePicWidgeUsingUrl(String profilePicThumbnailUrl) {
+    return profilePicThumbnailUrl != null
+        ? Image.network(
+            profilePicThumbnailUrl,
             height: 50,
             width: 50,
             fit: BoxFit.cover,
@@ -272,7 +285,6 @@ class FHBBasicWidget {
             if (results.containsKey(Constants.keyAudioFile)) {
               containsAudio = true;
               audioPath = results[Constants.keyAudioFile];
-           
 
               updateUI(containsAudio, audioPath);
             }
@@ -434,9 +446,7 @@ class FHBBasicWidget {
                       color: Colors.white, shape: BoxShape.circle),
                 ),
               ],
-            ))
-
-        );
+            )));
   }
 
   static Widget getRefreshContainerButton(
@@ -452,9 +462,45 @@ class FHBBasicWidget {
               style: TextStyle(
                 fontSize: 13,
               )),
-        
         ],
       ),
     );
+  }
+
+  Future<bool> showDialogWithTwoButtons(
+      BuildContext context, Function logout, String title, String msg) {
+    return showDialog(
+          context: context,
+          child: AlertDialog(
+            title: Text(
+              title,
+              style: TextStyle(
+                  fontSize: 16, color: Color(CommonUtil().getMyPrimaryColor())),
+            ),
+            content: Text(
+              msg,
+              style: TextStyle(fontSize: 14),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text(variable.Cancel,
+                    style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()))),
+              ),
+              FlatButton(
+                onPressed: () {
+                  logout();
+                },
+                child: Text(variable.strYes,
+                    style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()))),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 }

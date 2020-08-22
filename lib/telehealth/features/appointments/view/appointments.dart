@@ -380,6 +380,15 @@ class _AppointmentsState extends State<Appointments> {
                       child: Column(
                         children: [
                           //joinCallIcon(doc),
+                          IconButton(
+                              icon: ImageIcon(
+                                  AssetImage(Constants.Appointments_chatImage)),
+                              onPressed: () {
+                                //chat integration start
+                                String doctorId = doc.doctorId;
+                                String doctorName = doc.doctorName;
+                                storePatientDetailsToFCM(doctorId, doctorName);
+                              }),
                           SizedBoxWidget(
                             height: (hour == '00' || minutes == '00') ? 0 : 15,
                           ),

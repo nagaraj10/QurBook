@@ -189,7 +189,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
 
       if (widget.arguments.sharedbyme.profileData.dateOfBirth != null) {
-        dateofBirthStr = new FHBUtils().getFormattedDateForUser(
+        dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
         dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
@@ -247,7 +247,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .split("T"); //by space" " the string need to splited
 
         // dateOfBirthController.text = list[0];
-        dateofBirthStr = new FHBUtils().getFormattedDateForUser(
+        dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
         dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
@@ -298,7 +298,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             : value.response.data.generalInfo.gender;
 
         dateofBirthStr = value.response.data.generalInfo.dateOfBirth != null
-            ? new FHBUtils().getFormattedDateForUser(
+            ? new FHBUtils().getFormattedDateForUserBirth(
                 value.response.data.generalInfo.dateOfBirth)
             : '';
         dateOfBirthController.text =
@@ -1203,7 +1203,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         dateTime = picked ?? dateTime;
 
         dateofBirthStr =
-            new FHBUtils().getFormattedDateForUser(dateTime.toString());
+            new FHBUtils().getFormattedDateForUserBirth(dateTime.toString());
         dateOfBirthController.text =
             new FHBUtils().getFormattedDateOnlyNew(dateTime.toString());
       });
@@ -1238,8 +1238,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           addFamilyUserInfoBloc.relationship = selectedRelationShip.roleName;
           addFamilyUserInfoBloc.userId =
               widget.arguments.sharedbyme.profileData.id;
-          addFamilyUserInfoBloc.phoneNo =
-              widget.arguments.sharedbyme.profileData.phoneNumber;
+          addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
 
           if (doValidation()) {
             if (addFamilyUserInfoBloc.profileBanner != null) {
@@ -1252,8 +1251,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             var signInData = {};
             signInData[variable.strCountryCode] =
                 widget.arguments.sharedbyme.profileData.countryCode;
-            signInData[variable.strPhoneNumber] =
-                widget.arguments.sharedbyme.profileData.phoneNumber;
+            signInData[variable.strPhoneNumber] = mobileNoController.text;
             signInData[variable.strFirstName] = firstNameController.text;
             signInData[variable.strMiddleName] =
                 middleNameController.text.length == 0
@@ -1304,7 +1302,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 context, _keyLoader, variable.Please_Wait);
 
             addFamilyUserInfoBloc.updateSelfProfile().then((value) {
-              if (value.success && value.status == 200) {
+              if (value != null && value.success && value.status == 200) {
                 saveProfileImage();
                 getUserProfileData();
               } else {

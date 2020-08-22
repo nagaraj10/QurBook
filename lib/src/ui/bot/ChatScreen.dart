@@ -322,8 +322,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             child: Container(
           height: 40,
           width: 40,
-          child: FHBBasicWidget().getProfilePicWidget(
-              myProfile.response.data.generalInfo.profilePicThumbnail),
+          child: FHBBasicWidget().getProfilePicWidgeUsingUrl(
+              myProfile.response.data.generalInfo.profilePicThumbnailURL),
         )),
         SizedBox(width: 20),
       ],

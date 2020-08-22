@@ -931,7 +931,7 @@ class _MyFamilyState extends State<MyFamily> {
               if (addFamilyOTPResponse.success &&
                   addFamilyOTPResponse.status == 200) {
                 if (addFamilyOTPResponse.response.data != null) {
-                  _familyListBloc.getFamilyMembersList().then((value) {
+                  _familyListBloc.getFamilyMembersInfo().then((value) {
                     if (value.status == 200 && value.success) {
                       PreferenceUtil.saveFamilyData(
                               Constants.KEY_FAMILYMEMBER, value.response.data)

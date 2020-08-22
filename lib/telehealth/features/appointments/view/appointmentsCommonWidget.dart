@@ -4,6 +4,7 @@ import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
@@ -22,7 +23,7 @@ class AppointmentsCommonWidget {
           child: Row(
             children: [
               TextWidget(
-                text: doc,
+                text: toBeginningOfSentenceCase(doc),
                 fontWeight: FontWeight.w500,
                 fontsize: fhbStyles.fnt_doc_name,
                 softwrap: false,
@@ -71,7 +72,7 @@ class AppointmentsCommonWidget {
     return daysNum != '0'
         ? TextWidget(
             fontsize: 10,
-            text: daysNum+' days',
+            text: daysNum + ' days',
             fontWeight: FontWeight.w500,
             colors: Colors.black,
           )
