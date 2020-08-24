@@ -540,7 +540,7 @@ class ApiBaseHelper {
       Dio dio = new Dio();
 
       dio.options.headers[variable.straccept] = variable.strAcceptVal;
-      //dio.options.headers[variable.strContentType] = variable.strcntVal;
+      dio.options.headers[variable.strContentType] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
       String fileNoun = file.path.split('/').last;
 

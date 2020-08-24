@@ -44,7 +44,6 @@ import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcase.dart';
 
 class CommonUtil {
@@ -726,8 +725,7 @@ class CommonUtil {
     String mediaMasterId = '';
 
     for (MediaMasterIds mediaMasterIdsObj in mediaMasterIdsList) {
-      if (mediaMasterIdsObj.fileType == Constants.audioFileType ||
-          mediaMasterIdsObj.fileType == Constants.audioFileTypeAppStream) {
+      if (mediaMasterIdsObj.fileType == Constants.audioFileType) {
         mediaMasterId = mediaMasterIdsObj.id;
       }
     }
@@ -1055,36 +1053,6 @@ class CommonUtil {
   static Future<void> askPermissionForCameraAndMic() async {
     await PermissionHandler().requestPermissions(
       [PermissionGroup.camera, PermissionGroup.microphone],
-    );
-  }
-
-  getDoctorProfileImageWidget(String doctorId) {
-    HealthReportListForUserBlock _healthReportListForUserBlock =
-        new HealthReportListForUserBlock();
-    return FutureBuilder(
-      future: _healthReportListForUserBlock.getProfilePic(doctorId),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-        if (snapshot.hasData) {
-          return Image.memory(
-            snapshot.data,
-            height: 50,
-            width: 50,
-            fit: BoxFit.cover,
-          );
-        } else {
-          return new SizedBox(
-            width: 50.0,
-            height: 50.0,
-            child: Shimmer.fromColors(
-                baseColor: Colors.grey[200],
-                highlightColor: Colors.grey[550],
-                child:
-                    Container(width: 50, height: 50, color: Colors.grey[200])),
-          );
-        }
-
-        ///load until snapshot.hasData resolves to true
-      },
     );
   }
 }

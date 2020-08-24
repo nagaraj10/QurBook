@@ -6,15 +6,9 @@ class DeviceInfoSucess {
   DeviceInfoSucess({this.isSuccess, this.message, this.result});
 
   DeviceInfoSucess.fromJson(Map<String, dynamic> json) {
-    if (json != null) {
-      isSuccess = json['isSuccess'] != null ? json['isSuccess'] : false;
-      message = json['message'];
-      result = json['result'] != null ? json['result'] : null;
-    } else {
-      isSuccess = false;
-      message = '';
-      result = null;
-    }
+    isSuccess = json['isSuccess'];
+    message = json['message'];
+    result = json['result'];
   }
 
   Map<String, dynamic> toJson() {

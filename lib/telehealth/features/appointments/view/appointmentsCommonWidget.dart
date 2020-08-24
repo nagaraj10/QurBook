@@ -4,9 +4,7 @@ import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:flutter/material.dart';
@@ -23,7 +21,7 @@ class AppointmentsCommonWidget {
           child: Row(
             children: [
               TextWidget(
-                text: toBeginningOfSentenceCase(doc),
+                text: doc,
                 fontWeight: FontWeight.w500,
                 fontsize: fhbStyles.fnt_doc_name,
                 softwrap: false,
@@ -72,7 +70,7 @@ class AppointmentsCommonWidget {
     return daysNum != '0'
         ? TextWidget(
             fontsize: 10,
-            text: daysNum + ' days',
+            text: daysNum+' days',
             fontWeight: FontWeight.w500,
             colors: Colors.black,
           )
@@ -288,7 +286,7 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Widget floatingButton(BuildContext context) {
+  Widget floatingButton() {
     return FloatingActionButton(
       mini: true,
       backgroundColor: Colors.white,
@@ -303,14 +301,7 @@ class AppointmentsCommonWidget {
         icon: Icons.add,
         colors: Color(new CommonUtil().getMyPrimaryColor()),
         size: 24,
-        onTap: () {
-          Navigator.of(context).pop();
-              Navigator.pushNamed(
-                context,
-                '/telehealth-providers',
-                arguments: HomeScreenArguments(selectedIndex: 1),
-              ).then((value) {});
-        },
+        onTap: () {},
       ),
     );
   }
