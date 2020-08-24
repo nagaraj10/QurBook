@@ -18,6 +18,7 @@ import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/view/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import '../../../../common/CommonUtil.dart';
@@ -444,7 +445,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   MediaQuery.of(context).size.width * 0.5),
                           padding: const EdgeInsets.only(),
                           child: Text(
-                            document['lastMessage']!=null?document['lastMessage']:'',
+                            'Last message',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
@@ -473,7 +474,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Text(
-                            'Next appointment on Jul 15,2020',
+                            'Next appointment date Jul 15,2020',
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: Colors.grey[800],
@@ -483,9 +484,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         )
                       ],
                     ),
-                   /* SizedBox(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width * 0.035,
-                    ),*/
+                    ),
                   ],
                 ),
               ),
