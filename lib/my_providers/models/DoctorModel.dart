@@ -1,7 +1,5 @@
-
-import 'package:myfhb/my_providers/models/ProfilePic.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-
+import 'package:myfhb/my_providers/models/ProfilePic.dart';
 
 class DoctorsModel {
   String id;
@@ -17,6 +15,8 @@ class DoctorsModel {
   String email;
   String state;
   String city;
+  String latitude;
+  String longitude;
   bool isActive;
   String specialization;
   bool isUserDefined;
@@ -41,6 +41,8 @@ class DoctorsModel {
       this.email,
       this.state,
       this.city,
+      this.latitude,
+      this.longitude,
       this.isActive,
       this.specialization,
       this.isUserDefined,
@@ -65,6 +67,8 @@ class DoctorsModel {
     email = json[parameters.strEmail];
     state = json[parameters.strState];
     city = json[parameters.strCity];
+    latitude = json[parameters.strLatitude];
+    longitude = json[parameters.strLongitute];
     isActive = json[parameters.strIsActive];
     specialization = json[parameters.strSpecilization];
     isUserDefined = json[parameters.strIsUserDefined];
@@ -95,6 +99,8 @@ class DoctorsModel {
     data[parameters.strEmail] = this.email;
     data[parameters.strState] = this.state;
     data[parameters.strCity] = this.city;
+    data[parameters.strLatitude] = this.latitude;
+    data[parameters.strLongitute] = this.longitude;
     data[parameters.strIsActive] = this.isActive;
     data[parameters.strSpecilization] = this.specialization;
     data[parameters.strIsUserDefined] = this.isUserDefined;
@@ -105,11 +111,10 @@ class DoctorsModel {
       data[parameters.strprofilePic] = this.profilePic.toJson();
     }
     if (this.profilePicThumbnail != null) {
-      data[parameters.strprofilePicThumbnail] = this.profilePicThumbnail.toJson();
+      data[parameters.strprofilePicThumbnail] =
+          this.profilePicThumbnail.toJson();
     }
     data[parameters.strisDefault] = this.isDefault;
     return data;
   }
 }
-
-

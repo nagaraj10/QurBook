@@ -78,7 +78,7 @@ class CallMain extends StatelessWidget {
                 },
                 child: Container(),
               ),
-              CustomAppBar(userName),
+              CustomAppBar(Platform.isIOS ? arguments.userName : userName),
               Consumer<HideProvider>(
                 builder: (context, status, child) {
                   return Visibility(

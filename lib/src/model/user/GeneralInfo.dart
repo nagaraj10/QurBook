@@ -18,6 +18,8 @@ class GeneralInfo {
   String dateOfBirth;
   ProfilePicThumbnailMain profilePicThumbnail;
   QualifiedFullName qualifiedFullName;
+  String mappedDoctorId;
+  String profilePicThumbnailURL;
 
   GeneralInfo(
       {this.name,
@@ -33,7 +35,10 @@ class GeneralInfo {
       this.createdOn,
       this.lastModifiedOn,
       this.dateOfBirth,
-      this.profilePicThumbnail,this.qualifiedFullName});
+      this.profilePicThumbnail,
+      this.qualifiedFullName,
+      this.mappedDoctorId,
+      this.profilePicThumbnailURL});
 
   GeneralInfo.fromJson(Map<String, dynamic> json) {
     name = json[parameters.strName];
@@ -56,6 +61,8 @@ class GeneralInfo {
     qualifiedFullName = json[parameters.strqualifiedFullName] != null
         ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
         : null;
+    mappedDoctorId = json['mappedDoctorId'];
+    profilePicThumbnailURL = json['profilePicThumbnailURL'];
   }
 
   Map<String, dynamic> toJson() {
@@ -80,6 +87,8 @@ class GeneralInfo {
     if (this.qualifiedFullName != null) {
       data[parameters.strqualifiedFullName] = this.qualifiedFullName.toJson();
     }
+    data['mappedDoctorId'] = this.mappedDoctorId;
+    data['profilePicThumbnailURL'] = this.profilePicThumbnailURL;
     return data;
   }
 }

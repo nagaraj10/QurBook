@@ -17,7 +17,6 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
@@ -73,10 +72,11 @@ Future<void> main() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(
-   MyFHB() ,
+    MyFHB(),
   );
 
   // await saveToPreference();
+  //await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.AuthToken);
 }
 
 void saveToPreference() async {
@@ -153,10 +153,9 @@ class _MyFHBState extends State<MyFHB> {
       final provider = PushNotificationsProvider();
       provider.initNotification();
 
-      provider.pushController.listen((event) {
-        Get.key.currentState.pushNamed(routervariable.rt_CallMain,
-            arguments: CallArguments(
-                role: ClientRole.Broadcaster, channelName: 'Test'));
+      provider.pushController.listen((callarguments) {
+        Get.key.currentState
+            .pushNamed(routervariable.rt_CallMain, arguments: callarguments);
       });
     }
 

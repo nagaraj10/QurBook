@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 const String strAPP_NAME = 'MyFHB';
 const String strAppPackage = 'com.globalmantrainnovations.myfhb';
@@ -124,6 +122,8 @@ const String strzipCode = 'zipCode';
 const String strbranch = 'branch';
 const String strwebsite = 'website';
 const String strgoogleMapUrl = 'googleMapUrl';
+const String strLatitude = 'latitude';
+const String strLongitute = 'longitude';
 
 const String strCallDoctors = 'doctors/';
 const String strCallHospital = 'hospitals/';

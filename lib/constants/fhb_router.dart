@@ -18,6 +18,7 @@ import 'package:myfhb/src/ui/camera/take_picture_screen_for_devices.dart';
 import 'package:myfhb/src/ui/dashboard.dart';
 import 'package:myfhb/src/ui/settings/MySettings.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 
 import '../add_address/screens/add_address_screen.dart';
@@ -53,6 +54,7 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_MyRecords: (BuildContext context) => MyRecords(),
     router.rt_MyFamily: (BuildContext context) => MyFamily(),
     router.rt_myprovider: (BuildContext context) => MyProvider(),
+    router.rt_th_myprovider: (BuildContext context) => MyProvidersMain(),
     router.rt_AddProvider: (BuildContext context) =>
         AddProviders(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_AddAddress: (BuildContext context) =>
