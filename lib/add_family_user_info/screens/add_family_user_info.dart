@@ -189,7 +189,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
 
       if (widget.arguments.sharedbyme.profileData.dateOfBirth != null) {
-        dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
+        dateofBirthStr = new FHBUtils().getFormattedDateForUser(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
         dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
@@ -247,7 +247,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .split("T"); //by space" " the string need to splited
 
         // dateOfBirthController.text = list[0];
-        dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
+        dateofBirthStr = new FHBUtils().getFormattedDateForUser(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
         dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
@@ -298,7 +298,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             : value.response.data.generalInfo.gender;
 
         dateofBirthStr = value.response.data.generalInfo.dateOfBirth != null
-            ? new FHBUtils().getFormattedDateForUserBirth(
+            ? new FHBUtils().getFormattedDateForUser(
                 value.response.data.generalInfo.dateOfBirth)
             : '';
         dateOfBirthController.text =
@@ -1203,7 +1203,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         dateTime = picked ?? dateTime;
 
         dateofBirthStr =
-            new FHBUtils().getFormattedDateForUserBirth(dateTime.toString());
+            new FHBUtils().getFormattedDateForUser(dateTime.toString());
         dateOfBirthController.text =
             new FHBUtils().getFormattedDateOnlyNew(dateTime.toString());
       });
@@ -1302,7 +1302,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 context, _keyLoader, variable.Please_Wait);
 
             addFamilyUserInfoBloc.updateSelfProfile().then((value) {
-              if (value != null && value.success && value.status == 200) {
+              if (value.success && value.status == 200) {
                 saveProfileImage();
                 getUserProfileData();
               } else {

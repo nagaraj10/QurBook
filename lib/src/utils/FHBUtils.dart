@@ -108,12 +108,6 @@ class FHBUtils {
     return formattedDate;
   }
 
-  String getFormattedDateForUserBirth(String strDate) {
-    String formattedDate =
-        DateFormat('yyyy-MM-dd').format(DateTime.parse(strDate));
-    return formattedDate;
-  }
-
   String getFormattedDateOnly(String strDate) {
     String formattedDate;
     try {

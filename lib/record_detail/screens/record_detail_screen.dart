@@ -74,7 +74,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   int index = 0;
   int length = 0;
   List<ImageDocumentResponse> imagesPathMain = new List();
-  // PermissionStatus permissionStatus = PermissionStatus.unknown;
+ // PermissionStatus permissionStatus = PermissionStatus.unknown;
   //final PermissionHandler _storagePermission = Platform.isAndroid ? Permission.storage : Permission.photos;
   bool firsTym = true;
   bool ispdfPresent = false;
@@ -277,11 +277,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 color: Colors.black,
                               ),
                               onPressed: () {
-                                new FHBBasicWidget()
-                                    .showDialogWithTwoButtons(context, () {
-                                  deleteRecord(widget.data.id);
-                                }, 'Confirmation',
-                                        'Are you sure you want to delete');
+                                deleteRecord(widget.data.id);
                               })
                         ],
                       );
@@ -368,7 +364,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void _listenForPermissionStatus() async {
-    // final status = await _storagePermission.status;
+   // final status = await _storagePermission.status;
     //setState(() => permissionStatus = status);
   }
 
@@ -455,7 +451,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         _healthReportListForUserBlock.getHelthReportList().then((value) {
           PreferenceUtil.saveCompleteData(
               Constants.KEY_COMPLETE_DATA, value.response.data);
-          Navigator.of(context).pop();
           Navigator.of(context).pop();
         });
       }

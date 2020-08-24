@@ -18,6 +18,7 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
+
 class FamilyListDialog extends StatefulWidget {
   final FamilyData familyData;
 
@@ -149,16 +150,17 @@ class FamilyListDialogState extends State<FamilyListDialog> {
 
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
-    LinkedData linkedData =
-        new LinkedData(roleName: variable.Self, nickName: variable.Self);
+    LinkedData linkedData = new LinkedData(roleName: variable.Self, nickName:variable.Self);
 
     if (sharedByMe == null) {
       sharedByMe = new List();
       sharedByMe.add(
           new Sharedbyme(profileData: profileData, linkedData: linkedData));
+      
     } else {
       sharedByMe.insert(
           0, new Sharedbyme(profileData: profileData, linkedData: linkedData));
+      
     }
     if (sharedByMe.length > 0) {
       return Container(
@@ -188,12 +190,9 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                             ClipOval(
                                 child: sharedByMe[index].linkedData.nickName ==
                                         variable.Self
-                                    ? new FHBBasicWidget()
-                                        .getProfilePicWidgeUsingUrl(myProfile
-                                            .response
-                                            .data
-                                            .generalInfo
-                                            .profilePicThumbnailURL)
+                                    ? new FHBBasicWidget().getProfilePicWidget(
+                                        myProfile.response.data.generalInfo
+                                            .profilePicThumbnail)
                                     : Image.memory(
                                         Uint8List.fromList(sharedByMe[index]
                                             .profileData

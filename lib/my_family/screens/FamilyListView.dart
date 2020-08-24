@@ -42,6 +42,7 @@ class FamilyListView {
                             onTextFieldtap, _keyLoader)
                         : setupAlertDialoadContainer(
                             null, context, onTextFieldtap, _keyLoader),
+                  
                   ],
                 ),
               ));
@@ -60,19 +61,21 @@ class FamilyListView {
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
-    LinkedData linkedData =
-        new LinkedData(roleName: variable.Self, nickName: variable.Self);
+    LinkedData linkedData = new LinkedData(roleName: variable.Self, nickName: variable.Self);
 
     if (sharedByMe == null) {
       sharedByMe = new List();
       sharedByMe.add(
           new Sharedbyme(profileData: profileData, linkedData: linkedData));
+
     } else {
       sharedByMe.insert(
           0, new Sharedbyme(profileData: profileData, linkedData: linkedData));
+      
     }
     if (sharedByMe.length > 0) {
       return Container(
+       
           decoration: BoxDecoration(
               color: const Color(fhbColors.bgColorContainer),
               borderRadius: BorderRadius.circular(10)),
@@ -128,15 +131,14 @@ class FamilyListView {
                                               .nickName ==
                                           variable.Self
                                       ? myProfile.response.data.generalInfo
-                                                  .profilePicThumbnailURL !=
+                                                  .profilePicThumbnail !=
                                               null
                                           ? new FHBBasicWidget()
-                                              .getProfilePicWidgeUsingUrl(
-                                                  myProfile
-                                                      .response
-                                                      .data
-                                                      .generalInfo
-                                                      .profilePicThumbnailURL)
+                                              .getProfilePicWidget(myProfile
+                                                  .response
+                                                  .data
+                                                  .generalInfo
+                                                  .profilePicThumbnail)
                                           : Container(
                                               height: 50,
                                               width: 50,
@@ -222,18 +224,15 @@ class FamilyListView {
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
-                                    sharedByMe[index].linkedData != null
-                                        ? sharedByMe[index]
-                                                    .linkedData
-                                                    .roleName !=
-                                                null
-                                            ? toBeginningOfSentenceCase(
-                                                sharedByMe[index]
-                                                    .linkedData
-                                                    .roleName
-                                                    .toLowerCase())
-                                            : ''
-                                        : '',
+                    sharedByMe[index].linkedData!=null?
+                                    sharedByMe[index].linkedData.roleName !=
+                                            null
+                                        ? toBeginningOfSentenceCase(
+                                            sharedByMe[index]
+                                                .linkedData
+                                                .roleName
+                                                .toLowerCase())
+                                        : '':'',
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(fontSize: 10),
@@ -244,6 +243,7 @@ class FamilyListView {
                           ),
                         ),
                         onTap: () {
+                          
                           onTextFieldtap(
                               context,
                               sharedByMe[index].profileData.userId,

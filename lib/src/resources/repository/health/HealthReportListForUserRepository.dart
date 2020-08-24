@@ -18,35 +18,29 @@ import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
+
 class HealthReportListForUserRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<UserHealthResponseList> getHealthReportList({bool condition}) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    final response = await _helper.getHealthRecordList(
-        query.qr_mediameta + userID + query.qr_slash + query.qr_getMediaData,
-        condition: condition);
+    final response = await _helper
+        .getHealthRecordList(query.qr_mediameta + userID + query.qr_slash+query.qr_getMediaData,condition:condition);
     return UserHealthResponseList.fromJson(response);
   }
 
   Future<dynamic> getDoctorProfile(String doctorsId) async {
-    final response = await _helper.getDoctorProfilePic(query.qr_doctors +
-        doctorsId +
-        query.qr_profilePic +
-        query.qr_ques +
-        query.qr_isOriginalPicRequiredTrue);
+    final response = await _helper
+        .getDoctorProfilePic(query.qr_doctors + doctorsId +query.qr_slash+query.qr_getprofilepic+query.qr_isOriginalPicRequiredTrue);
     return response;
   }
 
   Future<ImageDocumentResponse> getDocumentImage(String metaMasterID) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    final response = await _helper.getDocumentImage(query.qr_mediameta +
-        userID +
-        query.qr_slash +
-        query.qr_rawMedia +
-        metaMasterID);
+    final response = await _helper.getDocumentImage(
+        query.qr_mediameta+ userID + query.qr_slash+query.qr_rawMedia+metaMasterID);
     return ImageDocumentResponse.fromJson(response);
   }
 
@@ -55,7 +49,7 @@ class HealthReportListForUserRepository {
 
     try {
       String familyId =
-          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+      PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
       if (familyId.length > 0) {
         id = familyId;
       } else {
@@ -65,9 +59,7 @@ class HealthReportListForUserRepository {
       id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
-    var response = await _helper.saveMediaData(
-        query.qr_mediameta + id + query.qr_slash + query.qr_savedmedia,
-        jsonString);
+    var response = await _helper.saveMediaData(query.qr_mediameta+ id + query.qr_slash +query.qr_savedmedia, jsonString);
     return SavedMetaDataResponse.fromJson(response);
   }
 
@@ -76,7 +68,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.saveImageAndGetDeviceInfo(
-        query.qr_ai + userID + query.qr_slash + query.qr_savehealth,
+        query.qr_ai + userID + query.qr_slash+query.qr_savehealth,
         File(fileName),
         fileName,
         metaID,
@@ -89,10 +81,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.saveImageToServerClone(
-        query.qr_mediamaster +
-            userID +
-            query.qr_slash +
-            query.qr_savedmediamaster,
+        query.qr_mediamaster + userID +query.qr_slash+query.qr_savedmediamaster,
         File(fileName.trim()),
         fileName.trim(),
         metaID,
@@ -118,12 +107,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     var response = await _helper.updateMediaData(
-        query.qr_mediameta +
-            userID +
-            query.qr_slash +
-            query.qr_updatemediameta +
-            metaInfoID,
-        jsonString);
+        query.qr_mediameta + userID + query.qr_slash+query.qr_updatemediameta + metaInfoID, jsonString);
     return UpdateMediaResponse.fromJson(response);
   }
 
@@ -132,8 +116,7 @@ class HealthReportListForUserRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.getDocumentImageList(
-        query.qr_mediameta + userID + query.qr_slash + query.qr_rawMedia,
-        metaMasterIdList);
+        query.qr_mediameta + userID + query.qr_slash+query.qr_rawMedia, metaMasterIdList);
     return response;
   }
 
@@ -143,8 +126,7 @@ class HealthReportListForUserRepository {
     var imagesList = new List<ImageDocumentResponse>();
 
     imagesList = await _helper.getDocumentImageList(
-        query.qr_mediameta + userID + query.qr_slash + query.qr_rawMedia,
-        metaMasterIdList);
+        query.qr_mediameta + userID + query.qr_slash+query.qr_rawMedia, metaMasterIdList);
     return imagesList;
   }
 }
