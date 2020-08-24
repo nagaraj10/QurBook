@@ -11,13 +11,13 @@ class BodyTemperature {
 
   factory BodyTemperature.fromJson(Map<String, dynamic> json) =>
       BodyTemperature(
-        isSuccess: json[strisSuccess],
+        isSuccess: json[is_Success],
         entities: List<BodyTemperatureEntity>.from(
             json[strentities].map((x) => BodyTemperatureEntity.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        strisSuccess: isSuccess,
+        is_Success: isSuccess,
         strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
       };
 }

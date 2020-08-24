@@ -227,7 +227,7 @@ const String strlocation='location';
 const String strlat='lat';
 const String strlng='lng';
 const String strpredictions='predictions';
-const String strresult='result';
+const String dataResult='result';
 const String strresults='results';
 
 const String strentityCode='entityCode';
@@ -332,7 +332,7 @@ const String strsyncEndDate = 'endDateTime';
 const String strlastSyncDateTime = 'lastSyncDateTime';
 const String strStartTimeStamp = "startDateTime";
 const String strEndTimeStamp = "endDateTime";
-const String strisSuccess = "isSuccess";
+const String is_Success = "isSuccess";
 const String strsourcetype = "sourcetype";
 
 //Data Params for device readings

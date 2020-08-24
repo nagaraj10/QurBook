@@ -7,20 +7,20 @@ class BPValues {
   BPValues({this.isSuccess, this.result});
 
   BPValues.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[strisSuccess];
-    if (json[strresult] != null) {
+    isSuccess = json[is_Success];
+    if (json[dataResult] != null) {
       result = new List<BPResult>();
-      json[strresult].forEach((v) {
-        result.add(new BPResult.fromJson(v));
+      json[dataResult].forEach((bpvalue) {
+        result.add(new BPResult.fromJson(bpvalue));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strisSuccess] = this.isSuccess;
+    data[is_Success] = this.isSuccess;
     if (this.result != null) {
-      data[strresult] = this.result.map((v) => v.toJson()).toList();
+      data[dataResult] = this.result.map((bpvalue) => bpvalue.toJson()).toList();
     }
     return data;
   }

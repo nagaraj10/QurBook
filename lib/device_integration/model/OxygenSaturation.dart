@@ -11,13 +11,13 @@ class OxygenSaturation {
 
   factory OxygenSaturation.fromJson(Map<String, dynamic> json) =>
       OxygenSaturation(
-        isSuccess: json[strisSuccess],
+        isSuccess: json[is_Success],
         entities: List<OxygenSaturationEntity>.from(
             json[strentities].map((x) => OxygenSaturationEntity.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        strisSuccess: isSuccess,
+        is_Success: isSuccess,
         strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
       };
 }

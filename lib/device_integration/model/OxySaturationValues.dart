@@ -7,19 +7,20 @@ class OxySaturationValues {
   OxySaturationValues({this.isSuccess, this.result});
 
   OxySaturationValues.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[strisSuccess];
-    if (json[strresult] != null) {
+    isSuccess = json[is_Success];
+    if (json[dataResult] != null) {
       result = new List<OxyResult>();
-      json[strresult].forEach((v) {
-        result.add(new OxyResult.fromJson(v));
+      json[dataResult].forEach((oxygenvalue) {
+        result.add(new OxyResult.fromJson(oxygenvalue));
       });
     }
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strisSuccess] = this.isSuccess;
+    data[is_Success] = this.isSuccess;
     if (this.result != null) {
-      data[strresult] = this.result.map((v) => v.toJson()).toList();
+      data[dataResult] =
+          this.result.map((oxygenvalue) => oxygenvalue.toJson()).toList();
     }
     return data;
   }

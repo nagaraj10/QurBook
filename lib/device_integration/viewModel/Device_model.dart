@@ -100,7 +100,7 @@ class DevicesViewModel with ChangeNotifier {
       if (resp == null) {
         return [];
       }
-      final parsed1 = json.decode(resp.toString())[strresult] as List;
+      final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<BPResult> ret = parsed1.map((i) => BPResult.fromJson(i)).toList();
       return ret;
     } catch (e) {
@@ -113,7 +113,7 @@ class DevicesViewModel with ChangeNotifier {
       if (resp == null) {
         return [];
       }
-      final parsed1 = json.decode(resp.toString())[strresult] as List;
+      final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<GVResult> ret = parsed1.map((i) => GVResult.fromJson(i)).toList();
       return ret;
     } catch (e) {
@@ -126,7 +126,7 @@ class DevicesViewModel with ChangeNotifier {
       if (resp == null) {
         return [];
       }
-      final parsed1 = json.decode(resp.toString())[strresult] as List;
+      final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<OxyResult> ret = parsed1.map((i) => OxyResult.fromJson(i)).toList();
       return ret;
     } catch (e) {
@@ -139,7 +139,7 @@ class DevicesViewModel with ChangeNotifier {
       if (resp == null) {
         return [];
       }
-      final parsed1 = json.decode(resp.toString())[strresult] as List;
+      final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<TMPResult> ret = parsed1.map((i) => TMPResult.fromJson(i)).toList();
       return ret;
     } catch (e) {
@@ -152,7 +152,7 @@ class DevicesViewModel with ChangeNotifier {
       if (resp == null) {
         return [];
       }
-      final parsed1 = json.decode(resp.toString())[strresult] as List;
+      final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<WVResult> ret = parsed1.map((i) => WVResult.fromJson(i)).toList();
       return ret;
     } catch (e) {
@@ -165,7 +165,7 @@ class DevicesViewModel with ChangeNotifier {
       if (resp == null) {
         return [];
       }
-      final parsed1 = json.decode(resp.toString())[strresult] as List;
+      final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<HRResult> ret = parsed1.map((i) => HRResult.fromJson(i)).toList();
       return ret;
     } catch (e) {

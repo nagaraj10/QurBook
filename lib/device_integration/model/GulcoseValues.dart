@@ -7,20 +7,21 @@ class GlucoseValues {
   GlucoseValues({this.isSuccess, this.result});
 
   GlucoseValues.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[strisSuccess];
-    if (json[strresult] != null) {
+    isSuccess = json[is_Success];
+    if (json[dataResult] != null) {
       result = new List<GVResult>();
-      json[strresult].forEach((v) {
-        result.add(new GVResult.fromJson(v));
+      json[dataResult].forEach((glucosevalue) {
+        result.add(new GVResult.fromJson(glucosevalue));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strisSuccess] = this.isSuccess;
+    data[is_Success] = this.isSuccess;
     if (this.result != null) {
-      data[strresult] = this.result.map((v) => v.toJson()).toList();
+      data[dataResult] =
+          this.result.map((glucosevalue) => glucosevalue.toJson()).toList();
     }
     return data;
   }

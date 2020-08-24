@@ -39,7 +39,7 @@ class _SelectedDeviceState extends State<SelectedDevice> {
         }
       case strBGlucose:
         {
-          if (widget.deviceValues.bloodPressure.entities.isNotEmpty) {
+          if (widget.deviceValues.bloodGlucose.entities.isNotEmpty) {
             date =
                 widget.deviceValues.bloodGlucose.entities[0].lastsyncdatetime;
           }
@@ -47,7 +47,7 @@ class _SelectedDeviceState extends State<SelectedDevice> {
         }
       case strOxygen:
         {
-          if (widget.deviceValues.bloodPressure.entities.isNotEmpty) {
+          if (widget.deviceValues.oxygenSaturation.entities.isNotEmpty) {
             date = widget
                 .deviceValues.oxygenSaturation.entities[0].lastsyncdatetime;
             devicevalue1 = widget
@@ -57,7 +57,7 @@ class _SelectedDeviceState extends State<SelectedDevice> {
         }
       case strTemp:
         {
-          if (widget.deviceValues.bloodPressure.entities.isNotEmpty) {
+          if (widget.deviceValues.bodyTemperature.entities.isNotEmpty) {
             date = widget
                 .deviceValues.bodyTemperature.entities[0].lastsyncdatetime;
             devicevalue1 =
@@ -67,7 +67,7 @@ class _SelectedDeviceState extends State<SelectedDevice> {
         }
       case strWgt:
         {
-          if (widget.deviceValues.bloodPressure.entities.isNotEmpty) {
+          if (widget.deviceValues.bodyWeight.entities.isNotEmpty) {
             date = widget.deviceValues.bodyWeight.entities[0].lastsyncdatetime;
             devicevalue1 = widget.deviceValues.bodyWeight.entities[0].weight;
           }

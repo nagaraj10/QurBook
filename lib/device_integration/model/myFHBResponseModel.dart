@@ -16,14 +16,14 @@ class LastSync {
   List<LastSyncResult> result;
 
   factory LastSync.fromJson(Map<String, dynamic> json) => LastSync(
-        isSuccess: json[strisSuccess],
+        isSuccess: json[is_Success],
         result:
-            List<LastSyncResult>.from(json[strresult].map((x) => LastSyncResult.fromJson(x))),
+            List<LastSyncResult>.from(json[dataResult].map((x) => LastSyncResult.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        strisSuccess: isSuccess,
-        strresult: List<dynamic>.from(result.map((x) => x.toJson())),
+        is_Success: isSuccess,
+        dataResult: List<dynamic>.from(result.map((x) => x.toJson())),
       };
 }
 

@@ -10,13 +10,13 @@ class BloodPressure {
   List<BloodPressureEntity> entities;
 
   factory BloodPressure.fromJson(Map<String, dynamic> json) => BloodPressure(
-        isSuccess: json[strisSuccess],
+        isSuccess: json[is_Success],
         entities: List<BloodPressureEntity>.from(
             json[strentities].map((x) => BloodPressureEntity.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        strisSuccess: isSuccess,
+        is_Success: isSuccess,
         strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
       };
 }

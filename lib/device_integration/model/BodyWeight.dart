@@ -10,13 +10,13 @@ class BodyWeight {
   List<BodyWeightEntity> entities;
 
   factory BodyWeight.fromJson(Map<String, dynamic> json) => BodyWeight(
-        isSuccess: json[strisSuccess],
+        isSuccess: json[is_Success],
         entities: List<BodyWeightEntity>.from(
             json[strentities].map((x) => BodyWeightEntity.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        strisSuccess: isSuccess,
+        is_Success: isSuccess,
         strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
       };
 }

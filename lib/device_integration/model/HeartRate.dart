@@ -10,13 +10,13 @@ class HeartRate {
   List<HeartRateEntity> entities;
 
   factory HeartRate.fromJson(Map<String, dynamic> json) => HeartRate(
-        isSuccess: json[strisSuccess],
+        isSuccess: json[is_Success],
         entities: List<HeartRateEntity>.from(
             json[strentities].map((x) => HeartRateEntity.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        strisSuccess: isSuccess,
+        is_Success: isSuccess,
         strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
       };
 }

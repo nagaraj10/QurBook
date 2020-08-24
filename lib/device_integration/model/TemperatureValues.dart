@@ -7,20 +7,21 @@ class TemperatureValues {
   TemperatureValues({this.isSuccess, this.result});
 
   TemperatureValues.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[strisSuccess];
-    if (json[strresult] != null) {
+    isSuccess = json[is_Success];
+    if (json[dataResult] != null) {
       result = new List<TMPResult>();
-      json[strresult].forEach((v) {
-        result.add(new TMPResult.fromJson(v));
+      json[dataResult].forEach((tempaturevalue) {
+        result.add(new TMPResult.fromJson(tempaturevalue));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[strisSuccess] = this.isSuccess;
+    data[is_Success] = this.isSuccess;
     if (this.result != null) {
-      data[strresult] = this.result.map((v) => v.toJson()).toList();
+      data[dataResult] =
+          this.result.map((tempaturevalue) => tempaturevalue.toJson()).toList();
     }
     return data;
   }

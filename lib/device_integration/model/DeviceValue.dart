@@ -22,13 +22,13 @@ class DeviceValue {
   DevResult result;
 
   factory DeviceValue.fromJson(Map<String, dynamic> json) => DeviceValue(
-        isSuccess: json[strisSuccess],
-        result: DevResult.fromJson(json[strresult]),
+        isSuccess: json[is_Success],
+        result: DevResult.fromJson(json[dataResult]),
       );
 
   Map<String, dynamic> toJson() => {
-        strisSuccess: isSuccess,
-        strresult: result.toJson(),
+        is_Success: isSuccess,
+        dataResult: result.toJson(),
       };
 }
 
