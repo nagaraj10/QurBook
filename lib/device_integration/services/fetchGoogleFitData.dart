@@ -8,7 +8,7 @@ import 'dart:convert' show json;
 class GoogleFitData {
   GoogleSignInHelper _signInHelper;
 
-  FetchGoogleFitData() {
+  GoogleFitData() {
     _signInHelper = GoogleSignInHelper();
   }
 
