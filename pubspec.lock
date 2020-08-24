@@ -446,7 +446,11 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
+<<<<<<< HEAD
+      path: "D:\\ventech\\myFHB-flutter-common"
+=======
       path: "D:\\commonWidget"
+>>>>>>> 73148dd8e6e9fdd88a6c78769250bd91818a4716
       relative: false
     source: path
     version: "0.0.1"

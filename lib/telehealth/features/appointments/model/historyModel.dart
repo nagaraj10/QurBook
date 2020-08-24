@@ -42,7 +42,7 @@ class History {
   bool isMedicalRecordsShared;
   String specialization;
   String location;
-  int doctorPic;
+  String doctorPic;
   String doctorName;
   String doctorId;
   String doctorSessionId;

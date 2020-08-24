@@ -21,7 +21,11 @@ dependencies:
     sdk: flutter
   
   gmiwidgetspackage:
+<<<<<<< HEAD
+    path: D:\ventech\myFHB-flutter-common
+=======
     path: D:\commonWidget
+>>>>>>> 73148dd8e6e9fdd88a6c78769250bd91818a4716
 
   # The following adds the Cupertino Icons font to your application.
   flutter_launcher_icons: ^0.7.0
