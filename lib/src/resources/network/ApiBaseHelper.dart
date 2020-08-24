@@ -17,6 +17,7 @@ import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
@@ -142,7 +143,7 @@ class ApiBaseHelper {
     var responseJson;
 
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
-    dio.options.headers[variable.strContentType] = variable.strcntVal;
+    //dio.options.headers[variable.strContentType] = variable.strcntVal;
     dio.options.headers[variable.strAuthorization] = authToken;
 
     Map<String, dynamic> mapForSignUp = new Map();
@@ -932,5 +933,34 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<List<AssociateRecordsResponse>> associateRecords(
+      String doctorId, String userId, List<String> metaMasterIdList) async {
+    var imagesList = new List<AssociateRecordsResponse>();
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    for (int i = 0; i < metaMasterIdList.length; i++) {
+      var associateRecord = {};
+      //var parentAppoint = {};
+      associateRecord[qr_doctorid] = doctorId;
+      associateRecord[qr_userid] = userID;
+      associateRecord[qr_mediaMetaId] = metaMasterIdList[i];
+      var jsonString = convert.jsonEncode(associateRecord);
+      print(jsonString);
+
+      var responseJson;
+      try {
+        final response = await http.post(_baseUrl + Constants.SHAREECORD,
+            headers: await headerRequest.getRequestHeadersAuthContent());
+        responseJson = _returnResponse(response);
+        print(responseJson + '*****');
+      } on SocketException {
+        throw FetchDataException('No Internet connection');
+      }
+      imagesList.add(AssociateRecordsResponse.fromJson(responseJson));
+    }
+
+    return imagesList;
   }
 }

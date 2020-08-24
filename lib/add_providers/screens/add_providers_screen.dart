@@ -808,9 +808,9 @@ class AddProvidersState extends State<AddProviders> {
 
   updateDoctorsIdWithUserDetails() {
     updateProvidersBloc.updateDoctorsIdWithUserDetails().then((value) {
-      print(value.status);
+      /* print(value.status);
       print(value.message);
-      print(widget.fromClass);
+      print(widget.fromClass);*/
 
       var routeClassName = '';
 

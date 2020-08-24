@@ -14,7 +14,9 @@ import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/ui/Dashboard.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class WebCognitoScreen extends StatefulWidget {
   @override
@@ -222,18 +224,13 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
           .then((value) {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => DashboardScreen()));
+            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+
             //Navigator.pop(context, 'code:${mURL}');
           });
         } else {
           new FHBBasicWidget().showDialogWithTwoButtons(context, () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => DashboardScreen()));
+            PageNavigator.goToPermanent(context, router.rt_Dashboard);
           }, value.message, 'Confirmation Dialog');
         }
       });

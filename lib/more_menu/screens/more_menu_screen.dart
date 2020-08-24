@@ -87,9 +87,18 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      myProfile.response.data.generalInfo.name != null
-                          ? toBeginningOfSentenceCase(
-                              myProfile.response.data.generalInfo.name)
+                      myProfile.response.data.generalInfo.qualifiedFullName !=
+                              null
+                          ? toBeginningOfSentenceCase(myProfile
+                                      .response
+                                      .data
+                                      .generalInfo
+                                      .qualifiedFullName
+                                      .firstName ??
+                                  '') +' '+
+                              toBeginningOfSentenceCase(myProfile.response.data
+                                      .generalInfo.qualifiedFullName.lastName ??
+                                  '')
                           : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),

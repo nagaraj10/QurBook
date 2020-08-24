@@ -3,6 +3,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
@@ -56,8 +57,8 @@ class ProvidersListRepository {
     return DoctorBookMarkedSucessModel.fromJson(response);
   }
 
-  Future<DoctorTimeSlotsModel> getTelehealthSlotsList(String date,String doctorId) async {
-
+  Future<DoctorTimeSlotsModel> getTelehealthSlotsList(
+      String date, String doctorId) async {
     print(date);
     print(doctorId);
 
@@ -66,14 +67,19 @@ class ProvidersListRepository {
     slotInput[qr_doctorid] = doctorId;
 
     var jsonString = convert.jsonEncode(slotInput);
-    final response = await _helper.getTimeSlotsList(qr_getSlots,jsonString);
+    final response = await _helper.getTimeSlotsList(qr_getSlots, jsonString);
     return DoctorTimeSlotsModel.fromJson(response);
   }
 
-  Future<BookAppointmentModel> bookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,
-      String slotNumber,bool isMedicalShared,String isFollowUp,List<String> healthRecords) async {
-
-
+  Future<BookAppointmentModel> bookAppointment(
+      String createdBy,
+      String createdFor,
+      String doctorSessionId,
+      String scheduleDate,
+      String slotNumber,
+      bool isMedicalShared,
+      String isFollowUp,
+      List<String> healthRecords) async {
     var slotInput = {};
     //var parentAppoint = {};
     slotInput[qr_created_by] = createdBy;
@@ -85,17 +91,20 @@ class ProvidersListRepository {
     slotInput[qr_is_followup] = false;
     slotInput[qr_health_record_ref] = healthRecords;
     slotInput[qr_parent_appointment] = {};
-   /* parentAppoint["id"] = '';
+    /* parentAppoint["id"] = '';
     parentAppoint["bookingID"] = {};*/
 
     var jsonString = convert.jsonEncode(slotInput);
     print(jsonString);
-    final response = await _helper.bookAppointment(qr_bookAppmnt,jsonString);
+    final response = await _helper.bookAppointment(qr_bookAppmnt, jsonString);
     return BookAppointmentModel.fromJson(response);
   }
 
-  Future<UpdatePaymentModel> updatePayment(String paymentId,String appointmentId,String paymentOrderId,String paymentRequestId) async {
-
+  Future<UpdatePaymentModel> updatePayment(
+      String paymentId,
+      String appointmentId,
+      String paymentOrderId,
+      String paymentRequestId) async {
     var paymentInput = {};
     paymentInput[qr_payment_id] = paymentId;
     paymentInput[qr_appoint_id] = appointmentId;
@@ -104,7 +113,14 @@ class ProvidersListRepository {
 
     var jsonString = convert.jsonEncode(paymentInput);
     print(jsonString);
-    final response = await _helper.updatePayment(qr_update_payment,jsonString);
+    final response = await _helper.updatePayment(qr_update_payment, jsonString);
     return UpdatePaymentModel.fromJson(response);
+  }
+
+  Future<List<AssociateRecordsResponse>> associateRecords(
+      String doctorId, String userId, List<String> healthRecords) async {
+    final response =
+        await _helper.associateRecords(doctorId, userId, healthRecords);
+    return response;
   }
 }
