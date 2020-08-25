@@ -98,6 +98,7 @@ class _MyProvidersState extends State<MyProviders> {
                   searchWord: CommonConstants.doctors,
                   fromClass: router.cn_teleheathProvider,
                 )).then((value) {
+              providerViewModel.doctorIdsList = null;
               setState(() {});
             });
           },
@@ -233,7 +234,7 @@ class _MyProvidersState extends State<MyProviders> {
                           }),
                     ],
                   )),
-                  docs[i].isTelehealthEnabled
+                  docs[i].isActive
                       ? commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,

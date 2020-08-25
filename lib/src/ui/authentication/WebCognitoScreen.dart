@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -222,13 +224,18 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
           .then((value) {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
-            PageNavigator.goToPermanent(context, router.rt_Dashboard);
-
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => DashboardScreen()));
             //Navigator.pop(context, 'code:${mURL}');
           });
         } else {
           new FHBBasicWidget().showDialogWithTwoButtons(context, () {
-            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => DashboardScreen()));
           }, value.message, 'Confirmation Dialog');
         }
       });
@@ -248,5 +255,41 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
     } catch (e) {}
     //getAuthToken(authcode);
     //TODO: More restoring of settings would go here...
+  }
+
+  Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,
+      String user_mobile_no, String deviceId) async {
+    var jsonParam;
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+    final token = await _firebaseMessaging.getToken();
+    print('Firebase Token from Login Page $token');
+
+    Map<String, dynamic> deviceInfo = new Map();
+    Map<String, dynamic> user = new Map();
+    Map<String, dynamic> jsonData = new Map();
+
+    user['id'] = userId;
+    deviceInfo['user'] = user;
+    deviceInfo['phoneNumber'] = user_mobile_no;
+    deviceInfo['email'] = email;
+    deviceInfo['isActive'] = true;
+    deviceInfo['deviceTokenId'] = token;
+
+    jsonData['deviceInfo'] = deviceInfo;
+    if (Platform.isIOS) {
+      jsonData['platformCode'] = 'IOSPLT';
+    } else {
+      jsonData['platformCode'] = 'ANDPLT';
+    }
+
+    print(jsonData.toString());
+
+    var params = json.encode(jsonData);
+
+    print(params.toString());
+
+    final response = await apiBaseHelper.postDeviceId('device-info', params);
+    return DeviceInfoSucess.fromJson(response);
   }
 }

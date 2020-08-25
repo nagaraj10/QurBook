@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/global_search/model/Data.dart';
-import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Media/MediaData.dart';
-import 'package:myfhb/src/model/TabModel.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/global_search/bloc/GlobalSearchBloc.dart';
+import 'package:myfhb/global_search/model/Data.dart';
 import 'package:myfhb/global_search/model/GlobalSearch.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
@@ -40,11 +42,6 @@ import '../../constants/fhb_constants.dart';
 
 export 'package:myfhb/common/CommonUtil.dart';
 export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
 
 class MyRecords extends StatefulWidget {
   int categoryPosition;
@@ -52,13 +49,16 @@ class MyRecords extends StatefulWidget {
   bool isNotesSelect;
   bool isAudioSelect;
   List<String> selectedMedias;
+  bool isFromChat =false;
 
   MyRecords(
       {this.categoryPosition,
       this.allowSelect,
       this.isAudioSelect,
       this.isNotesSelect,
-      this.selectedMedias});
+      this.selectedMedias,
+      this.isFromChat,
+      });
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -140,9 +140,13 @@ class _MyRecordsState extends State<MyRecords> {
         elevation: 0,
         automaticallyImplyLeading: false,
         flexibleSpace: GradientAppBar(),
-        leading: SizedBox(
-          width: 0,
-          height: 0,
+        leading: IconWidget(
+          icon: Icons.arrow_back_ios,
+          colors: Colors.white,
+          size: 20,
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
         titleSpacing: 0,
         title: _buildSearchField(),
@@ -211,6 +215,7 @@ class _MyRecordsState extends State<MyRecords> {
 
     categoryDataList = new CommonUtil().getAllCategoryList(data);
     completeData = new CommonUtil().getMediaTypeInfo(data);
+    print('getWidgetForSearchedMedia');
     PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, completeData);
     PreferenceUtil.saveCategoryList(
         Constants.KEY_SEARCHED_CATEGORY, categoryDataList);
@@ -304,6 +309,7 @@ class _MyRecordsState extends State<MyRecords> {
         completeData =
             PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST);
       }
+      print('end of getMainWidgets');
     }
     return CustomTabView(
       initPosition: initPosition,
@@ -532,6 +538,7 @@ class CustomTabView extends StatefulWidget {
   bool allowSelect;
   bool allowSelectNotes;
   bool allowSelectVoice;
+  bool isFromChat = false;
 
   CustomTabView(
       {@required this.itemCount,
@@ -550,7 +557,9 @@ class CustomTabView extends StatefulWidget {
       this.allowSelect,
       this.selectedMedia,
       this.allowSelectNotes,
-      this.allowSelectVoice});
+      this.allowSelectVoice,
+      this.isFromChat
+      });
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -590,6 +599,7 @@ class _CustomTabsState extends State<CustomTabView>
     if (widget.fromSearch) {
       _currentPosition = 0;
     } else {
+      print(widget.initPosition);
       _currentPosition = widget.initPosition ?? 0;
     }
 
@@ -770,7 +780,7 @@ class _CustomTabsState extends State<CustomTabView>
                 onPressed: () {
                   Navigator.of(context).pop({'metaId': widget.selectedMedia});
                 },
-                child: Text('Associate'),
+                child: widget.isFromChat?Text('Attach'):Text('Associate'),
                 textColor: Color(new CommonUtil().getMyPrimaryColor()),
                 color: Colors.white,
                 borderSide: BorderSide(
@@ -841,7 +851,7 @@ class _CustomTabsState extends State<CustomTabView>
 
   Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
     CompleteData completeDataFromPreference =
-        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
+    PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch
         ? getMediTypeForlabels(data, widget.completeData)
         : completeDataFromPreference != null
@@ -967,7 +977,7 @@ class _CustomTabsState extends State<CustomTabView>
                       )),
                     );
 
-                    break;
+              break;
 
                   case Status.ERROR:
                     return Text(variable.strNoLoadtabls,
@@ -1020,9 +1030,11 @@ class _CustomTabsState extends State<CustomTabView>
       if (condition) {
         if (!(widget.selectedMedia.contains(metaId))) {
           widget.selectedMedia.add(metaId);
+          print(metaId + ' Added ************');
         }
       } else {
         widget.selectedMedia.remove(metaId);
+        print(metaId + ' removed **************');
       }
     } else if (widget.allowSelectNotes || widget.allowSelectVoice) {
       if (condition) {
@@ -1031,12 +1043,15 @@ class _CustomTabsState extends State<CustomTabView>
               .showInSnackBar(Constants.STR_ONLY_ONE, widget.scaffold_state);
         } else {
           widget.selectedMedia.add(metaId);
+          print(metaId + ' Added ************');
         }
       } else {
         widget.selectedMedia.remove(metaId);
+        print(metaId + ' removed **************');
       }
     }
 
+    print(widget.selectedMedia);
     callBackToRefresh();
   }
 
@@ -1238,18 +1253,18 @@ class _CustomTabsState extends State<CustomTabView>
         Padding(padding: EdgeInsets.only(top: 10)),
         dataObj.logo != null
             ? Image.network(
-                Constants.BASE_URL + dataObj.logo,
-                width: 20,
-                height: 20,
-                color: Colors.white,
-              )
+          Constants.BASE_URL + dataObj.logo,
+          width: 20,
+          height: 20,
+          color: Colors.white,
+        )
             : Icon(Icons.calendar_today, size: 20, color: Colors.white),
         Padding(padding: EdgeInsets.only(top: 10)),
         Container(
             child: Text(
-          dataObj.categoryName,
-          style: TextStyle(fontSize: 12),
-        )),
+              dataObj.categoryName,
+              style: TextStyle(fontSize: 12),
+            )),
         Padding(padding: EdgeInsets.only(top: 10)),
       ]));
       /* }*/
@@ -1261,19 +1276,19 @@ class _CustomTabsState extends State<CustomTabView>
   void openNotesDialog() {
     TextEditingController fileName = new TextEditingController(
         text:
-            categoryName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+        categoryName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     new CommonDialogBox().getDialogBoxForNotes(
         context,
         containsAudio,
         audioPath,
-        (containsAudio, audioPath) {
+            (containsAudio, audioPath) {
           setState(() {
             audioPath = audioPath;
             containsAudio = containsAudio;
           });
         },
         null,
-        (containsAudio, audioPath) {
+            (containsAudio, audioPath) {
           audioPath = audioPath;
           containsAudio = containsAudio;
 

@@ -7,12 +7,14 @@ import 'package:myfhb/telehealth/features/appointments/model/doctorsData.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/timeModel.dart';
+import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
 
 class AppointmentsViewModel extends ChangeNotifier {
   ApiBaseHelper _helper = ApiBaseHelper();
   AppointmentsModel appointmentsModel;
   CancelAppointmentModel cancelAppointmentModel = new CancelAppointmentModel();
   Reshedule resheduleAppointmentModel = new Reshedule();
+  GetMetaFileURLModel getMetaFileURLModel = new GetMetaFileURLModel();
 
   Future<AppointmentsModel> fetchAppointments() async {
     try {
