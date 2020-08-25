@@ -150,6 +150,7 @@ class FamilyListBloc implements BaseBloc {
 
   Future<AddFamilyOTPResponse> postUserLinkingForPrimaryNo(
       String jsonString) async {
+    print(jsonString);
     userLinkingForPrimaryNoSink
         .add(ApiResponse.loading(variable.strPostUserLink));
 

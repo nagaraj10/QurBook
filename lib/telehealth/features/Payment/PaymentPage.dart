@@ -5,6 +5,7 @@
 // ignore_for_file: public_member_api_docs
 
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
@@ -17,7 +18,12 @@ class PaymentPage extends StatefulWidget {
   final String paymentId;
   final String appointmentId;
 
-  PaymentPage({Key key, @required this.redirectUrl,@required this.paymentId,@required this.appointmentId}) : super(key: key);
+  PaymentPage(
+      {Key key,
+      @required this.redirectUrl,
+      @required this.paymentId,
+      @required this.appointmentId})
+      : super(key: key);
 
   @override
   _WebViewExampleState createState() => _WebViewExampleState();
@@ -69,14 +75,14 @@ class _WebViewExampleState extends State<PaymentPage> {
             if (finalUrl.contains(CHECK_URL)) {
               Uri uri = Uri.parse(finalUrl);
               String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
-              if(paymentStatus!=null && paymentStatus==CREDIT){
+              if (paymentStatus != null && paymentStatus == CREDIT) {
                 String paymentOrderId = uri.queryParameters[PAYMENT_ID];
                 String paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
 
-                updatePayment(paymentId,appointmentId,paymentOrderId,paymentRequestId);
-
-              }else{
-                callResultPage(false,'');
+                updatePayment(
+                    paymentId, appointmentId, paymentOrderId, paymentRequestId);
+              } else {
+                callResultPage(false, '');
               }
             }
             return NavigationDecision.navigate;
@@ -93,7 +99,7 @@ class _WebViewExampleState extends State<PaymentPage> {
     );
   }
 
-  void callResultPage(bool status,String refNo) {
+  void callResultPage(bool status, String refNo) {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -113,25 +119,32 @@ class _WebViewExampleState extends State<PaymentPage> {
         });
   }
 
-  updatePayment(String paymentId,String appointmentId,String paymentOrderId,String paymentRequestId) {
-    updatePaymentStatus(paymentId,appointmentId,paymentOrderId,paymentRequestId).then((value) {
-      if (value.status == 200 && value.success == true && value.response.data.paymentStatus.code==PAYSUC) {
-          callResultPage(true,value.response.data.paymentOrderId);
+  updatePayment(String paymentId, String appointmentId, String paymentOrderId,
+      String paymentRequestId) {
+    updatePaymentStatus(
+            paymentId, appointmentId, paymentOrderId, paymentRequestId)
+        .then((value) {
+      if (value.status == 200 &&
+          value.success == true &&
+          value.response.data.paymentStatus.code == PAYSUC) {
+        callResultPage(true, value.response.data.paymentOrderId);
       } else {
-       callResultPage(false,'');
+        callResultPage(false, '');
       }
-
     });
   }
 
   Future<UpdatePaymentModel> updatePaymentStatus(
-      String paymentId,String appointmentId,String paymentOrderId,String paymentRequestId) async {
+      String paymentId,
+      String appointmentId,
+      String paymentOrderId,
+      String paymentRequestId) async {
     UpdatePaymentModel updatePaymentModel =
-    await providerViewModel.updatePaymentStatus(paymentId,appointmentId,paymentOrderId,paymentRequestId);
+        await providerViewModel.updatePaymentStatus(
+            paymentId, appointmentId, paymentOrderId, paymentRequestId);
 
     return updatePaymentModel;
   }
-
 }
 
 enum MenuOptions {

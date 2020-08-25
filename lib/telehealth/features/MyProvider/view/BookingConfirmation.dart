@@ -114,7 +114,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     getCategoryList();
     getDataFromWidget();
-
   }
 
   addHealthRecords() {
