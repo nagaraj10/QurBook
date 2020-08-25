@@ -1,5 +1,6 @@
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/device_integration/model/googleFitValues.dart';
+import 'package:myfhb/device_integration/model/googleFitEnumvalues.dart';
 
 class Point {
   Point({

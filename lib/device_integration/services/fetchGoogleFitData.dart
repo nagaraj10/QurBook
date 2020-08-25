@@ -4,6 +4,7 @@ import 'package:myfhb/device_integration/services/googleSignInHelper.dart';
 import 'package:myfhb/device_integration/model/googleFitResponseModel.dart';
 import 'package:myfhb/device_integration/model/googleFitDataset.dart';
 import 'package:myfhb/device_integration/model/googleFitPoint.dart';
+import 'package:myfhb/device_integration/model/googleFitBucket.dart';
 import 'dart:async';
 import 'dart:convert' show json;
 
