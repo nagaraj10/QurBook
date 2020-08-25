@@ -42,7 +42,6 @@ class MyProviderState extends State<MyProvider>
   }
 
   void refreshPage() {
-    print('Refresh Page');
 //    _providersBloc = new ProvidersBloc();
 //    _providersBloc.getMedicalPreferencesList().then((value) {
 //      setState(() {

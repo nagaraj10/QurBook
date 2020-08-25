@@ -418,8 +418,13 @@ packages:
   gmiwidgetspackage:
     dependency: "direct main"
     description:
+<<<<<<< HEAD
+      path: "D:\\ventech\\myFHB-flutter-common"
+      relative: false
+=======
       path: "../fhb_common"
       relative: true
+>>>>>>> ef9befe915c94c095467e1fdba44565f1790b422
     source: path
     version: "0.0.1"
   google_api_availability:

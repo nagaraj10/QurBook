@@ -21,6 +21,7 @@ import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.d
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
+import 'package:myfhb/telehealth/features/followUp/model/followUpResponse.dart';
 
 import 'AppException.dart';
 import 'dart:async';
@@ -962,7 +963,40 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> postDeviceId(String url, String jsonBody) async {
+  Future<FollowOnDate> followUpAppointment(String id, String date) async {
+    var inputBody = {};
+    inputBody[FOLLOWID] = id;
+    inputBody[FOLLOWONDATE] = date;
+
+    var jsonString = convert.jsonEncode(inputBody);
+    print(jsonString);
+    final response = await getApiForfollowUpAppointment(
+        qr_follow_up_appointment, jsonString);
+    return FollowOnDate.fromJson(response);
+  }
+
+  Future<dynamic> getApiForfollowUpAppointment(
+      String url, String jsonBody) async {
+    var responseJson;
+    try {
+//      print(authtoken);
+//      print(url);
+//      print(jsonBody);
+      final response = await http.put(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot(),
+          body: jsonBody);
+//      print(_baseUrl+url);
+//      print(jsonBody);
+      print(response.body);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> postDeviceId(
+      String url, String jsonBody, bool isActive) async {
     Map<String, String> requestHeadersAuthAccept = new Map();
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['Content-type'] = 'application/json';
@@ -970,12 +1004,37 @@ class ApiBaseHelper {
     requestHeadersAuthAccept['Authorization'] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
     var responseJson;
     try {
-      final response = await http.post(CommonUtil.COGNITO_URL + url,
-          headers: requestHeadersAuthAccept, body: jsonBody);
-      print(response.body);
+      if (isActive) {
+        final response = await http.post(CommonUtil.COGNITO_URL + url,
+            headers: requestHeadersAuthAccept, body: jsonBody);
+        responseJson = _returnResponse(response);
+      } else {
+        final response = await http.put(CommonUtil.COGNITO_URL + url,
+            headers: requestHeadersAuthAccept, body: jsonBody);
+        responseJson = _returnResponse(response);
+      }
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> associateRecords(String url, String jsonString) async {
+    var responseJson;
+    Map<String, String> requestHeadersAuthContent = new Map();
+
+    requestHeadersAuthContent['Content-type'] = 'application/json';
+    requestHeadersAuthContent['authorization'] =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    try {
+      final response = await http.post(
+        _baseUrl + url,
+        body: jsonString,
+        headers: await headerRequest.getRequestHeadersAuthContent(),
+      );
+      print(response);
       responseJson = _returnResponse(response);
       print(responseJson);
     } on SocketException {
@@ -985,22 +1044,23 @@ class ApiBaseHelper {
   }
 
   Future<GetMetaFileURLModel> getMetaIdURL(
-      List<String> recordIds,String patientId) async {
+      List<String> recordIds, String patientId) async {
     var inputBody = {};
     inputBody[META_IDS] = recordIds;
     inputBody[INCLUDE_MEDIA] = true;
     var jsonString = convert.jsonEncode(inputBody);
     print(jsonString);
-    final response =
-    await getApiForGetMetaURL(jsonString,patientId);
+    final response = await getApiForGetMetaURL(jsonString, patientId);
     return GetMetaFileURLModel.fromJson(response);
   }
 
-  Future<dynamic> getApiForGetMetaURL(String jsonBody,String patientId) async {
+  Future<dynamic> getApiForGetMetaURL(String jsonBody, String patientId) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + qr_media_meta+patientId+qr_get_media_master,
-          headers: await headerRequest.getRequestHeader(), body: jsonBody);
+      final response = await http.post(
+          _baseUrl + qr_media_meta + patientId + qr_get_media_master,
+          headers: await headerRequest.getRequestHeader(),
+          body: jsonBody);
       print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {

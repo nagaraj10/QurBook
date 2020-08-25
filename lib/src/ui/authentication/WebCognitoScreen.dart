@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -216,9 +215,11 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       PreferenceUtil.save("user_details", saveuser);
 
       authToken = decodesstring;
-      String deviceId = await DeviceId.getID;
+      FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-      sendDeviceToken(userId, saveuser.email, user_mobile_no, deviceId)
+      final token = await _firebaseMessaging.getToken();
+      CommonUtil()
+          .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
           .then((value) {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
@@ -287,7 +288,8 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
 
     print(params.toString());
 
-    final response = await apiBaseHelper.postDeviceId('device-info', params);
+    final response =
+        await apiBaseHelper.postDeviceId('device-info', params, true);
     return DeviceInfoSucess.fromJson(response);
   }
 }

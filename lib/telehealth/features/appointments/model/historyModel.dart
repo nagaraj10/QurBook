@@ -42,7 +42,7 @@ class History {
   bool isMedicalRecordsShared;
   String specialization;
   String location;
-  String doctorPic;
+  int doctorPic;
   String doctorName;
   String doctorId;
   String doctorSessionId;
@@ -66,7 +66,7 @@ class History {
     slotNumber = json["slotNumber"];
     isRefunded = json["isRefunded"];
     bookingId = json["bookingID"];
-    sharedMedicalRecordsId = json["sharedMedicalRecordsId"];
+    sharedMedicalRecordsId = json["sharedMedicalRecordsId"] == null ? null : json["sharedMedicalRecordsId"];
     isMedicalRecordsShared = json["isMedicalRecordsShared"];
     specialization = json["specialization"];
     location = json["location"];
