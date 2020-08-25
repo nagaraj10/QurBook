@@ -445,7 +445,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   MediaQuery.of(context).size.width * 0.5),
                           padding: const EdgeInsets.only(),
                           child: Text(
-                            'Last message',
+                            document['lastMessage']!=null?document['lastMessage']:'',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,

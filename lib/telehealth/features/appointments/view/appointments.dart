@@ -728,8 +728,7 @@ class _AppointmentsState extends State<Appointments> {
     storeDoctorDetailsToFCM(doctorId, doctorName);
   }
 
-  Future<void> storeDoctorDetailsToFCM(
-      String doctorId, String doctorName) async {
+  Future<void> storeDoctorDetailsToFCM(String doctorId, String doctorName) async {
     prefs = await SharedPreferences.getInstance();
 
     String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
