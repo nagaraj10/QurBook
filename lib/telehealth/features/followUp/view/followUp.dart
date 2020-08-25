@@ -326,5 +326,3 @@ class _FollowUpState extends State<FollowUp> {
     );
   }
 }
-
-

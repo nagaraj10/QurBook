@@ -23,6 +23,7 @@ import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/src/model/TabModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/health/BillsList.dart';
@@ -49,16 +50,16 @@ class MyRecords extends StatefulWidget {
   bool isNotesSelect;
   bool isAudioSelect;
   List<String> selectedMedias;
-  bool isFromChat =false;
+  bool isFromChat = false;
 
-  MyRecords(
-      {this.categoryPosition,
-      this.allowSelect,
-      this.isAudioSelect,
-      this.isNotesSelect,
-      this.selectedMedias,
-      this.isFromChat,
-      });
+  MyRecords({
+    this.categoryPosition,
+    this.allowSelect,
+    this.isAudioSelect,
+    this.isNotesSelect,
+    this.selectedMedias,
+    this.isFromChat,
+  });
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -558,8 +559,7 @@ class CustomTabView extends StatefulWidget {
       this.selectedMedia,
       this.allowSelectNotes,
       this.allowSelectVoice,
-      this.isFromChat
-      });
+      this.isFromChat});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -780,7 +780,7 @@ class _CustomTabsState extends State<CustomTabView>
                 onPressed: () {
                   Navigator.of(context).pop({'metaId': widget.selectedMedia});
                 },
-                child: widget.isFromChat?Text('Attach'):Text('Associate'),
+                child: widget.isFromChat ? Text('Attach') : Text('Associate'),
                 textColor: Color(new CommonUtil().getMyPrimaryColor()),
                 color: Colors.white,
                 borderSide: BorderSide(
@@ -851,7 +851,7 @@ class _CustomTabsState extends State<CustomTabView>
 
   Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
     CompleteData completeDataFromPreference =
-    PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
+        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch
         ? getMediTypeForlabels(data, widget.completeData)
         : completeDataFromPreference != null
@@ -977,7 +977,7 @@ class _CustomTabsState extends State<CustomTabView>
                       )),
                     );
 
-              break;
+                    break;
 
                   case Status.ERROR:
                     return Text(variable.strNoLoadtabls,
@@ -1253,18 +1253,18 @@ class _CustomTabsState extends State<CustomTabView>
         Padding(padding: EdgeInsets.only(top: 10)),
         dataObj.logo != null
             ? Image.network(
-          Constants.BASE_URL + dataObj.logo,
-          width: 20,
-          height: 20,
-          color: Colors.white,
-        )
+                Constants.BASE_URL + dataObj.logo,
+                width: 20,
+                height: 20,
+                color: Colors.white,
+              )
             : Icon(Icons.calendar_today, size: 20, color: Colors.white),
         Padding(padding: EdgeInsets.only(top: 10)),
         Container(
             child: Text(
-              dataObj.categoryName,
-              style: TextStyle(fontSize: 12),
-            )),
+          dataObj.categoryName,
+          style: TextStyle(fontSize: 12),
+        )),
         Padding(padding: EdgeInsets.only(top: 10)),
       ]));
       /* }*/
@@ -1276,19 +1276,19 @@ class _CustomTabsState extends State<CustomTabView>
   void openNotesDialog() {
     TextEditingController fileName = new TextEditingController(
         text:
-        categoryName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+            categoryName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     new CommonDialogBox().getDialogBoxForNotes(
         context,
         containsAudio,
         audioPath,
-            (containsAudio, audioPath) {
+        (containsAudio, audioPath) {
           setState(() {
             audioPath = audioPath;
             containsAudio = containsAudio;
           });
         },
         null,
-            (containsAudio, audioPath) {
+        (containsAudio, audioPath) {
           audioPath = audioPath;
           containsAudio = containsAudio;
 

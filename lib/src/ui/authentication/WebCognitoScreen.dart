@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,11 +8,11 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class WebCognitoScreen extends StatefulWidget {
@@ -289,7 +288,8 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
 
     print(params.toString());
 
-    final response = await apiBaseHelper.postDeviceId('device-info', params);
+    final response =
+        await apiBaseHelper.postDeviceId('device-info', params, true);
     return DeviceInfoSucess.fromJson(response);
   }
 }
