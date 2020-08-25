@@ -50,16 +50,16 @@ class MyRecords extends StatefulWidget {
   bool isNotesSelect;
   bool isAudioSelect;
   List<String> selectedMedias;
-  bool isFromChat =false;
+  bool isFromChat = false;
 
-  MyRecords(
-      {this.categoryPosition,
-      this.allowSelect,
-      this.isAudioSelect,
-      this.isNotesSelect,
-      this.selectedMedias,
-      this.isFromChat,
-      });
+  MyRecords({
+    this.categoryPosition,
+    this.allowSelect,
+    this.isAudioSelect,
+    this.isNotesSelect,
+    this.selectedMedias,
+    this.isFromChat,
+  });
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -320,7 +320,6 @@ class _MyRecordsState extends State<MyRecords> {
       allowSelectVoice: widget.isAudioSelect ?? false,
       allowSelectNotes: widget.isNotesSelect ?? false,
       selectedMedia: widget.selectedMedias,
-      isFromChat: widget.isFromChat,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -560,8 +559,7 @@ class CustomTabView extends StatefulWidget {
       this.selectedMedia,
       this.allowSelectNotes,
       this.allowSelectVoice,
-      this.isFromChat
-      });
+      this.isFromChat});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -782,7 +780,7 @@ class _CustomTabsState extends State<CustomTabView>
                 onPressed: () {
                   Navigator.of(context).pop({'metaId': widget.selectedMedia});
                 },
-                child: widget.isFromChat?Text('Attach'):Text('Associate'),
+                child: widget.isFromChat ? Text('Attach') : Text('Associate'),
                 textColor: Color(new CommonUtil().getMyPrimaryColor()),
                 color: Colors.white,
                 borderSide: BorderSide(

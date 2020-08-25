@@ -24,6 +24,7 @@ import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
@@ -98,6 +99,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   List<CategoryData> filteredCategoryData = new List();
   CategoryData categoryDataObjClone = new CategoryData();
 
+  String doctorId;
+
   @override
   void initState() {
     providerViewModel = new MyProviderViewModel();
@@ -147,6 +150,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     scheduleDate =
         commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
 
+    doctorId = widget.docs[widget.i].id;
     try {
       fees = widget.isNewAppointment
           ? widget.followUpFee == null
@@ -156,8 +160,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     } catch (e) {
       fees = '';
     }
-
-    print(fees);
   }
 
   Widget getDropdown() {
@@ -823,39 +825,53 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
 
     try {
-      bookAppointmentCall(createdBy, createdFor, doctorSessionId, scheduleDate,
-              slotNumber, isMedicalShared, isFollowUp, healthRecords)
-          .then((value) {
-        if (value != null) {
-          if (value.status != null &&
-              value.success != null &&
-              value.message != null) {
-            if (value.status == 200 &&
-                value.success == true &&
-                value.message == appointmentCreatedMessage) {
-              pr.hide();
-              if (value.response.data.paymentInfo.longurl != null) {
-                goToPaymentPage(
-                    value.response.data.paymentInfo.longurl,
-                    value.response.data.paymentInfo.payment.id,
-                    value.response.data.appointmentInfo.id);
+      associateRecords(doctorId, createdBy, healthRecords).then((value) {
+        if (value != null && value.success) {
+          bookAppointmentCall(
+                  createdBy,
+                  createdFor,
+                  doctorSessionId,
+                  scheduleDate,
+                  slotNumber,
+                  isMedicalShared,
+                  isFollowUp,
+                  healthRecords)
+              .then((value) {
+            if (value != null) {
+              if (value.status != null &&
+                  value.success != null &&
+                  value.message != null) {
+                if (value.status == 200 &&
+                    value.success == true &&
+                    value.message == appointmentCreatedMessage) {
+                  if (value.response.data.paymentInfo.longurl != null) {
+                    goToPaymentPage(
+                        value.response.data.paymentInfo.longurl,
+                        value.response.data.paymentInfo.payment.id,
+                        value.response.data.appointmentInfo.id);
+                  } else {
+                    pr.hide();
+                    toast.getToast(noUrl, Colors.red);
+                  }
+                } else {
+                  pr.hide();
+                  toast.getToast(
+                      value.message != null ? value.message : someWentWrong,
+                      Colors.red);
+                }
               } else {
                 pr.hide();
-                toast.getToast(noUrl, Colors.red);
+                toast.getToast(someWentWrong, Colors.red);
               }
             } else {
               pr.hide();
-              toast.getToast(
-                  value.message != null ? value.message : someWentWrong,
-                  Colors.red);
+              toast.getToast(noUrl, Colors.red);
             }
-          } else {
-            pr.hide();
-            toast.getToast(someWentWrong, Colors.red);
-          }
+          });
         } else {
           pr.hide();
-          toast.getToast(noUrl, Colors.red);
+          toast.getToast(value.message != null ? value.message : someWentWrong,
+              Colors.red);
         }
       });
     } catch (e) {
@@ -1111,5 +1127,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         print(metaIds.toString());
       }
     });
+  }
+
+  Future<AssociateRecordsResponse> associateRecords(
+      String doctorId, String userId, List<String> healthRecords) async {
+    AssociateRecordsResponse associateResponseList = await providerViewModel
+        .associateRecords(doctorId, userId, healthRecords);
+
+    return associateResponseList;
   }
 }
