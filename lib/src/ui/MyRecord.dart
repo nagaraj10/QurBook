@@ -50,7 +50,7 @@ class MyRecords extends StatefulWidget {
   bool isNotesSelect;
   bool isAudioSelect;
   List<String> selectedMedias;
-  bool isFromChat = false;
+  bool isFromChat;
 
   MyRecords({
     this.categoryPosition,
@@ -320,6 +320,7 @@ class _MyRecordsState extends State<MyRecords> {
       allowSelectVoice: widget.isAudioSelect ?? false,
       allowSelectNotes: widget.isNotesSelect ?? false,
       selectedMedia: widget.selectedMedias,
+      isFromChat: widget.isFromChat ?? false,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -539,7 +540,7 @@ class CustomTabView extends StatefulWidget {
   bool allowSelect;
   bool allowSelectNotes;
   bool allowSelectVoice;
-  bool isFromChat = false;
+  bool isFromChat;
 
   CustomTabView(
       {@required this.itemCount,
