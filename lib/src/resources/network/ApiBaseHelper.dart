@@ -132,7 +132,6 @@ class ApiBaseHelper {
 
     //responseJson = _returnResponse(response.data);
 
-    print(response.data);
     return response.data;
   }
 
@@ -163,7 +162,6 @@ class ApiBaseHelper {
       final response = await http.post(_baseUrl + url,
           body: jsonData, headers: await headerRequest.getRequestHeader());
       responseJson = _returnResponse(response);
-      print(responseJson.toString());
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -303,7 +301,6 @@ class ApiBaseHelper {
 
   Future<dynamic> getFamilyMembersList(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-    print(authToken);
     var responseJson;
     try {
       final response = await http.get(_baseUrl + url,
@@ -345,7 +342,6 @@ class ApiBaseHelper {
         } else {
           responseJson = convert.jsonDecode(response.body.toString());
         }
-        print(response.body.toString());
 
         return responseJson;
 
@@ -456,7 +452,6 @@ class ApiBaseHelper {
       final response = await http.post(_baseUrl + url,
           body: jsonData, headers: await headerRequest.getRequestHeader());
       responseJson = _returnResponse(response);
-      print(response.body.toString());
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -756,7 +751,6 @@ class ApiBaseHelper {
       final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
-      print(responseJson);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -826,7 +820,6 @@ class ApiBaseHelper {
 
   Future<AppointmentsModel> fetchAppointments() async {
     String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-//    print('patient_id: '+userId);
     return await http
         .get(
       _baseUrl + qr_appointment_fetch + userId,
@@ -837,7 +830,6 @@ class ApiBaseHelper {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
         if (resReturnCode.status == 200) {
-//          print(response.body);
           return AppointmentsModel.fromJson(jsonDecode(response.body));
         } else {
           throw Exception(variable.strFailed);
@@ -855,7 +847,6 @@ class ApiBaseHelper {
     inputBody[BOOKING_IDS] = doctorIds;
 
     var jsonString = convert.jsonEncode(inputBody);
-    print(jsonString);
     final response =
         await getApiForCancelAppointment(qr_appointment_cancel, jsonString);
     return CancelAppointmentModel.fromJson(response);
@@ -865,12 +856,8 @@ class ApiBaseHelper {
       String url, String jsonBody) async {
     var responseJson;
     try {
-//      print(authtoken);
-//      print(url);
-//      print(jsonBody);
       final response = await http.put(_baseUrl + url,
           headers: await headerRequest.getRequestHeader(), body: jsonBody);
-//      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -887,7 +874,6 @@ class ApiBaseHelper {
     inputBody[RESHEDULE_SOURCE] = PATIENT;
 
     var jsonString = convert.jsonEncode(inputBody);
-    print(jsonString);
     final response = await getApiForresheduleAppointment(
         qr_appoinment_reshedule, jsonString);
     return Reshedule.fromJson(response);
@@ -897,15 +883,10 @@ class ApiBaseHelper {
       String url, String jsonBody) async {
     var responseJson;
     try {
-//      print(authtoken);
-//      print(url);
-//      print(jsonBody);
       final response = await http.put(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonBody);
-//      print(_baseUrl+url);
-//      print(jsonBody);
-      print(response.body);
+
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -913,7 +894,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> postDeviceId(String url, String jsonBody) async {
+  Future<dynamic> postDeviceId(
+      String url, String jsonBody, bool isActive) async {
     Map<String, String> requestHeadersAuthAccept = new Map();
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['Content-type'] = 'application/json';
@@ -921,46 +903,43 @@ class ApiBaseHelper {
     requestHeadersAuthAccept['Authorization'] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
     var responseJson;
     try {
-      final response = await http.post(CommonUtil.COGNITO_URL + url,
-          headers: requestHeadersAuthAccept, body: jsonBody);
-      print(response.body);
-      responseJson = _returnResponse(response);
-      print(responseJson);
+      if (isActive) {
+        final response = await http.post(CommonUtil.COGNITO_URL + url,
+            headers: requestHeadersAuthAccept, body: jsonBody);
+        responseJson = _returnResponse(response);
+      } else {
+        final response = await http.put(CommonUtil.COGNITO_URL + url,
+            headers: requestHeadersAuthAccept, body: jsonBody);
+        responseJson = _returnResponse(response);
+      }
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
   }
 
-  Future<List<AssociateRecordsResponse>> associateRecords(
-      String doctorId, String userId, List<String> metaMasterIdList) async {
-    var imagesList = new List<AssociateRecordsResponse>();
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+  Future<dynamic> associateRecords(String url, String jsonString) async {
+    var responseJson;
+    Map<String, String> requestHeadersAuthContent = new Map();
 
-    for (int i = 0; i < metaMasterIdList.length; i++) {
-      var associateRecord = {};
-      //var parentAppoint = {};
-      associateRecord[qr_doctorid] = doctorId;
-      associateRecord[qr_userid] = userID;
-      associateRecord[qr_mediaMetaId] = metaMasterIdList[i];
-      var jsonString = convert.jsonEncode(associateRecord);
-      print(jsonString);
-
-      var responseJson;
-      try {
-        final response = await http.post(_baseUrl + Constants.SHAREECORD,
-            headers: await headerRequest.getRequestHeadersAuthContent());
-        responseJson = _returnResponse(response);
-        print(responseJson + '*****');
-      } on SocketException {
-        throw FetchDataException('No Internet connection');
-      }
-      imagesList.add(AssociateRecordsResponse.fromJson(responseJson));
+    requestHeadersAuthContent['Content-type'] = 'application/json';
+    requestHeadersAuthContent['authorization'] =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    try {
+      final response = await http.post(
+        _baseUrl + url,
+        body: jsonString,
+        headers: await headerRequest.getRequestHeadersAuthContent(),
+      );
+      print(response);
+      responseJson = _returnResponse(response);
+      print(responseJson);
+    } on SocketException {
+      throw FetchDataException('No Internet connection');
     }
 
-    return imagesList;
+    return responseJson;
   }
 }

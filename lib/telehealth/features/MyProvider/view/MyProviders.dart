@@ -233,7 +233,7 @@ class _MyProvidersState extends State<MyProviders> {
                           }),
                     ],
                   )),
-                  docs[i].isActive
+                  docs[i].isTelehealthEnabled
                       ? commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,

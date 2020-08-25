@@ -95,7 +95,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                                       .generalInfo
                                       .qualifiedFullName
                                       .firstName ??
-                                  '') +' '+
+                                  '') +
+                              ' ' +
                               toBeginningOfSentenceCase(myProfile.response.data
                                       .generalInfo.qualifiedFullName.lastName ??
                                   '')

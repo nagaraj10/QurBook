@@ -103,7 +103,6 @@ class _FollowUpState extends State<FollowUp> {
                                   setState(() {
                                     radioItem = data.widget;
                                     id = data.index;
-                                    print(id);
                                   });
                                 },
                               ))
@@ -147,8 +146,6 @@ class _FollowUpState extends State<FollowUp> {
                 setState(() {
                   _selectedId = value;
                   dateCount = int.parse(value.substring(6, 8).trim());
-                  print(dateCount);
-                  print(_selectedId);
                 });
               },
               items: List<String>.generate(31, (i) => 'after $i days')
@@ -182,5 +179,3 @@ class _FollowUpState extends State<FollowUp> {
     });
   }
 }
-
-

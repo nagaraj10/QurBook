@@ -1680,7 +1680,6 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                         var image =
                             ImagePicker.pickImage(source: ImageSource.gallery);
                         image.then((value) {
-                          print('file Path' + value.path);
                           if (isProfileImage) {
                             imageURI = value;
                           } else {

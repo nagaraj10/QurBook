@@ -131,3 +131,4 @@ const String qr_appointment_fetch =
 
 const String qr_userid = 'userId';
 const String qr_mediaMetaId = 'mediaMetaId';
+const String qr_sharerecord='sharerecord/';

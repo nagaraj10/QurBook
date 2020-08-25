@@ -59,9 +59,6 @@ class ProvidersListRepository {
 
   Future<DoctorTimeSlotsModel> getTelehealthSlotsList(
       String date, String doctorId) async {
-    print(date);
-    print(doctorId);
-
     var slotInput = {};
     slotInput[qr_slotDate] = date;
     slotInput[qr_doctorid] = doctorId;
@@ -95,7 +92,6 @@ class ProvidersListRepository {
     parentAppoint["bookingID"] = {};*/
 
     var jsonString = convert.jsonEncode(slotInput);
-    print(jsonString);
     final response = await _helper.bookAppointment(qr_bookAppmnt, jsonString);
     return BookAppointmentModel.fromJson(response);
   }
@@ -112,15 +108,22 @@ class ProvidersListRepository {
     paymentInput[qr_payment_req_id] = paymentRequestId;
 
     var jsonString = convert.jsonEncode(paymentInput);
-    print(jsonString);
     final response = await _helper.updatePayment(qr_update_payment, jsonString);
     return UpdatePaymentModel.fromJson(response);
   }
 
-  Future<List<AssociateRecordsResponse>> associateRecords(
+  Future<AssociateRecordsResponse> associateRecords(
       String doctorId, String userId, List<String> healthRecords) async {
-    final response =
-        await _helper.associateRecords(doctorId, userId, healthRecords);
-    return response;
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    var associateRecord = {};
+    //var parentAppoint = {};
+    associateRecord[qr_doctorid] = doctorId;
+    associateRecord[qr_userid] = userID;
+    associateRecord[qr_mediaMetaId] = healthRecords;
+    var jsonString = convert.jsonEncode(associateRecord);
+    print(jsonString);
+    final response = await _helper.associateRecords(qr_sharerecord, jsonString);
+    return AssociateRecordsResponse.fromJson(response);
   }
 }

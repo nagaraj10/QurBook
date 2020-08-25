@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:io';
 
-import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,14 +7,12 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
 
 class WebCognitoScreen extends StatefulWidget {
   @override
@@ -218,9 +214,11 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       PreferenceUtil.save("user_details", saveuser);
 
       authToken = decodesstring;
-      String deviceId = await DeviceId.getID;
+      FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-      sendDeviceToken(userId, saveuser.email, user_mobile_no, deviceId)
+      final token = await _firebaseMessaging.getToken();
+      CommonUtil()
+          .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
           .then((value) {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
@@ -250,39 +248,5 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
     } catch (e) {}
     //getAuthToken(authcode);
     //TODO: More restoring of settings would go here...
-  }
-
-  Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,
-      String user_mobile_no, String deviceId) async {
-    var jsonParam;
-    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-
-    final token = await _firebaseMessaging.getToken();
-    Map<String, dynamic> deviceInfo = new Map();
-    Map<String, dynamic> user = new Map();
-    Map<String, dynamic> jsonData = new Map();
-
-    user['id'] = userId;
-    deviceInfo['user'] = user;
-    deviceInfo['phoneNumber'] = user_mobile_no;
-    deviceInfo['email'] = email;
-    deviceInfo['isActive'] = true;
-    deviceInfo['deviceTokenId'] = token;
-
-    jsonData['deviceInfo'] = deviceInfo;
-    if (Platform.isIOS) {
-      jsonData['platformCode'] = 'IOSPLT';
-    } else {
-      jsonData['platformCode'] = 'ANDPLT';
-    }
-
-    print(jsonData.toString());
-
-    var params = json.encode(jsonData);
-
-    print(params.toString());
-
-    final response = await apiBaseHelper.postDeviceId('device-info', params);
-    return DeviceInfoSucess.fromJson(response);
   }
 }

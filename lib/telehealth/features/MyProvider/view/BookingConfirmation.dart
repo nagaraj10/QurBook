@@ -171,8 +171,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     } catch (e) {
       fees = '';
     }
-
-    print(fees);
   }
 
   Widget getDropdown() {
@@ -838,38 +836,53 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
 
     try {
-      bookAppointmentCall(createdBy, createdFor, doctorSessionId, scheduleDate,
-              slotNumber, isMedicalShared, isFollowUp, healthRecords)
-          .then((value) {
-        if (value != null) {
-          if (value.status != null &&
-              value.success != null &&
-              value.message != null) {
-            if (value.status == 200 &&
-                value.success == true &&
-                value.message == appointmentCreatedMessage) {
-              if (value.response.data.paymentInfo.longurl != null) {
-                goToPaymentPage(
-                    value.response.data.paymentInfo.longurl,
-                    value.response.data.paymentInfo.payment.id,
-                    value.response.data.appointmentInfo.id);
+      associateRecords(doctorId, createdBy, healthRecords).then((value) {
+        if (value != null && value.success) {
+          bookAppointmentCall(
+                  createdBy,
+                  createdFor,
+                  doctorSessionId,
+                  scheduleDate,
+                  slotNumber,
+                  isMedicalShared,
+                  isFollowUp,
+                  healthRecords)
+              .then((value) {
+            if (value != null) {
+              if (value.status != null &&
+                  value.success != null &&
+                  value.message != null) {
+                if (value.status == 200 &&
+                    value.success == true &&
+                    value.message == appointmentCreatedMessage) {
+                  if (value.response.data.paymentInfo.longurl != null) {
+                    goToPaymentPage(
+                        value.response.data.paymentInfo.longurl,
+                        value.response.data.paymentInfo.payment.id,
+                        value.response.data.appointmentInfo.id);
+                  } else {
+                    pr.hide();
+                    toast.getToast(noUrl, Colors.red);
+                  }
+                } else {
+                  pr.hide();
+                  toast.getToast(
+                      value.message != null ? value.message : someWentWrong,
+                      Colors.red);
+                }
               } else {
                 pr.hide();
-                toast.getToast(noUrl, Colors.red);
+                toast.getToast(someWentWrong, Colors.red);
               }
             } else {
               pr.hide();
-              toast.getToast(
-                  value.message != null ? value.message : someWentWrong,
-                  Colors.red);
+              toast.getToast(noUrl, Colors.red);
             }
-          } else {
-            pr.hide();
-            toast.getToast(someWentWrong, Colors.red);
-          }
+          });
         } else {
           pr.hide();
-          toast.getToast(noUrl, Colors.red);
+          toast.getToast(value.message != null ? value.message : someWentWrong,
+              Colors.red);
         }
       });
     } catch (e) {
@@ -1126,24 +1139,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
   }
 
-  Future<List<AssociateRecordsResponse>> associateRecords(
+  Future<AssociateRecordsResponse> associateRecords(
       String doctorId, String userId, List<String> healthRecords) async {
-    List<AssociateRecordsResponse> associateResponseList =
-        await providerViewModel.associateRecords(
-            doctorId, userId, healthRecords);
+    AssociateRecordsResponse associateResponseList = await providerViewModel
+        .associateRecords(doctorId, userId, healthRecords);
 
     return associateResponseList;
   }
-
-  /* void associateApi(){
-    associateRecords(doctorId, createdBy, recordIds)
-        .then((associateList) {
-      if (associateList.length == recordIds.length) {
-      } else {
-        pr.hide();
-        toast.getToast(
-            value.message != null ? value.message : someWentWrong,
-            Colors.red);
-      }
-      }*/
 }

@@ -20,7 +20,7 @@ class MyProviderViewModel extends ChangeNotifier {
   List<TelehealthProviderModel> teleHealthProviderModel = new List();
   BookAppointmentModel bookAppointment = BookAppointmentModel();
   UpdatePaymentModel updatePaymentModel = UpdatePaymentModel();
-  List<AssociateRecordsResponse> associateRecordResponse=new List();
+  AssociateRecordsResponse associateRecordResponse = AssociateRecordsResponse();
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
@@ -113,10 +113,10 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<AssociateRecordsResponse>> associateRecords(
+  Future<AssociateRecordsResponse> associateRecords(
       String doctorId, String userId, List<String> healthRecords) async {
     try {
-      List<AssociateRecordsResponse> bookAppointmentModel =
+      AssociateRecordsResponse bookAppointmentModel =
           await _providersListRepository.associateRecords(
               doctorId, userId, healthRecords);
       associateRecordResponse = bookAppointmentModel;
