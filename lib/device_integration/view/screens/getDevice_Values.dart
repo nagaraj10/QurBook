@@ -8,6 +8,7 @@ import 'package:myfhb/device_integration/model/WeightValues.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:intl/intl.dart';
 
 class EachDeviceValues extends StatelessWidget {
   EachDeviceValues({this.device_name});
@@ -27,8 +28,8 @@ class EachDeviceValues extends StatelessWidget {
         child: Column(
           children: [
             Container(
-                height: 10.0,
-                ),
+              height: 10.0,
+            ),
             Expanded(
               child: getValues(context, _devicesmodel),
             ),
@@ -36,6 +37,13 @@ class EachDeviceValues extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String getFormattedDateTime(String datetime) {
+    DateTime dateTimeStamp = DateTime.parse(datetime);
+    String formattedDate =
+        DateFormat('yyyy-MM-dd – kk:mm:ss').format(dateTimeStamp);
+    return formattedDate;
   }
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
@@ -60,11 +68,13 @@ class EachDeviceValues extends StatelessWidget {
                     itemBuilder: (context, i) {
                       return buildRow(
                           translist[i].sourceType,
-                          translist[i].startDateTime,
+                          getFormattedDateTime(translist[i].startDateTime),
                           '${translist[i].systolic}',
                           '${translist[i].diastolic}',
+                          '',
                           'Systolic',
-                          'Diastolic');
+                          'Diastolic',
+                          '');
                     },
                   );
                 } else {
@@ -97,11 +107,17 @@ class EachDeviceValues extends StatelessWidget {
                         itemBuilder: (context, i) {
                           return buildRow(
                               translist[i].sourceType,
-                              translist[i].startDateTime,
+                              getFormattedDateTime(translist[i].startDateTime),
                               '${translist[i].bloodGlucoseLevel}',
-                              '',
-                              'mg/dL',
-                              '');
+                              translist[i].mealContext == null
+                                  ? 'Not Provided'
+                                  : '${translist[i].mealContext}',
+                              translist[i].mealType == null
+                                  ? 'Not Provided'
+                                  : '${translist[i].mealType}',
+                              '${translist[i].bgUnit}',
+                              'Meal Context',
+                              'Meal Type');
                         },
                       )
                     : new Center(child: new CircularProgressIndicator());
@@ -128,10 +144,12 @@ class EachDeviceValues extends StatelessWidget {
                         itemBuilder: (context, i) {
                           return buildRow(
                               translist[i].sourceType,
-                              translist[i].startDateTime,
+                              getFormattedDateTime(translist[i].startDateTime),
                               '${translist[i].oxygenSaturation}',
                               '',
+                              '',
                               'OxygenSaturation Value',
+                              '',
                               '');
                         },
                       )
@@ -160,10 +178,12 @@ class EachDeviceValues extends StatelessWidget {
                     itemBuilder: (context, i) {
                       return buildRow(
                           translist[i].sourceType,
-                          translist[i].startDateTime,
+                          getFormattedDateTime(translist[i].startDateTime),
                           '${translist[i].weight}',
                           '',
-                          'KG',
+                          '',
+                          '${translist[i].weightUnit}',
+                          '',
                           '');
                     },
                   );
@@ -181,10 +201,12 @@ class EachDeviceValues extends StatelessWidget {
                         itemBuilder: (context, i) {
                           return buildRow(
                               translist[i].sourceType,
-                              translist[i].startDateTime,
+                              getFormattedDateTime(translist[i].startDateTime),
                               '${translist[i].weight}',
                               '',
-                              'KG',
+                              '',
+                              '${translist[i].weightUnit}',
+                              '',
                               '');
                         },
                       )
@@ -216,10 +238,12 @@ class EachDeviceValues extends StatelessWidget {
                         itemBuilder: (context, i) {
                           return buildRow(
                               translist[i].sourceType,
-                              translist[i].startDateTime,
+                              getFormattedDateTime(translist[i].startDateTime),
                               '${translist[i].temperature}',
                               '',
-                              'F',
+                              '',
+                              '${translist[i].temperatureUnit}',
+                              '',
                               '');
                         },
                       )
@@ -272,7 +296,7 @@ class EachDeviceValues extends StatelessWidget {
 }
 
 Widget buildRow(String type, String date, String value1, String value2,
-    String valuename1, String valuename2) {
+    String value3, String valuename1, String valuename2, String valuename3) {
   return Padding(
     padding: const EdgeInsets.only(top: 5.0),
     child: Container(
@@ -298,7 +322,7 @@ Widget buildRow(String type, String date, String value1, String value2,
                       height: 5.0,
                     ),
                     Text(
-                      value1 == null ? '' : value1,
+                      value1 == '' ? '' : value1,
                       style: TextStyle(
                           color: Colors.lightBlueAccent,
                           fontWeight: FontWeight.bold),
@@ -311,7 +335,7 @@ Widget buildRow(String type, String date, String value1, String value2,
                 Column(
                   children: [
                     Text(
-                      valuename2 == null ? '' : value1,
+                      valuename2 == '' ? '' : valuename2,
                       style: TextStyle(color: Colors.black),
                     ),
                     SizedBox(
@@ -319,6 +343,26 @@ Widget buildRow(String type, String date, String value1, String value2,
                     ),
                     Text(
                       value2,
+                      style: TextStyle(
+                          color: Colors.lightBlueAccent,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 10.0,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      valuename3 == '' ? '' : valuename3,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Text(
+                      value3,
                       style: TextStyle(
                           color: Colors.lightBlueAccent,
                           fontWeight: FontWeight.bold),
