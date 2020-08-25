@@ -3,7 +3,6 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:pdf_render/pdf_render_widgets.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
-
 class PDFViewer extends StatelessWidget {
   /// render at 100 dpi
   static const scale = 100.0 / 72.0;
@@ -31,7 +30,7 @@ class PDFViewer extends StatelessWidget {
           backgroundColor: Colors.grey,
           body: Center(
               child: PdfDocumentLoader(
-            data: pdfData,
+            filePath: pdfData,
             documentBuilder: (context, pdfDocument, pageCount) => LayoutBuilder(
                 builder: (context, constraints) => ListView.builder(
                     controller: controller,
@@ -50,7 +49,7 @@ class PDFViewer extends StatelessWidget {
                             customizer: (context, page, size) => Stack(
                                   alignment: Alignment.bottomCenter,
                                   children: <Widget>[
-                                    page != null? page :0,
+                                    page != null ? page : 0,
                                     Text('${index + 1}',
                                         style: TextStyle(
                                             fontSize:

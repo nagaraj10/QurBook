@@ -37,7 +37,6 @@ class PushNotificationsProvider {
   initNotification() async {
     await _firebaseMessaging.requestNotificationPermissions();
     final token = await _firebaseMessaging.getToken();
-    print("Token new: $token");
 
     initLocalNotification();
 

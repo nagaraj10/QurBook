@@ -188,7 +188,7 @@ class _MyFHBState extends State<MyFHB> {
       var passedValArr = c_msg.split('&');
       Get.to(CallMain(
         userName: passedValArr[1] ?? 'Doctor',
-        channelName: 'Test', //todo this should be change with passedValArr[0]
+        channelName: passedValArr[0],
         role: ClientRole.Broadcaster,
         isAppExists: true,
       ));
@@ -243,8 +243,7 @@ class _MyFHBState extends State<MyFHB> {
               : CallMain(
                   isAppExists: false,
                   role: ClientRole.Broadcaster,
-                  //channelName: navRoute.split('&')[0],
-                  channelName: 'Test',
+                  channelName: navRoute.split('&')[0],
                   userName: navRoute.split('&')[1] ?? 'Doctor',
                 ),
           routes: routes,
@@ -280,31 +279,5 @@ class _MyFHBState extends State<MyFHB> {
           break;
       }
     } on PlatformException catch (e, s) {}
-  }
-
-  void requeatPermissionForAudioAndCamera() async {
-    /*  final Permission cameraPermission = Permission.camera;
-    var cameraPermissionResult = await cameraPermission.status;
-
-    final Permission audioPermission = Permission.microphone;
-    var audioPermissionResult = await cameraPermission.status;
-
-    print(cameraPermissionResult.toString());
-    print(audioPermissionResult.toString());
-
-
-    if(cameraPermissionResult == PermissionStatus.denied || cameraPermissionResult == PermissionStatus.undetermined ){
-      cameraPermission.request();
-    }
-
-    if(audioPermissionResult == PermissionStatus.denied || audioPermissionResult == PermissionStatus.undetermined ){
-      audioPermission.request();
-    }
-
-
-    print(cameraPermissionResult.toString());
-    print(audioPermissionResult.toString());
-
-   */
   }
 }
