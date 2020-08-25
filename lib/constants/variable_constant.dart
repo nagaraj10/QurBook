@@ -247,8 +247,8 @@ const String strSettings = 'Settings';
 const String strHelp = 'Help and support';
 const String strPrivacy = 'Privacy policy';
 const String strRateus = 'Rate us';
-const String strMaya = 'Maya';
-const String strMAYA = 'MAYA';
+const String strMaya = 'Sheela';
+const String strMAYA = 'SHEELA';
 
 const String strColorPalete = 'Color palette';
 
@@ -431,7 +431,7 @@ const security = const MethodChannel('flutter.native/security');
 const String strWaitLoading = 'wait! Its loading';
 
 const String _wordsFromMaya = 'waiting for maya to speak';
-const String strhiMaya = 'Hi Maya';
+const String strhiMaya = 'Hi Sheela';
 const String strtts = 'textToSpeech';
 const String strtapToSpeak = 'Tap to Speak';
 
