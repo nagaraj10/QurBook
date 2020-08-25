@@ -40,10 +40,7 @@ class _MyScheduleState extends State<MySchedule>
           elevation: 0,
           bottom: TabBar(
             tabs: [
-              Tab(
-                
-                text: variable.strAppointments
-              ),
+              Tab(text: variable.strAppointments),
               Tab(
                 text: variable.strRemainders,
               ),

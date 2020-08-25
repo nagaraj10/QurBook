@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -61,7 +62,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     return Scaffold(
         appBar: AppBar(
             flexibleSpace: GradientAppBar(),
-            leading: Container(),
+            leading: IconWidget(
+              icon: Icons.arrow_back_ios,
+              colors: Colors.white,
+              size: 20,
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.exit_to_app),

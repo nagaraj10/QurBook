@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -70,7 +71,14 @@ class _SuperMayaState extends State<SuperMaya> {
                 child: AppBar(
                   flexibleSpace: GradientAppBar(),
                   backgroundColor: Colors.transparent,
-                  leading: Container(),
+                  leading: IconWidget(
+                    icon: Icons.arrow_back_ios,
+                    colors: Colors.white,
+                    size: 20,
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                   elevation: 0,
                   title: Text('Sheela'),
                   centerTitle: true,
