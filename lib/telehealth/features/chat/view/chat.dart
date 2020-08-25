@@ -169,13 +169,13 @@ class ChatState extends State<Chat> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: 'Poppins', color: Colors.white)),
-                    Text(
+                    /*Text(
                       '#123232',
                       style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 12,
                           color: Colors.white),
-                    ),
+                    ),*/
                     Text(
                       'Last visit date June 07,2020',
                       overflow: TextOverflow.ellipsis,
@@ -965,6 +965,7 @@ class ChatScreenState extends State<ChatScreen> {
                       height: 50,
                       child: FlatButton(
                           onPressed: () {
+                            recordIds.clear();
                             FetchRecords(
                                 0,
                                 true,
@@ -1118,6 +1119,7 @@ class ChatScreenState extends State<ChatScreen> {
         isAudioSelect: isAudioSelect,
         isNotesSelect: isNotesSelect,
         selectedMedias: mediaIds,
+        isFromChat: true,
       ),
     ))
         .then((results) {
