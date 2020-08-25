@@ -261,6 +261,8 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
     FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
     final token = await _firebaseMessaging.getToken();
+    print('Firebase Token from Login Page $token');
+
     Map<String, dynamic> deviceInfo = new Map();
     Map<String, dynamic> user = new Map();
     Map<String, dynamic> jsonData = new Map();

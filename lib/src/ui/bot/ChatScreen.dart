@@ -11,6 +11,8 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/bot/ConversationModel.dart';
 import 'package:myfhb/src/model/bot/SpeechModelResponse.dart';
@@ -18,9 +20,6 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:uuid/uuid.dart';
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 // ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
@@ -177,14 +176,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           chatData(conversations);
         });
       });
-    } on PlatformException catch (e) {
-    }
+    } on PlatformException catch (e) {}
   }
 
   sendToMaya(String msg) async {
     String mayaUrl = CommonUtil.MAYA_URL;
     String uuidString = uuid;
-
 
     var reqJson = {};
     reqJson[parameters.strSender] = user_id;
@@ -196,7 +193,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
     String jsonString = convert.jsonEncode(reqJson);
 
-    HeaderRequest headerRequest=new HeaderRequest();
+    HeaderRequest headerRequest = new HeaderRequest();
 
     var response = await http.post(
       mayaUrl,
@@ -207,11 +204,11 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     if (response.statusCode == 200) {
       if (response.body != null) {
         var jsonResponse = convert.jsonDecode(response.body);
-        
+
         List<dynamic> list = jsonResponse;
         if (list.length > 0) {
           SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
-         
+
           setState(() {
             isEndOfConv = res.endOfConv;
           });
@@ -231,9 +228,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             isLoading = false;
             isMayaSpeaks = 0;
             if (!stopTTSNow) {
-              variable.tts_platform.invokeMethod(variable.strtts,
-                  {parameters.strMessage: res.text, parameters.strIsClose: false}).then((res) {
-                
+              variable.tts_platform.invokeMethod(variable.strtts, {
+                parameters.strMessage: res.text,
+                parameters.strIsClose: false
+              }).then((res) {
                 if (res == 1) {
                   isMayaSpeaks = 1;
                 }
@@ -276,7 +274,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Column(
-        children: [
+          children: [
             Text(
               c.name.toUpperCase(),
               style: Theme.of(context).textTheme.body1,
@@ -317,7 +315,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             ),
           ],
         ),
-        SizedBox(width: 20),
         ClipOval(
             child: Container(
           height: 40,
@@ -332,7 +329,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   Widget receiverLayout(Conversation c, BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CircleAvatar(

@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/common/CommonDialogBox.dart';
-import 'package:myfhb/global_search/model/Data.dart';
-import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Media/MediaData.dart';
-import 'package:myfhb/src/model/TabModel.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/global_search/bloc/GlobalSearchBloc.dart';
+import 'package:myfhb/global_search/model/Data.dart';
 import 'package:myfhb/global_search/model/GlobalSearch.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/src/model/TabModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/health/BillsList.dart';
@@ -40,11 +43,6 @@ import '../../constants/fhb_constants.dart';
 
 export 'package:myfhb/common/CommonUtil.dart';
 export 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
 
 class MyRecords extends StatefulWidget {
   int categoryPosition;
@@ -52,13 +50,16 @@ class MyRecords extends StatefulWidget {
   bool isNotesSelect;
   bool isAudioSelect;
   List<String> selectedMedias;
+  bool isFromChat =false;
 
   MyRecords(
       {this.categoryPosition,
-        this.allowSelect,
-        this.isAudioSelect,
-        this.isNotesSelect,
-        this.selectedMedias});
+      this.allowSelect,
+      this.isAudioSelect,
+      this.isNotesSelect,
+      this.selectedMedias,
+      this.isFromChat,
+      });
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -111,14 +112,14 @@ class _MyRecordsState extends State<MyRecords> {
     PreferenceUtil.init();
 
     var isFirstTime =
-    PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_HOMESCREEN);
+        PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_HOMESCREEN);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(
           Duration(milliseconds: 1000),
-              () => isFirstTime
+          () => isFirstTime
               ? null
               : ShowCaseWidget.of(_myContext)
-              .startShowCase([_cameraKey, _voiceKey]));
+                  .startShowCase([_cameraKey, _voiceKey]));
     });
   }
 
@@ -140,9 +141,13 @@ class _MyRecordsState extends State<MyRecords> {
         elevation: 0,
         automaticallyImplyLeading: false,
         flexibleSpace: GradientAppBar(),
-        leading: SizedBox(
-          width: 0,
-          height: 0,
+        leading: IconWidget(
+          icon: Icons.arrow_back_ios,
+          colors: Colors.white,
+          size: 20,
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
         titleSpacing: 0,
         title: _buildSearchField(),
@@ -161,45 +166,45 @@ class _MyRecordsState extends State<MyRecords> {
 
     return PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST) != null
         ? getMainWidgets(PreferenceUtil.getCategoryTypeDisplay(
-        Constants.KEY_SEARCHED_CATEGORY))
+            Constants.KEY_SEARCHED_CATEGORY))
         : StreamBuilder<ApiResponse<GlobalSearch>>(
-      stream: _globalSearchBloc.globalSearchStream,
-      builder:
-          (context, AsyncSnapshot<ApiResponse<GlobalSearch>> snapshot) {
-        if (!snapshot.hasData) return Container();
+            stream: _globalSearchBloc.globalSearchStream,
+            builder:
+                (context, AsyncSnapshot<ApiResponse<GlobalSearch>> snapshot) {
+              if (!snapshot.hasData) return Container();
 
-        switch (snapshot.data.status) {
-          case Status.LOADING:
-            return Center(
-                child: SizedBox(
-                  child: CircularProgressIndicator(
-                    backgroundColor:
-                    Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
-                  width: 30,
-                  height: 30,
-                ));
+              switch (snapshot.data.status) {
+                case Status.LOADING:
+                  return Center(
+                      child: SizedBox(
+                    child: CircularProgressIndicator(
+                      backgroundColor:
+                          Color(new CommonUtil().getMyPrimaryColor()),
+                    ),
+                    width: 30,
+                    height: 30,
+                  ));
 
-            break;
+                  break;
 
-          case Status.ERROR:
-            return FHBBasicWidget.getRefreshContainerButton(
-                snapshot.data.message, () {
-              setState(() {});
-            });
-          case Status.COMPLETED:
-            _categoryListBlock = null;
-            //rebuildAllBlocks();
-            return snapshot.data.data.response.count == 0
-                ? getEmptyCard()
-                : Container(
-              child: getWidgetForSearchedMedia(
-                  snapshot.data.data.response.data),
-            );
-            break;
-        }
-      },
-    );
+                case Status.ERROR:
+                  return FHBBasicWidget.getRefreshContainerButton(
+                      snapshot.data.message, () {
+                    setState(() {});
+                  });
+                case Status.COMPLETED:
+                  _categoryListBlock = null;
+                  //rebuildAllBlocks();
+                  return snapshot.data.data.response.count == 0
+                      ? getEmptyCard()
+                      : Container(
+                          child: getWidgetForSearchedMedia(
+                              snapshot.data.data.response.data),
+                        );
+                  break;
+              }
+            },
+          );
   }
 
   getEmptyCard() {
@@ -223,7 +228,7 @@ class _MyRecordsState extends State<MyRecords> {
 
   Widget getResponseFromApiWidget() {
     List<CategoryData> categoryDataFromPrefernce =
-    PreferenceUtil.getCategoryType();
+        PreferenceUtil.getCategoryType();
     if (categoryDataFromPrefernce != null &&
         categoryDataFromPrefernce.length > 0)
       return getMainWidgets(categoryDataFromPrefernce);
@@ -237,13 +242,13 @@ class _MyRecordsState extends State<MyRecords> {
               case Status.LOADING:
                 return Center(
                     child: SizedBox(
-                      child: CircularProgressIndicator(
-                        backgroundColor:
+                  child: CircularProgressIndicator(
+                    backgroundColor:
                         Color(new CommonUtil().getMyPrimaryColor()),
-                      ),
-                      width: 30,
-                      height: 30,
-                    ));
+                  ),
+                  width: 30,
+                  height: 30,
+                ));
                 break;
 
               case Status.ERROR:
@@ -283,8 +288,8 @@ class _MyRecordsState extends State<MyRecords> {
       PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
 
       List<CategoryData> categoryDataFromPrefernce =
-      PreferenceUtil.getCategoryTypeDisplay(
-          Constants.KEY_CATEGORYLIST_VISIBLE);
+          PreferenceUtil.getCategoryTypeDisplay(
+              Constants.KEY_CATEGORYLIST_VISIBLE);
       if (categoryDataFromPrefernce != null &&
           categoryDataFromPrefernce.length > 0) {
         categoryData = fliterCategories(categoryDataFromPrefernce);
@@ -315,6 +320,7 @@ class _MyRecordsState extends State<MyRecords> {
       allowSelectVoice: widget.isAudioSelect ?? false,
       allowSelectNotes: widget.isNotesSelect ?? false,
       selectedMedia: widget.selectedMedias,
+      isFromChat: widget.isFromChat,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -374,7 +380,7 @@ class _MyRecordsState extends State<MyRecords> {
                   ),
                   suffixIcon: Visibility(
                     visible:
-                    _searchQueryController.text.length >= 3 ? true : false,
+                        _searchQueryController.text.length >= 3 ? true : false,
                     child: IconButton(
                       icon: Icon(
                         Icons.clear,
@@ -383,7 +389,7 @@ class _MyRecordsState extends State<MyRecords> {
                       onPressed: () {
                         _searchQueryController.clear();
                         PreferenceUtil.saveCompleteData(
-                            Constants.KEY_SEARCHED_LIST, null)
+                                Constants.KEY_SEARCHED_LIST, null)
                             .then((value) {
                           setState(() {
                             fromSearch = false;
@@ -401,7 +407,7 @@ class _MyRecordsState extends State<MyRecords> {
                   _globalSearchBloc = new GlobalSearchBloc();
                   if (editedValue != '' && editedValue.length > 3) {
                     PreferenceUtil.saveCompleteData(
-                        Constants.KEY_SEARCHED_LIST, null)
+                            Constants.KEY_SEARCHED_LIST, null)
                         .then((value) {
                       searchQuery = editedValue;
                       _globalSearchBloc
@@ -414,7 +420,7 @@ class _MyRecordsState extends State<MyRecords> {
                     });
                   } else if (editedValue == '') {
                     PreferenceUtil.saveCompleteData(
-                        Constants.KEY_SEARCHED_LIST, null)
+                            Constants.KEY_SEARCHED_LIST, null)
                         .then((value) {
                       searchQuery = '';
                       setState(() {
@@ -534,25 +540,28 @@ class CustomTabView extends StatefulWidget {
   bool allowSelect;
   bool allowSelectNotes;
   bool allowSelectVoice;
+  bool isFromChat = false;
 
   CustomTabView(
       {@required this.itemCount,
-        this.tabBuilder,
-        this.pageBuilder,
-        this.stub,
-        this.onPositionChange,
-        this.onScroll,
-        this.initPosition,
-        this.categoryData,
-        this.cameraKey,
-        this.voiceKey,
-        this.scaffold_state,
-        this.fromSearch,
-        this.completeData,
-        this.allowSelect,
-        this.selectedMedia,
-        this.allowSelectNotes,
-        this.allowSelectVoice});
+      this.tabBuilder,
+      this.pageBuilder,
+      this.stub,
+      this.onPositionChange,
+      this.onScroll,
+      this.initPosition,
+      this.categoryData,
+      this.cameraKey,
+      this.voiceKey,
+      this.scaffold_state,
+      this.fromSearch,
+      this.completeData,
+      this.allowSelect,
+      this.selectedMedia,
+      this.allowSelectNotes,
+      this.allowSelectVoice,
+      this.isFromChat
+      });
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -668,13 +677,13 @@ class _CustomTabsState extends State<CustomTabView>
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: <Color>[
-                    Color(new CommonUtil().getMyPrimaryColor()),
-                    Color(new CommonUtil().getMyGredientColor())
-                  ],
+                Color(new CommonUtil().getMyPrimaryColor()),
+                Color(new CommonUtil().getMyGredientColor())
+              ],
                   stops: [
-                    0.3,
-                    1.0
-                  ])),
+                0.3,
+                1.0
+              ])),
           child: TabBar(
             indicatorWeight: 4,
             isScrollable: true,
@@ -744,19 +753,19 @@ class _CustomTabsState extends State<CustomTabView>
                   ),
                   onPressed: () {
                     PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME,
-                        Constants.STR_VOICERECORDS)
+                            Constants.STR_VOICERECORDS)
                         .then((value) {
                       PreferenceUtil.saveString(
-                          Constants.KEY_CATEGORYID,
-                          PreferenceUtil.getStringValue(
-                              Constants.KEY_VOICE_ID))
+                              Constants.KEY_CATEGORYID,
+                              PreferenceUtil.getStringValue(
+                                  Constants.KEY_VOICE_ID))
                           .then((value) {
                         Navigator.of(context)
                             .push(MaterialPageRoute(
-                          builder: (context) => AudioRecordScreen(
-                            fromVoice: true,
-                          ),
-                        ))
+                              builder: (context) => AudioRecordScreen(
+                                fromVoice: true,
+                              ),
+                            ))
                             .then((results) {});
                       });
                     });
@@ -770,17 +779,17 @@ class _CustomTabsState extends State<CustomTabView>
         alignment: Alignment.bottomCenter,
         child: (widget.selectedMedia != null && widget.selectedMedia.length > 0)
             ? OutlineButton(
-          onPressed: () {
-            Navigator.of(context).pop({'metaId': widget.selectedMedia});
-          },
-          child: Text('Associate'),
-          textColor: Color(new CommonUtil().getMyPrimaryColor()),
-          color: Colors.white,
-          borderSide: BorderSide(
-              color: Color(new CommonUtil().getMyPrimaryColor())),
-          shape:
-          OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-        )
+                onPressed: () {
+                  Navigator.of(context).pop({'metaId': widget.selectedMedia});
+                },
+                child: widget.isFromChat?Text('Attach'):Text('Associate'),
+                textColor: Color(new CommonUtil().getMyPrimaryColor()),
+                color: Colors.white,
+                borderSide: BorderSide(
+                    color: Color(new CommonUtil().getMyPrimaryColor())),
+                shape:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+              )
             : SizedBox(),
       )
     ]);
@@ -788,114 +797,114 @@ class _CustomTabsState extends State<CustomTabView>
 
   Widget getAllTabsToDisplayInBody(List<CategoryData> data) {
     CompleteData completeDataFromPreference =
-    PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
+        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch
         ? getMediTypeForlabels(data, widget.completeData)
         : completeDataFromPreference != null
-        ? getMediTypeForlabels(data, completeDataFromPreference)
-        : StreamBuilder<ApiResponse<UserHealthResponseList>>(
-      stream: _healthReportListForUserBlock.healthReportStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<UserHealthResponseList>>
-          snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return Scaffold(
-                backgroundColor: Colors.white,
-                body: Center(
-                    child: SizedBox(
-                      child: CircularProgressIndicator(
-                        backgroundColor:
-                        Color(new CommonUtil().getMyPrimaryColor()),
-                      ),
-                      width: 30,
-                      height: 30,
-                    )),
+            ? getMediTypeForlabels(data, completeDataFromPreference)
+            : StreamBuilder<ApiResponse<UserHealthResponseList>>(
+                stream: _healthReportListForUserBlock.healthReportStream,
+                builder: (context,
+                    AsyncSnapshot<ApiResponse<UserHealthResponseList>>
+                        snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        return Scaffold(
+                          backgroundColor: Colors.white,
+                          body: Center(
+                              child: SizedBox(
+                            child: CircularProgressIndicator(
+                              backgroundColor:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                            ),
+                            width: 30,
+                            height: 30,
+                          )),
+                        );
+                        break;
+
+                      case Status.ERROR:
+                        return FHBBasicWidget.getRefreshContainerButton(
+                            snapshot.data.message, () {
+                          setState(() {});
+                        });
+                        break;
+
+                      case Status.COMPLETED:
+                        _healthReportListForUserBlock = null;
+                        rebuildAllBlocks();
+                        if (!widget.fromSearch) {
+                          PreferenceUtil.saveCompleteData(
+                              Constants.KEY_COMPLETE_DATA,
+                              snapshot.data.data.response.data);
+                        }
+
+                        return getMediTypeForlabels(
+                            data, snapshot.data.data.response.data);
+                        break;
+                    }
+                  } else {
+                    return Container(height: 0, color: Colors.white);
+                  }
+                },
               );
-              break;
-
-            case Status.ERROR:
-              return FHBBasicWidget.getRefreshContainerButton(
-                  snapshot.data.message, () {
-                setState(() {});
-              });
-              break;
-
-            case Status.COMPLETED:
-              _healthReportListForUserBlock = null;
-              rebuildAllBlocks();
-              if (!widget.fromSearch) {
-                PreferenceUtil.saveCompleteData(
-                    Constants.KEY_COMPLETE_DATA,
-                    snapshot.data.data.response.data);
-              }
-
-              return getMediTypeForlabels(
-                  data, snapshot.data.data.response.data);
-              break;
-          }
-        } else {
-          return Container(height: 0, color: Colors.white);
-        }
-      },
-    );
   }
 
   Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
     CompleteData completeDataFromPreference =
-    PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
+        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch
         ? getMediTypeForlabels(data, widget.completeData)
         : completeDataFromPreference != null
-        ? getMediTypeForlabels(data, completeDataFromPreference)
-        : StreamBuilder<ApiResponse<UserHealthResponseList>>(
-      stream: _healthReportListForUserBlock.healthReportStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<UserHealthResponseList>>
-          snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return Scaffold(
-                backgroundColor: Colors.white,
-                body: Center(
-                    child: SizedBox(
-                      child: CircularProgressIndicator(
-                        backgroundColor:
-                        Color(new CommonUtil().getMyPrimaryColor()),
-                      ),
-                      width: 30,
-                      height: 30,
-                    )),
+            ? getMediTypeForlabels(data, completeDataFromPreference)
+            : StreamBuilder<ApiResponse<UserHealthResponseList>>(
+                stream: _healthReportListForUserBlock.healthReportStream,
+                builder: (context,
+                    AsyncSnapshot<ApiResponse<UserHealthResponseList>>
+                        snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        return Scaffold(
+                          backgroundColor: Colors.white,
+                          body: Center(
+                              child: SizedBox(
+                            child: CircularProgressIndicator(
+                              backgroundColor:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                            ),
+                            width: 30,
+                            height: 30,
+                          )),
+                        );
+                        break;
+
+                      case Status.ERROR:
+                        return FHBBasicWidget.getRefreshContainerButton(
+                            snapshot.data.message, () {
+                          setState(() {});
+                        });
+                        break;
+
+                      case Status.COMPLETED:
+                        _healthReportListForUserBlock = null;
+                        rebuildAllBlocks();
+                        if (!widget.fromSearch) {
+                          PreferenceUtil.saveCompleteData(
+                              Constants.KEY_COMPLETE_DATA,
+                              snapshot.data.data.response.data);
+                        }
+
+                        return getMediTypeForlabels(
+                            data, snapshot.data.data.response.data);
+                        break;
+                    }
+                  } else {
+                    return Container(height: 0, color: Colors.white);
+                  }
+                },
               );
-              break;
-
-            case Status.ERROR:
-              return FHBBasicWidget.getRefreshContainerButton(
-                  snapshot.data.message, () {
-                setState(() {});
-              });
-              break;
-
-            case Status.COMPLETED:
-              _healthReportListForUserBlock = null;
-              rebuildAllBlocks();
-              if (!widget.fromSearch) {
-                PreferenceUtil.saveCompleteData(
-                    Constants.KEY_COMPLETE_DATA,
-                    snapshot.data.data.response.data);
-              }
-
-              return getMediTypeForlabels(
-                  data, snapshot.data.data.response.data);
-              break;
-          }
-        } else {
-          return Container(height: 0, color: Colors.white);
-        }
-      },
-    );
   }
 
   void rebuildAllBlocks() {
@@ -951,46 +960,46 @@ class _CustomTabsState extends State<CustomTabView>
     return selectedMediaData != null
         ? getStackBody(data, completeData, selectedMediaData)
         : StreamBuilder<ApiResponse<MediaTypesResponse>>(
-      stream: _mediaTypeBlock.mediaTypeStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<MediaTypesResponse>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return Scaffold(
-                backgroundColor: Colors.white,
-                body: Center(
-                    child: SizedBox(
-                      child: CircularProgressIndicator(
-                        backgroundColor:
-                        Color(new CommonUtil().getMyPrimaryColor()),
-                      ),
-                      width: 30,
-                      height: 30,
-                    )),
-              );
+            stream: _mediaTypeBlock.mediaTypeStream,
+            builder: (context,
+                AsyncSnapshot<ApiResponse<MediaTypesResponse>> snapshot) {
+              if (snapshot.hasData) {
+                switch (snapshot.data.status) {
+                  case Status.LOADING:
+                    return Scaffold(
+                      backgroundColor: Colors.white,
+                      body: Center(
+                          child: SizedBox(
+                        child: CircularProgressIndicator(
+                          backgroundColor:
+                              Color(new CommonUtil().getMyPrimaryColor()),
+                        ),
+                        width: 30,
+                        height: 30,
+                      )),
+                    );
 
-              break;
+                    break;
 
-            case Status.ERROR:
-              return Text(variable.strNoLoadtabls,
-                  style: TextStyle(color: Colors.red));
-              break;
+                  case Status.ERROR:
+                    return Text(variable.strNoLoadtabls,
+                        style: TextStyle(color: Colors.red));
+                    break;
 
-            case Status.COMPLETED:
-              _mediaTypeBlock = null;
-              rebuildAllBlocks();
-              PreferenceUtil.saveMediaType(Constants.KEY_METADATA,
-                  snapshot.data.data.response.data);
-              return getStackBody(
-                  data, completeData, snapshot.data.data.response.data);
-              break;
-          }
-        } else {
-          return getStackBody(data, completeData, null);
-        }
-      },
-    );
+                  case Status.COMPLETED:
+                    _mediaTypeBlock = null;
+                    rebuildAllBlocks();
+                    PreferenceUtil.saveMediaType(Constants.KEY_METADATA,
+                        snapshot.data.data.response.data);
+                    return getStackBody(
+                        data, completeData, snapshot.data.data.response.data);
+                    break;
+                }
+              } else {
+                return getStackBody(data, completeData, null);
+              }
+            },
+          );
   }
 
   Widget getStackBody(List<CategoryData> data, CompleteData completeData,
@@ -1246,18 +1255,18 @@ class _CustomTabsState extends State<CustomTabView>
         Padding(padding: EdgeInsets.only(top: 10)),
         dataObj.logo != null
             ? Image.network(
-          Constants.BASE_URL + dataObj.logo,
-          width: 20,
-          height: 20,
-          color: Colors.white,
-        )
+                Constants.BASE_URL + dataObj.logo,
+                width: 20,
+                height: 20,
+                color: Colors.white,
+              )
             : Icon(Icons.calendar_today, size: 20, color: Colors.white),
         Padding(padding: EdgeInsets.only(top: 10)),
         Container(
             child: Text(
-              dataObj.categoryName,
-              style: TextStyle(fontSize: 12),
-            )),
+          dataObj.categoryName,
+          style: TextStyle(fontSize: 12),
+        )),
         Padding(padding: EdgeInsets.only(top: 10)),
       ]));
       /* }*/
@@ -1269,19 +1278,19 @@ class _CustomTabsState extends State<CustomTabView>
   void openNotesDialog() {
     TextEditingController fileName = new TextEditingController(
         text:
-        categoryName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
+            categoryName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     new CommonDialogBox().getDialogBoxForNotes(
         context,
         containsAudio,
         audioPath,
-            (containsAudio, audioPath) {
+        (containsAudio, audioPath) {
           setState(() {
             audioPath = audioPath;
             containsAudio = containsAudio;
           });
         },
         null,
-            (containsAudio, audioPath) {
+        (containsAudio, audioPath) {
           audioPath = audioPath;
           containsAudio = containsAudio;
 
@@ -1294,7 +1303,8 @@ class _CustomTabsState extends State<CustomTabView>
 
   void onCameraClicked() async {
     final PermissionHandler cameraPermission = PermissionHandler();
-    var permissionStatus = await cameraPermission.checkPermissionStatus(PermissionGroup.camera);
+    var permissionStatus =
+        await cameraPermission.checkPermissionStatus(PermissionGroup.camera);
 
     if (permissionStatus == PermissionStatus.denied ||
         permissionStatus == PermissionStatus.unknown) {
@@ -1340,6 +1350,4 @@ class _CustomTabsState extends State<CustomTabView>
       [PermissionGroup.camera, PermissionGroup.microphone],
     );
   }
-
-
 }
