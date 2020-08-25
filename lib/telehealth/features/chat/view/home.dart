@@ -414,7 +414,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(),
+                          padding: const EdgeInsets.only(bottom: 5),
                           child: Text(
                             toBeginningOfSentenceCase(document['nickname']),
                             overflow: TextOverflow.ellipsis,
@@ -425,7 +425,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                 fontFamily: 'Poppins'),
                           ),
                         ),
-                        SizedBox(
+                        /*SizedBox(
                           height: 1,
                         ),
                         Text(
@@ -435,7 +435,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                               fontSize: 14,
                               fontFamily: 'Poppins',
                               color: Colors.grey[700]),
-                        ),
+                        ),*/
                         SizedBox(
                           height: 1,
                         ),
@@ -443,24 +443,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
                           constraints: BoxConstraints(
                               maxWidth:
                                   MediaQuery.of(context).size.width * 0.5),
-                          padding: const EdgeInsets.only(),
+                          padding: const EdgeInsets.only(bottom: 5),
                           child: Text(
-                            'Last message',
+                            document['lastMessage']!=null?document['lastMessage']:'',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                                fontFamily: 'Poppins'),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 1,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(),
-                          child: Text(
-                            'Last visit date June 07,2020',
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
                                 color: Colors.grey[600],
@@ -474,6 +460,22 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Text(
+                            'Last visit '+DateFormat('dd MMM kk:mm').format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    int.parse(document['createdAt']))),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w300,
+                                color: Colors.grey[600],
+                                fontSize: 12,
+                                fontFamily: 'Poppins'),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 1,
+                        ),
+                        /*Padding(
+                          padding: const EdgeInsets.only(bottom: 15),
+                          child: Text(
                             'Next appointment date Jul 15,2020',
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
@@ -481,7 +483,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                 fontSize: 12,
                                 fontFamily: 'Poppins'),
                           ),
-                        )
+                        )*/
                       ],
                     ),
                     SizedBox(

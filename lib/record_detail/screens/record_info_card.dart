@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/DeviceReadings.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
@@ -38,10 +39,8 @@ class RecordInfoCard {
               children: <Widget>[
                 ClipOval(
                     child: metaInfo.doctor != null
-                        ? Container(
-                        width: 50,
-                        height: 50,
-                        color: Color(fhbColors.bgColorContainer))//getDoctorProfileImageWidget(metaInfo)
+                        ? new CommonUtil().getDoctorProfileImageWidget(metaInfo
+                            .doctor.id) //getDoctorProfileImageWidget(metaInfo)
                         : Container(
                             width: 50,
                             height: 50,
@@ -54,7 +53,12 @@ class RecordInfoCard {
                       children: <Widget>[
                         metaInfo.doctor.name != null
                             ? Text(
-                                toBeginningOfSentenceCase(metaInfo.doctor.name),
+                                toBeginningOfSentenceCase(
+                                    metaInfo.doctor != null
+                                        ? metaInfo.doctor.name != null
+                                            ? metaInfo.doctor.name
+                                            : ''
+                                        : ''),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 14),
                                 softWrap: false,
@@ -127,10 +131,12 @@ class RecordInfoCard {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
-                  backgroundImage: metaInfo.hospital!=null?metaInfo.hospital.logoThumbnail != null
-                      ? NetworkImage(
-                          Constants.BASE_URL + metaInfo.hospital.logoThumbnail)
-                      : null:null,
+                  backgroundImage: metaInfo.hospital != null
+                      ? metaInfo.hospital.logoThumbnail != null
+                          ? NetworkImage(Constants.BASE_URL +
+                              metaInfo.hospital.logoThumbnail)
+                          : null
+                      : null,
                 ),
                 Expanded(
                   child: Padding(
@@ -138,18 +144,21 @@ class RecordInfoCard {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                       metaInfo.hospital!=null? metaInfo.hospital.name != null
-                            ? Text(
-                                toBeginningOfSentenceCase(
-                                    metaInfo.hospital.name),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 14),
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                              )
+                        metaInfo.hospital != null
+                            ? metaInfo.hospital.name != null
+                                ? Text(
+                                    toBeginningOfSentenceCase(
+                                        metaInfo.hospital.name),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14),
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : SizedBox(
+                                    height: 0,
+                                  )
                             : SizedBox(
-                                height: 0,
-                              ): SizedBox(
                                 height: 0,
                               ),
                         metaInfo.doctor != null
@@ -212,10 +221,12 @@ class RecordInfoCard {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
-                  backgroundImage: metaInfo.laboratory!=null?metaInfo.laboratory.logoThumbnail != null
-                      ? NetworkImage(Constants.BASE_URL +
-                          metaInfo.laboratory.logoThumbnail)
-                      : null:null,
+                  backgroundImage: metaInfo.laboratory != null
+                      ? metaInfo.laboratory.logoThumbnail != null
+                          ? NetworkImage(Constants.BASE_URL +
+                              metaInfo.laboratory.logoThumbnail)
+                          : null
+                      : null,
                 ),
                 Expanded(
                   child: Padding(
@@ -223,18 +234,21 @@ class RecordInfoCard {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        metaInfo.laboratory!=null?metaInfo.laboratory.name != null
-                            ? Text(
-                                toBeginningOfSentenceCase(
-                                    metaInfo.laboratory.name),
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 14),
-                                softWrap: false,
-                                overflow: TextOverflow.ellipsis,
-                              )
+                        metaInfo.laboratory != null
+                            ? metaInfo.laboratory.name != null
+                                ? Text(
+                                    toBeginningOfSentenceCase(
+                                        metaInfo.laboratory.name),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14),
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : SizedBox(
+                                    height: 0,
+                                  )
                             : SizedBox(
-                                height: 0,
-                              ):SizedBox(
                                 height: 0,
                               ),
                         metaInfo.doctor != null

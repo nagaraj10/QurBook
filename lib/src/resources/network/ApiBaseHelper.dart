@@ -20,6 +20,7 @@ import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
+import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
 
 import 'AppException.dart';
 
@@ -540,7 +541,7 @@ class ApiBaseHelper {
       Dio dio = new Dio();
 
       dio.options.headers[variable.straccept] = variable.strAcceptVal;
-      dio.options.headers[variable.strContentType] = variable.strcntVal;
+      //dio.options.headers[variable.strContentType] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
       String fileNoun = file.path.split('/').last;
 
@@ -928,6 +929,31 @@ class ApiBaseHelper {
       print(response.body);
       responseJson = _returnResponse(response);
       print(responseJson);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<GetMetaFileURLModel> getMetaIdURL(
+      List<String> recordIds,String patientId) async {
+    var inputBody = {};
+    inputBody[META_IDS] = recordIds;
+    inputBody[INCLUDE_MEDIA] = true;
+    var jsonString = convert.jsonEncode(inputBody);
+    print(jsonString);
+    final response =
+    await getApiForGetMetaURL(jsonString,patientId);
+    return GetMetaFileURLModel.fromJson(response);
+  }
+
+  Future<dynamic> getApiForGetMetaURL(String jsonBody,String patientId) async {
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrl + qr_media_meta+patientId+qr_get_media_master,
+          headers: await headerRequest.getRequestHeader(), body: jsonBody);
+      print(response.body);
+      responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }

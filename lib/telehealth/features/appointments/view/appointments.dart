@@ -51,12 +51,12 @@ class _AppointmentsState extends State<Appointments> {
   List<String> hours = List();
   List<String> minutes = List();
   List<String> daysCount;
-
+  Timer timer;
   SharedPreferences prefs;
 
   @override
   void initState() {
-    Timer.periodic(Duration(seconds: 1), (Timer t) {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       hours = appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).hours;
       minutes =
           appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).minutes;
@@ -90,9 +90,17 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: body(), floatingActionButton: commonWidget.floatingButton());
+        body: body(),
+        floatingActionButton: commonWidget.floatingButton(context));
   }
 
   Widget search() {
@@ -339,7 +347,7 @@ class _AppointmentsState extends State<Appointments> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          docPhotoView(),
+                          docPhotoView(doc),
                           SizedBoxWidget(
                             width: 10,
                           ),
@@ -372,6 +380,15 @@ class _AppointmentsState extends State<Appointments> {
                       child: Column(
                         children: [
                           //joinCallIcon(doc),
+                          IconButton(
+                              icon: ImageIcon(
+                                  AssetImage(Constants.Appointments_chatImage)),
+                              onPressed: () {
+                                //chat integration start
+                                String doctorId = doc.doctorId;
+                                String doctorName = doc.doctorName;
+                                storePatientDetailsToFCM(doctorId, doctorName);
+                              }),
                           SizedBoxWidget(
                             height: (hour == '00' || minutes == '00') ? 0 : 15,
                           ),
@@ -438,7 +455,7 @@ class _AppointmentsState extends State<Appointments> {
         ));
   }
 
-  Widget docPhotoView() {
+  Widget docPhotoView(History doc) {
     return Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -459,6 +476,14 @@ class _AppointmentsState extends State<Appointments> {
             ]),
         child: ClipOval(
           child: Container(
+            child: doc.doctorPic == null
+                ? Container(color: Color(fhbColors.bgColorContainer))
+                : Image.network(
+                    doc.doctorPic,
+                    fit: BoxFit.cover,
+                    height: 40,
+                    width: 40,
+                  ),
             color: Color(fhbColors.bgColorContainer),
             height: 50,
             width: 50,
@@ -479,7 +504,7 @@ class _AppointmentsState extends State<Appointments> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        docPhotoView(),
+                        docPhotoView(doc),
                         SizedBoxWidget(
                           width: 10,
                         ),
@@ -513,28 +538,28 @@ class _AppointmentsState extends State<Appointments> {
                             height: doc.specialization == null ? 30 : 40,
                           ),
                           commonWidget.count(doc.slotNumber),
-                           TextWidget(
-                                  fontsize: 9,
-                                  text: doc.followupDate == null
-                                      ? ''
-                                      :Constants.Appointments_followUpStatus,
-                                  overflow: TextOverflow.visible,
-                                  fontWeight: FontWeight.w400,
-                                  colors: Colors.black38,
-                                ),
-                           TextWidget(
-                                  fontsize: 10,
-                                  text: doc.followupDate== null
-                                      ? ""
-                                      :DateFormat.yMMMEd()
-                                          .format(DateTime.parse(
-                                              doc.followupDate))
-                                          .toString() ??
-                                      '',
-                                  fontWeight: FontWeight.w500,
-                                  overflow: TextOverflow.visible,
-                                  colors: Colors.black,
-                                ),
+                          TextWidget(
+                            fontsize: 9,
+                            text: doc.followupDate == null
+                                ? ''
+                                : Constants.Appointments_followUpStatus,
+                            overflow: TextOverflow.visible,
+                            fontWeight: FontWeight.w400,
+                            colors: Colors.black38,
+                          ),
+                          TextWidget(
+                            fontsize: 10,
+                            text: doc.followupDate == null
+                                ? ""
+                                : DateFormat.yMMMEd()
+                                        .format(
+                                            DateTime.parse(doc.followupDate))
+                                        .toString() ??
+                                    '',
+                            fontWeight: FontWeight.w500,
+                            overflow: TextOverflow.visible,
+                            colors: Colors.black,
+                          ),
                           TextWidget(
                             fontsize: 15,
                             text: doc.followupFee ?? '',
@@ -703,8 +728,7 @@ class _AppointmentsState extends State<Appointments> {
     storeDoctorDetailsToFCM(doctorId, doctorName);
   }
 
-  Future<void> storeDoctorDetailsToFCM(
-      String doctorId, String doctorName) async {
+  Future<void> storeDoctorDetailsToFCM(String doctorId, String doctorName) async {
     prefs = await SharedPreferences.getInstance();
 
     String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);

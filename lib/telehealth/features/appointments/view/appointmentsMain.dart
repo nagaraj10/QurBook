@@ -8,6 +8,7 @@ import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewMod
 import 'package:myfhb/telehealth/features/appointments/view/appointments.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleAppointments.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
+import 'package:myfhb/telehealth/features/followUp/view/followUpMain.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:provider/provider.dart';
@@ -72,7 +73,14 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
           icon: Icons.notifications,
           colors: Colors.white,
           size: 22,
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => FollowUpMain()
+              ),
+            );
+          },
         ),
         SwitchProfile().buildActions(context, _key, callBackToRefresh),
         IconWidget(

@@ -76,6 +76,7 @@ Future<void> main() async {
   );
 
   // await saveToPreference();
+  //await PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, Constants.AuthToken);
 }
 
 void saveToPreference() async {
