@@ -189,7 +189,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
 
       if (widget.arguments.sharedbyme.profileData.dateOfBirth != null) {
-        dateofBirthStr = new FHBUtils().getFormattedDateForUser(
+        dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
         dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.sharedbyme.profileData.dateOfBirth);

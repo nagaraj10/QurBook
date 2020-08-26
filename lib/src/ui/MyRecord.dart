@@ -1301,12 +1301,17 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   void onCameraClicked() async {
-    final PermissionHandler cameraPermission = PermissionHandler();
-    var permissionStatus =
-        await cameraPermission.checkPermissionStatus(PermissionGroup.camera);
+//    final PermissionHandler cameraPermission = PermissionHandler();
+//    var permissionStatus =
+//        await cameraPermission.checkPermissionStatus(PermissionGroup.camera);
+//
+//    if (permissionStatus == PermissionStatus.denied ||
+//        permissionStatus == PermissionStatus.unknown) {
+//      await _handleCameraAndMic();
+//    }
+    var status = await Permission.camera.status;
 
-    if (permissionStatus == PermissionStatus.denied ||
-        permissionStatus == PermissionStatus.unknown) {
+    if (status.isUndetermined || status.isDenied) {
       await _handleCameraAndMic();
     } else {
       categoryName =
@@ -1345,8 +1350,10 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
+    await Permission.microphone.request();
+    await Permission.camera.request();
+//    await PermissionHandler().requestPermissions(
+//      [PermissionGroup.camera, PermissionGroup.microphone],
+//    );
   }
 }
