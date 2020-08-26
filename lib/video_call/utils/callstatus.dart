@@ -5,13 +5,11 @@ class CallStatus extends ChangeNotifier {
 
   void startCall() {
     isCallAlive = true;
-    print('is My Call alive $isCallAlive');
     notifyListeners();
   }
 
   void enCall() {
     isCallAlive = false;
-    print('is My Call alive $isCallAlive');
     notifyListeners();
   }
 }

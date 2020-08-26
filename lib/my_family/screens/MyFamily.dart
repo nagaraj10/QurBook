@@ -1,6 +1,5 @@
 // ignore: file_names
 import 'dart:convert' as convert;
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_country_picker/country.dart';
@@ -243,7 +242,8 @@ class _MyFamilyState extends State<MyFamily> {
             children: <Widget>[
               ClipOval(
                 child: position == 0
-                    ? myProfile.response.data.generalInfo.profilePicThumbnail ==
+                    ? myProfile.response.data.generalInfo
+                                .profilePicThumbnailURL ==
                             null
                         ? Container(
                             width: 60,
@@ -263,14 +263,14 @@ class _MyFamilyState extends State<MyFamily> {
                               ),
                             ),
                           )
-                        : Image.memory(
-                            Uint8List.fromList(myProfile.response.data
-                                .generalInfo.profilePicThumbnail.data),
+                        : Image.network(
+                            myProfile.response.data.generalInfo
+                                .profilePicThumbnailURL,
                             fit: BoxFit.cover,
                             width: 60,
                             height: 60,
                           )
-                    : data.profileData.profilePicThumbnail == null
+                    : data.profileData.profilePicThumbnailURL == null
                         ? Container(
                             width: 60,
                             height: 60,
@@ -287,9 +287,8 @@ class _MyFamilyState extends State<MyFamily> {
                               ),
                             ),
                           )
-                        : Image.memory(
-                            Uint8List.fromList(
-                                data.profileData.profilePicThumbnail.data),
+                        : Image.network(
+                            data.profileData.profilePicThumbnailURL,
                             fit: BoxFit.cover,
                             width: 60,
                             height: 60,

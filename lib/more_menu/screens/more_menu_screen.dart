@@ -48,6 +48,10 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   @override
   void initState() {
+    getProfileImage();
+  }
+
+  getProfileImage() {
     String profileImageFile =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
     if (profileImageFile != null) {
@@ -57,6 +61,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   @override
   Widget build(BuildContext context) {
+    getProfileImage();
     final theme = Theme.of(context).copyWith(dividerColor: Colors.transparent);
     return Scaffold(
         appBar: AppBar(
@@ -94,9 +99,19 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      myProfile.response.data.generalInfo.name != null
-                          ? toBeginningOfSentenceCase(
-                              myProfile.response.data.generalInfo.name)
+                      myProfile.response.data.generalInfo.qualifiedFullName !=
+                              null
+                          ? toBeginningOfSentenceCase(myProfile
+                                      .response
+                                      .data
+                                      .generalInfo
+                                      .qualifiedFullName
+                                      .firstName ??
+                                  '') +
+                              ' ' +
+                              toBeginningOfSentenceCase(myProfile.response.data
+                                      .generalInfo.qualifiedFullName.lastName ??
+                                  '')
                           : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),

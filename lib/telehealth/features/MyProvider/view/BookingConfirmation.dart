@@ -1,48 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
+import 'package:gmiwidgetspackage/widgets/FlutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/IconButtonWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:gmiwidgetspackage/widgets/FlutterToast.dart';
-import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
-
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
-
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'dart:convert';
 import 'package:progress_dialog/progress_dialog.dart';
-
-import 'package:myfhb/my_family/models/LinkedData.dart';
-import 'package:myfhb/my_family/models/ProfileData.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class BookingConfirmation extends StatefulWidget {
   final followUpFee;
@@ -109,6 +99,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   List<CategoryData> filteredCategoryData = new List();
   CategoryData categoryDataObjClone = new CategoryData();
 
+  String doctorId;
+
   @override
   void initState() {
     providerViewModel = new MyProviderViewModel();
@@ -158,6 +150,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     scheduleDate =
         commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
 
+    doctorId = widget.docs[widget.i].id;
     try {
       fees = widget.isNewAppointment
           ? widget.followUpFee == null
@@ -167,8 +160,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     } catch (e) {
       fees = '';
     }
-
-    print(fees);
   }
 
   Widget getDropdown() {
@@ -834,39 +825,53 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
 
     try {
-      bookAppointmentCall(createdBy, createdFor, doctorSessionId, scheduleDate,
-              slotNumber, isMedicalShared, isFollowUp, healthRecords)
-          .then((value) {
-        if (value != null) {
-          if (value.status != null &&
-              value.success != null &&
-              value.message != null) {
-            if (value.status == 200 &&
-                value.success == true &&
-                value.message == appointmentCreatedMessage) {
-              pr.hide();
-              if (value.response.data.paymentInfo.longurl != null) {
-                goToPaymentPage(
-                    value.response.data.paymentInfo.longurl,
-                    value.response.data.paymentInfo.payment.id,
-                    value.response.data.appointmentInfo.id);
+      associateRecords(doctorId, createdBy, healthRecords).then((value) {
+        if (value != null && value.success) {
+          bookAppointmentCall(
+                  createdBy,
+                  createdFor,
+                  doctorSessionId,
+                  scheduleDate,
+                  slotNumber,
+                  isMedicalShared,
+                  isFollowUp,
+                  healthRecords)
+              .then((value) {
+            if (value != null) {
+              if (value.status != null &&
+                  value.success != null &&
+                  value.message != null) {
+                if (value.status == 200 &&
+                    value.success == true &&
+                    value.message == appointmentCreatedMessage) {
+                  if (value.response.data.paymentInfo.longurl != null) {
+                    goToPaymentPage(
+                        value.response.data.paymentInfo.longurl,
+                        value.response.data.paymentInfo.payment.id,
+                        value.response.data.appointmentInfo.id);
+                  } else {
+                    pr.hide();
+                    toast.getToast(noUrl, Colors.red);
+                  }
+                } else {
+                  pr.hide();
+                  toast.getToast(
+                      value.message != null ? value.message : someWentWrong,
+                      Colors.red);
+                }
               } else {
                 pr.hide();
-                toast.getToast(noUrl, Colors.red);
+                toast.getToast(someWentWrong, Colors.red);
               }
             } else {
               pr.hide();
-              toast.getToast(
-                  value.message != null ? value.message : someWentWrong,
-                  Colors.red);
+              toast.getToast(noUrl, Colors.red);
             }
-          } else {
-            pr.hide();
-            toast.getToast(someWentWrong, Colors.red);
-          }
+          });
         } else {
           pr.hide();
-          toast.getToast(noUrl, Colors.red);
+          toast.getToast(value.message != null ? value.message : someWentWrong,
+              Colors.red);
         }
       });
     } catch (e) {
@@ -1097,6 +1102,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         isAudioSelect: isAudioSelect,
         isNotesSelect: isNotesSelect,
         selectedMedias: mediaIds,
+        isFromChat: false,
       ),
     ))
         .then((results) {
@@ -1121,5 +1127,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         print(metaIds.toString());
       }
     });
+  }
+
+  Future<AssociateRecordsResponse> associateRecords(
+      String doctorId, String userId, List<String> healthRecords) async {
+    AssociateRecordsResponse associateResponseList = await providerViewModel
+        .associateRecords(doctorId, userId, healthRecords);
+
+    return associateResponseList;
   }
 }

@@ -280,6 +280,9 @@ const String Appointments_cancel = 'Cancel';
 const String Appointments_new = 'New Appointment';
 const String YOUR_BOOKING_SUCCESS =
     "Your booking has been cancelled succesfully..";
+const String YOUR_FOLLOWUP_SUCCESS =
+    "Your Followup date has been updated succesfully..";
+const String FOLLOW_UP_CANCEL = "Followup date updation failed.. Plesae try again!";
 const String YOUR_RESHEDULE_SUCCESS =
     "Your booking has been resheduled succesfully..";
 const String BOOKING_CANCEL = "Booking cancellation failed.. Plesae try again!";
@@ -298,7 +301,9 @@ const String Appointments_chatImage = 'assets/navicons/chat.png';
 const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
 const String Appointments_newAppoinmentImage =
     'assets/icons/new-appointment.svg';
-const String PATIENT_FOLLOW_UP='Patient follow up';
+const String PATIENT_FOLLOW_UP = 'Patient follow up';
 
 const String audioFileAACType = 'audio/aac';
 const String audioFileTypeAppStream = 'application/octet-stream';
+
+const String SHAREECORD = 'sharerecord/';

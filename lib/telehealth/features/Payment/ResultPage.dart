@@ -1,19 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 
 class ResultPage extends StatefulWidget {
   final bool status;
   final String refNo;
-  ResultPage({Key key, @required this.status,this.refNo}) : super(key: key);
+  ResultPage({Key key, @required this.status, this.refNo}) : super(key: key);
   @override
   _ResultPage createState() => _ResultPage();
 }
 
 class _ResultPage extends State<ResultPage> {
-
   bool status;
 
   @override
@@ -34,9 +33,7 @@ class _ResultPage extends State<ResultPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Image.asset(
-                        status
-                            ? PAYMENT_SUCCESS_PNG
-                            : PAYMENT_FAILURE_PNG,
+                        status ? PAYMENT_SUCCESS_PNG : PAYMENT_FAILURE_PNG,
                         width: 120,
                         height: 120,
                         color: status ? Colors.white : Colors.red),
@@ -47,20 +44,21 @@ class _ResultPage extends State<ResultPage> {
                             color: Colors.white,
                             fontWeight: FontWeight.bold)),
                     SizedBox(height: 10),
-                    Text(
-                        status
-                            ? APPOINTMENT_CONFIRM
-                            : UNABLE_PROCESS,
+                    Text(status ? APPOINTMENT_CONFIRM : UNABLE_PROCESS,
                         style: TextStyle(
                             fontSize: 14,
                             color: Colors.white,
                             fontWeight: FontWeight.bold)),
-                    status?Text(
-                        widget.refNo!=null?'Ref.no: '+widget.refNo:'',
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold)):SizedBox(),
+                    status
+                        ? Text(
+                            widget.refNo != null
+                                ? 'Ref.no: ' + widget.refNo
+                                : '',
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold))
+                        : SizedBox(),
                     SizedBox(height: 30),
                     FlatButton(
                       shape: RoundedRectangleBorder(
@@ -70,12 +68,16 @@ class _ResultPage extends State<ResultPage> {
                       textColor: Colors.white,
                       padding: EdgeInsets.all(12.0),
                       onPressed: () {
-                       status?Navigator.pushNamed(
-                         context,
-                         router.rt_TelehealthProvider,
-                         arguments: HomeScreenArguments(selectedIndex: 0),
-                       ).then((value) {}):
-                       Navigator.pop(context);
+                        status
+                            ? Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => TelehealthProviders(
+                                          arguments: HomeScreenArguments(
+                                              selectedIndex: 0),
+                                        )),
+                                (route) => false)
+                            : Navigator.pop(context);
                       },
                       child: Text(
                         "Done".toUpperCase(),

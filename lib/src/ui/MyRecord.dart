@@ -50,16 +50,16 @@ class MyRecords extends StatefulWidget {
   bool isNotesSelect;
   bool isAudioSelect;
   List<String> selectedMedias;
-  bool isFromChat =false;
+  bool isFromChat;
 
-  MyRecords(
-      {this.categoryPosition,
-      this.allowSelect,
-      this.isAudioSelect,
-      this.isNotesSelect,
-      this.selectedMedias,
-      this.isFromChat,
-      });
+  MyRecords({
+    this.categoryPosition,
+    this.allowSelect,
+    this.isAudioSelect,
+    this.isNotesSelect,
+    this.selectedMedias,
+    this.isFromChat,
+  });
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -320,7 +320,7 @@ class _MyRecordsState extends State<MyRecords> {
       allowSelectVoice: widget.isAudioSelect ?? false,
       allowSelectNotes: widget.isNotesSelect ?? false,
       selectedMedia: widget.selectedMedias,
-      isFromChat: widget.isFromChat,
+      isFromChat: widget.isFromChat ?? false,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -540,7 +540,7 @@ class CustomTabView extends StatefulWidget {
   bool allowSelect;
   bool allowSelectNotes;
   bool allowSelectVoice;
-  bool isFromChat = false;
+  bool isFromChat;
 
   CustomTabView(
       {@required this.itemCount,
@@ -560,8 +560,7 @@ class CustomTabView extends StatefulWidget {
       this.selectedMedia,
       this.allowSelectNotes,
       this.allowSelectVoice,
-      this.isFromChat
-      });
+      this.isFromChat});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -782,7 +781,7 @@ class _CustomTabsState extends State<CustomTabView>
                 onPressed: () {
                   Navigator.of(context).pop({'metaId': widget.selectedMedia});
                 },
-                child: widget.isFromChat?Text('Attach'):Text('Associate'),
+                child: widget.isFromChat ? Text('Attach') : Text('Associate'),
                 textColor: Color(new CommonUtil().getMyPrimaryColor()),
                 color: Colors.white,
                 borderSide: BorderSide(
@@ -1302,13 +1301,18 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   void onCameraClicked() async {
-    final PermissionHandler cameraPermission = PermissionHandler();
-    var permissionStatus =
-        await cameraPermission.checkPermissionStatus(PermissionGroup.camera);
+//    final PermissionHandler cameraPermission = PermissionHandler();
+//    var permissionStatus =
+//        await cameraPermission.checkPermissionStatus(PermissionGroup.camera);
+//
+//    if (permissionStatus == PermissionStatus.denied ||
+//        permissionStatus == PermissionStatus.unknown) {
+//      await _handleCameraAndMic();
+//    }
+    var status = await Permission.camera.status;
 
-    if (permissionStatus == PermissionStatus.denied ||
-        permissionStatus == PermissionStatus.unknown) {
-      CommonUtil.askPermissionForCameraAndMic();
+    if (status.isUndetermined || status.isDenied) {
+      await _handleCameraAndMic();
     } else {
       categoryName =
           widget.categoryData.elementAt(_currentPosition).categoryName;
@@ -1343,5 +1347,13 @@ class _CustomTabsState extends State<CustomTabView>
         });
       }
     }
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    await Permission.microphone.request();
+    await Permission.camera.request();
+//    await PermissionHandler().requestPermissions(
+//      [PermissionGroup.camera, PermissionGroup.microphone],
+//    );
   }
 }

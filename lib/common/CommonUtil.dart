@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
@@ -15,10 +19,12 @@ import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
+import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Health/CategoryInfo.dart';
@@ -41,8 +47,8 @@ import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
-import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/model/user/QualifiedFullName.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcase.dart';
@@ -368,11 +374,23 @@ class CommonUtil {
     });
   }
 
-  void logout(Function(SignOutResponse) moveToLoginPage) {
+  void logout(Function(SignOutResponse) moveToLoginPage) async {
     LoginBloc loginBloc = new LoginBloc();
 
+    MyProfile myProfile =
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    GeneralInfo generalInfo = myProfile.response.data.generalInfo;
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+    final token = await _firebaseMessaging.getToken();
     loginBloc.logout().then((signOutResponse) {
       moveToLoginPage(signOutResponse);
+      /*CommonUtil()
+          .sendDeviceToken(PreferenceUtil.getStringValue(Constants.KEY_USERID),
+              generalInfo.email, generalInfo.phoneNumber, token, false)
+          .then((value) {
+        moveToLoginPage(signOutResponse);
+      });*/
     });
   }
 
@@ -1013,7 +1031,6 @@ class CommonUtil {
   dateConversionToApiFormat(DateTime dateTime) {
     var newFormat = DateFormat('yyyy-MM-d');
     String updatedDate = newFormat.format(dateTime);
-
     return updatedDate;
   }
 
@@ -1053,9 +1070,39 @@ class CommonUtil {
   }
 
   static Future<void> askPermissionForCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
+//    await PermissionHandler().requestPermissions(
+//      [PermissionGroup.camera, PermissionGroup.microphone],
+//    );
+
+    PermissionStatus status = await Permission.microphone.request();
+    PermissionStatus cameraStatus = await Permission.camera.request();
+
+    if (status == PermissionStatus.granted &&
+        cameraStatus == PermissionStatus.granted) {
+      return true;
+    } else {
+      _handleInvalidPermissions(cameraStatus, status);
+      return false;
+    }
+  }
+
+  static void _handleInvalidPermissions(
+    PermissionStatus cameraPermissionStatus,
+    PermissionStatus microphonePermissionStatus,
+  ) {
+    if (cameraPermissionStatus == PermissionStatus.denied &&
+        microphonePermissionStatus == PermissionStatus.denied) {
+      throw new PlatformException(
+          code: "PERMISSION_DENIED",
+          message: "Access to camera and microphone denied",
+          details: null);
+    } else if (cameraPermissionStatus == PermissionStatus.permanentlyDenied &&
+        microphonePermissionStatus == PermissionStatus.permanentlyDenied) {
+      throw new PlatformException(
+          code: "PERMISSION_DISABLED",
+          message: "Location data is not available on device",
+          details: null);
+    }
   }
 
   getDoctorProfileImageWidget(String doctorId) {
@@ -1063,10 +1110,11 @@ class CommonUtil {
         new HealthReportListForUserBlock();
     return FutureBuilder(
       future: _healthReportListForUserBlock.getProfilePic(doctorId),
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+      builder:
+          (BuildContext context, AsyncSnapshot<DoctorImageResponse> snapshot) {
         if (snapshot.hasData) {
-          return Image.memory(
-            snapshot.data,
+          return Image.network(
+            snapshot.data.response,
             height: 50,
             width: 50,
             fit: BoxFit.cover,
@@ -1086,5 +1134,37 @@ class CommonUtil {
         ///load until snapshot.hasData resolves to true
       },
     );
+  }
+
+  Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,
+      String user_mobile_no, String deviceId, bool isActive) async {
+    var jsonParam;
+    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+    ApiBaseHelper apiBaseHelper = new ApiBaseHelper();
+
+    final token = await _firebaseMessaging.getToken();
+    Map<String, dynamic> deviceInfo = new Map();
+    Map<String, dynamic> user = new Map();
+    Map<String, dynamic> jsonData = new Map();
+
+    user['id'] = userId;
+    deviceInfo['user'] = user;
+    deviceInfo['phoneNumber'] = user_mobile_no;
+    deviceInfo['email'] = email;
+    deviceInfo['isActive'] = isActive;
+    deviceInfo['deviceTokenId'] = token;
+
+    jsonData['deviceInfo'] = deviceInfo;
+    if (Platform.isIOS) {
+      jsonData['platformCode'] = 'IOSPLT';
+    } else {
+      jsonData['platformCode'] = 'ANDPLT';
+    }
+
+    var params = json.encode(jsonData);
+
+    final response =
+        await apiBaseHelper.postDeviceId('device-info', params, isActive);
+    return DeviceInfoSucess.fromJson(response);
   }
 }

@@ -548,7 +548,6 @@ class AddProvidersState extends State<AddProviders> {
 
   Widget _showUser() {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    print(selectedFamilyMemberName);
     return InkWell(
         onTap: () {
           if (widget.arguments.fromClass != router.rt_myprovider) {
@@ -808,10 +807,6 @@ class AddProvidersState extends State<AddProviders> {
 
   updateDoctorsIdWithUserDetails() {
     updateProvidersBloc.updateDoctorsIdWithUserDetails().then((value) {
-      print(value.status);
-      print(value.message);
-      print(widget.fromClass);
-
       var routeClassName = '';
 
       if (widget.arguments.fromClass == router.cn_AddProvider ||
@@ -994,7 +989,6 @@ class AddProvidersState extends State<AddProviders> {
                   : widget.arguments.placeDetail.lng;
 
           var jsonString = convert.jsonEncode(signInData);
-          print(jsonString);
 
           addProvidersBloc.doctorsJsonString = jsonString;
           addProvidersBloc.addDoctors();
