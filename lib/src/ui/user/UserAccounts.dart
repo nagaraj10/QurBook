@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
@@ -9,7 +8,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
@@ -17,8 +17,6 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 
 import 'MyProfilePage.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class UserAccounts extends StatefulWidget {
   UserAccountsArguments arguments;
@@ -153,9 +151,19 @@ class _UserAccountsState extends State<UserAccounts>
                         ),
                         SizedBox(width: 10),
                         Text(
-                          myProfile.response.data.generalInfo.name != null
-                              ? toBeginningOfSentenceCase(
-                                  myProfile.response.data.generalInfo.name)
+                          myProfile.response.data.generalInfo.qualifiedFullName !=
+                              null
+                              ? toBeginningOfSentenceCase(myProfile
+                              .response
+                              .data
+                              .generalInfo
+                              .qualifiedFullName
+                              .firstName ??
+                              '') +
+                              ' ' +
+                              toBeginningOfSentenceCase(myProfile.response.data
+                                  .generalInfo.qualifiedFullName.lastName ??
+                                  '')
                               : '',
                           style: TextStyle(
                               color: Colors.white,
