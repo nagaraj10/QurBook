@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   
   gmiwidgetspackage:
-    path: /Users/SENTHIL/Code/Flutter Projects/BitBucket/Common Widgets
+    path: D:\commonWidget
 
   # The following adds the Cupertino Icons font to your application.
   flutter_launcher_icons: ^0.7.0
@@ -36,7 +36,7 @@ dependencies:
   path_provider: ^1.6.0
   path: ^1.6.4
   gradient_bottom_navigation_bar: ^1.0.0+4
-  flutter_svg:
+  flutter_svg: ^0.18.0
   flutter_arc_speed_dial: ^1.0.2
   curved_navigation_bar: ^0.3.1
   shared_preferences: ^0.5.6
