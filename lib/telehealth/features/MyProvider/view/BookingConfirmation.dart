@@ -1,49 +1,38 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
+import 'package:gmiwidgetspackage/widgets/FlutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/IconButtonWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:gmiwidgetspackage/widgets/FlutterToast.dart';
-import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
-
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
-
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'dart:convert';
 import 'package:progress_dialog/progress_dialog.dart';
-
-import 'package:myfhb/my_family/models/LinkedData.dart';
-import 'package:myfhb/my_family/models/ProfileData.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class BookingConfirmation extends StatefulWidget {
   final followUpFee;
@@ -1113,6 +1102,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         isAudioSelect: isAudioSelect,
         isNotesSelect: isNotesSelect,
         selectedMedias: mediaIds,
+        isFromChat: false,
       ),
     ))
         .then((results) {

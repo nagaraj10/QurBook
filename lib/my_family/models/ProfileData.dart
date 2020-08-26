@@ -23,6 +23,7 @@ class ProfileData {
   String countryCode;
   bool isEmailVerified;
   String status;
+  String profilePicThumbnailURL;
 
   ProfileData(
       {this.userId,
@@ -44,7 +45,8 @@ class ProfileData {
       this.isTokenRefresh,
       this.countryCode,
       this.isEmailVerified,
-      this.status});
+      this.status,
+      this.profilePicThumbnailURL});
 
   ProfileData.fromJson(Map<String, dynamic> json) {
     userId = json[parameters.struserId];
@@ -73,6 +75,7 @@ class ProfileData {
     countryCode = json[parameters.strCountryCode];
     isEmailVerified = json[parameters.strisEmailVerified];
     status = json[parameters.strStatus];
+    profilePicThumbnailURL = json[parameters.strprofilePicThumbnailURL];
   }
 
   Map<String, dynamic> toJson() {
@@ -102,6 +105,7 @@ class ProfileData {
     if (this.qualifiedFullName != null) {
       data[parameters.strqualifiedFullName] = this.qualifiedFullName.toJson();
     }
+    data[parameters.strprofilePicThumbnailURL] = this.profilePicThumbnailURL;
     return data;
   }
 }

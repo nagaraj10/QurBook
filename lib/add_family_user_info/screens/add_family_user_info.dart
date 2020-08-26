@@ -247,7 +247,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .split("T"); //by space" " the string need to splited
 
         // dateOfBirthController.text = list[0];
-        dateofBirthStr = new FHBUtils().getFormattedDateForUser(
+        dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
         dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
             widget.arguments.sharedbyme.profileData.dateOfBirth);
@@ -298,7 +298,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             : value.response.data.generalInfo.gender;
 
         dateofBirthStr = value.response.data.generalInfo.dateOfBirth != null
-            ? new FHBUtils().getFormattedDateForUser(
+            ? new FHBUtils().getFormattedDateForUserBirth(
                 value.response.data.generalInfo.dateOfBirth)
             : '';
         dateOfBirthController.text =
@@ -1203,7 +1203,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         dateTime = picked ?? dateTime;
 
         dateofBirthStr =
-            new FHBUtils().getFormattedDateForUser(dateTime.toString());
+            new FHBUtils().getFormattedDateForUserBirth(dateTime.toString());
         dateOfBirthController.text =
             new FHBUtils().getFormattedDateOnlyNew(dateTime.toString());
       });
@@ -1260,6 +1260,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             signInData[variable.strLastName] = lastNameController.text;
             signInData[variable.strRelation] = selectedRelationShip.id;
             var jsonString = convert.jsonEncode(signInData);
+            print(jsonString);
 
             addFamilyUserInfoBloc.relationshipJsonString = jsonString;
 
@@ -1273,7 +1274,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       PreferenceUtil.saveFamilyData(
                               Constants.KEY_FAMILYMEMBER, value.response.data)
                           .then((value) {
-                        saveProfileImage();
+                        //saveProfileImage();
                         MySliverAppBar.imageURI = null;
                         fetchedProfileData = null;
                         imageURI = null;
@@ -1302,7 +1303,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 context, _keyLoader, variable.Please_Wait);
 
             addFamilyUserInfoBloc.updateSelfProfile().then((value) {
-              if (value.success && value.status == 200) {
+              if (value != null && value.success && value.status == 200) {
                 saveProfileImage();
                 getUserProfileData();
               } else {
@@ -1328,8 +1329,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
         } else {
           addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
-          addFamilyUserInfoBloc.phoneNo =
-              new FHBUtils().getFormattedDateForUser(mobileNoController.text);
+          addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
           addFamilyUserInfoBloc.relationship = relationShipController.text;
 
           if (doValidation()) {
@@ -1346,7 +1346,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   PreferenceUtil.saveFamilyData(
                           Constants.KEY_FAMILYMEMBER, value.response.data)
                       .then((value) {
-                    saveProfileImage();
+                    //saveProfileImage();
                     MySliverAppBar.imageURI = null;
                     fetchedProfileData = null;
                     imageURI = null;

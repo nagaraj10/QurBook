@@ -452,6 +452,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> addUserLinking(String url, String jsonData) async {
+    print(_baseUrl + url);
+    print(jsonData);
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
@@ -480,9 +482,11 @@ class ApiBaseHelper {
     Dio dio = new Dio();
     var responseJson;
 
-    dio.options.headers[variable.strContentType] = variable.strcntVal;
+    //dio.options.headers[variable.strContentType] = variable.strcntVal;
     dio.options.headers[variable.strAuthorization] = authToken;
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
+    print(url);
+    print(query);
 
     Map<String, dynamic> mapForSignUp = new Map();
     mapForSignUp[parameters.strSections] = query;
@@ -508,6 +512,9 @@ class ApiBaseHelper {
   Future<dynamic> updateRelationShipUserInFamilyLinking(
       String url, String jsonData) async {
     var responseJson;
+    print(url);
+    print(jsonData);
+
     try {
       final response = await http.put(_baseUrl + url,
           body: jsonData,

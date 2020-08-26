@@ -1,34 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:expandable/expandable.dart';
-import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/my_family/models/ProfileData.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/user/MyProfile.dart';
-import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
-import 'package:myfhb/telehealth/features/appointments/view/resheduleAppointments.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Appointments extends StatefulWidget {
@@ -476,15 +468,15 @@ class _AppointmentsState extends State<Appointments> {
             ]),
         child: ClipOval(
           child: Container(
-            child:Container(color: Color(fhbColors.bgColorContainer)),
-//            doc.doctorPic == null
-//                ? Container(color: Color(fhbColors.bgColorContainer))
-//                : Image.network(
-//                    doc.doctorPic,
-//                    fit: BoxFit.cover,
-//                    height: 40,
-//                    width: 40,
-//                  ),
+            child: //Container(color: Color(fhbColors.bgColorContainer)),
+                doc.doctorPic == null
+                    ? Container(color: Color(fhbColors.bgColorContainer))
+                    : Image.network(
+                        doc.doctorPic,
+                        fit: BoxFit.cover,
+                        height: 40,
+                        width: 40,
+                      ),
             color: Color(fhbColors.bgColorContainer),
             height: 50,
             width: 50,
@@ -729,7 +721,8 @@ class _AppointmentsState extends State<Appointments> {
     storeDoctorDetailsToFCM(doctorId, doctorName);
   }
 
-  Future<void> storeDoctorDetailsToFCM(String doctorId, String doctorName) async {
+  Future<void> storeDoctorDetailsToFCM(
+      String doctorId, String doctorName) async {
     prefs = await SharedPreferences.getInstance();
 
     String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
