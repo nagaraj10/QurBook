@@ -201,8 +201,14 @@ class _MyFamilyState extends State<MyFamily> {
   Widget getCardWidgetForUser(
       Sharedbyme data, int position, List<Sharedbyme> profilesSharedByMeAry) {
     MyProfile myProfile;
+    String fulName;
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      fulName = myProfile.response.data.generalInfo.qualifiedFullName != null
+          ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+              ' ' +
+              myProfile.response.data.generalInfo.qualifiedFullName.lastName
+          : '';
     } catch (e) {}
 
     return InkWell(
@@ -251,11 +257,7 @@ class _MyFamilyState extends State<MyFamily> {
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
-                                myProfile.response.data.generalInfo.name != null
-                                    ? myProfile
-                                        .response.data.generalInfo.name[0]
-                                        .toUpperCase()
-                                    : '',
+                                fulName != null ? fulName.toUpperCase() : '',
                                 style: TextStyle(
                                     fontSize: 22,
                                     color: Color(
@@ -305,10 +307,9 @@ class _MyFamilyState extends State<MyFamily> {
                   children: <Widget>[
                     Text(
                       position == 0
-                          ? myProfile.response.data.generalInfo.name != null
-                              ? new CommonUtil().titleCase(myProfile
-                                  .response.data.generalInfo.name
-                                  .toLowerCase())
+                          ? fulName != null
+                              ? new CommonUtil()
+                                  .titleCase(fulName.toLowerCase())
                               : ''
                           : data.linkedData.nickName != null
                               ? new CommonUtil()

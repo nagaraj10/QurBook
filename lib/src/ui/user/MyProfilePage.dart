@@ -15,8 +15,6 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
-
-
 class MyProfilePage extends StatefulWidget {
   @override
   _MyProfilePageState createState() => _MyProfilePageState();
@@ -39,13 +37,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
-  
-
   @override
   void initState() {
     PreferenceUtil.init();
     super.initState();
- 
   }
 
   @override
@@ -58,7 +53,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-   
+
     profileWidget = getProfileWidget(myProfile.response.data);
 
     return profileWidget;
@@ -91,7 +86,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
             for (String bloodRange in variable.bloodRangeArray) {
               if (bloodGroupSplitName[1][0] == bloodRange) {
                 bloodRangeController.text = bloodRange;
-            
               }
             }
           }
@@ -104,9 +98,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
     if (data.generalInfo.phoneNumber != null) {
       mobile.text = data.generalInfo.phoneNumber;
     }
-    if (data.generalInfo.name != null) {
-      name.text =
-          toBeginningOfSentenceCase(data.generalInfo.name.toLowerCase());
+    if (data.generalInfo.qualifiedFullName != null) {
+      name.text = toBeginningOfSentenceCase(
+          data.generalInfo.qualifiedFullName.firstName.toLowerCase() +
+              data.generalInfo.qualifiedFullName.lastName.toLowerCase());
     }
     if (data.generalInfo.email != null) {
       email.text = data.generalInfo.email;
@@ -119,8 +114,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
       renameBloodGroup(data.generalInfo.bloodGroup);
     }
     if (data.generalInfo.dateOfBirth != null) {
-      
-      dob.text = new FHBUtils().getFormattedDateOnlyNew(data.generalInfo.dateOfBirth);
+      dob.text =
+          new FHBUtils().getFormattedDateOnlyNew(data.generalInfo.dateOfBirth);
     }
     if (data.generalInfo.qualifiedFullName != null) {
       firstName.text = data.generalInfo.qualifiedFullName.firstName;
@@ -131,8 +126,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
               : '';
       lastName.text = data.generalInfo.qualifiedFullName.lastName;
     } else {
-      firstName.text =
-          data.generalInfo.name != null ? data.generalInfo.name : '';
+      firstName.text = data.generalInfo.qualifiedFullName != null
+          ? data.generalInfo.qualifiedFullName.firstName +
+              data.generalInfo.qualifiedFullName.lastName
+          : '';
       middleName.text = '';
       lastName.text = '';
     }
@@ -220,14 +217,14 @@ class _MyProfilePageState extends State<MyProfilePage> {
                                           .getMyPrimaryColor())))),
                           onTap: () {
                             new FHBUtils().check().then((intenet) {
-                            if (intenet != null && intenet) {
-                              verifyEmail();
-                            } else {
-                              new FHBBasicWidget().showInSnackBar(
-                                  Constants.STR_NO_CONNECTIVITY,
-                                  scaffold_state);
-                            }
-                          });
+                              if (intenet != null && intenet) {
+                                verifyEmail();
+                              } else {
+                                new FHBBasicWidget().showInSnackBar(
+                                    Constants.STR_NO_CONNECTIVITY,
+                                    scaffold_state);
+                              }
+                            });
                           },
                         )
                       : Text('')

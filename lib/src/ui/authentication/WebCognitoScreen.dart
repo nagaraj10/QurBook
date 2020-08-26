@@ -203,7 +203,10 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
 
       /* PreferenceUtil.saveInt(CommonConstants.KEY_COUNTRYCODE,
           int.parse(parseJwtPayLoad(decodesstring)['token']['countryCode']));*/
-      PreferenceUtil.saveString(Constants.MOB_NUM, ph).then((onValue) {});
+      PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no)
+          .then((onValue) {});
+      PreferenceUtil.saveString(Constants.KEY_EMAIL, saveuser.email)
+          .then((onValue) {});
 
       PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring)
           .then((onValue) {});

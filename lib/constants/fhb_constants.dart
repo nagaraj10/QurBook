@@ -282,7 +282,8 @@ const String YOUR_BOOKING_SUCCESS =
     "Your booking has been cancelled succesfully..";
 const String YOUR_FOLLOWUP_SUCCESS =
     "Your Followup date has been updated succesfully..";
-const String FOLLOW_UP_CANCEL = "Followup date updation failed.. Plesae try again!";
+const String FOLLOW_UP_CANCEL =
+    "Followup date updation failed.. Plesae try again!";
 const String YOUR_RESHEDULE_SUCCESS =
     "Your booking has been resheduled succesfully..";
 const String BOOKING_CANCEL = "Booking cancellation failed.. Plesae try again!";
@@ -307,3 +308,5 @@ const String audioFileAACType = 'audio/aac';
 const String audioFileTypeAppStream = 'application/octet-stream';
 
 const String SHAREECORD = 'sharerecord/';
+const String KEY_DEVICEINFO = 'deviceInfo';
+const String KEY_EMAIL = 'email';

@@ -35,7 +35,6 @@ import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/imageSlider.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
 export 'package:myfhb/my_family/models/relationship_response_list.dart';

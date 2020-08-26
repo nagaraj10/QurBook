@@ -37,7 +37,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   var auth_token = PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
   static MyProfile prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE_MAIN);
-  var user_name = prof.response.data.generalInfo.name;
+  var user_name = prof.response.data.generalInfo.qualifiedFullName != null
+      ? prof.response.data.generalInfo.qualifiedFullName.firstName +
+          prof.response.data.generalInfo.qualifiedFullName.lastName
+      : '';
   List<Conversation> conversations = new List();
   var isMayaSpeaks = -1;
   var isEndOfConv = false;
@@ -72,7 +75,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     Conversation model = new Conversation(
       isMayaSaid: false,
       text: variable.strhiMaya,
-      name: prof.response.data.generalInfo.name,
+      name: prof.response.data.generalInfo.qualifiedFullName != null
+          ? prof.response.data.generalInfo.qualifiedFullName.firstName +
+              prof.response.data.generalInfo.qualifiedFullName.lastName
+          : '',
       timeStamp: date,
     );
     conversations.add(model);
@@ -168,7 +174,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         Conversation model = new Conversation(
           isMayaSaid: false,
           text: response,
-          name: prof.response.data.generalInfo.name,
+          name: prof.response.data.generalInfo.qualifiedFullName != null
+              ? prof.response.data.generalInfo.qualifiedFullName.firstName +
+                  prof.response.data.generalInfo.qualifiedFullName.lastName
+              : '',
           timeStamp: date,
         );
         conversations.add(model);
@@ -217,7 +226,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
           Conversation model = new Conversation(
             isMayaSaid: true,
             text: res.text,
-            name: prof.response.data.generalInfo.name,
+            name: prof.response.data.generalInfo.qualifiedFullName != null
+                ? prof.response.data.generalInfo.qualifiedFullName.firstName +
+                    prof.response.data.generalInfo.qualifiedFullName.lastName
+                : '',
             imageUrl: res.imageURL,
             timeStamp: date,
           );

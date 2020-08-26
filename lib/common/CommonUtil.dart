@@ -415,10 +415,15 @@ class CommonUtil {
             lastName: generalInfo.qualifiedFullName.lastName)
         : null;
 
+    String fullName = generalInfo.qualifiedFullName != null
+        ? generalInfo.qualifiedFullName.firstName +
+            ' ' +
+            generalInfo.qualifiedFullName.lastName
+        : '';
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
-        name: generalInfo.name,
+        name: fullName ?? '',
         email: generalInfo.email,
         dateOfBirth: generalInfo.dateOfBirth,
         gender: generalInfo.gender,
@@ -1157,14 +1162,21 @@ class CommonUtil {
     jsonData['deviceInfo'] = deviceInfo;
     if (Platform.isIOS) {
       jsonData['platformCode'] = 'IOSPLT';
+      jsonData['deviceTypeCode'] = 'IOS';
     } else {
       jsonData['platformCode'] = 'ANDPLT';
+      jsonData["deviceTypeCode"] = 'ANDROID';
     }
 
     var params = json.encode(jsonData);
 
     final response =
         await apiBaseHelper.postDeviceId('device-info', params, isActive);
+    if (isActive) {
+      PreferenceUtil.saveString(Constants.KEY_DEVICEINFO, variable.strtrue);
+    } else {
+      PreferenceUtil.saveString(Constants.KEY_DEVICEINFO, variable.strFalse);
+    }
     return DeviceInfoSucess.fromJson(response);
   }
 }

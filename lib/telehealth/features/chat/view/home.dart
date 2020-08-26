@@ -12,19 +12,17 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/view/settings.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import '../../../../common/CommonUtil.dart';
 
 class ChatHomeScreen extends StatefulWidget {
-
   ChatHomeScreen({Key key}) : super(key: key);
 
   @override
@@ -45,25 +43,27 @@ class HomeScreenState extends State<ChatHomeScreen> {
     const Choice(title: 'Log out', icon: Icons.exit_to_app),
   ];
 
-  String patientId='';
-  String patientName='';
+  String patientId = '';
+  String patientName = '';
 
   @override
   void initState() {
     super.initState();
     registerNotification();
     configLocalNotification();
-
   }
 
   Future<String> getPatientDetails() async {
-     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-     patientName = myProfile.response.data.generalInfo.name;
-
-     return patientId;
+    patientName = myProfile.response.data.generalInfo.qualifiedFullName != null
+        ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+            myProfile.response.data.generalInfo.qualifiedFullName.lastName
+        : '';
+    return patientId;
   }
+
   void registerNotification() {
     firebaseMessaging.requestNotificationPermissions();
 
@@ -296,7 +296,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
         ],*/
       ),
       body: WillPopScope(
-        child:checkIfDoctorIdExist(),
+        child: checkIfDoctorIdExist(),
         onWillPop: onBackPress,
       ),
     );
@@ -319,13 +319,14 @@ class HomeScreenState extends State<ChatHomeScreen> {
     );
   }
 
-  Widget getChatList(){
+  Widget getChatList() {
     return Stack(
       children: <Widget>[
         // List
         Container(
           child: StreamBuilder(
-            stream: Firestore.instance.collection('chat_list')
+            stream: Firestore.instance
+                .collection('chat_list')
                 .document(patientId)
                 .collection('user_list')
                 .snapshots(),
@@ -445,7 +446,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   MediaQuery.of(context).size.width * 0.5),
                           padding: const EdgeInsets.only(bottom: 5),
                           child: Text(
-                            document['lastMessage']!=null?document['lastMessage']:'',
+                            document['lastMessage'] != null
+                                ? document['lastMessage']
+                                : '',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
@@ -460,9 +463,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Text(
-                            'Last visit '+DateFormat('dd MMM kk:mm').format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    int.parse(document['createdAt']))),
+                            'Last visit ' +
+                                DateFormat('dd MMM kk:mm').format(
+                                    DateTime.fromMillisecondsSinceEpoch(
+                                        int.parse(document['createdAt']))),
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
                                 color: Colors.grey[600],
