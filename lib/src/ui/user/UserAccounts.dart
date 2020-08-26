@@ -151,19 +151,24 @@ class _UserAccountsState extends State<UserAccounts>
                         ),
                         SizedBox(width: 10),
                         Text(
-                          myProfile.response.data.generalInfo.qualifiedFullName !=
-                              null
+                          myProfile.response.data.generalInfo
+                                      .qualifiedFullName !=
+                                  null
                               ? toBeginningOfSentenceCase(myProfile
-                              .response
-                              .data
-                              .generalInfo
-                              .qualifiedFullName
-                              .firstName ??
-                              '') +
-                              ' ' +
-                              toBeginningOfSentenceCase(myProfile.response.data
-                                  .generalInfo.qualifiedFullName.lastName ??
-                                  '')
+                                          .response
+                                          .data
+                                          .generalInfo
+                                          .qualifiedFullName
+                                          .firstName ??
+                                      '') +
+                                  ' ' +
+                                  toBeginningOfSentenceCase(myProfile
+                                          .response
+                                          .data
+                                          .generalInfo
+                                          .qualifiedFullName
+                                          .lastName ??
+                                      '')
                               : '',
                           style: TextStyle(
                               color: Colors.white,
