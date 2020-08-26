@@ -144,7 +144,6 @@ class ApiBaseHelper {
     var responseJson;
 
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
-    dio.options.headers[variable.strContentType] = variable.strcntVal;
     dio.options.headers[variable.strAuthorization] = authToken;
 
     Map<String, dynamic> mapForSignUp = new Map();

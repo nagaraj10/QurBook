@@ -391,8 +391,9 @@ class _AppointmentsState extends State<Appointments> {
                           TextWidget(
                             fontsize: 10,
                             text: DateFormat("hh:mm a")
-                                    .format(DateTime.parse(
-                                        doc.plannedStartDateTime))
+                                    .format(
+                                        DateTime.parse(doc.plannedStartDateTime)
+                                            .toUtc())
                                     .toString() ??
                                 '',
                             fontWeight: FontWeight.w600,
