@@ -267,6 +267,7 @@ class ChatScreenState extends State<ChatScreen> {
   String imageUrl;
   String patientId='';
   String patientName='';
+  String patientPicUrl='';
 
   final TextEditingController textEditingController = TextEditingController();
   var chatEnterMessageController = TextEditingController();
@@ -321,7 +322,16 @@ class ChatScreenState extends State<ChatScreen> {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.response.data.generalInfo.name;
+    patientPicUrl = getProfileURL();
   }
+
+  String getProfileURL() {
+    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    String patientPicURL = myProfile.response.data.generalInfo.profilePicThumbnailURL;
+
+    return patientPicURL;
+  }
+
 
   void onFocusChange() {
     if (focusNode.hasFocus) {
@@ -435,8 +445,7 @@ class ChatScreenState extends State<ChatScreen> {
         .document(peerId)
         .setData({
       'nickname': widget.peerName!=null?widget.peerName:'',
-      'photoUrl': '',
-      //'photoUrl': 'http://lorempixel.com/640/360',
+      'photoUrl': widget.peerAvatar!=null?widget.peerAvatar:'',
       'id':peerId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       'lastMessage': content
@@ -449,8 +458,7 @@ class ChatScreenState extends State<ChatScreen> {
         .document(patientId)
         .setData({
       'nickname': patientName!=null?patientName:'',
-      'photoUrl': '',
-      //'photoUrl': 'http://lorempixel.com/640/360',
+      'photoUrl': patientPicUrl!=null?patientPicUrl:'',
       'id':patientId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       'lastMessage': content
