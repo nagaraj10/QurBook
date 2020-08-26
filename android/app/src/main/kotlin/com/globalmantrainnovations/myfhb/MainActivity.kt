@@ -38,6 +38,7 @@ class MainActivity : FlutterActivity() {
     val STREAM = "com.example.agoraflutterquickstart/stream"
     private var sharedValue: String? = null
     private var username: String? = null
+    private var docId: String? = null
     private lateinit var mEventChannel:EventSink
     private val REQ_CODE = 112
     private val INTENT_AUTHENTICATE = 155
@@ -239,7 +240,8 @@ class MainActivity : FlutterActivity() {
     fun handleSendText(intent: Intent) {
         sharedValue = intent.getStringExtra(Intent.EXTRA_TEXT)
         username = intent.getStringExtra(getString(R.string.username))
-        sharedValue="$sharedValue&$username"
+        docId = intent.getStringExtra(getString(R.string.docId))
+        sharedValue="$sharedValue&$username-$docId"
         if (::mEventChannel.isInitialized){mEventChannel.success(sharedValue)}
         Log.d(TAG, "passed text from intent filter ${sharedValue!!}")
     }

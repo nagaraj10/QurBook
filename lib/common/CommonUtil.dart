@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
@@ -46,7 +47,6 @@ import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
-import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -1031,7 +1031,6 @@ class CommonUtil {
   dateConversionToApiFormat(DateTime dateTime) {
     var newFormat = DateFormat('yyyy-MM-d');
     String updatedDate = newFormat.format(dateTime);
-
     return updatedDate;
   }
 
@@ -1071,9 +1070,39 @@ class CommonUtil {
   }
 
   static Future<void> askPermissionForCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
+//    await PermissionHandler().requestPermissions(
+//      [PermissionGroup.camera, PermissionGroup.microphone],
+//    );
+
+    PermissionStatus status = await Permission.microphone.request();
+    PermissionStatus cameraStatus = await Permission.camera.request();
+
+    if (status == PermissionStatus.granted &&
+        cameraStatus == PermissionStatus.granted) {
+      return true;
+    } else {
+      _handleInvalidPermissions(cameraStatus, status);
+      return false;
+    }
+  }
+
+  static void _handleInvalidPermissions(
+    PermissionStatus cameraPermissionStatus,
+    PermissionStatus microphonePermissionStatus,
+  ) {
+    if (cameraPermissionStatus == PermissionStatus.denied &&
+        microphonePermissionStatus == PermissionStatus.denied) {
+      throw new PlatformException(
+          code: "PERMISSION_DENIED",
+          message: "Access to camera and microphone denied",
+          details: null);
+    } else if (cameraPermissionStatus == PermissionStatus.permanentlyDenied &&
+        microphonePermissionStatus == PermissionStatus.permanentlyDenied) {
+      throw new PlatformException(
+          code: "PERMISSION_DISABLED",
+          message: "Location data is not available on device",
+          details: null);
+    }
   }
 
   getDoctorProfileImageWidget(String doctorId) {

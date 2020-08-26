@@ -28,6 +28,7 @@
     <string name="user_notification_meeting_start_error">There was an error starting the meeting. Please try again</string>
     <string name="nsid">notificationId</string>
     <string name="meetid">meeting_id</string>
+    <string name="docId">doctorId</string>
     <string name="type">type</string>
     <string name="ns_icall_type">Incoming_call</string>
     <string name="ns_ack_type">Ackowledgement</string>
