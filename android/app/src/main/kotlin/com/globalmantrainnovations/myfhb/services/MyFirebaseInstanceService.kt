@@ -64,6 +64,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val NS_ID = 9090
         val MEETING_ID = data[getString(R.string.meetid)]
         val USER_NAME = data[getString(R.string.username)]
+        val DOC_ID = data[getString(R.string.docId)]
         val NS_TIMEOUT = 30 * 1000L
         val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
 
@@ -76,10 +77,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptIntent.putExtra(getString(R.string.meetid), "$MEETING_ID")
         acceptIntent.putExtra(getString(R.string.username), "$USER_NAME")
+        acceptIntent.putExtra(getString(R.string.docId), "$DOC_ID")
         val acceptPendingIntent = PendingIntent.getBroadcast(applicationContext, 0, acceptIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val fullScreenIntent = Intent(this, NotificationActivity::class.java)
                 .putExtra(getString(R.string.username), USER_NAME)
+                .putExtra(getString(R.string.docId), DOC_ID)
                 .putExtra(getString(R.string.meetid), MEETING_ID)
                 .putExtra(getString(R.string.nsid), NS_ID)
         val fullScreenPendingIntent = PendingIntent.getActivity(this, 0,

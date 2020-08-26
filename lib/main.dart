@@ -187,8 +187,9 @@ class _MyFHBState extends State<MyFHB> {
     if (c_msg.isNotEmpty || c_msg != null) {
       var passedValArr = c_msg.split('&');
       Get.to(CallMain(
-        userName: passedValArr[1] ?? 'Doctor',
-        channelName: passedValArr[0] ?? 'Test',
+        userName: passedValArr[1].split('-')[0],
+        doctorId: passedValArr[1].split('-')[1],
+        channelName: passedValArr[0],
         role: ClientRole.Broadcaster,
         isAppExists: true,
       ));
@@ -243,8 +244,9 @@ class _MyFHBState extends State<MyFHB> {
               : CallMain(
                   isAppExists: false,
                   role: ClientRole.Broadcaster,
-                  channelName: navRoute.split('&')[0] ?? 'Test',
-                  userName: navRoute.split('&')[1] ?? 'Doctor',
+                  channelName: navRoute.split('&')[0],
+                  userName: navRoute.split('&')[1].split('-')[0],
+                  doctorId: navRoute.split('&')[1].split('-')[1],
                 ),
           routes: routes,
           debugShowCheckedModeBanner: false,

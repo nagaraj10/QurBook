@@ -335,14 +335,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ).then((value) {});
   }
 
-  /* Future<void> _handleCameraAndMic() async {
-    // You can request multiple permissions at once.
-    await [
-      Permission.camera,
-      Permission.microphone,
-    ].request();
-  }*/
-
   bool checkPagesForEveryIndex(int position) {
     bool condition = false;
 
@@ -411,10 +403,4 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void getProfileData() async {
     await new CommonUtil().getUserProfileData();
   }
-
-//  Future<void> _handleCameraAndMic() async {
-//    await PermissionHandler().requestPermissions(
-//      [PermissionGroup.camera, PermissionGroup.microphone],
-//    );
-//  }
 }
