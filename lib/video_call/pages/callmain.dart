@@ -21,6 +21,7 @@ class CallMain extends StatelessWidget {
   String channelName;
 
   String userName;
+  String doctorId;
 
   /// non-modifiable client role of the page
   ClientRole role;
@@ -36,7 +37,8 @@ class CallMain extends StatelessWidget {
       this.role,
       this.arguments,
       this.isAppExists,
-      this.userName});
+      this.userName,
+      this.doctorId});
 
   @override
   Widget build(BuildContext context) {

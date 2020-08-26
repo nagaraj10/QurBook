@@ -14,7 +14,6 @@ import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -336,14 +335,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ).then((value) {});
   }
 
-  /* Future<void> _handleCameraAndMic() async {
-    // You can request multiple permissions at once.
-    await [
-      Permission.camera,
-      Permission.microphone,
-    ].request();
-  }*/
-
   bool checkPagesForEveryIndex(int position) {
     bool condition = false;
 
@@ -411,11 +402,5 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void getProfileData() async {
     await new CommonUtil().getUserProfileData();
-  }
-
-  Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
   }
 }

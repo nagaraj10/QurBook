@@ -1308,7 +1308,7 @@ class _CustomTabsState extends State<CustomTabView>
 
     if (permissionStatus == PermissionStatus.denied ||
         permissionStatus == PermissionStatus.unknown) {
-      await _handleCameraAndMic();
+      CommonUtil.askPermissionForCameraAndMic();
     } else {
       categoryName =
           widget.categoryData.elementAt(_currentPosition).categoryName;
@@ -1343,11 +1343,5 @@ class _CustomTabsState extends State<CustomTabView>
         });
       }
     }
-  }
-
-  Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
   }
 }
