@@ -14,6 +14,17 @@ class FetchHealthKitData {
     }
   }
 
+//for mockito unit testing
+  Health _healthHandler;
+
+  FetchHealthKitData() {
+    _healthHandler = Health();
+  }
+
+  FetchHealthKitData.forTest(Health helper) {
+    _healthHandler = helper;
+  }
+
   Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
     if (await Health.requestAuthorization()) {
       try {
@@ -158,8 +169,7 @@ class FetchHealthKitData {
           String params = json.encode(healthRecord);
           return params;
         }
-      } catch (exception) {
-      }
+      } catch (exception) {}
     }
   }
 
@@ -195,8 +205,7 @@ class FetchHealthKitData {
           String params = json.encode(healthRecord);
           return params;
         }
-      } catch (exception) {
-      }
+      } catch (exception) {}
     }
   }
 
@@ -235,8 +244,7 @@ class FetchHealthKitData {
           String params = json.encode(healthRecord);
           print(params);
         }
-      } catch (exception) {
-      }
+      } catch (exception) {}
     }
   }
 }
