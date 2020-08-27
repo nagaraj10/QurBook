@@ -10,13 +10,9 @@ import 'dart:convert' show json;
 class SyncHealthKitData {
   FetchHealthKitData _hkHelper;
   DeviceHealthRecord _deviceHealthRecord;
+
   SyncHealthKitData() {
     _hkHelper = FetchHealthKitData();
-  }
-  //for mockito unit testing
-  SyncHealthKitData.forTest(var hkHealper, DeviceHealthRecord deviceHelper) {
-    _hkHelper = hkHealper;
-    _deviceHealthRecord = deviceHelper;
   }
 
   Future<void> activateHKT() async {
@@ -90,7 +86,8 @@ class SyncHealthKitData {
       if (heartRateParams != null) {
         response = await postHKData(heartRateParams);
       }
-    } catch (e) {}
+    } catch (e) {
+    }
 
     // todo
   }
@@ -100,7 +97,8 @@ class SyncHealthKitData {
       _deviceHealthRecord = DeviceHealthRecord();
       var response = await _deviceHealthRecord.postDeviceData(params);
       return response;
-    } catch (e) {}
+    } catch (e) {
+    }
   }
 
   Future<dynamic> getLastSynctime() async {
@@ -114,6 +112,7 @@ class SyncHealthKitData {
 
       if (!lastSync.isSuccess) return null;
       return lastSync.result[0].lastSyncDateTime;
-    } catch (e) {}
+    } catch (e) {
+    }
   }
 }
