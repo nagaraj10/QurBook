@@ -379,7 +379,9 @@ class _AppointmentsState extends State<Appointments> {
                                 //chat integration start
                                 String doctorId = doc.doctorId;
                                 String doctorName = doc.doctorName;
-                                storePatientDetailsToFCM(doctorId, doctorName);
+                                String doctorPic = doc.doctorPic;
+                                storePatientDetailsToFCM(
+                                    doctorId, doctorName, doctorPic);
                               }),
                           SizedBoxWidget(
                             height: (hour == '00' || minutes == '00') ? 0 : 15,
@@ -391,9 +393,8 @@ class _AppointmentsState extends State<Appointments> {
                           TextWidget(
                             fontsize: 10,
                             text: DateFormat("hh:mm a")
-                                    .format(
-                                        DateTime.parse(doc.plannedStartDateTime)
-                                            .toUtc())
+                                    .format(DateTime.parse(
+                                        doc.plannedStartDateTime))
                                     .toString() ??
                                 '',
                             fontWeight: FontWeight.w600,
@@ -579,7 +580,8 @@ class _AppointmentsState extends State<Appointments> {
                     //chat integration start
                     String doctorId = doc.doctorId;
                     String doctorName = doc.doctorName;
-                    storePatientDetailsToFCM(doctorId, doctorName);
+                    String doctorPic = doc.doctorPic;
+                    storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
@@ -704,30 +706,42 @@ class _AppointmentsState extends State<Appointments> {
 
   String getPatientName() {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    String patientName = myProfile.response.data.generalInfo.name;
+    String patientName =
+        myProfile.response.data.generalInfo.qualifiedFullName ??
+            myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+                myProfile.response.data.generalInfo.qualifiedFullName.lastName;
 
     return patientName;
   }
 
-  void storePatientDetailsToFCM(String doctorId, String doctorName) {
+  String getProfileURL() {
+    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    String patientPicURL =
+        myProfile.response.data.generalInfo.profilePicThumbnailURL;
+
+    return patientPicURL;
+  }
+
+  void storePatientDetailsToFCM(
+      String doctorId, String doctorName, String doctorPic) {
     Firestore.instance.collection('users').document(doctorId).setData({
       'nickname': doctorName != null ? doctorName : '',
-      'photoUrl': '',
-      //'photoUrl': 'http://lorempixel.com/640/360',
+      'photoUrl': doctorPic != null ? doctorPic : '',
       'id': doctorId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       'chattingWith': null
     });
 
-    storeDoctorDetailsToFCM(doctorId, doctorName);
+    storeDoctorDetailsToFCM(doctorId, doctorName, doctorPic);
   }
 
   Future<void> storeDoctorDetailsToFCM(
-      String doctorId, String doctorName) async {
+      String doctorId, String doctorName, String doctorPic) async {
     prefs = await SharedPreferences.getInstance();
 
     String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     String patientName = getPatientName();
+    String patientPicUrl = getProfileURL();
 
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
@@ -739,8 +753,7 @@ class _AppointmentsState extends State<Appointments> {
       // Update data to server if new user
       Firestore.instance.collection('users').document(patientId).setData({
         'nickname': patientName != null ? patientName : '',
-        'photoUrl': '',
-        //'photoUrl': 'https://loremflickr.com/640/360',
+        'photoUrl': patientPicUrl != null ? patientPicUrl : '',
         'id': patientId,
         'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
         'chattingWith': null
@@ -749,7 +762,7 @@ class _AppointmentsState extends State<Appointments> {
       // Write data to local
       await prefs.setString('id', patientId);
       await prefs.setString('nickname', patientName);
-      await prefs.setString('photoUrl', '');
+      await prefs.setString('photoUrl', patientPicUrl);
     } else {
       // Write data to local
       await prefs.setString('id', documents[0]['id']);
@@ -758,17 +771,16 @@ class _AppointmentsState extends State<Appointments> {
       await prefs.setString('aboutMe', documents[0]['aboutMe']);
     }
 
-    goToChatPage(doctorId, doctorName);
+    goToChatPage(doctorId, doctorName, doctorPic);
   }
 
-  void goToChatPage(String doctorId, String doctorName) {
+  void goToChatPage(String doctorId, String doctorName, String doctorPic) {
     Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => Chat(
                   peerId: doctorId,
-                  peerAvatar: '',
-                  //peerAvatar: 'http://lorempixel.com/640/360',
+                  peerAvatar: doctorPic != null ? doctorPic : '',
                   peerName: doctorName,
                 )));
   }
