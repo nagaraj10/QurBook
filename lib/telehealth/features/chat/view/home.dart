@@ -18,6 +18,7 @@ import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/view/settings.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import '../../../../common/CommonUtil.dart';
@@ -413,7 +414,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(),
+                          padding: const EdgeInsets.only(bottom: 5),
                           child: Text(
                             toBeginningOfSentenceCase(document['nickname']),
                             overflow: TextOverflow.ellipsis,
@@ -424,7 +425,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                 fontFamily: 'Poppins'),
                           ),
                         ),
-                        SizedBox(
+                        /*SizedBox(
                           height: 1,
                         ),
                         Text(
@@ -434,7 +435,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                               fontSize: 14,
                               fontFamily: 'Poppins',
                               color: Colors.grey[700]),
-                        ),
+                        ),*/
                         SizedBox(
                           height: 1,
                         ),
@@ -442,7 +443,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                           constraints: BoxConstraints(
                               maxWidth:
                                   MediaQuery.of(context).size.width * 0.5),
-                          padding: const EdgeInsets.only(),
+                          padding: const EdgeInsets.only(bottom: 5),
                           child: Text(
                             document['lastMessage']!=null?document['lastMessage']:'',
                             overflow: TextOverflow.ellipsis,
@@ -457,9 +458,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
                           height: 1,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(),
+                          padding: const EdgeInsets.only(bottom: 15),
                           child: Text(
-                            'Last visit date June 07,2020',
+                            'Last visit '+DateFormat('dd MMM kk:mm').format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    int.parse(document['createdAt']))),
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
                                 color: Colors.grey[600],
@@ -470,22 +473,22 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         SizedBox(
                           height: 1,
                         ),
-                        Padding(
+                        /*Padding(
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Text(
-                            'Next appointment on Jul 15,2020',
+                            'Next appointment date Jul 15,2020',
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 color: Colors.grey[800],
                                 fontSize: 12,
                                 fontFamily: 'Poppins'),
                           ),
-                        )
+                        )*/
                       ],
                     ),
-                   /* SizedBox(
+                    SizedBox(
                       width: MediaQuery.of(context).size.width * 0.035,
-                    ),*/
+                    ),
                   ],
                 ),
               ),

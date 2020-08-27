@@ -41,7 +41,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
                       Row(
                         children: [
                           Text(
-                            widget.userName,
+                            (widget.userName.isEmpty || widget.userName != null)
+                                ? widget.userName
+                                : '',
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           //todo this has to be uncomment in future

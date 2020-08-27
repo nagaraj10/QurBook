@@ -476,14 +476,15 @@ class _AppointmentsState extends State<Appointments> {
             ]),
         child: ClipOval(
           child: Container(
-            child: doc.doctorPic == null
-                ? Container(color: Color(fhbColors.bgColorContainer))
-                : Image.network(
-                    doc.doctorPic,
-                    fit: BoxFit.cover,
-                    height: 40,
-                    width: 40,
-                  ),
+            child:Container(color: Color(fhbColors.bgColorContainer)),
+//            doc.doctorPic == null
+//                ? Container(color: Color(fhbColors.bgColorContainer))
+//                : Image.network(
+//                    doc.doctorPic,
+//                    fit: BoxFit.cover,
+//                    height: 40,
+//                    width: 40,
+//                  ),
             color: Color(fhbColors.bgColorContainer),
             height: 50,
             width: 50,
@@ -728,8 +729,7 @@ class _AppointmentsState extends State<Appointments> {
     storeDoctorDetailsToFCM(doctorId, doctorName);
   }
 
-  Future<void> storeDoctorDetailsToFCM(
-      String doctorId, String doctorName) async {
+  Future<void> storeDoctorDetailsToFCM(String doctorId, String doctorName) async {
     prefs = await SharedPreferences.getInstance();
 
     String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);

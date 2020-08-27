@@ -339,7 +339,7 @@ class _MySettingsState extends State<MySettings> {
                                             _isGLActive = value;
                                             PreferenceUtil.saveString(
                                                 Constants.glMon,
-                                                _isGFActive.toString());
+                                                _isGLActive.toString());
 
                                             break;
                                           case 2:
