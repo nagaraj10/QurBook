@@ -1,12 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class MyControllers extends StatefulWidget {
   CallStatus callStatus;
@@ -16,15 +23,22 @@ class MyControllers extends StatefulWidget {
   bool muted;
   bool _isHideMyVideo;
   String doctorId;
+  String doctorName;
 
   MyControllers(this.callStatus, this.role, this.isAppExists, this.doctorId,
-      this.controllerState, this.muted, this._isHideMyVideo);
+      this.controllerState, this.muted, this._isHideMyVideo,this.doctorName);
 
   @override
   _MyControllersState createState() => _MyControllersState();
 }
 
 class _MyControllersState extends State<MyControllers> {
+
+  SharedPreferences prefs;
+  String patientId;
+  String patientName;
+  String patientPicUrl;
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -60,7 +74,9 @@ class _MyControllersState extends State<MyControllers> {
             ),
           ),
           IconButton(
-            onPressed: null,
+            onPressed: (){
+              storePatientDetailsToFCM();
+            },
             icon: Icon(
               Icons.chat_bubble_outline,
               color: Colors.white,
@@ -120,5 +136,97 @@ class _MyControllersState extends State<MyControllers> {
     });
     widget.controllerState(widget.muted, widget._isHideMyVideo);
     AgoraRtcEngine.muteLocalVideoStream(widget._isHideMyVideo);
+  }
+
+  void storePatientDetailsToFCM() {
+    Firestore.instance.collection('users').document(widget.doctorId).setData({
+      'nickname': widget.doctorName != null ? widget.doctorName : '',
+      'photoUrl': '',
+      //'photoUrl': 'http://lorempixel.com/640/360',
+      'id': widget.doctorId,
+      'createdAt': DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString(),
+      'chattingWith': null
+    });
+
+    storeDoctorDetailsToFCM();
+  }
+
+  Future<void> storeDoctorDetailsToFCM() async {
+    prefs = await SharedPreferences.getInstance();
+
+     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+     patientName = getPatientName();
+     patientPicUrl = getProfileURL();
+
+    patientId = json.decode(patientId);
+    patientName = json.decode(patientName);
+    patientPicUrl = json.decode(patientPicUrl);
+
+    final QuerySnapshot result = await Firestore.instance
+        .collection('users')
+        .where('id', isEqualTo: patientId)
+        .getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+
+    if (documents.length == 0) {
+      // Update data to server if new user
+      Firestore.instance.collection('users').document(patientId).setData({
+        'nickname': patientName != null ? patientName : '',
+        'photoUrl': patientPicUrl != null ? patientPicUrl : '',
+        'id': patientId,
+        'createdAt': DateTime
+            .now()
+            .millisecondsSinceEpoch
+            .toString(),
+        'chattingWith': null
+      });
+
+      // Write data to local
+      await prefs.setString('id', patientId);
+      await prefs.setString('nickname', patientName);
+      await prefs.setString('photoUrl', patientPicUrl);
+    } else {
+      // Write data to local
+      await prefs.setString('id', documents[0]['id']);
+      await prefs.setString('nickname', documents[0]['nickname']);
+      await prefs.setString('photoUrl', documents[0]['photoUrl']);
+      await prefs.setString('aboutMe', documents[0]['aboutMe']);
+    }
+
+    goToChatPage();
+  }
+
+  void goToChatPage() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Chat(
+                  peerId: widget.doctorId,
+                  peerAvatar: '',
+                  //peerAvatar: 'http://lorempixel.com/640/360',
+                  peerName: widget.doctorName,
+                )));
+  }
+
+  String getPatientName() {
+    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    String patientName =
+    myProfile.response.data.generalInfo.qualifiedFullName !=null ?
+    myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+        myProfile.response.data.generalInfo.qualifiedFullName.lastName:'';
+
+    return patientName;
+  }
+
+  String getProfileURL() {
+    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    String patientPicURL =
+        myProfile.response.data.generalInfo.profilePicThumbnailURL;
+
+    return patientPicURL;
   }
 }
