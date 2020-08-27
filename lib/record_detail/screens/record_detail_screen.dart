@@ -1224,25 +1224,28 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     }
     _healthReportListForUserBlock.getDocumentImage(audioMediaId).then((res) {
-      return downloadMedia(res.response.data.fileContent, context);
+      return downloadMedia(res.response.data.fileContent, context, '.mp3');
     });
   }
 
-  downloadMedia(String url, BuildContext context) async {
+  downloadMedia(String url, BuildContext context, String fileType) async {
     var path;
     FHBUtils.createFolderInAppDocDir(variable.stAudioPath)
         .then((filePath) async {
       final bytes = await _loadFileBytes(url,
           onError: (Exception exception) =>
-              print('audio_provider.load => exception ${exception}'));
-
-      path = '$filePath${widget.data.metaInfo.fileName}.mp3';
+              debugPrint('audio_provider.load => exception ${exception}'));
+      path = '$filePath${widget.data.metaInfo.fileName}' + fileType;
       new File(path).writeAsBytes(bytes);
-      //await path.writeAsBytes(bytes);
+      if (fileType == '.mp3') {
+        //await path.writeAsBytes(bytes);
 
-      containsAudio = true;
-      audioPath = path;
-      isAudioDownload = true;
+        containsAudio = true;
+        audioPath = path;
+        isAudioDownload = true;
+      } else {
+        pdfFile = path;
+      }
       setState(() {});
     });
   }
@@ -1269,8 +1272,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     }
     _healthReportListForUserBlock.getDocumentImage(pdfFileMediaId).then((res) {
-      pdfFile = res;
-      setState(() {});
+      return downloadMedia(res.response.data.fileContent, context, '.pdf');
     });
   }
 }

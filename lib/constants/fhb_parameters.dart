@@ -1,7 +1,5 @@
 library fhb_parmeters;
 
-import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
-
 const String strStatus = 'status';
 const String strSuccess = 'success';
 const String strMessage = 'message';
@@ -14,8 +12,7 @@ const String strCountryCode = 'countryCode';
 const String strPhoneNumber = 'phoneNumber';
 const String strGender = 'gender';
 const String strGenderID = 'genderId';
-const String strdob='dob';
-const String strName = 'name';
+const String strdob = 'dob';
 const String strIstemper = 'isTempUser';
 const String strIsEmailVerified = 'isEmailVerified';
 const String strTransactionId = 'transactionId';
@@ -38,77 +35,78 @@ const String strPhoneNumber1 = 'phoneNumber1';
 const String strPhoneNumber2 = 'phoneNumber2';
 const String strPhoneNumber3 = 'phoneNumber3';
 const String strPhoneNumber4 = 'phoneNumber4';
-const String strState='state';
-const String strCity='city';
-const String strSpecilization='specialization';
-const String strIsUserDefined='isUserDefined';
-const String strDescription='description';
-const String strCreatedBy='createdBy';
+const String strState = 'state';
+const String strCity = 'city';
+const String strSpecilization = 'specialization';
+const String strIsUserDefined = 'isUserDefined';
+const String strDescription = 'description';
+const String strCreatedBy = 'createdBy';
 
 //for bookmark
-const String strMediaMetaIds='mediaMetaIds';
-const String strIsBookmarked='isBookmarked';
+const String strMediaMetaIds = 'mediaMetaIds';
+const String strIsBookmarked = 'isBookmarked';
 
 //for database table country and unitmeasurement
-const String strbpSPUnit='bpSPUnit';
-const String strbpDPUnit='bpDPUnit';
-const String strbpPulseUnit='bpPulseUnit';
-const String strglucometerUnit='glucometerUnit';
-const String strpoOxySatUnit='poOxySatUnit';
-const String strpoPulseUnit='poPulseUnit';
-const String strtempUnit='tempUnit';
-const String strweightUnit='weightUnit';
+const String strbpSPUnit = 'bpSPUnit';
+const String strbpDPUnit = 'bpDPUnit';
+const String strbpPulseUnit = 'bpPulseUnit';
+const String strglucometerUnit = 'glucometerUnit';
+const String strpoOxySatUnit = 'poOxySatUnit';
+const String strpoPulseUnit = 'poPulseUnit';
+const String strtempUnit = 'tempUnit';
+const String strweightUnit = 'weightUnit';
 
-const String strUnits='units';
-const String strminValue='minValue';
-const String strmaxValue='maxValue';
+const String strUnits = 'units';
+const String strminValue = 'minValue';
+const String strmaxValue = 'maxValue';
 
-const String strmediaMasterIds='mediaMasterIds';
+const String strmediaMasterIds = 'mediaMasterIds';
 
 //for hospital data
-const String strLatitude='latitude';
-const String strLongitute='longitude';
-const String strLogo='logo';
-const String strLogothumbnail='logoThumbnail';
-const String strZipcode='zipCode';
-const String strBranch='branch';
+const String strLatitude = 'latitude';
+const String strLongitute = 'longitude';
+const String strLogo = 'logo';
+const String strLogothumbnail = 'logoThumbnail';
+const String strZipcode = 'zipCode';
+const String strBranch = 'branch';
 
 //for authentication
-const String strLastLoggedIn='lastLoggedIn';
-const String strAuthToken='authToken';
+const String strLastLoggedIn = 'lastLoggedIn';
+const String strAuthToken = 'authToken';
 
 //for maya
-const String strIsMayaSaid='isMayaSaid';
-const String strText='text';
-const String strImageUrl='imageUrl';
-const String strTimeStamp='timeStamp';
+const String strIsMayaSaid = 'isMayaSaid';
+const String strText = 'text';
+const String strImageUrl = 'imageUrl';
+const String strTimeStamp = 'timeStamp';
+const String strName = 'name';
 
 //speechmodel
-const String strSender='sender';
-const String strSenderName='Name';
-const String strSource='source';
-const String strSessionId='sessionId';
-const String strReceiptId='recipient_id';
-const String strEndOfConv='endOfConv';
-const String strSpeechImageURL='imageURL';
+const String strSender = 'sender';
+const String strSenderName = 'Name';
+const String strSource = 'source';
+const String strSessionId = 'sessionId';
+const String strReceiptId = 'recipient_id';
+const String strEndOfConv = 'endOfConv';
+const String strSpeechImageURL = 'imageURL';
 
 //for category
-const String strCategoryName='categoryName';
-const String strCategoryDesc='categoryDescription';
-const String strIsDisplay='isDisplay';
-const String strIsCreate='isCreate';
-const String strIsRead='isRead';
-const String strIsEdit='isEdit';
-const String strIsDelete='isDelete';
+const String strCategoryName = 'categoryName';
+const String strCategoryDesc = 'categoryDescription';
+const String strIsDisplay = 'isDisplay';
+const String strIsCreate = 'isCreate';
+const String strIsRead = 'isRead';
+const String strIsEdit = 'isEdit';
+const String strIsDelete = 'isDelete';
 
 //for digitRecognisition
-const String strParameters='parameter';
-const String strUnit='unit';
-const String strValues='values';
-const String strmediaMetaId='mediaMetaId';
-const String strmediaMasterId='mediaMasterId';
-const String strDeviceMeasurements='deviceMeasurements';
-const String strmediaMetaID='mediaMetaID';
+const String strParameters = 'parameter';
+const String strUnit = 'unit';
+const String strValues = 'values';
+const String strmediaMetaId = 'mediaMetaId';
+const String strmediaMasterId = 'mediaMasterId';
+const String strDeviceMeasurements = 'deviceMeasurements';
+const String strmediaMetaID = 'mediaMetaID';
 
 //for healthRecords
 const String strmediaMetaInfo='mediaMetaInfo';
@@ -262,28 +260,31 @@ const String strdestinationId='destinationId';
 
 
 //Booking Confirm
-const String self='Self';
-const String theAppointmentIsFor='The Appointment is for';
-const String dateAndTime='Date & Time';
-const String confirmDetails='Confirmation Details';
-const String preConsultingDetails='Pre Consulting Details';
-const String addNotes='Add Notes';
-const String addVoice='Add Voice';
-const String records='Records';
-const String deviceReading='Device Readings';
-const String payNow='Pay Now';
-const String slotsAreNotAvailable='Slot not available in this date';
-const String bookNow='Book Now';
-const String redirectedToPaymentMessage='You are being re-directed to a secured payment site';
-const String cancellationAppointmentConfirmation='Are you sure you want to cancel this appointment';
-const String ok='Ok';
-const String yes='Yes';
-const String no='No';
-const String appointmentCreatedMessage='Created a new  appointment(s) successfully';
-const String someWentWrong='Booking appointment failed.. Some went wrong!';
-const String checkSlots='Checking available slots..';
-const String selectSlotsMsg='please select your time slot before you book';
-const String noUrl='Something went wrong ..please try again..';
+const String self = 'Self';
+const String theAppointmentIsFor = 'The Appointment is for';
+const String dateAndTime = 'Date & Time';
+const String confirmDetails = 'Confirmation Details';
+const String preConsultingDetails = 'Pre Consulting Details';
+const String addNotes = 'Add Notes';
+const String addVoice = 'Add Voice';
+const String records = 'Records';
+const String deviceReading = 'Device Readings';
+const String payNow = 'Pay Now';
+const String slotsAreNotAvailable = 'Slot not available in this date';
+const String bookNow = 'Book Now';
+const String redirectedToPaymentMessage =
+    'You are being re-directed to a secured payment site';
+const String cancellationAppointmentConfirmation =
+    'Are you sure you want to cancel this appointment';
+const String ok = 'Ok';
+const String yes = 'Yes';
+const String no = 'No';
+const String appointmentCreatedMessage =
+    'Created a new  appointment(s) successfully';
+const String someWentWrong = 'Booking appointment failed.. Some went wrong!';
+const String checkSlots = 'Checking available slots..';
+const String selectSlotsMsg = 'please select your time slot before you book';
+const String noUrl = 'Something went wrong ..please try again..';
 
 //Payment
 const String PAYMENT_STATUS='payment_status';

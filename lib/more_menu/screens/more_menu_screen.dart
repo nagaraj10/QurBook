@@ -1,22 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
+import 'package:launch_review/launch_review.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/src/ui/HomeScreen.dart';
-import 'package:launch_review/launch_review.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:intl/intl.dart';
-import 'dart:io';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function refresh;
@@ -61,7 +61,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     return Scaffold(
         appBar: AppBar(
             flexibleSpace: GradientAppBar(),
-            leading: Container(),
+            leading: IconWidget(
+              icon: Icons.arrow_back_ios,
+              colors: Colors.white,
+              size: 20,
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.exit_to_app),
@@ -87,9 +94,19 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      myProfile.response.data.generalInfo.name != null
-                          ? toBeginningOfSentenceCase(
-                              myProfile.response.data.generalInfo.name)
+                      myProfile.response.data.generalInfo.qualifiedFullName !=
+                              null
+                          ? toBeginningOfSentenceCase(myProfile
+                                      .response
+                                      .data
+                                      .generalInfo
+                                      .qualifiedFullName
+                                      .firstName ??
+                                  '') +
+                              ' ' +
+                              toBeginningOfSentenceCase(myProfile.response.data
+                                      .generalInfo.qualifiedFullName.lastName ??
+                                  '')
                           : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
