@@ -919,7 +919,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             Container(
               alignment: Alignment.center,
               child: commonWidgets.getClipOvalImageNew(
-                  widget.docs[widget.i].profilePicThumbnail,
+                  widget.docs[widget.i].profilePicThumbnailURL,
                   fhbStyles.cardClipImage),
             ),
             new Positioned(

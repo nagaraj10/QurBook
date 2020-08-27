@@ -161,14 +161,14 @@ class CommonWidgets {
     ));
   }
 
-  Widget getClipOvalImageNew(ProfilePic profileImage, double imageSize) {
-    return ClipOval(child: getProfilePicWidget(profileImage));
+  Widget getClipOvalImageNew(String profilePicThumbnailURL, double imageSize) {
+    return ClipOval(child: getProfilePicWidget(profilePicThumbnailURL));
   }
 
-  Widget getProfilePicWidget(ProfilePic profilePicThumbnail) {
+  Widget getProfilePicWidget(String profilePicThumbnail) {
     return profilePicThumbnail != null
-        ? Image.memory(
-            Uint8List.fromList(profilePicThumbnail.data),
+        ? Image.network(
+      profilePicThumbnail,
             height: 40,
             width: 40,
             fit: BoxFit.cover,
@@ -215,7 +215,7 @@ class CommonWidgets {
                           Align(
                             alignment: Alignment.bottomCenter,
                             child: getClipOvalImageNew(
-                                docs.profilePic, fhbStyles.detailClipImage),
+                                docs.profilePicThumbnailURL, fhbStyles.detailClipImage),
                           ),
                           getSizeBoxWidth(10.0),
                           Expanded(

@@ -122,7 +122,7 @@ class ProvidersListRepository {
     associateRecord[qr_userid] = userID;
     associateRecord[qr_mediaMetaId] = healthRecords;
     var jsonString = convert.jsonEncode(associateRecord);
-    print(jsonString);
+    print(jsonString + '******************');
     final response = await _helper.associateRecords(qr_sharerecord, jsonString);
     return AssociateRecordsResponse.fromJson(response);
   }

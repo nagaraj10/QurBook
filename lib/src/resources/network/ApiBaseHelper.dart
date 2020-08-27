@@ -810,7 +810,9 @@ class ApiBaseHelper {
       final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonBody);
+      print(_baseUrl + url);
       responseJson = _returnResponse(response);
+      print(responseJson+' *************');
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -993,7 +995,7 @@ class ApiBaseHelper {
       );
       print(response);
       responseJson = _returnResponse(response);
-      print(responseJson);
+      print(responseJson + '**************');
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }

@@ -44,6 +44,7 @@ class DoctorIds {
   bool isDefault;
   String doctorPatientMappingId;
   String gender;
+  String profilePicThumbnailURL;
 
   DoctorIds(
       {this.id,
@@ -82,7 +83,8 @@ class DoctorIds {
       this.fees,
       this.isDefault,
       this.doctorPatientMappingId,
-      this.gender});
+      this.gender,
+      this.profilePicThumbnailURL});
 
   DoctorIds.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
@@ -135,11 +137,14 @@ class DoctorIds {
         professionalDetails.add(new ProfessionalDetails.fromJson(v));
       });
     }
-    fees = json[parameters.strfees] != null ? new Fees.fromJson(json[parameters.strfees]) : null;
+    fees = json[parameters.strfees] != null
+        ? new Fees.fromJson(json[parameters.strfees])
+        : null;
     isDefault = json[parameters.strisDefault];
     doctorPatientMappingId = json[parameters.strdoctorPatientMappingId];
     gender = json[parameters.strGender];
-    specialization=json[parameters.strSpecilization];
+    specialization = json[parameters.strSpecilization];
+    profilePicThumbnailURL = json[parameters.strprofilePicThumbnailURL];
   }
 
   Map<String, dynamic> toJson() {
@@ -190,7 +195,8 @@ class DoctorIds {
     data[parameters.strisDefault] = this.isDefault;
     data[parameters.strdoctorPatientMappingId] = this.doctorPatientMappingId;
     data[parameters.strGender] = this.gender;
-    data[parameters.strSpecilization]=this.specialization;
+    data[parameters.strSpecilization] = this.specialization;
+    data[parameters.strprofilePicThumbnailURL] = this.profilePicThumbnailURL;
     return data;
   }
 }
