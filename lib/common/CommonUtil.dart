@@ -384,13 +384,13 @@ class CommonUtil {
 
     final token = await _firebaseMessaging.getToken();
     loginBloc.logout().then((signOutResponse) {
-      moveToLoginPage(signOutResponse);
-      /*CommonUtil()
+      // moveToLoginPage(signOutResponse);
+      CommonUtil()
           .sendDeviceToken(PreferenceUtil.getStringValue(Constants.KEY_USERID),
               generalInfo.email, generalInfo.phoneNumber, token, false)
           .then((value) {
         moveToLoginPage(signOutResponse);
-      });*/
+      });
     });
   }
 

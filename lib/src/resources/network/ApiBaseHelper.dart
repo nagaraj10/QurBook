@@ -968,7 +968,7 @@ class ApiBaseHelper {
             headers: requestHeadersAuthAccept, body: jsonBody);
         responseJson = _returnResponse(response);
       } else {
-        final response = await http.put(CommonUtil.COGNITO_URL + url,
+        final response = await http.post(CommonUtil.COGNITO_URL + url,
             headers: requestHeadersAuthAccept, body: jsonBody);
         responseJson = _returnResponse(response);
       }
