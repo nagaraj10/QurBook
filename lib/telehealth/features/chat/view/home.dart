@@ -375,6 +375,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                 peerId: document.documentID,
                                 peerAvatar: document['photoUrl'],
                                 peerName: document['nickname'],
+                                lastDate: document['createdAt'],
                               )));
                 },
                 child: Row(
@@ -463,10 +464,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         Padding(
                           padding: const EdgeInsets.only(bottom: 15),
                           child: Text(
-                            'Last visit ' +
-                                DateFormat('dd MMM kk:mm').format(
-                                    DateTime.fromMillisecondsSinceEpoch(
-                                        int.parse(document['createdAt']))),
+                            document['createdAt']!=null?'Last visit date on '+DateFormat('dd MMM kk:mm').format(
+                                DateTime.fromMillisecondsSinceEpoch(
+                                    int.parse(document['createdAt']))):'',
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
                                 color: Colors.grey[600],

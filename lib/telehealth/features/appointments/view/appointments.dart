@@ -707,9 +707,9 @@ class _AppointmentsState extends State<Appointments> {
   String getPatientName() {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     String patientName =
-        myProfile.response.data.generalInfo.qualifiedFullName ??
+        myProfile.response.data.generalInfo.qualifiedFullName !=null ?
             myProfile.response.data.generalInfo.qualifiedFullName.firstName +
-                myProfile.response.data.generalInfo.qualifiedFullName.lastName;
+                myProfile.response.data.generalInfo.qualifiedFullName.lastName:'';
 
     return patientName;
   }
