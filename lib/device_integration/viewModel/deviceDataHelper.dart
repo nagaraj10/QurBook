@@ -5,12 +5,16 @@ class DeviceDataHelper {
   SyncGoogleFitData _syncGoogleFitData = SyncGoogleFitData();
   SyncHealthKitData _syncHealthKitData = SyncHealthKitData();
 
-  Future<void> activateGF() async {
-    await _syncGoogleFitData.activateGF();
+  Future<bool> isGFSignedIn() async {
+    return await _syncGoogleFitData.isGFSignedIn();
   }
 
-  Future<void> deactivateGF() async {
-    await _syncGoogleFitData.deactivateGF();
+  Future<bool> activateGF() async {
+    return await _syncGoogleFitData.activateGF();
+  }
+
+  Future<bool> deactivateGF() async {
+    return await _syncGoogleFitData.deactivateGF();
   }
 
   Future<void> syncGF() async {

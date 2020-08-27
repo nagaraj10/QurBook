@@ -22,13 +22,21 @@ class GoogleFitData {
     return signedIn;
   }
 
-  Future<void> signIn() async {
-    await _signInHelper.handleSignIn();
-    await _signInHelper.handleScopes();
+  Future<bool> signIn() async {
+    bool ret = false;
+
+    if(await isSignedIn()){
+      return await _signInHelper.handleScopes();
+    }
+    ret = await _signInHelper.handleSignIn();
+    if(ret){
+        ret = await _signInHelper.handleScopes();
+    }
+    return ret;   
   }
 
-  Future<void> signOut() async {
-    await _signInHelper.handleSignOut();
+  Future<bool> signOut() async {
+    return await _signInHelper.handleSignOut();
   }
 
   String getDataSourceBody(String startTime, String endTime, String type) {

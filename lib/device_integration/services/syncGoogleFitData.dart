@@ -15,23 +15,26 @@ class SyncGoogleFitData {
     _gfHelper = GoogleFitData();
   }
 
-  Future<void> activateGF() async {
-    bool signedIn = await _gfHelper.isSignedIn();
-    await _gfHelper.signIn();
-    if (!signedIn) {
-      await _gfHelper.signIn();
-    } 
+  Future<bool> isGFSignedIn() async {
+    return _gfHelper.isSignedIn();
   }
 
-  Future<void> deactivateGF() async {
-    await _gfHelper.signOut();
+  Future<bool> activateGF() async {
+    return await _gfHelper.signIn();
+  }
+
+  Future<bool> deactivateGF() async {
+    return await _gfHelper.signOut();
   }
 
   Future<bool> syncGFData() async {
     var response;
     String startTime = "";
     String endTime = "";
-    await activateGF();
+
+    if(!await isGFSignedIn()){
+      return false;
+    }
 
     DateTime lastSynctime = await getLastSynctime();
 
@@ -67,8 +70,7 @@ class SyncGoogleFitData {
       if (heartRateParams != null) {
         response = await postGFData(heartRateParams);
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> postGFData(String params) async {
@@ -78,8 +80,7 @@ class SyncGoogleFitData {
       var response = await _deviceHealthRecord.postDeviceData(params);
 
       return response;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> getLastSynctime() async {
@@ -91,7 +92,6 @@ class SyncGoogleFitData {
       LastSync lastSync = lastSyncFromJson(jsonstr);
       if (!lastSync.isSuccess) return null;
       return lastSync.result[0].lastSyncDateTime;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 }

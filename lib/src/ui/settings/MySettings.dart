@@ -176,98 +176,105 @@ class _MySettingsState extends State<MySettings> {
                         height: 1,
                         color: Colors.grey[200],
                       ),
-                      ListTile(
-                          leading: ImageIcon(
-                            AssetImage(variable.icon_digit_googleFit),
-                            //size: 30,
-                            color: Colors.black,
-                          ),
-                          title: Text(variable.strGoogleFit),
-                          subtitle: Text(
-                            variable.strAllowGoogle,
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          trailing: Wrap(children: <Widget>[
-                            Transform.scale(
-                              scale: 0.8,
-                              child: IconButton(
-                                icon: Icon(Icons.sync),
-                                onPressed: () {
-                                  _deviceDataHelper.syncGF();
-                                },
-                              ),
-                            ),
-                            Transform.scale(
-                              scale: 0.8,
-                              child: Switch(
-                                value: _isGFActive,
-                                activeColor:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                onChanged: (bool newValue) {
-                                  newValue == true
-                                      ? _deviceDataHelper.activateGF()
-                                      : _deviceDataHelper.deactivateGF();
-                                  setState(() {
-                                    _isGFActive = newValue;
-
-                                    PreferenceUtil.saveString(
-                                        Constants.activateGF,
-                                        _isGFActive.toString());
-                                  });
-                                },
-                              ),
-                            )
-                          ])),
+                      FutureBuilder(
+                          future: _handleGoogleFit(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListTile(
+                                leading: ImageIcon(
+                                  AssetImage(variable.icon_digit_googleFit),
+                                  //size: 30,
+                                  color: Colors.black,
+                                ),
+                                title: Text(variable.strGoogleFit),
+                                subtitle: Text(
+                                  variable.strAllowGoogle,
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                trailing: Wrap(
+                                  children: <Widget>[
+                                    Transform.scale(
+                                      scale: 0.8,
+                                      child: IconButton(
+                                        icon: Icon(Icons.sync),
+                                        onPressed: () {
+                                          _deviceDataHelper.syncGF();
+                                        },
+                                      ),
+                                    ),
+                                    Transform.scale(
+                                      scale: 0.8,
+                                      child: Switch(
+                                        value: _isGFActive,
+                                        activeColor: Color(new CommonUtil()
+                                            .getMyPrimaryColor()),
+                                        onChanged: (bool newValue) {
+                                          //newValue == true
+                                          //    ? _deviceDataHelper.activateGF()
+                                          //    : _deviceDataHelper.deactivateGF();
+                                          setState(() {
+                                            _isGFActive = newValue;
+                                          });
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            }
+                            else{
+                              return Container();
+                            }
+                          }),
                       Container(
                         height: 1,
                         color: Colors.grey[200],
                       ),
-
-                      (Platform.isIOS) ?
-                      ListTile(
-                          leading: Icon(
-                            Icons.favorite,
-                            color: Colors.pink,
-                          ),
-                          title: Text(variable.strHealthKit),
-                          subtitle: Text(
-                            variable.strAllowHealth,
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          trailing: Wrap(
-                            children: <Widget>[
-                              Transform.scale(
-                                scale: 0.8,
-                                child: IconButton(
-                                  icon: Icon(Icons.sync),
-                                  onPressed: () {
-                                    _deviceDataHelper.syncHKT();
-                                  },
-                                ),
+                      (Platform.isIOS)
+                          ? ListTile(
+                              leading: Icon(
+                                Icons.favorite,
+                                color: Colors.pink,
                               ),
-                              Transform.scale(
-                                scale: 0.8,
-                                child: Switch(
-                                  value: _isHKActive,
-                                  activeColor: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
-                                  onChanged: (bool newValue) {
-                                    newValue == true
-                                        ? _deviceDataHelper.activateHKT()
-                                        : _deviceDataHelper.deactivateHKT();
-                                    setState(() {
-                                      _isHKActive = newValue;
+                              title: Text(variable.strHealthKit),
+                              subtitle: Text(
+                                variable.strAllowHealth,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                              trailing: Wrap(
+                                children: <Widget>[
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: IconButton(
+                                      icon: Icon(Icons.sync),
+                                      onPressed: () {
+                                        _deviceDataHelper.syncHKT();
+                                      },
+                                    ),
+                                  ),
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: Switch(
+                                      value: _isHKActive,
+                                      activeColor: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      onChanged: (bool newValue) {
+                                        newValue == true
+                                            ? _deviceDataHelper.activateHKT()
+                                            : _deviceDataHelper.deactivateHKT();
+                                        setState(() {
+                                          _isHKActive = newValue;
 
-                                      PreferenceUtil.saveString(
-                                          Constants.activateHK,
-                                          _isHKActive.toString());
-                                    });
-                                  },
-                                ),
-                              )
-                            ],
-                          )):SizedBox.shrink(),
-
+                                          PreferenceUtil.saveString(
+                                              Constants.activateHK,
+                                              _isHKActive.toString());
+                                        });
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ))
+                          : SizedBox.shrink(),
                       Container(
                         height: 1,
                         color: Colors.grey[200],
@@ -388,5 +395,24 @@ class _MySettingsState extends State<MySettings> {
         ],
       ),
     );
+  }
+
+  Future<bool> _handleGoogleFit() async {
+    bool ret = false;
+    bool _isSignedIn = await _deviceDataHelper.isGFSignedIn();
+    if (_isGFActive == _isSignedIn)
+    {
+      ret = _isGFActive;
+    }
+    else{
+        if(_isGFActive){
+          _isGFActive = await _deviceDataHelper.activateGF();
+        }else{
+          
+          _isGFActive = ! await _deviceDataHelper.deactivateGF();      
+        }
+    }
+    PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
+    return ret;
   }
 }
