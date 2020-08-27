@@ -4,7 +4,13 @@ class CallArguments {
   String channelName;
   String userName;
   ClientRole role;
+  String doctorId;
   bool isAppExists;
 
-  CallArguments({this.channelName, this.userName, this.role, this.isAppExists});
+  CallArguments(
+      {this.channelName,
+      this.userName,
+      this.role,
+      this.doctorId,
+      this.isAppExists});
 }

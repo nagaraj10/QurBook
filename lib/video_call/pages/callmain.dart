@@ -92,6 +92,7 @@ class CallMain extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             MyControllers(callStatus, role, isAppExists,
+                                Platform.isIOS ? arguments.doctorId : doctorId,
                                 (isMute, isVideoHide) {
                               _isMute = isMute;
                               _isVideoHide = isVideoHide;
