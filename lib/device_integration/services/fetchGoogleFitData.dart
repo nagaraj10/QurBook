@@ -8,15 +8,13 @@ import 'package:myfhb/device_integration/model/googleFitBucket.dart';
 import 'dart:async';
 import 'dart:convert' show json;
 
-class FetchGoogleFitData {
+class GoogleFitData {
   GoogleSignInHelper _signInHelper;
-  FetchGoogleFitData() {
+
+  GoogleFitData() {
     _signInHelper = GoogleSignInHelper();
   }
-  FetchGoogleFitData.forTest(GoogleSignInHelper helper) {
-    this._signInHelper = helper;
-  }
-//for mockito unit testing
+
   Future<bool> isSignedIn() async {
     bool signedIn = await _signInHelper.isSignedIn();
     return signedIn;
@@ -31,7 +29,7 @@ class FetchGoogleFitData {
     await _signInHelper.handleSignOut();
   }
 
-  String getDataSourceBody(var startTime, var endTime, String type) {
+  String getDataSourceBody(String startTime, String endTime, String type) {
     Map data = {
       "aggregateBy": [
         {
@@ -57,7 +55,7 @@ class FetchGoogleFitData {
     return dateString.toIso8601String();
   }
 
-  Future<String> getWeightSummary(var startTime, var endTime) async {
+  Future<String> getWeightSummary(String startTime, String endTime) async {
     String jsonBody = getDataSourceBody(startTime, endTime, gfWeight);
     String response = await _signInHelper.getDataAggregate(jsonBody);
 
@@ -96,7 +94,7 @@ class FetchGoogleFitData {
     }
   }
 
-  Future<String> getBPSummary(var startTime, var endTime) async {
+  Future<String> getBPSummary(String startTime, String endTime) async {
     String jsonBody = getDataSourceBody(startTime, endTime, gfBloodPressure);
     String response = await _signInHelper.getDataAggregate(jsonBody);
 
@@ -135,7 +133,8 @@ class FetchGoogleFitData {
     }
   }
 
-  Future<String> getBloodGlucoseSummary(var startTime, var endTime) async {
+  Future<String> getBloodGlucoseSummary(
+      String startTime, String endTime) async {
     String jsonBody = getDataSourceBody(startTime, endTime, gfBloodGlucose);
     String response = await _signInHelper.getDataAggregate(jsonBody);
 
@@ -176,7 +175,7 @@ class FetchGoogleFitData {
     }
   }
 
-  Future<String> getBodyTempSummary(var startTime, var endTime) async {
+  Future<String> getBodyTempSummary(String startTime, String endTime) async {
     String jsonBody = getDataSourceBody(startTime, endTime, gfBodyTemperature);
     String response = await _signInHelper.getDataAggregate(jsonBody);
 
@@ -215,7 +214,8 @@ class FetchGoogleFitData {
     }
   }
 
-  Future<String> getOxygenSaturationSummary(var startTime, var endTime) async {
+  Future<String> getOxygenSaturationSummary(
+      String startTime, String endTime) async {
     String jsonBody = getDataSourceBody(startTime, endTime, gfOxygenSaturation);
     String response = await _signInHelper.getDataAggregate(jsonBody);
 
@@ -254,7 +254,7 @@ class FetchGoogleFitData {
     }
   }
 
-  Future<String> getHeartRateSummary(var startTime, var endTime) async {
+  Future<String> getHeartRateSummary(String startTime, String endTime) async {
     String jsonBody = getDataSourceBody(startTime, endTime, gfHeartRate);
     String response = await _signInHelper.getDataAggregate(jsonBody);
 
