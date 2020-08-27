@@ -29,6 +29,8 @@
 .pub/
 /build/
 #/secrets.json
+pubspec.lock
+.flutter-plugins-dependencies
 
 # Web related
 lib/generated_plugin_registrant.dart

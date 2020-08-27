@@ -89,6 +89,7 @@ dependencies:
   cloud_firestore: ^0.12.9+5
   firebase_storage: ^3.0.6
   device_id: ^0.2.0
+  gallery_saver: ^2.0.1
 
 
 
