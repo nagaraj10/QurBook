@@ -298,7 +298,6 @@ class ChatScreenState extends State<ChatScreen> {
     isShowSticker = false;
     imageUrl = '';
 
-    readLocal();
     getPatientDetails();
   }
 
@@ -325,7 +324,7 @@ class ChatScreenState extends State<ChatScreen> {
     return getMetaFileURLModel;
   }
 
-  Future<String> getPatientDetails() async {
+  getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.response.data.generalInfo.qualifiedFullName != null
@@ -333,6 +332,8 @@ class ChatScreenState extends State<ChatScreen> {
             myProfile.response.data.generalInfo.qualifiedFullName.lastName
         : '';
     patientPicUrl = getProfileURL();
+
+    readLocal();
   }
 
   String getProfileURL() {
@@ -355,15 +356,17 @@ class ChatScreenState extends State<ChatScreen> {
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString('id') ?? '';
-    if (id == "") {
+   /* if (id == "") {
       groupChatId = '$peerId-$patientId';
-    } else {
-      if (id.hashCode <= peerId.hashCode) {
-        groupChatId = '$id-$peerId';
+    } */
+    //else
+    //  {
+      if (patientId.hashCode <= peerId.hashCode) {
+        groupChatId = '$patientId-$peerId';
       } else {
-        groupChatId = '$peerId-$id';
+        groupChatId = '$peerId-$patientId';
       }
-    }
+  //  }
     Firestore.instance
         .collection('users')
         .document(id == "" ? patientId : id)

@@ -20,7 +20,7 @@ class CallMain extends StatelessWidget {
   /// non-modifiable channel name of the page
   String channelName;
 
-  String userName;
+  String doctorName;
   String doctorId;
 
   /// non-modifiable client role of the page
@@ -37,7 +37,7 @@ class CallMain extends StatelessWidget {
       this.role,
       this.arguments,
       this.isAppExists,
-      this.userName,
+      this.doctorName,
       this.doctorId});
 
   @override
@@ -80,7 +80,7 @@ class CallMain extends StatelessWidget {
                 },
                 child: Container(),
               ),
-              CustomAppBar(Platform.isIOS ? arguments.userName : userName),
+              CustomAppBar(Platform.isIOS ? arguments.userName : doctorName),
               Consumer<HideProvider>(
                 builder: (context, status, child) {
                   return Visibility(
@@ -96,7 +96,7 @@ class CallMain extends StatelessWidget {
                                 (isMute, isVideoHide) {
                               _isMute = isMute;
                               _isVideoHide = isVideoHide;
-                            }, _isMute, _isVideoHide),
+                            }, _isMute, _isVideoHide,doctorName),
                             SizedBox(
                               height: 48,
                             ),
