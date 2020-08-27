@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:showcaseview/showcase_widget.dart';
+import 'ChatScreen.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
-import 'package:showcaseview/showcase_widget.dart';
-
-import 'ChatScreen.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class SuperMaya extends StatefulWidget {
   @override
@@ -70,14 +70,7 @@ class _SuperMayaState extends State<SuperMaya> {
                 child: AppBar(
                   flexibleSpace: GradientAppBar(),
                   backgroundColor: Colors.transparent,
-                  leading: IconWidget(
-                    icon: Icons.arrow_back_ios,
-                    colors: Colors.white,
-                    size: 20,
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                  ),
+                  leading: Container(),
                   elevation: 0,
                   title: Text('Sheela'),
                   centerTitle: true,

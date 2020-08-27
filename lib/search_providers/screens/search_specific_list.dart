@@ -491,7 +491,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     color: Color(fhbColors.bgColorContainer),
                     child:
                         widget.arguments.searchWord == CommonConstants.doctors
-                            ? CommonUtil().getDoctorProfileImageWidget(id)
+                            ? getDoctorProfileImageWidget(id)
                             : getHospitalLogoImage(logo),
                   )),
                   SizedBox(width: 10),

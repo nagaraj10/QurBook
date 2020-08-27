@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
@@ -20,7 +19,6 @@ class MyProviderViewModel extends ChangeNotifier {
   List<TelehealthProviderModel> teleHealthProviderModel = new List();
   BookAppointmentModel bookAppointment = BookAppointmentModel();
   UpdatePaymentModel updatePaymentModel = UpdatePaymentModel();
-  AssociateRecordsResponse associateRecordResponse = AssociateRecordsResponse();
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
@@ -29,7 +27,7 @@ class MyProviderViewModel extends ChangeNotifier {
       TelehealthProviderModel myProvidersResponseList =
           await _providersListRepository.getTelehealthDoctorsList();
 
-      doctorIdsList = myProvidersResponseList
+        doctorIdsList = myProvidersResponseList
           .response.data.medicalPreferences.preferences.doctorIds;
       return doctorIdsList;
     } catch (e) {}
@@ -44,6 +42,7 @@ class MyProviderViewModel extends ChangeNotifier {
     return doctorBookMarkedSucessModel.success;
   }
 
+ 
   List<DoctorIds> getFilterDoctorList(String doctorName) {
     List<DoctorIds> filterDoctorData = new List();
     for (DoctorIds doctorData in doctorIdsList) {
@@ -74,53 +73,22 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<BookAppointmentModel> putBookAppointment(
-      String createdBy,
-      String createdFor,
-      String doctorSessionId,
-      String scheduleDate,
-      String slotNumber,
-      bool isMedicalShared,
-      String isFollowUp,
-      List<String> healthRecords) async {
+  Future<BookAppointmentModel> putBookAppointment(String createdBy,String createdFor,String doctorSessionId,String scheduleDate,
+      String slotNumber,bool isMedicalShared,String isFollowUp,List<String> healthRecords) async {
     try {
       BookAppointmentModel bookAppointmentModel =
-          await _providersListRepository.bookAppointment(
-              createdBy,
-              createdFor,
-              doctorSessionId,
-              scheduleDate,
-              slotNumber,
-              isMedicalShared,
-              isFollowUp,
-              healthRecords);
+      await _providersListRepository.bookAppointment(createdBy,createdFor,doctorSessionId,scheduleDate,slotNumber,isMedicalShared,isFollowUp,healthRecords);
       bookAppointment = bookAppointmentModel;
       return bookAppointment;
     } catch (e) {}
   }
 
-  Future<UpdatePaymentModel> updatePaymentStatus(
-      String paymentId,
-      String appointmentId,
-      String paymentOrderId,
-      String paymentRequestId) async {
+  Future<UpdatePaymentModel> updatePaymentStatus(String paymentId,String appointmentId,String paymentOrderId,String paymentRequestId) async {
     try {
       UpdatePaymentModel updatePaymentModel =
-          await _providersListRepository.updatePayment(
-              paymentId, appointmentId, paymentOrderId, paymentRequestId);
+      await _providersListRepository.updatePayment(paymentId,appointmentId,paymentOrderId,paymentRequestId);
       updatePaymentModel = updatePaymentModel;
       return updatePaymentModel;
-    } catch (e) {}
-  }
-
-  Future<AssociateRecordsResponse> associateRecords(
-      String doctorId, String userId, List<String> healthRecords) async {
-    try {
-      AssociateRecordsResponse bookAppointmentModel =
-          await _providersListRepository.associateRecords(
-              doctorId, userId, healthRecords);
-      associateRecordResponse = bookAppointmentModel;
-      return associateRecordResponse;
     } catch (e) {}
   }
 }

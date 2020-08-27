@@ -98,8 +98,11 @@ class _MyProvidersState extends State<MyProviders> {
                   searchWord: CommonConstants.doctors,
                   fromClass: router.cn_teleheathProvider,
                 )).then((value) {
-              providerViewModel.doctorIdsList = null;
-              setState(() {});
+              setState(() {
+//                providerViewModel.fetchProviderDoctors().then((value) {
+//                  providerListWidget(value);
+//                });
+              });
             });
           },
           child: Icon(

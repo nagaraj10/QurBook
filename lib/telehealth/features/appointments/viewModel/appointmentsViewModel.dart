@@ -7,14 +7,12 @@ import 'package:myfhb/telehealth/features/appointments/model/doctorsData.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/timeModel.dart';
-import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
 
 class AppointmentsViewModel extends ChangeNotifier {
   ApiBaseHelper _helper = ApiBaseHelper();
   AppointmentsModel appointmentsModel;
   CancelAppointmentModel cancelAppointmentModel = new CancelAppointmentModel();
   Reshedule resheduleAppointmentModel = new Reshedule();
-  GetMetaFileURLModel getMetaFileURLModel = new GetMetaFileURLModel();
 
   Future<AppointmentsModel> fetchAppointments() async {
     try {
@@ -76,7 +74,7 @@ class AppointmentsViewModel extends ChangeNotifier {
           isSearch ? upcoming : appointmentsModel.response.data.upcoming;
       List<String> dummySearchList = List<String>();
       List<String> dummyHour = List<String>();
-      List<String> dummyDays = List<String>();
+      List<String> dummyDays=List<String>();
       List<String> dummyMinutes = List<String>();
       List<String> hours;
       List<String> minutes;
@@ -90,7 +88,7 @@ class AppointmentsViewModel extends ChangeNotifier {
 //        DateTime dob1 =
 //            DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(dummySearchList[i]);
         DateTime dob1 =
-            DateFormat("yyyy-MM-dd HH:mm:ss").parse(dummySearchList[i]);
+        DateFormat("yyyy-MM-dd HH:mm:ss").parse(dummySearchList[i]);
         DateTime dob2 =
             DateFormat("yyyy-MM-dd HH:mm:ss").parse('${DateTime.now()}');
         Duration dur = dob1.difference(dob2);
@@ -113,7 +111,7 @@ class AppointmentsViewModel extends ChangeNotifier {
       }
       minutes = dummyMinutes;
       hours = dummyHour;
-      days = dummyDays;
+      days=dummyDays;
       time = Time(minutes: minutes, hours: hours, daysCount: days);
       return time;
     } else {}
@@ -135,6 +133,7 @@ class AppointmentsViewModel extends ChangeNotifier {
       Reshedule resheduleAp = await _helper.resheduleAppointment(
           bookingId, slotNumber, resheduleDate);
       resheduleAppointmentModel = resheduleAp;
+      print(resheduleAp);
       return resheduleAppointmentModel;
     } catch (e) {}
   }

@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>588661578434-fj6k7cs9hh78gqo3eakprmmo61tgsoti.apps.googleusercontent.com</string>
+	<string>41214208151-7ubtv4vo90juh286ptsfjnoa1pm1gl2e.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.588661578434-fj6k7cs9hh78gqo3eakprmmo61tgsoti</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>588661578434-f7jv3mlclgh7el6q0d48cdgo81erbi3e.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.41214208151-7ubtv4vo90juh286ptsfjnoa1pm1gl2e</string>
 	<key>API_KEY</key>
-	<string>AIzaSyA94AzMwGOVqspftaGHjtEEegzbrlxAaRY</string>
+	<string>AIzaSyAXtgFECriQ_XBNurC2J2LwRa9-OOBWtLY</string>
 	<key>GCM_SENDER_ID</key>
-	<string>588661578434</string>
+	<string>41214208151</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
 	<string>com.trident.voipapp</string>
 	<key>PROJECT_ID</key>
-	<string>myfhbfitness</string>
+	<string>myfhb-th</string>
 	<key>STORAGE_BUCKET</key>
-	<string>myfhbfitness.appspot.com</string>
+	<string>myfhb-th.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:588661578434:ios:6ef14085acd0a1c998f95b</string>
+	<string>1:41214208151:ios:5d2235ef943884d23461d2</string>
 	<key>DATABASE_URL</key>
-	<string>https://myfhbfitness.firebaseio.com</string>
+	<string>https://myfhb-th.firebaseio.com</string>
 </dict>
 </plist>

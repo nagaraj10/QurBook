@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
 import 'package:myfhb/record_detail/model/UpdateMediaResponse.dart';
@@ -31,13 +30,13 @@ class HealthReportListForUserRepository {
     return UserHealthResponseList.fromJson(response);
   }
 
-  Future<DoctorImageResponse> getDoctorProfile(String doctorsId) async {
+  Future<dynamic> getDoctorProfile(String doctorsId) async {
     final response = await _helper.getDoctorProfilePic(query.qr_doctors +
         doctorsId +
         query.qr_profilePic +
         query.qr_ques +
         query.qr_isOriginalPicRequiredTrue);
-    return DoctorImageResponse.fromJson(response);
+    return response;
   }
 
   Future<ImageDocumentResponse> getDocumentImage(String metaMasterID) async {

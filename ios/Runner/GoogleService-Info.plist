@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>588661578434-l1qvt7tl7de2hbqa5o8iqvak8tvmofkn.apps.googleusercontent.com</string>
+	<string>588661578434-fj6k7cs9hh78gqo3eakprmmo61tgsoti.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.588661578434-l1qvt7tl7de2hbqa5o8iqvak8tvmofkn</string>
+	<string>com.googleusercontent.apps.588661578434-fj6k7cs9hh78gqo3eakprmmo61tgsoti</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>588661578434-oplufmffn1s1v2an6bgbsupged6lh703.apps.googleusercontent.com</string>
+	<string>588661578434-f7jv3mlclgh7el6q0d48cdgo81erbi3e.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
 	<string>AIzaSyA94AzMwGOVqspftaGHjtEEegzbrlxAaRY</string>
 	<key>GCM_SENDER_ID</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.ventechsolutions.myFHB</string>
+	<string>com.trident.voipapp</string>
 	<key>PROJECT_ID</key>
 	<string>myfhbfitness</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:588661578434:ios:517489e9957ed41898f95b</string>
+	<string>1:588661578434:ios:6ef14085acd0a1c998f95b</string>
 	<key>DATABASE_URL</key>
 	<string>https://myfhbfitness.firebaseio.com</string>
 </dict>

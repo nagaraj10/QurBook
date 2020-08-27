@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
+import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:shimmer/shimmer.dart';
+
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 
 class VoiceRecordList extends StatefulWidget {
   final CompleteData completeData;
@@ -18,26 +23,20 @@ class VoiceRecordList extends StatefulWidget {
   final String categoryId;
 
   final Function(String, String) getDataForParticularLabel;
-  final Function(String, bool) mediaSelected;
+    final Function(String, bool) mediaSelected;
 
-  final String categoryDescription;
-  final bool isNotesSelect;
+    final String categoryDescription;
+final bool isNotesSelect;
   final bool isAudioSelect;
-  List<String> mediaMeta;
+    List<String> mediaMeta;
   final bool allowSelect;
 
-  VoiceRecordList(
-      this.completeData,
-      this.callBackToRefresh,
-      this.categoryName,
-      this.categoryId,
-      this.getDataForParticularLabel,
-      this.categoryDescription,
-      this.mediaSelected,
+
+  VoiceRecordList(this.completeData, this.callBackToRefresh, this.categoryName,
+      this.categoryId, this.getDataForParticularLabel,      this.categoryDescription,
+this.mediaSelected,
       this.allowSelect,
-      this.mediaMeta,
-      this.isNotesSelect,
-      this.isAudioSelect);
+      this.mediaMeta,this.isNotesSelect,this.isAudioSelect);
 
   @override
   _VoiceRecordListState createState() => new _VoiceRecordListState();
@@ -101,15 +100,16 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
 
   getCardWidgetForVoiceRecords(MediaMetaInfo mediaMetaInfoObj, int i) {
     return InkWell(
-        onLongPress: () {
-          if (widget.isAudioSelect) {
-            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
-
-            setState(() {});
-            widget.mediaSelected(
-                mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
-          }
-        },
+ onLongPress: () {
+        if (widget.isAudioSelect) {
+          print('inside is audio');
+          mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+          
+          setState(() {});
+          widget.mediaSelected(
+              mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
+        }
+      },
         onTap: () {
           if (widget.isAudioSelect) {
             bool condition;
@@ -122,17 +122,18 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
 
             // setState(() {});
             widget.mediaSelected(mediaMetaInfoObj.id, condition);
-          } else {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => RecordDetailScreen(
-                  data: mediaMetaInfoObj,
-                ),
+          
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RecordDetailScreen(
+                data: mediaMetaInfoObj,
               ),
-            );
-          }
-        },
+            ),
+          );
+        } },     
+       
         child: Container(
             padding: EdgeInsets.all(10.0),
             margin: EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -141,14 +142,17 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(fhbColors.cardShadowColor),
-                  blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 0, // has the effect of extending the shadow
-                  // has the effect of extending the shadow
-                )
+                        color: const Color(fhbColors.cardShadowColor),
+                        blurRadius:
+                            16, // has the effect of softening the shadow
+                        spreadRadius:
+                            0, // has the effect of extending the shadow
+                        // has the effect of extending the shadow
+                      )
               ],
             ),
-            child: Row(
+            child:
+              Row(
               children: <Widget>[
                 CircleAvatar(
                     radius: 25,
@@ -194,10 +198,12 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
+                   
                       IconButton(
                           icon: mediaMetaInfoObj.isBookmarked
                               ? ImageIcon(
-                                  AssetImage(variable.icon_record_fav_active),
+                                  AssetImage(
+                                      variable.icon_record_fav_active),
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
@@ -211,20 +217,19 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                             new CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
+
                       (mediaMetaInfoObj.metaInfo.hasVoiceNotes != null &&
-                              mediaMetaInfoObj.metaInfo.hasVoiceNotes)
+                          mediaMetaInfoObj.metaInfo.hasVoiceNotes)
                           ? Icon(
-                              Icons.mic,
-                              color: Colors.black54,
-                            )
+                        Icons.mic,
+                        color: Colors.black54,
+                      )
                           : Container(),
                       widget.mediaMeta.contains(mediaMetaInfoObj.id)
-                          ? Icon(
-                              Icons.done,
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                            )
+                          ? Icon(Icons.done,color: Color(new CommonUtil().getMyPrimaryColor()),)
                           : SizedBox(),
+
+                   
                     ],
                   ),
                 ),

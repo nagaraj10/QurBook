@@ -12,7 +12,6 @@ class HealthRecord {
   List<Notes> prescription;
   Notes notes;
   Notes voice;
-  List<String> others;
 
   HealthRecord.fromJson(Map<String, dynamic> json) {
     prescription = json["prescription"] == null
@@ -21,9 +20,6 @@ class HealthRecord {
     notes = json["notes"] == null ? null : Notes.fromJson(json["notes"]);
     voice = json["voice"] == null ? null : Notes.fromJson(json["voice"]);
     rx = json["rx"] == null ? null : json["rx"];
-    others=
-    json["others"] == null ? null : List<String>.from(
-        json["others"].map((x) => x));
   }
 
   Map<String, dynamic> toJson() {
@@ -33,8 +29,6 @@ class HealthRecord {
     data["notes"] = notes.toJson();
     data["voice"] = voice.toJson();
     data["rx"] = List<dynamic>.from(rx.map((x) => x));
-    data['others']=others == null ? null : List<dynamic>.from(others.map((x) => x));
-
     return data;
   }
 }

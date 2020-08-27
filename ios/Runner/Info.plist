@@ -28,22 +28,12 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-    <key>NSAppleMusicUsageDescription</key>
-    <string>Application requires access to AppleMusic for setting up default tones for the set appointments &amp; reminders</string>
-    <key>NSCalendarsUsageDescription</key>
-    <string>Application requires access to Calendar option for facilitating the user to pick date for setting up appointment &amp; reminders</string>
-    <key>NSCameraUsageDescription</key>
-    <string>Application requires access to Camera to take pictures of health records</string>
-    <key>NSContactsUsageDescription</key>
-    <string>Application requires access to Contacts for adding family members &amp; friends from contact list</string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Application requires access to LocationWhenInUse for locating the address and adding a healthcare provider</string>
-    <key>NSMotionUsageDescription</key>
-    <string>Application requires access to MotionUsage to detect the Medical device reading captured using phone camera</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>Application requires access to PhotoLibrary to capture picture of the physical medical records and devices</string>
-    <key>NSSpeechRecognitionUsageDescription</key>
-    <string>Application requires access to Speech Recognition for activating built in Voice assistant to perform set workflows</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Access camera</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This example listens for speech on the device microphone on your request.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This example recognizes words as you speak them and displays them. </string>
 	<key>UIBackgroundModes</key>
  	<array>
  		<string>audio</string>
@@ -88,5 +78,7 @@
 	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+    <key>FirebaseAppDelegateProxyEnabled</key>
+    <false/>
 </dict>
 </plist>

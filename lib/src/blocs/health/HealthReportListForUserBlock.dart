@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:typed_data';
 
-import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
 import 'package:myfhb/record_detail/model/UpdateMediaResponse.dart';
@@ -91,8 +90,7 @@ class HealthReportListForUserBlock implements BaseBloc {
     _metaDataUpdateController =
         StreamController<ApiResponse<UpdateMediaResponse>>();
 
-    _imageListController =
-        StreamController<ApiResponse<List<ImageDocumentResponse>>>();
+    _imageListController = StreamController<ApiResponse<List<ImageDocumentResponse>>>();
   }
 
   Future<UserHealthResponseList> getHelthReportList({bool condtion}) async {
@@ -100,8 +98,8 @@ class HealthReportListForUserBlock implements BaseBloc {
     healthReportListSink
         .add(ApiResponse.loading(variable.strGettingHealthRecords));
     try {
-      userHealthResponseList = await _healthReportListForUserRepository
-          .getHealthReportList(condition: condtion ?? false);
+      userHealthResponseList =
+          await _healthReportListForUserRepository.getHealthReportList(condition:condtion??false);
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       healthReportListSink.add(ApiResponse.error(e.toString()));
@@ -122,9 +120,9 @@ class HealthReportListForUserBlock implements BaseBloc {
     return saveMetaDataResponse;
   }
 
-  Future<DoctorImageResponse> getProfilePic(String doctorsId) async {
+  Future<dynamic> getProfilePic(String doctorsId) async {
     try {
-      DoctorImageResponse userHealthResponseList =
+      var userHealthResponseList =
           await _healthReportListForUserRepository.getDoctorProfile(doctorsId);
       return userHealthResponseList;
     } catch (e) {}
@@ -132,9 +130,8 @@ class HealthReportListForUserBlock implements BaseBloc {
 
   Future<ImageDocumentResponse> getDocumentImage(String metaMasterId) async {
     try {
-      ImageDocumentResponse userHealthResponseList =
-          await _healthReportListForUserRepository
-              .getDocumentImage(metaMasterId);
+      ImageDocumentResponse userHealthResponseList = await _healthReportListForUserRepository
+          .getDocumentImage(metaMasterId);
       return userHealthResponseList;
     } catch (e) {}
   }

@@ -212,6 +212,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
     if (sharedbyme.profileData.isVirtualUser == true) {
       MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      print("Profile Main");
+      print(myProf);
       mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
       emailController.text = myProf.response.data.generalInfo.email;
     } else {

@@ -18,11 +18,11 @@ import AVFoundation
     var STT_Result : FlutterResult?
     var TTS_Result : FlutterResult?
     
-    var STT_CHANNEL = Constants.STT_CHANNEL
-    var TTS_CHANNEL = Constants.TTS_CHANNEL
+    var STT_CHANNEL = "flutter.native/voiceIntent"
+    var TTS_CHANNEL = "flutter.native/textToSpeech"
     
-    var STT_METHOD = Constants.STT_METHOD
-    var TTS_METHOD = Constants.TTS_METHOD
+    var STT_METHOD = "speakWithVoiceAssistant"
+    var TTS_METHOD = "textToSpeech"
     
     var detectionTimer : Timer?
     var message = ""
@@ -36,7 +36,7 @@ import AVFoundation
         
         // 1
         // Google Api Key
-        GMSServices.provideAPIKey(Constants.googlekey)
+        GMSServices.provideAPIKey("AIzaSyCQ26mjgJ8T00uCWigel-zWQKU6fkhsGX4")
         
         // 1
         // Local Notification
@@ -86,8 +86,8 @@ import AVFoundation
             print("Text to Speech channel entered")
             
             let argumentDic = call.arguments as! Dictionary<String, Any>
-            let message = argumentDic[Constants.paramaters.message] as! String
-            let isClose = argumentDic[Constants.paramaters.isClose] as! Bool
+            let message = argumentDic["message"] as! String
+            let isClose = argumentDic["isClose"] as! Bool
             
             print("TTS : ", message)
             
@@ -105,11 +105,22 @@ import AVFoundation
         
         speechRecognizer.delegate = self
         requestAuthorization(); // Request Authorization
-                
+        
+        //        recognitionTask?.cancel()
+        //        recognitionTask = nil
+        //
+        // Cancel the previous recognition task.
+        //        if recognitionTask != nil {
+        //            recognitionTask?.cancel()
+        //            recognitionTask = nil
+        //        }
+        
+        //        if  audioEngine.isRunning {
         recognitionRequest?.shouldReportPartialResults = false
         audioEngine.inputNode.removeTap(onBus: 0)
         audioEngine.stop()
         recognitionRequest?.endAudio()
+        //        }
         
         // 1
         // Audio session, to get information from the microphone.
@@ -118,6 +129,7 @@ import AVFoundation
             try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: .defaultToSpeaker)
             try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         } catch {
+            print("audioSession properties weren't set because of an error.")
         }
         
         let inputNode = audioEngine.inputNode
@@ -153,12 +165,14 @@ import AVFoundation
             self.message = result.bestTranscription.formattedString
             self.detectionTimer?.invalidate()
             
+            print("Outside")
             print(result.bestTranscription.formattedString as Any)
             print(result.isFinal)
             
             if let timer = self.detectionTimer, timer.isValid {
                 if result.isFinal {
                     // pull out the best transcription...
+                    print("Inside")
                     print(result.bestTranscription.formattedString as Any)
                     print(result.isFinal)
                     
@@ -172,6 +186,7 @@ import AVFoundation
             } else {
                 self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (timer) in
                     //                    isFinal = true
+                    print("Timer called")
                     Loading.sharedInstance.hideLoader()
                     
                     print(self.message)
@@ -210,7 +225,7 @@ import AVFoundation
         speechSynthesizer.delegate = self
         
         let speechUtterance = AVSpeechUtterance(string: messageToSpeak)
-        speechUtterance.voice = AVSpeechSynthesisVoice(language: Constants.enUS) // en-GB -> MAle , en-US -> Female
+        speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US") // en-GB -> MAle , en-US -> Female
         
         speechUtterance.rate = 0.5
         //        speechUtterance.pitchMultiplier = 0.5
@@ -238,7 +253,7 @@ import AVFoundation
     // 4
     // Stop Recording
     func showLoading(){
-        let alert = UIAlertController(title: nil, message: Constants.Listening, preferredStyle: .alert)
+        let alert = UIAlertController(title: nil, message: "Listening...", preferredStyle: .alert)
         
         let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
         loadingIndicator.hidesWhenStopped = true
@@ -258,6 +273,7 @@ import AVFoundation
 
 extension AppDelegate: AVSpeechSynthesizerDelegate {
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
+        print("all done")
         
         TTS_Result!(1);
     }

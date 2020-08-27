@@ -2,19 +2,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_query.dart' as query;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_query.dart' as query;
 
 class HealthReportListScreen extends StatefulWidget {
   final CompleteData completeData;
@@ -124,6 +126,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
             }
           },
           onTap: () {
+            print(widget.allowSelect);
             if (widget.allowSelect) {
               bool condition;
               if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
@@ -163,8 +166,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               children: <Widget>[
                 ClipOval(
                     child: mediaMetaInfoObj.metaInfo.doctor != null
-                        ? CommonUtil().getDoctorProfileImageWidget(
-                            mediaMetaInfoObj.metaInfo.doctor.id)
+                        ? getDoctorProfileImageWidget(mediaMetaInfoObj)
                         : Container(
                             width: 50,
                             height: 50,

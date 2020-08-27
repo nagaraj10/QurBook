@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -215,11 +216,9 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       PreferenceUtil.save("user_details", saveuser);
 
       authToken = decodesstring;
-      FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+      String deviceId = await DeviceId.getID;
 
-      final token = await _firebaseMessaging.getToken();
-      CommonUtil()
-          .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
+      sendDeviceToken(userId, saveuser.email, user_mobile_no, deviceId)
           .then((value) {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
@@ -262,8 +261,6 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
     FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
     final token = await _firebaseMessaging.getToken();
-    print('Firebase Token from Login Page $token');
-
     Map<String, dynamic> deviceInfo = new Map();
     Map<String, dynamic> user = new Map();
     Map<String, dynamic> jsonData = new Map();
@@ -288,8 +285,7 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
 
     print(params.toString());
 
-    final response =
-        await apiBaseHelper.postDeviceId('device-info', params, true);
+    final response = await apiBaseHelper.postDeviceId('device-info', params);
     return DeviceInfoSucess.fromJson(response);
   }
 }

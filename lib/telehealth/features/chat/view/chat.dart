@@ -6,21 +6,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
-import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/GetMediaURLViewModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
@@ -90,7 +83,7 @@ class ChatState extends State<Chat> {
                   AnimatedSwitcher(
                     duration: Duration(milliseconds: 10),
                     child: Container(
-                      width: MediaQuery.of(context).size.width * 0.67,
+                      width: MediaQuery.of(context).size.width * 0.76,
                       child: _patientDetailOrSearch(),
                     ),
                   ),
@@ -169,13 +162,13 @@ class ChatState extends State<Chat> {
                         maxLines: 1,
                         style: TextStyle(
                             fontFamily: 'Poppins', color: Colors.white)),
-                    /*Text(
+                    Text(
                       '#123232',
                       style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 12,
                           color: Colors.white),
-                    ),*/
+                    ),
                     Text(
                       'Last visit date June 07,2020',
                       overflow: TextOverflow.ellipsis,
@@ -273,14 +266,12 @@ class ChatScreenState extends State<ChatScreen> {
   final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
   List<String> recordIds = new List();
-  GetMediaFileViewModel getMediaFileViewModel = GetMediaFileViewModel();
-  FlutterToast toast = new FlutterToast();
 
   @override
   void initState() {
     super.initState();
-
     focusNode.addListener(onFocusChange);
+
     groupChatId = '';
 
     isLoading = false;
@@ -292,35 +283,12 @@ class ChatScreenState extends State<ChatScreen> {
 
   }
 
-  getMediaURL(List<String> recordIds) {
-    getMediaFileURL(recordIds).then((value) {
-      if (value.status == 200 && value.success == true) {
-        for(int i = 0;i<value.response.data.mediaMasterInfo.length;i++){
-          String fileType = value.response.data.mediaMasterInfo[i].fileType;
-          String fileURL = value.response.data.mediaMasterInfo[i].fileContent;
-          if((fileType=='.jpg')||(fileType=='.png')){
-            onSendMessage(fileURL, 1);
-          }
-        }
-
-      } else {
-        toast.getToast('Unable to get file', Colors.red);
-      }
-    });
-  }
-
-  Future<GetMetaFileURLModel> getMediaFileURL(
-      List<String> recordIds) async {
-    GetMetaFileURLModel getMetaFileURLModel =
-    await getMediaFileViewModel.getMediaMetaURL(recordIds,patientId);
-
-    return getMetaFileURLModel;
-  }
-
   Future<String> getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.response.data.generalInfo.name;
+    print('patient_id: '+patientId);
+    print('patient_name: '+patientName);
   }
 
   void onFocusChange() {
@@ -346,7 +314,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
     Firestore.instance
         .collection('users')
-        .document(id==""?patientId:id)
+        .document(id)
         .updateData({'chattingWith': peerId});
 
     setState(() {});
@@ -393,7 +361,6 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void onSendMessage(String content, int type) {
-    print('patientId'+patientId);
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       textEditingController.clear();
@@ -408,7 +375,7 @@ class ChatScreenState extends State<ChatScreen> {
         await transaction.set(
           documentReference,
           {
-            'idFrom': id==""?patientId:id,
+            'idFrom': id,
             'idTo': peerId,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
@@ -453,13 +420,13 @@ class ChatScreenState extends State<ChatScreen> {
       //'photoUrl': 'http://lorempixel.com/640/360',
       'id':patientId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-      'lastMessage': content
+      'lastMessage': content,
     });
 
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
-    if (document['idFrom'] == patientId) {
+    if (document['idFrom'] == id) {
       // Right (my message)
       return Row(
         children: <Widget>[
@@ -738,7 +705,7 @@ class ChatScreenState extends State<ChatScreen> {
   bool isLastMessageLeft(int index) {
     if ((index > 0 &&
             listMessage != null &&
-            listMessage[index - 1]['idFrom'] == patientId) ||
+            listMessage[index - 1]['idFrom'] == id) ||
         index == 0) {
       return true;
     } else {
@@ -749,7 +716,7 @@ class ChatScreenState extends State<ChatScreen> {
   bool isLastMessageRight(int index) {
     if ((index > 0 &&
             listMessage != null &&
-            listMessage[index - 1]['idFrom'] != patientId) ||
+            listMessage[index - 1]['idFrom'] != id) ||
         index == 0) {
       return true;
     } else {
@@ -765,7 +732,7 @@ class ChatScreenState extends State<ChatScreen> {
     } else {
       Firestore.instance
           .collection('users')
-          .document(id==""?patientId:id)
+          .document(id)
           .updateData({'chattingWith': null});
       Navigator.pop(context);
     }
@@ -965,7 +932,6 @@ class ChatScreenState extends State<ChatScreen> {
                       height: 50,
                       child: FlatButton(
                           onPressed: () {
-                            recordIds.clear();
                             FetchRecords(
                                 0,
                                 true,
@@ -1069,6 +1035,7 @@ class ChatScreenState extends State<ChatScreen> {
   }*/
 
   Widget buildListMessage() {
+    print('group_chat_id'+groupChatId);
     return Flexible(
       child: groupChatId == ''
           ? Center(
@@ -1119,7 +1086,6 @@ class ChatScreenState extends State<ChatScreen> {
         isAudioSelect: isAudioSelect,
         isNotesSelect: isNotesSelect,
         selectedMedias: mediaIds,
-        isFromChat: true,
       ),
     ))
         .then((results) {
@@ -1129,7 +1095,6 @@ class ChatScreenState extends State<ChatScreen> {
 
         if (allowSelect) {
           recordIds = results['metaId'].cast<String>();
-          getMediaURL(recordIds);
         }
         //print(recordIdCount);
         setState(() {});

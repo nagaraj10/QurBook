@@ -8,6 +8,7 @@ import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
+import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -128,15 +129,12 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val MEETING_ID = data[getString(R.string.meetid)]
         val USER_NAME = data[getString(R.string.username)]
         val NS_TIMEOUT = 30 * 1000L
-        val ack_sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+
 
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)
             val channelAck = NotificationChannel(CHANNEL_ACK, getString(R.string.channel_ack), NotificationManager.IMPORTANCE_DEFAULT)
             channelAck.description = getString(R.string.channel_ack_desc)
-            val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
-            channelAck.setSound(ack_sound,attributes)
             manager.createNotificationChannel(channelAck)
         }
 
@@ -146,9 +144,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
                 .setContentTitle(data[getString(R.string.pro_ns_title)])
                 .setContentText(data[getString(R.string.pro_ns_body)])
-                .setSound(ack_sound)
-                .setAutoCancel(false)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .setAutoCancel(true)
+                .setDefaults(NotificationCompat.DEFAULT_SOUND)
                 .build()
         nsManager.notify(NS_ID,notification)
     }

@@ -1,3 +1,11 @@
+
+
+import 'dart:convert';
+
+FollowOnDate followOnDateFromJson(String str) => FollowOnDate.fromJson(json.decode(str));
+
+String followOnDateToJson(FollowOnDate data) => json.encode(data.toJson());
+
 class FollowOnDate {
   FollowOnDate({
     this.status,
@@ -11,22 +19,19 @@ class FollowOnDate {
   String message;
   Response response;
 
-  FollowOnDate.fromJson(Map<String, dynamic> json) {
-    status = json["status"];
-    success = json["success"];
-    message = json["message"];
-    response =
-        json["response"] == null ? null : Response.fromJson(json["response"]);
-  }
+  factory FollowOnDate.fromJson(Map<String, dynamic> json) => FollowOnDate(
+    status: json["status"],
+    success: json["success"],
+    message: json["message"],
+    response: Response.fromJson(json["response"]),
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["status"] = status;
-    data["success"] = success;
-    data["message"] = message;
-    data["response"] = response.toJson();
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    "status": status,
+    "success": success,
+    "message": message,
+    "response": response.toJson(),
+  };
 }
 
 class Response {
@@ -38,17 +43,15 @@ class Response {
   int count;
   Data data;
 
-  Response.fromJson(Map<String, dynamic> json) {
-    count = json["count"];
-    data = json["data"] == null ? null : Data.fromJson(json["data"]);
-  }
+  factory Response.fromJson(Map<String, dynamic> json) => Response(
+    count: json["count"],
+    data: Data.fromJson(json["data"]),
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["count"] = count;
-    data["data"] = this.data.toJson();
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    "count": count,
+    "data": data.toJson(),
+  };
 }
 
 class Data {
@@ -96,51 +99,49 @@ class Data {
   DateTime lastModifiedOn;
   String lastModifiedBy;
 
-  Data.fromJson(Map<String, dynamic> json) {
-    id = json["id"];
-    bookingId = json["bookingID"];
-    createdBy = json["createdBy"];
-    createdFor = json["createdFor"];
-    doctorSessionId = json["doctorSessionId"];
-    plannedStartDateTime = DateTime.parse(json["plannedStartDateTime"]);
-    plannedEndDateTime = DateTime.parse(json["plannedEndDateTime"]);
-    plannedFollowupDate = DateTime.parse(json["plannedFollowupDate"]);
-    actualStartDateTime = json["actualStartDateTime"];
-    actualEndDateTime = json["actualEndDateTime"];
-    statusId = json["statusId"];
-    slotNumber = json["slotNumber"];
-    isMedicalRecordsShared = json["isMedicalRecordsShared"];
-    sharedMedicalRecordsId = json["sharedMedicalRecordsId"];
-    isActive = json["isActive"];
-    isFollowUpFee = json["isFollowUpFee"];
-    isFollowUp = json["isFollowUp"];
-    createdOn = DateTime.parse(json["createdOn"]);
-    lastModifiedOn = DateTime.parse(json["lastModifiedOn"]);
-    lastModifiedBy = json["lastModifiedBy"];
-  }
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
+    id: json["id"],
+    bookingId: json["bookingID"],
+    createdBy: json["createdBy"],
+    createdFor: json["createdFor"],
+    doctorSessionId: json["doctorSessionId"],
+    plannedStartDateTime: DateTime.parse(json["plannedStartDateTime"]),
+    plannedEndDateTime: DateTime.parse(json["plannedEndDateTime"]),
+    plannedFollowupDate: DateTime.parse(json["plannedFollowupDate"]),
+    actualStartDateTime: json["actualStartDateTime"],
+    actualEndDateTime: json["actualEndDateTime"],
+    statusId: json["statusId"],
+    slotNumber: json["slotNumber"],
+    isMedicalRecordsShared: json["isMedicalRecordsShared"],
+    sharedMedicalRecordsId: json["sharedMedicalRecordsId"],
+    isActive: json["isActive"],
+    isFollowUpFee: json["isFollowUpFee"],
+    isFollowUp: json["isFollowUp"],
+    createdOn: DateTime.parse(json["createdOn"]),
+    lastModifiedOn: DateTime.parse(json["lastModifiedOn"]),
+    lastModifiedBy: json["lastModifiedBy"],
+  );
 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["id"] = id;
-    data["bookingID"] = bookingId;
-    data["createdBy"] = createdBy;
-    data["createdFor"] = createdFor;
-    data["doctorSessionId"] = doctorSessionId;
-    data["plannedStartDateTime"] = plannedStartDateTime.toIso8601String();
-    data["plannedEndDateTime"] = plannedEndDateTime.toIso8601String();
-    data["plannedFollowupDate"] = plannedFollowupDate.toIso8601String();
-    data["actualStartDateTime"] = actualStartDateTime;
-    data["actualEndDateTime"] = actualEndDateTime;
-    data["statusId"] = statusId;
-    data["slotNumber"] = slotNumber;
-    data["isMedicalRecordsShared"] = isMedicalRecordsShared;
-    data["sharedMedicalRecordsId"] = sharedMedicalRecordsId;
-    data["isActive"] = isActive;
-    data["isFollowUpFee"] = isFollowUpFee;
-    data["isFollowUp"] = isFollowUp;
-    data["createdOn"] = createdOn.toIso8601String();
-    data["lastModifiedOn"] = lastModifiedOn.toIso8601String();
-    data["lastModifiedBy"] = lastModifiedBy;
-    return data;
-  }
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "bookingID": bookingId,
+    "createdBy": createdBy,
+    "createdFor": createdFor,
+    "doctorSessionId": doctorSessionId,
+    "plannedStartDateTime": plannedStartDateTime.toIso8601String(),
+    "plannedEndDateTime": plannedEndDateTime.toIso8601String(),
+    "plannedFollowupDate": plannedFollowupDate.toIso8601String(),
+    "actualStartDateTime": actualStartDateTime,
+    "actualEndDateTime": actualEndDateTime,
+    "statusId": statusId,
+    "slotNumber": slotNumber,
+    "isMedicalRecordsShared": isMedicalRecordsShared,
+    "sharedMedicalRecordsId": sharedMedicalRecordsId,
+    "isActive": isActive,
+    "isFollowUpFee": isFollowUpFee,
+    "isFollowUp": isFollowUp,
+    "createdOn": createdOn.toIso8601String(),
+    "lastModifiedOn": lastModifiedOn.toIso8601String(),
+    "lastModifiedBy": lastModifiedBy,
+  };
 }
