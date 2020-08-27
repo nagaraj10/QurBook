@@ -8,11 +8,16 @@ import 'dart:convert' show json;
 import 'package:myfhb/constants/fhb_query.dart' as query;
 
 class SyncGoogleFitData {
-  GoogleFitData _gfHelper;
+  FetchGoogleFitData _gfHelper;
   DeviceHealthRecord _deviceHealthRecord;
 
   SyncGoogleFitData() {
-    _gfHelper = GoogleFitData();
+    _gfHelper = FetchGoogleFitData();
+  }
+//for mockito unit testing
+  SyncGoogleFitData.forTest(var gfHelper, DeviceHealthRecord deviceHelper) {
+    _gfHelper = gfHelper;
+    _deviceHealthRecord = deviceHelper;
   }
 
   Future<void> activateGF() async {
@@ -20,7 +25,7 @@ class SyncGoogleFitData {
     await _gfHelper.signIn();
     if (!signedIn) {
       await _gfHelper.signIn();
-    } 
+    }
   }
 
   Future<void> deactivateGF() async {
@@ -40,14 +45,16 @@ class SyncGoogleFitData {
     var startT = new DateTime(currentdate.year, currentdate.month - 2,
         currentdate.day, currentdate.hour, currentdate.minute);
 
-    if (lastSynctime == null) {
+    startTime = startT.millisecondsSinceEpoch.toString();
+
+    /*  if (lastSynctime == null) {
       startTime = startT.millisecondsSinceEpoch.toString();
     } else {
       var newstartT = new DateTime(lastSynctime.year, lastSynctime.month,
           lastSynctime.day, lastSynctime.hour, lastSynctime.minute + 1);
       startTime = newstartT.millisecondsSinceEpoch.toString();
       // To do handle more than 3 months logic
-    }
+    }  */
     try {
       String bpParams = await _gfHelper.getBPSummary(startTime, endTime);
       if (bpParams != null) {
@@ -67,8 +74,7 @@ class SyncGoogleFitData {
       if (heartRateParams != null) {
         response = await postGFData(heartRateParams);
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> postGFData(String params) async {
@@ -78,8 +84,7 @@ class SyncGoogleFitData {
       var response = await _deviceHealthRecord.postDeviceData(params);
 
       return response;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> getLastSynctime() async {
@@ -91,7 +96,6 @@ class SyncGoogleFitData {
       LastSync lastSync = lastSyncFromJson(jsonstr);
       if (!lastSync.isSuccess) return null;
       return lastSync.result[0].lastSyncDateTime;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 }
