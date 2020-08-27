@@ -476,7 +476,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   Widget buildItem(int index, DocumentSnapshot document) {
     if (document['idFrom'] == patientId) {
-      // Right (my message)
       return Row(
         children: <Widget>[
           document['type'] == 0
