@@ -37,6 +37,7 @@ class PushNotificationsProvider {
   initNotification() async {
     await _firebaseMessaging.requestNotificationPermissions();
     final token = await _firebaseMessaging.getToken();
+    print('Token : $token');
 
     initLocalNotification();
 
@@ -86,12 +87,14 @@ class PushNotificationsProvider {
     ringtone = message['aps']['sound'];
 
     final userName = message['username'];
-    final channelName = message['meetingid'];
+    final channelName = message['meeting_id'];
+    final doctorId = message['doctorId'];
 
     callArguments = CallArguments(
         role: ClientRole.Broadcaster,
         channelName: channelName,
-        userName: userName);
+        userName: userName,
+        doctorId: doctorId);
 
     showLocalNotification();
   }
@@ -101,12 +104,14 @@ class PushNotificationsProvider {
 
     Future.delayed(const Duration(seconds: 3), () {
       final userName = message['username'];
-      final channelName = message['meetingid'];
+      final channelName = message['meeting_id'];
+      final doctorId = message['doctorId'];
 
       var callArguments = CallArguments(
           role: ClientRole.Broadcaster,
           channelName: channelName,
-          userName: userName);
+          userName: userName,
+          doctorId: doctorId);
       _pushStreamCOntroller.sink.add(callArguments);
     });
   }
@@ -114,12 +119,14 @@ class PushNotificationsProvider {
   Future<dynamic> onResume(Map<String, dynamic> message) async {
     print("OnResume New: $message");
     final userName = message['username'];
-    final channelName = message['meetingid'];
+    final channelName = message['meeting_id'];
+    final doctorId = message['doctorId'];
 
     var callArguments = CallArguments(
         role: ClientRole.Broadcaster,
         channelName: channelName,
-        userName: userName);
+        userName: userName,
+        doctorId: doctorId);
     _pushStreamCOntroller.sink.add(callArguments);
   }
 

@@ -14,6 +14,7 @@ import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -127,7 +128,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         )),
                     BottomNavigationBarItem(
                         icon: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChatHomeScreen()));
+                            },
                             child: ImageIcon(
                               AssetImage(variable.icon_chat),
                               color: Colors.black54,

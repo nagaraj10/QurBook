@@ -26,12 +26,13 @@ class Chat extends StatefulWidget {
   final String peerId;
   final String peerAvatar;
   final String peerName;
+  final String lastDate;
 
   Chat(
       {Key key,
       @required this.peerId,
       @required this.peerAvatar,
-      @required this.peerName})
+        @required this.peerName, @required this.lastDate})
       : super(key: key);
 
   @override
@@ -52,6 +53,7 @@ class ChatState extends State<Chat> {
         peerId: widget.peerId,
         peerAvatar: widget.peerAvatar,
         peerName: widget.peerName,
+        lastDate: widget.lastDate,
       ),
     );
   }
@@ -173,7 +175,9 @@ class ChatState extends State<Chat> {
                           color: Colors.white),
                     ),*/
                     Text(
-                      'Last visit date June 07,2020',
+                      widget.lastDate!=null?'Last visit date on '+DateFormat('dd MMM kk:mm').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(widget.lastDate))):'',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
@@ -181,7 +185,7 @@ class ChatState extends State<Chat> {
                           fontSize: 10,
                           color: Colors.white),
                     ),
-                    Text(
+                    /*Text(
                       'Next appointment date Jul 15,2020',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -189,7 +193,7 @@ class ChatState extends State<Chat> {
                           fontFamily: 'Poppins',
                           fontSize: 10,
                           color: Colors.white),
-                    )
+                    )*/
                   ],
                 ),
               ))
@@ -236,17 +240,18 @@ class ChatScreen extends StatefulWidget {
   final String peerId;
   final String peerAvatar;
   final String peerName;
+  final String lastDate;
 
   ChatScreen(
       {Key key,
       @required this.peerId,
       @required this.peerAvatar,
-      @required this.peerName})
+      @required this.peerName,@required this.lastDate})
       : super(key: key);
 
   @override
   State createState() => ChatScreenState(
-      peerId: peerId, peerAvatar: peerAvatar, peerName: peerName);
+      peerId: peerId, peerAvatar: peerAvatar, peerName: peerName,lastDate: lastDate);
 }
 
 class ChatScreenState extends State<ChatScreen> {
@@ -254,12 +259,13 @@ class ChatScreenState extends State<ChatScreen> {
       {Key key,
       @required this.peerId,
       @required this.peerAvatar,
-      @required this.peerName});
+      @required this.peerName, @required this.lastDate});
 
   String peerId;
   String peerAvatar;
   String peerName;
   String id;
+  String lastDate;
 
   var listMessage;
   String groupChatId;
@@ -394,6 +400,7 @@ class ChatScreenState extends State<ChatScreen> {
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
     storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
       imageUrl = downloadUrl;
+      imageUrl = downloadUrl;
       setState(() {
         isLoading = false;
         onSendMessage(imageUrl, 1);
@@ -446,8 +453,8 @@ class ChatScreenState extends State<ChatScreen> {
         .collection('user_list')
         .document(peerId)
         .setData({
-      'nickname': widget.peerName != null ? widget.peerName : '',
-      'photoUrl': widget.peerAvatar != null ? widget.peerAvatar : '',
+      'nickname': peerName != null ? peerName : '',
+      'photoUrl': peerAvatar != null ? peerAvatar : '',
       'id': peerId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       'lastMessage': content
@@ -469,7 +476,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   Widget buildItem(int index, DocumentSnapshot document) {
     if (document['idFrom'] == patientId) {
-      // Right (my message)
       return Row(
         children: <Widget>[
           document['type'] == 0

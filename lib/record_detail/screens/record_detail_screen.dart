@@ -5,8 +5,8 @@ import 'dart:typed_data';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:http/http.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -35,6 +35,7 @@ import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/imageSlider.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
@@ -373,27 +374,55 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   void saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
     //check the storage permission for both android and ios!
+    //request gallery permission
+    String albumName = 'Media';
+    bool downloadStatus = false;
+    PermissionStatus storagePermission = Platform.isAndroid
+        ? await Permission.storage.status
+        : await Permission.photos.status;
+    if (storagePermission.isUndetermined || storagePermission.isRestricted) {
+      Platform.isAndroid
+          ? await Permission.storage.request()
+          : await Permission.photos.request();
+    }
+    var _currentImage;
     Scaffold.of(contxt).showSnackBar(SnackBar(
-      content: Text(variable.strDownloadStart),
+      content: const Text(variable.strDownloadStart),
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
     ));
 
     if (imagesPathMain.length > 1) {
       for (int i = 0; i < imagesPathMain.length; i++) {
-        await ImageGallerySaver.saveImage(imagesPathMain[i]);
+        _currentImage = imagesPathMain[i];
+        _currentImage =
+            '${_currentImage.response.data.fileContent}.${_currentImage.response.data.fileType}';
+        GallerySaver.saveImage(_currentImage, albumName: albumName)
+            .then((value) => downloadStatus = value);
       }
-      Scaffold.of(contxt).showSnackBar(SnackBar(
-        content: Text(variable.strFilesDownloaded),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-      ));
-    } else {
-      await ImageGallerySaver.saveImage(imagesPathMain[0]).then((res) {
+      if (downloadStatus) {
         Scaffold.of(contxt).showSnackBar(SnackBar(
-          content: Text(variable.strFilesView),
+          content: const Text(variable.strFilesDownloaded),
           backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         ));
-        return;
+      }
+    } else {
+      _currentImage = imagesPathMain[0];
+      _currentImage =
+          '${_currentImage.response.data.fileContent}${_currentImage.response.data.fileType}';
+      GallerySaver.saveImage(_currentImage, albumName: albumName).then((value) {
+        if (value) {
+          Scaffold.of(contxt).showSnackBar(SnackBar(
+            content: const Text(variable.strFilesView),
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          ));
+        }
       });
+//      var appDocDir = await getTemporaryDirectory();
+//      await Dio().download(_currentImage, appDocDir.path);
+//      await ImageGallerySaver.saveFile(appDocDir.path).then((res) {
+//        print('image saving status $res');
+
+//      });
     }
   }
 

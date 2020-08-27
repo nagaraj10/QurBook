@@ -15,7 +15,9 @@ class MyControllers extends StatefulWidget {
   Function(bool, bool) controllerState;
   bool muted;
   bool _isHideMyVideo;
-  MyControllers(this.callStatus, this.role, this.isAppExists,
+  String doctorId;
+
+  MyControllers(this.callStatus, this.role, this.isAppExists, this.doctorId,
       this.controllerState, this.muted, this._isHideMyVideo);
 
   @override

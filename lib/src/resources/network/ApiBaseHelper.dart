@@ -21,7 +21,6 @@ import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.d
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
-import 'package:myfhb/telehealth/features/followUp/model/followUpResponse.dart';
 
 import 'AppException.dart';
 
@@ -903,38 +902,6 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getApiForresheduleAppointment(
-      String url, String jsonBody) async {
-    var responseJson;
-    try {
-//      print(authtoken);
-//      print(url);
-//      print(jsonBody);
-      final response = await http.put(_baseUrl + url,
-          headers: await headerRequest.getRequestHeadersTimeSlot(),
-          body: jsonBody);
-//      print(_baseUrl+url);
-//      print(jsonBody);
-      print(response.body);
-      responseJson = _returnResponse(response);
-    } on SocketException {
-      throw FetchDataException(variable.strNoInternet);
-    }
-    return responseJson;
-  }
-
-  Future<FollowOnDate> followUpAppointment(String id, String date) async {
-    var inputBody = {};
-    inputBody[FOLLOWID] = id;
-    inputBody[FOLLOWONDATE] = date;
-
-    var jsonString = convert.jsonEncode(inputBody);
-    print(jsonString);
-    final response = await getApiForfollowUpAppointment(
-        qr_follow_up_appointment, jsonString);
-    return FollowOnDate.fromJson(response);
-  }
-
-  Future<dynamic> getApiForfollowUpAppointment(
       String url, String jsonBody) async {
     var responseJson;
     try {
