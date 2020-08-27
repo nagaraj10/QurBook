@@ -334,7 +334,7 @@ const String strlastSyncDateTime = 'lastSyncDateTime';
 const String strStartTimeStamp = "startDateTime";
 const String strEndTimeStamp = "endDateTime";
 const String is_Success = "isSuccess";
-const String strsourcetype = "sourcetype";
+const String strsourcetype = "sourceType";
 
 //Data Params for device readings
 //BP
@@ -458,3 +458,4 @@ const String strHRate = "heartRate";
 const String strOxygen = "oxygenSaturation";
 
 const String strentities = "entities";
+const String strUser = "user";

@@ -7,6 +7,8 @@ import 'package:myfhb/device_integration/model/googleFitPoint.dart';
 import 'package:myfhb/device_integration/model/googleFitBucket.dart';
 import 'dart:async';
 import 'dart:convert' show json;
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class GoogleFitData {
   GoogleSignInHelper _signInHelper;
@@ -62,6 +64,11 @@ class GoogleFitData {
     final responseHandler = ResponseFromJson(response);
     Map<String, dynamic> healthRecord = new Map();
 
+    Map<String, dynamic> userData = new Map();
+    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    healthRecord[strUser] = userData;
+
     for (Bucket bucket in responseHandler.bucket) {
       healthRecord[strsyncStartDate] =
           getFormatedDateFromMicro(bucket.startTimeMillis);
@@ -100,6 +107,10 @@ class GoogleFitData {
 
     final responseHandler = ResponseFromJson(response);
     Map<String, dynamic> healthRecord = new Map();
+    Map<String, dynamic> userData = new Map();
+    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    healthRecord[strUser] = userData;
 
     for (Bucket bucket in responseHandler.bucket) {
       healthRecord[strsyncStartDate] =
@@ -140,6 +151,11 @@ class GoogleFitData {
 
     final responseHandler = ResponseFromJson(response);
     Map<String, dynamic> healthRecord = new Map();
+
+    Map<String, dynamic> userData = new Map();
+    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    healthRecord[strUser] = userData;
 
     for (Bucket bucket in responseHandler.bucket) {
       healthRecord[strsyncStartDate] =
@@ -182,6 +198,11 @@ class GoogleFitData {
     final responseHandler = ResponseFromJson(response);
     Map<String, dynamic> healthRecord = new Map();
 
+    Map<String, dynamic> userData = new Map();
+    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    healthRecord[strUser] = userData;
+
     for (Bucket bucket in responseHandler.bucket) {
       healthRecord[strsyncStartDate] =
           getFormatedDateFromMicro(bucket.startTimeMillis);
@@ -222,6 +243,11 @@ class GoogleFitData {
     final responseHandler = ResponseFromJson(response);
     Map<String, dynamic> healthRecord = new Map();
 
+    Map<String, dynamic> userData = new Map();
+    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    healthRecord[strUser] = userData;
+
     for (Bucket bucket in responseHandler.bucket) {
       healthRecord[strsyncStartDate] =
           getFormatedDateFromMicro(bucket.startTimeMillis);
@@ -260,6 +286,11 @@ class GoogleFitData {
 
     final responseHandler = ResponseFromJson(response);
     Map<String, dynamic> healthRecord = new Map();
+
+    Map<String, dynamic> userData = new Map();
+    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    healthRecord[strUser] = userData;
 
     for (Bucket bucket in responseHandler.bucket) {
       healthRecord[strsyncStartDate] =
