@@ -212,18 +212,13 @@ class _CallPageState extends State<CallPage> {
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
-        _expandedVideoRow([attendees[1]]),
+        Container(child: attendees[1]),
         SizedBox(
           width: 150,
           height: 200,
           child: Container(
-            margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-            child: Stack(
-              children: [
-                _expandedVideoRow([attendees[0]]),
-              ],
-            ),
-          ),
+              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: attendees[0]),
         ),
       ],
     );
