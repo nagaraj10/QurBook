@@ -241,7 +241,7 @@ class MainActivity : FlutterActivity() {
         sharedValue = intent.getStringExtra(Intent.EXTRA_TEXT)
         username = intent.getStringExtra(getString(R.string.username))
         docId = intent.getStringExtra(getString(R.string.docId))
-        sharedValue="$sharedValue&$username-$docId"
+        sharedValue="$sharedValue&$username&$docId"
         if (::mEventChannel.isInitialized){mEventChannel.success(sharedValue)}
         Log.d(TAG, "passed text from intent filter ${sharedValue!!}")
     }
