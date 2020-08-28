@@ -549,6 +549,8 @@ const redirecturl = 'http://localhost:4200/callback?code=';
 const String strNoDoctordata = 'No Doctor List Available';
 const String strNoAppointments = 'No Appoinments Available';
 
+const String strNoDataAvailable = 'Unable To load';
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   final parts = token.split('.');

@@ -811,7 +811,6 @@ class ApiBaseHelper {
           body: jsonBody);
       print(_baseUrl + url);
       responseJson = _returnResponse(response);
-      print(responseJson+' *************');
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -960,9 +959,7 @@ class ApiBaseHelper {
         body: jsonString,
         headers: await headerRequest.getRequestHeadersAuthContent(),
       );
-      print(response);
       responseJson = _returnResponse(response);
-      print(responseJson + '**************');
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }

@@ -178,7 +178,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.ERROR:
             rebuildBlockObject();
-            return Text('', style: TextStyle(color: Colors.red));
+            return Text(
+                variable.strNoDataAvailable + ' ' + CommonConstants.doctors,
+                style: TextStyle(color: Colors.red));
             break;
 
           case Status.COMPLETED:
@@ -217,7 +219,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.ERROR:
             rebuildBlockObject();
-            return Text(variable.strNoLoadtabls,
+            return Text(
+                variable.strNoDataAvailable + ' ' + CommonConstants.hospitals,
                 style: TextStyle(color: Colors.red));
             break;
 
@@ -257,7 +260,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.ERROR:
             rebuildBlockObject();
-            return Text(variable.strNoLoadtabls,
+            return Text(
+                variable.strNoDataAvailable + ' ' + CommonConstants.labs,
                 style: TextStyle(color: Colors.red));
             break;
 
