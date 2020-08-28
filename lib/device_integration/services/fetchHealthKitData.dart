@@ -3,8 +3,11 @@ import 'dart:async';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'dart:convert' show json;
 import 'package:quiver/iterables.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class FetchHealthKitData {
+  String _userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
   Future<bool> activateHKT() async {
     try {
       bool ret = await Health.requestAuthorization();
@@ -18,6 +21,12 @@ class FetchHealthKitData {
     if (await Health.requestAuthorization()) {
       try {
         Map<String, dynamic> healthRecord = new Map();
+
+        Map<String, dynamic> userData = new Map();
+        userData[strId] = _userID;
+
+        healthRecord[strUser] = userData;
+
         List<HealthDataPoint> healthData = await Health.getHealthDataFromType(
             startDate, endDate, HealthDataType.WEIGHT);
         if (healthData.isNotEmpty) {
@@ -56,6 +65,12 @@ class FetchHealthKitData {
             startDate, endDate, HealthDataType.HEART_RATE);
         healthData = Health.removeDuplicates(healthData);
         Map<String, dynamic> healthRecord = new Map();
+
+        Map<String, dynamic> userData = new Map();
+        userData[strId] = _userID;
+
+        healthRecord[strUser] = userData;
+
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
@@ -96,6 +111,12 @@ class FetchHealthKitData {
         diastolicData = Health.removeDuplicates(diastolicData);
 
         Map<String, dynamic> healthRecord = new Map();
+
+        Map<String, dynamic> userData = new Map();
+        userData[strId] = _userID;
+
+        healthRecord[strUser] = userData;
+
         if (systolicData.isNotEmpty && diastolicData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
@@ -136,6 +157,12 @@ class FetchHealthKitData {
 
         //healthData.forEach((list) => print("list for GLuecose: $list \n \n"));
         Map<String, dynamic> healthRecord = new Map();
+
+        Map<String, dynamic> userData = new Map();
+        userData[strId] = _userID;
+
+        healthRecord[strUser] = userData;
+
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
@@ -158,8 +185,7 @@ class FetchHealthKitData {
           String params = json.encode(healthRecord);
           return params;
         }
-      } catch (exception) {
-      }
+      } catch (exception) {}
     }
   }
 
@@ -175,6 +201,12 @@ class FetchHealthKitData {
 
         // healthData.forEach((list) => print("list for GLuecose: $list \n \n"));
         Map<String, dynamic> healthRecord = new Map();
+
+        Map<String, dynamic> userData = new Map();
+        userData[strId] = _userID;
+
+        healthRecord[strUser] = userData;
+
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
@@ -195,8 +227,7 @@ class FetchHealthKitData {
           String params = json.encode(healthRecord);
           return params;
         }
-      } catch (exception) {
-      }
+      } catch (exception) {}
     }
   }
 
@@ -211,6 +242,12 @@ class FetchHealthKitData {
 
         //healthData.forEach((list) => print("list for GLuecose: $list \n \n"));
         Map<String, dynamic> healthRecord = new Map();
+
+        Map<String, dynamic> userData = new Map();
+        userData[strId] = _userID;
+
+        healthRecord[strUser] = userData;
+
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
@@ -235,8 +272,7 @@ class FetchHealthKitData {
           String params = json.encode(healthRecord);
           print(params);
         }
-      } catch (exception) {
-      }
+      } catch (exception) {}
     }
   }
 }

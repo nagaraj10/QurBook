@@ -12,6 +12,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class GoogleFitData {
   GoogleSignInHelper _signInHelper;
+  String _userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
   GoogleFitData() {
     _signInHelper = GoogleSignInHelper();
@@ -25,14 +26,14 @@ class GoogleFitData {
   Future<bool> signIn() async {
     bool ret = false;
 
-    if(await isSignedIn()){
+    if (await isSignedIn()) {
       return await _signInHelper.handleScopes();
     }
     ret = await _signInHelper.handleSignIn();
-    if(ret){
-        ret = await _signInHelper.handleScopes();
+    if (ret) {
+      ret = await _signInHelper.handleScopes();
     }
-    return ret;   
+    return ret;
   }
 
   Future<bool> signOut() async {
@@ -73,7 +74,7 @@ class GoogleFitData {
     Map<String, dynamic> healthRecord = new Map();
 
     Map<String, dynamic> userData = new Map();
-    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    userData[strId] = _userID;
 
     healthRecord[strUser] = userData;
 
@@ -116,7 +117,7 @@ class GoogleFitData {
     final responseHandler = ResponseFromJson(response);
     Map<String, dynamic> healthRecord = new Map();
     Map<String, dynamic> userData = new Map();
-    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    userData[strId] = _userID;
 
     healthRecord[strUser] = userData;
 
@@ -161,7 +162,7 @@ class GoogleFitData {
     Map<String, dynamic> healthRecord = new Map();
 
     Map<String, dynamic> userData = new Map();
-    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    userData[strId] = _userID;
 
     healthRecord[strUser] = userData;
 
@@ -207,7 +208,7 @@ class GoogleFitData {
     Map<String, dynamic> healthRecord = new Map();
 
     Map<String, dynamic> userData = new Map();
-    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    userData[strId] = _userID;
 
     healthRecord[strUser] = userData;
 
@@ -252,7 +253,7 @@ class GoogleFitData {
     Map<String, dynamic> healthRecord = new Map();
 
     Map<String, dynamic> userData = new Map();
-    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    userData[strId] = _userID;
 
     healthRecord[strUser] = userData;
 
@@ -296,7 +297,7 @@ class GoogleFitData {
     Map<String, dynamic> healthRecord = new Map();
 
     Map<String, dynamic> userData = new Map();
-    userData[strId] = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    userData[strId] = _userID;
 
     healthRecord[strUser] = userData;
 
