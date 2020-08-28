@@ -113,6 +113,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.COGNITO_AUTH_CODE = values[9];
   CommonUtil.COGNITO_AUTH_TOKEN = values[10];
   CommonUtil.COGNITO_URL = values[11];
+  CommonUtil.BASE_URL_V2 = values[12];
 }
 
 class MyFHB extends StatefulWidget {

@@ -1,0 +1,73 @@
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import "package:http/http.dart" as http;
+import 'dart:io';
+
+class GoogleSignInHelper {
+  GoogleSignInAccount m_currentUser;
+  GoogleSignIn _googleSignIn = GoogleSignIn();
+  final String _url = gfAggregateURL;
+
+  GoogleSignInHelper() {
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      m_currentUser = account;
+    });
+  }
+
+  Future<bool> isSignedIn() async {
+    bool signedIn = await _googleSignIn.isSignedIn();
+    return signedIn;
+  }
+
+  Future<void> handleSignIn() async {
+    try {
+      if (m_currentUser == null) {
+        await _googleSignIn.signIn();
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> handleScopes() async {
+    List<String> Scopes = [];
+    Scopes.add(gfscopeBodyRead);
+    Scopes.add(gfscopepressureRead);
+    Scopes.add(gfscopetempRead);
+    Scopes.add(gfscopesaturationRead);
+    Scopes.add(gfscopeglucoseRead);
+    try {
+      if (m_currentUser != null) {
+        await _googleSignIn.requestScopes(Scopes);
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  Future<void> handleSignOut() async {
+    try {
+      bool signedIn = await _googleSignIn.isSignedIn();
+      if (signedIn) {
+        _googleSignIn.disconnect();
+      }
+    } catch (e) {}
+  }
+
+  Future<dynamic> getDataAggregate(String jsonBody) async {
+    var responseJson;
+    try {
+      final response = await http.post(_url,
+          body: jsonBody, headers: await m_currentUser.authHeaders);
+      if (response.statusCode != 200) {
+        throw "${response.statusCode} and ${response.body}";
+      }
+      responseJson = response.body;
+    } on SocketException {
+      throw variable.strNoInternet;
+    }
+    return responseJson;
+  }
+}
+
