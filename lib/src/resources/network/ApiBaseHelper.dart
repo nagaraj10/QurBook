@@ -381,6 +381,12 @@ class ApiBaseHelper {
         break;
 
       case 500:
+        var responseJson = convert.jsonDecode(response.body.toString());
+
+        return responseJson;
+
+        break;
+
       default:
         throw FetchDataException(
             variable.strErrComm + '${response.statusCode}');

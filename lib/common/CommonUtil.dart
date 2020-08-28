@@ -1164,7 +1164,7 @@ class CommonUtil {
     jsonData['deviceInfo'] = deviceInfo;
     if (Platform.isIOS) {
       jsonData['platformCode'] = 'IOSPLT';
-      jsonData['deviceTypeCode'] = 'IOS';
+      jsonData['deviceTypeCode'] = 'IPHONE';
     } else {
       jsonData['platformCode'] = 'ANDPLT';
       jsonData["deviceTypeCode"] = 'ANDROID';
