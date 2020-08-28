@@ -416,7 +416,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 5),
+                          padding: const EdgeInsets.only(bottom: 4),
                           child: Text(
                             toBeginningOfSentenceCase(document['nickname']),
                             overflow: TextOverflow.ellipsis,
@@ -445,14 +445,14 @@ class HomeScreenState extends State<ChatHomeScreen> {
                           constraints: BoxConstraints(
                               maxWidth:
                                   MediaQuery.of(context).size.width * 0.5),
-                          padding: const EdgeInsets.only(bottom: 5),
+                          padding: const EdgeInsets.only(bottom: 4),
                           child: Text(
                             document['lastMessage'] != null
                                 ? document['lastMessage']
                                 : '',
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
-                                fontWeight: FontWeight.w300,
+                                fontWeight: FontWeight.bold,
                                 color: Colors.grey[600],
                                 fontSize: 12,
                                 fontFamily: 'Poppins'),
@@ -462,20 +462,17 @@ class HomeScreenState extends State<ChatHomeScreen> {
                           height: 1,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
+                          padding: const EdgeInsets.only(bottom: 10),
                           child: Text(
-                            document['createdAt']!=null?'Last visit date on '+DateFormat('dd MMM kk:mm').format(
+                            document['createdAt']!=null?'Date: '+DateFormat('dd MMM kk:mm').format(
                                 DateTime.fromMillisecondsSinceEpoch(
                                     int.parse(document['createdAt']))):'',
                             style: TextStyle(
                                 fontWeight: FontWeight.w300,
                                 color: Colors.grey[600],
-                                fontSize: 12,
+                                fontSize: 10,
                                 fontFamily: 'Poppins'),
                           ),
-                        ),
-                        SizedBox(
-                          height: 1,
                         ),
                         /*Padding(
                           padding: const EdgeInsets.only(bottom: 15),
