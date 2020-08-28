@@ -80,6 +80,7 @@ const String allowDeviceRecognition = 'allowDeviceRecognition';
 const String allowDigitRecognition = 'allowDigitRecognition';
 const String activateGF = "activateGF"; // activate googleFit
 const String activateHK = "activateHK"; // activate appleHealth
+const String isFirstTym = "FirsTym";
 const String bpMon = "bpMon";
 const String glMon = "GLMon";
 const String oxyMon = "OxyMon";

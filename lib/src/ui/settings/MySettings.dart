@@ -27,7 +27,7 @@ class _MySettingsState extends State<MySettings> {
   DevicesViewModel _deviceModel;
   DevResult devicesList;
   bool _isHKActive = false;
-
+  bool _firstTym = true;
   bool _isBPActive = false;
   bool _isGLActive = false;
   bool _isOxyActive = false;
@@ -81,7 +81,17 @@ class _MySettingsState extends State<MySettings> {
           PreferenceUtil.getStringValue(Constants.thMon) == variable.strFalse
               ? false
               : true;
+      _firstTym = PreferenceUtil.getStringValue(Constants.isFirstTym) ==
+              variable.strFalse
+          ? false
+          : true;
     });
+    if (_firstTym) {
+      _firstTym = false;
+      _isGFActive = false;
+      PreferenceUtil.saveString(Constants.activateGF, _firstTym.toString());
+      PreferenceUtil.saveString(Constants.isFirstTym, _firstTym.toString());
+    }
   }
 
   @override
@@ -209,9 +219,6 @@ class _MySettingsState extends State<MySettings> {
                                         activeColor: Color(new CommonUtil()
                                             .getMyPrimaryColor()),
                                         onChanged: (bool newValue) {
-                                          //newValue == true
-                                          //    ? _deviceDataHelper.activateGF()
-                                          //    : _deviceDataHelper.deactivateGF();
                                           setState(() {
                                             _isGFActive = newValue;
                                           });
