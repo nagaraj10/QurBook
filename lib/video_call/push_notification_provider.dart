@@ -102,7 +102,7 @@ class PushNotificationsProvider {
   Future<dynamic> onLaunch(Map<String, dynamic> message) async {
     print("OnLaunch New: $message");
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 5), () {
       final userName = message['username'];
       final channelName = message['meeting_id'];
       final doctorId = message['doctorId'];
