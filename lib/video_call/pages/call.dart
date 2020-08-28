@@ -130,11 +130,18 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
+    AgoraRtcEngine.onUserMuteAudio = (int uid, bool muted) {
+      setState(() {
+        //get the remote user mute status
+      });
+    };
+
     AgoraRtcEngine.onUserOffline = (int uid, int reason) {
       setState(() {
         final info = 'userOffline: $uid';
         _infoStrings.add(info);
         _users.remove(uid);
+        Navigator.pop(context);
       });
     };
 
