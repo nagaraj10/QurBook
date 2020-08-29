@@ -72,7 +72,6 @@ class CommonUtil {
   static String COGNITO_URL = '';
   static String BASEURL_DEVICE_READINGS = '';
 
-
   CategoryData categoryDataObjClone = new CategoryData();
 
   static Future<dynamic> getResourceLoader() async {
@@ -950,10 +949,10 @@ class CommonUtil {
 
     if (PreferenceUtil.getStringValue(Constants.activateGF) ==
         variable.strtrue) {
-      _deviceDataHelper.syncGF();
+      _deviceDataHelper.syncGoogleFit();
     } else if (PreferenceUtil.getStringValue(Constants.activateHK) ==
         variable.strtrue) {
-      _deviceDataHelper.syncHKT();
+      _deviceDataHelper.syncHealthKit();
     }
   }
 

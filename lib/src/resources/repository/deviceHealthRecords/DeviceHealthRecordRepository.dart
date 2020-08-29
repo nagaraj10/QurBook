@@ -32,7 +32,7 @@ class DeviceHealthRecord {
         jsonString) ;
 */
     var response =
-        await _helper.saveDeviceData(query.qr_deviceInfo, jsonString);
+        await _helper.saveDeviceData(query.qr_DeviceInfo, jsonString);
     return response;
   }
 
@@ -40,13 +40,13 @@ class DeviceHealthRecord {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     //print('static user id ${Constants.asgurduserID}');
 
-    var response = await _helper.getDeviceInfo(query.qr_deviceInfo +
+    var response = await _helper.getDeviceInfo(query.qr_DeviceInfo +
         query.qr_slash +
-        query.qr_user +
+        query.qr_User +
         query.qr_slash +
         userID +
         query.qr_slash +
-        query.qr_lastSync +
+        query.qr_LastSync +
         qr_param);
     return response;
   }
@@ -54,13 +54,13 @@ class DeviceHealthRecord {
   Future<dynamic> getlastMeasureSync() async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    var response = await _helper.getDeviceInfo(query.qr_deviceInfo +
+    var response = await _helper.getDeviceInfo(query.qr_DeviceInfo +
         query.qr_slash +
-        query.qr_user +
+        query.qr_User +
         query.qr_slash +
         userID +
         query.qr_slash +
-        query.qr_lastMeasureSync);
+        query.qr_LastMeasureSync);
 
     return response;
   }
@@ -69,13 +69,13 @@ class DeviceHealthRecord {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.getByRecordDataType(
-        query.qr_deviceInfo +
+        query.qr_DeviceInfo +
             query.qr_slash +
-            query.qr_user +
+            query.qr_User +
             query.qr_slash +
             userID +
             query.qr_slash +
-            query.qr_deviceInterval,
+            query.qr_DeviceInterval,
         jsonString);
     return response;
   }

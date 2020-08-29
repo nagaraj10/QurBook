@@ -15,24 +15,24 @@ class SyncGoogleFitData {
     _gfHelper = GoogleFitData();
   }
 
-  Future<bool> isGFSignedIn() async {
+  Future<bool> isGoogleFitSignedIn() async {
     return _gfHelper.isSignedIn();
   }
 
-  Future<bool> activateGF() async {
+  Future<bool> activateGoogleFit() async {
     return await _gfHelper.signIn();
   }
 
-  Future<bool> deactivateGF() async {
+  Future<bool> deactivateGoogleFit() async {
     return await _gfHelper.signOut();
   }
 
-  Future<bool> syncGFData() async {
+  Future<bool> syncGoogleFitData() async {
     var response;
     String startTime = "";
     String endTime = "";
 
-    if(!await isGFSignedIn()){
+    if (!await isGoogleFitSignedIn()) {
       return false;
     }
 
@@ -54,26 +54,47 @@ class SyncGoogleFitData {
     try {
       String bpParams = await _gfHelper.getBPSummary(startTime, endTime);
       if (bpParams != null) {
-        response = await postGFData(bpParams);
+        response = await postGoogleFitData(bpParams);
       }
 
       response = "";
       String weightParams =
           await _gfHelper.getWeightSummary(startTime, endTime);
       if (weightParams != null) {
-        response = await postGFData(weightParams);
+        response = await postGoogleFitData(weightParams);
       }
 
       response = "";
       String heartRateParams =
           await _gfHelper.getHeartRateSummary(startTime, endTime);
       if (heartRateParams != null) {
-        response = await postGFData(heartRateParams);
+        response = await postGoogleFitData(heartRateParams);
+      }
+
+      response = "";
+      String glucoseParams =
+          await _gfHelper.getBloodGlucoseSummary(startTime, endTime);
+      if (glucoseParams != null) {
+        response = await postGoogleFitData(glucoseParams);
+      }
+
+      response = "";
+      String temperatureParams =
+          await _gfHelper.getBodyTempSummary(startTime, endTime);
+      if (temperatureParams != null) {
+        response = await postGoogleFitData(temperatureParams);
+      }
+
+      response = "";
+      String oxygenParams =
+          await _gfHelper.getOxygenSaturationSummary(startTime, endTime);
+      if (oxygenParams != null) {
+        response = await postGoogleFitData(oxygenParams);
       }
     } catch (e) {}
   }
 
-  Future<dynamic> postGFData(String params) async {
+  Future<dynamic> postGoogleFitData(String params) async {
     try {
       _deviceHealthRecord = DeviceHealthRecord();
 
@@ -87,7 +108,7 @@ class SyncGoogleFitData {
     try {
       _deviceHealthRecord = DeviceHealthRecord();
       var lastsyncDetails =
-          await _deviceHealthRecord.getLastsynctime(query.qr_lastSyncGF);
+          await _deviceHealthRecord.getLastsynctime(query.qr_LastSyncGF);
       String jsonstr = json.encode(lastsyncDetails);
       LastSync lastSync = lastSyncFromJson(jsonstr);
       if (!lastSync.isSuccess) return null;

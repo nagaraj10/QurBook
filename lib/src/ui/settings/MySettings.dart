@@ -208,7 +208,7 @@ class _MySettingsState extends State<MySettings> {
                                       child: IconButton(
                                         icon: Icon(Icons.sync),
                                         onPressed: () {
-                                          _deviceDataHelper.syncGF();
+                                          _deviceDataHelper.syncGoogleFit();
                                         },
                                       ),
                                     ),
@@ -228,8 +228,7 @@ class _MySettingsState extends State<MySettings> {
                                   ],
                                 ),
                               );
-                            }
-                            else{
+                            } else {
                               return Container();
                             }
                           }),
@@ -255,7 +254,7 @@ class _MySettingsState extends State<MySettings> {
                                     child: IconButton(
                                       icon: Icon(Icons.sync),
                                       onPressed: () {
-                                        _deviceDataHelper.syncHKT();
+                                        _deviceDataHelper.syncHealthKit();
                                       },
                                     ),
                                   ),
@@ -267,8 +266,10 @@ class _MySettingsState extends State<MySettings> {
                                           new CommonUtil().getMyPrimaryColor()),
                                       onChanged: (bool newValue) {
                                         newValue == true
-                                            ? _deviceDataHelper.activateHKT()
-                                            : _deviceDataHelper.deactivateHKT();
+                                            ? _deviceDataHelper
+                                                .activateHealthKit()
+                                            : _deviceDataHelper
+                                                .deactivateHealthKit();
                                         setState(() {
                                           _isHKActive = newValue;
 
@@ -406,18 +407,15 @@ class _MySettingsState extends State<MySettings> {
 
   Future<bool> _handleGoogleFit() async {
     bool ret = false;
-    bool _isSignedIn = await _deviceDataHelper.isGFSignedIn();
-    if (_isGFActive == _isSignedIn)
-    {
+    bool _isSignedIn = await _deviceDataHelper.isGoogleFitSignedIn();
+    if (_isGFActive == _isSignedIn) {
       ret = _isGFActive;
-    }
-    else{
-        if(_isGFActive){
-          _isGFActive = await _deviceDataHelper.activateGF();
-        }else{
-          
-          _isGFActive = ! await _deviceDataHelper.deactivateGF();      
-        }
+    } else {
+      if (_isGFActive) {
+        _isGFActive = await _deviceDataHelper.activateGoogleFit();
+      } else {
+        _isGFActive = !await _deviceDataHelper.deactivateGoogleFit();
+      }
     }
     PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
     return ret;

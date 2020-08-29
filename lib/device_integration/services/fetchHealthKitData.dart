@@ -8,7 +8,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class FetchHealthKitData {
   String _userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-  Future<bool> activateHKT() async {
+  Future<bool> activateHealthKit() async {
     try {
       bool ret = await Health.requestAuthorization();
       return ret;

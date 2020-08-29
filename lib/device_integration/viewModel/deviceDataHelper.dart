@@ -5,31 +5,31 @@ class DeviceDataHelper {
   SyncGoogleFitData _syncGoogleFitData = SyncGoogleFitData();
   SyncHealthKitData _syncHealthKitData = SyncHealthKitData();
 
-  Future<bool> isGFSignedIn() async {
-    return await _syncGoogleFitData.isGFSignedIn();
+  Future<bool> isGoogleFitSignedIn() async {
+    return await _syncGoogleFitData.isGoogleFitSignedIn();
   }
 
-  Future<bool> activateGF() async {
-    return await _syncGoogleFitData.activateGF();
+  Future<bool> activateGoogleFit() async {
+    return await _syncGoogleFitData.activateGoogleFit();
   }
 
-  Future<bool> deactivateGF() async {
-    return await _syncGoogleFitData.deactivateGF();
+  Future<bool> deactivateGoogleFit() async {
+    return await _syncGoogleFitData.deactivateGoogleFit();
   }
 
-  Future<void> syncGF() async {
-    await _syncGoogleFitData.syncGFData();
+  Future<void> syncGoogleFit() async {
+    await _syncGoogleFitData.syncGoogleFitData();
   }
 
-  Future<void> activateHKT() async {
-    await _syncHealthKitData.activateHKT();
+  Future<void> activateHealthKit() async {
+    await _syncHealthKitData.activateHealthKit();
   }
 
-  Future<void> deactivateHKT() async {
+  Future<void> deactivateHealthKit() async {
     //     //todo
   }
 
-  Future<void> syncHKT() async {
-    await _syncHealthKitData.syncHKTData();
+  Future<void> syncHealthKit() async {
+    await _syncHealthKitData.syncHealthKitData();
   }
 }
