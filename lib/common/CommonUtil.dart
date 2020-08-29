@@ -70,6 +70,8 @@ class CommonUtil {
   static String COGNITO_AUTH_TOKEN = '';
   static String COGNITO_AUTH_CODE = '';
   static String COGNITO_URL = '';
+  static String BASEURL_DEVICE_READINGS = '';
+
 
   CategoryData categoryDataObjClone = new CategoryData();
 
