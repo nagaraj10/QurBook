@@ -17,12 +17,12 @@ import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/view/screens/getDevice_Values.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/device_integration/view/screens/Widget_View.dart';
 
@@ -461,8 +461,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
+    await Permission.microphone.request();
+    await Permission.camera.request();
   }
 }

@@ -127,7 +127,7 @@ const String qr_user = 'user';
 const String qr_lastSyncGF = '?source=Google Fit';
 const String qr_lastSyncHK = '?source=Apple Health';
 
-const String RESHEDULE_SOURCE="rescheduleSource";
+const String RESHEDULE_SOURCE = "rescheduleSource";
 const String BOOKING_IDS = "bookingIds";
 const String BOOKING_ID = "bookingId";
 const String META_IDS = "mediaMetaIds";
@@ -145,12 +145,3 @@ const String qr_get_media_master = '/getmediamaster/';
 const String qr_userid = 'userId';
 const String qr_mediaMetaId = 'mediaMetaId';
 const String qr_sharerecord = 'sharerecord';
-
-//device integration added by Ravindran
-const String qr_lastSync = 'lastSync';
-const String qr_lastMeasureSync = 'lastMeasureSync';
-const String qr_deviceInterval = 'deviceInterval';
-const String qr_deviceInfo = 'device-information';
-const String qr_user = 'user';
-const String qr_lastSyncGF = '?source=Google Fit';
-const String qr_lastSyncHK = '?source=Apple Health';

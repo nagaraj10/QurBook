@@ -301,6 +301,7 @@ const String UNABLE_PROCESS = 'We unable to reach your process..';
 const String strSourceCode = 'sourceCode';
 const String strEntityCode = 'entityCode';
 const String strRoleCode = 'roleCode';
+const String strprofilePicThumbnailURL = 'profilePicThumbnailURL';
 
 //parameters for device Integration
 
@@ -449,5 +450,4 @@ const String strTemp = "bodyTemperature";
 const String strWgt = "bodyWeight";
 const String strHRate = "heartRate";
 const String strOxygen = "oxygenSaturation";
-
 const String strentities = "entities";
