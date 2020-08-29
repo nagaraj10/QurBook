@@ -22,6 +22,7 @@ import com.google.firebase.messaging.RemoteMessage
 class MyFirebaseInstanceService : FirebaseMessagingService() {
     val CHANNEL_INCOMING = "cha_call"
     val CHANNEL_ACK = "cha_ack"
+    val CHANNEL_MISS_CALL = "cha_missed_call_ns"
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d(TAG, "Token: $token")
@@ -126,6 +127,11 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
             AutoDismissNotification().setAlarm(this,NS_ID,NS_TIMEOUT)
         }
+        Thread {
+            Thread.sleep(NS_TIMEOUT)
+            Log.d(TAG, "createNotification4Call: Missed call Alert")
+            createNotification4MissedCall(USER_NAME!!)
+        }.start()
     }
 
     private fun createNotification4Ack(data:Map<String, String> = HashMap()){
@@ -148,11 +154,34 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
 
         var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
-                .setSmallIcon(R.mipmap.app_ns_icon)
+                .setSmallIcon(android.R.drawable.sym_call_incoming)
                 .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
                 .setContentTitle(data[getString(R.string.pro_ns_title)])
                 .setContentText(data[getString(R.string.pro_ns_body)])
                 .setSound(ack_sound)
+                .setAutoCancel(false)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
+                .build()
+        nsManager.notify(NS_ID,notification)
+    }
+
+    private fun createNotification4MissedCall(body: String){
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = 9092
+
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelCallAlert = NotificationChannel(CHANNEL_MISS_CALL, getString(R.string.channel_miss_ns), NotificationManager.IMPORTANCE_DEFAULT)
+            channelCallAlert.description = getString(R.string.channel_call_alert_desc)
+            manager.createNotificationChannel(channelCallAlert)
+        }
+
+
+        var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
+                .setSmallIcon(android.R.drawable.stat_notify_missed_call)
+                .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
+                .setContentTitle(body)
+                .setContentText(getString(R.string.missed_call_alert_title))
                 .setAutoCancel(false)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .build()
