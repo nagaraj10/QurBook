@@ -21,7 +21,6 @@ import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.d
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
-import 'package:myfhb/telehealth/features/followUp/model/followUpResponse.dart';
 
 import 'AppException.dart';
 import 'dart:async';
@@ -149,7 +148,6 @@ class ApiBaseHelper {
     var responseJson;
 
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
-    dio.options.headers[variable.strContentType] = variable.strcntVal;
     dio.options.headers[variable.strAuthorization] = authToken;
 
     Map<String, dynamic> mapForSignUp = new Map();
@@ -387,6 +385,12 @@ class ApiBaseHelper {
         break;
 
       case 500:
+        var responseJson = convert.jsonDecode(response.body.toString());
+
+        return responseJson;
+
+        break;
+
       default:
         throw FetchDataException(
             variable.strErrComm + '${response.statusCode}');
@@ -457,6 +461,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> addUserLinking(String url, String jsonData) async {
+    print(_baseUrl + url);
+    print(jsonData);
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
@@ -485,9 +491,11 @@ class ApiBaseHelper {
     Dio dio = new Dio();
     var responseJson;
 
-    dio.options.headers[variable.strContentType] = variable.strcntVal;
+    //dio.options.headers[variable.strContentType] = variable.strcntVal;
     dio.options.headers[variable.strAuthorization] = authToken;
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
+    print(url);
+    print(query);
 
     Map<String, dynamic> mapForSignUp = new Map();
     mapForSignUp[parameters.strSections] = query;
@@ -513,6 +521,9 @@ class ApiBaseHelper {
   Future<dynamic> updateRelationShipUserInFamilyLinking(
       String url, String jsonData) async {
     var responseJson;
+    print(url);
+    print(jsonData);
+
     try {
       final response = await http.put(_baseUrl + url,
           body: jsonData,
@@ -809,6 +820,7 @@ class ApiBaseHelper {
       final response = await http.post(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonBody);
+      print(_baseUrl + url);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -846,7 +858,6 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  
   Future<AppointmentsModel> fetchAppointments() async {
     String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 //    print('patient_id: '+userId);
@@ -860,7 +871,7 @@ class ApiBaseHelper {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
         if (resReturnCode.status == 200) {
-//          print(response.body);
+//\\          print(response.body);
           return AppointmentsModel.fromJson(jsonDecode(response.body));
         } else {
           throw Exception(variable.strFailed);
@@ -963,38 +974,6 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<FollowOnDate> followUpAppointment(String id, String date) async {
-    var inputBody = {};
-    inputBody[FOLLOWID] = id;
-    inputBody[FOLLOWONDATE] = date;
-
-    var jsonString = convert.jsonEncode(inputBody);
-    print(jsonString);
-    final response = await getApiForfollowUpAppointment(
-        qr_follow_up_appointment, jsonString);
-    return FollowOnDate.fromJson(response);
-  }
-
-  Future<dynamic> getApiForfollowUpAppointment(
-      String url, String jsonBody) async {
-    var responseJson;
-    try {
-//      print(authtoken);
-//      print(url);
-//      print(jsonBody);
-      final response = await http.put(_baseUrl + url,
-          headers: await headerRequest.getRequestHeadersTimeSlot(),
-          body: jsonBody);
-//      print(_baseUrl+url);
-//      print(jsonBody);
-      print(response.body);
-      responseJson = _returnResponse(response);
-    } on SocketException {
-      throw FetchDataException(variable.strNoInternet);
-    }
-    return responseJson;
-  }
-
   Future<dynamic> postDeviceId(
       String url, String jsonBody, bool isActive) async {
     Map<String, String> requestHeadersAuthAccept = new Map();
@@ -1011,7 +990,7 @@ class ApiBaseHelper {
             headers: requestHeadersAuthAccept, body: jsonBody);
         responseJson = _returnResponse(response);
       } else {
-        final response = await http.put(CommonUtil.COGNITO_URL + url,
+        final response = await http.post(CommonUtil.COGNITO_URL + url,
             headers: requestHeadersAuthAccept, body: jsonBody);
         responseJson = _returnResponse(response);
       }
@@ -1034,9 +1013,7 @@ class ApiBaseHelper {
         body: jsonString,
         headers: await headerRequest.getRequestHeadersAuthContent(),
       );
-      print(response);
       responseJson = _returnResponse(response);
-      print(responseJson);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }

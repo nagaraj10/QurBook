@@ -1,6 +1,5 @@
 // ignore: file_names
 import 'dart:convert' as convert;
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_country_picker/country.dart';
@@ -202,8 +201,14 @@ class _MyFamilyState extends State<MyFamily> {
   Widget getCardWidgetForUser(
       Sharedbyme data, int position, List<Sharedbyme> profilesSharedByMeAry) {
     MyProfile myProfile;
+    String fulName;
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      fulName = myProfile.response.data.generalInfo.qualifiedFullName != null
+          ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+              ' ' +
+              myProfile.response.data.generalInfo.qualifiedFullName.lastName
+          : '';
     } catch (e) {}
 
     return InkWell(
@@ -243,7 +248,8 @@ class _MyFamilyState extends State<MyFamily> {
             children: <Widget>[
               ClipOval(
                 child: position == 0
-                    ? myProfile.response.data.generalInfo.profilePicThumbnail ==
+                    ? myProfile.response.data.generalInfo
+                                .profilePicThumbnailURL ==
                             null
                         ? Container(
                             width: 60,
@@ -251,11 +257,7 @@ class _MyFamilyState extends State<MyFamily> {
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
-                                myProfile.response.data.generalInfo.name != null
-                                    ? myProfile
-                                        .response.data.generalInfo.name[0]
-                                        .toUpperCase()
-                                    : '',
+                                fulName != null ? fulName.toUpperCase() : '',
                                 style: TextStyle(
                                     fontSize: 22,
                                     color: Color(
@@ -263,14 +265,14 @@ class _MyFamilyState extends State<MyFamily> {
                               ),
                             ),
                           )
-                        : Image.memory(
-                            Uint8List.fromList(myProfile.response.data
-                                .generalInfo.profilePicThumbnail.data),
+                        : Image.network(
+                            myProfile.response.data.generalInfo
+                                .profilePicThumbnailURL,
                             fit: BoxFit.cover,
                             width: 60,
                             height: 60,
                           )
-                    : data.profileData.profilePicThumbnail == null
+                    : data.profileData.profilePicThumbnailURL == null
                         ? Container(
                             width: 60,
                             height: 60,
@@ -287,9 +289,8 @@ class _MyFamilyState extends State<MyFamily> {
                               ),
                             ),
                           )
-                        : Image.memory(
-                            Uint8List.fromList(
-                                data.profileData.profilePicThumbnail.data),
+                        : Image.network(
+                            data.profileData.profilePicThumbnailURL,
                             fit: BoxFit.cover,
                             width: 60,
                             height: 60,
@@ -306,10 +307,9 @@ class _MyFamilyState extends State<MyFamily> {
                   children: <Widget>[
                     Text(
                       position == 0
-                          ? myProfile.response.data.generalInfo.name != null
-                              ? new CommonUtil().titleCase(myProfile
-                                  .response.data.generalInfo.name
-                                  .toLowerCase())
+                          ? fulName != null
+                              ? new CommonUtil()
+                                  .titleCase(fulName.toLowerCase())
                               : ''
                           : data.linkedData.nickName != null
                               ? new CommonUtil()

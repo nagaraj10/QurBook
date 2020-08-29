@@ -110,10 +110,10 @@ void setValues(List<dynamic> values) {
   CommonUtil.GOOGLE_STATIC_MAP_URL = values[6];
   CommonUtil.BASE_URL_FROM_RES = values[7];
   CommonUtil.BASE_COVER_IMAGE = values[8];
-  CommonUtil.BASE_URL_V2 = values[9];
-  CommonUtil.COGNITO_AUTH_CODE = values[10];
-  CommonUtil.COGNITO_AUTH_TOKEN = values[11];
-  CommonUtil.COGNITO_URL=values[12];
+  CommonUtil.COGNITO_AUTH_CODE = values[9];
+  CommonUtil.COGNITO_AUTH_TOKEN = values[10];
+  CommonUtil.COGNITO_URL = values[11];
+  CommonUtil.BASE_URL_V2 = values[12];
 }
 
 class MyFHB extends StatefulWidget {
@@ -188,7 +188,9 @@ class _MyFHBState extends State<MyFHB> {
     if (c_msg.isNotEmpty || c_msg != null) {
       var passedValArr = c_msg.split('&');
       Get.to(CallMain(
-        userName: passedValArr[1] ?? 'Doctor',
+        doctorName: passedValArr[1],
+        doctorId: passedValArr[2],
+        doctorPic: passedValArr[3],
         channelName: passedValArr[0],
         role: ClientRole.Broadcaster,
         isAppExists: true,
@@ -245,7 +247,9 @@ class _MyFHBState extends State<MyFHB> {
                   isAppExists: false,
                   role: ClientRole.Broadcaster,
                   channelName: navRoute.split('&')[0],
-                  userName: navRoute.split('&')[1] ?? 'Doctor',
+                  doctorName: navRoute.split('&')[1] ?? 'Test',
+                  doctorId: navRoute.split('&')[2] ?? 'Doctor',
+                  doctorPic: navRoute.split('&')[3] ?? '',
                 ),
           routes: routes,
           debugShowCheckedModeBanner: false,

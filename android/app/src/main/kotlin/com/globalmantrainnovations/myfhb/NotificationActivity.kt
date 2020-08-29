@@ -15,6 +15,9 @@ import androidx.core.app.NotificationManagerCompat
 class NotificationActivity : AppCompatActivity() {
     private val TAG = "NotificationActivity"
     private lateinit var channelName:String
+    private lateinit var username:String
+    private lateinit var docId:String
+    private lateinit var docPic:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +27,11 @@ class NotificationActivity : AppCompatActivity() {
         tv.text = "${intent.getStringExtra(UNAME)}"
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val nsID:Int=intent.getIntExtra(NS_ID,0)
-        channelName=intent.getStringExtra(MID)
         nsManager.cancel(nsID)
+        channelName=intent.getStringExtra(MID)
+        username=intent.getStringExtra(getString(R.string.username))
+        docId=intent.getStringExtra(getString(R.string.docId))
+        docPic=intent.getStringExtra(getString(R.string.docPic))
 
     }
 
@@ -53,6 +59,9 @@ class NotificationActivity : AppCompatActivity() {
         launchIntent?.action = Intent.ACTION_SEND
         launchIntent?.type="text/plain"
         launchIntent?.putExtra(Intent.EXTRA_TEXT,channelName)
+        launchIntent?.putExtra(getString(R.string.username),username)
+        launchIntent?.putExtra(getString(R.string.docId),docId)
+        launchIntent?.putExtra(getString(R.string.docPic),docPic)
         startActivity(launchIntent)
     }
 

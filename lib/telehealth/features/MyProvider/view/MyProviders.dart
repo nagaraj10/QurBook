@@ -200,7 +200,7 @@ class _MyProvidersState extends State<MyProviders> {
             Container(
               alignment: Alignment.center,
               child: commonWidgets.getClipOvalImageNew(
-                  docs[i].profilePicThumbnail, fhbStyles.cardClipImage),
+                  docs[i].profilePicThumbnailURL, fhbStyles.cardClipImage),
             ),
             new Positioned(
               bottom: 0.0,

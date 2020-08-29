@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import android.view.WindowManager
+import androidx.multidex.BuildConfig
 import com.globalmantrainnovations.myfhb.services.AVServices
 
 
@@ -38,6 +39,8 @@ class MainActivity : FlutterActivity() {
     val STREAM = "com.example.agoraflutterquickstart/stream"
     private var sharedValue: String? = null
     private var username: String? = null
+    private var docId: String? = null
+    private var docPic: String? = null
     private lateinit var mEventChannel:EventSink
     private val REQ_CODE = 112
     private val INTENT_AUTHENTICATE = 155
@@ -239,7 +242,9 @@ class MainActivity : FlutterActivity() {
     fun handleSendText(intent: Intent) {
         sharedValue = intent.getStringExtra(Intent.EXTRA_TEXT)
         username = intent.getStringExtra(getString(R.string.username))
-        sharedValue="$sharedValue&$username"
+        docId = intent.getStringExtra(getString(R.string.docId))
+        docPic= intent.getStringExtra(getString(R.string.docPic))
+        sharedValue="$sharedValue&$username&$docId&$docPic"
         if (::mEventChannel.isInitialized){mEventChannel.success(sharedValue)}
         Log.d(TAG, "passed text from intent filter ${sharedValue!!}")
     }

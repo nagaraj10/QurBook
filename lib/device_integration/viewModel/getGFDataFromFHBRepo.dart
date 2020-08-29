@@ -6,15 +6,13 @@ class GetGFDataFromFHBRepo {
   DeviceHealthRecord _deviceHealthRecord;
   Map<String, dynamic> body = new Map();
 
-  
   Future<dynamic> _getDataByDataType(String params) async {
     try {
       _deviceHealthRecord = DeviceHealthRecord();
       print(params);
       final response = await _deviceHealthRecord.queryBydeviceInterval(params);
       return response;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> getBPData() async {
@@ -31,8 +29,7 @@ class GetGFDataFromFHBRepo {
       var response = await _getDataByDataType(params);
       String res = json.encode(response);
       return res;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> getHeartRateData() async {
@@ -49,8 +46,7 @@ class GetGFDataFromFHBRepo {
       var response = await _getDataByDataType(params);
       String res = json.encode(response);
       return res;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> getOxygenSaturationData() async {
@@ -67,8 +63,7 @@ class GetGFDataFromFHBRepo {
       var response = await _getDataByDataType(params);
       String res = json.encode(response);
       return res;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> getWeightData() async {
@@ -85,8 +80,7 @@ class GetGFDataFromFHBRepo {
       var response = await _getDataByDataType(params);
       String res = json.encode(response);
       return res;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> getBloodGlucoseData() async {
@@ -103,8 +97,7 @@ class GetGFDataFromFHBRepo {
       var response = await _getDataByDataType(params);
       String res = json.encode(response);
       return res;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> getBodyTemperatureData() async {
@@ -121,8 +114,7 @@ class GetGFDataFromFHBRepo {
       var response = await _getDataByDataType(params);
       String res = json.encode(response);
       return res;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<dynamic> getLatestDeviceHealthRecord() async {
@@ -131,7 +123,6 @@ class GetGFDataFromFHBRepo {
         _deviceHealthRecord = DeviceHealthRecord();
       var response = await _deviceHealthRecord.getlastMeasureSync();
       return response;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 }

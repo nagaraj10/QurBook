@@ -90,8 +90,7 @@ class DevicesViewModel with ChangeNotifier {
 
       //notifyListeners();
       return result;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<List<BPResult>> fetchBPDetails() async {
@@ -103,8 +102,7 @@ class DevicesViewModel with ChangeNotifier {
       final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<BPResult> ret = parsed1.map((i) => BPResult.fromJson(i)).toList();
       return ret;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<List<GVResult>> fetchGLDetails() async {
@@ -116,8 +114,7 @@ class DevicesViewModel with ChangeNotifier {
       final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<GVResult> ret = parsed1.map((i) => GVResult.fromJson(i)).toList();
       return ret;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<List<OxyResult>> fetchOXYDetails(String response) async {
@@ -129,8 +126,7 @@ class DevicesViewModel with ChangeNotifier {
       final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<OxyResult> ret = parsed1.map((i) => OxyResult.fromJson(i)).toList();
       return ret;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<List<TMPResult>> fetchTMPDetails() async {
@@ -142,8 +138,7 @@ class DevicesViewModel with ChangeNotifier {
       final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<TMPResult> ret = parsed1.map((i) => TMPResult.fromJson(i)).toList();
       return ret;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<List<WVResult>> fetchWVDetails(String response) async {
@@ -155,8 +150,7 @@ class DevicesViewModel with ChangeNotifier {
       final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<WVResult> ret = parsed1.map((i) => WVResult.fromJson(i)).toList();
       return ret;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<List<HRResult>> fetchHeartRateDetails(String response) async {
@@ -168,8 +162,7 @@ class DevicesViewModel with ChangeNotifier {
       final parsed1 = json.decode(resp.toString())[dataResult] as List;
       List<HRResult> ret = parsed1.map((i) => HRResult.fromJson(i)).toList();
       return ret;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<List<Values>> getBPValuesList() async {

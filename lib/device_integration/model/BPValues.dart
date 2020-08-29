@@ -20,7 +20,8 @@ class BPValues {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data[is_Success] = this.isSuccess;
     if (this.result != null) {
-      data[dataResult] = this.result.map((bpvalue) => bpvalue.toJson()).toList();
+      data[dataResult] =
+          this.result.map((bpvalue) => bpvalue.toJson()).toList();
     }
     return data;
   }

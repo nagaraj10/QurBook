@@ -494,8 +494,6 @@ const String strHealthKit = "Apple Health";
 const String strAllowHealth = "Allow app to recieve data from Apple Health";
 const String strAddDevice = 'Tap to add device widgets to your home screen';
 
-
-
 //for homescreen and dashboard
 const String strMyInfo = 'My Info';
 const String strMyFamily = 'My Family';
@@ -558,6 +556,8 @@ const roleCode = "285bbe41-3030-4b0e-b914-00e404a77032";
 const redirecturl = 'http://localhost:4200/callback?code=';
 const String strNoDoctordata = 'No Doctor List Available';
 const String strNoAppointments = 'No Appoinments Available';
+
+const String strNoDataAvailable = 'Unable To load';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

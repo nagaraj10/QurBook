@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
@@ -12,6 +12,9 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/global_search/model/Data.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/LinkedData.dart';
@@ -46,14 +49,11 @@ import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
-import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcase.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class CommonUtil {
@@ -318,7 +318,7 @@ class CommonUtil {
             mediaMasterIds.fileType == "image/png")
           mediaMasterIdsList.add(mediaMasterIds);
       }
-    } 
+    }
 
     return mediaMasterIdsList.length > 0 ? mediaMasterIdsList : new List();
   }
@@ -387,13 +387,13 @@ class CommonUtil {
 
     final token = await _firebaseMessaging.getToken();
     loginBloc.logout().then((signOutResponse) {
-      moveToLoginPage(signOutResponse);
-      /*CommonUtil()
+      // moveToLoginPage(signOutResponse);
+      CommonUtil()
           .sendDeviceToken(PreferenceUtil.getStringValue(Constants.KEY_USERID),
               generalInfo.email, generalInfo.phoneNumber, token, false)
           .then((value) {
         moveToLoginPage(signOutResponse);
-      });*/
+      });
     });
   }
 
@@ -401,7 +401,7 @@ class CommonUtil {
     MyProfile myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     GeneralInfo generalInfo = myProfile.response.data.generalInfo;
-    
+
     LinkedData linkedData =
         new LinkedData(roleName: variable.Self, nickName: variable.Self);
     ProfilePicThumbnail profilePicThumbnail =
@@ -418,10 +418,15 @@ class CommonUtil {
             lastName: generalInfo.qualifiedFullName.lastName)
         : null;
 
+    String fullName = generalInfo.qualifiedFullName != null
+        ? generalInfo.qualifiedFullName.firstName +
+            ' ' +
+            generalInfo.qualifiedFullName.lastName
+        : '';
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
-        name: generalInfo.name,
+        name: fullName ?? '',
         email: generalInfo.email,
         dateOfBirth: generalInfo.dateOfBirth,
         gender: generalInfo.gender,
@@ -818,43 +823,42 @@ class CommonUtil {
   }
 
   networkUI() {
-  Get.bottomSheet(
-    Container(
-      constraints: BoxConstraints(maxHeight: 120),
-      child: Card(
-        elevation: 10.0,
-        //margin: EdgeInsets.only(left: 3.0,right: 3.0),
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topRight: Radius.circular(20.0),
-                topLeft: Radius.circular(20.0))),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ImageIcon(
-              AssetImage(variable.icon_wifi),
-              color: Color(CommonUtil().getMyPrimaryColor()),
-              size: 50.0,
-            ),
-            Text(
-              variable.strNoInternet,
-              style: TextStyle(
+    Get.bottomSheet(
+      Container(
+        constraints: BoxConstraints(maxHeight: 120),
+        child: Card(
+          elevation: 10.0,
+          //margin: EdgeInsets.only(left: 3.0,right: 3.0),
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(20.0),
+                  topLeft: Radius.circular(20.0))),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              ImageIcon(
+                AssetImage(variable.icon_wifi),
                 color: Color(CommonUtil().getMyPrimaryColor()),
-                fontSize: 16.0,
+                size: 50.0,
               ),
-            ),
-          ],
+              Text(
+                variable.strNoInternet,
+                style: TextStyle(
+                  color: Color(CommonUtil().getMyPrimaryColor()),
+                  fontSize: 16.0,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
-    ),
-    backgroundColor: Colors.transparent,
-    isDismissible: false,
-    enableDrag: false,
-  );
-}
-  
-  
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+    );
+  }
+
   Widget customSnack(bool isOffline) {
     return Container(
       height: 20.0,
@@ -986,22 +990,22 @@ class CommonUtil {
     List<DeviceData> devicelist = new List<DeviceData>();
     if (PreferenceUtil.getStringValue(Constants.bpMon) != variable.strFalse) {
       devicelist.add(DeviceData(
-       title: Constants.STR_BP_MONITOR,
-        icon: Constants.Devices_BP,
+          title: Constants.STR_BP_MONITOR,
+          icon: Constants.Devices_BP,
           status: 0,
           isSelected: false,
-         value_name: parameters.strDataTypeBP,
+          value_name: parameters.strDataTypeBP,
           value1: 'SYS',
           value2: 'DIS',
           color: Colors.redAccent));
     }
     if (PreferenceUtil.getStringValue(Constants.glMon) != variable.strFalse) {
       devicelist.add(DeviceData(
-        title: Constants.STR_GLUCOMETER,
-        icon: Constants.Devices_GL,
+          title: Constants.STR_GLUCOMETER,
+          icon: Constants.Devices_GL,
           status: 0,
           isSelected: false,
-        value_name: parameters.strGlusoceLevel,
+          value_name: parameters.strGlusoceLevel,
           value1: 'GL',
           value2: '',
           color: Colors.orange));
@@ -1009,8 +1013,8 @@ class CommonUtil {
 
     if (PreferenceUtil.getStringValue(Constants.oxyMon) != variable.strFalse) {
       devicelist.add(DeviceData(
-        title: Constants.STR_PULSE_OXIMETER,
-        icon: Constants.Devices_OxY,
+          title: Constants.STR_PULSE_OXIMETER,
+          icon: Constants.Devices_OxY,
           status: 0,
           isSelected: false,
           value_name: parameters.strOxgenSaturation,
@@ -1021,22 +1025,22 @@ class CommonUtil {
 
     if (PreferenceUtil.getStringValue(Constants.wsMon) != variable.strFalse) {
       devicelist.add(DeviceData(
-        title: Constants.STR_WEIGHING_SCALE,
-        icon: Constants.Devices_WS,
+          title: Constants.STR_WEIGHING_SCALE,
+          icon: Constants.Devices_WS,
           status: 0,
           isSelected: false,
-            value_name: parameters.strWeight,
+          value_name: parameters.strWeight,
           value1: 'WT',
           value2: '',
           color: Colors.lightGreen));
     }
     if (PreferenceUtil.getStringValue(Constants.thMon) != variable.strFalse) {
       devicelist.add(DeviceData(
-        title: Constants.STR_THERMOMETER,
-        icon: Constants.Devices_THM,
+          title: Constants.STR_THERMOMETER,
+          icon: Constants.Devices_THM,
           status: 0,
           isSelected: false,
-           value_name: parameters.strTemperature,
+          value_name: parameters.strTemperature,
           value1: 'TEMP',
           value2: '',
           color: Colors.deepOrangeAccent));
@@ -1110,7 +1114,6 @@ class CommonUtil {
   dateConversionToApiFormat(DateTime dateTime) {
     var newFormat = DateFormat('yyyy-MM-d');
     String updatedDate = newFormat.format(dateTime);
-
     return updatedDate;
   }
 
@@ -1150,9 +1153,39 @@ class CommonUtil {
   }
 
   static Future<void> askPermissionForCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
+//    await PermissionHandler().requestPermissions(
+//      [PermissionGroup.camera, PermissionGroup.microphone],
+//    );
+
+    PermissionStatus status = await Permission.microphone.request();
+    PermissionStatus cameraStatus = await Permission.camera.request();
+
+    if (status == PermissionStatus.granted &&
+        cameraStatus == PermissionStatus.granted) {
+      return true;
+    } else {
+      _handleInvalidPermissions(cameraStatus, status);
+      return false;
+    }
+  }
+
+  static void _handleInvalidPermissions(
+    PermissionStatus cameraPermissionStatus,
+    PermissionStatus microphonePermissionStatus,
+  ) {
+    if (cameraPermissionStatus == PermissionStatus.denied &&
+        microphonePermissionStatus == PermissionStatus.denied) {
+      throw new PlatformException(
+          code: "PERMISSION_DENIED",
+          message: "Access to camera and microphone denied",
+          details: null);
+    } else if (cameraPermissionStatus == PermissionStatus.permanentlyDenied &&
+        microphonePermissionStatus == PermissionStatus.permanentlyDenied) {
+      throw new PlatformException(
+          code: "PERMISSION_DISABLED",
+          message: "Location data is not available on device",
+          details: null);
+    }
   }
 
   getDoctorProfileImageWidget(String doctorId) {
@@ -1207,14 +1240,21 @@ class CommonUtil {
     jsonData['deviceInfo'] = deviceInfo;
     if (Platform.isIOS) {
       jsonData['platformCode'] = 'IOSPLT';
+      jsonData['deviceTypeCode'] = 'IPHONE';
     } else {
       jsonData['platformCode'] = 'ANDPLT';
+      jsonData["deviceTypeCode"] = 'ANDROID';
     }
 
     var params = json.encode(jsonData);
 
     final response =
         await apiBaseHelper.postDeviceId('device-info', params, isActive);
+    if (isActive) {
+      PreferenceUtil.saveString(Constants.KEY_DEVICEINFO, variable.strtrue);
+    } else {
+      PreferenceUtil.saveString(Constants.KEY_DEVICEINFO, variable.strFalse);
+    }
     return DeviceInfoSucess.fromJson(response);
   }
 }

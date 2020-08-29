@@ -14,6 +14,8 @@ class AcceptReceiver:BroadcastReceiver() {
         val notificationId = p1?.getIntExtra(p0?.getString(R.string.nsid), 0)
         val meeting_id = p1?.getStringExtra(p0?.getString(R.string.meetid))
         val username = p1?.getStringExtra(p0?.getString(R.string.username))
+        val docId = p1?.getStringExtra(p0?.getString(R.string.docId))
+        val docPic = p1?.getStringExtra(p0?.getString(R.string.docPic))
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
 
         nsManager.cancel(notificationId!! as Int)
@@ -28,6 +30,8 @@ class AcceptReceiver:BroadcastReceiver() {
         launchIntent?.type="text/plain"
         launchIntent?.putExtra(Intent.EXTRA_TEXT,meeting_id)
         launchIntent?.putExtra(p0.getString(R.string.username),username)
+        launchIntent?.putExtra(p0.getString(R.string.docId),docId)
+        launchIntent?.putExtra(p0.getString(R.string.docPic),docPic)
         p0.startActivity(launchIntent)
     }
 }

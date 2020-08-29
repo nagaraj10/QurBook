@@ -139,9 +139,6 @@ const String qr_appoinment_reshedule = "appointments/reschedule";
 const String qr_appointment_cancel = "/appointments/cancellation";
 const String qr_appointment_fetch =
     '/appointments/getPatientDetails?patientId=';
-const String FOLLOWONDATE = "followOnDate";
-const String FOLLOWID = "id";
-const String qr_follow_up_appointment = 'appointments/updateFollowOn';
 const String qr_media_meta = 'mediameta/';
 const String qr_get_media_master = '/getmediamaster/';
 

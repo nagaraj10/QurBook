@@ -10,19 +10,15 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/GetMediaURLViewModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import '../../../../common/CommonUtil.dart';
 
@@ -30,12 +26,13 @@ class Chat extends StatefulWidget {
   final String peerId;
   final String peerAvatar;
   final String peerName;
+  final String lastDate;
 
   Chat(
       {Key key,
       @required this.peerId,
       @required this.peerAvatar,
-      @required this.peerName})
+        @required this.peerName, @required this.lastDate})
       : super(key: key);
 
   @override
@@ -56,6 +53,7 @@ class ChatState extends State<Chat> {
         peerId: widget.peerId,
         peerAvatar: widget.peerAvatar,
         peerName: widget.peerName,
+        lastDate: widget.lastDate,
       ),
     );
   }
@@ -168,7 +166,7 @@ class ChatState extends State<Chat> {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(
-                            fontFamily: 'Poppins', color: Colors.white)),
+                            fontFamily: 'Poppins', fontSize:16,color: Colors.white)),
                     /*Text(
                       '#123232',
                       style: TextStyle(
@@ -177,15 +175,17 @@ class ChatState extends State<Chat> {
                           color: Colors.white),
                     ),*/
                     Text(
-                      'Last visit date June 07,2020',
+                      widget.lastDate!=null?'Date: '+DateFormat('dd MMM kk:mm').format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              int.parse(widget.lastDate))):'',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
                           fontFamily: 'Poppins',
-                          fontSize: 10,
+                          fontSize: 8,
                           color: Colors.white),
                     ),
-                    Text(
+                    /*Text(
                       'Next appointment date Jul 15,2020',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -193,7 +193,7 @@ class ChatState extends State<Chat> {
                           fontFamily: 'Poppins',
                           fontSize: 10,
                           color: Colors.white),
-                    )
+                    )*/
                   ],
                 ),
               ))
@@ -240,22 +240,32 @@ class ChatScreen extends StatefulWidget {
   final String peerId;
   final String peerAvatar;
   final String peerName;
+  final String lastDate;
 
-  ChatScreen({Key key, @required this.peerId, @required this.peerAvatar,@required this.peerName})
+  ChatScreen(
+      {Key key,
+      @required this.peerId,
+      @required this.peerAvatar,
+      @required this.peerName,@required this.lastDate})
       : super(key: key);
 
   @override
-  State createState() =>
-      ChatScreenState(peerId: peerId, peerAvatar: peerAvatar,peerName: peerName);
+  State createState() => ChatScreenState(
+      peerId: peerId, peerAvatar: peerAvatar, peerName: peerName,lastDate: lastDate);
 }
 
 class ChatScreenState extends State<ChatScreen> {
-  ChatScreenState({Key key, @required this.peerId, @required this.peerAvatar, @required this.peerName});
+  ChatScreenState(
+      {Key key,
+      @required this.peerId,
+      @required this.peerAvatar,
+      @required this.peerName, @required this.lastDate});
 
   String peerId;
   String peerAvatar;
   String peerName;
   String id;
+  String lastDate;
 
   var listMessage;
   String groupChatId;
@@ -265,8 +275,9 @@ class ChatScreenState extends State<ChatScreen> {
   bool isLoading;
   bool isShowSticker;
   String imageUrl;
-  String patientId='';
-  String patientName='';
+  String patientId = '';
+  String patientName = '';
+  String patientPicUrl = '';
 
   final TextEditingController textEditingController = TextEditingController();
   var chatEnterMessageController = TextEditingController();
@@ -287,40 +298,50 @@ class ChatScreenState extends State<ChatScreen> {
     isShowSticker = false;
     imageUrl = '';
 
-    readLocal();
     getPatientDetails();
-
   }
 
   getMediaURL(List<String> recordIds) {
     getMediaFileURL(recordIds).then((value) {
       if (value.status == 200 && value.success == true) {
-        for(int i = 0;i<value.response.data.mediaMasterInfo.length;i++){
+        for (int i = 0; i < value.response.data.mediaMasterInfo.length; i++) {
           String fileType = value.response.data.mediaMasterInfo[i].fileType;
           String fileURL = value.response.data.mediaMasterInfo[i].fileContent;
-          if((fileType=='.jpg')||(fileType=='.png')){
+          if ((fileType == '.jpg') || (fileType == '.png')) {
             onSendMessage(fileURL, 1);
           }
         }
-
       } else {
         toast.getToast('Unable to get file', Colors.red);
       }
     });
   }
 
-  Future<GetMetaFileURLModel> getMediaFileURL(
-      List<String> recordIds) async {
+  Future<GetMetaFileURLModel> getMediaFileURL(List<String> recordIds) async {
     GetMetaFileURLModel getMetaFileURLModel =
-    await getMediaFileViewModel.getMediaMetaURL(recordIds,patientId);
+        await getMediaFileViewModel.getMediaMetaURL(recordIds, patientId);
 
     return getMetaFileURLModel;
   }
 
-  Future<String> getPatientDetails() async {
+  getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    patientName = myProfile.response.data.generalInfo.name;
+    patientName = myProfile.response.data.generalInfo.qualifiedFullName != null
+        ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +' '+
+            myProfile.response.data.generalInfo.qualifiedFullName.lastName
+        : '';
+    patientPicUrl = getProfileURL();
+
+    readLocal();
+  }
+
+  String getProfileURL() {
+    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    String patientPicURL =
+        myProfile.response.data.generalInfo.profilePicThumbnailURL;
+
+    return patientPicURL;
   }
 
   void onFocusChange() {
@@ -335,18 +356,20 @@ class ChatScreenState extends State<ChatScreen> {
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString('id') ?? '';
-    if(id==""){
+   /* if (id == "") {
       groupChatId = '$peerId-$patientId';
-    }else{
-      if (id.hashCode <= peerId.hashCode) {
-        groupChatId = '$id-$peerId';
+    } */
+    //else
+    //  {
+      if (patientId.hashCode <= peerId.hashCode) {
+        groupChatId = '$patientId-$peerId';
       } else {
-        groupChatId = '$peerId-$id';
+        groupChatId = '$peerId-$patientId';
       }
-    }
+  //  }
     Firestore.instance
         .collection('users')
-        .document(id==""?patientId:id)
+        .document(id == "" ? patientId : id)
         .updateData({'chattingWith': peerId});
 
     setState(() {});
@@ -380,6 +403,7 @@ class ChatScreenState extends State<ChatScreen> {
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
     storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
       imageUrl = downloadUrl;
+      imageUrl = downloadUrl;
       setState(() {
         isLoading = false;
         onSendMessage(imageUrl, 1);
@@ -393,7 +417,7 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void onSendMessage(String content, int type) {
-    print('patientId'+patientId);
+    print('patientId' + patientId);
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
       textEditingController.clear();
@@ -408,7 +432,7 @@ class ChatScreenState extends State<ChatScreen> {
         await transaction.set(
           documentReference,
           {
-            'idFrom': id==""?patientId:id,
+            'idFrom': id == "" ? patientId : id,
             'idTo': peerId,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
@@ -420,24 +444,21 @@ class ChatScreenState extends State<ChatScreen> {
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);
 
       addChatList(content);
-
     } else {
       Fluttertoast.showToast(msg: 'Nothing to send');
     }
   }
 
-  void addChatList(String content){
-
+  void addChatList(String content) {
     Firestore.instance
         .collection('chat_list')
         .document(patientId)
         .collection('user_list')
         .document(peerId)
         .setData({
-      'nickname': widget.peerName!=null?widget.peerName:'',
-      'photoUrl': '',
-      //'photoUrl': 'http://lorempixel.com/640/360',
-      'id':peerId,
+      'nickname': peerName != null ? peerName : '',
+      'photoUrl': peerAvatar != null ? peerAvatar : '',
+      'id': peerId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       'lastMessage': content
     });
@@ -448,19 +469,16 @@ class ChatScreenState extends State<ChatScreen> {
         .collection('user_list')
         .document(patientId)
         .setData({
-      'nickname': patientName!=null?patientName:'',
-      'photoUrl': '',
-      //'photoUrl': 'http://lorempixel.com/640/360',
-      'id':patientId,
+      'nickname': patientName != null ? patientName : '',
+      'photoUrl': patientPicUrl != null ? patientPicUrl : '',
+      'id': patientId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       'lastMessage': content
     });
-
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
     if (document['idFrom'] == patientId) {
-      // Right (my message)
       return Row(
         children: <Widget>[
           document['type'] == 0
@@ -765,7 +783,7 @@ class ChatScreenState extends State<ChatScreen> {
     } else {
       Firestore.instance
           .collection('users')
-          .document(id==""?patientId:id)
+          .document(id == "" ? patientId : id)
           .updateData({'chattingWith': null});
       Navigator.pop(context);
     }
@@ -966,12 +984,7 @@ class ChatScreenState extends State<ChatScreen> {
                       child: FlatButton(
                           onPressed: () {
                             recordIds.clear();
-                            FetchRecords(
-                                0,
-                                true,
-                                false,
-                                false,
-                                recordIds);
+                            FetchRecords(0, true, false, false, recordIds);
                           },
                           child: new Icon(
                             Icons.attach_file,

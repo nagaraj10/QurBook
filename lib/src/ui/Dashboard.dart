@@ -9,17 +9,20 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/device_integration/view/screens/Widget_View.dart';
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/view/screens/getDevice_Values.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/device_integration/view/screens/Widget_View.dart';
 
@@ -173,22 +176,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 children: <Widget>[
                   Container(
                     height: 20,
-
                   ),
                   Container(
-                    alignment: Alignment.topRight,
-                   child:  (imageURIProfile!=null) ? IconButton(
-                                      icon: Icon(
-                                        Icons.more_vert,
-                                        color: Colors.black87,
-                                        size: 30,
-                                      ),
-                                      onPressed: () {
-                                        saveMediaDialog(context, false);
-                                      },
-                                    )
-                        : SizedBox.shrink()
-                  ),
+                      alignment: Alignment.topRight,
+                      child: (imageURIProfile != null)
+                          ? IconButton(
+                              icon: Icon(
+                                Icons.more_vert,
+                                color: Colors.black87,
+                                size: 30,
+                              ),
+                              onPressed: () {
+                                saveMediaDialog(context, false);
+                              },
+                            )
+                          : SizedBox.shrink()),
                   Container(
                     height: 150,
                   ),
@@ -384,14 +386,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     ).then((value) {});
   }
 
-  /* Future<void> _handleCameraAndMic() async {
-    // You can request multiple permissions at once.
-    await [
-      Permission.camera,
-      Permission.microphone,
-    ].request();
-  }*/
-
   bool checkPagesForEveryIndex(int position) {
     bool condition = false;
 
@@ -464,10 +458,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void syncDevices() async {
     await new CommonUtil().syncDevices();
-    }
+  }
+
   Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [PermissionGroup.camera, PermissionGroup.microphone],
-    );
+    await Permission.microphone.request();
+    await Permission.camera.request();
   }
 }

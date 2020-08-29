@@ -11,7 +11,8 @@ import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Doctor
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
-import 'package:myfhb/telehealth/features/MyProvider/view/ExpansionTileWidget.dart' as expansion;
+import 'package:myfhb/telehealth/features/MyProvider/view/ExpansionTileWidget.dart'
+    as expansion;
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
@@ -124,9 +125,8 @@ class _MyProvidersState extends State<MyProvidersNew> {
   Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Card(
         elevation: 5,
-        margin: EdgeInsets.only(left:15.0,right: 15.0,top:5,bottom: 5),
+        margin: EdgeInsets.only(left: 15.0, right: 15.0, top: 5, bottom: 5),
         child: expansion.ExpansionTileWidget(
-
           title: collapseListItem(ctx, i, docs),
           children: [expandedListItem(ctx, i, docs)],
         ));
@@ -147,10 +147,12 @@ class _MyProvidersState extends State<MyProvidersNew> {
         children: [
           commonWidgets.getSizedBox(20.0),
           DoctorSessionTimeSlot(
-              date: _selectedValue.toString(),
-              doctorId: docs[i].id,
-              docs: docs,
-              i: i,isReshedule: false,),
+            date: _selectedValue.toString(),
+            doctorId: docs[i].id,
+            docs: docs,
+            i: i,
+            isReshedule: false,
+          ),
         ],
       ),
     );
@@ -173,7 +175,7 @@ class _MyProvidersState extends State<MyProvidersNew> {
             Container(
               alignment: Alignment.center,
               child: commonWidgets.getClipOvalImageNew(
-                  docs[i].profilePicThumbnail, fhbStyles.cardClipImage),
+                  docs[i].profilePicThumbnailURL, fhbStyles.cardClipImage),
             ),
             new Positioned(
               bottom: 0.0,

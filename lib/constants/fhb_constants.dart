@@ -78,14 +78,6 @@ const String CURRENT_THEME = 'App Theme';
 const String stop_detecting = 'StopDetecting';
 const String allowDeviceRecognition = 'allowDeviceRecognition';
 const String allowDigitRecognition = 'allowDigitRecognition';
-const String activateGF = "activateGF"; // activate googleFit
-const String activateHK = "activateHK"; // activate appleHealth
-const String isFirstTym = "FirsTym";
-const String bpMon = "bpMon";
-const String glMon = "GLMon";
-const String oxyMon = "OxyMon";
-const String thMon = "THMon";
-const String wsMon = "WSMon";
 
 const String audioFileType = 'audio/mp3';
 const String MSG_VERIFYEMAIL_VERIFIED =
@@ -289,9 +281,6 @@ const String Appointments_cancel = 'Cancel';
 const String Appointments_new = 'New Appointment';
 const String YOUR_BOOKING_SUCCESS =
     "Your booking has been cancelled succesfully..";
-const String YOUR_FOLLOWUP_SUCCESS =
-    "Your Followup date has been updated succesfully..";
-const String FOLLOW_UP_CANCEL = "Followup date updation failed.. Plesae try again!";
 const String YOUR_RESHEDULE_SUCCESS =
     "Your booking has been resheduled succesfully..";
 const String BOOKING_CANCEL = "Booking cancellation failed.. Plesae try again!";
@@ -320,10 +309,21 @@ const String Devices_OxY = 'assets/devices/pulse_oxim.png';
 const String Devices_THM = 'assets/devices/fever.png';
 const String Devices_WS = 'assets/devices/weight.png';
 
-//For Google Fit Integration
-const String asgurduserID = '49cdc4be-afd9-419e-b3f9-1bd35207c74f';
-
 const String audioFileAACType = 'audio/aac';
 const String audioFileTypeAppStream = 'application/octet-stream';
 
 const String SHAREECORD = 'sharerecord/';
+const String KEY_DEVICEINFO = 'deviceInfo';
+const String KEY_EMAIL = 'email';
+
+//For Google Fit Integration
+const String asgurduserID = '49cdc4be-afd9-419e-b3f9-1bd35207c74f';
+
+const String activateGF = "activateGF"; // activate googleFit
+const String activateHK = "activateHK"; // activate appleHealth
+const String isFirstTym = "FirsTym";
+const String bpMon = "bpMon";
+const String glMon = "GLMon";
+const String oxyMon = "OxyMon";
+const String thMon = "THMon";
+const String wsMon = "WSMon";
