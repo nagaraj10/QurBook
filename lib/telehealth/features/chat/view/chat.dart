@@ -166,7 +166,7 @@ class ChatState extends State<Chat> {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(
-                            fontFamily: 'Poppins', color: Colors.white)),
+                            fontFamily: 'Poppins', fontSize:16,color: Colors.white)),
                     /*Text(
                       '#123232',
                       style: TextStyle(
@@ -175,14 +175,14 @@ class ChatState extends State<Chat> {
                           color: Colors.white),
                     ),*/
                     Text(
-                      widget.lastDate!=null?'Last visit date on '+DateFormat('dd MMM kk:mm').format(
+                      widget.lastDate!=null?'Date: '+DateFormat('dd MMM kk:mm').format(
                           DateTime.fromMillisecondsSinceEpoch(
                               int.parse(widget.lastDate))):'',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
                           fontFamily: 'Poppins',
-                          fontSize: 10,
+                          fontSize: 8,
                           color: Colors.white),
                     ),
                     /*Text(
@@ -328,7 +328,7 @@ class ChatScreenState extends State<ChatScreen> {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.response.data.generalInfo.qualifiedFullName != null
-        ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+        ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +' '+
             myProfile.response.data.generalInfo.qualifiedFullName.lastName
         : '';
     patientPicUrl = getProfileURL();

@@ -161,10 +161,6 @@ class _MyControllersState extends State<MyControllers> {
      patientName = getPatientName();
      patientPicUrl = getProfileURL();
 
-    patientId = json.decode(patientId);
-    patientName = json.decode(patientName);
-    patientPicUrl = json.decode(patientPicUrl);
-
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
         .where('id', isEqualTo: patientId)
@@ -216,7 +212,7 @@ class _MyControllersState extends State<MyControllers> {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     String patientName =
     myProfile.response.data.generalInfo.qualifiedFullName !=null ?
-    myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+    myProfile.response.data.generalInfo.qualifiedFullName.firstName +' '+
         myProfile.response.data.generalInfo.qualifiedFullName.lastName:'';
 
     return patientName;
