@@ -25,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 3), () {
       var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
 
-      var deviceIfo = PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_MAYA);
+      var deviceIfo = PreferenceUtil.isKeyValid(Constants.KEY_DEVICEINFO);
       if (!isFirstTime) {
         PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, variable.strtrue);
         PageNavigator.goToPermanent(context, router.rt_WebCognito);

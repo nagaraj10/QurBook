@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -6,12 +7,10 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:flutter/material.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
-import 'package:path/path.dart';
 
 class AppointmentsCommonWidget {
   Widget docName(BuildContext context, doc) {
@@ -149,7 +148,13 @@ class AppointmentsCommonWidget {
     String notesCount = doc.healthRecord.notes == null ? null : 1.toString();
     String voiceNotesCount =
         doc.healthRecord.voice == null ? null : 1.toString();
-    String rxCount = doc.healthRecord.rx == null ? null : 1.toString();
+    int healthRecord = doc.healthRecord.prescription.length == 0
+        ? 0
+        : doc.healthRecord.prescription.length;
+    int otherRecords = doc.healthRecord.others.length == 0
+        ? 0
+        : doc.healthRecord.others.length;
+    String rxCount = (healthRecord + otherRecords).toString();
     return Row(
       children: [
         iconWithText(
@@ -305,11 +310,11 @@ class AppointmentsCommonWidget {
         size: 24,
         onTap: () {
           Navigator.of(context).pop();
-              Navigator.pushNamed(
-                context,
-                '/telehealth-providers',
-                arguments: HomeScreenArguments(selectedIndex: 1),
-              ).then((value) {});
+          Navigator.pushNamed(
+            context,
+            '/telehealth-providers',
+            arguments: HomeScreenArguments(selectedIndex: 1),
+          ).then((value) {});
         },
       ),
     );

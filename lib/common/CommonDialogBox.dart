@@ -655,11 +655,12 @@ class CommonDialogBox {
                       readOnly: true,
                       controller: dateOfVisit,
                       decoration: InputDecoration(
+                          labelText: CommonConstants.exprityDate,
                           suffixIcon: new IconButton(
-                        icon: new Icon(Icons.calendar_today),
-                        onPressed: () =>
-                            _selectDateFuture(context, dateOfVisit),
-                      )),
+                            icon: new Icon(Icons.calendar_today),
+                            onPressed: () =>
+                                _selectDateFuture(context, dateOfVisit),
+                          )),
                     ))),
             SizedBox(
               height: 15,
@@ -1949,11 +1950,15 @@ class CommonDialogBox {
         validationMsg = CommonConstants.strFileEmpty;
       } else {
         validationConditon = true;
+        validationMsg = CommonConstants.strExpDateEmpty;
       }
     } else if (categoryName == Constants.STR_IDDOCS) {
       if (fileName.text == '') {
         validationConditon = false;
         validationMsg = CommonConstants.strFileEmpty;
+      } else if (dateOfVisit.text == '') {
+        validationConditon = false;
+        validationMsg = CommonConstants.strExpDateEmpty;
       } else if (selectedMediaData == null) {
         validationConditon = false;
         validationMsg = CommonConstants.strIDEmpty;
@@ -2032,7 +2037,7 @@ class CommonDialogBox {
           validationMsg = CommonConstants.strOxugenSaturationEmpty;
         } else if (pulse.text == '' || pulse.text == null) {
           validationConditon = false;
-          validationMsg = CommonConstants.strPulse;
+          validationMsg = CommonConstants.strPulseEmpty;
         } else {
           validationConditon = true;
         }
