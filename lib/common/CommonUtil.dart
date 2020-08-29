@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +10,11 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
 import 'package:myfhb/global_search/model/Data.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/LinkedData.dart';
@@ -942,6 +943,18 @@ class CommonUtil {
     }
   }
 
+  Future<void> syncDevices() async {
+    DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
+
+    if (PreferenceUtil.getStringValue(Constants.activateGF) ==
+        variable.strtrue) {
+      _deviceDataHelper.syncGF();
+    } else if (PreferenceUtil.getStringValue(Constants.activateHK) ==
+        variable.strtrue) {
+      _deviceDataHelper.syncHKT();
+    }
+  }
+
   Future<MyProfile> getUserProfileData() async {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
 
@@ -971,6 +984,69 @@ class CommonUtil {
       }
       return profileData;
     });
+  }
+
+  List<DeviceData> getDeviceList() {
+    List<DeviceData> devicelist = new List<DeviceData>();
+    if (PreferenceUtil.getStringValue(Constants.bpMon) != variable.strFalse) {
+      devicelist.add(DeviceData(
+          title: Constants.STR_BP_MONITOR,
+          icon: Constants.Devices_BP,
+          status: 0,
+          isSelected: false,
+          value_name: parameters.strDataTypeBP,
+          value1: 'SYS',
+          value2: 'DIS',
+          color: Colors.redAccent));
+    }
+    if (PreferenceUtil.getStringValue(Constants.glMon) != variable.strFalse) {
+      devicelist.add(DeviceData(
+          title: Constants.STR_GLUCOMETER,
+          icon: Constants.Devices_GL,
+          status: 0,
+          isSelected: false,
+          value_name: parameters.strGlusoceLevel,
+          value1: 'GL',
+          value2: '',
+          color: Colors.orange));
+    }
+
+    if (PreferenceUtil.getStringValue(Constants.oxyMon) != variable.strFalse) {
+      devicelist.add(DeviceData(
+          title: Constants.STR_PULSE_OXIMETER,
+          icon: Constants.Devices_OxY,
+          status: 0,
+          isSelected: false,
+          value_name: parameters.strOxgenSaturation,
+          value1: 'OS',
+          value2: '',
+          color: Colors.black26));
+    }
+
+    if (PreferenceUtil.getStringValue(Constants.wsMon) != variable.strFalse) {
+      devicelist.add(DeviceData(
+          title: Constants.STR_WEIGHING_SCALE,
+          icon: Constants.Devices_WS,
+          status: 0,
+          isSelected: false,
+          value_name: parameters.strWeight,
+          value1: 'WT',
+          value2: '',
+          color: Colors.lightGreen));
+    }
+    if (PreferenceUtil.getStringValue(Constants.thMon) != variable.strFalse) {
+      devicelist.add(DeviceData(
+          title: Constants.STR_THERMOMETER,
+          icon: Constants.Devices_THM,
+          status: 0,
+          isSelected: false,
+          value_name: parameters.strTemperature,
+          value1: 'TEMP',
+          value2: '',
+          color: Colors.deepOrangeAccent));
+    }
+
+    return devicelist;
   }
 
   Future<MyProfile> getMyProfile() async {
@@ -1180,69 +1256,5 @@ class CommonUtil {
       PreferenceUtil.saveString(Constants.KEY_DEVICEINFO, variable.strFalse);
     }
     return DeviceInfoSucess.fromJson(response);
-  }
-
-  //added by ravindran for device integration
-  List<DeviceData> getDeviceList() {
-    List<DeviceData> devicelist = new List<DeviceData>();
-    if (PreferenceUtil.getStringValue(Constants.bpMon) != variable.strFalse) {
-      devicelist.add(DeviceData(
-          title: Constants.STR_BP_MONITOR,
-          icon: Constants.Devices_BP,
-          status: 0,
-          isSelected: false,
-          value_name: parameters.strDataTypeBP,
-          value1: 'SYS',
-          value2: 'DIS',
-          color: Colors.redAccent));
-    }
-    if (PreferenceUtil.getStringValue(Constants.glMon) != variable.strFalse) {
-      devicelist.add(DeviceData(
-          title: Constants.STR_GLUCOMETER,
-          icon: Constants.Devices_GL,
-          status: 0,
-          isSelected: false,
-          value_name: parameters.strGlusoceLevel,
-          value1: 'GL',
-          value2: '',
-          color: Colors.orange));
-    }
-
-    if (PreferenceUtil.getStringValue(Constants.oxyMon) != variable.strFalse) {
-      devicelist.add(DeviceData(
-          title: Constants.STR_PULSE_OXIMETER,
-          icon: Constants.Devices_OxY,
-          status: 0,
-          isSelected: false,
-          value_name: parameters.strOxgenSaturation,
-          value1: 'OS',
-          value2: '',
-          color: Colors.black26));
-    }
-
-    if (PreferenceUtil.getStringValue(Constants.wsMon) != variable.strFalse) {
-      devicelist.add(DeviceData(
-          title: Constants.STR_WEIGHING_SCALE,
-          icon: Constants.Devices_WS,
-          status: 0,
-          isSelected: false,
-          value_name: parameters.strWeight,
-          value1: 'WT',
-          value2: '',
-          color: Colors.lightGreen));
-    }
-    if (PreferenceUtil.getStringValue(Constants.thMon) != variable.strFalse) {
-      devicelist.add(DeviceData(
-          title: Constants.STR_THERMOMETER,
-          icon: Constants.Devices_THM,
-          status: 0,
-          isSelected: false,
-          value_name: parameters.strTemperature,
-          value1: 'TEMP',
-          value2: '',
-          color: Colors.deepOrangeAccent));
-    }
-
-    return devicelist;
   }
 }
