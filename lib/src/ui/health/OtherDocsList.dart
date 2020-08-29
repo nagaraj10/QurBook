@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class OtherDocsList extends StatefulWidget {
   final CompleteData completeData;
@@ -27,6 +23,8 @@ class OtherDocsList extends StatefulWidget {
   List<String> mediaMeta;
   final bool isNotesSelect;
   final bool isAudioSelect;
+  final bool showDetails;
+
   OtherDocsList(
       this.completeData,
       this.callBackToRefresh,
@@ -38,7 +36,8 @@ class OtherDocsList extends StatefulWidget {
       this.allowSelect,
       this.mediaMeta,
       this.isNotesSelect,
-      this.isAudioSelect);
+      this.isAudioSelect,
+      this.showDetails);
 
   @override
   _OtherDocsState createState() => _OtherDocsState();
@@ -113,7 +112,7 @@ class _OtherDocsState extends State<OtherDocsList> {
           }
         },
         onTap: () {
-          if (widget.allowSelect ) {
+          if (widget.allowSelect && widget.showDetails == false) {
             bool condition;
             if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
               condition = false;
@@ -136,103 +135,103 @@ class _OtherDocsState extends State<OtherDocsList> {
           }
         },
         child: Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(fhbColors.cardShadowColor),
-                  blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 0, // has the effect of extending the shadow
-                  // has the effect of extending the shadow
-                )
-              ],
-            ),
-            child:
-                Row(
+          padding: EdgeInsets.all(10.0),
+          margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(fhbColors.cardShadowColor),
+                blurRadius: 16, // has the effect of softening the shadow
+                spreadRadius: 0, // has the effect of extending the shadow
+                // has the effect of extending the shadow
+              )
+            ],
+          ),
+          child: Row(
+            children: <Widget>[
+              CircleAvatar(
+                radius: 25,
+                backgroundColor: const Color(fhbColors.bgColorContainer),
+                child: Image.network(
+                  mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                      ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
+                      : Constants.BASE_URL +
+                          mediaMetaInfoObj.metaInfo.categoryInfo.logo,
+                  height: 25,
+                  width: 25,
+                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: const Color(fhbColors.bgColorContainer),
-                      child: Image.network(
-                        mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
-                            ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                            : Constants.BASE_URL +
-                                mediaMetaInfoObj.metaInfo.categoryInfo.logo,
-                        height: 25,
-                        width: 25,
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                      ),
+                    SizedBox(height: 10.0),
+                    Text(
+                      mediaMetaInfoObj.metaInfo.fileName != null
+                          ? mediaMetaInfoObj.metaInfo.fileName
+                          : '',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
                     ),
-                    SizedBox(
-                      width: 20,
-                    ),
-                    Expanded(
-                      flex: 6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          SizedBox(height: 10.0),
-                          Text(
-                            mediaMetaInfoObj.metaInfo.fileName != null
-                                ? mediaMetaInfoObj.metaInfo.fileName
-                                : '',
-                            style: TextStyle(fontWeight: FontWeight.w500),
-                            overflow: TextOverflow.fade,
-                            softWrap: false,
-                          ),
-                          Text(
-                            new FHBUtils().getFormattedDateString(
-                                mediaMetaInfoObj.createdOn),
-                            style: TextStyle(
-                                color: Colors.grey[400], fontSize: 12),
-                          )
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          IconButton(
-                              icon: mediaMetaInfoObj.isBookmarked
-                                  ? ImageIcon(
-                                      AssetImage(
-                                          variable.icon_record_fav_active),
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      size: 20,
-                                    )
-                                  : ImageIcon(
-                                      AssetImage(variable.icon_record_fav),
-                                      color: Colors.black,
-                                      size: 20,
-                                    ),
-                              onPressed: () {
-                                new CommonUtil()
-                                    .bookMarkRecord(mediaMetaInfoObj, _refresh);
-                              }),
-
-                          (mediaMetaInfoObj.metaInfo.hasVoiceNotes != null &&
-                              mediaMetaInfoObj.metaInfo.hasVoiceNotes)
-                              ? Icon(
+                    Text(
+                      new FHBUtils()
+                          .getFormattedDateString(mediaMetaInfoObj.createdOn),
+                      style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                    )
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                        icon: mediaMetaInfoObj.isBookmarked
+                            ? ImageIcon(
+                                AssetImage(variable.icon_record_fav_active),
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                size: 20,
+                              )
+                            : ImageIcon(
+                                AssetImage(variable.icon_record_fav),
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                        onPressed: () {
+                          new CommonUtil()
+                              .bookMarkRecord(mediaMetaInfoObj, _refresh);
+                        }),
+                    (mediaMetaInfoObj.metaInfo.hasVoiceNotes != null &&
+                            mediaMetaInfoObj.metaInfo.hasVoiceNotes)
+                        ? Icon(
                             Icons.mic,
                             color: Colors.black54,
                           )
-                              : Container(),  widget.mediaMeta.contains(mediaMetaInfoObj.id)
-                              ? Icon(Icons.done,color: Color(new CommonUtil().getMyPrimaryColor()),)
-                              : SizedBox(),
-                        ],
-                      ),
-                    ),
+                        : Container(),
+                    widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                        ? Icon(
+                            Icons.done,
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                          )
+                        : SizedBox(),
                   ],
                 ),
-                ));
+              ),
+            ],
+          ),
+        ));
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {

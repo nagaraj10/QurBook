@@ -361,7 +361,7 @@ class _AppointmentsState extends State<Appointments> {
                               commonWidget.docTimeSlot(
                                   context, doc, hour, minute, days),
                               SizedBoxWidget(height: 15.0),
-                              commonWidget.docIcons(doc)
+                              commonWidget.docIcons(doc,context)
                             ],
                           ),
                         ],
@@ -519,7 +519,7 @@ class _AppointmentsState extends State<Appointments> {
                             commonWidget.docLoc(context, doc.location),
                             SizedBoxWidget(height: 5.0),
                             SizedBoxWidget(height: 15.0),
-                            commonWidget.docIcons(doc)
+                            commonWidget.docIcons(doc,context)
                           ],
                         ),
                       ],

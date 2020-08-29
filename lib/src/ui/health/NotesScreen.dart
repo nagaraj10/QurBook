@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-
+import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class NotesScreenList extends StatefulWidget {
   final CompleteData completeData;
@@ -30,6 +26,8 @@ class NotesScreenList extends StatefulWidget {
   List<String> mediaMeta;
   final bool isNotesSelect;
   final bool isAudioSelect;
+  final bool showDetails;
+
   NotesScreenList(
       this.completeData,
       this.callBackToRefresh,
@@ -39,7 +37,7 @@ class NotesScreenList extends StatefulWidget {
       this.categoryDescription,
       this.mediaSelected,
       this.allowSelect,
-      this.mediaMeta,this.isNotesSelect,this.isAudioSelect);
+      this.mediaMeta,this.isNotesSelect,this.isAudioSelect,this.showDetails);
 
   @override
   _NotesScreenListState createState() => _NotesScreenListState();
@@ -115,7 +113,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
           }
         },
         onTap: () {
-            if (widget.isNotesSelect) {
+            if (widget.isNotesSelect && widget.showDetails==false) {
               bool condition;
               if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
                 condition = false;

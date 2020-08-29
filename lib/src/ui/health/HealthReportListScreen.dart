@@ -29,6 +29,7 @@ class HealthReportListScreen extends StatefulWidget {
   final bool allowSelect;
   final bool isNotesSelect;
   final bool isAudioSelect;
+  final bool showDetails;
 
   List<String> mediaMeta;
   HealthReportListScreen(
@@ -41,7 +42,8 @@ class HealthReportListScreen extends StatefulWidget {
       this.allowSelect,
       this.mediaMeta,
       this.isNotesSelect,
-      this.isAudioSelect);
+      this.isAudioSelect,
+      this.showDetails);
 
   @override
   _HealthReportListScreenState createState() => _HealthReportListScreenState();
@@ -124,7 +126,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
             }
           },
           onTap: () {
-            if (widget.allowSelect) {
+            if (widget.allowSelect && widget.showDetails == false) {
               bool condition;
               if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
                 condition = false;
