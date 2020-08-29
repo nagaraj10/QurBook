@@ -115,11 +115,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (deviceValues.bloodPressure.entities.isNotEmpty) {
             dateTimeStamp =
                 deviceValues.bloodPressure.entities[0].lastsyncdatetime;
-            date = DateFormat(parameters.strDateYMD, variable.strenUs)
-                    .format(dateTimeStamp) +
-                " " +
-                DateFormat(parameters.strTimeHMS, variable.strenUs)
-                    .format(dateTimeStamp);
+            date =
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+
             devicevalue1 =
                 deviceValues.bloodPressure.entities[0].systolic.toString();
             devicevalue2 =
@@ -136,11 +134,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (deviceValues.bloodGlucose.entities.isNotEmpty) {
             dateTimeStamp =
                 deviceValues.bloodGlucose.entities[0].lastsyncdatetime;
-            date = DateFormat(parameters.strDateYMD, variable.strenUs)
-                    .format(dateTimeStamp) +
-                " " +
-                DateFormat(parameters.strTimeHMS, variable.strenUs)
-                    .format(dateTimeStamp);
+            date =
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+
             devicevalue1 = deviceValues
                 .bloodGlucose.entities[0].bloodGlucoseLevel
                 .toString();
@@ -155,11 +151,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
             dateTimeStamp =
                 deviceValues.oxygenSaturation.entities[0].lastsyncdatetime;
-            date = DateFormat(parameters.strDateYMD, variable.strenUs)
-                    .format(dateTimeStamp) +
-                " " +
-                DateFormat(parameters.strTimeHMS, variable.strenUs)
-                    .format(dateTimeStamp);
+            date = "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
             devicevalue1 = deviceValues
                 .oxygenSaturation.entities[0].oxygenSaturation
                 .toString();
@@ -174,11 +166,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (deviceValues.bodyTemperature.entities.isNotEmpty) {
             dateTimeStamp =
                 deviceValues.bodyTemperature.entities[0].lastsyncdatetime;
-            date = DateFormat(parameters.strDateYMD, variable.strenUs)
-                    .format(dateTimeStamp) +
-                " " +
-                DateFormat(parameters.strTimeHMS, variable.strenUs)
-                    .format(dateTimeStamp);
+            date ="${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
             devicevalue1 =
                 deviceValues.bodyTemperature.entities[0].temperature.toString();
           } else {
@@ -192,11 +180,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (deviceValues.bodyWeight.entities.isNotEmpty) {
             dateTimeStamp =
                 deviceValues.bodyWeight.entities[0].lastsyncdatetime;
-            date = DateFormat(parameters.strDateYMD, variable.strenUs)
-                    .format(dateTimeStamp) +
-                " " +
-                DateFormat(parameters.strTimeHMS, variable.strenUs)
-                    .format(dateTimeStamp);
+            date = "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
             devicevalue1 =
                 deviceValues.bodyWeight.entities[0].weight.toString();
           } else {
