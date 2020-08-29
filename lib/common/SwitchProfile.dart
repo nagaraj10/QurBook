@@ -1,20 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-
 
 class SwitchProfile {
   FamilyListBloc _familyListBloc;
@@ -60,10 +58,11 @@ class SwitchProfile {
               child: ClipOval(
                   child: myProfile != null
                       ? myProfile.response.data.generalInfo
-                                  .profilePicThumbnail !=
+                                  .profilePicThumbnailURL !=
                               null
-                          ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile
-                              .response.data.generalInfo.profilePicThumbnailURL)
+                          ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                              myProfile.response.data.generalInfo
+                                  .profilePicThumbnailURL)
                           : Container(
                               height: 50,
                               width: 50,
@@ -88,15 +87,12 @@ class SwitchProfile {
                           color: Color(fhbColors.bgColorContainer),
                         )),
             )));
-
-   
   }
 
   Future<Widget> getDialogBoxWithFamilyMemberScrap(FamilyData familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, keyLoader, (context, userId, userName) {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
-        
         if (PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME) ==
             Constants.STR_IDDOCS) {
           if (PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID) !=
@@ -131,10 +127,11 @@ class SwitchProfile {
         new HealthReportListForUserBlock();
 
     _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
-      
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
           .then((value) {
-        _healthReportListForUserBlock.getHelthReportList(condtion: false).then((value) {
+        _healthReportListForUserBlock
+            .getHelthReportList(condtion: false)
+            .then((value) {
           PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value.response.data)
               .then((value) {

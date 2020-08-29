@@ -7,6 +7,7 @@ class HeaderRequest {
     auth['authorization'] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
+    print(PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN));
     return auth;
   }
 

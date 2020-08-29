@@ -137,6 +137,8 @@ class CommonConstants {
   static String strOxugenSaturationEmpty =
       'Please Enter Oxygen Saturation Value';
 
+  static String strExpDateEmpty = 'Please Enter Expiry Date';
+
   //From senthil
 
   static String add_family = "Add Family";
@@ -193,6 +195,7 @@ class CommonConstants {
   static String firstNameWithStar = "FirstName*";
   static String middleNameWithStar = "MiddleName*";
   static String lastNameWithStar = "LastName*";
+  static String exprityDate = "Expiry Date*";
 
   //===========================================//
 

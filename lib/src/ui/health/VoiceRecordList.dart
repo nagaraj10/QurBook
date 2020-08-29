@@ -25,6 +25,8 @@ class VoiceRecordList extends StatefulWidget {
   final bool isAudioSelect;
   List<String> mediaMeta;
   final bool allowSelect;
+  final bool showDetails;
+
 
   VoiceRecordList(
       this.completeData,
@@ -37,7 +39,7 @@ class VoiceRecordList extends StatefulWidget {
       this.allowSelect,
       this.mediaMeta,
       this.isNotesSelect,
-      this.isAudioSelect);
+      this.isAudioSelect,this.showDetails);
 
   @override
   _VoiceRecordListState createState() => new _VoiceRecordListState();
@@ -111,7 +113,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
           }
         },
         onTap: () {
-          if (widget.isAudioSelect) {
+          if (widget.isAudioSelect && widget.showDetails==false) {
             bool condition;
             if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
               condition = false;

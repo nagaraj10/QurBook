@@ -51,15 +51,16 @@ class MyRecords extends StatefulWidget {
   bool isAudioSelect;
   List<String> selectedMedias;
   bool isFromChat;
+  bool showDetails;
 
-  MyRecords({
-    this.categoryPosition,
-    this.allowSelect,
-    this.isAudioSelect,
-    this.isNotesSelect,
-    this.selectedMedias,
-    this.isFromChat,
-  });
+  MyRecords(
+      {this.categoryPosition,
+      this.allowSelect,
+      this.isAudioSelect,
+      this.isNotesSelect,
+      this.selectedMedias,
+      this.isFromChat,
+      this.showDetails});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -321,6 +322,7 @@ class _MyRecordsState extends State<MyRecords> {
       allowSelectNotes: widget.isNotesSelect ?? false,
       selectedMedia: widget.selectedMedias,
       isFromChat: widget.isFromChat ?? false,
+      showDetails: widget.showDetails ?? false,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -541,6 +543,7 @@ class CustomTabView extends StatefulWidget {
   bool allowSelectNotes;
   bool allowSelectVoice;
   bool isFromChat;
+  bool showDetails;
 
   CustomTabView(
       {@required this.itemCount,
@@ -560,7 +563,8 @@ class CustomTabView extends StatefulWidget {
       this.selectedMedia,
       this.allowSelectNotes,
       this.allowSelectVoice,
-      this.isFromChat});
+      this.isFromChat,
+      this.showDetails});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -777,18 +781,22 @@ class _CustomTabsState extends State<CustomTabView>
       Align(
         alignment: Alignment.bottomCenter,
         child: (widget.selectedMedia != null && widget.selectedMedia.length > 0)
-            ? OutlineButton(
-                onPressed: () {
-                  Navigator.of(context).pop({'metaId': widget.selectedMedia});
-                },
-                child: widget.isFromChat ? Text('Attach') : Text('Associate'),
-                textColor: Color(new CommonUtil().getMyPrimaryColor()),
-                color: Colors.white,
-                borderSide: BorderSide(
-                    color: Color(new CommonUtil().getMyPrimaryColor())),
-                shape:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-              )
+            ? !widget.showDetails
+                ? OutlineButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .pop({'metaId': widget.selectedMedia});
+                    },
+                    child:
+                        widget.isFromChat ? Text('Attach') : Text('Associate'),
+                    textColor: Color(new CommonUtil().getMyPrimaryColor()),
+                    color: Colors.white,
+                    borderSide: BorderSide(
+                        color: Color(new CommonUtil().getMyPrimaryColor())),
+                    shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                  )
+                : SizedBox()
             : SizedBox(),
       )
     ]);
@@ -1075,7 +1083,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
-            widget.allowSelectVoice));
+            widget.allowSelectVoice,
+            widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionDevice) {
         tabWidgetList.add(new DeviceListScreen(
@@ -1088,7 +1097,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
-            widget.allowSelectVoice));
+            widget.allowSelectVoice,
+            widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionLabReport) {
         tabWidgetList.add(new LabReportListScreen(
@@ -1101,7 +1111,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
-            widget.allowSelectVoice));
+            widget.allowSelectVoice,
+            widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionMedicalReport) {
         tabWidgetList.add(new MedicalReportListScreen(
@@ -1114,7 +1125,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
-            widget.allowSelectVoice));
+            widget.allowSelectVoice,
+            widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionBills) {
         tabWidgetList.add(new BillsList(
@@ -1127,7 +1139,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
-            widget.allowSelectVoice));
+            widget.allowSelectVoice,
+            widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionIDDocs) {
         tabWidgetList.add(new IDDocsList(
@@ -1140,7 +1153,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
-            widget.allowSelectVoice));
+            widget.allowSelectVoice,
+            widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
         tabWidgetList.add(new OtherDocsList(
@@ -1154,7 +1168,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
-            widget.allowSelectVoice));
+            widget.allowSelectVoice,
+            widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionVoiceRecord) {
         tabWidgetList.add(new VoiceRecordList(
@@ -1168,7 +1183,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
-            widget.allowSelectVoice));
+            widget.allowSelectVoice,
+            widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionClaimsRecord) {
         tabWidgetList.add(new OtherDocsList(
@@ -1182,7 +1198,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
-            widget.allowSelectVoice));
+            widget.allowSelectVoice,
+            widget.showDetails));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionNotes) {
         tabWidgetList.add(new NotesScreenList(
@@ -1196,7 +1213,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
-            widget.allowSelectVoice));
+            widget.allowSelectVoice,
+            widget.showDetails));
       } else {
         tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
       }

@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DeviceListScreen extends StatefulWidget {
   final CompleteData completeData;
@@ -27,10 +25,12 @@ class DeviceListScreen extends StatefulWidget {
     List<String> mediaMeta;
   final bool isNotesSelect;
   final bool isAudioSelect;
+  final bool showDetails;
+
 
 
   DeviceListScreen(this.completeData, this.callBackToRefresh, this.categoryName,
-      this.categoryId, this.getDataForParticularLabel,this.mediaSelected,this.allowSelect,this.mediaMeta,this.isNotesSelect,this.isAudioSelect);
+      this.categoryId, this.getDataForParticularLabel,this.mediaSelected,this.allowSelect,this.mediaMeta,this.isNotesSelect,this.isAudioSelect,this.showDetails);
 
   @override
   _DeviceListScreentState createState() => _DeviceListScreentState();
@@ -104,7 +104,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
         }
       },
         onTap: () {
-          if (widget.allowSelect ) {
+          if (widget.allowSelect && widget.showDetails==false) {
             bool condition;
             if (widget.mediaMeta.contains(data.id)) {
               condition = false;

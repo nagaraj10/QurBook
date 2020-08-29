@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -14,23 +13,18 @@ import 'package:myfhb/common/OverlayDeviceDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
-import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
-import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/router_variable.dart' as router;
-
 
 class DisplayPictureScreen extends StatefulWidget {
   final List<String> imagePath;
@@ -184,8 +178,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     try {
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
       setFileName();
-    } catch (e) {
-    }
+    } catch (e) {}
 
     if (categoryName != Constants.STR_DEVICES) {
       switch (categoryName) {
@@ -197,7 +190,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               dateOfVisit,
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -205,8 +197,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-          
-
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -220,8 +210,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                
-
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -229,8 +217,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               },
               widget.imagePath,
               (containsAudio, audioPath) {
-              
-
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -246,8 +232,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                
-
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -255,8 +239,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               },
               widget.imagePath,
               (containsAudio, audioPath) {
-              
-
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -275,7 +257,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               dateOfVisit,
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -283,7 +264,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-          
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -298,7 +278,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               dateOfVisit,
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -306,8 +285,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-           
-
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -320,7 +297,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -328,8 +304,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               },
               widget.imagePath,
               (containsAudio, audioPath) {
-              
-
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -343,7 +317,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           break;
       }
     } else {
-
       var digitRecog = true;
 
       digitRecog =
@@ -637,7 +610,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         if (results.containsKey(Constants.keyDoctor)) {
           doctorsData = json.decode(results[Constants.keyDoctor]);
 
-          
           setState(() {
             doctorsName.text = doctorsData[parameters.strName];
           });
@@ -655,8 +627,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     });
   }
 
-  
-
   getAllObjectToPost() {
     initialData();
     setFileName();
@@ -665,11 +635,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     deviceController = new TextEditingController(text: '');
     memoController = new TextEditingController(text: '');
 
-   
-
-    dateOfVisit = new TextEditingController(
-        text: FHBUtils().getFormattedDateOnly(dateTime.toString()));
-
     pulse = new TextEditingController(text: '');
     diaStolicPressure = new TextEditingController(text: '');
 
@@ -677,10 +642,16 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
+    if (categoryName != Constants.STR_IDDOCS) {
+      dateOfVisit = new TextEditingController(
+          text: FHBUtils().getFormattedDateOnly(dateTime.toString()));
+    } else {
+      dateOfVisit = new TextEditingController(text: '');
+    }
+
     isCategoryNameDevices =
         categoryName == Constants.IS_CATEGORYNAME_DEVICES ? true : false;
     categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
-
 
     categoryDataObj = new CommonUtil()
         .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
@@ -701,10 +672,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     }
   }
 
-  
-  
   void initialData() {
-
     if (!firstTym) {
       categoryNameClone =
           PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
@@ -715,7 +683,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
         ? Constants.IS_CATEGORYNAME_DEVICES
         : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
-
   }
 
   Widget getToggleButton() {
@@ -755,8 +722,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     });
   }
 
- 
-  
   void setFileName() {
     if (categoryName == CommonConstants.strDevice) {
       fileName = new TextEditingController(
@@ -769,10 +734,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     }
   }
 
-  
-  
-
-  
   Widget getCarousalImage() {
     int index = _current + 1;
     return Container(
@@ -894,8 +855,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           .then((postImageResponse) {
         _scaffoldKey.currentState.hideCurrentSnackBar();
 
-        
-
         if (skipTapped == false) {
           displayDevicesList(deviceName, postImageResponse);
         }
@@ -920,8 +879,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   void callBackToRefresh() {
-    setState(() {
-    });
+    setState(() {});
   }
 
   void _showOverlayCategoryDialog(BuildContext context) {
@@ -929,8 +887,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       initializeData();
     });
   }
-
- 
 
   void initializeData() {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);

@@ -115,8 +115,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       ispdfPresent = false;
     }
 
-    if (mediMasterId.length > 0)
+    if (mediMasterId.length > 0) {
+      length = mediMasterId.length;
+      index = 1;
       _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
+    }
   }
 
   @override

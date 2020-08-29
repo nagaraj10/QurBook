@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -6,14 +7,19 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:flutter/material.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
-import 'package:path/path.dart';
 
 class AppointmentsCommonWidget {
+  List<CategoryData> filteredCategoryData = new List();
+  List<CategoryData> categoryDataList = new List();
+  CategoryData categoryDataObjClone = new CategoryData();
+
   Widget docName(BuildContext context, doc) {
     return Row(
       children: [
@@ -145,33 +151,92 @@ class AppointmentsCommonWidget {
               );
   }
 
-  Widget docIcons(History doc) {
-    String notesCount = doc.healthRecord.notes == null ? null : 1.toString();
+  Widget docIcons(History doc, BuildContext context) {
+    List<String> recordIds = new List();
+    List<String> notesId = new List();
+    List<String> voiceIds = new List();
+    String notesCount =
+        doc.healthRecord.notes == null ? 0.toString() : 1.toString();
     String voiceNotesCount =
-        doc.healthRecord.voice == null ? null : 1.toString();
-    String rxCount = doc.healthRecord.rx == null ? null : 1.toString();
+        doc.healthRecord.voice == null ? 0.toString() : 1.toString();
+    int healthRecord = doc.healthRecord.prescription.length == 0
+        ? 0
+        : doc.healthRecord.prescription.length;
+    int otherRecords = doc.healthRecord.others.length == 0
+        ? 0
+        : doc.healthRecord.others.length;
+    String rxCount = (healthRecord + otherRecords).toString();
+
+    if (int.parse(notesCount) > 0) {
+      notesId.add(doc.healthRecord.notes.mediaMetaId);
+    }
+    if (int.parse(voiceNotesCount) > 0) {
+      notesId.add(doc.healthRecord.voice.mediaMetaId);
+    }
+    if (int.parse(rxCount) > 0) {
+      if (otherRecords > 0) {
+        recordIds.addAll(doc.healthRecord.others);
+      }
+      for (int i = 0; i < doc.healthRecord.prescription.length; i++) {
+        recordIds.add(doc.healthRecord.prescription[i].mediaMetaId);
+      }
+    }
+    notesCount = notesCount == '0' ? '' : notesCount;
+    voiceNotesCount = voiceNotesCount == '0' ? '' : voiceNotesCount;
+    rxCount = rxCount == '0' ? '' : rxCount;
+
     return Row(
       children: [
         iconWithText(
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
-            Constants.Appointments_notes,
-            () {},
-            notesCount),
+            Constants.Appointments_notes, () async {
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => MyRecords(
+              categoryPosition: getCategoryPosition(Constants.STR_NOTES),
+              allowSelect: false,
+              isAudioSelect: false,
+              isNotesSelect: true,
+              selectedMedias: notesId,
+              isFromChat: false,
+              showDetails: true,
+            ),
+          ));
+        }, notesCount),
         SizedBoxWidget(width: 15.0),
         iconWithText(
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
-            Constants.STR_VOICE_NOTES,
-            () {},
-            voiceNotesCount),
+            Constants.STR_VOICE_NOTES, () async {
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => MyRecords(
+              categoryPosition: getCategoryPosition(Constants.STR_VOICERECORDS),
+              allowSelect: false,
+              isAudioSelect: true,
+              isNotesSelect: true,
+              selectedMedias: voiceIds,
+              isFromChat: false,
+              showDetails: true,
+            ),
+          ));
+        }, voiceNotesCount),
         SizedBoxWidget(width: 15.0),
         iconWithText(
             Constants.Appointments_recordsImage,
             Color(new CommonUtil().getMyPrimaryColor()),
-            Constants.Appointments_records,
-            () {},
-            rxCount),
+            Constants.Appointments_records, () async {
+          await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => MyRecords(
+              categoryPosition: getCategoryPosition(Constants.STR_PRESCRIPTION),
+              allowSelect: true,
+              isAudioSelect: true,
+              isNotesSelect: true,
+              selectedMedias: recordIds,
+              isFromChat: false,
+              showDetails: true,
+            ),
+          ));
+        }, rxCount),
       ],
     );
   }
@@ -193,7 +258,7 @@ class AppointmentsCommonWidget {
                   color: color,
                 ),
               ),
-              (count == null || count == 0)
+              (count == null || count == 0 || count == '')
                   ? Container()
                   : BadgesBlue(
                       backColor: Colors.blue,
@@ -305,11 +370,11 @@ class AppointmentsCommonWidget {
         size: 24,
         onTap: () {
           Navigator.of(context).pop();
-              Navigator.pushNamed(
-                context,
-                '/telehealth-providers',
-                arguments: HomeScreenArguments(selectedIndex: 1),
-              ).then((value) {});
+          Navigator.pushNamed(
+            context,
+            '/telehealth-providers',
+            arguments: HomeScreenArguments(selectedIndex: 1),
+          ).then((value) {});
         },
       ),
     );
@@ -326,5 +391,64 @@ class AppointmentsCommonWidget {
           fontsize: 14,
           softwrap: true,
         ));
+  }
+
+  List<CategoryData> getCategoryList() {
+    CategoryListBlock _categoryListBlock = new CategoryListBlock();
+
+    if (filteredCategoryData == null || filteredCategoryData.length == 0) {
+      _categoryListBlock.getCategoryList().then((value) {
+        categoryDataList = value.response.data;
+
+        filteredCategoryData =
+            new CommonUtil().fliterCategories(categoryDataList);
+
+        filteredCategoryData.add(categoryDataObjClone);
+      });
+      return filteredCategoryData;
+    } else {
+      return filteredCategoryData;
+    }
+  }
+
+  getCategoryPosition(String categoryName) {
+    int categoryPosition;
+    switch (categoryName) {
+      case Constants.STR_NOTES:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+
+      case Constants.STR_PRESCRIPTION:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+
+      case Constants.STR_VOICERECORDS:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+      default:
+        categoryPosition = 0;
+        return categoryPosition;
+
+        break;
+    }
+  }
+
+  int pickPosition(String categoryName) {
+    int position = 0;
+    List<CategoryData> categoryDataList = getCategoryList();
+    for (int i = 0; i < categoryDataList.length; i++) {
+      if (categoryName == categoryDataList[i].categoryName) {
+        print(categoryName + ' ****' + categoryDataList[i].categoryName);
+        position = i;
+      }
+    }
+    if (categoryName == Constants.STR_PRESCRIPTION) {
+      return position;
+    } else {
+      return position;
+    }
   }
 }
