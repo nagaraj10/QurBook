@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
@@ -6,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -13,7 +13,6 @@ import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class MyControllers extends StatefulWidget {
   CallStatus callStatus;
@@ -26,14 +25,13 @@ class MyControllers extends StatefulWidget {
   String doctorName;
 
   MyControllers(this.callStatus, this.role, this.isAppExists, this.doctorId,
-      this.controllerState, this.muted, this._isHideMyVideo,this.doctorName);
+      this.controllerState, this.muted, this._isHideMyVideo, this.doctorName);
 
   @override
   _MyControllersState createState() => _MyControllersState();
 }
 
 class _MyControllersState extends State<MyControllers> {
-
   SharedPreferences prefs;
   String patientId;
   String patientName;
@@ -74,7 +72,7 @@ class _MyControllersState extends State<MyControllers> {
             ),
           ),
           IconButton(
-            onPressed: (){
+            onPressed: () {
               storePatientDetailsToFCM();
             },
             icon: Icon(
@@ -83,14 +81,14 @@ class _MyControllersState extends State<MyControllers> {
               size: 20.0,
             ),
           ),
-          IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.attach_file,
-              color: Colors.white,
-              size: 20.0,
-            ),
-          ),
+//          IconButton(
+//            onPressed: null,
+//            icon: Icon(
+//              Icons.attach_file,
+//              color: Colors.white,
+//              size: 20.0,
+//            ),
+//          ),
           Container(
             color: Colors.redAccent,
             child: IconButton(
@@ -144,10 +142,7 @@ class _MyControllersState extends State<MyControllers> {
       'photoUrl': '',
       //'photoUrl': 'http://lorempixel.com/640/360',
       'id': widget.doctorId,
-      'createdAt': DateTime
-          .now()
-          .millisecondsSinceEpoch
-          .toString(),
+      'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       'chattingWith': null
     });
 
@@ -157,9 +152,9 @@ class _MyControllersState extends State<MyControllers> {
   Future<void> storeDoctorDetailsToFCM() async {
     prefs = await SharedPreferences.getInstance();
 
-     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-     patientName = getPatientName();
-     patientPicUrl = getProfileURL();
+    patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    patientName = getPatientName();
+    patientPicUrl = getProfileURL();
 
     final QuerySnapshot result = await Firestore.instance
         .collection('users')
@@ -173,10 +168,7 @@ class _MyControllersState extends State<MyControllers> {
         'nickname': patientName != null ? patientName : '',
         'photoUrl': patientPicUrl != null ? patientPicUrl : '',
         'id': patientId,
-        'createdAt': DateTime
-            .now()
-            .millisecondsSinceEpoch
-            .toString(),
+        'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
         'chattingWith': null
       });
 
@@ -199,8 +191,7 @@ class _MyControllersState extends State<MyControllers> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) =>
-                Chat(
+            builder: (context) => Chat(
                   peerId: widget.doctorId,
                   peerAvatar: '',
                   //peerAvatar: 'http://lorempixel.com/640/360',
@@ -211,9 +202,11 @@ class _MyControllersState extends State<MyControllers> {
   String getPatientName() {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     String patientName =
-    myProfile.response.data.generalInfo.qualifiedFullName !=null ?
-    myProfile.response.data.generalInfo.qualifiedFullName.firstName +' '+
-        myProfile.response.data.generalInfo.qualifiedFullName.lastName:'';
+        myProfile.response.data.generalInfo.qualifiedFullName != null
+            ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+                ' ' +
+                myProfile.response.data.generalInfo.qualifiedFullName.lastName
+            : '';
 
     return patientName;
   }
