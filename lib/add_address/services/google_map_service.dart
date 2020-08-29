@@ -42,7 +42,7 @@ class GoogleMapServices {
 
     final http.Response response = await http.get(webserviceCall.getQueryForPlaceDetail( placeId,  token));
     final responseData = json.decode(response.body);
-    final result = responseData[parameters.strresult];
+    final result = responseData[parameters.dataResult];
 
     final PlaceDetail placeDetail = PlaceDetail.fromJson(result);
 

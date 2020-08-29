@@ -23,6 +23,10 @@ import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
 
 import 'AppException.dart';
+import 'dart:async';
+import 'package:myfhb/constants/fhb_query.dart';
+import 'package:myfhb/src/resources/network/AppException.dart';
+import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
@@ -838,6 +842,23 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> saveDeviceData(String url, String jsonBody) async {
+    var header = await headerRequest.getRequestHeader();
+    var responseJson;
+    try {
+      final response = await http.post(
+          //_baseUrl + url,
+          _baseUrlV2 + url,
+          body: jsonBody,
+          headers: header);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  
   Future<AppointmentsModel> fetchAppointments() async {
     String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 //    print('patient_id: '+userId);
@@ -885,6 +906,33 @@ class ApiBaseHelper {
       final response = await http.put(_baseUrl + url,
           headers: await headerRequest.getRequestHeader(), body: jsonBody);
 //      print(response.body);
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getByRecordDataType(String url, String jsonBody) async {
+    var header = await headerRequest.getRequestHeader();
+    var responseJson;
+    try {
+      final response =
+          await http.post(_baseUrlV2 + url, body: jsonBody, headers: header);
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> getDeviceInfo(String url) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    var header = await headerRequest.getRequestHeader();
+    var responseJson;
+    try {
+      final response = await http.get(_baseUrlV2 + url, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

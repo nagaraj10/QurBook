@@ -223,7 +223,7 @@ const String strlocation = 'location';
 const String strlat = 'lat';
 const String strlng = 'lng';
 const String strpredictions = 'predictions';
-const String strresult = 'result';
+const String dataResult = 'result';
 const String strresults = 'results';
 
 const String strentityCode = 'entityCode';
@@ -302,10 +302,8 @@ const String strSourceCode = 'sourceCode';
 const String strEntityCode = 'entityCode';
 const String strRoleCode = 'roleCode';
 
-const String strprofilePicThumbnailURL = 'profilePicThumbnailURL';
-
 //parameters for device Integration
-const String dataResult = 'result';
+
 const String strBPTitle = "BP Readings";
 const String strGLTitle = "Glucose Readings";
 const String strOxyTitle = "SPO2 Reading";

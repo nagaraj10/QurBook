@@ -118,7 +118,16 @@ const String qr_lang_ko = 'language=ko';
 const String qr_sessiontoken = 'sessiontoken=';
 
 const String CANCEL_SOURCE = "cancellationSource";
-const String RESHEDULE_SOURCE = "rescheduleSource";
+
+const String qr_lastSync = 'lastSync';
+const String qr_lastMeasureSync = 'lastMeasureSync';
+const String qr_deviceInterval = 'deviceInterval';
+const String qr_deviceInfo = 'device-information';
+const String qr_user = 'user';
+const String qr_lastSyncGF = '?source=Google Fit';
+const String qr_lastSyncHK = '?source=Apple Health';
+
+const String RESHEDULE_SOURCE="rescheduleSource";
 const String BOOKING_IDS = "bookingIds";
 const String BOOKING_ID = "bookingId";
 const String META_IDS = "mediaMetaIds";
