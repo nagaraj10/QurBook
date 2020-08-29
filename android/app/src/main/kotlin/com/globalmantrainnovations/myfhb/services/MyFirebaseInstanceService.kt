@@ -1,5 +1,6 @@
 package com.globalmantrainnovations.myfhb.services
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -60,6 +61,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
     }
 
+    @SuppressLint("RestrictedApi")
     private fun createNotification4Call(data:Map<String, String> = HashMap()){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = 9090
@@ -129,8 +131,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
         Thread {
             Thread.sleep(NS_TIMEOUT)
-            Log.d(TAG, "createNotification4Call: Missed call Alert")
-            createNotification4MissedCall(USER_NAME!!)
+            //createNotification4MissedCall(USER_NAME!!)
         }.start()
     }
 

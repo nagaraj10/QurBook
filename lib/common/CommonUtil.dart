@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
@@ -51,10 +53,11 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcase.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class CommonUtil {
   static String MAYA_URL = "";
@@ -1256,5 +1259,18 @@ class CommonUtil {
       PreferenceUtil.saveString(Constants.KEY_DEVICEINFO, variable.strFalse);
     }
     return DeviceInfoSucess.fromJson(response);
+  }
+
+  static Future<File> downloadFile(String url, String extension) async {
+    print(url);
+    http.Client _client = new http.Client();
+    var req = await _client.get(Uri.parse(url));
+    var bytes = req.bodyBytes;
+    String dir = (await getTemporaryDirectory()).path;
+    File file = new File('$dir/${basename(url)}$extension');
+    await file.writeAsBytes(bytes);
+    print('File size:${await file.length()}');
+    print(file.path);
+    return file;
   }
 }

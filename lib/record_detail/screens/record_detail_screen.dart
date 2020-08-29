@@ -5,8 +5,8 @@ import 'dart:typed_data';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:gallery_saver/gallery_saver.dart';
 import 'package:http/http.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -394,35 +394,36 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     if (imagesPathMain.length > 1) {
       for (int i = 0; i < imagesPathMain.length; i++) {
         _currentImage = imagesPathMain[i];
-        _currentImage =
-            '${_currentImage.response.data.fileContent}.${_currentImage.response.data.fileType}';
-        GallerySaver.saveImage(_currentImage, albumName: albumName)
-            .then((value) => downloadStatus = value);
+        CommonUtil.downloadFile(_currentImage.response.data.fileContent,
+                _currentImage.response.data.fileType)
+            .then((filePath) async {
+          await ImageGallerySaver.saveFile(filePath.path).then((res) {
+            if (i == imagesPathMain.length - 1) {
+              setState(() {
+                downloadStatus = true;
+              });
+            }
+          });
+        });
       }
-      if (downloadStatus) {
-        Scaffold.of(contxt).showSnackBar(SnackBar(
-          content: const Text(variable.strFilesDownloaded),
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-        ));
-      }
+      downloadStatus
+          ? Scaffold.of(contxt).showSnackBar(SnackBar(
+              content: const Text(variable.strFilesDownloaded),
+              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            ))
+          : null;
     } else {
       _currentImage = imagesPathMain[0];
-      _currentImage =
-          '${_currentImage.response.data.fileContent}${_currentImage.response.data.fileType}';
-      GallerySaver.saveImage(_currentImage, albumName: albumName).then((value) {
-        if (value) {
+      CommonUtil.downloadFile(_currentImage.response.data.fileContent,
+              _currentImage.response.data.fileType)
+          .then((filePath) async {
+        await ImageGallerySaver.saveFile(filePath.path).then((res) {
           Scaffold.of(contxt).showSnackBar(SnackBar(
-            content: const Text(variable.strFilesView),
+            content: const Text(variable.strFilesDownloaded),
             backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
           ));
-        }
+        });
       });
-//      var appDocDir = await getTemporaryDirectory();
-//      await Dio().download(_currentImage, appDocDir.path);
-//      await ImageGallerySaver.saveFile(appDocDir.path).then((res) {
-//        print('image saving status $res');
-
-//      });
     }
   }
 
