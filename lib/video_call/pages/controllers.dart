@@ -23,9 +23,10 @@ class MyControllers extends StatefulWidget {
   bool _isHideMyVideo;
   String doctorId;
   String doctorName;
+  String doctorPicUrl;
 
   MyControllers(this.callStatus, this.role, this.isAppExists, this.doctorId,
-      this.controllerState, this.muted, this._isHideMyVideo, this.doctorName);
+      this.controllerState, this.muted, this._isHideMyVideo, this.doctorName,this.doctorPicUrl);
 
   @override
   _MyControllersState createState() => _MyControllersState();
@@ -139,8 +140,7 @@ class _MyControllersState extends State<MyControllers> {
   void storePatientDetailsToFCM() {
     Firestore.instance.collection('users').document(widget.doctorId).setData({
       'nickname': widget.doctorName != null ? widget.doctorName : '',
-      'photoUrl': '',
-      //'photoUrl': 'http://lorempixel.com/640/360',
+      'photoUrl': widget.doctorPicUrl!=null?widget.doctorPicUrl:'',
       'id': widget.doctorId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       'chattingWith': null
@@ -193,8 +193,7 @@ class _MyControllersState extends State<MyControllers> {
         MaterialPageRoute(
             builder: (context) => Chat(
                   peerId: widget.doctorId,
-                  peerAvatar: '',
-                  //peerAvatar: 'http://lorempixel.com/640/360',
+                  peerAvatar: widget.doctorPicUrl,
                   peerName: widget.doctorName,
                 )));
   }
