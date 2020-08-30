@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "588661578434-34nabhf3p85pcgl8nd3ctpoatmv7isph.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.go_fhb_flutter",
+            "certificate_hash": "c7f27710afa65295bb30064511ba46f8c51042f8"
+          }
+        },
+        {
           "client_id": "588661578434-oplufmffn1s1v2an6bgbsupged6lh703.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -67,7 +75,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "588661578434-grgmeu1r59qj3s6m594ifkg4i2rl9lt7.apps.googleusercontent.com",
+          "client_id": "588661578434-3vair1dbfjvbeuosleiibh1cn8vd6n22.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.globalmantrainnovations.myfhb",
@@ -75,7 +83,7 @@
           }
         },
         {
-          "client_id": "588661578434-f7jv3mlclgh7el6q0d48cdgo81erbi3e.apps.googleusercontent.com",
+          "client_id": "588661578434-6vj3luftr1h7jtfpata8rmfnha8pjdpp.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.globalmantrainnovations.myfhb",
@@ -83,13 +91,49 @@
           }
         },
         {
-          "client_id": "588661578434-luv1nkojeo5isb9pgbedeqbu7hv80fdt.apps.googleusercontent.com",
+          "client_id": "588661578434-lnr22h1bfjo8k6km7jp393vf367ln8ck.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.globalmantrainnovations.myfhb",
             "certificate_hash": "c7f27710afa65295bb30064511ba46f8c51042f8"
           }
         },
+        {
+          "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATmXYdNEYYPxrO-DLWppZZJg7e9efo-0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "588661578434-l1qvt7tl7de2hbqa5o8iqvak8tvmofkn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ventechsolutions.myFHB"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588661578434:android:5dc16aa5c1e32e3398f95b",
+        "android_client_info": {
+          "package_name": "com.ventechsolutions.myFHB"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "588661578434-o02bqib09rg5po5bsk7hhiq4qbgktc0p.apps.googleusercontent.com",
           "client_type": 3
