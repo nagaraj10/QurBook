@@ -6,7 +6,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -949,7 +951,7 @@ class ChatScreenState extends State<ChatScreen> {
           children: <Widget>[
             Flexible(
               child: Container(
-                height: 55,
+                height: 58,
                 child: Stack(
                   alignment: Alignment.centerRight,
                   children: [
@@ -975,10 +977,9 @@ class ChatScreenState extends State<ChatScreen> {
                           borderSide: BorderSide(color: Colors.transparent),
                         ),
                       ),
-                      onSubmitted: (value) =>
-                          onSendMessage(textEditingController.text, 0),
+                      /*onSubmitted: (value) =>*/
                     ),
-                    SizedBox(
+                    SizedBoxWithChild(
                       width: 50,
                       height: 50,
                       child: FlatButton(
@@ -998,10 +999,12 @@ class ChatScreenState extends State<ChatScreen> {
             ),
             new Container(
               child: RawMaterialButton(
-                onPressed: () {},
+                onPressed: () {
+                  onSendMessage(textEditingController.text, 0);
+                },
                 elevation: 2.0,
                 fillColor: Colors.white,
-                child: Icon(Icons.mic,
+                child: Icon(Icons.send,
                     size: 25.0, color: Color(CommonUtil().getMyPrimaryColor())),
                 padding: EdgeInsets.all(12.0),
                 shape: CircleBorder(),
