@@ -49,7 +49,19 @@ class _AppointmentsState extends State<Appointments> {
 
   @override
   void initState() {
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    setTimer(1);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    timer.cancel();
+    super.dispose();
+  }
+
+  setTimer(int secs) {
+    timer = Timer.periodic(Duration(seconds: secs), (Timer t) {
       hours = appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).hours;
       minutes =
           appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).minutes;
@@ -78,15 +90,6 @@ class _AppointmentsState extends State<Appointments> {
         });
       }
     });
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    timer.cancel();
-    super.dispose();
   }
 
   @override
@@ -212,14 +215,20 @@ class _AppointmentsState extends State<Appointments> {
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             AppointmentsModel appointmentsData = snapshot.data;
+            if (appointmentsData.response.data.upcoming != null &&
+                appointmentsData.response.data.upcoming.length > 0) {
+              setTimer(60);
+            }
 //            if(hours==null || minutes==null){
 //              hours = List.filled(appointmentsData
 //                  .response.data.upcoming.length, '00');
 //              minutes = List.filled(appointmentsData
 //                  .response.data.upcoming.length, '00');
 //            }
-            return (appointmentsData.response.data.history.length > 0 ||
-                    appointmentsData.response.data.upcoming.length > 0)
+            return ((appointmentsData.response.data.history != null &&
+                        appointmentsData.response.data.history.length > 0) ||
+                    (appointmentsData.response.data.upcoming != null &&
+                        appointmentsData.response.data.upcoming.length > 0))
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -289,11 +298,14 @@ class _AppointmentsState extends State<Appointments> {
                         height: 10,
                       ),
                       isSearch
-                          ? historyInfo.length != 0
+                          ? (historyInfo != null && historyInfo.length != 0)
                               ? commonWidget
                                   .title(Constants.Appointments_history)
                               : Container()
-                          : appointmentsData.response.data.history.length != 0
+                          : (appointmentsData.response.data.history != null &&
+                                  appointmentsData
+                                          .response.data.history.length !=
+                                      0)
                               ? commonWidget
                                   .title(Constants.Appointments_history)
                               : Container(),
@@ -301,17 +313,22 @@ class _AppointmentsState extends State<Appointments> {
                         width: 0,
                         height: 10,
                       ),
-                      new ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (BuildContext ctx, int i) =>
-                            doctorsHistoryListCard(isSearch
-                                ? historyInfo[i]
-                                : appointmentsData.response.data.history[i]),
-                        itemCount: isSearch
-                            ? historyInfo.length
-                            : appointmentsData.response.data.history.length,
-                      )
+                      (appointmentsData.response.data.history != null &&
+                              appointmentsData.response.data.history.length > 0)
+                          ? new ListView.builder(
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemBuilder: (BuildContext ctx, int i) =>
+                                  doctorsHistoryListCard(isSearch
+                                      ? historyInfo[i]
+                                      : appointmentsData
+                                          .response.data.history[i]),
+                              itemCount: isSearch
+                                  ? historyInfo.length
+                                  : appointmentsData
+                                      .response.data.history.length,
+                            )
+                          : Container()
                     ],
                   )
                 : Container(

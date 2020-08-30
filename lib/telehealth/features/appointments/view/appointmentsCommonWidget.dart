@@ -155,16 +155,16 @@ class AppointmentsCommonWidget {
     List<String> recordIds = new List();
     List<String> notesId = new List();
     List<String> voiceIds = new List();
+    print(doc.healthRecord);
     String notesCount =
         doc.healthRecord.notes == null ? 0.toString() : 1.toString();
     String voiceNotesCount =
         doc.healthRecord.voice == null ? 0.toString() : 1.toString();
-    int healthRecord = doc.healthRecord.prescription.length == 0
+    int healthRecord = doc.healthRecord.prescription == null
         ? 0
         : doc.healthRecord.prescription.length;
-    int otherRecords = doc.healthRecord.others.length == 0
-        ? 0
-        : doc.healthRecord.others.length;
+    int otherRecords =
+        doc.healthRecord.others == null ? 0 : doc.healthRecord.others.length;
     String rxCount = (healthRecord + otherRecords).toString();
 
     if (int.parse(notesCount) > 0) {
@@ -185,57 +185,66 @@ class AppointmentsCommonWidget {
     voiceNotesCount = voiceNotesCount == '0' ? '' : voiceNotesCount;
     rxCount = rxCount == '0' ? '' : rxCount;
 
+    print(notesCount + '****** ' + voiceNotesCount + '****' + rxCount);
     return Row(
       children: [
         iconWithText(
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_notes, () async {
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MyRecords(
-              categoryPosition: getCategoryPosition(Constants.STR_NOTES),
-              allowSelect: false,
-              isAudioSelect: false,
-              isNotesSelect: true,
-              selectedMedias: notesId,
-              isFromChat: false,
-              showDetails: true,
-            ),
-          ));
+          if (notesCount != '') {
+            await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => MyRecords(
+                categoryPosition: getCategoryPosition(Constants.STR_NOTES),
+                allowSelect: false,
+                isAudioSelect: false,
+                isNotesSelect: true,
+                selectedMedias: notesId,
+                isFromChat: false,
+                showDetails: true,
+              ),
+            ));
+          }
         }, notesCount),
         SizedBoxWidget(width: 15.0),
         iconWithText(
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.STR_VOICE_NOTES, () async {
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MyRecords(
-              categoryPosition: getCategoryPosition(Constants.STR_VOICERECORDS),
-              allowSelect: false,
-              isAudioSelect: true,
-              isNotesSelect: true,
-              selectedMedias: voiceIds,
-              isFromChat: false,
-              showDetails: true,
-            ),
-          ));
+          if (voiceNotesCount != '') {
+            await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => MyRecords(
+                categoryPosition:
+                    getCategoryPosition(Constants.STR_VOICERECORDS),
+                allowSelect: false,
+                isAudioSelect: true,
+                isNotesSelect: true,
+                selectedMedias: voiceIds,
+                isFromChat: false,
+                showDetails: true,
+              ),
+            ));
+          }
         }, voiceNotesCount),
         SizedBoxWidget(width: 15.0),
         iconWithText(
             Constants.Appointments_recordsImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records, () async {
-          await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => MyRecords(
-              categoryPosition: getCategoryPosition(Constants.STR_PRESCRIPTION),
-              allowSelect: true,
-              isAudioSelect: true,
-              isNotesSelect: true,
-              selectedMedias: recordIds,
-              isFromChat: false,
-              showDetails: true,
-            ),
-          ));
+          if (rxCount != null) {
+            await Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => MyRecords(
+                categoryPosition:
+                    getCategoryPosition(Constants.STR_PRESCRIPTION),
+                allowSelect: true,
+                isAudioSelect: true,
+                isNotesSelect: true,
+                selectedMedias: recordIds,
+                isFromChat: false,
+                showDetails: true,
+              ),
+            ));
+          }
         }, rxCount),
       ],
     );
