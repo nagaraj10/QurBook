@@ -17,6 +17,7 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
+import 'package:myfhb/telehealth/features/appointments/view/DoctorUpcomingAppointments.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
@@ -217,92 +218,109 @@ class _AppointmentsState extends State<Appointments> {
 //              minutes = List.filled(appointmentsData
 //                  .response.data.upcoming.length, '00');
 //            }
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                SizedBoxWidget(
-                  width: 0,
-                  height: 10,
-                ),
-                isSearch
-                    ? minutes.length == upcomingInfo.length
-                        ? commonWidget.title(Constants.Appointments_upcoming)
-                        : Container()
-                    : appointmentsData.response.data.upcoming.length != 0 &&
-                            minutes.length ==
-                                appointmentsData.response.data.upcoming.length
-                        ? commonWidget.title(Constants.Appointments_upcoming)
-                        : Container(),
-                SizedBoxWidget(
-                  width: 0,
-                  height: 10,
-                ),
-                isSearch
-                    ? minutes.length == upcomingInfo.length
-                        ? ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext ctx, int i) =>
-                                doctorsAppointmentsListCard(
-                                    isSearch
-                                        ? upcomingInfo[i]
-                                        : appointmentsData
-                                            .response.data.upcoming[i],
-                                    hours[i],
-                                    minutes[i],
-                                    daysCount[i]),
-                            itemCount: !isSearch
-                                ? appointmentsData.response.data.upcoming.length
-                                : upcomingInfo.length,
-                          )
-                        : Container()
-                    : minutes.length ==
-                            appointmentsData.response.data.upcoming.length
-                        ? ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext ctx, int i) =>
-                                doctorsAppointmentsListCard(
-                                    isSearch
-                                        ? upcomingInfo[i]
-                                        : appointmentsData
-                                            .response.data.upcoming[i],
-                                    hours[i],
-                                    minutes[i],
-                                    daysCount[i]),
-                            itemCount: !isSearch
-                                ? appointmentsData.response.data.upcoming.length
-                                : upcomingInfo.length,
-                          )
-                        : Container(),
-                SizedBoxWidget(
-                  width: 0,
-                  height: 10,
-                ),
-                isSearch
-                    ? historyInfo.length != 0
-                        ? commonWidget.title(Constants.Appointments_history)
-                        : Container()
-                    : appointmentsData.response.data.history.length != 0
-                        ? commonWidget.title(Constants.Appointments_history)
-                        : Container(),
-                SizedBoxWidget(
-                  width: 0,
-                  height: 10,
-                ),
-                new ListView.builder(
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (BuildContext ctx, int i) =>
-                      doctorsHistoryListCard(isSearch
-                          ? historyInfo[i]
-                          : appointmentsData.response.data.history[i]),
-                  itemCount: isSearch
-                      ? historyInfo.length
-                      : appointmentsData.response.data.history.length,
-                )
-              ],
-            );
+            return (appointmentsData.response.data.history.length > 0 ||
+                    appointmentsData.response.data.upcoming.length > 0)
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBoxWidget(
+                        width: 0,
+                        height: 10,
+                      ),
+                      isSearch
+                          ? minutes.length == upcomingInfo.length
+                              ? commonWidget
+                                  .title(Constants.Appointments_upcoming)
+                              : Container()
+                          : appointmentsData.response.data.upcoming.length !=
+                                      0 &&
+                                  minutes.length ==
+                                      appointmentsData
+                                          .response.data.upcoming.length
+                              ? commonWidget
+                                  .title(Constants.Appointments_upcoming)
+                              : Container(),
+                      SizedBoxWidget(
+                        width: 0,
+                        height: 10,
+                      ),
+                      isSearch
+                          ? minutes.length == upcomingInfo.length
+                              ? ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (BuildContext ctx, int i) =>
+                                      DoctorUpcomingAppointments(
+                                          isSearch
+                                              ? upcomingInfo[i]
+                                              : appointmentsData
+                                                  .response.data.upcoming[i],
+                                          hours[i],
+                                          minutes[i],
+                                          daysCount[i]),
+                                  itemCount: !isSearch
+                                      ? appointmentsData
+                                          .response.data.upcoming.length
+                                      : upcomingInfo.length,
+                                )
+                              : Container()
+                          : minutes.length ==
+                                  appointmentsData.response.data.upcoming.length
+                              ? ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemBuilder: (BuildContext ctx, int i) =>
+                                      doctorsAppointmentsListCard(
+                                          isSearch
+                                              ? upcomingInfo[i]
+                                              : appointmentsData
+                                                  .response.data.upcoming[i],
+                                          hours[i],
+                                          minutes[i],
+                                          daysCount[i]),
+                                  itemCount: !isSearch
+                                      ? appointmentsData
+                                          .response.data.upcoming.length
+                                      : upcomingInfo.length,
+                                )
+                              : Container(),
+                      SizedBoxWidget(
+                        width: 0,
+                        height: 10,
+                      ),
+                      isSearch
+                          ? historyInfo.length != 0
+                              ? commonWidget
+                                  .title(Constants.Appointments_history)
+                              : Container()
+                          : appointmentsData.response.data.history.length != 0
+                              ? commonWidget
+                                  .title(Constants.Appointments_history)
+                              : Container(),
+                      SizedBoxWidget(
+                        width: 0,
+                        height: 10,
+                      ),
+                      new ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext ctx, int i) =>
+                            doctorsHistoryListCard(isSearch
+                                ? historyInfo[i]
+                                : appointmentsData.response.data.history[i]),
+                        itemCount: isSearch
+                            ? historyInfo.length
+                            : appointmentsData.response.data.history.length,
+                      )
+                    ],
+                  )
+                : Container(
+                    height: MediaQuery.of(context).size.height / 2,
+                    alignment: Alignment.center,
+                    child: Center(
+                      child: Text(variable.strNoAppointments),
+                    ),
+                  );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: new CircularProgressIndicator(
@@ -361,7 +379,7 @@ class _AppointmentsState extends State<Appointments> {
                               commonWidget.docTimeSlot(
                                   context, doc, hour, minute, days),
                               SizedBoxWidget(height: 15.0),
-                              commonWidget.docIcons(doc,context)
+                              commonWidget.docIcons(doc, context)
                             ],
                           ),
                         ],
@@ -519,7 +537,7 @@ class _AppointmentsState extends State<Appointments> {
                             commonWidget.docLoc(context, doc.location),
                             SizedBoxWidget(height: 5.0),
                             SizedBoxWidget(height: 15.0),
-                            commonWidget.docIcons(doc,context)
+                            commonWidget.docIcons(doc, context)
                           ],
                         ),
                       ],
@@ -707,9 +725,11 @@ class _AppointmentsState extends State<Appointments> {
   String getPatientName() {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     String patientName =
-        myProfile.response.data.generalInfo.qualifiedFullName !=null ?
-            myProfile.response.data.generalInfo.qualifiedFullName.firstName +' '+
-                myProfile.response.data.generalInfo.qualifiedFullName.lastName:'';
+        myProfile.response.data.generalInfo.qualifiedFullName != null
+            ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+                ' ' +
+                myProfile.response.data.generalInfo.qualifiedFullName.lastName
+            : '';
 
     return patientName;
   }
