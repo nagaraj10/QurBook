@@ -173,7 +173,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       ],
                     )),
                     onTap: () {
-                      openWebView(Constants.FAQ, CommonUtil.FAQ_URL, false);
+                      openWebView(Constants.FAQ, variable.file_faq, true);
                     },
                   ),
                   ListTile(
@@ -209,7 +209,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     )),
                     onTap: () {
                       openWebView(Constants.terms_of_service,
-                          variable.file_termsandconditions, true);
+                          variable.file_terms, true);
                     },
                   ),
                   InkWell(

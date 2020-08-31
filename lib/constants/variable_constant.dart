@@ -162,14 +162,13 @@ const String icon_schedule = 'assets/navicons/schedule.png';
 const String icon_more = 'assets/navicons/more.png';
 
 //for File
-const String file_termsandconditions =
-    'assets/help_docs/termsandconditions.html';
-const String file_privacy = 'assets/help_docs/privacypolicy.html';
+const String file_privacy = 'assets/help_docs/myfhb_privacy_policy.html';
 const String file_img_jpg = 'image/jpg';
 const String file_img_png = 'image/png';
 const String file_img_all = 'image/*';
 const String file_audio_mp = 'audio/mp3';
-const String file_terms = 'assets/help_docs/termsandconditions.html';
+const String file_terms = 'assets/help_docs/myfhb_terms_of_use.html';
+const String file_faq = 'assets/help_docs/myfhb_faq.html';
 
 //for Family Font
 const String font_poppins = 'Poppins';

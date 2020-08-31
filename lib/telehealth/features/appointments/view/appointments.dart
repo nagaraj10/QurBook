@@ -49,7 +49,7 @@ class _AppointmentsState extends State<Appointments> {
 
   @override
   void initState() {
-    setTimer(1);
+    setTimer(60);
     super.initState();
   }
 

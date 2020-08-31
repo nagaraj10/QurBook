@@ -101,7 +101,7 @@ void saveToPreference() async {
 }
 
 void setValues(List<dynamic> values) {
-  CommonUtil.MAYA_URL = values[0];
+  CommonUtil.SHEELA_URL = values[0];
   CommonUtil.FAQ_URL = values[1];
   CommonUtil.GOOGLE_MAP_URL = values[2];
   CommonUtil.GOOGLE_PLACE_API_KEY = values[3];
