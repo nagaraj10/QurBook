@@ -51,7 +51,12 @@ class _MyProvidersState extends State<MyProviders> {
     return Scaffold(
         appBar: AppBar(
             flexibleSpace: GradientAppBar(),
-            leading: Icon(Icons.arrow_back_ios),
+            leading: GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Icon(
+                Icons.arrow_back_ios, // add custom icons also
+              ),
+            ),
             // you can put Icon as well, it accepts any widget.
             title:
                 getTitle() /* Column(

@@ -1117,7 +1117,7 @@ class CommonUtil {
   }
 
   dateConversionToApiFormat(DateTime dateTime) {
-    var newFormat = DateFormat('yyyy-MM-d');
+    var newFormat = DateFormat('yyyy-MM-dd');
     String updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }
