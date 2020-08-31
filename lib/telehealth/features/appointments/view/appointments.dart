@@ -49,7 +49,7 @@ class _AppointmentsState extends State<Appointments> {
 
   @override
   void initState() {
-    setTimer(60);
+    setTimer(1);
     super.initState();
   }
 
@@ -217,7 +217,7 @@ class _AppointmentsState extends State<Appointments> {
             AppointmentsModel appointmentsData = snapshot.data;
             if (appointmentsData.response.data.upcoming != null &&
                 appointmentsData.response.data.upcoming.length > 0) {
-              setTimer(60);
+              setTimer(1);
             }
 //            if(hours==null || minutes==null){
 //              hours = List.filled(appointmentsData
