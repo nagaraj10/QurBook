@@ -415,10 +415,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             );
     } else {
       if (imageURI == null) {
-        if (widget.arguments.sharedbyme.profileData.profilePicThumbnail !=
+        if (widget.arguments.sharedbyme.profileData.profilePicThumbnailURL !=
             null) {
-          return getProfilePicWidget(
-              widget.arguments.sharedbyme.profileData.profilePicThumbnail);
+          return Image.network(
+            widget.arguments.sharedbyme.profileData.profilePicThumbnailURL,
+            fit: BoxFit.cover,
+            width: 60,
+            height: 60,
+          );
         } else {
           return Center(
             child: Text(

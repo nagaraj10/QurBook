@@ -11,16 +11,12 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'dart:convert' as convert;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-
-
 
 class AddFamilyOTPScreen extends StatefulWidget {
   AddFamilyOTPArguments arguments;
@@ -180,44 +176,42 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             ),
             Expanded(
                 flex: 2,
-                child: ListView(
-                    children: <Widget>[
-                      GridView.count(
-                          crossAxisCount: 6,
-                          crossAxisSpacing: 10,
-                          shrinkWrap: true,
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          children: List<Container>.generate(
-                              6,
-                              (int index) => Container(
-                                    constraints: BoxConstraints(maxWidth: 20),
-                                    child: widgetList[index],
-                                  ))),
-                      SizedBox(height: 20),
-                      Text(
-                        variable.strdidtReceive,
+                child: ListView(children: <Widget>[
+                  GridView.count(
+                      crossAxisCount: 6,
+                      crossAxisSpacing: 10,
+                      shrinkWrap: true,
+                      primary: false,
+                      scrollDirection: Axis.vertical,
+                      children: List<Container>.generate(
+                          6,
+                          (int index) => Container(
+                                constraints: BoxConstraints(maxWidth: 20),
+                                child: widgetList[index],
+                              ))),
+                  SizedBox(height: 20),
+                  Text(
+                    variable.strdidtReceive,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  FlatButton(
+                      onPressed: () {
+                        generateOtp(widget.arguments.selectedCountryCode,
+                            widget.arguments.enteredMobNumber);
+                      },
+                      child: Text(
+                        variable.strResendCode,
                         style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      FlatButton(
-                          onPressed: () {
-                            generateOtp(widget.arguments.selectedCountryCode,
-                                widget.arguments.enteredMobNumber);
-                          },
-                          child: Text(
-                            variable.strResendCode,
-                            style: TextStyle(
-                                //color: Colors.deepPurple[300],
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                fontWeight: FontWeight.w600),
-                          )),
-                      SizedBox(height: 20)
-                    ])),
+                            //color: Colors.deepPurple[300],
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                            fontWeight: FontWeight.w600),
+                      )),
+                  SizedBox(height: 20)
+                ])),
             Expanded(
                 flex: 3,
                 child: SingleChildScrollView(
@@ -457,6 +451,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         onPressedConfirm: () {
           Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                   arguments: AddFamilyUserInfoArguments(
+                      fromClass: CommonConstants.add_family,
                       enteredFirstName: widget.arguments.enteredFirstName,
                       enteredMiddleName: widget.arguments.enteredMiddleName,
                       enteredLastName: widget.arguments.enteredLastName,
@@ -490,7 +485,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     signInData[variable.strOperation] = CommonConstants.user_linking;
 
     signInData[parameters.strSourceId] = parameters.strSrcIdVal;
-    signInData[parameters.strEntityId] =parameters.strEntityIdVal;
+    signInData[parameters.strEntityId] = parameters.strEntityIdVal;
     signInData[parameters.strRoleId] = parameters.strRoleIdVal;
     var jsonString = convert.jsonEncode(signInData);
 
