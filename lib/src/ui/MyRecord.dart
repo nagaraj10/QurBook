@@ -807,55 +807,55 @@ class _CustomTabsState extends State<CustomTabView>
         PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch
         ? getMediTypeForlabels(data, widget.completeData)
-        : completeDataFromPreference != null
+        : /*completeDataFromPreference != null
             ? getMediTypeForlabels(data, completeDataFromPreference)
-            : StreamBuilder<ApiResponse<UserHealthResponseList>>(
-                stream: _healthReportListForUserBlock.healthReportStream,
-                builder: (context,
-                    AsyncSnapshot<ApiResponse<UserHealthResponseList>>
-                        snapshot) {
-                  if (snapshot.hasData) {
-                    switch (snapshot.data.status) {
-                      case Status.LOADING:
-                        return Scaffold(
-                          backgroundColor: Colors.white,
-                          body: Center(
-                              child: SizedBox(
-                            child: CircularProgressIndicator(
-                              backgroundColor:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                            ),
-                            width: 30,
-                            height: 30,
-                          )),
-                        );
-                        break;
+            :*/
+        StreamBuilder<ApiResponse<UserHealthResponseList>>(
+            stream: _healthReportListForUserBlock.healthReportStream,
+            builder: (context,
+                AsyncSnapshot<ApiResponse<UserHealthResponseList>> snapshot) {
+              if (snapshot.hasData) {
+                switch (snapshot.data.status) {
+                  case Status.LOADING:
+                    return Scaffold(
+                      backgroundColor: Colors.white,
+                      body: Center(
+                          child: SizedBox(
+                        child: CircularProgressIndicator(
+                          backgroundColor:
+                              Color(new CommonUtil().getMyPrimaryColor()),
+                        ),
+                        width: 30,
+                        height: 30,
+                      )),
+                    );
+                    break;
 
-                      case Status.ERROR:
-                        return FHBBasicWidget.getRefreshContainerButton(
-                            snapshot.data.message, () {
-                          setState(() {});
-                        });
-                        break;
+                  case Status.ERROR:
+                    return FHBBasicWidget.getRefreshContainerButton(
+                        snapshot.data.message, () {
+                      setState(() {});
+                    });
+                    break;
 
-                      case Status.COMPLETED:
-                        _healthReportListForUserBlock = null;
-                        rebuildAllBlocks();
-                        if (!widget.fromSearch) {
-                          PreferenceUtil.saveCompleteData(
-                              Constants.KEY_COMPLETE_DATA,
-                              snapshot.data.data.response.data);
-                        }
-
-                        return getMediTypeForlabels(
-                            data, snapshot.data.data.response.data);
-                        break;
+                  case Status.COMPLETED:
+                    _healthReportListForUserBlock = null;
+                    rebuildAllBlocks();
+                    if (!widget.fromSearch) {
+                      PreferenceUtil.saveCompleteData(
+                          Constants.KEY_COMPLETE_DATA,
+                          snapshot.data.data.response.data);
                     }
-                  } else {
-                    return Container(height: 0, color: Colors.white);
-                  }
-                },
-              );
+
+                    return getMediTypeForlabels(
+                        data, snapshot.data.data.response.data);
+                    break;
+                }
+              } else {
+                return Container(height: 0, color: Colors.white);
+              }
+            },
+          );
   }
 
   Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
