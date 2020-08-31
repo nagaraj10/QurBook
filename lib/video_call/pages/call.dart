@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
 
 import '../utils/settings.dart';
@@ -141,7 +145,13 @@ class _CallPageState extends State<CallPage> {
         final info = 'userOffline: $uid';
         _infoStrings.add(info);
         _users.remove(uid);
-        Navigator.pop(context);
+        if (Platform.isIOS) {
+          Navigator.pop(context);
+        } else {
+          Get.offAll(TelehealthProviders(
+            arguments: HomeScreenArguments(selectedIndex: 0),
+          ));
+        }
       });
     };
 
