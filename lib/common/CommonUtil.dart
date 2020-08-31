@@ -440,7 +440,9 @@ class CommonUtil {
         profilePicThumbnail: profilePicThumbnail,
         qualifiedFullName: qualifiedFullName,
         isEmailVerified: generalInfo.isEmailVerified,
-        isTempUser: generalInfo.isTempUser);
+        isTempUser: generalInfo.isTempUser,
+        profilePicThumbnailURL:
+            myProfile.response.data.generalInfo.profilePicThumbnailURL);
 
     return new Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
