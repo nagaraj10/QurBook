@@ -189,7 +189,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   sendToMaya(String msg) async {
-    String mayaUrl = CommonUtil.MAYA_URL;
+    String mayaUrl = CommonUtil.SHEELA_URL;
     String uuidString = uuid;
 
     var reqJson = {};

@@ -21,6 +21,8 @@ class DoctorsData {
   String description;
   String createdBy;
   String lastModifiedOn;
+  String firstName;
+  String lastName;
 
   DoctorsData(
       {this.id,
@@ -41,20 +43,29 @@ class DoctorsData {
       this.isUserDefined,
       this.description,
       this.createdBy,
-      this.lastModifiedOn});
+      this.lastModifiedOn,
+      this.firstName,
+      this.lastName});
 
   DoctorsData.fromJson(Map<String, dynamic> json) {
-    CommonUtil commonUtil=new CommonUtil();
+    CommonUtil commonUtil = new CommonUtil();
     id = json[parameters.strId];
     name = json[parameters.strName];
-    addressLine1 = commonUtil.checkIfStringIsEmpty(json[parameters.strAddressLine1]);
-    addressLine2 = commonUtil.checkIfStringIsEmpty(json[parameters.strAddressLine2]);
+    addressLine1 =
+        commonUtil.checkIfStringIsEmpty(json[parameters.strAddressLine1]);
+    addressLine2 =
+        commonUtil.checkIfStringIsEmpty(json[parameters.strAddressLine2]);
     website = commonUtil.checkIfStringIsEmpty(json[parameters.strWebsite]);
-    googleMapUrl = commonUtil.checkIfStringIsEmpty(json[parameters.strGoogleMapUrl]);
-      phoneNumber1 = commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber1]);
-    phoneNumber2 = commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber2]);
-    phoneNumber3 = commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber3]);
-    phoneNumber4 = commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber4]);
+    googleMapUrl =
+        commonUtil.checkIfStringIsEmpty(json[parameters.strGoogleMapUrl]);
+    phoneNumber1 =
+        commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber1]);
+    phoneNumber2 =
+        commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber2]);
+    phoneNumber3 =
+        commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber3]);
+    phoneNumber4 =
+        commonUtil.checkIfStringIsEmpty(json[parameters.strPhoneNumber4]);
     email = json[parameters.strEmail];
     state = json[parameters.strState];
     city = json[parameters.strCity];
@@ -64,11 +75,13 @@ class DoctorsData {
     description = json[parameters.strDescription];
     createdBy = json[parameters.strCreatedBy];
     lastModifiedOn = json[parameters.strLastModifiedOn];
+    firstName = json[parameters.strFirstName];
+    lastName = json[parameters.strLastName];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-     data[parameters.strId] = this.id;
+    data[parameters.strId] = this.id;
     data[parameters.strName] = this.name;
     data[parameters.strAddressLine1] = this.addressLine1;
     data[parameters.strAddressLine2] = this.addressLine2;
@@ -87,6 +100,8 @@ class DoctorsData {
     data[parameters.strDescription] = this.description;
     data[parameters.strCreatedBy] = this.createdBy;
     data[parameters.strLastModifiedOn] = this.lastModifiedOn;
+    data[parameters.strFirstName] = this.firstName;
+    data[parameters.strLastName] = this.lastName;
     return data;
   }
 }

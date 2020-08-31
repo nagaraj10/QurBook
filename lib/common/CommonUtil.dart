@@ -60,7 +60,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcase.dart';
 
 class CommonUtil {
-  static String MAYA_URL = "";
+  static String SHEELA_URL = "";
   static String FAQ_URL = "";
   static String GOOGLE_MAP_URL = "";
   static String GOOGLE_PLACE_API_KEY = "";
@@ -1115,7 +1115,7 @@ class CommonUtil {
   }
 
   dateConversionToApiFormat(DateTime dateTime) {
-    var newFormat = DateFormat('yyyy-MM-d');
+    var newFormat = DateFormat('yyyy-MM-dd');
     String updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }

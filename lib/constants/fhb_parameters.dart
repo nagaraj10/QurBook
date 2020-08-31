@@ -41,6 +41,8 @@ const String strSpecilization = 'specialization';
 const String strIsUserDefined = 'isUserDefined';
 const String strDescription = 'description';
 const String strCreatedBy = 'createdBy';
+const String strFirstName = 'firstName';
+const String strLastName = 'lastName';
 
 //for bookmark
 const String strMediaMetaIds = 'mediaMetaIds';
