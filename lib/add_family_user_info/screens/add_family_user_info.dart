@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
@@ -104,6 +105,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   @override
   void initState() {
     super.initState();
+
+    PaintingBinding.instance.imageCache.clear();
 
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
 
