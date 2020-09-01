@@ -37,17 +37,16 @@ class BodyTemperatureEntity {
 
   factory BodyTemperatureEntity.fromJson(Map<String, dynamic> json) =>
       BodyTemperatureEntity(
-        lastsyncdatetime:
-            DateTime.parse(json[strlastSyncDateTime.toLowerCase()]),
+        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
         temperature: json[strParamTemp],
         temperatureunit: json[strParamTempUnit],
-        source: json[strSource],
+        source: json[strsourcetype],
       );
 
   Map<String, dynamic> toJson() => {
-        strlastSyncDateTime.toLowerCase(): lastsyncdatetime.toIso8601String(),
+        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
         strParamTemp: temperature,
         strParamTempUnit: temperatureunit,
-        strSource: source,
+        strsourcetype: source,
       };
 }

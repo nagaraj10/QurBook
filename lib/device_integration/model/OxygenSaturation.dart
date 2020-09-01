@@ -35,15 +35,14 @@ class OxygenSaturationEntity {
 
   factory OxygenSaturationEntity.fromJson(Map<String, dynamic> json) =>
       OxygenSaturationEntity(
-        lastsyncdatetime:
-            DateTime.parse(json[strlastSyncDateTime.toLowerCase()]),
+        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
         oxygenSaturation: json[strParamOxygen],
-        source: json[strSource],
+        source: json[strsourcetype],
       );
 
   Map<String, dynamic> toJson() => {
-        strlastSyncDateTime.toLowerCase(): lastsyncdatetime.toIso8601String(),
+        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
         strParamOxygen: oxygenSaturation,
-        strSource: source,
+        strsourcetype: source,
       };
 }

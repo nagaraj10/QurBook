@@ -27,7 +27,7 @@ class _MySettingsState extends State<MySettings> {
   DevicesViewModel _deviceModel;
   DevResult devicesList;
   bool _isHKActive = false;
-
+  bool _firstTym = true;
   bool _isBPActive = false;
   bool _isGLActive = false;
   bool _isOxyActive = false;
@@ -81,7 +81,17 @@ class _MySettingsState extends State<MySettings> {
           PreferenceUtil.getStringValue(Constants.thMon) == variable.strFalse
               ? false
               : true;
+      _firstTym = PreferenceUtil.getStringValue(Constants.isFirstTym) ==
+              variable.strFalse
+          ? false
+          : true;
     });
+    if (_firstTym) {
+      _firstTym = false;
+      _isGFActive = false;
+      PreferenceUtil.saveString(Constants.activateGF, _firstTym.toString());
+      PreferenceUtil.saveString(Constants.isFirstTym, _firstTym.toString());
+    }
   }
 
   @override
@@ -176,48 +186,52 @@ class _MySettingsState extends State<MySettings> {
                         height: 1,
                         color: Colors.grey[200],
                       ),
-                      ListTile(
-                          leading: ImageIcon(
-                            AssetImage(variable.icon_digit_googleFit),
-                            //size: 30,
-                            color: Colors.black,
-                          ),
-                          title: Text(variable.strGoogleFit),
-                          subtitle: Text(
-                            variable.strAllowGoogle,
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          trailing: Wrap(children: <Widget>[
-                            Transform.scale(
-                              scale: 0.8,
-                              child: IconButton(
-                                icon: Icon(Icons.sync),
-                                onPressed: () {
-                                  _deviceDataHelper.syncGF();
-                                },
-                              ),
-                            ),
-                            Transform.scale(
-                              scale: 0.8,
-                              child: Switch(
-                                value: _isGFActive,
-                                activeColor:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                onChanged: (bool newValue) {
-                                  newValue == true
-                                      ? _deviceDataHelper.activateGF()
-                                      : _deviceDataHelper.deactivateGF();
-                                  setState(() {
-                                    _isGFActive = newValue;
-
-                                    PreferenceUtil.saveString(
-                                        Constants.activateGF,
-                                        _isGFActive.toString());
-                                  });
-                                },
-                              ),
-                            )
-                          ])),
+                      FutureBuilder(
+                          future: _handleGoogleFit(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListTile(
+                                leading: ImageIcon(
+                                  AssetImage(variable.icon_digit_googleFit),
+                                  //size: 30,
+                                  color: Colors.black,
+                                ),
+                                title: Text(variable.strGoogleFit),
+                                subtitle: Text(
+                                  variable.strAllowGoogle,
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                trailing: Wrap(
+                                  children: <Widget>[
+                                    Transform.scale(
+                                      scale: 0.8,
+                                      child: IconButton(
+                                        icon: Icon(Icons.sync),
+                                        onPressed: () {
+                                          _deviceDataHelper.syncGoogleFit();
+                                        },
+                                      ),
+                                    ),
+                                    Transform.scale(
+                                      scale: 0.8,
+                                      child: Switch(
+                                        value: _isGFActive,
+                                        activeColor: Color(new CommonUtil()
+                                            .getMyPrimaryColor()),
+                                        onChanged: (bool newValue) {
+                                          setState(() {
+                                            _isGFActive = newValue;
+                                          });
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }),
                       Container(
                         height: 1,
                         color: Colors.grey[200],
@@ -240,7 +254,7 @@ class _MySettingsState extends State<MySettings> {
                                     child: IconButton(
                                       icon: Icon(Icons.sync),
                                       onPressed: () {
-                                        _deviceDataHelper.syncHKT();
+                                        _deviceDataHelper.syncHealthKit();
                                       },
                                     ),
                                   ),
@@ -252,8 +266,10 @@ class _MySettingsState extends State<MySettings> {
                                           new CommonUtil().getMyPrimaryColor()),
                                       onChanged: (bool newValue) {
                                         newValue == true
-                                            ? _deviceDataHelper.activateHKT()
-                                            : _deviceDataHelper.deactivateHKT();
+                                            ? _deviceDataHelper
+                                                .activateHealthKit()
+                                            : _deviceDataHelper
+                                                .deactivateHealthKit();
                                         setState(() {
                                           _isHKActive = newValue;
 
@@ -387,5 +403,21 @@ class _MySettingsState extends State<MySettings> {
         ],
       ),
     );
+  }
+
+  Future<bool> _handleGoogleFit() async {
+    bool ret = false;
+    bool _isSignedIn = await _deviceDataHelper.isGoogleFitSignedIn();
+    if (_isGFActive == _isSignedIn) {
+      ret = _isGFActive;
+    } else {
+      if (_isGFActive) {
+        _isGFActive = await _deviceDataHelper.activateGoogleFit();
+      } else {
+        _isGFActive = !await _deviceDataHelper.deactivateGoogleFit();
+      }
+    }
+    PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
+    return ret;
   }
 }

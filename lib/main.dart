@@ -114,6 +114,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.COGNITO_AUTH_TOKEN = values[10];
   CommonUtil.COGNITO_URL = values[11];
   CommonUtil.BASE_URL_V2 = values[12];
+  CommonUtil.BASEURL_DEVICE_READINGS=values[13];
 }
 
 class MyFHB extends StatefulWidget {
