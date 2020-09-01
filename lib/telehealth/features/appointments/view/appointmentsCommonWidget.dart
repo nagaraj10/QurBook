@@ -172,7 +172,7 @@ class AppointmentsCommonWidget {
       notesId.add(doc.healthRecord.notes.mediaMetaId);
     }
     if (int.parse(voiceNotesCount) > 0 && doc.healthRecord.voice != null) {
-      notesId.add(doc.healthRecord.voice.mediaMetaId);
+      voiceIds.add(doc.healthRecord.voice.mediaMetaId);
     }
     if (int.parse(rxCount) > 0 && doc.healthRecord.prescription != null) {
       if (otherRecords > 0) {
@@ -181,10 +181,14 @@ class AppointmentsCommonWidget {
       if (doc.healthRecord.prescription != null &&
           doc.healthRecord.prescription.length > 0) {
         for (int i = 0; i < doc.healthRecord.prescription.length; i++) {
-          recordIds.add(doc.healthRecord.prescription[i].mediaMetaId);
+          if (!recordIds
+              .contains(doc.healthRecord.prescription[i].mediaMetaId)) {
+            recordIds.add(doc.healthRecord.prescription[i].mediaMetaId);
+          }
         }
       }
     }
+
     notesCount = notesCount == '0' ? '' : notesCount;
     voiceNotesCount = voiceNotesCount == '0' ? '' : voiceNotesCount;
     rxCount = rxCount == '0' ? '' : rxCount;

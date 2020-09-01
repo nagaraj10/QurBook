@@ -1786,6 +1786,7 @@ class CommonDialogBox {
                     Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                         .pop();
                     Navigator.of(context).pop();
+                    onRefresh(true);
                   } else {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
@@ -1853,6 +1854,7 @@ class CommonDialogBox {
 
               if (categoryName == Constants.STR_NOTES) {
                 Navigator.of(context).pop();
+                onRefresh(true);
               } else {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(true);
@@ -1912,6 +1914,7 @@ class CommonDialogBox {
     } else {
       if (categoryName == Constants.STR_NOTES) {
         Navigator.of(context).pop();
+        onRefresh(true);
       } else {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -2353,7 +2356,8 @@ class CommonDialogBox {
                         context,
                         imagePath,
                         (context, imagePath) {
-                          onPostDataToServer(context, imagePath);
+                          onPostDataToServer(context, imagePath,
+                              onRefresh: refresh);
                         })
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
