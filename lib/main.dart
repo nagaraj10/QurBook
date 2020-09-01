@@ -14,9 +14,11 @@ import 'package:myfhb/constants/fhb_router.dart' as router;
 import 'package:myfhb/constants/router_variable.dart' as routervariable;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/schedules/add_reminders.dart';
+import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
@@ -187,14 +189,20 @@ class _MyFHBState extends State<MyFHB> {
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
       var passedValArr = c_msg.split('&');
-      Get.to(CallMain(
-        doctorName: passedValArr[1],
-        doctorId: passedValArr[2],
-        doctorPic: passedValArr[3],
-        channelName: passedValArr[0],
-        role: ClientRole.Broadcaster,
-        isAppExists: true,
-      ));
+      if (passedValArr[2] == 'ack' && passedValArr[3] == 'empty') {
+        Get.to(TelehealthProviders(
+          arguments: HomeScreenArguments(selectedIndex: 0),
+        ));
+      } else {
+        Get.to(CallMain(
+          doctorName: passedValArr[1],
+          doctorId: passedValArr[2],
+          doctorPic: passedValArr[3],
+          channelName: passedValArr[0],
+          role: ClientRole.Broadcaster,
+          isAppExists: true,
+        ));
+      }
     }
   }
 
