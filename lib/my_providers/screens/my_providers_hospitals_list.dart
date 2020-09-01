@@ -12,11 +12,15 @@ import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/HospitalModel.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
+import 'my_provider.dart';
+
 class MyProvidersHospitalsList extends StatelessWidget {
   List<HospitalsModel> hospitalsModel;
   ProvidersBloc providersBloc;
+  MyProviderState myProviderState;
 
-  MyProvidersHospitalsList({this.hospitalsModel, this.providersBloc});
+  MyProvidersHospitalsList(
+      {this.hospitalsModel, this.providersBloc, this.myProviderState});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,8 @@ class MyProvidersHospitalsList extends StatelessWidget {
                           fromClass: router.rt_myprovider,
                           hasData: true))
                   .then((value) {
-                providersBloc.getMedicalPreferencesList();
+//                providersBloc.getMedicalPreferencesList();
+                myProviderState.refreshPage();
               });
             },
             child: Container(

@@ -106,7 +106,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
 
         var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
-                .setSmallIcon(R.mipmap.app_ns_icon)
+                .setSmallIcon(android.R.drawable.sym_call_incoming)
                 .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
                 .setContentTitle(data[getString(R.string.pro_ns_title)])
                 .setContentText(data[getString(R.string.pro_ns_body)])
@@ -140,6 +140,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val NS_ID = 9091
         val MEETING_ID = data[getString(R.string.meetid)]
         val USER_NAME = data[getString(R.string.username)]
+        val DOC_ID = data[getString(R.string.docId)]
+        val DOC_PIC = data[getString(R.string.docPic)]
         val NS_TIMEOUT = 30 * 1000L
         val ack_sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
 
@@ -153,12 +155,21 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             manager.createNotificationChannel(channelAck)
         }
 
+        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        onTapNS.putExtra(getString(R.string.nsid), NS_ID)
+        onTapNS.putExtra(getString(R.string.meetid), "$MEETING_ID")
+        onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
+//        onTapNS.putExtra(getString(R.string.docId), "$DOC_ID")
+//        onTapNS.putExtra(getString(R.string.docPic), "$DOC_PIC")
+        val onTapPendingIntent = PendingIntent.getBroadcast(applicationContext, 0, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
+
 
         var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
-                .setSmallIcon(android.R.drawable.sym_call_incoming)
+                .setSmallIcon(R.mipmap.app_ns_icon)
                 .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
                 .setContentTitle(data[getString(R.string.pro_ns_title)])
                 .setContentText(data[getString(R.string.pro_ns_body)])
+                .setContentIntent(onTapPendingIntent)
                 .setSound(ack_sound)
                 .setAutoCancel(false)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)

@@ -168,13 +168,13 @@ class AppointmentsCommonWidget {
         doc.healthRecord.others == null ? 0 : doc.healthRecord.others.length;
     String rxCount = (healthRecord + otherRecords).toString();
 
-    if (int.parse(notesCount) > 0) {
+    if (int.parse(notesCount) > 0 && doc.healthRecord.notes != null) {
       notesId.add(doc.healthRecord.notes.mediaMetaId);
     }
-    if (int.parse(voiceNotesCount) > 0) {
-      voiceIds.add(doc.healthRecord.voice.mediaMetaId);
+    if (int.parse(voiceNotesCount) > 0 && doc.healthRecord.voice != null) {
+      notesId.add(doc.healthRecord.voice.mediaMetaId);
     }
-    if (int.parse(rxCount) > 0) {
+    if (int.parse(rxCount) > 0 && doc.healthRecord.prescription != null) {
       if (otherRecords > 0) {
         recordIds.addAll(doc.healthRecord.others);
       }
@@ -222,7 +222,7 @@ class AppointmentsCommonWidget {
                     getCategoryPosition(Constants.STR_VOICERECORDS),
                 allowSelect: false,
                 isAudioSelect: true,
-                isNotesSelect: false,
+                isNotesSelect: true,
                 selectedMedias: voiceIds,
                 isFromChat: false,
                 showDetails: true,
@@ -241,8 +241,8 @@ class AppointmentsCommonWidget {
                 categoryPosition:
                     getCategoryPosition(Constants.STR_PRESCRIPTION),
                 allowSelect: true,
-                isAudioSelect: false,
-                isNotesSelect: false,
+                isAudioSelect: true,
+                isNotesSelect: true,
                 selectedMedias: recordIds,
                 isFromChat: false,
                 showDetails: true,
