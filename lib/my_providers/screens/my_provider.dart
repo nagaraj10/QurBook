@@ -42,12 +42,15 @@ class MyProviderState extends State<MyProvider>
   }
 
   void refreshPage() {
-//    _providersBloc = new ProvidersBloc();
-//    _providersBloc.getMedicalPreferencesList().then((value) {
-//      setState(() {
-//        myProvidersResponseList = value;
-//      });
-//    });
+    setState(() {
+      myProvidersResponseList = null;
+    });
+    _providersBloc = new ProvidersBloc();
+    _providersBloc.getMedicalPreferencesList().then((value) {
+      setState(() {
+        myProvidersResponseList = value;
+      });
+    });
   }
 
   @override
@@ -68,15 +71,7 @@ class MyProviderState extends State<MyProvider>
                     searchWord: CommonConstants.doctors,
                     fromClass: router.cn_AddProvider,
                   )).then((value) {
-                setState(() {
-                  myProvidersResponseList = null;
-                });
-                _providersBloc = new ProvidersBloc();
-                _providersBloc.getMedicalPreferencesList().then((value) {
-                  setState(() {
-                    myProvidersResponseList = value;
-                  });
-                });
+                refreshPage();
               });
 
               break;
@@ -86,15 +81,7 @@ class MyProviderState extends State<MyProvider>
                     searchWord: CommonConstants.hospitals,
                     fromClass: router.cn_AddProvider,
                   )).then((value) {
-                setState(() {
-                  myProvidersResponseList = null;
-                });
-                _providersBloc = new ProvidersBloc();
-                _providersBloc.getMedicalPreferencesList().then((value) {
-                  setState(() {
-                    myProvidersResponseList = value;
-                  });
-                });
+                refreshPage();
               });
 
               break;
@@ -104,15 +91,7 @@ class MyProviderState extends State<MyProvider>
                     searchWord: CommonConstants.labs,
                     fromClass: router.cn_AddProvider,
                   )).then((value) {
-                setState(() {
-                  myProvidersResponseList = null;
-                });
-                _providersBloc = new ProvidersBloc();
-                _providersBloc.getMedicalPreferencesList().then((value) {
-                  setState(() {
-                    myProvidersResponseList = value;
-                  });
-                });
+                refreshPage();
               });
 
               break;
@@ -126,6 +105,7 @@ class MyProviderState extends State<MyProvider>
             ? MyProvidersTabBar(
                 data: myProvidersResponseList.response.data,
                 tabController: _tabController,
+                myProviderState: this,
               )
             : Center(
                 child: SizedBox(

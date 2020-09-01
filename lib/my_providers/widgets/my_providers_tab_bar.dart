@@ -6,6 +6,7 @@ import 'package:myfhb/my_providers/models/DoctorModel.dart';
 import 'package:myfhb/my_providers/models/HospitalModel.dart';
 import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
+import 'package:myfhb/my_providers/screens/my_provider.dart';
 import 'package:myfhb/my_providers/screens/my_providers_doctors_list.dart';
 import 'package:myfhb/my_providers/screens/my_providers_hospitals_list.dart';
 import 'package:myfhb/my_providers/screens/my_providers_labs_list.dart';
@@ -14,8 +15,13 @@ class MyProvidersTabBar extends StatefulWidget {
   MyProvidersData data;
   TabController tabController;
   ProvidersBloc providersBloc;
+  MyProviderState myProviderState;
 
-  MyProvidersTabBar({this.data, this.tabController, this.providersBloc});
+  MyProvidersTabBar(
+      {this.data,
+      this.tabController,
+      this.providersBloc,
+      this.myProviderState});
 
   @override
   State<StatefulWidget> createState() {
@@ -109,7 +115,8 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                 color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersDoctorsList(
                     doctorsModel: doctorsModel,
-                    providersBloc: widget.providersBloc))
+                    providersBloc: widget.providersBloc,
+                    myProviderState: widget.myProviderState))
             : Container(
                 child: Center(
                   child: Padding(
@@ -127,7 +134,8 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                 color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersHospitalsList(
                     hospitalsModel: hospitalsModel,
-                    providersBloc: widget.providersBloc))
+                    providersBloc: widget.providersBloc,
+                    myProviderState: widget.myProviderState))
             : Container(
                 child: Center(
                   child: Padding(
@@ -144,7 +152,9 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
             ? Container(
                 color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersLabsList(
-                    labsModel: labsModel, providersBloc: widget.providersBloc))
+                    labsModel: labsModel,
+                    providersBloc: widget.providersBloc,
+                    myProviderState: widget.myProviderState))
             : Container(
                 child: Center(
                   child: Padding(
