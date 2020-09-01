@@ -267,7 +267,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                   ),
                   Container(
-                    height: 180,
+                    height: 140,
                   ),
                   Expanded(
                     child: ChangeNotifierProvider(

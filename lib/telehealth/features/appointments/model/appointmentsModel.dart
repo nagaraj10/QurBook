@@ -47,7 +47,7 @@ class Response {
 
   Response.fromJson(Map<String, dynamic> json) {
     count = json["count"];
-    data = DoctorsData.fromJson(json["data"]);
+    data = json["data"]==null?null:DoctorsData.fromJson(json["data"]);
   }
 
   Map<String, dynamic> toJson() {

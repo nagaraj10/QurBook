@@ -1267,7 +1267,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       final bytes = await _loadFileBytes(url,
           onError: (Exception exception) =>
               debugPrint('audio_provider.load => exception ${exception}'));
-      path = '$filePath${widget.data.metaInfo.fileName}' + fileType;
+      if (fileType == '.mp3') {
+        path = '$filePath${widget.data.metaInfo.fileName}' + fileType;
+      } else {
+        path = '$filePath${widget.data.metaInfo.fileName}';
+      }
       new File(path).writeAsBytes(bytes);
       if (fileType == '.mp3') {
         //await path.writeAsBytes(bytes);

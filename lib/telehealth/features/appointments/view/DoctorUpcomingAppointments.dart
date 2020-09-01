@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,10 @@ class DoctorUpcomingAppointments extends StatefulWidget {
   String hour;
   String minute;
   String days;
-  DoctorUpcomingAppointments(this.doc, this.hour, this.minute, this.days);
+  ValueChanged<String> onChanged;
+
+  DoctorUpcomingAppointments({this.doc, this.onChanged});
+
   @override
   DoctorUpcomingAppointmentState createState() =>
       DoctorUpcomingAppointmentState();
@@ -38,6 +42,56 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   List<String> bookingIds = new List();
   AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
   SharedPreferences prefs;
+  Timer timer;
+  String hour;
+  String minutes;
+  String days;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      if (widget.doc.plannedStartDateTime != null) {
+        String hours, min;
+        int dys;
+        DateTime dob1 = DateFormat("yyyy-MM-dd HH:mm:ss")
+            .parse(widget.doc.plannedStartDateTime);
+        DateTime dob2 =
+            DateFormat("yyyy-MM-dd HH:mm:ss").parse('${DateTime.now()}');
+        Duration dur = dob1.difference(dob2);
+        dys = dur.inDays;
+        hours = dur.inHours >= 0 && dur.inHours <= 24
+            ? (dur.inHours.remainder(24)).round().toString().padLeft(2, '0')
+            : '00';
+        min = dur.inHours >= 0 && dur.inHours <= 24
+            ? (dur.inMinutes.remainder(60)).toString().padLeft(2, '0')
+            : '00';
+        setState(() {
+          hour = dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
+              ? '00'
+              : hours;
+          minutes = dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
+              ? '00'
+              : min;
+          days = dys >= 0 ? dys.toString() : '0';
+        });
+      } else {
+        setState(() {
+          hour = '00';
+          minutes = '00';
+          days = '0';
+        });
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    timer.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +131,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                   : SizedBox(height: 3.0),
                               commonWidget.docLoc(context, widget.doc.location),
                               SizedBox(height: 5.0),
-                              commonWidget.docTimeSlot(context, widget.doc,
-                                  widget.hour, widget.minute, widget.days),
+                              commonWidget.docTimeSlot(
+                                  context, widget.doc, hour, minutes, days),
                               SizedBoxWidget(height: 15.0),
                               commonWidget.docIcons(widget.doc, context)
                             ],
@@ -179,7 +233,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                 doc: doc,
                 isReshedule: isReshedule,
               )),
-    );
+    ).then((value) => widget.onChanged('Completed'));
   }
 
   Widget docPhotoView(History doc) {
@@ -312,6 +366,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   getCancelAppoitment(List<History> appointments) {
     cancelAppointment(appointments).then((value) {
       if (value.status == 200 && value.success == true) {
+        widget.onChanged('Completed');
         toast.getToast(Constants.YOUR_BOOKING_SUCCESS, Colors.green);
       } else {
         toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
@@ -390,7 +445,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                   peerId: doctorId,
                   peerAvatar: doctorPic != null ? doctorPic : '',
                   peerName: doctorName,
-                )));
+                ))).then((value) => widget.onChanged('Completed'));
   }
 
   String getPatientName() {
