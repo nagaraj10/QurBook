@@ -350,7 +350,9 @@ class RecordInfoCard {
                 child: Container(),
               ),
               Text(
-                FHBUtils().getMonthDateYear(createdDate),
+                createdDate != null
+                    ? FHBUtils().getMonthDateYear(createdDate)
+                    : '',
                 textAlign: TextAlign.end,
                 style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
               )

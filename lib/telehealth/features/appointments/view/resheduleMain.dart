@@ -16,8 +16,9 @@ import 'package:provider/provider.dart';
 class ResheduleMain extends StatefulWidget {
   History doc;
   bool isReshedule;
+  String bookId, id;
 
-  ResheduleMain({this.doc,this.isReshedule});
+  ResheduleMain({this.doc, this.isReshedule});
   @override
   _ResheduleMainState createState() => _ResheduleMainState();
 }
@@ -30,9 +31,11 @@ class _ResheduleMainState extends State<ResheduleMain> {
     return Scaffold(
       body: ChangeNotifierProvider(
         create: (context) => MyProviderViewModel(),
-        child: ResheduleAppointments(doc: widget.doc,isReshedule: widget.isReshedule,),
+        child: ResheduleAppointments(
+          doc: widget.doc,
+          isReshedule: widget.isReshedule,
+        ),
       ),
     );
   }
-
 }

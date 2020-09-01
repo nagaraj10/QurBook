@@ -75,14 +75,14 @@ class AppointmentsCommonWidget {
   }
 
   Widget docTimeSlot(BuildContext context, History doc, hour, minute, daysNum) {
-    return daysNum != '0' && daysNum!=null
+    return daysNum != '0' && daysNum != null
         ? TextWidget(
             fontsize: 10,
             text: daysNum + ' days',
             fontWeight: FontWeight.w500,
             colors: Colors.black,
           )
-        : ((hour == '00' && minute == '00') ||hour==null||minute==null)
+        : ((hour == '00' && minute == '00') || hour == null || minute == null)
 //        ||
 //                hour.length == 0 ||
 //                minute.length == 0)
@@ -172,14 +172,17 @@ class AppointmentsCommonWidget {
       notesId.add(doc.healthRecord.notes.mediaMetaId);
     }
     if (int.parse(voiceNotesCount) > 0) {
-      notesId.add(doc.healthRecord.voice.mediaMetaId);
+      voiceIds.add(doc.healthRecord.voice.mediaMetaId);
     }
     if (int.parse(rxCount) > 0) {
       if (otherRecords > 0) {
         recordIds.addAll(doc.healthRecord.others);
       }
-      for (int i = 0; i < doc.healthRecord.prescription.length; i++) {
-        recordIds.add(doc.healthRecord.prescription[i].mediaMetaId);
+      if (doc.healthRecord.prescription != null &&
+          doc.healthRecord.prescription.length > 0) {
+        for (int i = 0; i < doc.healthRecord.prescription.length; i++) {
+          recordIds.add(doc.healthRecord.prescription[i].mediaMetaId);
+        }
       }
     }
     notesCount = notesCount == '0' ? '' : notesCount;
@@ -219,7 +222,7 @@ class AppointmentsCommonWidget {
                     getCategoryPosition(Constants.STR_VOICERECORDS),
                 allowSelect: false,
                 isAudioSelect: true,
-                isNotesSelect: true,
+                isNotesSelect: false,
                 selectedMedias: voiceIds,
                 isFromChat: false,
                 showDetails: true,
@@ -238,8 +241,8 @@ class AppointmentsCommonWidget {
                 categoryPosition:
                     getCategoryPosition(Constants.STR_PRESCRIPTION),
                 allowSelect: true,
-                isAudioSelect: true,
-                isNotesSelect: true,
+                isAudioSelect: false,
+                isNotesSelect: false,
                 selectedMedias: recordIds,
                 isFromChat: false,
                 showDetails: true,

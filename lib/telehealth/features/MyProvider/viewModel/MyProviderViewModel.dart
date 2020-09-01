@@ -11,6 +11,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 
 class MyProviderViewModel extends ChangeNotifier {
   List<GetAllPatientsModel> mockDoctors = List<GetAllPatientsModel>();
@@ -81,8 +82,9 @@ class MyProviderViewModel extends ChangeNotifier {
       String scheduleDate,
       String slotNumber,
       bool isMedicalShared,
-      String isFollowUp,
-      List<String> healthRecords) async {
+      bool isFollowUp,
+      List<String> healthRecords,
+      {History doc}) async {
     try {
       BookAppointmentModel bookAppointmentModel =
           await _providersListRepository.bookAppointment(
@@ -93,7 +95,8 @@ class MyProviderViewModel extends ChangeNotifier {
               slotNumber,
               isMedicalShared,
               isFollowUp,
-              healthRecords);
+              healthRecords,
+              doc: doc);
       bookAppointment = bookAppointmentModel;
       return bookAppointment;
     } catch (e) {}

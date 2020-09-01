@@ -11,22 +11,25 @@ class PDFViewer extends StatelessWidget {
   static const wmargin = (margin + padding) * 2;
   static final controller = ScrollController();
   final pdfData;
+  String title;
 
-  PDFViewer(this.pdfData);
+  PDFViewer(this.pdfData, this.title);
 
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: new Scaffold(
           appBar: AppBar(
-              title: Text(variable.strViewPDF),
+              title: Text(title != null ? title : ''),
               elevation: 0,
               automaticallyImplyLeading: false,
               flexibleSpace: GradientAppBar(),
-              leading: SizedBox(
-                width: 0,
-                height: 0,
-              )),
+              leading: IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })),
           backgroundColor: Colors.grey,
           body: Center(
               child: PdfDocumentLoader(

@@ -1315,7 +1315,12 @@ class _CustomTabsState extends State<CustomTabView>
         },
         null,
         false,
-        fileName);
+        fileName,
+        (value) {
+          if (value) {
+            callBackToRefresh();
+          }
+        });
   }
 
   void onCameraClicked() async {
