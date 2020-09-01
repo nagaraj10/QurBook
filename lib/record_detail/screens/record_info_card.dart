@@ -78,7 +78,9 @@ class RecordInfoCard {
                             //Text('')
                             : SizedBox(height: 0),
                         Text(
-                          variable.strDateOfVisit + metaInfo.dateOfVisit,
+                          metaInfo.dateOfVisit != null
+                              ? variable.strDateOfVisit + metaInfo.dateOfVisit
+                              : '',
                           style: TextStyle(fontSize: 11),
                         ),
                       ],
