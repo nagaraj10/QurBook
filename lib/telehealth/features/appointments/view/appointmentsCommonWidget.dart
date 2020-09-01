@@ -75,14 +75,14 @@ class AppointmentsCommonWidget {
   }
 
   Widget docTimeSlot(BuildContext context, History doc, hour, minute, daysNum) {
-    return daysNum != '0' && daysNum!=null
+    return daysNum != '0' && daysNum != null
         ? TextWidget(
             fontsize: 10,
             text: daysNum + ' days',
             fontWeight: FontWeight.w500,
             colors: Colors.black,
           )
-        : ((hour == '00' && minute == '00') ||hour==null||minute==null)
+        : ((hour == '00' && minute == '00') || hour == null || minute == null)
 //        ||
 //                hour.length == 0 ||
 //                minute.length == 0)
@@ -168,13 +168,13 @@ class AppointmentsCommonWidget {
         doc.healthRecord.others == null ? 0 : doc.healthRecord.others.length;
     String rxCount = (healthRecord + otherRecords).toString();
 
-    if (int.parse(notesCount) > 0) {
+    if (int.parse(notesCount) > 0 && doc.healthRecord.notes != null) {
       notesId.add(doc.healthRecord.notes.mediaMetaId);
     }
-    if (int.parse(voiceNotesCount) > 0) {
+    if (int.parse(voiceNotesCount) > 0 && doc.healthRecord.voice != null) {
       notesId.add(doc.healthRecord.voice.mediaMetaId);
     }
-    if (int.parse(rxCount) > 0) {
+    if (int.parse(rxCount) > 0 && doc.healthRecord.prescription != null) {
       if (otherRecords > 0) {
         recordIds.addAll(doc.healthRecord.others);
       }
