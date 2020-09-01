@@ -71,10 +71,10 @@ class GetTimeSlots extends StatelessWidget {
                   print(doctorsData.slotNumber);
                   print(doctorsData.bookingId);
                   print(selectedDate.toString().substring(0, 10));
-                  resheduleAppoitment(
-                      context,
-                      [doctorsData],
-                      doctorsData.slotNumber.toString(),
+                  String selectedSlot = dateSlotTimingsObj
+                      .sessions[rowPosition].slots[itemPosition].slotNumber
+                      .toString();
+                  resheduleAppoitment(context, [doctorsData], selectedSlot,
                       selectedDate.toString().substring(0, 10));
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {

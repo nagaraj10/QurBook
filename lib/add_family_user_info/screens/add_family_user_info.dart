@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
@@ -104,6 +105,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   @override
   void initState() {
     super.initState();
+
+    PaintingBinding.instance.imageCache.clear();
 
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
 
@@ -415,10 +418,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             );
     } else {
       if (imageURI == null) {
-        if (widget.arguments.sharedbyme.profileData.profilePicThumbnail !=
+        if (widget.arguments.sharedbyme.profileData.profilePicThumbnailURL !=
             null) {
-          return getProfilePicWidget(
-              widget.arguments.sharedbyme.profileData.profilePicThumbnail);
+          return Image.network(
+            widget.arguments.sharedbyme.profileData.profilePicThumbnailURL,
+            fit: BoxFit.cover,
+            width: 60,
+            height: 60,
+          );
         } else {
           return Center(
             child: Text(

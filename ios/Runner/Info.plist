@@ -44,6 +44,8 @@
     <string>Application requires access to PhotoLibrary to capture picture of the physical medical records and devices</string>
     <key>NSSpeechRecognitionUsageDescription</key>
     <string>Application requires access to Speech Recognition for activating built in Voice assistant to perform set workflows</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Application requires access to microphone to record the audio</string>
 	<key>UIBackgroundModes</key>
  	<array>
  		<string>audio</string>

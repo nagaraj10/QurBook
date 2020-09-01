@@ -31,6 +31,7 @@ import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
   final String _baseUrlV2 = Constants.BASEURL_V2;
+  final String _baseUrlDeviceReading = CommonUtil.BASEURL_DEVICE_READINGS;
 
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -847,8 +848,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response = await http.post(
-          //_baseUrl + url,
-          _baseUrlV2 + url,
+          _baseUrlDeviceReading + url,
           body: jsonBody,
           headers: header);
       responseJson = _returnResponse(response);
@@ -918,7 +918,7 @@ class ApiBaseHelper {
     var responseJson;
     try {
       final response =
-          await http.post(_baseUrlV2 + url, body: jsonBody, headers: header);
+          await http.post(_baseUrlDeviceReading + url, body: jsonBody, headers: header);
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -932,7 +932,7 @@ class ApiBaseHelper {
     var header = await headerRequest.getRequestHeader();
     var responseJson;
     try {
-      final response = await http.get(_baseUrlV2 + url, headers: header);
+      final response = await http.get(_baseUrlDeviceReading + url, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

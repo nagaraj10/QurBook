@@ -119,13 +119,13 @@ const String qr_sessiontoken = 'sessiontoken=';
 
 const String CANCEL_SOURCE = "cancellationSource";
 
-const String qr_lastSync = 'lastSync';
-const String qr_lastMeasureSync = 'lastMeasureSync';
-const String qr_deviceInterval = 'deviceInterval';
-const String qr_deviceInfo = 'device-information';
-const String qr_user = 'user';
-const String qr_lastSyncGF = '?source=Google Fit';
-const String qr_lastSyncHK = '?source=Apple Health';
+const String qr_LastSync = 'latest-sync';
+const String qr_LastMeasureSync = 'latest-measure-sync';
+const String qr_DeviceInterval = 'device-interval';
+const String qr_DeviceInfo = 'device-health-record';
+const String qr_User = 'user';
+const String qr_LastSyncGF = '?source=Google Fit';
+const String qr_LastSyncHK = '?source=Apple Health';
 
 const String RESHEDULE_SOURCE = "rescheduleSource";
 const String BOOKING_IDS = "bookingIds";

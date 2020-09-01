@@ -18,8 +18,6 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
-
-
 class ShowDevicesNew extends StatefulWidget {
   @override
   _ShowDevicesNewState createState() => _ShowDevicesNewState();
@@ -48,7 +46,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     finalList = CommonUtil().getDeviceList();
     print("Refresh and updated the devices list");
     return getBody(context);
-     /*Stack(
+    /*Stack(
       children: <Widget>[
         Scaffold(
             backgroundColor: Colors.transparent,
@@ -89,8 +87,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 scrollDirection: Axis.horizontal,
                 itemCount: finalList.length,
                 itemBuilder: (context, i) {
-                  return Container(
-                      child: projectWidget(context, finalList[i]));
+                  return Container(child: projectWidget(context, finalList[i]));
                 });
           } else {
             return new Center(
@@ -111,46 +108,87 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         ),
       );
     }
-    
-    
-    if (deviceData.value_name ==parameters.strDataTypeBP) {
-      dateTimeStamp = deviceValues.bloodPressure.entities[0].lastsyncdatetime;
-      date = DateFormat(parameters.strDateYMD,variable.strenUs).format(dateTimeStamp)
-      + " " +DateFormat(parameters.strTimeHMS,variable.strenUs).format(dateTimeStamp) ;
-      devicevalue1 = deviceValues.bloodPressure.entities[0].systolic.toString();
-      devicevalue2 =
-          deviceValues.bloodPressure.entities[0].diastolic.toString();
-      return getDeviceData(
-          context, date, devicevalue1, devicevalue2, deviceData);
-    } else if (deviceData.value_name ==  parameters.strGlusoceLevel) {
-      dateTimeStamp = deviceValues.bloodGlucose.entities[0].lastsyncdatetime;
-       date = DateFormat(parameters.strDateYMD,variable.strenUs).format(dateTimeStamp)
-      + " " +DateFormat(parameters.strTimeHMS,variable.strenUs).format(dateTimeStamp) ;
-      devicevalue1 =
-          deviceValues.bloodGlucose.entities[0].bloodGlucoseLevel.toString();
-      return getDeviceData(context, date, devicevalue1, '', deviceData);
-    } else if (deviceData.value_name == parameters.strOxgenSaturation) {
-      dateTimeStamp =
-          deviceValues.oxygenSaturation.entities[0].lastsyncdatetime;
-           date = DateFormat(parameters.strDateYMD,variable.strenUs).format(dateTimeStamp)
-      + " " +DateFormat(parameters.strTimeHMS,variable.strenUs).format(dateTimeStamp) ;
-      devicevalue1 =
-          deviceValues.oxygenSaturation.entities[0].oxygenSaturation.toString();
-      return getDeviceData(context, date, devicevalue1, '', deviceData);
-    } else if (deviceData.value_name == parameters.strTemperature) {
-      dateTimeStamp =
-          deviceValues.bodyTemperature.entities[0].lastsyncdatetime;
-           date = DateFormat(parameters.strDateYMD,variable.strenUs).format(dateTimeStamp)
-      + " " +DateFormat(parameters.strTimeHMS,variable.strenUs).format(dateTimeStamp) ;
-      devicevalue1 =
-          deviceValues.bodyTemperature.entities[0].temperature.toString();
-      return getDeviceData(context, date, devicevalue1, '', deviceData);
-    } else if(deviceData.value_name == parameters.strWeight){
-      dateTimeStamp = deviceValues.bodyWeight.entities[0].lastsyncdatetime;
-       date = DateFormat(parameters.strDateYMD,variable.strenUs).format(dateTimeStamp)
-      + " " +DateFormat(parameters.strTimeHMS,variable.strenUs).format(dateTimeStamp) ;
-      devicevalue1 = deviceValues.bodyWeight.entities[0].weight.toString();
-      return getDeviceData(context, date, devicevalue1, '', deviceData);
+
+    switch (deviceData.value_name) {
+      case parameters.strDataTypeBP:
+        {
+          if (deviceValues.bloodPressure.entities.isNotEmpty) {
+            dateTimeStamp =
+                deviceValues.bloodPressure.entities[0].lastsyncdatetime;
+            date =
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+
+            devicevalue1 =
+                deviceValues.bloodPressure.entities[0].systolic.toString();
+            devicevalue2 =
+                deviceValues.bloodPressure.entities[0].diastolic.toString();
+          } else {
+            date = 'Record not available';
+            devicevalue1 = '';
+          }
+          return getDeviceData(
+              context, date, devicevalue1, devicevalue2, deviceData);
+        }
+      case parameters.strGlusoceLevel:
+        {
+          if (deviceValues.bloodGlucose.entities.isNotEmpty) {
+            dateTimeStamp =
+                deviceValues.bloodGlucose.entities[0].lastsyncdatetime;
+            date =
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+
+            devicevalue1 = deviceValues
+                .bloodGlucose.entities[0].bloodGlucoseLevel
+                .toString();
+          } else {
+            date = 'Record not available';
+            devicevalue1 = '';
+          }
+          return getDeviceData(context, date, devicevalue1, '', deviceData);
+        }
+      case parameters.strOxgenSaturation:
+        {
+          if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
+            dateTimeStamp =
+                deviceValues.oxygenSaturation.entities[0].lastsyncdatetime;
+            date = "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+            devicevalue1 = deviceValues
+                .oxygenSaturation.entities[0].oxygenSaturation
+                .toString();
+          } else {
+            date = 'Record not available';
+            devicevalue1 = '';
+          }
+          return getDeviceData(context, date, devicevalue1, '', deviceData);
+        }
+      case parameters.strTemperature:
+        {
+          if (deviceValues.bodyTemperature.entities.isNotEmpty) {
+            dateTimeStamp =
+                deviceValues.bodyTemperature.entities[0].lastsyncdatetime;
+            date ="${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+            devicevalue1 =
+                deviceValues.bodyTemperature.entities[0].temperature.toString();
+          } else {
+            date = 'Record not available';
+            devicevalue1 = '';
+          }
+          return getDeviceData(context, date, devicevalue1, '', deviceData);
+        }
+      case parameters.strWeight:
+        {
+          if (deviceValues.bodyWeight.entities.isNotEmpty) {
+            dateTimeStamp =
+                deviceValues.bodyWeight.entities[0].lastsyncdatetime;
+            date = "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+            devicevalue1 =
+                deviceValues.bodyWeight.entities[0].weight.toString();
+          } else {
+            date = 'Record not available';
+            devicevalue1 = '';
+          }
+          return getDeviceData(context, date, devicevalue1, '', deviceData);
+        }
     }
     //}
   }

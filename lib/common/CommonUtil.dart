@@ -73,6 +73,7 @@ class CommonUtil {
   static String COGNITO_AUTH_TOKEN = '';
   static String COGNITO_AUTH_CODE = '';
   static String COGNITO_URL = '';
+  static String BASEURL_DEVICE_READINGS = '';
 
   CategoryData categoryDataObjClone = new CategoryData();
 
@@ -440,7 +441,9 @@ class CommonUtil {
         profilePicThumbnail: profilePicThumbnail,
         qualifiedFullName: qualifiedFullName,
         isEmailVerified: generalInfo.isEmailVerified,
-        isTempUser: generalInfo.isTempUser);
+        isTempUser: generalInfo.isTempUser,
+        profilePicThumbnailURL:
+            myProfile.response.data.generalInfo.profilePicThumbnailURL);
 
     return new Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
@@ -951,10 +954,10 @@ class CommonUtil {
 
     if (PreferenceUtil.getStringValue(Constants.activateGF) ==
         variable.strtrue) {
-      _deviceDataHelper.syncGF();
+      _deviceDataHelper.syncGoogleFit();
     } else if (PreferenceUtil.getStringValue(Constants.activateHK) ==
         variable.strtrue) {
-      _deviceDataHelper.syncHKT();
+      _deviceDataHelper.syncHealthKit();
     }
   }
 
@@ -1115,7 +1118,7 @@ class CommonUtil {
   }
 
   dateConversionToApiFormat(DateTime dateTime) {
-    var newFormat = DateFormat('yyyy-MM-d');
+    var newFormat = DateFormat('yyyy-MM-dd');
     String updatedDate = newFormat.format(dateTime);
     return updatedDate;
   }

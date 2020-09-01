@@ -20,17 +20,20 @@ class GoogleSignInHelper {
     return signedIn;
   }
 
-  Future<void> handleSignIn() async {
+  Future<bool> handleSignIn() async {
     try {
       if (m_currentUser == null) {
-        await _googleSignIn.signIn();
+        GoogleSignInAccount user = await _googleSignIn.signIn();
+        m_currentUser = user;
+        return true;
       }
     } catch (error) {
-      throw error;
+      return false;
     }
   }
 
-  Future<void> handleScopes() async {
+  Future<bool> handleScopes() async {
+    bool ret = false;
     List<String> Scopes = [];
     Scopes.add(gfscopeBodyRead);
     Scopes.add(gfscopepressureRead);
@@ -39,20 +42,27 @@ class GoogleSignInHelper {
     Scopes.add(gfscopeglucoseRead);
     try {
       if (m_currentUser != null) {
-        await _googleSignIn.requestScopes(Scopes);
+        ret = await _googleSignIn.requestScopes(Scopes);
+        if(!ret){
+          await _googleSignIn.disconnect();
+        }
       }
     } catch (error) {
-      throw error;
+      return false;
     }
+    return ret;
   }
 
-  Future<void> handleSignOut() async {
+  Future<bool> handleSignOut() async {
     try {
       bool signedIn = await _googleSignIn.isSignedIn();
       if (signedIn) {
-        _googleSignIn.disconnect();
+       await  _googleSignIn.disconnect();
       }
-    } catch (e) {}
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   Future<dynamic> getDataAggregate(String jsonBody) async {

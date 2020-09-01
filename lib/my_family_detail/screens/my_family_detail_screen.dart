@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -265,17 +264,16 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                           child: Opacity(
                               opacity: 1,
                               child: ClipOval(
-                                child: sharedbyme
-                                            .profileData.profilePicThumbnail !=
+                                child: sharedbyme.profileData
+                                            .profilePicThumbnailURL !=
                                         null
-                                    ? Image.memory(
-                                        Uint8List.fromList(sharedbyme
-                                            .profileData
-                                            .profilePicThumbnail
-                                            .data),
+                                    ? Image.network(
+                                        sharedbyme
+                                            .profileData.profilePicThumbnailURL,
                                         fit: BoxFit.cover,
                                         width: 100,
-                                        height: 100)
+                                        height: 100,
+                                      )
                                     : Container(
                                         width: 100,
                                         height: 100,
@@ -283,8 +281,17 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                             .getMyPrimaryColor()),
                                         child: Center(
                                           child: Text(
-                                            sharedbyme.linkedData.nickName[0]
-                                                .toUpperCase(),
+                                            sharedbyme
+                                                        .profileData
+                                                        .qualifiedFullName
+                                                        .firstName !=
+                                                    null
+                                                ? sharedbyme
+                                                    .profileData
+                                                    .qualifiedFullName
+                                                    .firstName[0]
+                                                    .toUpperCase()
+                                                : '',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 60.0,

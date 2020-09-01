@@ -279,8 +279,11 @@ class _MyFamilyState extends State<MyFamily> {
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
-                                data.linkedData.nickName != null
-                                    ? data.linkedData.nickName[0].toUpperCase()
+                                data.profileData.qualifiedFullName.firstName !=
+                                        null
+                                    ? data.profileData.qualifiedFullName
+                                        .firstName[0]
+                                        .toUpperCase()
                                     : '',
                                 style: TextStyle(
                                     fontSize: 22,
@@ -311,9 +314,11 @@ class _MyFamilyState extends State<MyFamily> {
                               ? new CommonUtil()
                                   .titleCase(fulName.toLowerCase())
                               : ''
-                          : data.linkedData.nickName != null
-                              ? new CommonUtil()
-                                  .titleCase(data.linkedData.nickName)
+                          : data.profileData.qualifiedFullName.firstName != null
+                              ? new CommonUtil().titleCase(data
+                                      .profileData.qualifiedFullName.firstName +
+                                  ' ' +
+                                  data.profileData.qualifiedFullName.lastName)
                               : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                       softWrap: false,
