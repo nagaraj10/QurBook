@@ -6,7 +6,7 @@ class Notes {
   String mediaMetaId;
 
   Notes.fromJson(Map<String, dynamic> json) {
-    mediaMetaId = json["mediaMetaId"];
+    mediaMetaId = json["mediaMetaId"]==null?null:json["mediaMetaId"];
   }
 
   Map<String, dynamic> toJson() {

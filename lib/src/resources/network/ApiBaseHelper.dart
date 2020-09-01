@@ -867,6 +867,7 @@ class ApiBaseHelper {
       headers: await headerRequest.getAuth(),
     )
         .then((http.Response response) {
+//      print(response.body);
       if (response.statusCode == 200) {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
