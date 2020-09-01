@@ -36,17 +36,16 @@ class BodyWeightEntity {
 
   factory BodyWeightEntity.fromJson(Map<String, dynamic> json) =>
       BodyWeightEntity(
-        lastsyncdatetime:
-            DateTime.parse(json[strlastSyncDateTime.toLowerCase()]),
+        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
         weight: json[strParamWeight],
         weightunit: json[strParamWeightUnit],
-        source: json[strSource],
+        source: json[strsourcetype],
       );
 
   Map<String, dynamic> toJson() => {
-        strlastSyncDateTime.toLowerCase(): lastsyncdatetime.toIso8601String(),
+        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
         strParamWeight: weight,
         strParamWeightUnit: weightunit,
-        strSource: source,
+        strsourcetype: source,
       };
 }

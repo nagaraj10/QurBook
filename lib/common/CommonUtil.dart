@@ -73,6 +73,7 @@ class CommonUtil {
   static String COGNITO_AUTH_TOKEN = '';
   static String COGNITO_AUTH_CODE = '';
   static String COGNITO_URL = '';
+  static String BASEURL_DEVICE_READINGS = '';
 
   CategoryData categoryDataObjClone = new CategoryData();
 
@@ -953,10 +954,10 @@ class CommonUtil {
 
     if (PreferenceUtil.getStringValue(Constants.activateGF) ==
         variable.strtrue) {
-      _deviceDataHelper.syncGF();
+      _deviceDataHelper.syncGoogleFit();
     } else if (PreferenceUtil.getStringValue(Constants.activateHK) ==
         variable.strtrue) {
-      _deviceDataHelper.syncHKT();
+      _deviceDataHelper.syncHealthKit();
     }
   }
 

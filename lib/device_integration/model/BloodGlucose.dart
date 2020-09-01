@@ -36,17 +36,16 @@ class BloodGlucoseEntity {
 
   factory BloodGlucoseEntity.fromJson(Map<String, dynamic> json) =>
       BloodGlucoseEntity(
-        lastsyncdatetime:
-            DateTime.parse(json[strlastSyncDateTime.toLowerCase()]),
+        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
         bloodGlucoseLevel: json[strParamBGLevel],
         bgunit: json[strParamBGUnit],
-        source: json[strSource],
+        source: json[strsourcetype],
       );
 
   Map<String, dynamic> toJson() => {
-        strlastSyncDateTime.toLowerCase(): lastsyncdatetime.toIso8601String(),
+        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
         strParamBGLevel: bloodGlucoseLevel,
         strParamBGUnit: bgunit,
-        source: source,
+        strsourcetype: source,
       };
 }

@@ -34,15 +34,14 @@ class HeartRateEntity {
 
   factory HeartRateEntity.fromJson(Map<String, dynamic> json) =>
       HeartRateEntity(
-        lastsyncdatetime:
-            DateTime.parse(json[strlastSyncDateTime.toLowerCase()]),
+        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
         bpm: json[strParamHeartRate],
-        source: json[strSource],
+        source: json[strsourcetype],
       );
 
   Map<String, dynamic> toJson() => {
-        strlastSyncDateTime.toLowerCase(): lastsyncdatetime.toIso8601String(),
+        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
         strParamHeartRate: bpm,
-        strSource: source,
+        strsourcetype: source,
       };
 }

@@ -9,6 +9,7 @@ import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class EachDeviceValues extends StatelessWidget {
   EachDeviceValues({this.device_name});
@@ -61,29 +62,35 @@ class EachDeviceValues extends StatelessWidget {
                   );
                 }
                 List<BPResult> translist = snapshot.data;
-                if (!translist.isEmpty) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: translist.length,
-                    itemBuilder: (context, i) {
-                      return buildRow(
-                          translist[i].sourceType,
-                          getFormattedDateTime(translist[i].startDateTime),
-                          '${translist[i].systolic}',
-                          '${translist[i].diastolic}',
-                          '',
-                          'Systolic',
-                          'Diastolic',
-                          '');
-                    },
-                  );
-                } else {
-                  return new Center(
-                    child: new CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
-                    ),
-                  );
-                }
+                return !translist.isEmpty
+                    ? ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: translist.length,
+                        itemBuilder: (context, i) {
+                          return buildRow(
+                              translist[i].sourceType,
+                              getFormattedDateTime(translist[i].startDateTime),
+                              '${translist[i].systolic}',
+                              '${translist[i].diastolic}',
+                              '',
+                              'Systolic',
+                              'Diastolic',
+                              '');
+                        },
+                      )
+                    : Container(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 40, right: 40),
+                            child: Text(
+                              "No health record details available.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontFamily: variable.font_roboto),
+                            ),
+                          ),
+                        ),
+                      );
               });
         }
         break;
@@ -120,7 +127,19 @@ class EachDeviceValues extends StatelessWidget {
                               'Meal Type');
                         },
                       )
-                    : new Center(child: new CircularProgressIndicator());
+                    : Container(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 40, right: 40),
+                            child: Text(
+                              "No health record details available.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontFamily: variable.font_roboto),
+                            ),
+                          ),
+                        ),
+                      );
               });
         }
         break;
@@ -153,7 +172,19 @@ class EachDeviceValues extends StatelessWidget {
                               '');
                         },
                       )
-                    : new Center(child: new CircularProgressIndicator());
+                    : Container(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 40, right: 40),
+                            child: Text(
+                              "No health record details available.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontFamily: variable.font_roboto),
+                            ),
+                          ),
+                        ),
+                      );
               });
         }
         break;
@@ -171,29 +202,6 @@ class EachDeviceValues extends StatelessWidget {
                 }
                 List<WVResult> translist = snapshot.data;
                 //devicesViewModel.fetchWVDetails(snapshot.data.toString());
-                if (translist.isEmpty) {
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: translist.length,
-                    itemBuilder: (context, i) {
-                      return buildRow(
-                          translist[i].sourceType,
-                          getFormattedDateTime(translist[i].startDateTime),
-                          '${translist[i].weight}',
-                          '',
-                          '',
-                          '${translist[i].weightUnit}',
-                          '',
-                          '');
-                    },
-                  );
-                } else {
-                  new Center(
-                    child: new CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
-                    ),
-                  );
-                }
                 return !translist.isEmpty
                     ? ListView.builder(
                         shrinkWrap: true,
@@ -210,9 +218,17 @@ class EachDeviceValues extends StatelessWidget {
                               '');
                         },
                       )
-                    : new Center(
-                        child: new CircularProgressIndicator(
-                          backgroundColor: Colors.grey,
+                    : Container(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 40, right: 40),
+                            child: Text(
+                              "No health record details available.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontFamily: variable.font_roboto),
+                            ),
+                          ),
                         ),
                       );
               });
@@ -247,7 +263,19 @@ class EachDeviceValues extends StatelessWidget {
                               '');
                         },
                       )
-                    : new Center(child: new CircularProgressIndicator());
+                    : Container(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 40, right: 40),
+                            child: Text(
+                              "No health record details available.",
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(fontFamily: variable.font_roboto),
+                            ),
+                          ),
+                        ),
+                      );
               });
         }
         break;

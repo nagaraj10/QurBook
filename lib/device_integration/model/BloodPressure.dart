@@ -36,17 +36,16 @@ class BloodPressureEntity {
 
   factory BloodPressureEntity.fromJson(Map<String, dynamic> json) =>
       BloodPressureEntity(
-        lastsyncdatetime:
-            DateTime.parse(json[strlastSyncDateTime.toLowerCase()]),
+        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
         systolic: json[strParamSystolic],
         diastolic: json[strParamDiastolic],
-        source: json[strSource],
+        source: json[strsourcetype],
       );
 
   Map<String, dynamic> toJson() => {
-        strlastSyncDateTime.toLowerCase(): lastsyncdatetime.toIso8601String(),
+        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
         strParamSystolic: systolic,
         strParamDiastolic: diastolic,
-        strSource: source,
+        strsourcetype: source,
       };
 }
