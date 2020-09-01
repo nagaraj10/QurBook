@@ -49,47 +49,8 @@ class _AppointmentsState extends State<Appointments> {
 
   @override
   void initState() {
-    setTimer(1);
+    setState(() {});
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    timer.cancel();
-    super.dispose();
-  }
-
-  setTimer(int secs) {
-    timer = Timer.periodic(Duration(seconds: secs), (Timer t) {
-      hours = appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).hours;
-      minutes =
-          appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).minutes;
-      daysCount =
-          appointmentsViewModel.getTimeSlot(upcomingInfo, isSearch).daysCount;
-      if (hours.length != 0 && minutes.length != 0) {
-        setState(() {
-          hours;
-          minutes;
-          daysCount;
-        });
-      } else {
-        setState(() {
-          hours = List.filled(
-              appointmentsViewModel
-                  .appointmentsModel.response.data.upcoming.length,
-              '00');
-          minutes = List.filled(
-              appointmentsViewModel
-                  .appointmentsModel.response.data.upcoming.length,
-              '00');
-          daysCount = List.filled(
-              appointmentsViewModel
-                  .appointmentsModel.response.data.upcoming.length,
-              '0');
-        });
-      }
-    });
   }
 
   @override
@@ -157,29 +118,6 @@ class _AppointmentsState extends State<Appointments> {
     (context as Element).markNeedsBuild();
   }
 
-  Future<CancelAppointmentModel> cancelAppointment(
-      List<History> appointments) async {
-    for (int i = 0; i < appointments.length; i++) {
-      bookingIds.add(appointments[i].bookingId);
-    }
-    CancelAppointmentModel cancelAppointment =
-        await appointmentsViewModel.fetchCancelAppointment(bookingIds);
-
-    return cancelAppointment;
-  }
-
-  FlutterToast toast = new FlutterToast();
-
-  getCancelAppoitment(List<History> appointments) {
-    cancelAppointment(appointments).then((value) {
-      if (value.status == 200 && value.success == true) {
-        toast.getToast(Constants.YOUR_BOOKING_SUCCESS, Colors.green);
-      } else {
-        toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
-      }
-    });
-  }
-
   Widget body() {
     return SingleChildScrollView(
       child: Container(
@@ -215,16 +153,7 @@ class _AppointmentsState extends State<Appointments> {
         builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             AppointmentsModel appointmentsData = snapshot.data;
-            if (appointmentsData.response.data.upcoming != null &&
-                appointmentsData.response.data.upcoming.length > 0) {
-              setTimer(1);
-            }
-//            if(hours==null || minutes==null){
-//              hours = List.filled(appointmentsData
-//                  .response.data.upcoming.length, '00');
-//              minutes = List.filled(appointmentsData
-//                  .response.data.upcoming.length, '00');
-//            }
+
             return ((appointmentsData.response.data.history != null &&
                         appointmentsData.response.data.history.length > 0) ||
                     (appointmentsData.response.data.upcoming != null &&
@@ -237,62 +166,37 @@ class _AppointmentsState extends State<Appointments> {
                         height: 10,
                       ),
                       isSearch
-                          ? minutes.length == upcomingInfo.length
-                              ? commonWidget
-                                  .title(Constants.Appointments_upcoming)
-                              : Container()
-                          : appointmentsData.response.data.upcoming.length !=
-                                      0 &&
-                                  minutes.length ==
-                                      appointmentsData
-                                          .response.data.upcoming.length
-                              ? commonWidget
-                                  .title(Constants.Appointments_upcoming)
-                              : Container(),
+                          ? (upcomingInfo != null && upcomingInfo.length != 0)
+                          ? commonWidget
+                          .title(Constants.Appointments_upcoming)
+                          : Container()
+                          : (appointmentsData.response.data.upcoming != null &&
+                          appointmentsData
+                              .response.data.upcoming.length !=
+                              0)
+                          ? commonWidget
+                          .title(Constants.Appointments_upcoming)
+                          : Container(),
                       SizedBoxWidget(
                         width: 0,
                         height: 10,
                       ),
-                      isSearch
-                          ? minutes.length == upcomingInfo.length
-                              ? ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (BuildContext ctx, int i) =>
-                                      DoctorUpcomingAppointments(
-                                          isSearch
-                                              ? upcomingInfo[i]
-                                              : appointmentsData
-                                                  .response.data.upcoming[i],
-                                          hours[i],
-                                          minutes[i],
-                                          daysCount[i]),
-                                  itemCount: !isSearch
-                                      ? appointmentsData
-                                          .response.data.upcoming.length
-                                      : upcomingInfo.length,
-                                )
-                              : Container()
-                          : minutes.length ==
-                                  appointmentsData.response.data.upcoming.length
-                              ? ListView.builder(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  shrinkWrap: true,
-                                  itemBuilder: (BuildContext ctx, int i) =>
-                                      doctorsAppointmentsListCard(
-                                          isSearch
-                                              ? upcomingInfo[i]
-                                              : appointmentsData
-                                                  .response.data.upcoming[i],
-                                          hours[i],
-                                          minutes[i],
-                                          daysCount[i]),
-                                  itemCount: !isSearch
-                                      ? appointmentsData
-                                          .response.data.upcoming.length
-                                      : upcomingInfo.length,
-                                )
-                              : Container(),
+                      ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (BuildContext ctx, int i) =>
+                            DoctorUpcomingAppointments(
+                                doc: isSearch
+                                    ? upcomingInfo[i]
+                                    : appointmentsData
+                                        .response.data.upcoming[i],
+                                onChanged: (value) {
+                                  setState(() {});
+                                }),
+                        itemCount: !isSearch
+                            ? appointmentsData.response.data.upcoming.length
+                            : upcomingInfo.length,
+                      ),
                       SizedBoxWidget(
                         width: 0,
                         height: 10,
@@ -354,134 +258,6 @@ class _AppointmentsState extends State<Appointments> {
             );
           }
         });
-  }
-
-  Widget doctorsAppointmentsListCard(
-      History doc, String hour, String minute, String days) {
-    return Card(
-        color: Colors.white,
-        elevation: 0.5,
-        child: Column(
-          children: [
-            Container(
-                padding: EdgeInsets.all(8),
-                child: Stack(
-//                  crossAxisAlignment: CrossAxisAlignment.start,
-//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Container(
-//                      width:MediaQuery.of(context).size.width/1.8,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          docPhotoView(doc),
-                          SizedBoxWidget(
-                            width: 10,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              commonWidget.docName(context, doc.doctorName),
-                              SizedBoxWidget(height: 3.0, width: 0),
-                              doc.specialization == null
-                                  ? Container()
-                                  : commonWidget.docStatus(
-                                      context, doc.specialization ?? ''),
-                              doc.specialization == null
-                                  ? Container()
-                                  : SizedBox(height: 3.0),
-                              commonWidget.docLoc(context, doc.location),
-                              SizedBox(height: 5.0),
-                              commonWidget.docTimeSlot(
-                                  context, doc, hour, minute, days),
-                              SizedBoxWidget(height: 15.0),
-                              commonWidget.docIcons(doc, context)
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Column(
-                        children: [
-                          //joinCallIcon(doc),
-                          IconButton(
-                              icon: ImageIcon(
-                                  AssetImage(Constants.Appointments_chatImage)),
-                              onPressed: () {
-                                //chat integration start
-                                String doctorId = doc.doctorId;
-                                String doctorName = doc.doctorName;
-                                String doctorPic = doc.doctorPic;
-                                storePatientDetailsToFCM(
-                                    doctorId, doctorName, doctorPic);
-                              }),
-                          SizedBoxWidget(
-                            height: (hour == '00' || minutes == '00') ? 0 : 15,
-                          ),
-                          SizedBoxWidget(
-                            height: doc.specialization == null ? 30 : 40,
-                          ),
-                          commonWidget.count(doc.slotNumber),
-                          TextWidget(
-                            fontsize: 10,
-                            text: DateFormat("hh:mm a")
-                                    .format(DateTime.parse(
-                                        doc.plannedStartDateTime))
-                                    .toString() ??
-                                '',
-                            fontWeight: FontWeight.w600,
-                            colors: Color(new CommonUtil().getMyPrimaryColor()),
-                          ),
-                          TextWidget(
-                            fontsize: 10,
-                            text: DateFormat.yMMMEd()
-                                    .format(DateTime.parse(
-                                        doc.plannedStartDateTime))
-                                    .toString() ??
-                                '',
-                            fontWeight: FontWeight.w500,
-                            overflow: TextOverflow.visible,
-                            colors: Colors.black,
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                )),
-            SizedBoxWidget(height: 10.0),
-            Container(height: 1, color: Colors.black26),
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
-              child: Row(
-                children: [
-                  commonWidget.iconWithText(
-                      Constants.Appointments_receiptImage,
-                      Colors.black38,
-                      Constants.Appointments_receipt,
-                      () {},
-                      null),
-                  SizedBoxWidget(width: 15.0),
-                  commonWidget.iconWithText(
-                      Constants.Appointments_resheduleImage,
-                      Colors.black38,
-                      Constants.Appointments_reshedule, () {
-                    navigateToProviderScreen(doc, true);
-                  }, null),
-                  SizedBoxWidget(width: 15.0),
-                  commonWidget.iconWithText(Constants.Appointments_cancelImage,
-                      Colors.black38, Constants.Appointments_cancel, () {
-                    _displayDialog(context, [doc]);
-                  }, null),
-                  SizedBoxWidget(width: 15.0),
-                ],
-              ),
-            )
-          ],
-        ));
   }
 
   Widget docPhotoView(History doc) {
@@ -649,95 +425,6 @@ class _AppointmentsState extends State<Appointments> {
         ));
   }
 
-  _displayDialog(BuildContext context, List<History> appointments) async {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            insetPadding: EdgeInsets.symmetric(horizontal: 8),
-            backgroundColor: Colors.transparent,
-            content: Container(
-              width: double.maxFinite,
-              height: 250.0,
-              child: Column(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                        child: Container(
-                          height: 160,
-                          padding: EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              TextWidget(
-                                  text: parameters
-                                      .cancellationAppointmentConfirmation,
-                                  fontsize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  colors: Colors.grey[600]),
-                              SizedBoxWidget(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  SizedBoxWithChild(
-                                    width: 90,
-                                    height: 40,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          side: BorderSide(color: Colors.grey)),
-                                      color: Colors.transparent,
-                                      textColor: Colors.grey,
-                                      padding: EdgeInsets.all(8.0),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: TextWidget(
-                                          text: parameters.no, fontsize: 12),
-                                    ),
-                                  ),
-                                  SizedBoxWithChild(
-                                    width: 90,
-                                    height: 40,
-                                    child: FlatButton(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12.0),
-                                          side: BorderSide(
-                                              color: Colors.blue[800])),
-                                      color: Colors.transparent,
-                                      textColor: Colors.blue[800],
-                                      padding: EdgeInsets.all(8.0),
-                                      onPressed: () {
-                                        Navigator.pop(context,
-                                            getCancelAppoitment(appointments));
-                                      },
-                                      child: TextWidget(
-                                          text: parameters.yes, fontsize: 12),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
 
   String getPatientName() {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
