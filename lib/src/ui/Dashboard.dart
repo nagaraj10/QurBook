@@ -140,7 +140,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       )),
                   BottomNavigationBarItem(
                       icon: InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => ChatHomeScreen()),);
+                          },
                           child: ImageIcon(
                             AssetImage(variable.icon_chat),
                             color: Colors.black54,
