@@ -14,6 +14,7 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
+import 'package:myfhb/telehealth/features/appointments/view/DoctorTimeSlotWidget.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -43,15 +44,15 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   List<String> bookingIds = new List();
   AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
   SharedPreferences prefs;
-  Timer timer;
+  /* Timer timer;
   String hour;
   String minutes;
-  String days;
+  String days;*/
 
   @override
   void initState() {
     // TODO: implement initState
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    /*timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       if (widget.doc.plannedStartDateTime != null) {
         String hours, min;
         int dys;
@@ -83,14 +84,12 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
           days = '0';
         });
       }
-    });
+    });*/
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    timer.cancel();
     super.dispose();
   }
 
@@ -132,8 +131,10 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                   : SizedBox(height: 3.0),
                               commonWidget.docLoc(context, widget.doc.location),
                               SizedBox(height: 5.0),
-                              commonWidget.docTimeSlot(
-                                  context, widget.doc, hour, minutes, days),
+                              DoctorTimeSlotWidget(
+                                doc: widget.doc,
+                                onChanged: widget.onChanged,
+                              ),
                               SizedBoxWidget(height: 15.0),
                               commonWidget.docIcons(widget.doc, context)
                             ],
