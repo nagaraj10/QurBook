@@ -157,6 +157,8 @@ class AppointmentsCommonWidget {
     List<String> notesId = new List();
     List<String> voiceIds = new List();
 //    print(doc.healthRecord);
+
+    print(doc.bookingId);
     String notesCount =
         doc.healthRecord.notes == null ? 0.toString() : 1.toString();
     String voiceNotesCount =
@@ -170,13 +172,16 @@ class AppointmentsCommonWidget {
 
     if (int.parse(notesCount) > 0 && doc.healthRecord.notes != null) {
       notesId.add(doc.healthRecord.notes.mediaMetaId);
+      print('notesId' + doc.healthRecord.notes.mediaMetaId);
     }
     if (int.parse(voiceNotesCount) > 0 && doc.healthRecord.voice != null) {
       voiceIds.add(doc.healthRecord.voice.mediaMetaId);
+      print('voiceIds' + doc.healthRecord.voice.mediaMetaId);
     }
-    if (int.parse(rxCount) > 0 && doc.healthRecord.prescription != null) {
+    if (int.parse(rxCount) > 0) {
       if (otherRecords > 0) {
         recordIds.addAll(doc.healthRecord.others);
+        print('others******' + doc.healthRecord.others.toString());
       }
       if (doc.healthRecord.prescription != null &&
           doc.healthRecord.prescription.length > 0) {
@@ -184,6 +189,8 @@ class AppointmentsCommonWidget {
           if (!recordIds
               .contains(doc.healthRecord.prescription[i].mediaMetaId)) {
             recordIds.add(doc.healthRecord.prescription[i].mediaMetaId);
+
+            print('RECORDID' + doc.healthRecord.prescription[i].mediaMetaId);
           }
         }
       }
@@ -240,13 +247,14 @@ class AppointmentsCommonWidget {
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records, () async {
           if (rxCount != null) {
+            print(recordIds.toString() + '***********************');
             await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => MyRecords(
                 categoryPosition:
                     getCategoryPosition(Constants.STR_PRESCRIPTION),
                 allowSelect: true,
-                isAudioSelect: true,
-                isNotesSelect: true,
+                isAudioSelect: false,
+                isNotesSelect: false,
                 selectedMedias: recordIds,
                 isFromChat: false,
                 showDetails: true,
@@ -442,6 +450,11 @@ class AppointmentsCommonWidget {
         break;
 
       case Constants.STR_VOICERECORDS:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+
+      case Constants.STR_BILLS:
         categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;

@@ -847,10 +847,8 @@ class ApiBaseHelper {
     var header = await headerRequest.getRequestHeader();
     var responseJson;
     try {
-      final response = await http.post(
-          _baseUrlDeviceReading + url,
-          body: jsonBody,
-          headers: header);
+      final response = await http.post(_baseUrlDeviceReading + url,
+          body: jsonBody, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -860,6 +858,7 @@ class ApiBaseHelper {
 
   Future<AppointmentsModel> fetchAppointments() async {
     String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    print(_baseUrl + qr_appointment_fetch + userId);
 //    print('patient_id: '+userId);
     return await http
         .get(
@@ -917,8 +916,8 @@ class ApiBaseHelper {
     var header = await headerRequest.getRequestHeader();
     var responseJson;
     try {
-      final response =
-          await http.post(_baseUrlDeviceReading + url, body: jsonBody, headers: header);
+      final response = await http.post(_baseUrlDeviceReading + url,
+          body: jsonBody, headers: header);
 
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -932,7 +931,8 @@ class ApiBaseHelper {
     var header = await headerRequest.getRequestHeader();
     var responseJson;
     try {
-      final response = await http.get(_baseUrlDeviceReading + url, headers: header);
+      final response =
+          await http.get(_baseUrlDeviceReading + url, headers: header);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

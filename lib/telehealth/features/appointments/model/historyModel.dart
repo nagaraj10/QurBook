@@ -1,32 +1,33 @@
 import 'package:myfhb/telehealth/features/appointments/model/healthRecord.dart';
 
 class History {
-  History({
-    this.appointmentId,
-    this.createdOn,
-    this.createdBy,
-    this.lastModifiedBy,
-    this.healthRecord,
-    this.plannedStartDateTime,
-    this.plannedEndDateTime,
-    this.slotNumber,
-    this.isRefunded,
-    this.bookingId,
-    this.sharedMedicalRecordsId,
-    this.isMedicalRecordsShared,
-    this.specialization,
-    this.location,
-    this.doctorPic,
-    this.doctorName,
-    this.doctorId,
-    this.doctorSessionId,
-    this.patientId,
-    this.actualStartDateTime,
-    this.actualEndDateTime,
-    this.followupDate,
-    this.followupFee,
-    this.status,
-  });
+  History(
+      {this.appointmentId,
+      this.createdOn,
+      this.createdBy,
+      this.lastModifiedBy,
+      this.healthRecord,
+      this.plannedStartDateTime,
+      this.plannedEndDateTime,
+      this.slotNumber,
+      this.isRefunded,
+      this.bookingId,
+      this.sharedMedicalRecordsId,
+      this.isMedicalRecordsShared,
+      this.specialization,
+      this.location,
+      this.doctorPic,
+      this.doctorName,
+      this.doctorId,
+      this.doctorSessionId,
+      this.patientId,
+      this.actualStartDateTime,
+      this.actualEndDateTime,
+      this.followupDate,
+      this.followupFee,
+      this.status,
+      this.paymentMediaMetaId,
+      this.refundMediaMetaId});
 
   String appointmentId;
   String createdOn;
@@ -52,6 +53,8 @@ class History {
   String followupDate;
   String followupFee;
   String status;
+  String paymentMediaMetaId;
+  String refundMediaMetaId;
 
   History.fromJson(Map<String, dynamic> json) {
     appointmentId = json["appointmentId"];
@@ -82,6 +85,8 @@ class History {
     followupDate = json["followupDate"];
     followupFee = json["followupFee"];
     status = json["status"];
+    paymentMediaMetaId = json["paymentMediaMetaId"];
+    refundMediaMetaId = json["refundMediaMetaId"];
   }
 
   Map<String, dynamic> toJson() {
@@ -113,6 +118,8 @@ class History {
     data["followupDate"] = this.followupDate;
     data["followupFee"] = this.followupFee;
     data["status"] = this.status;
+    data["paymentMediaMetaId"] = this.paymentMediaMetaId;
+    data["refundMediaMetaId"] = this.refundMediaMetaId;
     return data;
   }
 }

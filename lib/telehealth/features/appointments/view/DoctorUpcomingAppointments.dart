@@ -11,6 +11,7 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
@@ -199,12 +200,10 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
               padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
               child: Row(
                 children: [
-                  commonWidget.iconWithText(
-                      Constants.Appointments_receiptImage,
-                      Colors.black38,
-                      Constants.Appointments_receipt,
-                      () {},
-                      null),
+                  commonWidget.iconWithText(Constants.Appointments_receiptImage,
+                      Colors.black38, Constants.Appointments_receipt, () {
+                    moveToBilsPage(widget.doc.paymentMediaMetaId);
+                  }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
                       Constants.Appointments_resheduleImage,
@@ -466,5 +465,22 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         myProfile.response.data.generalInfo.profilePicThumbnailURL;
 
     return patientPicURL;
+  }
+
+  void moveToBilsPage(String paymentMediaMetaId) async {
+    List<String> paymentID = new List();
+    paymentID.add(paymentMediaMetaId);
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MyRecords(
+        categoryPosition: new AppointmentsCommonWidget()
+            .getCategoryPosition(Constants.STR_BILLS),
+        allowSelect: true,
+        isAudioSelect: false,
+        isNotesSelect: false,
+        selectedMedias: paymentID,
+        isFromChat: false,
+        showDetails: true,
+      ),
+    ));
   }
 }
