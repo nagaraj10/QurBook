@@ -95,6 +95,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
 
   @override
   Widget build(BuildContext context) {
+    var _firstPress = true ;
     return Card(
         color: Colors.white,
         elevation: 0.5,
@@ -151,12 +152,10 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               icon: ImageIcon(
                                   AssetImage(Constants.Appointments_chatImage)),
                               onPressed: () {
-                                //chat integration start
-                                String doctorId = widget.doc.doctorId;
-                                String doctorName = widget.doc.doctorName;
-                                String doctorPic = widget.doc.doctorPic;
-                                storePatientDetailsToFCM(
-                                    doctorId, doctorName, doctorPic);
+                                if(_firstPress){
+                                  _firstPress = false ;
+                                  goToChatIntegration(widget.doc);
+                                }
                               }),
                           SizedBoxWidget(
                             height:
@@ -223,6 +222,14 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
             )
           ],
         ));
+  }
+
+  void goToChatIntegration(History doc){
+    //chat integration start
+    String doctorId = doc.doctorId;
+    String doctorName = doc.doctorName;
+    String doctorPic = doc.doctorPic;
+    storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
   }
 
   void navigateToProviderScreen(doc, isReshedule) {

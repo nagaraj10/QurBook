@@ -299,6 +299,7 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   Widget doctorsHistoryListCard(History doc) {
+    var _firstPress = true ;
     return Card(
         color: Colors.white,
         elevation: 0.5,
@@ -389,11 +390,10 @@ class _AppointmentsState extends State<Appointments> {
                 children: [
                   commonWidget.iconWithText(Constants.Appointments_chatImage,
                       Colors.black38, Constants.Appointments_chat, () {
-                    //chat integration start
-                    String doctorId = doc.doctorId;
-                    String doctorName = doc.doctorName;
-                    String doctorPic = doc.doctorPic;
-                    storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
+                        if(_firstPress){
+                          _firstPress = false ;
+                          goToChatIntegration(doc);
+                        }
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
@@ -422,6 +422,14 @@ class _AppointmentsState extends State<Appointments> {
             )
           ],
         ));
+  }
+
+  void goToChatIntegration(History doc){
+    //chat integration start
+    String doctorId = doc.doctorId;
+    String doctorName = doc.doctorName;
+    String doctorPic = doc.doctorPic;
+    storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
   }
 
   String getPatientName() {

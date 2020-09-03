@@ -49,6 +49,7 @@ class _MyControllersState extends State<MyControllers> {
 
   /// Toolbar layout
   Widget _toolbar({CallStatus callStatus, HideProvider hideProvider}) {
+    var _firstPress = true ;
     if (widget.role == ClientRole.Audience) return Container();
     return Container(
       color: Colors.black.withOpacity(0.5),
@@ -74,7 +75,10 @@ class _MyControllersState extends State<MyControllers> {
           ),
           IconButton(
             onPressed: () {
-              storePatientDetailsToFCM();
+              if(_firstPress){
+                _firstPress = false ;
+                storePatientDetailsToFCM();
+              }
             },
             icon: Icon(
               Icons.chat_bubble_outline,

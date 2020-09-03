@@ -1027,7 +1027,6 @@ class ApiBaseHelper {
     inputBody[META_IDS] = recordIds;
     inputBody[INCLUDE_MEDIA] = true;
     var jsonString = convert.jsonEncode(inputBody);
-    print(jsonString);
     final response = await getApiForGetMetaURL(jsonString, patientId);
     return GetMetaFileURLModel.fromJson(response);
   }
@@ -1039,7 +1038,6 @@ class ApiBaseHelper {
           _baseUrl + qr_media_meta + patientId + qr_get_media_master,
           headers: await headerRequest.getRequestHeader(),
           body: jsonBody);
-      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

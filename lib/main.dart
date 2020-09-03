@@ -188,7 +188,7 @@ class _MyFHBState extends State<MyFHB> {
 
   void _updateTimer(msg) {
     _msgListener.value = _msg;
-    var doctorPic;
+    var doctorPic='';
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
       var passedValArr = c_msg.split('&');
@@ -198,7 +198,9 @@ class _MyFHBState extends State<MyFHB> {
         ));
       } else {
         doctorPic = passedValArr[3];
-        doctorPic = json.decode(doctorPic);
+        if(doctorPic!=''){
+          doctorPic = json.decode(doctorPic);
+        }
         Get.to(CallMain(
           doctorName: passedValArr[1],
           doctorId: passedValArr[2],
