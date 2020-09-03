@@ -202,7 +202,7 @@ class _MyFHBState extends State<MyFHB> {
         if (doctorPic.isNotEmpty) {
           doctorPic = json.decode(doctorPic);
         }else{
-          doctorPic = PROFILE_PH;
+          doctorPic = '';
         }
         Get.to(CallMain(
           doctorName: passedValArr[1],
