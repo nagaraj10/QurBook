@@ -116,7 +116,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.COGNITO_AUTH_TOKEN = values[10];
   CommonUtil.COGNITO_URL = values[11];
   CommonUtil.BASE_URL_V2 = values[12];
-  CommonUtil.BASEURL_DEVICE_READINGS=values[13];
+  CommonUtil.BASEURL_DEVICE_READINGS = values[13];
 }
 
 class MyFHB extends StatefulWidget {
@@ -190,11 +190,11 @@ class _MyFHBState extends State<MyFHB> {
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
       var passedValArr = c_msg.split('&');
-      if (passedValArr[2] == 'ack' && passedValArr[3] == 'empty') {
+      if (c_msg == 'ack') {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(selectedIndex: 0),
         ));
-      } else {
+      }else if(passedValArr[4]=='call'){
         Get.to(CallMain(
           doctorName: passedValArr[1],
           doctorId: passedValArr[2],

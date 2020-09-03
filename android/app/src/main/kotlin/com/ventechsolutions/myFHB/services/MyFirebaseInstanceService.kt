@@ -18,6 +18,7 @@ import com.ventechsolutions.myFHB.NotificationActivity
 import com.ventechsolutions.myFHB.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.ventechsolutions.myFHB.MyApp
 
 
 class MyFirebaseInstanceService : FirebaseMessagingService() {
@@ -70,7 +71,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val DOC_ID = data[getString(R.string.docId)]
         val DOC_PIC = data[getString(R.string.docPic)]
         val NS_TIMEOUT = 30 * 1000L
-        val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
+        //val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
 
 
         val declineIntent = Intent(applicationContext, DeclineReciver::class.java)
@@ -98,9 +99,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             val manager = getSystemService(NotificationManager::class.java)
             val channelCall = NotificationChannel(CHANNEL_INCOMING, getString(R.string.channel_call), NotificationManager.IMPORTANCE_HIGH)
             channelCall.description = getString(R.string.channel_incoming_desc)
-            val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
-            channelCall.setSound(_sound,attributes)
+//            val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+//                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+//            channelCall.setSound(_sound,attributes)
             manager.createNotificationChannel(channelCall)
         }
 
@@ -118,7 +119,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .addAction(R.drawable.ic_decline, getString(R.string.ns_act_decline), declinePendingIntent)
                 .setAutoCancel(true)
                 .setFullScreenIntent(fullScreenPendingIntent,true)
-                .setSound(_sound)
+                //.setSound(_sound)
                 .setOngoing(true)
                 .setTimeoutAfter(NS_TIMEOUT)
                 .setOnlyAlertOnce(false)
@@ -131,7 +132,11 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
         Thread {
             Thread.sleep(NS_TIMEOUT)
-            //createNotification4MissedCall(USER_NAME!!)
+            if(MyApp.isMissedNSShown){
+                createNotification4MissedCall(USER_NAME!!)
+            }else{
+                MyApp.isMissedNSShown=true
+            }
         }.start()
     }
 
@@ -143,15 +148,15 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val DOC_ID = data[getString(R.string.docId)]
         val DOC_PIC = data[getString(R.string.docPic)]
         val NS_TIMEOUT = 30 * 1000L
-        val ack_sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+        //val ack_sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
 
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)
             val channelAck = NotificationChannel(CHANNEL_ACK, getString(R.string.channel_ack), NotificationManager.IMPORTANCE_DEFAULT)
             channelAck.description = getString(R.string.channel_ack_desc)
-            val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
-            channelAck.setSound(ack_sound,attributes)
+//            val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+//                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+//            channelAck.setSound(ack_sound,attributes)
             manager.createNotificationChannel(channelAck)
         }
 
@@ -170,14 +175,14 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .setContentTitle(data[getString(R.string.pro_ns_title)])
                 .setContentText(data[getString(R.string.pro_ns_body)])
                 .setContentIntent(onTapPendingIntent)
-                .setSound(ack_sound)
+                //.setSound(ack_sound)
                 .setAutoCancel(false)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .build()
         nsManager.notify(NS_ID,notification)
     }
 
-    private fun createNotification4MissedCall(body: String){
+    private fun createNotification4MissedCall(body: String){  
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = 9092
 
