@@ -54,6 +54,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
 
   Future<String> getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    print(patientId);
 
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.response.data.generalInfo.qualifiedFullName != null
