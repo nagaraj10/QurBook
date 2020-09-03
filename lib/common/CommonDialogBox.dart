@@ -2341,7 +2341,7 @@ class CommonDialogBox {
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath);
+                    onPostDataToServer(context, imagePath, onRefresh: refresh);
                   })
                 : containsAudioMain
                     ? fhbBasicWidget.getAudioIconWithFile(
