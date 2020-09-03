@@ -155,10 +155,10 @@ class _AppointmentsState extends State<Appointments> {
           if (snapshot.hasData) {
             AppointmentsModel appointmentsData = snapshot.data;
 
-            return ((appointmentsData.response.data.history != null &&
-                        appointmentsData.response.data.history.length > 0) ||
-                    (appointmentsData.response.data.upcoming != null &&
-                        appointmentsData.response.data.upcoming.length > 0))
+            return ((appointmentsData?.response?.data?.history != null &&
+                        appointmentsData.response?.data?.history?.length > 0) ||
+                    (appointmentsData?.response?.data?.upcoming != null &&
+                        appointmentsData?.response?.data?.upcoming?.length > 0))
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -218,8 +218,8 @@ class _AppointmentsState extends State<Appointments> {
                         width: 0,
                         height: 10,
                       ),
-                      (appointmentsData.response.data.history != null &&
-                              appointmentsData.response.data.history.length > 0)
+                      (appointmentsData?.response?.data?.history != null &&
+                              appointmentsData?.response?.data?.history?.length > 0)
                           ? new ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
