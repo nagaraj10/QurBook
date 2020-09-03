@@ -267,7 +267,7 @@ class _MyFHBState extends State<MyFHB> {
                   channelName: navRoute.split('&')[0],
                   doctorName: navRoute.split('&')[1] ?? 'Test',
                   doctorId: navRoute.split('&')[2] ?? 'Doctor',
-                  doctorPic: json.decode(navRoute.split('&')[3]) ?? PROFILE_PH,
+                  doctorPic: json.decode(navRoute.split('&')[3]) ?? '',
                 ),
           routes: routes,
           debugShowCheckedModeBanner: false,
