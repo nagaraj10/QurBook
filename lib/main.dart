@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_router.dart' as router;
 import 'package:myfhb/constants/router_variable.dart' as routervariable;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -187,8 +188,8 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   void _updateTimer(msg) {
+    var doctorPic = '';
     _msgListener.value = _msg;
-    var doctorPic='';
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
       var passedValArr = c_msg.split('&');
@@ -196,15 +197,13 @@ class _MyFHBState extends State<MyFHB> {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(selectedIndex: 0),
         ));
-<<<<<<< HEAD
-      }else if(passedValArr[4]=='call'){
-=======
-      } else {
+      } else if (passedValArr[4] == 'call') {
         doctorPic = passedValArr[3];
-        if(doctorPic!=''){
+        if (doctorPic.isNotEmpty) {
           doctorPic = json.decode(doctorPic);
+        }else{
+          doctorPic = PROFILE_PH;
         }
->>>>>>> a7501cef51e183e999ad1c9b3744c9d8076432a0
         Get.to(CallMain(
           doctorName: passedValArr[1],
           doctorId: passedValArr[2],
@@ -268,7 +267,7 @@ class _MyFHBState extends State<MyFHB> {
                   channelName: navRoute.split('&')[0],
                   doctorName: navRoute.split('&')[1] ?? 'Test',
                   doctorId: navRoute.split('&')[2] ?? 'Doctor',
-                  doctorPic: navRoute.split('&')[3] ?? '',
+                  doctorPic: json.decode(navRoute.split('&')[3]) ?? PROFILE_PH,
                 ),
           routes: routes,
           debugShowCheckedModeBanner: false,
