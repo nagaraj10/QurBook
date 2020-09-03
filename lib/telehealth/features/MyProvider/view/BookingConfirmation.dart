@@ -122,7 +122,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   addHealthRecords() {
-    healthRecords.addAll(recordIds);
+    //healthRecords.addAll(recordIds);
     healthRecords.addAll(notesId);
     healthRecords.addAll(voiceIds);
   }
@@ -836,7 +836,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
 
     try {
-      associateRecords(doctorId, createdBy, healthRecords).then((value) {
+      associateRecords(doctorId, createdBy, recordIds).then((value) {
         if (value != null && value.success) {
           bookAppointmentCall(
                   createdBy,

@@ -14,6 +14,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
@@ -167,16 +168,16 @@ class _AppointmentsState extends State<Appointments> {
                       ),
                       isSearch
                           ? (upcomingInfo != null && upcomingInfo.length != 0)
-                          ? commonWidget
-                          .title(Constants.Appointments_upcoming)
-                          : Container()
+                              ? commonWidget
+                                  .title(Constants.Appointments_upcoming)
+                              : Container()
                           : (appointmentsData.response.data.upcoming != null &&
-                          appointmentsData
-                              .response.data.upcoming.length !=
-                              0)
-                          ? commonWidget
-                          .title(Constants.Appointments_upcoming)
-                          : Container(),
+                                  appointmentsData
+                                          .response.data.upcoming.length !=
+                                      0)
+                              ? commonWidget
+                                  .title(Constants.Appointments_upcoming)
+                              : Container(),
                       SizedBoxWidget(
                         width: 0,
                         height: 10,
@@ -298,6 +299,7 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   Widget doctorsHistoryListCard(History doc) {
+    var _firstPress = true ;
     return Card(
         color: Colors.white,
         elevation: 0.5,
@@ -388,11 +390,10 @@ class _AppointmentsState extends State<Appointments> {
                 children: [
                   commonWidget.iconWithText(Constants.Appointments_chatImage,
                       Colors.black38, Constants.Appointments_chat, () {
-                    //chat integration start
-                    String doctorId = doc.doctorId;
-                    String doctorName = doc.doctorName;
-                    String doctorPic = doc.doctorPic;
-                    storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
+                        if(_firstPress){
+                          _firstPress = false ;
+                          goToChatIntegration(doc);
+                        }
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
@@ -402,12 +403,10 @@ class _AppointmentsState extends State<Appointments> {
                       () {},
                       null),
                   SizedBoxWidget(width: 15.0),
-                  commonWidget.iconWithText(
-                      Constants.Appointments_receiptImage,
-                      Colors.black38,
-                      Constants.Appointments_receipt,
-                      () {},
-                      null),
+                  commonWidget.iconWithText(Constants.Appointments_receiptImage,
+                      Colors.black38, Constants.Appointments_receipt, () {
+                    moveToBilsPage(doc.paymentMediaMetaId);
+                  }, null),
                   SizedBoxWidget(width: 15.0),
                   GestureDetector(
                     onTap: () {
@@ -425,6 +424,13 @@ class _AppointmentsState extends State<Appointments> {
         ));
   }
 
+  void goToChatIntegration(History doc){
+    //chat integration start
+    String doctorId = doc.doctorId;
+    String doctorName = doc.doctorName;
+    String doctorPic = doc.doctorPic;
+    storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
+  }
 
   String getPatientName() {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
@@ -507,5 +513,22 @@ class _AppointmentsState extends State<Appointments> {
                   peerAvatar: doctorPic != null ? doctorPic : '',
                   peerName: doctorName,
                 )));
+  }
+
+  void moveToBilsPage(String paymentMediaMetaId) async {
+    List<String> paymentID = new List();
+    paymentID.add(paymentMediaMetaId);
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MyRecords(
+        categoryPosition: new AppointmentsCommonWidget()
+            .getCategoryPosition(Constants.STR_BILLS),
+        allowSelect: true,
+        isAudioSelect: false,
+        isNotesSelect: false,
+        selectedMedias: paymentID,
+        isFromChat: false,
+        showDetails: true,
+      ),
+    ));
   }
 }

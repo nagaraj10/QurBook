@@ -15,7 +15,6 @@ import 'package:myfhb/telehealth/features/Devices/view/Devices.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
-import 'package:myfhb/telehealth/features/chat/view/login.dart';
 import 'package:myfhb/telehealth/features/telehealth/view/Telehealth.dart';
 
 import '../../../../src/ui/MyRecord.dart';

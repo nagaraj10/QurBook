@@ -101,7 +101,9 @@ class ProvidersListRepository {
     }
 
     var jsonString = convert.jsonEncode(slotInput);
+    print(jsonString);
     final response = await _helper.bookAppointment(qr_bookAppmnt, jsonString);
+    print(response);
     return BookAppointmentModel.fromJson(response);
   }
 

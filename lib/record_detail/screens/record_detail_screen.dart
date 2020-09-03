@@ -400,39 +400,48 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
     ));
 
-    if (imagesPathMain.length > 1) {
-      for (int i = 0; i < imagesPathMain.length; i++) {
-        _currentImage = imagesPathMain[i];
+    if (ispdfPresent) {
+      print('audioPath' + pdfFile);
+      await ImageGallerySaver.saveFile(pdfFile).then((res) {
+        setState(() {
+          downloadStatus = true;
+        });
+      });
+    } else {
+      if (imagesPathMain.length > 1) {
+        for (int i = 0; i < imagesPathMain.length; i++) {
+          _currentImage = imagesPathMain[i];
+          CommonUtil.downloadFile(_currentImage.response.data.fileContent,
+                  _currentImage.response.data.fileType)
+              .then((filePath) async {
+            await ImageGallerySaver.saveFile(filePath.path).then((res) {
+              if (i == imagesPathMain.length - 1) {
+                setState(() {
+                  downloadStatus = true;
+                });
+              }
+            });
+          });
+        }
+        downloadStatus
+            ? Scaffold.of(contxt).showSnackBar(SnackBar(
+                content: const Text(variable.strFilesDownloaded),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+              ))
+            : null;
+      } else {
+        _currentImage = imagesPathMain[0];
         CommonUtil.downloadFile(_currentImage.response.data.fileContent,
                 _currentImage.response.data.fileType)
             .then((filePath) async {
           await ImageGallerySaver.saveFile(filePath.path).then((res) {
-            if (i == imagesPathMain.length - 1) {
-              setState(() {
-                downloadStatus = true;
-              });
-            }
+            Scaffold.of(contxt).showSnackBar(SnackBar(
+              content: const Text(variable.strFilesDownloaded),
+              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            ));
           });
         });
       }
-      downloadStatus
-          ? Scaffold.of(contxt).showSnackBar(SnackBar(
-              content: const Text(variable.strFilesDownloaded),
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            ))
-          : null;
-    } else {
-      _currentImage = imagesPathMain[0];
-      CommonUtil.downloadFile(_currentImage.response.data.fileContent,
-              _currentImage.response.data.fileType)
-          .then((filePath) async {
-        await ImageGallerySaver.saveFile(filePath.path).then((res) {
-          Scaffold.of(contxt).showSnackBar(SnackBar(
-            content: const Text(variable.strFilesDownloaded),
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-          ));
-        });
-      });
     }
   }
 
