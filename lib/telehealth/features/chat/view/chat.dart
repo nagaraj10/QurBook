@@ -311,6 +311,8 @@ class ChatScreenState extends State<ChatScreen> {
           String fileURL = value.response.data.mediaMasterInfo[i].fileContent;
           if ((fileType == '.jpg') || (fileType == '.png')) {
             onSendMessage(fileURL, 1);
+          }else{
+            toast.getToast('Attached file is not a valid image', Colors.red);
           }
         }
       } else {
