@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -18,7 +19,6 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
-import 'package:myfhb/telehealth/features/chat/view/settings.dart';
 
 import '../../../../common/CommonUtil.dart';
 
@@ -55,6 +55,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
 
   Future<String> getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    print(patientId);
 
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.response.data.generalInfo.qualifiedFullName != null
@@ -101,14 +102,14 @@ class HomeScreenState extends State<ChatHomeScreen> {
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  void onItemMenuPress(Choice choice) {
+  /*void onItemMenuPress(Choice choice) {
     if (choice.title == 'Log out') {
       handleSignOut();
     } else {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => Settings()));
     }
-  }
+  }*/
 
   void showNotification(message) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
@@ -358,156 +359,177 @@ class HomeScreenState extends State<ChatHomeScreen> {
   }
 
   Widget buildItem(BuildContext context, DocumentSnapshot document) {
+    String lastMessage = document['lastMessage'];
     if (document['id'] == patientId) {
       return Container();
     } else {
       return Column(
         children: <Widget>[
-          Container(
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Chat(
+                            peerId: document.documentID,
+                            peerAvatar: document['photoUrl'],
+                            peerName: document['nickname'],
+                            lastDate: document['createdAt'],
+                          )));
+            },
+            child: Container(
               child: Row(
-            children: <Widget>[
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Chat(
-                                peerId: document.documentID,
-                                peerAvatar: document['photoUrl'],
-                                peerName: document['nickname'],
-                                lastDate: document['createdAt'],
-                              )));
-                },
-                child: Row(
-                  children: <Widget>[
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.025),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.15,
-                      height: MediaQuery.of(context).size.width * 0.15,
-                      child: ClipOval(
-                        child: document['photoUrl'] != null
-                            ? CachedNetworkImage(
-                                placeholder: (context, url) => Container(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 1.0,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        themeColor),
-                                  ),
-                                  width: 50.0,
-                                  height: 50.0,
-                                  padding: EdgeInsets.all(15.0),
+                children: <Widget>[
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.025),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.15,
+                    height: MediaQuery.of(context).size.width * 0.15,
+                    child: ClipOval(
+                      child: document['photoUrl'] != null
+                          ? CachedNetworkImage(
+                              placeholder: (context, url) => Container(
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 1.0,
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(themeColor),
                                 ),
-                                imageUrl: document['photoUrl'],
                                 width: 50.0,
                                 height: 50.0,
-                                fit: BoxFit.cover,
-                              )
-                            : Icon(
-                                Icons.account_circle,
-                                size: 50.0,
-                                color: greyColor,
+                                padding: EdgeInsets.all(15.0),
                               ),
-                      ),
+                              imageUrl: document['photoUrl'],
+                              width: 50.0,
+                              height: 50.0,
+                              fit: BoxFit.cover,
+                            )
+                          : Icon(
+                              Icons.account_circle,
+                              size: 50.0,
+                              color: greyColor,
+                            ),
                     ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.055,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4),
-                          child: Text(
-                            toBeginningOfSentenceCase(document['nickname']),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 16,
-                                fontFamily: 'Poppins'),
-                          ),
-                        ),
-                        /*SizedBox(
-                          height: 1,
-                        ),
-                        Text(
-                          '#1232443',
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.055,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          toBeginningOfSentenceCase(document['nickname']),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                           style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                              fontFamily: 'Poppins',
-                              color: Colors.grey[700]),
-                        ),*/
-                        SizedBox(
-                          height: 1,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              fontFamily: 'Poppins'),
                         ),
-                        Container(
-                          constraints: BoxConstraints(
-                              maxWidth:
-                                  MediaQuery.of(context).size.width * 0.5),
-                          padding: const EdgeInsets.only(bottom: 4),
-                          child: Text(
-                            document['lastMessage'] != null
-                                ? document['lastMessage']
-                                : '',
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey[600],
-                                fontSize: 12,
-                                fontFamily: 'Poppins'),
+                      ),
+                      /*SizedBox(
+                            height: 1,
                           ),
-                        ),
-                        SizedBox(
-                          height: 1,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Text(
-                            document['createdAt']!=null?'Date: '+DateFormat('dd MMM kk:mm').format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    int.parse(document['createdAt']))):'',
+                          Text(
+                            '#1232443',
                             style: TextStyle(
-                                fontWeight: FontWeight.w300,
-                                color: Colors.grey[600],
-                                fontSize: 10,
-                                fontFamily: 'Poppins'),
-                          ),
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                                fontFamily: 'Poppins',
+                                color: Colors.grey[700]),
+                          ),*/
+                      SizedBox(
+                        height: 1,
+                      ),
+                      Container(
+                        constraints: BoxConstraints(
+                            maxWidth: MediaQuery.of(context).size.width * 0.5),
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: lastMessage != null
+                            ? lastMessage.contains('https')
+                                ? Row(
+                                    children: [
+                                      Icon(
+                                        Icons.photo,
+                                        size: 14,
+                                        color: Colors.black54,
+                                      ),
+                                      SizedBoxWidget(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        'Photo',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 12,
+                                            fontFamily: 'Poppins'),
+                                      )
+                                    ],
+                                  )
+                                : Text(
+                                    lastMessage,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[600],
+                                        fontSize: 12,
+                                        fontFamily: 'Poppins'),
+                                  )
+                            : '',
+                      ),
+                      SizedBox(
+                        height: 1,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Text(
+                          document['createdAt'] != null
+                              ? 'Date: ' +
+                                  DateFormat('dd MMM kk:mm').format(
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                          int.parse(document['createdAt'])))
+                              : '',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              color: Colors.grey[600],
+                              fontSize: 10,
+                              fontFamily: 'Poppins'),
                         ),
-                        /*Padding(
-                          padding: const EdgeInsets.only(bottom: 15),
-                          child: Text(
-                            'Next appointment date Jul 15,2020',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.grey[800],
-                                fontSize: 12,
-                                fontFamily: 'Poppins'),
-                          ),
-                        )*/
-                      ],
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.035,
-                    ),
-                  ],
-                ),
+                      ),
+                      /*Padding(
+                            padding: const EdgeInsets.only(bottom: 15),
+                            child: Text(
+                              'Next appointment date Jul 15,2020',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.grey[800],
+                                  fontSize: 12,
+                                  fontFamily: 'Poppins'),
+                            ),
+                          )*/
+                    ],
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.035,
+                  ),
+                ],
               ),
 
               /*
-              SizedBox(
-                width: 10,
-              ),
-
-              GestureDetector(
-                onTap: () {},
-                child: Icon(
-                  Icons.videocam,
-                  color: Colors.blue[400],
+                SizedBox(
+                  width: 10,
                 ),
-              ),*/
-            ],
-          )),
+
+                GestureDetector(
+                  onTap: () {},
+                  child: Icon(
+                    Icons.videocam,
+                    color: Colors.blue[400],
+                  ),
+                ),*/
+            ),
+          ),
           Container(
             color: Colors.grey,
             height: 0.5,
@@ -518,7 +540,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
     }
   }
 
-  /*Widget buildItem(BuildContext context, DocumentSnapshot document) {
+/*Widget buildItem(BuildContext context, DocumentSnapshot document) {
     if (document['id'] == currentUserId) {
       return Container();
     } else {

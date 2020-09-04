@@ -115,17 +115,32 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
           } else if (snapshot.hasError) {
             return new Text('Error: ${snapshot.error}');
           } else {
-            return Container(
-              margin: EdgeInsets.only(left: 5, top: 12),
-              child: GetTimeSlots(
-                dateSlotTimingsObj: snapshot.data,
-                docs: widget.docs,
-                j: widget.i,
-                selectedDate: _selectedValue,
-                isReshedule: widget.isReshedule,
-                doctorsData: widget.doctorsData,
-              ),
-            );
+            return snapshot.data.sessionCounts != null
+                ? Container(
+                    margin: EdgeInsets.only(left: 5, top: 12),
+                    child: GetTimeSlots(
+                      dateSlotTimingsObj: snapshot.data,
+                      docs: widget.docs,
+                      j: widget.i,
+                      selectedDate: _selectedValue,
+                      isReshedule: widget.isReshedule,
+                      doctorsData: widget.doctorsData,
+                    ),
+                  )
+                : Column(
+                    children: <Widget>[
+                      SizedBoxWidget(
+                        height: 8,
+                      ),
+                      new Text(
+                        slotsAreNotAvailable,
+                        style: TextStyle(fontSize: 10.0),
+                      ),
+                      SizedBoxWidget(
+                        height: 8,
+                      ),
+                    ],
+                  );
           }
         } else {
           return Column(

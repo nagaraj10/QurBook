@@ -14,6 +14,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
@@ -22,6 +23,7 @@ import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWi
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Appointments extends StatefulWidget {
@@ -30,6 +32,7 @@ class Appointments extends StatefulWidget {
 }
 
 class _AppointmentsState extends State<Appointments> {
+  ChatViewModel chatViewModel = ChatViewModel();
   TextEditingController _searchQueryController = TextEditingController();
   final GlobalKey<State> _key = new GlobalKey<State>();
   AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
@@ -154,10 +157,10 @@ class _AppointmentsState extends State<Appointments> {
           if (snapshot.hasData) {
             AppointmentsModel appointmentsData = snapshot.data;
 
-            return ((appointmentsData.response.data.history != null &&
-                        appointmentsData.response.data.history.length > 0) ||
-                    (appointmentsData.response.data.upcoming != null &&
-                        appointmentsData.response.data.upcoming.length > 0))
+            return ((appointmentsData?.response?.data?.history != null &&
+                        appointmentsData.response?.data?.history?.length > 0) ||
+                    (appointmentsData?.response?.data?.upcoming != null &&
+                        appointmentsData?.response?.data?.upcoming?.length > 0))
                 ? Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -167,16 +170,16 @@ class _AppointmentsState extends State<Appointments> {
                       ),
                       isSearch
                           ? (upcomingInfo != null && upcomingInfo.length != 0)
-                          ? commonWidget
-                          .title(Constants.Appointments_upcoming)
-                          : Container()
+                              ? commonWidget
+                                  .title(Constants.Appointments_upcoming)
+                              : Container()
                           : (appointmentsData.response.data.upcoming != null &&
-                          appointmentsData
-                              .response.data.upcoming.length !=
-                              0)
-                          ? commonWidget
-                          .title(Constants.Appointments_upcoming)
-                          : Container(),
+                                  appointmentsData
+                                          .response.data.upcoming.length !=
+                                      0)
+                              ? commonWidget
+                                  .title(Constants.Appointments_upcoming)
+                              : Container(),
                       SizedBoxWidget(
                         width: 0,
                         height: 10,
@@ -217,8 +220,8 @@ class _AppointmentsState extends State<Appointments> {
                         width: 0,
                         height: 10,
                       ),
-                      (appointmentsData.response.data.history != null &&
-                              appointmentsData.response.data.history.length > 0)
+                      (appointmentsData?.response?.data?.history != null &&
+                              appointmentsData?.response?.data?.history?.length > 0)
                           ? new ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
@@ -388,11 +391,7 @@ class _AppointmentsState extends State<Appointments> {
                 children: [
                   commonWidget.iconWithText(Constants.Appointments_chatImage,
                       Colors.black38, Constants.Appointments_chat, () {
-                    //chat integration start
-                    String doctorId = doc.doctorId;
-                    String doctorName = doc.doctorName;
-                    String doctorPic = doc.doctorPic;
-                    storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
+                    goToChatIntegration(doc);
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
@@ -402,12 +401,10 @@ class _AppointmentsState extends State<Appointments> {
                       () {},
                       null),
                   SizedBoxWidget(width: 15.0),
-                  commonWidget.iconWithText(
-                      Constants.Appointments_receiptImage,
-                      Colors.black38,
-                      Constants.Appointments_receipt,
-                      () {},
-                      null),
+                  commonWidget.iconWithText(Constants.Appointments_receiptImage,
+                      Colors.black38, Constants.Appointments_receipt, () {
+                    moveToBilsPage(doc.paymentMediaMetaId);
+                  }, null),
                   SizedBoxWidget(width: 15.0),
                   GestureDetector(
                     onTap: () {
@@ -425,6 +422,14 @@ class _AppointmentsState extends State<Appointments> {
         ));
   }
 
+  void goToChatIntegration(History doc){
+    //chat integration start
+    String doctorId = doc.doctorId;
+    String doctorName = doc.doctorName;
+    String doctorPic = doc.doctorPic;
+    //chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
+    storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
+  }
 
   String getPatientName() {
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
@@ -507,5 +512,22 @@ class _AppointmentsState extends State<Appointments> {
                   peerAvatar: doctorPic != null ? doctorPic : '',
                   peerName: doctorName,
                 )));
+  }
+
+  void moveToBilsPage(String paymentMediaMetaId) async {
+    List<String> paymentID = new List();
+    paymentID.add(paymentMediaMetaId);
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MyRecords(
+        categoryPosition: new AppointmentsCommonWidget()
+            .getCategoryPosition(Constants.STR_BILLS),
+        allowSelect: true,
+        isAudioSelect: false,
+        isNotesSelect: false,
+        selectedMedias: paymentID,
+        isFromChat: false,
+        showDetails: true,
+      ),
+    ));
   }
 }

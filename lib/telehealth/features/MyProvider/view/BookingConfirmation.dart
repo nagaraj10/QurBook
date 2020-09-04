@@ -31,6 +31,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Doctor
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
+import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -43,6 +44,8 @@ class BookingConfirmation extends StatefulWidget {
   final List<SessionsTime> sessionData;
   final int rowPosition;
   final int itemPosition;
+  final bool isFollowUp;
+  History doctorsData;
 
   BookingConfirmation(
       {this.docs,
@@ -52,7 +55,9 @@ class BookingConfirmation extends StatefulWidget {
       this.rowPosition,
       this.followUpFee,
       this.itemPosition,
-      this.isNewAppointment});
+      this.isNewAppointment,
+      this.isFollowUp,
+      this.doctorsData});
 
   @override
   BookingConfirmationState createState() => BookingConfirmationState();
@@ -117,7 +122,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   addHealthRecords() {
-    healthRecords.addAll(recordIds);
+    //healthRecords.addAll(recordIds);
     healthRecords.addAll(notesId);
     healthRecords.addAll(voiceIds);
   }
@@ -764,11 +769,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                     healthRecords.length > 0)
                                                 ? true
                                                 : false,
-                                            "false",
+                                            widget.isFollowUp,
                                             (healthRecords != null &&
                                                     healthRecords.length > 0)
                                                 ? healthRecords
-                                                : []);
+                                                : [],
+                                            doc: widget.isFollowUp
+                                                ? widget.doctorsData
+                                                : null);
                                       },
                                       child: TextWidget(text: ok, fontsize: 12),
                                     ),
@@ -795,8 +803,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       String scheduleDate,
       String slotNumber,
       bool isMedicalShared,
-      String isFollowUp,
-      List<String> healthRecords) async {
+      bool isFollowUp,
+      List<String> healthRecords,
+      {History doc}) async {
     BookAppointmentModel bookAppointmentModel =
         await providerViewModel.putBookAppointment(
             createdBy,
@@ -806,7 +815,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             slotNumber,
             isMedicalShared,
             isFollowUp,
-            healthRecords);
+            healthRecords,
+            doc: doc);
 
     return bookAppointmentModel;
   }
@@ -818,14 +828,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       String scheduleDate,
       String slotNumber,
       bool isMedicalShared,
-      String isFollowUp,
-      List<String> healthRecords) {
+      bool isFollowUp,
+      List<String> healthRecords,
+      {History doc}) {
     setState(() {
       pr.show();
     });
 
     try {
-      associateRecords(doctorId, createdBy, healthRecords).then((value) {
+      associateRecords(doctorId, createdBy, recordIds).then((value) {
         if (value != null && value.success) {
           bookAppointmentCall(
                   createdBy,
@@ -835,7 +846,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   slotNumber,
                   isMedicalShared,
                   isFollowUp,
-                  healthRecords)
+                  healthRecords,
+                  doc: doc)
               .then((value) {
             if (value != null) {
               if (value.status != null &&

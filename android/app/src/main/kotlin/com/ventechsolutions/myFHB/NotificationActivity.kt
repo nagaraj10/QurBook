@@ -48,12 +48,12 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     fun decline(v: View?) {
-        //todo close this activity
+        MyApp.isMissedNSShown=false
         finish()
     }
 
     fun accept(v: View?) {
-        //todo start amazon chime
+        MyApp.isMissedNSShown=false
         val pm: PackageManager = packageManager
         val launchIntent = pm.getLaunchIntentForPackage(packageName)
         launchIntent?.action = Intent.ACTION_SEND

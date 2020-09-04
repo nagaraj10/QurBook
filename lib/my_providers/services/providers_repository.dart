@@ -15,6 +15,7 @@ import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 
 class ProvidersListRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -75,8 +76,9 @@ class ProvidersListRepository {
       String scheduleDate,
       String slotNumber,
       bool isMedicalShared,
-      String isFollowUp,
-      List<String> healthRecords) async {
+      bool isFollowUp,
+      List<String> healthRecords,
+      {History doc}) async {
     var slotInput = {};
     //var parentAppoint = {};
     slotInput[qr_created_by] = createdBy;
@@ -85,14 +87,23 @@ class ProvidersListRepository {
     slotInput[qr_schedule_date] = scheduleDate;
     slotInput[qr_slot_number] = slotNumber;
     slotInput[qr_is_medical_shared] = isMedicalShared;
-    slotInput[qr_is_followup] = false;
+    slotInput[qr_is_followup] = isFollowUp;
     slotInput[qr_health_record_ref] = healthRecords;
-    slotInput[qr_parent_appointment] = {};
-    /* parentAppoint["id"] = '';
-    parentAppoint["bookingID"] = {};*/
+    if (isFollowUp) {
+      var parentAppoint = {};
+
+      parentAppoint["id"] = doc.appointmentId;
+      parentAppoint["bookingID"] = doc.bookingId;
+
+      slotInput[qr_parent_appointment] = parentAppoint;
+    } else {
+      slotInput[qr_parent_appointment] = {};
+    }
 
     var jsonString = convert.jsonEncode(slotInput);
+    print(jsonString);
     final response = await _helper.bookAppointment(qr_bookAppmnt, jsonString);
+    print(response);
     return BookAppointmentModel.fromJson(response);
   }
 

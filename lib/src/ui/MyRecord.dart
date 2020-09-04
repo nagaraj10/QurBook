@@ -356,6 +356,7 @@ class _MyRecordsState extends State<MyRecords> {
       voiceKey: _voiceKey,
       scaffold_state: scaffold_state,
       completeData: completeData,
+      recordsState: this,
     );
   }
 
@@ -544,6 +545,7 @@ class CustomTabView extends StatefulWidget {
   bool allowSelectVoice;
   bool isFromChat;
   bool showDetails;
+  _MyRecordsState recordsState;
 
   CustomTabView(
       {@required this.itemCount,
@@ -564,7 +566,8 @@ class CustomTabView extends StatefulWidget {
       this.allowSelectNotes,
       this.allowSelectVoice,
       this.isFromChat,
-      this.showDetails});
+      this.showDetails,
+      this.recordsState});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -1315,7 +1318,12 @@ class _CustomTabsState extends State<CustomTabView>
         },
         null,
         false,
-        fileName);
+        fileName,
+        (value) {
+          if (value) {
+            widget.recordsState.setState(() {});
+          }
+        });
   }
 
   void onCameraClicked() async {

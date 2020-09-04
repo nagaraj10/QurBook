@@ -244,7 +244,6 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       // redirecting to dashboard screen using userid
 
     } else {
-      print(res.body.toString());
       _globalKey.currentState.showSnackBar(SnackBar(
         content: new Text(res.body.toString()),
       ));

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.app.NotificationManagerCompat
+import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.R
 
 
@@ -17,7 +18,7 @@ class AcceptReceiver:BroadcastReceiver() {
         val docId = p1?.getStringExtra(p0?.getString(R.string.docId))
         val docPic = p1?.getStringExtra(p0?.getString(R.string.docPic))
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
-
+        MyApp.isMissedNSShown=false
         nsManager.cancel(notificationId!! as Int)
         p0.sendBroadcast(Intent(p0.getString(R.string.intaction_accept_call))
                 .putExtra(p0.getString(R.string.meetid),meeting_id)

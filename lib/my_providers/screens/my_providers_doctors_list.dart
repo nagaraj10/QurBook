@@ -62,10 +62,9 @@ class MyProvidersDoctorsList extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     ClipOval(
-                        child: eachDoctorModel.profilePic != null
-                            ? Image.memory(
-                                Uint8List.fromList(
-                                    eachDoctorModel.profilePic.data),
+                        child: eachDoctorModel.profilePicThumbnailUrl != null
+                            ? Image.network(
+                                eachDoctorModel.profilePicThumbnailUrl,
                                 height: 50,
                                 width: 50,
                                 fit: BoxFit.cover,

@@ -1581,7 +1581,8 @@ class CommonDialogBox {
     );
   }
 
-  void onPostDataToServer(BuildContext context, List<String> imagePath) async {
+  void onPostDataToServer(BuildContext context, List<String> imagePath,
+      {Function onRefresh}) async {
     if (doValidationBeforePosting()) {
       CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
@@ -1739,6 +1740,7 @@ class CommonDialogBox {
 
                 if (categoryName == Constants.STR_NOTES) {
                   Navigator.of(context).pop();
+                  onRefresh(true);
                 } else {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
@@ -1757,7 +1759,8 @@ class CommonDialogBox {
               }
 
               postAudioToServer(
-                  savedMetaDataResponse.response.data.mediaMetaID, context);
+                  savedMetaDataResponse.response.data.mediaMetaID, context,
+                  onRefresh: onRefresh);
             }
           });
         }
@@ -1770,7 +1773,8 @@ class CommonDialogBox {
             PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
             if (audioPathMain != '') {
               saveAudioFile(context, audioPathMain,
-                  savedMetaDataResponse.response.data.mediaMetaID);
+                  savedMetaDataResponse.response.data.mediaMetaID,
+                  onRefresh: onRefresh);
             } else {
               _healthReportListForUserBlock
                   .getHelthReportList(condtion: false)
@@ -1779,7 +1783,10 @@ class CommonDialogBox {
                         Constants.KEY_COMPLETE_DATA, value.response.data)
                     .then((value) {
                   if (categoryName == Constants.STR_NOTES) {
+                    Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                        .pop();
                     Navigator.of(context).pop();
+                    onRefresh(true);
                   } else {
                     Navigator.of(context).pop();
                     Navigator.of(context).pop();
@@ -1800,7 +1807,8 @@ class CommonDialogBox {
     }
   }
 
-  void postAudioToServer(String mediaMetaID, BuildContext context) {
+  void postAudioToServer(String mediaMetaID, BuildContext context,
+      {Function onRefresh}) {
     Map<String, dynamic> postImage = new Map();
 
     postImage[parameters.strmediaMetaId] = mediaMetaID;
@@ -1826,6 +1834,7 @@ class CommonDialogBox {
 
                 if (categoryName == Constants.STR_NOTES) {
                   Navigator.of(context).pop();
+                  onRefresh(true);
                 } else {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop(true);
@@ -1845,6 +1854,7 @@ class CommonDialogBox {
 
               if (categoryName == Constants.STR_NOTES) {
                 Navigator.of(context).pop();
+                onRefresh(true);
               } else {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(true);
@@ -1863,6 +1873,7 @@ class CommonDialogBox {
 
               if (categoryName == Constants.STR_NOTES) {
                 Navigator.of(context).pop();
+                onRefresh(true);
               } else {
                 Navigator.of(context).pop();
                 Navigator.of(context).pop(true);
@@ -1876,8 +1887,8 @@ class CommonDialogBox {
     }
   }
 
-  void saveAudioFile(
-      BuildContext context, String audioPath, String mediaMetaID) {
+  void saveAudioFile(BuildContext context, String audioPath, String mediaMetaID,
+      {Function onRefresh}) {
     if (audioPathMain != '') {
       _healthReportListForUserBlock
           .saveImage(audioPathMain, mediaMetaID, '')
@@ -1892,6 +1903,7 @@ class CommonDialogBox {
 
             if (categoryName == Constants.STR_NOTES) {
               Navigator.of(context).pop();
+              onRefresh(true);
             } else {
               Navigator.of(context).pop();
               Navigator.of(context).pop(true);
@@ -1902,6 +1914,7 @@ class CommonDialogBox {
     } else {
       if (categoryName == Constants.STR_NOTES) {
         Navigator.of(context).pop();
+        onRefresh(true);
       } else {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
@@ -2272,7 +2285,8 @@ class CommonDialogBox {
       Function(bool, String) updateAudioUI,
       MediaMetaInfo mediaMetaInfoClone,
       bool modeOfSaveClone,
-      TextEditingController fileNameClone) {
+      TextEditingController fileNameClone,
+      Function(bool) refresh) {
     if (mediaMetaInfoClone != null) {
       if (mediaMetaInfoClone != null) {
         metaInfoId = mediaMetaInfoClone.id;
@@ -2327,7 +2341,7 @@ class CommonDialogBox {
             ),
             modeOfSave
                 ? fhbBasicWidget.getSaveButton(() {
-                    onPostDataToServer(context, imagePath);
+                    onPostDataToServer(context, imagePath, onRefresh: refresh);
                   })
                 : containsAudioMain
                     ? fhbBasicWidget.getAudioIconWithFile(
@@ -2342,7 +2356,8 @@ class CommonDialogBox {
                         context,
                         imagePath,
                         (context, imagePath) {
-                          onPostDataToServer(context, imagePath);
+                          onPostDataToServer(context, imagePath,
+                              onRefresh: refresh);
                         })
                     : Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2356,7 +2371,8 @@ class CommonDialogBox {
                             setState(() {});
                           }),
                           fhbBasicWidget.getSaveButton(() {
-                            onPostDataToServer(context, imagePath);
+                            onPostDataToServer(context, imagePath,
+                                onRefresh: refresh);
                           })
                         ],
                       ),

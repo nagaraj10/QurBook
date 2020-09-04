@@ -11,8 +11,10 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
+import 'package:myfhb/telehealth/features/appointments/view/DoctorTimeSlotWidget.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -20,6 +22,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DoctorUpcomingAppointments extends StatefulWidget {
@@ -42,15 +45,16 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   List<String> bookingIds = new List();
   AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
   SharedPreferences prefs;
-  Timer timer;
+  ChatViewModel chatViewModel = ChatViewModel();
+  /* Timer timer;
   String hour;
   String minutes;
-  String days;
+  String days;*/
 
   @override
   void initState() {
     // TODO: implement initState
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    /*timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       if (widget.doc.plannedStartDateTime != null) {
         String hours, min;
         int dys;
@@ -82,14 +86,12 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
           days = '0';
         });
       }
-    });
+    });*/
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    timer.cancel();
     super.dispose();
   }
 
@@ -131,8 +133,10 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                   : SizedBox(height: 3.0),
                               commonWidget.docLoc(context, widget.doc.location),
                               SizedBox(height: 5.0),
-                              commonWidget.docTimeSlot(
-                                  context, widget.doc, hour, minutes, days),
+                              DoctorTimeSlotWidget(
+                                doc: widget.doc,
+                                onChanged: widget.onChanged,
+                              ),
                               SizedBoxWidget(height: 15.0),
                               commonWidget.docIcons(widget.doc, context)
                             ],
@@ -149,12 +153,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               icon: ImageIcon(
                                   AssetImage(Constants.Appointments_chatImage)),
                               onPressed: () {
-                                //chat integration start
-                                String doctorId = widget.doc.doctorId;
-                                String doctorName = widget.doc.doctorName;
-                                String doctorPic = widget.doc.doctorPic;
-                                storePatientDetailsToFCM(
-                                    doctorId, doctorName, doctorPic);
+                                  goToChatIntegration(widget.doc);
                               }),
                           SizedBoxWidget(
                             height:
@@ -199,12 +198,10 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
               padding: EdgeInsets.only(left: 67, top: 10, bottom: 10),
               child: Row(
                 children: [
-                  commonWidget.iconWithText(
-                      Constants.Appointments_receiptImage,
-                      Colors.black38,
-                      Constants.Appointments_receipt,
-                      () {},
-                      null),
+                  commonWidget.iconWithText(Constants.Appointments_receiptImage,
+                      Colors.black38, Constants.Appointments_receipt, () {
+                    moveToBilsPage(widget.doc.paymentMediaMetaId);
+                  }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
                       Constants.Appointments_resheduleImage,
@@ -223,6 +220,15 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
             )
           ],
         ));
+  }
+
+  void goToChatIntegration(History doc){
+    //chat integration start
+    String doctorId = doc.doctorId;
+    String doctorName = doc.doctorName;
+    String doctorPic = doc.doctorPic;
+    storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
+   // chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
   }
 
   void navigateToProviderScreen(doc, isReshedule) {
@@ -466,5 +472,22 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         myProfile.response.data.generalInfo.profilePicThumbnailURL;
 
     return patientPicURL;
+  }
+
+  void moveToBilsPage(String paymentMediaMetaId) async {
+    List<String> paymentID = new List();
+    paymentID.add(paymentMediaMetaId);
+    await Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => MyRecords(
+        categoryPosition: new AppointmentsCommonWidget()
+            .getCategoryPosition(Constants.STR_BILLS),
+        allowSelect: true,
+        isAudioSelect: false,
+        isNotesSelect: false,
+        selectedMedias: paymentID,
+        isFromChat: false,
+        showDetails: true,
+      ),
+    ));
   }
 }

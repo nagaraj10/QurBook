@@ -80,12 +80,12 @@ class GetTimeSlots extends StatelessWidget {
                   if (rowPosition > -1 && itemPosition > -1) {
                     if (doctorsData == null) {
                       print('normal Appointmnt');
-                      navigateToConfirmBook(
-                          context, rowPosition, itemPosition, null, false);
+                      navigateToConfirmBook(context, rowPosition, itemPosition,
+                          null, false, false);
                     } else {
                       print('new Appointmnt from history');
                       navigateToConfirmBook(context, rowPosition, itemPosition,
-                          doctorsData.followupFee, true);
+                          doctorsData.followupFee, true, true);
                     }
                   } else {
                     toast.getToast(selectSlotsMsg, Colors.red);
@@ -104,19 +104,22 @@ class GetTimeSlots extends StatelessWidget {
   }
 
   navigateToConfirmBook(BuildContext context, int rowPos, int itemPos,
-      String followUpFee, bool isNewAppointment) {
+      String followUpFee, bool isNewAppointment, bool isFollowUp) {
     Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => BookingConfirmation(
-              docs: docs,
-              followUpFee: followUpFee,
-              isNewAppointment: isNewAppointment,
-              i: j,
-              selectedDate: selectedDate,
-              sessionData: dateSlotTimingsObj.sessions,
-              rowPosition: rowPos,
-              itemPosition: itemPos),
+            docs: docs,
+            followUpFee: followUpFee,
+            isNewAppointment: isNewAppointment,
+            i: j,
+            selectedDate: selectedDate,
+            sessionData: dateSlotTimingsObj.sessions,
+            rowPosition: rowPos,
+            itemPosition: itemPos,
+            isFollowUp: isFollowUp,
+            doctorsData: doctorsData,
+          ),
         ));
   }
 

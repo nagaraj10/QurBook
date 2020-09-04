@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io' show Platform;
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
@@ -10,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_router.dart' as router;
 import 'package:myfhb/constants/router_variable.dart' as routervariable;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -116,7 +118,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.COGNITO_AUTH_TOKEN = values[10];
   CommonUtil.COGNITO_URL = values[11];
   CommonUtil.BASE_URL_V2 = values[12];
-  CommonUtil.BASEURL_DEVICE_READINGS=values[13];
+  CommonUtil.BASEURL_DEVICE_READINGS = values[13];
 }
 
 class MyFHB extends StatefulWidget {
@@ -186,19 +188,30 @@ class _MyFHBState extends State<MyFHB> {
   }
 
   void _updateTimer(msg) {
+    var doctorPic = '';
     _msgListener.value = _msg;
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
       var passedValArr = c_msg.split('&');
-      if (passedValArr[2] == 'ack' && passedValArr[3] == 'empty') {
+      if (c_msg == 'ack') {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(selectedIndex: 0),
         ));
-      } else {
+      } else if (passedValArr[4] == 'call') {
+        doctorPic = passedValArr[3];
+        if (doctorPic.isNotEmpty) {
+          try {
+            doctorPic = json.decode(doctorPic);
+          } catch (e) {
+            //doctorPic=
+          }
+        } else {
+          doctorPic = '';
+        }
         Get.to(CallMain(
           doctorName: passedValArr[1],
           doctorId: passedValArr[2],
-          doctorPic: passedValArr[3],
+          doctorPic: doctorPic,
           channelName: passedValArr[0],
           role: ClientRole.Broadcaster,
           isAppExists: true,
@@ -258,7 +271,7 @@ class _MyFHBState extends State<MyFHB> {
                   channelName: navRoute.split('&')[0],
                   doctorName: navRoute.split('&')[1] ?? 'Test',
                   doctorId: navRoute.split('&')[2] ?? 'Doctor',
-                  doctorPic: navRoute.split('&')[3] ?? '',
+                  doctorPic: json.decode(navRoute.split('&')[3]) ?? '',
                 ),
           routes: routes,
           debugShowCheckedModeBanner: false,

@@ -133,7 +133,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             widget.data.metaInfo.fileName == null
                 ? toBeginningOfSentenceCase(
                     widget.data.metaInfo.mediaTypeInfo.name)
-                : toBeginningOfSentenceCase(widget.data.metaInfo.fileName),
+                : widget.data.metaInfo.fileName.contains('.pdf')
+                    ? getFileNameForPdf(toBeginningOfSentenceCase(
+                        widget.data.metaInfo.fileName))
+                    : toBeginningOfSentenceCase(widget.data.metaInfo.fileName),
             maxLines: 1,
             minFontSize: 12,
             maxFontSize: 16,
@@ -175,12 +178,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
                                 IconButton(
-                                  onPressed: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ImageSlider(
-                                                imageList: imagesPathMain,
-                                              ))),
+                                  onPressed: () {
+                                    if (imagesPathMain.length > 0)
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ImageSlider(
+                                                    imageList: imagesPathMain,
+                                                  )));
+                                  },
                                   icon: Icon(
                                     Icons.fullscreen,
                                     color: Colors.white,
@@ -394,39 +400,48 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
     ));
 
-    if (imagesPathMain.length > 1) {
-      for (int i = 0; i < imagesPathMain.length; i++) {
-        _currentImage = imagesPathMain[i];
+    if (ispdfPresent) {
+      print('audioPath' + pdfFile);
+      await ImageGallerySaver.saveFile(pdfFile).then((res) {
+        setState(() {
+          downloadStatus = true;
+        });
+      });
+    } else {
+      if (imagesPathMain.length > 1) {
+        for (int i = 0; i < imagesPathMain.length; i++) {
+          _currentImage = imagesPathMain[i];
+          CommonUtil.downloadFile(_currentImage.response.data.fileContent,
+                  _currentImage.response.data.fileType)
+              .then((filePath) async {
+            await ImageGallerySaver.saveFile(filePath.path).then((res) {
+              if (i == imagesPathMain.length - 1) {
+                setState(() {
+                  downloadStatus = true;
+                });
+              }
+            });
+          });
+        }
+        downloadStatus
+            ? Scaffold.of(contxt).showSnackBar(SnackBar(
+                content: const Text(variable.strFilesDownloaded),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+              ))
+            : null;
+      } else {
+        _currentImage = imagesPathMain[0];
         CommonUtil.downloadFile(_currentImage.response.data.fileContent,
                 _currentImage.response.data.fileType)
             .then((filePath) async {
           await ImageGallerySaver.saveFile(filePath.path).then((res) {
-            if (i == imagesPathMain.length - 1) {
-              setState(() {
-                downloadStatus = true;
-              });
-            }
+            Scaffold.of(contxt).showSnackBar(SnackBar(
+              content: const Text(variable.strFilesDownloaded),
+              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            ));
           });
         });
       }
-      downloadStatus
-          ? Scaffold.of(contxt).showSnackBar(SnackBar(
-              content: const Text(variable.strFilesDownloaded),
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            ))
-          : null;
-    } else {
-      _currentImage = imagesPathMain[0];
-      CommonUtil.downloadFile(_currentImage.response.data.fileContent,
-              _currentImage.response.data.fileType)
-          .then((filePath) async {
-        await ImageGallerySaver.saveFile(filePath.path).then((res) {
-          Scaffold.of(contxt).showSnackBar(SnackBar(
-            content: const Text(variable.strFilesDownloaded),
-            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-          ));
-        });
-      });
     }
   }
 
@@ -824,7 +839,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               },
               widget.data,
               true,
-              new TextEditingController(text: fileName));
+              new TextEditingController(text: fileName),
+              (value) {
+                if (value) {
+                  setState(() {});
+                }
+              });
 
           break;
       }
@@ -1089,16 +1109,30 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                       ? pdfFile == null
                           ? Container(child: CircularProgressIndicator())
                           : Container(
-                              child: IconButton(
-                                icon: ImageIcon(
-                                    AssetImage(variable.icon_attach),
-                                    color: Colors.white),
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => PDFViewer(pdfFile),
-                                  ));
-                                },
-                              ),
+                              child: Center(
+                                  child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'View PDF',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                  IconButton(
+                                    tooltip: 'View PDF',
+                                    icon: ImageIcon(
+                                        AssetImage(variable.icon_attach),
+                                        color: Colors.white),
+                                    onPressed: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) => PDFViewer(pdfFile,
+                                            widget.data.metaInfo.fileName),
+                                      ));
+                                    },
+                                  )
+                                ],
+                              )),
                             )
                       : Container(
                           child: Icon(
@@ -1301,6 +1335,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void getPdfFileData(String pdfFileMediaId) {
+    print(pdfFileMediaId + 'PDFFFFFFF');
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
@@ -1310,5 +1345,18 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     _healthReportListForUserBlock.getDocumentImage(pdfFileMediaId).then((res) {
       return downloadMedia(res.response.data.fileContent, context, '.pdf');
     });
+  }
+
+  getFileNameForPdf(String pdfFileName) {
+    if (pdfFileName.contains('.pdf')) {
+      pdfFileName = pdfFileName.replaceAll('.pdf', '');
+      try {
+        var spilit = pdfFileName.split('_');
+        String value = toBeginningOfSentenceCase(spilit[1]) + '_' + spilit[0];
+        return value;
+      } catch (e) {
+        return pdfFileName = pdfFileName.replaceAll('.pdf', '');
+      }
+    }
   }
 }
