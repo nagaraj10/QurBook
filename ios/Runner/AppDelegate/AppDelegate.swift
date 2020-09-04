@@ -13,7 +13,7 @@ import AVFoundation
     
     var recognitionTask: SFSpeechRecognitionTask?
     
-    let audioEngine = AVAudioEngine()
+    var audioEngine = AVAudioEngine()
     
     var STT_Result : FlutterResult?
     var TTS_Result : FlutterResult?
@@ -48,6 +48,8 @@ import AVFoundation
         // Speech Recognization
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         
+        requestAuthorization();
+        
         // 2 a)
         // Speech to Text
         let sttChannel = FlutterMethodChannel(name: STT_CHANNEL,
@@ -64,11 +66,15 @@ import AVFoundation
             
             print("STT : ", result);
             
-            //            self!.showLoading();
             Loading.sharedInstance.showLoader()
             
             self?.STT_Result = result;
-            try! self?.startRecording();
+            
+            do{
+                try self?.startRecording();
+            }catch(let error){
+                print("error is \(error.localizedDescription)")
+            }
         })
         
         // 2  b)
@@ -103,106 +109,89 @@ import AVFoundation
     // Speech to Text
     func startRecording() throws {
         
-        speechRecognizer.delegate = self
-        requestAuthorization(); // Request Authorization
-                
-        recognitionRequest?.shouldReportPartialResults = false
-        audioEngine.inputNode.removeTap(onBus: 0)
-        audioEngine.stop()
-        recognitionRequest?.endAudio()
+        // Reset
+        audioEngine.reset()
+        recognitionTask?.cancel()
+        self.recognitionTask = nil
         
-        // 1
-        // Audio session, to get information from the microphone.
+        // Initialization
+        audioEngine = AVAudioEngine()
+        recognitionTask = SFSpeechRecognitionTask()
+        
         let audioSession = AVAudioSession.sharedInstance()
-        do {
-            try audioSession.setCategory(AVAudioSession.Category.playAndRecord, options: .defaultToSpeaker)
-            try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
-        } catch {
-        }
+        try audioSession.setCategory(.record, mode: .measurement, options: .duckOthers)
+        try audioSession.setActive(true, options: .notifyOthersOnDeactivation)
         
         let inputNode = audioEngine.inputNode
-        
-        // 2
-        // The AudioBuffer
-        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
-        
-        guard let recognitionRequest = recognitionRequest else {
-            fatalError("Unable to create an SFSpeechAudioBufferRecognitionRequest object")
-        }
-        
-        recognitionRequest.shouldReportPartialResults = true
-        
-        // 3
-        // Force speech recognition to be on-device
-        //        if #available(iOS 13, *) {
-        //            recognitionRequest.requiresOnDeviceRecognition = true
-        //        }
-        
-        // 4
-        // Actually create the recognition task. We need to keep a pointer to it so we can stop it.
-        recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest, resultHandler: { [unowned self] (result, error) in
-            
-            //            var isFinal = false
-            
-            guard let result = result else {
-                print("There was an error: \(error!)")
-                return
-            }
-            
-            //            isFinal = result.isFinal
-            self.message = result.bestTranscription.formattedString
-            self.detectionTimer?.invalidate()
-            
-            print(result.bestTranscription.formattedString as Any)
-            print(result.isFinal)
-            
-            if let timer = self.detectionTimer, timer.isValid {
-                if result.isFinal {
-                    // pull out the best transcription...
-                    print(result.bestTranscription.formattedString as Any)
-                    print(result.isFinal)
-                    
-                    timer.invalidate()
-                    self.STT_Result!(result.bestTranscription.formattedString as Any);
-                    self.message = "";
-                    
-                    self.stopRecording()
-                    
-                }
-            } else {
-                self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (timer) in
-                    //                    isFinal = true
-                    Loading.sharedInstance.hideLoader()
-                    
-                    print(self.message)
-                    
-                    timer.invalidate()
-                    self.STT_Result!(self.message);
-                    self.message = "";
-                    self.stopRecording()
-                })
-            }
-        })
-        
-        // 5
-        // Configure the microphone.
-        let micFormat = inputNode.inputFormat(forBus: 0)
-        
-        // 6
-        // The buffer size tells us how much data should the microphone record before dumping it into the recognition request.
-        inputNode.installTap(onBus: 0, bufferSize: 1024, format: micFormat) { (buffer, when) in
+        inputNode.removeTap(onBus: 0)
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
             self.recognitionRequest?.append(buffer)
         }
         
         audioEngine.prepare()
         try audioEngine.start()
+        
+        recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        guard let recognitionRequest = recognitionRequest else { fatalError("Unable to create a SFSpeechAudioBufferRecognitionRequest object") }
+        recognitionRequest.shouldReportPartialResults = true
+        
+        if #available(iOS 13, *) {
+            if speechRecognizer.supportsOnDeviceRecognition ?? false{
+                recognitionRequest.requiresOnDeviceRecognition = true
+            }
+        }
+        print(recognitionRequest)
+        print("recognitionRequest Entered")
+        recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
+            if let result = result {
+       
+                self.message = result.bestTranscription.formattedString
+                self.detectionTimer?.invalidate()
+                
+                print(result.bestTranscription.formattedString as Any)
+                print(result.isFinal)
+                
+                if let timer = self.detectionTimer, timer.isValid {
+                    if result.isFinal {
+                        // pull out the best transcription...
+                        print(result.bestTranscription.formattedString as Any)
+                        print(result.isFinal)
+                        
+                        timer.invalidate()
+                        self.STT_Result!(result.bestTranscription.formattedString as Any);
+                        self.message = "";
+                        
+                        self.stopRecording()
+                    }
+                } else {
+                    self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (timer) in
+                        //                    isFinal = true
+                        Loading.sharedInstance.hideLoader()
+                        
+                        print(self.message)
+                        
+                        timer.invalidate()
+                        self.STT_Result!(self.message);
+                        self.message = "";
+                        self.stopRecording()
+                    })
+                }
+            }
+            
+            if (error != nil){
+                print(error?.localizedDescription as Any);
+            }
+        }
     }
     
     // 2  b)
     // Text to Speech
     func textToSpeech(messageToSpeak: String, isClose:Bool){
         do{
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride(rawValue: AVAudioSession.PortOverride.speaker.rawValue)!);
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playAndRecord, mode: .default, options: .defaultToSpeaker)
+            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
+            
         }catch{
             
         }
@@ -233,26 +222,6 @@ import AVFoundation
         
         self.recognitionRequest = nil
         self.recognitionTask = nil
-    }
-    
-    // 4
-    // Stop Recording
-    func showLoading(){
-        let alert = UIAlertController(title: nil, message: Constants.Listening, preferredStyle: .alert)
-        
-        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
-        loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.style = UIActivityIndicatorView.Style.gray
-        loadingIndicator.startAnimating();
-        
-        alert.view.addSubview(loadingIndicator)
-        self.window?.rootViewController?.present(alert, animated: true, completion: nil)
-    }
-    
-    // 5
-    // Stop Recording
-    func hideLoading(){
-        self.window?.rootViewController?.dismiss(animated: false, completion: nil)
     }
 }
 
