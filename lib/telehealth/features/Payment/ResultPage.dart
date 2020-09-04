@@ -69,14 +69,21 @@ class _ResultPage extends State<ResultPage> {
                       padding: EdgeInsets.all(12.0),
                       onPressed: () {
                         status
-                            ? Navigator.pushAndRemoveUntil(
+                            ? /*Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => TelehealthProviders(
                                           arguments: HomeScreenArguments(
                                               selectedIndex: 0),
                                         )),
-                                (route) => false)
+                                (route) => false)*/
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TelehealthProviders(
+                                  arguments: HomeScreenArguments(
+                                      selectedIndex: 0),
+                                )))
                             : Navigator.pop(context);
                       },
                       child: Text(
