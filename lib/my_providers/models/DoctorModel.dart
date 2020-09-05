@@ -26,6 +26,7 @@ class DoctorsModel {
   ProfilePic profilePic;
   ProfilePic profilePicThumbnail;
   bool isDefault;
+  var profilePicThumbnailUrl;
 
   DoctorsModel(
       {this.id,
@@ -82,6 +83,9 @@ class DoctorsModel {
         ? new ProfilePic.fromJson(json[parameters.strprofilePicThumbnail])
         : null;
     isDefault = json[parameters.strisDefault];
+    profilePicThumbnailUrl = json["profilePicThumbnailURL"] != null
+        ? json["profilePicThumbnailURL"]
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -115,6 +119,8 @@ class DoctorsModel {
           this.profilePicThumbnail.toJson();
     }
     data[parameters.strisDefault] = this.isDefault;
+    data["profilePicThumbnailURL"] = profilePicThumbnailUrl;
+
     return data;
   }
 }

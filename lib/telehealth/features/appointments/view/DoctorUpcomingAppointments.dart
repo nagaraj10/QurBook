@@ -22,6 +22,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DoctorUpcomingAppointments extends StatefulWidget {
@@ -44,6 +45,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   List<String> bookingIds = new List();
   AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
   SharedPreferences prefs;
+  ChatViewModel chatViewModel = ChatViewModel();
   /* Timer timer;
   String hour;
   String minutes;
@@ -95,7 +97,6 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
 
   @override
   Widget build(BuildContext context) {
-    var _firstPress = true ;
     return Card(
         color: Colors.white,
         elevation: 0.5,
@@ -152,10 +153,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               icon: ImageIcon(
                                   AssetImage(Constants.Appointments_chatImage)),
                               onPressed: () {
-                                if(_firstPress){
-                                  _firstPress = false ;
                                   goToChatIntegration(widget.doc);
-                                }
                               }),
                           SizedBoxWidget(
                             height:
@@ -230,6 +228,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     String doctorName = doc.doctorName;
     String doctorPic = doc.doctorPic;
     storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
+   // chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
   }
 
   void navigateToProviderScreen(doc, isReshedule) {

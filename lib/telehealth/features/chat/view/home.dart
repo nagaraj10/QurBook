@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -358,6 +359,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
   }
 
   Widget buildItem(BuildContext context, DocumentSnapshot document) {
+    String lastMessage = document['lastMessage'];
     if (document['id'] == patientId) {
       return Container();
     } else {
@@ -443,17 +445,38 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * 0.5),
                         padding: const EdgeInsets.only(bottom: 4),
-                        child: Text(
-                          document['lastMessage'] != null
-                              ? document['lastMessage']
-                              : '',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[600],
-                              fontSize: 12,
-                              fontFamily: 'Poppins'),
-                        ),
+                        child: lastMessage != null
+                            ? lastMessage.contains('https')
+                                ? Row(
+                                    children: [
+                                      Icon(
+                                        Icons.photo,
+                                        size: 14,
+                                        color: Colors.black54,
+                                      ),
+                                      SizedBoxWidget(
+                                        width: 3,
+                                      ),
+                                      Text(
+                                        'Photo',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(
+                                            color: Colors.grey[600],
+                                            fontSize: 12,
+                                            fontFamily: 'Poppins'),
+                                      )
+                                    ],
+                                  )
+                                : Text(
+                                    lastMessage,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.grey[600],
+                                        fontSize: 12,
+                                        fontFamily: 'Poppins'),
+                                  )
+                            : '',
                       ),
                       SizedBox(
                         height: 1,

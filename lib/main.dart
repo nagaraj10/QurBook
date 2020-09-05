@@ -200,8 +200,12 @@ class _MyFHBState extends State<MyFHB> {
       } else if (passedValArr[4] == 'call') {
         doctorPic = passedValArr[3];
         if (doctorPic.isNotEmpty) {
-          doctorPic = json.decode(doctorPic);
-        }else{
+          try {
+            doctorPic = json.decode(doctorPic);
+          } catch (e) {
+            //doctorPic=
+          }
+        } else {
           doctorPic = '';
         }
         Get.to(CallMain(

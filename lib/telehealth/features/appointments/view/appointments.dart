@@ -23,6 +23,7 @@ import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWi
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Appointments extends StatefulWidget {
@@ -31,6 +32,7 @@ class Appointments extends StatefulWidget {
 }
 
 class _AppointmentsState extends State<Appointments> {
+  ChatViewModel chatViewModel = ChatViewModel();
   TextEditingController _searchQueryController = TextEditingController();
   final GlobalKey<State> _key = new GlobalKey<State>();
   AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
@@ -299,7 +301,6 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   Widget doctorsHistoryListCard(History doc) {
-    var _firstPress = true ;
     return Card(
         color: Colors.white,
         elevation: 0.5,
@@ -390,10 +391,7 @@ class _AppointmentsState extends State<Appointments> {
                 children: [
                   commonWidget.iconWithText(Constants.Appointments_chatImage,
                       Colors.black38, Constants.Appointments_chat, () {
-                        if(_firstPress){
-                          _firstPress = false ;
-                          goToChatIntegration(doc);
-                        }
+                    goToChatIntegration(doc);
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
@@ -429,6 +427,7 @@ class _AppointmentsState extends State<Appointments> {
     String doctorId = doc.doctorId;
     String doctorName = doc.doctorName;
     String doctorPic = doc.doctorPic;
+    //chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
     storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
   }
 
