@@ -48,7 +48,9 @@ class CommonWidgets {
   Widget getDoctoSpecialist(String phoneNumber) {
     print('specialization' + phoneNumber);
     return Text(
-      (phoneNumber != null && phoneNumber != 'null') ? toBeginningOfSentenceCase(phoneNumber) : '',
+      (phoneNumber != null && phoneNumber != 'null')
+          ? toBeginningOfSentenceCase(phoneNumber)
+          : '',
       style: TextStyle(
           color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_doc_specialist),
       softWrap: false,
@@ -168,7 +170,7 @@ class CommonWidgets {
   Widget getProfilePicWidget(String profilePicThumbnail) {
     return profilePicThumbnail != null
         ? Image.network(
-      profilePicThumbnail,
+            profilePicThumbnail,
             height: 40,
             width: 40,
             fit: BoxFit.cover,
@@ -215,7 +217,8 @@ class CommonWidgets {
                           Align(
                             alignment: Alignment.bottomCenter,
                             child: getClipOvalImageNew(
-                                docs.profilePicThumbnailURL, fhbStyles.detailClipImage),
+                                docs.profilePicThumbnailURL,
+                                fhbStyles.detailClipImage),
                           ),
                           getSizeBoxWidth(10.0),
                           Expanded(
@@ -352,15 +355,11 @@ class CommonWidgets {
   }
 
   Color getDoctorStatus(String s, int position) {
-    if (position % 2 == 0) {
-      s = 'available';
-    } else {
-      s = 'busy';
-    }
+    print('getDoctorStatus $s');
     switch (s) {
-      case 'available':
+      case 'true':
         return Colors.green;
-      case 'busy':
+      case 'false':
         return Colors.red;
       default:
         return null;
