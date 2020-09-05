@@ -49,7 +49,7 @@ class FamilyListView {
   }
 
   Widget setupAlertDialoadContainer(
-      List<Sharedbyme> sharedByMe,
+      List<Sharedbyme> sharedByMeList,
       BuildContext context,
       Function(BuildContext context, String searchParam, String name)
           onTextFieldtap,
@@ -63,14 +63,19 @@ class FamilyListView {
     LinkedData linkedData =
         new LinkedData(roleName: variable.Self, nickName: variable.Self);
 
-    if (sharedByMe == null) {
-      sharedByMe = new List();
-      sharedByMe.add(
+    if (sharedByMeList == null) {
+      sharedByMeList = new List();
+      sharedByMeList.add(
           new Sharedbyme(profileData: profileData, linkedData: linkedData));
     } else {
-      sharedByMe.insert(
-          0, new Sharedbyme(profileData: profileData, linkedData: linkedData));
+      if (!sharedByMeList.contains(
+          new Sharedbyme(profileData: profileData, linkedData: linkedData))) {
+        sharedByMeList.insert(0,
+            new Sharedbyme(profileData: profileData, linkedData: linkedData));
+      }
     }
+    List<Sharedbyme> sharedByMe = removeDuplicates(sharedByMeList);
+
     if (sharedByMe.length > 0) {
       return Container(
           decoration: BoxDecoration(
@@ -259,5 +264,16 @@ class FamilyListView {
     } else {
       return Center(child: Text(variable.strNoFamily));
     }
+  }
+
+  List<Sharedbyme> removeDuplicates(List<Sharedbyme> SharedbymeList) {
+    List<Sharedbyme> sharedByMeClone = new List();
+
+    for (Sharedbyme sharedbymeObj in SharedbymeList) {
+      if (!sharedByMeClone.contains(sharedbymeObj)) {
+        sharedByMeClone.add(sharedbymeObj);
+      }
+    }
+    return sharedByMeClone;
   }
 }

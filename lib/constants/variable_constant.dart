@@ -535,7 +535,7 @@ const String strNoData = 'No data Available';
 const String strViewPDF = 'View PDF';
 const String strLogout = 'Logout';
 const String strLogoutMsg =
-    'Stay Healthy.. See you Soon. \nMaya will be waiting to serve you.';
+    'Stay Healthy.. See you Soon. \nSheela will be waiting to serve you.';
 const String strYes = 'Yes';
 const String strRelaoding = 'Relaoding';
 const String strStartNow = 'Start now';
