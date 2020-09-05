@@ -28,7 +28,7 @@
 .pub-cache/
 .pub/
 /build/
-#/secrets.json
+secrets.json
 pubspec.lock
 .flutter-plugins-dependencies
 
