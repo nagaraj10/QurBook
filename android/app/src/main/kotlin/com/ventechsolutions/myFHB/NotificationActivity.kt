@@ -63,6 +63,7 @@ class NotificationActivity : AppCompatActivity() {
         launchIntent?.putExtra(getString(R.string.docId),docId)
         launchIntent?.putExtra(getString(R.string.docPic),docPic)
         startActivity(launchIntent)
+        finish()
     }
 
     companion object {

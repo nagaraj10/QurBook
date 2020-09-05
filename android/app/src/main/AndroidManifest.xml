@@ -80,7 +80,8 @@
         <service android:name=".services.AVServices"/>
         <service
             android:name=".services.MyFirebaseInstanceService"
-            android:exported="false">
+            android:exported="true"
+            android:enabled="true">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

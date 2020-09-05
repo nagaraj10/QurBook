@@ -5,20 +5,17 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.ContentResolver
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.media.AudioAttributes
-import android.net.Uri
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.ventechsolutions.myFHB.NotificationActivity
-import com.ventechsolutions.myFHB.R
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ventechsolutions.myFHB.MyApp
+import com.ventechsolutions.myFHB.NotificationActivity
+import com.ventechsolutions.myFHB.R
 
 
 class MyFirebaseInstanceService : FirebaseMessagingService() {
@@ -56,9 +53,11 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     private fun createNotification(title:String="", body:String="", data:Map<String, String> = HashMap()) {
         //todo segregate the NS according their type
         val NS_TYPE=data[getString(R.string.type).toLowerCase()]
+        //MyApp.setmContext(this)
         when(NS_TYPE){
             getString(R.string.ns_type_call)->createNotification4Call(data)
             getString(R.string.ns_type_ack)->createNotification4Ack(data)
+            //getString(R.string.ns_type_ack)->MyApp.createAckNotification(data)
         }
     }
 
@@ -142,7 +141,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     private fun createNotification4Ack(data:Map<String, String> = HashMap()){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
-        val NS_ID = 9091
+        val NS_ID = System.currentTimeMillis().toInt()
         val MEETING_ID = data[getString(R.string.meetid)]
         val USER_NAME = data[getString(R.string.username)]
         val DOC_ID = data[getString(R.string.docId)]
@@ -166,7 +165,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
 //        onTapNS.putExtra(getString(R.string.docId), "$DOC_ID")
 //        onTapNS.putExtra(getString(R.string.docPic), "$DOC_PIC")
-        val onTapPendingIntent = PendingIntent.getBroadcast(applicationContext, 0, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
+        val onTapPendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
 
 
         var notification = NotificationCompat.Builder(this, CHANNEL_INCOMING)
