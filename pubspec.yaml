@@ -92,6 +92,7 @@ dependencies:
   firebase_storage: ^3.0.6
   device_id: ^0.2.0
   gallery_saver: ^2.0.1
+  simple_pdf_viewer: ^0.2.2
 
 
 

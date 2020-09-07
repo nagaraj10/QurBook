@@ -458,7 +458,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                         width: 3,
                                       ),
                                       Text(
-                                        'Photo',
+                                        'File',
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.grey[600],
