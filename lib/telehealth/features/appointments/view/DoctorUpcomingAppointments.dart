@@ -46,6 +46,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
   SharedPreferences prefs;
   ChatViewModel chatViewModel = ChatViewModel();
+
   /* Timer timer;
   String hour;
   String minutes;
@@ -153,13 +154,13 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               icon: ImageIcon(
                                   AssetImage(Constants.Appointments_chatImage)),
                               onPressed: () {
-                                  goToChatIntegration(widget.doc);
+                                goToChatIntegration(widget.doc);
                               }),
                           SizedBoxWidget(
-                            height:
-                                (widget.hour == '00' || widget.minute == '00')
-                                    ? 0
-                                    : 15,
+                            height: (widget.hour == Constants.STATIC_HOUR ||
+                                    widget.minute == Constants.STATIC_HOUR)
+                                ? 0
+                                : 15,
                           ),
                           SizedBoxWidget(
                             height: widget.doc.specialization == null ? 30 : 40,
@@ -167,7 +168,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                           commonWidget.count(widget.doc.slotNumber),
                           TextWidget(
                             fontsize: 10,
-                            text: DateFormat("hh:mm a")
+                            text: DateFormat(Constants.Appointments_time_format)
                                     .format(DateTime.parse(
                                         widget.doc.plannedStartDateTime))
                                     .toString() ??
@@ -222,13 +223,13 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         ));
   }
 
-  void goToChatIntegration(History doc){
+  void goToChatIntegration(History doc) {
     //chat integration start
     String doctorId = doc.doctorId;
     String doctorName = doc.doctorName;
     String doctorPic = doc.doctorPic;
     storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
-   // chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
+    // chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
   }
 
   void navigateToProviderScreen(doc, isReshedule) {
@@ -239,7 +240,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                 doc: doc,
                 isReshedule: isReshedule,
               )),
-    ).then((value) => widget.onChanged('Completed'));
+    ).then((value) => widget.onChanged(Constants.callBack));
   }
 
   Widget docPhotoView(History doc) {
@@ -372,7 +373,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   getCancelAppoitment(List<History> appointments) {
     cancelAppointment(appointments).then((value) {
       if (value.status == 200 && value.success == true) {
-        widget.onChanged('Completed');
+        widget.onChanged(Constants.callBack);
         toast.getToast(Constants.YOUR_BOOKING_SUCCESS, Colors.green);
       } else {
         toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
@@ -451,7 +452,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                   peerId: doctorId,
                   peerAvatar: doctorPic != null ? doctorPic : '',
                   peerName: doctorName,
-                ))).then((value) => widget.onChanged('Completed'));
+                ))).then((value) => widget.onChanged(Constants.callBack));
   }
 
   String getPatientName() {

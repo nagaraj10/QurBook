@@ -8,6 +8,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/DoctorSessionTimeSlot.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
@@ -43,7 +44,6 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
       docs = doctorIdsList
           .firstWhere((element) => element.id == widget.doc.doctorId);
       noData=docs.name==null?true:false;
-      print(widget.doc.slotNumber);
     }));
   }
 
@@ -113,12 +113,10 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                 BoxShadow(
                   color: const Color(0xFFe3e2e2),
                   blurRadius: 16,
-                  // has the effect of softening the shadow
                   spreadRadius: 5.0,
-                  // has the effect of extending the shadow
                   offset: Offset(
-                    0.0, // horizontal, move right 10
-                    0.0, // vertical, move down 10
+                    0.0,
+                    0.0,
                   ),
                 )
               ],
@@ -178,7 +176,6 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                               height: fhbStyles.imageHeight,
                               icon: Icons.info,
                               onTap: () {
-                                print('on Info pressed');
                                 commonWidgets.showDoctorDetailView(
                                     docs[i], context);
                               }),
@@ -190,7 +187,6 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                       height: fhbStyles.imageHeight,
                       icon: Icons.check_circle,
                       onTap: () {
-                        print('on check  pressed');
                       })
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
@@ -199,7 +195,6 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                         .bookMarkDoctor(!(docs[i].isDefault), docs[i])
                         .then((status) {
                       if (status) {
-                        print('onClick');
                         providerViewModel.doctorIdsList.clear();
                         setState(() {});
                       }
@@ -257,9 +252,9 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                       commonWidgets.getDoctorsAddress('${docs[i].city}')),
                   docs[i].isMCIVerified
                       ? commonWidgets.getMCVerified(
-                      docs[i].isMCIVerified, 'Verified')
+                      docs[i].isMCIVerified, Constants.VERIFIED)
                       : commonWidgets.getMCVerified(
-                      docs[i].isMCIVerified, 'Not Verified'),
+                      docs[i].isMCIVerified, Constants.NOT_VERIFIED),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               )

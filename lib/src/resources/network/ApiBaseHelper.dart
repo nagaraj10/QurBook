@@ -889,7 +889,6 @@ class ApiBaseHelper {
     inputBody[BOOKING_IDS] = doctorIds;
 
     var jsonString = convert.jsonEncode(inputBody);
-    print(jsonString);
     final response =
         await getApiForCancelAppointment(qr_appointment_cancel, jsonString);
     return CancelAppointmentModel.fromJson(response);
@@ -899,9 +898,6 @@ class ApiBaseHelper {
       String url, String jsonBody) async {
     var responseJson;
     try {
-//      print(authtoken);
-//      print(url);
-//      print(jsonBody);
       final response = await http.put(_baseUrl + url,
           headers: await headerRequest.getRequestHeader(), body: jsonBody);
 //      print(response.body);
@@ -949,7 +945,6 @@ class ApiBaseHelper {
     inputBody[RESHEDULE_SOURCE] = PATIENT;
 
     var jsonString = convert.jsonEncode(inputBody);
-    print(jsonString);
     final response = await getApiForresheduleAppointment(
         qr_appoinment_reshedule, jsonString);
     return Reshedule.fromJson(response);
@@ -959,15 +954,9 @@ class ApiBaseHelper {
       String url, String jsonBody) async {
     var responseJson;
     try {
-//      print(authtoken);
-//      print(url);
-//      print(jsonBody);
       final response = await http.put(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersTimeSlot(),
           body: jsonBody);
-//      print(_baseUrl+url);
-//      print(jsonBody);
-      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);

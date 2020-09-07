@@ -6,11 +6,7 @@ import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
-import 'package:myfhb/telehealth/features/appointments/view/appointments.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleAppointments.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:provider/provider.dart';
 
 class ResheduleMain extends StatefulWidget {
