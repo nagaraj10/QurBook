@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_router.dart' as router;
 import 'package:myfhb/constants/router_variable.dart' as routervariable;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
