@@ -148,9 +148,15 @@ class _CallPageState extends State<CallPage> {
         if (Platform.isIOS) {
           Navigator.pop(context);
         } else {
-          Get.offAll(TelehealthProviders(
-            arguments: HomeScreenArguments(selectedIndex: 0),
-          ));
+          if (widget.isAppExists) {
+            Navigator.pop(context);
+          } else {
+            //   Get.offAll(TelehealthProviders(
+            //   arguments: HomeScreenArguments(selectedIndex: 0),
+            // ));
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/', (Route<dynamic> route) => false);
+          }
         }
       });
     };

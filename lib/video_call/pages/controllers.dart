@@ -25,8 +25,16 @@ class MyControllers extends StatefulWidget {
   String doctorName;
   String doctorPicUrl;
 
-  MyControllers(this.callStatus, this.role, this.isAppExists, this.doctorId,
-      this.controllerState, this.muted, this._isHideMyVideo, this.doctorName,this.doctorPicUrl);
+  MyControllers(
+      this.callStatus,
+      this.role,
+      this.isAppExists,
+      this.doctorId,
+      this.controllerState,
+      this.muted,
+      this._isHideMyVideo,
+      this.doctorName,
+      this.doctorPicUrl);
 
   @override
   _MyControllersState createState() => _MyControllersState();
@@ -74,7 +82,7 @@ class _MyControllersState extends State<MyControllers> {
           ),
           IconButton(
             onPressed: () {
-                storePatientDetailsToFCM();
+              storePatientDetailsToFCM();
             },
             icon: Icon(
               Icons.chat_bubble_outline,
@@ -115,9 +123,12 @@ class _MyControllersState extends State<MyControllers> {
     if (Platform.isIOS) {
       Navigator.pop(context);
     } else {
-      Get.offAll(TelehealthProviders(
-        arguments: HomeScreenArguments(selectedIndex: 0),
-      ));
+      if (widget.isAppExists) {
+        Navigator.pop(context);
+      } else {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      }
     }
   }
 
@@ -140,7 +151,7 @@ class _MyControllersState extends State<MyControllers> {
   void storePatientDetailsToFCM() {
     Firestore.instance.collection('users').document(widget.doctorId).setData({
       'nickname': widget.doctorName != null ? widget.doctorName : '',
-      'photoUrl': widget.doctorPicUrl!=null?widget.doctorPicUrl:'',
+      'photoUrl': widget.doctorPicUrl != null ? widget.doctorPicUrl : '',
       'id': widget.doctorId,
       'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
       'chattingWith': null

@@ -1,13 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_downloader/image_downloader.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -53,6 +58,7 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -1265,15 +1271,55 @@ class CommonUtil {
   }
 
   static Future<File> downloadFile(String url, String extension) async {
-    print(url);
-    http.Client _client = new http.Client();
-    var req = await _client.get(Uri.parse(url));
-    var bytes = req.bodyBytes;
-    String dir = (await getTemporaryDirectory()).path;
-    File file = new File('$dir/${basename(url)}$extension');
-    await file.writeAsBytes(bytes);
-    print('File size:${await file.length()}');
-    print(file.path);
-    return file;
+    try {
+      http.Client _client = new http.Client();
+      var req = await _client.get(Uri.parse(url));
+      var bytes = req.bodyBytes;
+      String dir = (await getTemporaryDirectory()).path;
+      File file = new File('$dir/${basename(url)}$extension');
+      await file.writeAsBytes(bytes);
+      return file;
+    } catch (e) {
+      print('$e exception thrown');
+    }
+  }
+
+  static void downloadMultipleFile(List images, BuildContext context) async {
+    for (var currentImage in images) {
+      try {
+        var _currentImage =
+            '${currentImage.response.data.fileContent}${currentImage.response.data.fileType}';
+        var dir = await FHBUtils.createFolderInAppDocDir('images');
+        var response = await Dio().get(currentImage.response.data.fileContent,
+            options: Options(responseType: ResponseType.bytes));
+        File file = File('$dir/${basename(_currentImage)}');
+        var raf = file.openSync(mode: FileMode.write);
+        raf.writeFromSync(response.data);
+        await raf.close();
+
+        //var img = await ImageDownloader.downloadImage(file.path);
+        //var img_path = await ImageDownloader.findPath(img);
+        // currentImage =
+        //     '${basename(currentImage.response.data.fileContent)}${currentImage.response.data.fileType}';
+        // var req =
+        //     await http.get(Uri.parse(currentImage.response.data.fileContent));
+        // var bytes = req.bodyBytes;
+        // String dir = (await getTemporaryDirectory()).path;
+        // File file = new File(
+        //     '$dir/${basename(currentImage.response.data.fileContent)}${currentImage.response.data.fileType}');
+        // await file.writeAsBytes(bytes);
+        var file_status =
+            await GallerySaver.saveImage(file.path, albumName: 'myfhb');
+        print('image file save status $file_status');
+
+        // Scaffold.of(context).showSnackBar(SnackBar(
+        //   content: const Text(variable.strFilesDownloaded),
+        //   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        // ));
+      } catch (error) {
+        print('$error exception thrown');
+      }
+    }
+    Get.snackbar('status', variable.strFilesDownloaded);
   }
 }
