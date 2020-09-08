@@ -111,9 +111,12 @@ class _MyControllersState extends State<MyControllers> {
     if (Platform.isIOS) {
       Navigator.pop(context);
     } else {
-      Get.offAll(TelehealthProviders(
-        arguments: HomeScreenArguments(selectedIndex: 0),
-      ));
+      if (widget.isAppExists) {
+        Navigator.pop(context);
+      } else {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      }
     }
   }
 
