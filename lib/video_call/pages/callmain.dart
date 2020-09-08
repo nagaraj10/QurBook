@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
@@ -98,7 +99,7 @@ class CallMain extends StatelessWidget {
                                 (isMute, isVideoHide) {
                               _isMute = isMute;
                               _isVideoHide = isVideoHide;
-                            }, _isMute, _isVideoHide, doctorName,doctorPic),
+                            }, _isMute, _isVideoHide, doctorName, doctorPic),
                             SizedBox(
                               height: 48,
                             ),
@@ -138,7 +139,7 @@ class CallMain extends StatelessWidget {
               children: [
                 Container(
                   child: Text(
-                    'Do you want exit from call?',
+                    parameters.exit_call,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         fontSize: 20,
@@ -150,7 +151,7 @@ class CallMain extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     FlatButton(
-                        child: Text('Yes'),
+                        child: Text(parameters.Yes),
                         onPressed: () {
                           if (Platform.isIOS) {
                             Navigator.of(context);
@@ -161,7 +162,7 @@ class CallMain extends StatelessWidget {
                           }
                         }),
                     FlatButton(
-                        child: Text('No'),
+                        child: Text(parameters.No),
                         onPressed: () {
                           Navigator.of(context).pop(false);
                         }),

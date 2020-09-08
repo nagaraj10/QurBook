@@ -119,7 +119,7 @@ class DoctorsModel {
           this.profilePicThumbnail.toJson();
     }
     data[parameters.strisDefault] = this.isDefault;
-    data["profilePicThumbnailURL"] = profilePicThumbnailUrl;
+    data[parameters.strprofilePicThumbnailURL] = profilePicThumbnailUrl;
 
     return data;
   }
