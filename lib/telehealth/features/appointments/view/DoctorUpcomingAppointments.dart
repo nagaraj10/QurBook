@@ -46,6 +46,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
   SharedPreferences prefs;
   ChatViewModel chatViewModel = ChatViewModel();
+
   /* Timer timer;
   String hour;
   String minutes;
@@ -153,13 +154,13 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               icon: ImageIcon(
                                   AssetImage(Constants.Appointments_chatImage)),
                               onPressed: () {
-                                  goToChatIntegration(widget.doc);
+                                goToChatIntegration(widget.doc);
                               }),
                           SizedBoxWidget(
-                            height:
-                                (widget.hour == '00' || widget.minute == '00')
-                                    ? 0
-                                    : 15,
+                            height: (widget.hour == Constants.STATIC_HOUR ||
+                                    widget.minute == Constants.STATIC_HOUR)
+                                ? 0
+                                : 15,
                           ),
                           SizedBoxWidget(
                             height: widget.doc.specialization == null ? 30 : 40,
@@ -167,7 +168,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                           commonWidget.count(widget.doc.slotNumber),
                           TextWidget(
                             fontsize: 10,
-                            text: DateFormat("hh:mm a")
+                            text: DateFormat(Constants.Appointments_time_format)
                                     .format(DateTime.parse(
                                         widget.doc.plannedStartDateTime))
                                     .toString() ??
@@ -222,13 +223,12 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         ));
   }
 
-  void goToChatIntegration(History doc){
+  void goToChatIntegration(History doc) {
     //chat integration start
     String doctorId = doc.doctorId;
     String doctorName = doc.doctorName;
     String doctorPic = doc.doctorPic;
-    storePatientDetailsToFCM(doctorId, doctorName, doctorPic);
-   // chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
+    chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
   }
 
   void navigateToProviderScreen(doc, isReshedule) {
@@ -239,7 +239,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                 doc: doc,
                 isReshedule: isReshedule,
               )),
-    ).then((value) => widget.onChanged('Completed'));
+    ).then((value) => widget.onChanged(Constants.callBack));
   }
 
   Widget docPhotoView(History doc) {
@@ -372,7 +372,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   getCancelAppoitment(List<History> appointments) {
     cancelAppointment(appointments).then((value) {
       if (value.status == 200 && value.success == true) {
-        widget.onChanged('Completed');
+        widget.onChanged(Constants.callBack);
         toast.getToast(Constants.YOUR_BOOKING_SUCCESS, Colors.green);
       } else {
         toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
@@ -389,89 +389,6 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         await appointmentsViewModel.fetchCancelAppointment(bookingIds);
 
     return cancelAppointment;
-  }
-
-  void storePatientDetailsToFCM(
-      String doctorId, String doctorName, String doctorPic) {
-    Firestore.instance.collection('users').document(doctorId).setData({
-      'nickname': doctorName != null ? doctorName : '',
-      'photoUrl': doctorPic != null ? doctorPic : '',
-      'id': doctorId,
-      'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-      'chattingWith': null
-    });
-
-    storeDoctorDetailsToFCM(doctorId, doctorName, doctorPic);
-  }
-
-  Future<void> storeDoctorDetailsToFCM(
-      String doctorId, String doctorName, String doctorPic) async {
-    prefs = await SharedPreferences.getInstance();
-
-    String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    String patientName = getPatientName();
-    String patientPicUrl = getProfileURL();
-
-    final QuerySnapshot result = await Firestore.instance
-        .collection('users')
-        .where('id', isEqualTo: patientId)
-        .getDocuments();
-    final List<DocumentSnapshot> documents = result.documents;
-
-    if (documents.length == 0) {
-      // Update data to server if new user
-      Firestore.instance.collection('users').document(patientId).setData({
-        'nickname': patientName != null ? patientName : '',
-        'photoUrl': patientPicUrl != null ? patientPicUrl : '',
-        'id': patientId,
-        'createdAt': DateTime.now().millisecondsSinceEpoch.toString(),
-        'chattingWith': null
-      });
-
-      // Write data to local
-      await prefs.setString('id', patientId);
-      await prefs.setString('nickname', patientName);
-      await prefs.setString('photoUrl', patientPicUrl);
-    } else {
-      // Write data to local
-      await prefs.setString('id', documents[0]['id']);
-      await prefs.setString('nickname', documents[0]['nickname']);
-      await prefs.setString('photoUrl', documents[0]['photoUrl']);
-      await prefs.setString('aboutMe', documents[0]['aboutMe']);
-    }
-
-    goToChatPage(doctorId, doctorName, doctorPic);
-  }
-
-  void goToChatPage(String doctorId, String doctorName, String doctorPic) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Chat(
-                  peerId: doctorId,
-                  peerAvatar: doctorPic != null ? doctorPic : '',
-                  peerName: doctorName,
-                ))).then((value) => widget.onChanged('Completed'));
-  }
-
-  String getPatientName() {
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    String patientName =
-        myProfile.response.data.generalInfo.qualifiedFullName != null
-            ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
-                ' ' +
-                myProfile.response.data.generalInfo.qualifiedFullName.lastName
-            : '';
-
-    return patientName;
-  }
-
-  String getProfileURL() {
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    String patientPicURL =
-        myProfile.response.data.generalInfo.profilePicThumbnailURL;
-
-    return patientPicURL;
   }
 
   void moveToBilsPage(String paymentMediaMetaId) async {

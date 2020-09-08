@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -14,6 +15,7 @@ class DoctorTimeSlotWidget extends StatefulWidget {
   ValueChanged<String> onChanged;
 
   DoctorTimeSlotWidget({this.doc, this.onChanged});
+
   @override
   DoctorTimeSlotWidgetState createState() => DoctorTimeSlotWidgetState();
 }
@@ -38,32 +40,32 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
       if (widget.doc.plannedStartDateTime != null) {
         String hours, min;
         int dys;
-        DateTime dob1 = DateFormat("yyyy-MM-dd HH:mm:ss")
+        DateTime dob1 = DateFormat(Constants.Appointments_slot_format)
             .parse(widget.doc.plannedStartDateTime);
-        DateTime dob2 =
-            DateFormat("yyyy-MM-dd HH:mm:ss").parse('${DateTime.now()}');
+        DateTime dob2 = DateFormat(Constants.Appointments_slot_format)
+            .parse('${DateTime.now()}');
         Duration dur = dob1.difference(dob2);
         dys = dur.inDays;
         hours = dur.inHours >= 0 && dur.inHours <= 24
-            ? (dur.inHours.remainder(24)).round().toString().padLeft(2, '0')
-            : '00';
+            ? (dur.inHours.remainder(24)).round().toString().padLeft(2, Constants.ZERO)
+            : Constants.STATIC_HOUR;
         min = dur.inHours >= 0 && dur.inHours <= 24
-            ? (dur.inMinutes.remainder(60)).toString().padLeft(2, '0')
-            : '00';
+            ? (dur.inMinutes.remainder(60)).toString().padLeft(2, Constants.ZERO)
+            : Constants.STATIC_HOUR;
         setState(() {
           hour = dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
-              ? '00'
+              ? Constants.STATIC_HOUR
               : hours;
           minutes = dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
-              ? '00'
+              ? Constants.STATIC_HOUR
               : min;
-          days = dys >= 0 ? dys.toString() : '0';
+          days = dys >= 0 ? dys.toString() : Constants.ZERO;
         });
       } else {
         setState(() {
-          hour = '00';
-          minutes = '00';
-          days = '0';
+          hour = Constants.STATIC_HOUR;
+          minutes = Constants.STATIC_HOUR;
+          days = Constants.ZERO;
         });
       }
     });
@@ -72,14 +74,17 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return days != '0' && days != null
+    return days != Constants.ZERO && days != null
         ? TextWidget(
             fontsize: 10,
-            text: days + ' days',
+            text: days + Constants.Appointments_days,
             fontWeight: FontWeight.w500,
             colors: Colors.black,
           )
-        : ((hour == '00' && minutes == '00') || hour == null || minutes == null)
+        : ((hour == Constants.STATIC_HOUR &&
+                    minutes == Constants.STATIC_HOUR) ||
+                hour == null ||
+                minutes == null)
 //        ||
 //                hour.length == 0 ||
 //                minute.length == 0)

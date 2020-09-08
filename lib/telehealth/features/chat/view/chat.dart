@@ -11,12 +11,14 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/PDFViewer.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
+import 'package:myfhb/telehealth/features/chat/view/PdfViewURL.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/GetMediaURLViewModel.dart';
@@ -34,7 +36,8 @@ class Chat extends StatefulWidget {
       {Key key,
       @required this.peerId,
       @required this.peerAvatar,
-        @required this.peerName, @required this.lastDate})
+      @required this.peerName,
+      @required this.lastDate})
       : super(key: key);
 
   @override
@@ -168,7 +171,9 @@ class ChatState extends State<Chat> {
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                         style: TextStyle(
-                            fontFamily: 'Poppins', fontSize:16,color: Colors.white)),
+                            fontFamily: 'Poppins',
+                            fontSize: 16,
+                            color: Colors.white)),
                     /*Text(
                       '#123232',
                       style: TextStyle(
@@ -177,9 +182,12 @@ class ChatState extends State<Chat> {
                           color: Colors.white),
                     ),*/
                     Text(
-                      widget.lastDate!=null?'Date: '+DateFormat('dd MMM kk:mm').format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(widget.lastDate))):'',
+                      widget.lastDate != null
+                          ? 'Date: ' +
+                              DateFormat('dd MMM kk:mm').format(
+                                  DateTime.fromMillisecondsSinceEpoch(
+                                      int.parse(widget.lastDate)))
+                          : '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                       style: TextStyle(
@@ -248,12 +256,16 @@ class ChatScreen extends StatefulWidget {
       {Key key,
       @required this.peerId,
       @required this.peerAvatar,
-      @required this.peerName,@required this.lastDate})
+      @required this.peerName,
+      @required this.lastDate})
       : super(key: key);
 
   @override
   State createState() => ChatScreenState(
-      peerId: peerId, peerAvatar: peerAvatar, peerName: peerName,lastDate: lastDate);
+      peerId: peerId,
+      peerAvatar: peerAvatar,
+      peerName: peerName,
+      lastDate: lastDate);
 }
 
 class ChatScreenState extends State<ChatScreen> {
@@ -261,7 +273,8 @@ class ChatScreenState extends State<ChatScreen> {
       {Key key,
       @required this.peerId,
       @required this.peerAvatar,
-      @required this.peerName, @required this.lastDate});
+      @required this.peerName,
+      @required this.lastDate});
 
   String peerId;
   String peerAvatar;
@@ -311,8 +324,10 @@ class ChatScreenState extends State<ChatScreen> {
           String fileURL = value.response.data.mediaMasterInfo[i].fileContent;
           if ((fileType == '.jpg') || (fileType == '.png')) {
             onSendMessage(fileURL, 1);
-          }else{
-            toast.getToast('Attached file is not a valid image', Colors.red);
+          } else if ((fileType == '.pdf')) {
+            onSendMessage(fileURL, 2);
+          } else {
+            toast.getToast('Attached file is not a valid format', Colors.red);
           }
         }
       } else {
@@ -332,7 +347,8 @@ class ChatScreenState extends State<ChatScreen> {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.response.data.generalInfo.qualifiedFullName != null
-        ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +' '+
+        ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+            ' ' +
             myProfile.response.data.generalInfo.qualifiedFullName.lastName
         : '';
     patientPicUrl = getProfileURL();
@@ -360,17 +376,17 @@ class ChatScreenState extends State<ChatScreen> {
   readLocal() async {
     prefs = await SharedPreferences.getInstance();
     id = prefs.getString('id') ?? '';
-   /* if (id == "") {
+    /* if (id == "") {
       groupChatId = '$peerId-$patientId';
     } */
     //else
     //  {
-      if (patientId.hashCode <= peerId.hashCode) {
-        groupChatId = '$patientId-$peerId';
-      } else {
-        groupChatId = '$peerId-$patientId';
-      }
-  //  }
+    if (patientId.hashCode <= peerId.hashCode) {
+      groupChatId = '$patientId-$peerId';
+    } else {
+      groupChatId = '$peerId-$patientId';
+    }
+    //  }
     Firestore.instance
         .collection('users')
         .document(id == "" ? patientId : id)
@@ -583,17 +599,65 @@ class ChatScreenState extends State<ChatScreen> {
                           right: 10.0),
                     )
                   // Sticker
-                  : Container(
-                      child: Image.asset(
-                        'images/${document['content']}.gif',
-                        width: 100.0,
-                        height: 100.0,
-                        fit: BoxFit.cover,
-                      ),
-                      margin: EdgeInsets.only(
-                          bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                          right: 10.0),
-                    ),
+                  : document['type'] == 2
+                      ? Card(
+                          color: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(25),
+                                  bottomLeft: Radius.circular(25),
+                                  bottomRight: Radius.circular(25))),
+                          child: InkWell(
+                            onTap: () {
+                              goToPDFViewBasedonURL(document['content']);
+                            },
+                            child: Container(
+                              constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * .6,
+                              ),
+                              padding: const EdgeInsets.all(15.0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(25),
+                                  bottomLeft: Radius.circular(25),
+                                  bottomRight: Radius.circular(25),
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.picture_as_pdf,
+                                    size: 14,
+                                    color: Colors.black54,
+                                  ),
+                                  SizedBoxWidget(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Click to view PDF',
+                                    style: TextStyle(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor())),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          child: Image.asset(
+                            'images/${document['content']}.gif',
+                            width: 100.0,
+                            height: 100.0,
+                            fit: BoxFit.cover,
+                          ),
+                          margin: EdgeInsets.only(
+                              bottom: isLastMessageRight(index) ? 20.0 : 10.0,
+                              right: 10.0),
+                        ),
         ],
         mainAxisAlignment: MainAxisAlignment.end,
       );
@@ -720,17 +784,67 @@ class ChatScreenState extends State<ChatScreen> {
                             ),
                             margin: EdgeInsets.only(left: 10.0),
                           )
-                        : Container(
-                            child: Image.asset(
-                              'images/${document['content']}.gif',
-                              width: 100.0,
-                              height: 100.0,
-                              fit: BoxFit.cover,
-                            ),
-                            margin: EdgeInsets.only(
-                                bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                                right: 10.0),
-                          ),
+                        : document['type'] == 2
+                            ? Card(
+                                color: Colors.transparent,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(25),
+                                        bottomLeft: Radius.circular(25),
+                                        bottomRight: Radius.circular(25))),
+                                child: InkWell(
+                                  onTap: () {
+                                    goToPDFViewBasedonURL(document['content']);
+                                  },
+                                  child: Container(
+                                    constraints: BoxConstraints(
+                                      maxWidth:
+                                          MediaQuery.of(context).size.width *
+                                              .6,
+                                    ),
+                                    padding: const EdgeInsets.all(15.0),
+                                    decoration: BoxDecoration(
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      borderRadius: BorderRadius.only(
+                                        topRight: Radius.circular(25),
+                                        bottomLeft: Radius.circular(25),
+                                        bottomRight: Radius.circular(25),
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.picture_as_pdf,
+                                          size: 14,
+                                          color: Colors.black54,
+                                        ),
+                                        SizedBoxWidget(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          'Click to view PDF',
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Container(
+                                child: Image.asset(
+                                  'images/${document['content']}.gif',
+                                  width: 100.0,
+                                  height: 100.0,
+                                  fit: BoxFit.cover,
+                                ),
+                                margin: EdgeInsets.only(
+                                    bottom:
+                                        isLastMessageRight(index) ? 20.0 : 10.0,
+                                    right: 10.0),
+                              ),
               ],
             ),
 
@@ -755,6 +869,12 @@ class ChatScreenState extends State<ChatScreen> {
         margin: EdgeInsets.only(bottom: 10.0),
       );
     }
+  }
+
+  goToPDFViewBasedonURL(String url) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => PDFViewURL(url: url),
+    ));
   }
 
   bool isLastMessageLeft(int index) {

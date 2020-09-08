@@ -74,91 +74,90 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Widget docTimeSlot(BuildContext context, History doc, hour, minute, daysNum) {
-    return daysNum != '0' && daysNum != null
-        ? TextWidget(
-            fontsize: 10,
-            text: daysNum + ' days',
-            fontWeight: FontWeight.w500,
-            colors: Colors.black,
-          )
-        : ((hour == '00' && minute == '00') || hour == null || minute == null)
-//        ||
-//                hour.length == 0 ||
-//                minute.length == 0)
-            ? Container()
-            : Row(
-                children: [
-                  ClipRect(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color(new CommonUtil().getMyPrimaryColor())),
-                      ),
-                      height: 29,
-                      width: 25,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(2.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          TextWidget(
-                            fontsize: 10,
-                            text: hour,
-                            fontWeight: FontWeight.w500,
-                            colors: Colors.grey,
-                          ),
-                          TextWidget(
-                            fontsize: 5,
-                            text: Constants.Appointments_hours,
-                            fontWeight: FontWeight.w500,
-                            colors: Color(new CommonUtil().getMyPrimaryColor()),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBoxWidget(width: 2.0),
-                  ClipRect(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color(new CommonUtil().getMyPrimaryColor())),
-                      ),
-                      height: 29,
-                      width: 25,
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.all(2.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          TextWidget(
-                            fontsize: 10,
-                            text: minute,
-                            fontWeight: FontWeight.w500,
-                            colors: Colors.grey,
-                          ),
-                          TextWidget(
-                            fontsize: 5,
-                            text: Constants.Appointments_minutes,
-                            fontWeight: FontWeight.w500,
-                            colors: Color(new CommonUtil().getMyPrimaryColor()),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                ],
-              );
-  }
+//  Widget docTimeSlot(BuildContext context, History doc, hour, minute, daysNum) {
+//    return daysNum != '0' && daysNum != null
+//        ? TextWidget(
+//            fontsize: 10,
+//            text: daysNum + ' days',
+//            fontWeight: FontWeight.w500,
+//            colors: Colors.black,
+//          )
+//        : ((hour == '00' && minute == '00') || hour == null || minute == null)
+////        ||
+////                hour.length == 0 ||
+////                minute.length == 0)
+//            ? Container()
+//            : Row(
+//                children: [
+//                  ClipRect(
+//                    child: Container(
+//                      decoration: BoxDecoration(
+//                        border: Border.all(
+//                            color: Color(new CommonUtil().getMyPrimaryColor())),
+//                      ),
+//                      height: 29,
+//                      width: 25,
+//                      alignment: Alignment.center,
+//                      padding: EdgeInsets.all(2.0),
+//                      child: Column(
+//                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                        children: [
+//                          TextWidget(
+//                            fontsize: 10,
+//                            text: hour,
+//                            fontWeight: FontWeight.w500,
+//                            colors: Colors.grey,
+//                          ),
+//                          TextWidget(
+//                            fontsize: 5,
+//                            text: Constants.Appointments_hours,
+//                            fontWeight: FontWeight.w500,
+//                            colors: Color(new CommonUtil().getMyPrimaryColor()),
+//                          ),
+//                        ],
+//                      ),
+//                    ),
+//                  ),
+//                  SizedBoxWidget(width: 2.0),
+//                  ClipRect(
+//                    child: Container(
+//                      decoration: BoxDecoration(
+//                        border: Border.all(
+//                            color: Color(new CommonUtil().getMyPrimaryColor())),
+//                      ),
+//                      height: 29,
+//                      width: 25,
+//                      alignment: Alignment.center,
+//                      padding: EdgeInsets.all(2.0),
+//                      child: Column(
+//                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+//                        children: [
+//                          TextWidget(
+//                            fontsize: 10,
+//                            text: minute,
+//                            fontWeight: FontWeight.w500,
+//                            colors: Colors.grey,
+//                          ),
+//                          TextWidget(
+//                            fontsize: 5,
+//                            text: Constants.Appointments_minutes,
+//                            fontWeight: FontWeight.w500,
+//                            colors: Color(new CommonUtil().getMyPrimaryColor()),
+//                          ),
+//                        ],
+//                      ),
+//                    ),
+//                  )
+//                ],
+//              );
+//  }
 
   Widget docIcons(History doc, BuildContext context) {
     List<String> recordIds = new List();
     List<String> notesId = new List();
     List<String> voiceIds = new List();
-//    print(doc.healthRecord);
 
-    print(doc.bookingId);
+
     String notesCount =
         doc.healthRecord.notes == null ? 0.toString() : 1.toString();
     String voiceNotesCount =
@@ -172,16 +171,13 @@ class AppointmentsCommonWidget {
 
     if (int.parse(notesCount) > 0 && doc.healthRecord.notes != null) {
       notesId.add(doc.healthRecord.notes.mediaMetaId);
-      print('notesId' + doc.healthRecord.notes.mediaMetaId);
     }
     if (int.parse(voiceNotesCount) > 0 && doc.healthRecord.voice != null) {
       voiceIds.add(doc.healthRecord.voice.mediaMetaId);
-      print('voiceIds' + doc.healthRecord.voice.mediaMetaId);
     }
     if (int.parse(rxCount) > 0) {
       if (otherRecords > 0) {
         recordIds.addAll(doc.healthRecord.others);
-        print('others******' + doc.healthRecord.others.toString());
       }
       if (doc.healthRecord.prescription != null &&
           doc.healthRecord.prescription.length > 0) {
@@ -190,17 +186,15 @@ class AppointmentsCommonWidget {
               .contains(doc.healthRecord.prescription[i].mediaMetaId)) {
             recordIds.add(doc.healthRecord.prescription[i].mediaMetaId);
 
-            print('RECORDID' + doc.healthRecord.prescription[i].mediaMetaId);
           }
         }
       }
     }
 
-    notesCount = notesCount == '0' ? '' : notesCount;
-    voiceNotesCount = voiceNotesCount == '0' ? '' : voiceNotesCount;
-    rxCount = rxCount == '0' ? '' : rxCount;
+    notesCount = notesCount == Constants.ZERO ? '' : notesCount;
+    voiceNotesCount = voiceNotesCount == Constants.ZERO ? '' : voiceNotesCount;
+    rxCount = rxCount == Constants.ZERO ? '' : rxCount;
 
-//    print(notesCount + '****** ' + voiceNotesCount + '****' + rxCount);
     return Row(
       children: [
         iconWithText(
@@ -247,7 +241,6 @@ class AppointmentsCommonWidget {
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records, () async {
           if (rxCount != null) {
-            print(recordIds.toString() + '***********************');
             await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => MyRecords(
                 categoryPosition:
@@ -471,7 +464,6 @@ class AppointmentsCommonWidget {
     List<CategoryData> categoryDataList = getCategoryList();
     for (int i = 0; i < categoryDataList.length; i++) {
       if (categoryName == categoryDataList[i].categoryName) {
-        print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;
       }
     }
