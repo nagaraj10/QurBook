@@ -62,9 +62,9 @@ import AVFoundation
                 return
             }
             
-            print("Speech to Text channel entered")
+            print(Constants.speechToText)
             
-            print("STT : ", result);
+            print(Constants.STT, result);
             
             Loading.sharedInstance.showLoader()
             
@@ -73,7 +73,7 @@ import AVFoundation
             do{
                 try self?.startRecording();
             }catch(let error){
-                print("error is \(error.localizedDescription)")
+                print("\(Constants.errorIs) \(error.localizedDescription)")
             }
         })
         
@@ -89,13 +89,13 @@ import AVFoundation
                 return
             }
             
-            print("Text to Speech channel entered")
+            print(Constants.textToSpeech)
             
             let argumentDic = call.arguments as! Dictionary<String, Any>
             let message = argumentDic[Constants.paramaters.message] as! String
             let isClose = argumentDic[Constants.paramaters.isClose] as! Bool
             
-            print("TTS : ", message)
+            print(Constants.TSS, message)
             
             self?.TTS_Result = result;
             self?.textToSpeech(messageToSpeak: message, isClose: isClose)
@@ -133,7 +133,7 @@ import AVFoundation
         try audioEngine.start()
         
         recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
-        guard let recognitionRequest = recognitionRequest else { fatalError("Unable to create a SFSpeechAudioBufferRecognitionRequest object") }
+        guard let recognitionRequest = recognitionRequest else { fatalError(Constants.unableToRecognition) }
         recognitionRequest.shouldReportPartialResults = true
         
         if #available(iOS 13, *) {
@@ -142,7 +142,8 @@ import AVFoundation
             }
         }
         print(recognitionRequest)
-        print("recognitionRequest Entered")
+        print(Constants.recogEntered)
+        
         recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { result, error in
             if let result = result {
        

@@ -1,10 +1,3 @@
-//
-//  constants.swift
-//  Runner
-//
-//  Created by Senthil on 24/08/20.
-//  Copyright © 2020 The Chromium Authors. All rights reserved.
-//
 
 import Foundation
 
@@ -19,6 +12,14 @@ struct Constants {
     
     static let enUS = "en-US"
     static let Listening = "Listening..."
+    
+    static let speechToText = "Speech to Text channel entered";
+    static let textToSpeech = "Text to Speech channel entered";
+    static let unableToRecognition = "Unable to create a SFSpeechAudioBufferRecognitionRequest object";
+    static let recogEntered = "recognitionRequest Entered";
+    static let STT = "STT : ";
+    static let TSS = "TTS : ";
+    static let errorIs = "error is";
     
     struct paramaters {
         static let message = "message"
