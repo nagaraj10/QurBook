@@ -4,13 +4,18 @@ import 'dart:io' show Platform;
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:camera/camera.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_router.dart' as router;
 import 'package:myfhb/constants/router_variable.dart' as routervariable;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -133,6 +138,11 @@ class _MyFHBState extends State<MyFHB> {
   static const secure_platform = variable.security;
   static const nav_platform = const MethodChannel('navigation.channel');
   String navRoute = '';
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  bool _internetconnection = false;
+  var _connectionStatus='';
+  FlutterToast toast = new FlutterToast();
 
   /// event channel for listening ns
   static const stream =
@@ -165,13 +175,20 @@ class _MyFHBState extends State<MyFHB> {
 
     ////    gettingResponseFromNative();
 ////    showSecurityWall();
+
+    initConnectivity();
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+
   }
 
   @override
   void dispose() {
     _disableTimer();
+    _connectivitySubscription.cancel();
     super.dispose();
   }
+
 
   void _enableTimer() {
     if (_timerSubscription == null) {
@@ -305,5 +322,112 @@ class _MyFHBState extends State<MyFHB> {
           break;
       }
     } on PlatformException catch (e, s) {}
+  }
+
+  Future<void> initConnectivity() async {
+    ConnectivityResult result;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) {
+      return Future.value(null);
+    }
+
+    return _updateConnectionStatus(result);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        String wifiName, wifiBSSID, wifiIP;
+
+        try {
+          if (!kIsWeb && Platform.isIOS) {
+            LocationAuthorizationStatus status =
+            await _connectivity.getLocationServiceAuthorization();
+            if (status == LocationAuthorizationStatus.notDetermined) {
+              status =
+              await _connectivity.requestLocationServiceAuthorization();
+            }
+            if (status == LocationAuthorizationStatus.authorizedAlways ||
+                status == LocationAuthorizationStatus.authorizedWhenInUse) {
+              wifiName = await _connectivity.getWifiName();
+            } else {
+              wifiName = await _connectivity.getWifiName();
+            }
+          } else {
+            wifiName = await _connectivity.getWifiName();
+          }
+        } on PlatformException catch (e) {
+          print(e.toString());
+          wifiName = failed_wifi;
+        }
+
+        try {
+          if (!kIsWeb && Platform.isIOS) {
+            LocationAuthorizationStatus status =
+            await _connectivity.getLocationServiceAuthorization();
+            if (status == LocationAuthorizationStatus.notDetermined) {
+              status =
+              await _connectivity.requestLocationServiceAuthorization();
+            }
+            if (status == LocationAuthorizationStatus.authorizedAlways ||
+                status == LocationAuthorizationStatus.authorizedWhenInUse) {
+              wifiBSSID = await _connectivity.getWifiBSSID();
+            } else {
+              wifiBSSID = await _connectivity.getWifiBSSID();
+            }
+          } else {
+            wifiBSSID = await _connectivity.getWifiBSSID();
+          }
+        } on PlatformException catch (e) {
+          print(e.toString());
+          wifiBSSID = failed_wifi_bssid;
+        }
+
+        try {
+          wifiIP = await _connectivity.getWifiIP();
+        } on PlatformException catch (e) {
+          print(e.toString());
+          wifiIP = failed_wifi_ip;
+        }
+
+        setState(() {
+          _internetconnection = true;
+          _connectionStatus = '$result\n'
+              'Wifi Name: $wifiName\n'
+              'Wifi BSSID: $wifiBSSID\n'
+              'Wifi IP: $wifiIP\n';
+          toast.getToast(wifi_connected, Colors.green);
+        });
+        break;
+      case ConnectivityResult.mobile:
+        setState(() {
+          _internetconnection = true;
+          toast.getToast(data_connected, Colors.green);
+        });
+        break;
+      case ConnectivityResult.none:
+        setState(() {
+          _internetconnection = false;
+          _connectionStatus = no_internet_conn;
+          toast.getToast(no_internet_conn, Colors.red);
+        });
+        break;
+      default:
+        setState(() {
+          _internetconnection = false;
+          _connectionStatus = failed_get_conn;
+          toast.getToast(failed_get_connectivity, Colors.red);
+        });
+        break;
+    }
   }
 }
