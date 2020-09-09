@@ -156,9 +156,13 @@ class CallMain extends StatelessWidget {
                           if (Platform.isIOS) {
                             Navigator.of(context);
                           } else {
-                            Get.offAll(TelehealthProviders(
-                              arguments: HomeScreenArguments(selectedIndex: 0),
-                            ));
+                            if (isAppExists) {
+                              Navigator.pop(context);
+                            } else {
+                              Navigator.of(context).pushNamedAndRemoveUntil(
+                                  '/splashscreen',
+                                  (Route<dynamic> route) => false);
+                            }
                           }
                         }),
                     FlatButton(

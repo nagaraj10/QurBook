@@ -154,11 +154,8 @@ class _CallPageState extends State<CallPage> {
           if (widget.isAppExists) {
             Navigator.pop(context);
           } else {
-            //   Get.offAll(TelehealthProviders(
-            //   arguments: HomeScreenArguments(selectedIndex: 0),
-            // ));
             Navigator.of(context).pushNamedAndRemoveUntil(
-                '/', (Route<dynamic> route) => false);
+                '/splashscreen', (Route<dynamic> route) => false);
           }
         }
       });

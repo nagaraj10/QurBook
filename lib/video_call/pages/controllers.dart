@@ -114,8 +114,8 @@ class _MyControllersState extends State<MyControllers> {
       if (widget.isAppExists) {
         Navigator.pop(context);
       } else {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+            '/splashscreen', (Route<dynamic> route) => false);
       }
     }
   }

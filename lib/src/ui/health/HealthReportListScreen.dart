@@ -258,6 +258,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
               ],
             ),
           ));
+    else
+      return SizedBox();
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {
