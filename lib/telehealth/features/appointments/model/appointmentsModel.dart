@@ -1,7 +1,5 @@
-
-
-
 import 'doctorsData.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class AppointmentsModel {
   AppointmentsModel({
@@ -17,20 +15,21 @@ class AppointmentsModel {
   Response response;
 
   AppointmentsModel.fromJson(Map<String, dynamic> json) {
-    status = json["status"];
-    success = json["success"];
-    message = json["message"];
-    response =
-    json['response'] != null ? Response.fromJson(json["response"]) : null;
+    status = json[parameters.strStatus];
+    success = json[parameters.strSuccess];
+    message = json[parameters.strMessage];
+    response = json[parameters.strResponse] != null
+        ? Response.fromJson(json[parameters.strResponse])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["status"] = this.status;
-    data["success"] = this.success;
-    data["message"] = this.message;
+    data[parameters.strStatus] = this.status;
+    data[parameters.strSuccess] = this.success;
+    data[parameters.strMessage] = this.message;
     if (this.response != null) {
-      data["response"] = this.response.toJson();
+      data[parameters.strResponse] = this.response.toJson();
     }
     return data;
   }
@@ -46,21 +45,18 @@ class Response {
   DoctorsData data;
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json["count"];
-    data = json["data"]==null?null:DoctorsData.fromJson(json["data"]);
+    count = json[parameters.strCount];
+    data = json[parameters.strData] == null
+        ? null
+        : DoctorsData.fromJson(json[parameters.strData]);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data["count"] = this.count;
+    data[parameters.strCount] = this.count;
     if (this.data != null) {
-      data["data"] = this.data.toJson();
+      data[parameters.strData] = this.data.toJson();
     }
     return data;
   }
 }
-
-
-
-
-

@@ -59,66 +59,6 @@ class AppointmentsViewModel extends ChangeNotifier {
         upcoming: dummySearchListUpcoming, history: dummySearchListHistory);
   }
 
-  Time getStaticValue() {
-    List<String> hours;
-    List<String> minutes;
-    hours = List.filled(appointmentsModel.response.data.upcoming.length, '00');
-    minutes =
-        List.filled(appointmentsModel.response.data.upcoming.length, '00');
-    Time time;
-    time = Time(minutes: minutes, hours: hours);
-    return time;
-  }
-
-  Time getTimeSlot(List<History> upcoming, bool isSearch) {
-    if (appointmentsModel != null) {
-      List<History> upcomingInfo =
-          isSearch ? upcoming : appointmentsModel.response.data.upcoming;
-      List<String> dummySearchList = List<String>();
-      List<String> dummyHour = List<String>();
-      List<String> dummyDays = List<String>();
-      List<String> dummyMinutes = List<String>();
-      List<String> hours;
-      List<String> minutes;
-      List<String> days;
-      Time time;
-
-      dummySearchList
-          .addAll(upcomingInfo.map((e) => e.plannedStartDateTime).toList());
-      for (int i = 0; i < dummySearchList.length; i++) {
-        DateTime dob = DateTime.tryParse(dummySearchList[i]);
-//        DateTime dob1 =
-//            DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").parse(dummySearchList[i]);
-        DateTime dob1 =
-            DateFormat("yyyy-MM-dd HH:mm:ss").parse(dummySearchList[i]);
-        DateTime dob2 =
-            DateFormat("yyyy-MM-dd HH:mm:ss").parse('${DateTime.now()}');
-        Duration dur = dob1.difference(dob2);
-        String daysCount = dur.inDays.toString();
-        String differenceInHours = dur.inHours >= 0 && dur.inHours <= 24
-            ? (dur.inHours.remainder(24)).round().toString().padLeft(2, '0')
-            : '00';
-        String differenceInMinutes = dur.inHours >= 0 && dur.inHours <= 24
-            ? (dur.inMinutes.remainder(60)).toString().padLeft(2, '0')
-            : '00';
-        dummyDays.add(daysCount);
-        dummyMinutes.add(
-            dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
-                ? '00'
-                : differenceInMinutes);
-        dummyHour.add(
-            dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
-                ? '00'
-                : differenceInHours);
-      }
-      minutes = dummyMinutes;
-      hours = dummyHour;
-      days = dummyDays;
-      time = Time(minutes: minutes, hours: hours, daysCount: days);
-      return time;
-    } else {}
-  }
-
   Future<CancelAppointmentModel> fetchCancelAppointment(
       List<String> bookingId) async {
     try {

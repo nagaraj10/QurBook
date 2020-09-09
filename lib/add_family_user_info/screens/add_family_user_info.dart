@@ -452,51 +452,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         image: new FileImage(imageURI), fit: BoxFit.cover))
                 : BoxDecoration(color: Colors.white));
       }
-
-//      return imageURI == null
-//          ? widget.arguments.sharedbyme.profileData != null
-//              ? widget.arguments.sharedbyme.profileData.profilePicThumbnail !=
-//                      null
-//                  ? getProfilePicWidget(widget
-//                      .arguments.sharedbyme.profileData.profilePicThumbnail)
-//                  : Center(
-//                      child: Text(
-//                        widget.arguments.sharedbyme.profileData
-//                                    .qualifiedFullName.firstName !=
-//                                null
-//                            ? widget.arguments.sharedbyme.profileData
-//                                .qualifiedFullName.firstName[0]
-//                                .toUpperCase()
-//                            : '',
-//                        style: TextStyle(
-//                          color: Colors.white,
-//                          fontSize: 60.0,
-//                          fontWeight: FontWeight.w200,
-//                        ),
-//                      ),
-//                    )
-//              : Center(
-//                  child: Text(
-//                    widget.arguments.sharedbyme.profileData.qualifiedFullName
-//                                .firstName !=
-//                            null
-//                        ? widget.arguments.sharedbyme.profileData
-//                            .qualifiedFullName.firstName[0]
-//                            .toUpperCase()
-//                        : '',
-//                    style: TextStyle(
-//                      color: Colors.white,
-//                      fontSize: 60.0,
-//                      fontWeight: FontWeight.w200,
-//                    ),
-//                  ),
-//                )
-//          : Container(
-//              decoration: imageURI != null
-//                  ? BoxDecoration(
-//                      image: DecorationImage(
-//                          image: new FileImage(imageURI), fit: BoxFit.cover))
-//                  : BoxDecoration(color: Colors.white));
     }
   }
 
@@ -521,14 +476,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-              title: Text('Make a Choice!'),
+              title: Text(variable.makeAChoice),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(1)),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     GestureDetector(
-                      child: Text('Gallery'),
+                      child: Text(variable.Gallery),
                       onTap: () {
                         Navigator.pop(context);
 
@@ -545,7 +500,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       padding: EdgeInsets.all(8.0),
                     ),
                     GestureDetector(
-                      child: Text('Camera'),
+                      child: Text(variable.Camera),
                       onTap: () {
                         Navigator.pop(context);
 
@@ -1696,26 +1651,6 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
 
                           (cont as Element).markNeedsBuild();
                         });
-
-//                        var image =
-//                            ImagePicker.pickImage(source: ImageSource.gallery);
-//                        image.then((value) {
-//                          imageURI = value;
-//
-//                          (cont as Element).markNeedsBuild();
-//                        });
-//                        var image =
-//                            ImagePicker.pickImage(source: ImageSource.gallery);
-//                        image.then((value) {
-//                          if (isProfileImage) {
-//                            imageURI = value;
-//                          } else {
-//                            imageURIProfile = value;
-//                            imageSet = true;
-//                          }
-//
-//                          (cont as Element).markNeedsBuild();
-//                        });
                       },
                     ),
                     Padding(
@@ -1737,26 +1672,6 @@ class MySliverAppBar extends SliverPersistentHeaderDelegate {
                           }
                           (cont as Element).markNeedsBuild();
                         });
-
-//                        var image =
-//                            ImagePicker.pickImage(source: ImageSource.camera);
-//                        image.then((value) {
-//                          imageURI = value;
-//
-//                          (cont as Element).markNeedsBuild();
-//                        });
-
-//                        var image =
-//                            ImagePicker.pickImage(source: ImageSource.camera);
-//                        image.then((value) {
-//                          if (isProfileImage)
-//                            imageURI = value;
-//                          else {
-//                            imageURIProfile = value;
-//                            imageSet = true;
-//                          }
-//                          (cont as Element).markNeedsBuild();
-//                        });
                       },
                     ),
                   ],

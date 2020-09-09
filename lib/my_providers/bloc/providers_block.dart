@@ -33,7 +33,6 @@ class ProvidersBloc implements BaseBloc {
     try {
       myProvidersResponseList =
           await _providersListRepository.getMedicalPreferencesList();
-//      providersListSink.add(ApiResponse.completed(myProvidersResponseList));
     } catch (e) {
       providersListSink.add(ApiResponse.error(e.toString()));
     }

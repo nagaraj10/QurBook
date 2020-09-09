@@ -202,8 +202,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               if (snapshot.data.data.response.data != null) {
                 familyData = snapshot.data.data.response.data;
 
-                PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
-                    snapshot.data.data.response.data);
+                // PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
+                //     snapshot.data.data.response.data);
               }
               return dropDownButton(snapshot.data.data.response.data != null
                   ? snapshot.data.data.response.data.sharedbyme

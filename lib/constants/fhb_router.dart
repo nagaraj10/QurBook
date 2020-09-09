@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
 import 'package:myfhb/schedules/add_appointments.dart';
@@ -19,7 +20,9 @@ import 'package:myfhb/src/ui/dashboard.dart';
 import 'package:myfhb/src/ui/settings/MySettings.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
+import 'package:provider/provider.dart';
 
 import '../add_address/screens/add_address_screen.dart';
 import '../add_family_otp/screens/add_family_otp_screen.dart';
@@ -30,11 +33,6 @@ import '../feedback/Feedbacks.dart';
 import '../feedback/FeedbacksSucess.dart';
 import '../my_family/screens/MyFamily.dart';
 import '../my_family_detail/screens/my_family_detail_screen.dart';
-import '../telehealth/features/MyProvider/view/TelehealthProviders.dart';
-
-import 'package:myfhb/device_integration/view/screens/Show_Devices.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:provider/provider.dart';
 
 setRouter(List<CameraDescription> listOfCameras) async {
   var firstCamera = listOfCameras[0];
@@ -63,9 +61,8 @@ setRouter(List<CameraDescription> listOfCameras) async {
           arguments: ModalRoute.of(context).settings.arguments,
           toPreviousScreen: false,
         ),
-    router.rt_TakePicture: (BuildContext context) => TakePictureScreen(
-          camera: firstCamera,
-        ),
+    router.rt_TakePicture: (BuildContext context) =>
+        TakePictureScreen(camera: firstCamera),
     router.rt_TakePictureForDevices: (BuildContext context) =>
         TakePictureScreenForDevices(cameras: listOfCameras),
     router.rt_ConfirmLocation: (BuildContext context) => ConfirmLocationScreen(

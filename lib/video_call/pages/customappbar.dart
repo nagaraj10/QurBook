@@ -47,14 +47,6 @@ class _CustomAppBarState extends State<CustomAppBar> {
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           //todo this has to be uncomment in future
-//                      SizedBox(
-//                        width: 10,
-//                      ),
-//                      Icon(
-//                        Icons.mic,
-//                        color: Colors.white,
-//                        size: 20,
-//                      ),
                         ],
                       ),
                       TikTikTimer(
@@ -65,9 +57,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         timerTextStyle:
                             TextStyle(color: Colors.white, fontSize: 12),
                         isRaised: false,
-                        tracetime: (time) {
-                          // print(time.getCurrentSecond);
-                        },
+                        tracetime: (time) {},
                       ),
                     ],
                   ),

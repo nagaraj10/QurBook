@@ -289,6 +289,7 @@ const String strAddVoiceNote = 'Add voice note';
 const String strDownloadStart = 'Download Started';
 const String strFilesDownloaded = 'All Files are downloaded, view in Gallery';
 const String strFilesView = 'File downloaded, view in Gallery';
+const String strFilesErrorDownload = 'Error in File download.';
 const String strAfter = 'After';
 const String strDateFormatDay = 'dd/MM/yyyy';
 

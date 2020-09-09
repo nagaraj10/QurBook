@@ -1,3 +1,5 @@
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 class Notes {
   Notes({
     this.mediaMetaId,
@@ -6,13 +8,15 @@ class Notes {
   String mediaMetaId;
 
   Notes.fromJson(Map<String, dynamic> json) {
-    mediaMetaId = json["mediaMetaId"]==null?null:json["mediaMetaId"];
+    mediaMetaId = json[parameters.strmediaMetaId] == null
+        ? null
+        : json[parameters.strmediaMetaId];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     {
-      data["mediaMetaId"] = this.mediaMetaId;
+      data[parameters.strmediaMetaId] = this.mediaMetaId;
       return data;
     }
   }

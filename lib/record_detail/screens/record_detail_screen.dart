@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +27,7 @@ import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/record_detail/bloc/deleteRecordBloc.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/screens/record_info_card.dart';
+import 'package:myfhb/record_detail/services/downloadmultipleimages.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
@@ -384,7 +386,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   void saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
     //check the storage permission for both android and ios!
     //request gallery permission
-    String albumName = 'Media';
+    String albumName = 'myfhb';
     bool downloadStatus = false;
     PermissionStatus storagePermission = Platform.isAndroid
         ? await Permission.storage.status
@@ -400,6 +402,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
     ));
 
+    
     if (ispdfPresent) {
       print('audioPath' + pdfFile);
       await ImageGallerySaver.saveFile(pdfFile).then((res) {
@@ -409,38 +412,31 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       });
     } else {
       if (imagesPathMain.length > 1) {
-        for (int i = 0; i < imagesPathMain.length; i++) {
-          _currentImage = imagesPathMain[i];
-          CommonUtil.downloadFile(_currentImage.response.data.fileContent,
-                  _currentImage.response.data.fileType)
-              .then((filePath) async {
-            await ImageGallerySaver.saveFile(filePath.path).then((res) {
-              if (i == imagesPathMain.length - 1) {
-                setState(() {
-                  downloadStatus = true;
-                });
-              }
-            });
-          });
-        }
-        downloadStatus
-            ? Scaffold.of(contxt).showSnackBar(SnackBar(
-                content: const Text(variable.strFilesDownloaded),
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ))
-            : null;
+        DownloadMultipleImages(imagesPathMain).downloadFilesFromServer(contxt);
       } else {
         _currentImage = imagesPathMain[0];
-        CommonUtil.downloadFile(_currentImage.response.data.fileContent,
+        try{
+          CommonUtil.downloadFile(_currentImage.response.data.fileContent,
                 _currentImage.response.data.fileType)
             .then((filePath) async {
-          await ImageGallerySaver.saveFile(filePath.path).then((res) {
-            Scaffold.of(contxt).showSnackBar(SnackBar(
-              content: const Text(variable.strFilesDownloaded),
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-            ));
+          GallerySaver.saveImage(filePath.path, albumName: 'myfhb')
+              .then((value) {
+            if (value) {
+              Scaffold.of(contxt).showSnackBar(SnackBar(
+                content: const Text(variable.strFilesView),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+              ));
+            } else {
+              Scaffold.of(contxt).showSnackBar(SnackBar(
+                content: const Text(variable.strFilesErrorDownload),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+              ));
+            }
           });
         });
+        }catch(e){
+          print('$e exception thrown');
+        }
       }
     }
   }

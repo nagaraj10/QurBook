@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
@@ -35,7 +36,7 @@ class _CallPageState extends State<CallPage> {
   final _infoStrings = <String>[];
 
   ///create method channel for on going NS for call
-  static const platform = const MethodChannel('ongoing_ns.channel');
+  static const platform = const MethodChannel(parameters.ongoing_channel);
 
   @override
   void dispose() {
@@ -63,16 +64,17 @@ class _CallPageState extends State<CallPage> {
   }
 
   cancelOnGoingNS() async {
-    await platform.invokeMethod("startOnGoingNS", {'mode': 'stop'});
+    await platform.invokeMethod(
+        parameters.startOnGoingNS, {parameters.mode: parameters.stop});
   }
 
   Future<void> initialize() async {
     if (APP_ID.isEmpty) {
       setState(() {
         _infoStrings.add(
-          'APP_ID missing, please provide your APP_ID in settings.dart',
+          parameters.appid_missing,
         );
-        _infoStrings.add('Agora Engine is not starting');
+        _infoStrings.add(parameters.agora_not_starting);
       });
       return;
     }
@@ -87,7 +89,8 @@ class _CallPageState extends State<CallPage> {
         .then((value) async {
       //todo name has to be change with dynamic
 
-      await platform.invokeMethod("startOnGoingNS", {'mode': 'start'});
+      await platform.invokeMethod(
+          parameters.startOnGoingNS, {parameters.mode: parameters.start});
     });
   }
 
@@ -148,9 +151,15 @@ class _CallPageState extends State<CallPage> {
         if (Platform.isIOS) {
           Navigator.pop(context);
         } else {
-          Get.offAll(TelehealthProviders(
-            arguments: HomeScreenArguments(selectedIndex: 0),
-          ));
+          if (widget.isAppExists) {
+            Navigator.pop(context);
+          } else {
+            //   Get.offAll(TelehealthProviders(
+            //   arguments: HomeScreenArguments(selectedIndex: 0),
+            // ));
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                '/', (Route<dynamic> route) => false);
+          }
         }
       });
     };

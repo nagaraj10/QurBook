@@ -299,7 +299,15 @@ const String Appointments_chatImage = 'assets/navicons/chat.png';
 const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
 const String Appointments_newAppoinmentImage =
     'assets/icons/new-appointment.svg';
+const String Appointments_slot_format='yyyy-MM-dd HH:mm:ss';
+const String Appointments_time_format="hh:mm a";
+const String STATIC_HOUR='00';
+const String ZERO='0';
+const String callBack='Completed';
+const String Appointments_days=' days';
 const String PATIENT_FOLLOW_UP = 'Patient follow up';
+const String VERIFIED='Verified';
+const String NOT_VERIFIED='Not Verified';
 
 //ICON for Device Reading widgets
 
@@ -327,3 +335,14 @@ const String glMon = "GLMon";
 const String oxyMon = "OxyMon";
 const String thMon = "THMon";
 const String wsMon = "WSMon";
+
+//// Check Internet connectivity
+const String failed_wifi = "Failed to get Wifi Name";
+const String failed_wifi_bssid = "Failed to get Wifi BSSID";
+const String failed_wifi_ip = "Failed to get Wifi IP";
+const String wifi_connected = "Wifi connected";
+const String data_connected = "Mobile data connected";
+const String no_internet_conn = "No internet connection";
+const String failed_get_conn = "Failed to get connectivity.";
+const String failed_get_connectivity = "Failed to get internet connectivity.";
+

@@ -41,7 +41,6 @@ class MyProvidersHospitalsList extends StatelessWidget {
                           fromClass: router.rt_myprovider,
                           hasData: true))
                   .then((value) {
-//                providersBloc.getMedicalPreferencesList();
                 myProviderState.refreshPage();
               });
             },
