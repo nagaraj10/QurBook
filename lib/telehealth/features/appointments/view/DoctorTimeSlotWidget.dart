@@ -47,18 +47,24 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
         Duration dur = dob1.difference(dob2);
         dys = dur.inDays;
         hours = dur.inHours >= 0 && dur.inHours <= 24
-            ? (dur.inHours.remainder(24)).round().toString().padLeft(2, Constants.ZERO)
+            ? (dur.inHours.remainder(24))
+                .round()
+                .toString()
+                .padLeft(2, Constants.ZERO)
             : Constants.STATIC_HOUR;
         min = dur.inHours >= 0 && dur.inHours <= 24
-            ? (dur.inMinutes.remainder(60)).toString().padLeft(2, Constants.ZERO)
+            ? (dur.inMinutes.remainder(60))
+                .toString()
+                .padLeft(2, Constants.ZERO)
             : Constants.STATIC_HOUR;
         setState(() {
           hour = dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
               ? Constants.STATIC_HOUR
               : hours;
-          minutes = dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
+          minutes =  dur.inHours >= 24 || int.parse(min) <=0
               ? Constants.STATIC_HOUR
               : min;
+//
           days = dys >= 0 ? dys.toString() : Constants.ZERO;
         });
       } else {
