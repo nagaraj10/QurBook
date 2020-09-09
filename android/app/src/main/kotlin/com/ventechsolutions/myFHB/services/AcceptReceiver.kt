@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import androidx.core.app.NotificationManagerCompat
 import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.R
+import com.ventechsolutions.myFHB.constants.Constants
 
 
 class AcceptReceiver:BroadcastReceiver() {
@@ -28,7 +29,7 @@ class AcceptReceiver:BroadcastReceiver() {
         val pm: PackageManager = p0.packageManager
         val launchIntent = pm.getLaunchIntentForPackage(p0.packageName)
         launchIntent?.action = Intent.ACTION_SEND
-        launchIntent?.type="text/plain"
+        launchIntent?.type=Constants.TXT_PLAIN
         launchIntent?.putExtra(Intent.EXTRA_TEXT,meeting_id)
         launchIntent?.putExtra(p0.getString(R.string.username),username)
         launchIntent?.putExtra(p0.getString(R.string.docId),docId)

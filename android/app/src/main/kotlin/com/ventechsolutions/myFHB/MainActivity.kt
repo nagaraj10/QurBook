@@ -25,18 +25,20 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import android.view.WindowManager
 import androidx.multidex.BuildConfig
+import com.ventechsolutions.myFHB.constants.Constants
 import com.ventechsolutions.myFHB.services.AVServices
+import kotlin.system.exitProcess
 
 
 class MainActivity : FlutterActivity() {
-    private val VERSION_CODES_CHANNEL = "flutter.native/versioncode"
-    private val LISTEN4SMS = "flutter.native/listen4sms"
-    private val VOICE_CHANNEL = "flutter.native/voiceIntent"
-    private val TTS_CHANNEL = "flutter.native/textToSpeech"
-    private val SECURITY_CHANNEL = "flutter.native/security"
-    private val ROUTE_CHANNEL="navigation.channel"
-    private val ONGOING_NS_CHANNEL="ongoing_ns.channel"
-    val STREAM = "com.example.agoraflutterquickstart/stream"
+    private val VERSION_CODES_CHANNEL = Constants.CN_VC
+    private val LISTEN4SMS = Constants.CN_LISTEN4SMS
+    private val VOICE_CHANNEL = Constants.CN_VOICE_INTENT
+    private val TTS_CHANNEL = Constants.CN_TTS
+    private val SECURITY_CHANNEL = Constants.CN_SECURE
+    private val ROUTE_CHANNEL=Constants.CN_ROUTE
+    private val ONGOING_NS_CHANNEL=Constants.CN_ONG_NS
+    private val STREAM = Constants.CN_EVE_STREAM
     private var sharedValue: String? = null
     private var username: String? = null
     private var docId: String? = null
@@ -47,8 +49,8 @@ class MainActivity : FlutterActivity() {
     private var voiceText = ""
     private var langSource: String? = null
     private var langDest: String? = null
-    private var FromLang = "en"
-    private var ToLang = "ta"
+    private var FromLang = Constants.FROM_LANG
+    private var ToLang = Constants.TO_LANG
     private var ResultEN: String? = null
     private var ResultDest: String? = null
     var lang_list = arrayOf("English", "Tamil", "Telugu", "Hindi")
@@ -61,17 +63,17 @@ class MainActivity : FlutterActivity() {
     //internal var smsBroadcastReceiver: SMSBroadcastReceiver? = null
 
     private val smsBroadcastReceiver by lazy { SMSBroadcastReceiver() }
-    internal var TAG = this@MainActivity::class.toString()
     private val SMS_CONSENT_REQUEST = 2  // Set to an unused request code
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //todo this must be un command when go to production
         //this.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
 
         val action = intent.action
         val type = intent.type
         if (Intent.ACTION_SEND == action && type != null) {
-            if ("text/plain" == type) {
+            if (Constants.TXT_PLAIN == type) {
                 handleSendText(intent); // Handle text being sent
             }
         }
@@ -92,14 +94,13 @@ class MainActivity : FlutterActivity() {
 
         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
             if (status != TextToSpeech.ERROR) {
-                tts!!.language = Locale("en_US")
+                tts!!.language = Locale(Constants.EN_US)
             }
 
         })
 
         val appSignatureHelper = AppSignatureHelper(applicationContext)
-        appSignatureHelper.appSignatures;
-        Log.v("App signature fm native","${appSignatureHelper.appSignatures}");
+        appSignatureHelper.appSignatures
 
         val smsVerificationReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context, intent: Intent) {
@@ -129,7 +130,7 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ROUTE_CHANNEL).setMethodCallHandler { call, result ->
             try {
-                if(call.method!!.contentEquals("getMyRoute")){
+                if(call.method!!.contentEquals(Constants.FUN_GET_MY_ROUTE)){
                     result.success(sharedValue)
                     sharedValue=null
                 }else {
@@ -143,8 +144,8 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ONGOING_NS_CHANNEL).setMethodCallHandler { call, result ->
             try {
-                if(call.method!!.contentEquals("startOnGoingNS")){
-                    val passedMode = call.argument<String>("mode")
+                if(call.method!!.contentEquals(Constants.FUN_ONG_NS)){
+                    val passedMode = call.argument<String>(Constants.PROP_MODE)
                     startOnGoingNS(username!!,passedMode!!)
                 }else {
                     result.notImplemented()
@@ -168,7 +169,7 @@ class MainActivity : FlutterActivity() {
 
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VERSION_CODES_CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "getAppVersion") {
+            if (call.method == Constants.FUN_APP_VERSION) {
                 //logics to get version code
                 val appVersion = getAppVersion();
                 result.success(appVersion);
@@ -178,7 +179,7 @@ class MainActivity : FlutterActivity() {
         }
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, LISTEN4SMS).setMethodCallHandler { call, result ->
-            if (call.method == "listenForSMS") {
+            if (call.method == Constants.FUN_LISTEN_SMS) {
                 listenForSMS()
             } else {
                 result.notImplemented()
@@ -187,7 +188,7 @@ class MainActivity : FlutterActivity() {
 
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SECURITY_CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "secureMe") {
+            if (call.method == Constants.FUN_KEY_GAURD) {
                 //logics to show security methods
                 _securityResult=result
                 secureMe()
@@ -199,18 +200,9 @@ class MainActivity : FlutterActivity() {
 
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VOICE_CHANNEL).setMethodCallHandler { call, result ->
-            if (call.method == "speakWithVoiceAssistant") {
+            if (call.method == Constants.FUN_VOICE_ASST) {
                 _result=result
-//                val rec_Permisson = ContextCompat.checkSelfPermission(this,android.Manifest.permission.RECORD_AUDIO)
-////                if(rec_Permisson==PackageManager.PERMISSION_GRANTED && tts?.isSpeaking()!=true){
-////                    speakWithVoiceAssistant()
-////                    //result.success(voiceText)
-////                }else{
-////                    Log.i("RECORD_PERMISSION","we cant record without your permission.")
-////                    requestPermissionFromUSer()
-////                }
                 speakWithVoiceAssistant()
-
             } else {
                 result.notImplemented()
             }
@@ -218,9 +210,9 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger,TTS_CHANNEL).setMethodCallHandler{ call, result ->
             _TTSResult=result
-            if(call.method=="textToSpeech"){
-                val msg = call.argument<String>("message")
-                val iscls = call.argument<Boolean>("isClose")
+            if(call.method==Constants.FUN_TEXT2SPEECH){
+                val msg = call.argument<String>(Constants.PROP_MSG)
+                val iscls = call.argument<Boolean>(Constants.PROP_IS_CLOSE)
                 textToSpeech(msg!!,iscls!!)
             }else{
                 result.notImplemented()
@@ -229,11 +221,11 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun startOnGoingNS(name:String,mode:String){
-        if(mode == "start"){
+        if(mode == Constants.PROP_START){
             val serviceIntent = Intent(this, AVServices::class.java)
-            serviceIntent.putExtra("name",name)
+            serviceIntent.putExtra(Constants.PROP_NAME,name)
             startService(serviceIntent)
-        }else if(mode=="stop"){
+        }else if(mode==Constants.PROP_STOP){
             val serviceIntent = Intent(this, AVServices::class.java)
             stopService(serviceIntent)
         }
@@ -245,32 +237,20 @@ class MainActivity : FlutterActivity() {
         docId = intent.getStringExtra(getString(R.string.docId))
         docPic= intent.getStringExtra(getString(R.string.docPic))
         if(sharedValue!=null && username !=null && docId!=null && docPic !=null){
-            sharedValue="$sharedValue&$username&$docId&$docPic&call"
+            sharedValue="$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}"
         }else{
-            sharedValue="ack"
+            sharedValue=Constants.PROP_ACK
         }
         if (::mEventChannel.isInitialized){mEventChannel.success(sharedValue)}
-        Log.d(TAG, "passed text from intent filter ${sharedValue!!}")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.i(TAG, "onStart: invoked")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.i(TAG, "onResume: invoked")
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        Log.i(TAG, "onNewIntent: invoked")
         val action = intent.action
         val type = intent.type
         if (Intent.ACTION_SEND == action && type != null) {
-            if ("text/plain" == type) {
+            if (Constants.TXT_PLAIN == type) {
                 handleSendText(intent); // Handle text being sent
             }
         }
@@ -278,7 +258,6 @@ class MainActivity : FlutterActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(TAG, "onDestroy: invoked")
         val serviceIntent = Intent(this, AVServices::class.java)
         stopService(serviceIntent)
     }
@@ -289,8 +268,8 @@ class MainActivity : FlutterActivity() {
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
         GetSrcTargetLanguages()
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en_US")
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Need to speak")
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Constants.EN_US)
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
         try {
             startActivityForResult(intent, REQ_CODE)
@@ -316,7 +295,7 @@ class MainActivity : FlutterActivity() {
             //if successfully started, then start the receiver.
             //registerReceiver(smsBroadcastReceiver, IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
 
-            Toast.makeText(this@MainActivity,"Listener started", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@MainActivity,"Listener started", Toast.LENGTH_SHORT).show()
 
             val otpListener = object : SMSBroadcastReceiver.OTPListener {
                 override fun onOTPReceived(otp: String) {
@@ -325,7 +304,7 @@ class MainActivity : FlutterActivity() {
                 }
 
                 override fun onOTPTimeOut() {
-                    Toast.makeText(this@MainActivity,"TimeOut", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this@MainActivity,"TimeOut", Toast.LENGTH_SHORT).show()
                 }
             }
             smsBroadcastReceiver.injectOTPListener(otpListener)
@@ -334,7 +313,7 @@ class MainActivity : FlutterActivity() {
 
 
         task.addOnFailureListener {
-            Toast.makeText(this@MainActivity,"Problem to start listener", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this@MainActivity,"Problem to start listener", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -343,13 +322,16 @@ class MainActivity : FlutterActivity() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             val km: KeyguardManager = getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure()) {
-                val authIntent: Intent = km.createConfirmDeviceCredentialIntent("myFHB", "Please Authorize to use the Application")
+                //user has set pin/password/pattern
+                val authIntent: Intent = km.createConfirmDeviceCredentialIntent(Constants.KEY_GAURD_TITLE, Constants.KEY_GAURD_TITLE_DESC)
                 startActivityForResult(authIntent, INTENT_AUTHENTICATE)
             }else{
+                //user has not enabled any password/pin/pattern
                 _securityResult.success(1004)
                 return
             }
         }else{
+            //there is no key guard feature below Android 5.0
             _securityResult.success(1000)
             return
         }
@@ -367,21 +349,12 @@ class MainActivity : FlutterActivity() {
 
         tts!!.setOnUtteranceProgressListener(object : UtteranceProgressListener(){
             override fun onDone(p0: String?) {
-                //Toast.makeText(context,"listening Done",Toast.LENGTH_LONG).show()
-                Log.d("Message","listening Done")
                 runOnUiThread(Runnable { _TTSResult.success(1) })
-
             }
 
-            override fun onError(p0: String?) {
-                Log.d("Message","listening Error")
-                //runOnUiThread(Runnable { _TTSResult.success(-1) })
-            }
+            override fun onError(p0: String?) {}
 
-            override fun onStart(p0: String?) {
-                //runOnUiThread(Runnable { _TTSResult.success(0) })
-                Log.d("Message","listening start")
-            }
+            override fun onStart(p0: String?) {}
 
         })
 
@@ -399,11 +372,11 @@ class MainActivity : FlutterActivity() {
     }
 
     fun GetSrcTargetLanguages() {
-        langSource = "en_US"
+        langSource = Constants.EN_US
 //        var fl = spinFromLang!!.selectedItem.toString()
 //        var pos = findString(lang_list, fl)
 //        if (pos != -1) langSource = lang_ref[pos]
-        langDest = "en_US"
+        langDest = Constants.EN_US
 //        fl = spinToLang!!.selectedItem.toString()
 //        pos = findString(lang_list, fl)
 //        if (pos != -1) langDest = lang_ref[pos]
@@ -427,7 +400,9 @@ class MainActivity : FlutterActivity() {
                 if (resultCode == Activity.RESULT_OK) {
                     _securityResult.success(1002)
                 }else{
-                    _securityResult.success(1003)
+                    //_securityResult.success(1003)
+                    finishAffinity()
+                    exitProcess(0)
                 }
             }
             /*SMS_CONSENT_REQUEST ->

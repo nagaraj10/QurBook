@@ -23,12 +23,4 @@ class AutoDismissNotification : BroadcastReceiver() {
         val alarmPendingIntent = PendingIntent.getBroadcast(context, notificationId, alarmIntent, PendingIntent.FLAG_ONE_SHOT)
         alarmMgr.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + time, alarmPendingIntent)
     }
-
-    fun cancelAlarm(context: Context, notificationId: Int) {
-        val alarmIntent = Intent(context, AutoDismissNotification::class.java)
-        alarmIntent.putExtra(context.getString(R.string.nsid), notificationId)
-        val alarmPendingIntent = PendingIntent.getBroadcast(context, notificationId, alarmIntent, PendingIntent.FLAG_ONE_SHOT)
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.cancel(alarmPendingIntent)
-    }
 }

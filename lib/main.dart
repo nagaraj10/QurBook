@@ -174,8 +174,9 @@ class _MyFHBState extends State<MyFHB> {
       });
     }
 
-    ////    gettingResponseFromNative();
-////    showSecurityWall();
+    //gettingResponseFromNative();
+    ///un comment this while on production mode for enabling security.
+    //showSecurityWall();
 
     initConnectivity();
     _connectivitySubscription =
@@ -302,12 +303,6 @@ class _MyFHBState extends State<MyFHB> {
     try {
       final int RESULT_CODE =
           await secure_platform.invokeMethod(variable.strSecure);
-      switch (RESULT_CODE) {
-        case 1003:
-          //todo authorized unsuccessfull
-          SystemChannels.platform.invokeMethod<void>(variable.strpop);
-          break;
-      }
     } on PlatformException catch (e, s) {}
   }
 

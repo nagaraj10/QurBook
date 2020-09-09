@@ -11,10 +11,11 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.ventechsolutions.myFHB.MainActivity
 import com.ventechsolutions.myFHB.R
+import com.ventechsolutions.myFHB.constants.Constants
 
 class AVServices : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val input = intent.getStringExtra("name")
+        val input = intent.getStringExtra(getString(R.string.arg_name))
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT)
@@ -32,11 +33,10 @@ class AVServices : Service() {
                 .setContentText(input)
                 .setSmallIcon(R.mipmap.app_ns_icon)
                 .setContentIntent(pendingIntent)
-                .setTicker("Ticker values")
+                .setTicker(Constants.TICKER)
                 .setUsesChronometer(true)
                 .build()
         startForeground(1, notification)
-        //stopSelf();
         return START_NOT_STICKY
     }
 

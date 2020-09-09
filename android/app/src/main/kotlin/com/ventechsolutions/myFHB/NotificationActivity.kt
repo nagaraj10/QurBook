@@ -11,6 +11,7 @@ import android.view.WindowManager.LayoutParams.*
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
+import com.ventechsolutions.myFHB.constants.Constants
 
 class NotificationActivity : AppCompatActivity() {
     private val TAG = "NotificationActivity"
@@ -24,7 +25,10 @@ class NotificationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_notification)
         setupActivity()
         val tv = findViewById<TextView>(R.id.recipient_name_tv)
-        tv.text = "${intent.getStringExtra(UNAME)}"
+        val profile_pic = findViewById<TextView>(R.id.profile_dp)
+        val callerName = "${intent.getStringExtra(UNAME)}"
+        tv.text = callerName
+        profile_pic.text = callerName[0].toString()
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val nsID:Int=intent.getIntExtra(NS_ID,0)
         nsManager.cancel(nsID)
@@ -57,7 +61,7 @@ class NotificationActivity : AppCompatActivity() {
         val pm: PackageManager = packageManager
         val launchIntent = pm.getLaunchIntentForPackage(packageName)
         launchIntent?.action = Intent.ACTION_SEND
-        launchIntent?.type="text/plain"
+        launchIntent?.type=Constants.TXT_PLAIN
         launchIntent?.putExtra(Intent.EXTRA_TEXT,channelName)
         launchIntent?.putExtra(getString(R.string.username),username)
         launchIntent?.putExtra(getString(R.string.docId),docId)
