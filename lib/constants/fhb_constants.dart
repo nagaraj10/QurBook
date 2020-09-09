@@ -335,3 +335,14 @@ const String glMon = "GLMon";
 const String oxyMon = "OxyMon";
 const String thMon = "THMon";
 const String wsMon = "WSMon";
+
+//// Check Internet connectivity
+const String failed_wifi = "Failed to get Wifi Name";
+const String failed_wifi_bssid = "Failed to get Wifi BSSID";
+const String failed_wifi_ip = "Failed to get Wifi IP";
+const String wifi_connected = "Wifi connected";
+const String data_connected = "Mobile data connected";
+const String no_internet_conn = "No internet connection";
+const String failed_get_conn = "Failed to get connectivity.";
+const String failed_get_connectivity = "Failed to get internet connectivity.";
+

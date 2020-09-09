@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/video_call/model/CallArguments.dart';
 
 class PushNotificationsProvider {
@@ -21,14 +21,14 @@ class PushNotificationsProvider {
 
   static Future<dynamic> onBackgroundMessage(
       Map<String, dynamic> message) async {
-    if (message.containsKey('data')) {
+    if (message.containsKey(parameters.data)) {
       // Handle data message
-      final dynamic data = message['data'];
+      final dynamic data = message[parameters.data];
     }
 
-    if (message.containsKey('notification')) {
+    if (message.containsKey(parameters.notification)) {
       // Handle notification message
-      final dynamic notification = message['notification'];
+      final dynamic notification = message[parameters.notification];
     }
 
     // Or do other work.
@@ -37,7 +37,7 @@ class PushNotificationsProvider {
   initNotification() async {
     await _firebaseMessaging.requestNotificationPermissions();
     final token = await _firebaseMessaging.getToken();
-    print('Token : $token');
+    print('${parameters.token} : $token');
 
     initLocalNotification();
 
@@ -51,7 +51,7 @@ class PushNotificationsProvider {
   initLocalNotification() {
     // Local Notification
     flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    var android = new AndroidInitializationSettings('@mipmap/ic_launcher');
+    var android = new AndroidInitializationSettings(parameters.launcher);
     var iOS = new IOSInitializationSettings();
     var initSetttings = new InitializationSettings(android, iOS);
     flutterLocalNotificationsPlugin.initialize(initSetttings,
@@ -60,9 +60,9 @@ class PushNotificationsProvider {
 
   showLocalNotification() async {
     var android = new AndroidNotificationDetails(
-      'channel id',
-      'channel NAME',
-      'CHANNEL DESCRIPTION',
+      parameters.channel_id,
+      parameters.channel_name,
+      parameters.channel_descrip,
       priority: Priority.High,
       importance: Importance.Max,
     );
@@ -70,25 +70,23 @@ class PushNotificationsProvider {
     var iOS = new IOSNotificationDetails(sound: ringtone);
     var platform = new NotificationDetails(android, iOS);
     await flutterLocalNotificationsPlugin.show(0, title, body, platform,
-        payload: 'Custom_Sound');
+        payload: parameters.custom_sound);
   }
 
   Future onSelectNotification(String payload) {
-    debugPrint("payload : $payload");
-
     _pushStreamCOntroller.sink.add(callArguments);
   }
 
   Future<dynamic> onMessage(Map<String, dynamic> message) async {
     print("OnMessage New: $message");
 
-    title = message['aps']['alert']['title'];
-    body = message['aps']['alert']['body'];
-    ringtone = message['aps']['sound'];
+    title = message[parameters.aps][parameters.alert][parameters.title];
+    body = message[parameters.aps][parameters.alert][parameters.body];
+    ringtone = message[parameters.aps][parameters.sound];
 
-    final userName = message['username'];
-    final channelName = message['meeting_id'];
-    final doctorId = message['doctorId'];
+    final userName = message[parameters.username];
+    final channelName = message[parameters.meeting_id];
+    final doctorId = message[parameters.doctorId];
 
     callArguments = CallArguments(
         role: ClientRole.Broadcaster,
@@ -100,12 +98,12 @@ class PushNotificationsProvider {
   }
 
   Future<dynamic> onLaunch(Map<String, dynamic> message) async {
-    print("OnLaunch New: $message");
+    print("${parameters.onlaunch}: $message");
 
     Future.delayed(const Duration(seconds: 5), () {
-      final userName = message['username'];
-      final channelName = message['meeting_id'];
-      final doctorId = message['doctorId'];
+      final userName = message[parameters.username];
+      final channelName = message[parameters.meeting_id];
+      final doctorId = message[parameters.doctorId];
 
       var callArguments = CallArguments(
           role: ClientRole.Broadcaster,
@@ -117,10 +115,11 @@ class PushNotificationsProvider {
   }
 
   Future<dynamic> onResume(Map<String, dynamic> message) async {
-    print("OnResume New: $message");
-    final userName = message['username'];
-    final channelName = message['meeting_id'];
-    final doctorId = message['doctorId'];
+    print("${parameters.onresume}: $message");
+
+    final userName = message[parameters.username];
+    final channelName = message[parameters.meeting_id];
+    final doctorId = message[parameters.doctorId];
 
     var callArguments = CallArguments(
         role: ClientRole.Broadcaster,

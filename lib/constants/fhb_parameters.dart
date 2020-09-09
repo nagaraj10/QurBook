@@ -488,3 +488,36 @@ const String strIsFollowUpFee="isFollowUpFee";
 const String strAppointmentInfo="appointmentInfo";
 const String strPlannedFollowupDate="plannedFollowupDate";
 const String strPaymentInfo="paymentInfo";
+//Add Family User Info
+const String make_a_choice = 'Make a Choice!';
+
+// Video call
+const String onresume = 'OnResume New';
+const String onlaunch = 'OnLaunch New';
+const String username = 'username';
+const String meeting_id = 'meeting_id';
+const String doctorId = 'doctorId';
+const String aps = 'aps';
+const String alert = 'alert';
+const String title = 'title';
+const String body = 'body';
+const String sound = 'sound';
+const String custom_sound = 'Custom_Sound';
+const String channel_id = 'channel id';
+const String channel_name = 'channel NAME';
+const String channel_descrip = 'channel DESCRIPTION';
+const String launcher = '@mipmap/ic_launcher';
+const String data = 'data';
+const String notification = 'notification';
+const String token = 'Token';
+const String ongoing_channel = 'ongoing_ns.channel';
+const String startOnGoingNS = 'startOnGoingNS';
+const String mode = 'mode';
+const String start = 'start';
+const String stop = 'stop';
+const String appid_missing =
+    'APP_ID missing, please provide your APP_ID in settings.dart';
+const String agora_not_starting = 'Agora Engine is not starting';
+const String exit_call = 'Do you want exit from call?';
+const String Yes = 'Yes';
+const String No = 'No';

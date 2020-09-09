@@ -1,15 +1,10 @@
 import 'dart:io';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
@@ -26,8 +21,16 @@ class MyControllers extends StatefulWidget {
   String doctorName;
   String doctorPicUrl;
 
-  MyControllers(this.callStatus, this.role, this.isAppExists, this.doctorId,
-      this.controllerState, this.muted, this._isHideMyVideo, this.doctorName,this.doctorPicUrl);
+  MyControllers(
+      this.callStatus,
+      this.role,
+      this.isAppExists,
+      this.doctorId,
+      this.controllerState,
+      this.muted,
+      this._isHideMyVideo,
+      this.doctorName,
+      this.doctorPicUrl);
 
   @override
   _MyControllersState createState() => _MyControllersState();
@@ -76,8 +79,8 @@ class _MyControllersState extends State<MyControllers> {
           ),
           IconButton(
             onPressed: () {
-                chatViewModel.storePatientDetailsToFCM(widget.doctorId, widget.doctorName,
-                    widget.doctorPicUrl, context);
+              chatViewModel.storePatientDetailsToFCM(widget.doctorId,
+                  widget.doctorName, widget.doctorPicUrl, context);
             },
             icon: Icon(
               Icons.chat_bubble_outline,
@@ -85,20 +88,10 @@ class _MyControllersState extends State<MyControllers> {
               size: 20.0,
             ),
           ),
-//          IconButton(
-//            onPressed: null,
-//            icon: Icon(
-//              Icons.attach_file,
-//              color: Colors.white,
-//              size: 20.0,
-//            ),
-//          ),
           Container(
             color: Colors.redAccent,
             child: IconButton(
               onPressed: () {
-//                  callStatus.enCall();
-//                  iCallStatus.callNotAlive();
                 _onCallEnd(context);
               },
               icon: Icon(
@@ -118,9 +111,12 @@ class _MyControllersState extends State<MyControllers> {
     if (Platform.isIOS) {
       Navigator.pop(context);
     } else {
-      Get.offAll(TelehealthProviders(
-        arguments: HomeScreenArguments(selectedIndex: 0),
-      ));
+      if (widget.isAppExists) {
+        Navigator.pop(context);
+      } else {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+      }
     }
   }
 
