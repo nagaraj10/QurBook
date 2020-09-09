@@ -198,16 +198,14 @@ class _MyFHBState extends State<MyFHB> {
           arguments: HomeScreenArguments(selectedIndex: 0),
         ));
       } else if (passedValArr[4] == 'call') {
-        doctorPic = passedValArr[3];
-        if (doctorPic.isNotEmpty) {
-          try {
+        try {
+          doctorPic = passedValArr[3];
+          if (doctorPic.isNotEmpty) {
             doctorPic = json.decode(doctorPic);
-          } catch (e) {
-            //doctorPic=
+          } else {
+            doctorPic = '';
           }
-        } else {
-          doctorPic = '';
-        }
+        } catch (e) {}
         Get.to(CallMain(
           doctorName: passedValArr[1],
           doctorId: passedValArr[2],
@@ -263,16 +261,7 @@ class _MyFHBState extends State<MyFHB> {
             primaryColor: Color(myPrimaryColor),
             accentColor: Colors.white,
           ),
-          home: navRoute.isEmpty
-              ? SplashScreen()
-              : CallMain(
-                  isAppExists: false,
-                  role: ClientRole.Broadcaster,
-                  channelName: navRoute.split('&')[0],
-                  doctorName: navRoute.split('&')[1] ?? 'Test',
-                  doctorId: navRoute.split('&')[2] ?? 'Doctor',
-                  doctorPic: json.decode(navRoute.split('&')[3]) ?? '',
-                ),
+          home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
           routes: routes,
           debugShowCheckedModeBanner: false,
           navigatorKey: Get.key,
@@ -306,5 +295,24 @@ class _MyFHBState extends State<MyFHB> {
           break;
       }
     } on PlatformException catch (e, s) {}
+  }
+
+  Widget StartTheCall() {
+    var docPic = navRoute.split('&')[3];
+    try {
+      if (docPic.isNotEmpty) {
+        docPic = json.decode(navRoute.split('&')[3]);
+      } else {
+        docPic = '';
+      }
+    } catch (e) {}
+    return CallMain(
+      isAppExists: false,
+      role: ClientRole.Broadcaster,
+      channelName: navRoute.split('&')[0],
+      doctorName: navRoute.split('&')[1] ?? 'Test',
+      doctorId: navRoute.split('&')[2] ?? 'Doctor',
+      doctorPic: docPic,
+    );
   }
 }
