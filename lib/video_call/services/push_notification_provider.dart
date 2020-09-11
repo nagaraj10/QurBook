@@ -30,7 +30,6 @@ class PushNotificationsProvider {
       // Handle notification message
       final dynamic notification = message[parameters.notification];
     }
-
     // Or do other work.
   }
 
@@ -39,7 +38,7 @@ class PushNotificationsProvider {
     final token = await _firebaseMessaging.getToken();
     print('${parameters.token} : $token');
 
-    initLocalNotification();
+    // initLocalNotification();
 
     _firebaseMessaging.configure(
         onMessage: onMessage,
@@ -94,6 +93,7 @@ class PushNotificationsProvider {
         userName: userName,
         doctorId: doctorId);
 
+    initLocalNotification();
     showLocalNotification();
   }
 
