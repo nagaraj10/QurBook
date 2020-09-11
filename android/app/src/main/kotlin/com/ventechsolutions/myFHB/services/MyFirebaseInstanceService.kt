@@ -65,13 +65,18 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     private fun createNotification4Call(data:Map<String, String> = HashMap()){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = 9090
-        val MEETING_ID = data[getString(R.string.meetid)]
+        var MEETING_ID = data[getString(R.string.meetid)]
         val USER_NAME = data[getString(R.string.username)]
         val DOC_ID = data[getString(R.string.docId)]
         val DOC_PIC = data[getString(R.string.docPic)]
         val NS_TIMEOUT = 30 * 1000L
         val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
 
+        if(MyApp.recordId.isEmpty()){
+            MyApp.recordId = MEETING_ID!!
+        }else{
+            MyApp.recordId = ""
+        }
 
         val declineIntent = Intent(applicationContext, DeclineReciver::class.java)
         declineIntent.putExtra(getString(R.string.nsid), NS_ID)
