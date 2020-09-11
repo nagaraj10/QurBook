@@ -51,12 +51,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     companion object {
         private const val TAG = "MyFirebaseInstanceIDSer"
-
     }
-
+    
     private fun createNotification(title:String="", body:String="", data:Map<String, String> = HashMap()) {
         //todo segregate the NS according their type
         val NS_TYPE=data[getString(R.string.type).toLowerCase()]
+        var MEETING_ID = data[getString(R.string.meetid)]
+        MyApp.recordId = MEETING_ID!!
         when(NS_TYPE){
             getString(R.string.ns_type_call)->createNotification4Call(data)
             getString(R.string.ns_type_ack)->createNotification4Ack(data)
@@ -73,12 +74,6 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val DOC_PIC = data[getString(R.string.docPic)]
         val NS_TIMEOUT = 30 * 1000L
         val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
-
-        if(MyApp.recordId.isEmpty()){
-            MyApp.recordId = MEETING_ID!!
-        }else{
-            MyApp.recordId = ""
-        }
 
         //listen for doctor event
         listenEvent(id =MEETING_ID!!,nsId =NS_ID)

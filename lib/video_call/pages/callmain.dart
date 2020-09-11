@@ -157,8 +157,10 @@ class CallMain extends StatelessWidget {
                             Navigator.of(context);
                           } else {
                             if (isAppExists) {
+                              Navigator.of(context).pop(true);
                               Navigator.pop(context);
                             } else {
+                              Navigator.of(context).pop(true);
                               Navigator.of(context).pushNamedAndRemoveUntil(
                                   '/splashscreen',
                                   (Route<dynamic> route) => false);
