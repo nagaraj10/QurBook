@@ -12,7 +12,10 @@ import android.view.WindowManager.LayoutParams.*
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
+import com.google.firebase.firestore.FirebaseFirestore
 import com.ventechsolutions.myFHB.constants.Constants
+import com.ventechsolutions.myFHB.services.MyFirebaseInstanceService
+import java.lang.Exception
 
 class NotificationActivity : AppCompatActivity() {
     private val TAG = "NotificationActivity"
@@ -37,7 +40,31 @@ class NotificationActivity : AppCompatActivity() {
         username=intent.getStringExtra(getString(R.string.username))
         docId=intent.getStringExtra(getString(R.string.docId))
         docPic=intent.getStringExtra(getString(R.string.docPic))
+        listenEvent(id=channelName)
 
+    }
+
+    private fun listenEvent(id:String){
+        try {
+            val docRef = FirebaseFirestore.getInstance().collection("call_log").document(id)
+            docRef.addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d(TAG, "Current data: ${snapshot.data}")
+                    if(snapshot.data?.get("call_status") =="call_ended_by_user"){
+                        finish()
+                    }
+                } else {
+                    Log.d(TAG, "Current data: null")
+                }
+            }
+        }catch (e: Exception){
+            print("${e.message} was thrown")
+        }
     }
 
 
