@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager.LayoutParams.*
 import android.widget.TextView
@@ -53,11 +54,15 @@ class NotificationActivity : AppCompatActivity() {
 
     fun decline(v: View?) {
         MyApp.isMissedNSShown=false
+        MyApp().updateStatus(false)
+        MyApp.recordId = ""
         finish()
     }
 
     fun accept(v: View?) {
         MyApp.isMissedNSShown=false
+        MyApp().updateStatus(true)
+        MyApp.recordId = ""
         val pm: PackageManager = packageManager
         val launchIntent = pm.getLaunchIntentForPackage(packageName)
         launchIntent?.action = Intent.ACTION_SEND
