@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -221,7 +220,9 @@ class _AppointmentsState extends State<Appointments> {
                         height: 10,
                       ),
                       (appointmentsData?.response?.data?.history != null &&
-                              appointmentsData?.response?.data?.history?.length > 0)
+                              appointmentsData
+                                      ?.response?.data?.history?.length >
+                                  0)
                           ? new ListView.builder(
                               physics: NeverScrollableScrollPhysics(),
                               shrinkWrap: true,
@@ -347,19 +348,38 @@ class _AppointmentsState extends State<Appointments> {
                             height: doc.specialization == null ? 30 : 40,
                           ),
                           commonWidget.count(doc.slotNumber),
-                          TextWidget(
-                            fontsize: 9,
-                            text: doc.followupDate == null
-                                ? ''
-                                : Constants.Appointments_followUpStatus,
-                            overflow: TextOverflow.visible,
-                            fontWeight: FontWeight.w400,
-                            colors: Colors.black38,
-                          ),
+                          doc.followupDate == null
+                              ?  TextWidget(
+                                      fontsize: 10,
+                                      text: doc.plannedStartDateTime == null
+                                          ? ''
+                                          :DateFormat(Constants
+                                                  .Appointments_time_format)
+                                              .format(DateTime.parse(
+                                                  doc.plannedStartDateTime))
+                                              .toString() ??
+                                          '',
+                                      fontWeight: FontWeight.w600,
+                                      colors: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                    )
+                              : TextWidget(
+                                  fontsize: 9,
+                                  text:Constants.Appointments_followUpStatus,
+                                  overflow: TextOverflow.visible,
+                                  fontWeight: FontWeight.w400,
+                                  colors: Colors.black38,
+                                ),
                           TextWidget(
                             fontsize: 10,
                             text: doc.followupDate == null
-                                ? ""
+                                ? doc.plannedStartDateTime == null
+                                    ? ""
+                                    : DateFormat.yMMMEd()
+                                            .format(DateTime.parse(
+                                                doc.plannedStartDateTime))
+                                            .toString() ??
+                                        ''
                                 : DateFormat.yMMMEd()
                                         .format(
                                             DateTime.parse(doc.followupDate))
@@ -422,12 +442,13 @@ class _AppointmentsState extends State<Appointments> {
         ));
   }
 
-  void goToChatIntegration(History doc){
+  void goToChatIntegration(History doc) {
     //chat integration start
     String doctorId = doc.doctorId;
     String doctorName = doc.doctorName;
     String doctorPic = doc.doctorPic;
-    chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
+    chatViewModel.storePatientDetailsToFCM(
+        doctorId, doctorName, doctorPic, context);
   }
 
   void moveToBilsPage(String paymentMediaMetaId) async {

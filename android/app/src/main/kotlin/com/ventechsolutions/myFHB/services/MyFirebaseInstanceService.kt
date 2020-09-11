@@ -14,11 +14,13 @@ import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ventechsolutions.myFHB.MyApp
 import com.ventechsolutions.myFHB.NotificationActivity
 import com.ventechsolutions.myFHB.R
+import java.lang.Exception
 
 
 class MyFirebaseInstanceService : FirebaseMessagingService() {
@@ -65,13 +67,21 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     private fun createNotification4Call(data:Map<String, String> = HashMap()){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = 9090
-        val MEETING_ID = data[getString(R.string.meetid)]
+        var MEETING_ID = data[getString(R.string.meetid)]
         val USER_NAME = data[getString(R.string.username)]
         val DOC_ID = data[getString(R.string.docId)]
         val DOC_PIC = data[getString(R.string.docPic)]
         val NS_TIMEOUT = 30 * 1000L
         val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
 
+        if(MyApp.recordId.isEmpty()){
+            MyApp.recordId = MEETING_ID!!
+        }else{
+            MyApp.recordId = ""
+        }
+
+        //listen for doctor event
+        listenEvent(id =MEETING_ID!!,nsId =NS_ID)
 
         val declineIntent = Intent(applicationContext, DeclineReciver::class.java)
         declineIntent.putExtra(getString(R.string.nsid), NS_ID)
@@ -136,6 +146,30 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 MyApp.isMissedNSShown=true
             }
         }.start()
+    }
+
+    private fun listenEvent(id:String,nsId:Int){
+        try {
+            val docRef = FirebaseFirestore.getInstance().collection("call_log").document(id)
+            docRef.addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && snapshot.exists()) {
+                    Log.d(TAG, "Current data: ${snapshot.data}")
+                    if(snapshot.data?.get("call_status") =="call_ended_by_user"){
+                        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+                        nsManager.cancel(nsId)
+                    }
+                } else {
+                    Log.d(TAG, "Current data: null")
+                }
+            }
+        }catch (e:Exception){
+            print("${e.message} was thrown")
+        }
     }
 
     private fun createNotification4Ack(data:Map<String, String> = HashMap()){

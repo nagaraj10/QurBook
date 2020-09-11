@@ -14,6 +14,8 @@ class DeclineReciver:BroadcastReceiver(){
 
         var nsManager:NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         MyApp.isMissedNSShown=false
+        MyApp().updateStatus(false)
+        MyApp.recordId = ""
         nsManager.cancel(notificationId!!)
 
     }
