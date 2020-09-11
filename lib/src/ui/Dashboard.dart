@@ -143,7 +143,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           onTap: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => ChatHomeScreen()),);
+                              MaterialPageRoute(
+                                  builder: (context) => ChatHomeScreen()),
+                            );
                           },
                           child: ImageIcon(
                             AssetImage(variable.icon_chat),
@@ -378,7 +380,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context,
       router.rt_HomeScreen,
       arguments: HomeScreenArguments(selectedIndex: position),
-    ).then((value) {});
+    ).then((value) {
+      setState(() {});
+    });
   }
 
   void navigateToTelehealthScreen(int position) async {
