@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/common/CommonUtil.dart';
@@ -14,6 +15,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
+import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
@@ -21,6 +23,9 @@ import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.d
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:path/path.dart';
 
 import 'AppException.dart';
 import 'dart:async';
@@ -367,10 +372,10 @@ class ApiBaseHelper {
         var responseJson = convert.jsonDecode(response.body.toString());
 
         if (responseJson[parameters.strMessage] ==
-            Constants.STR_OTPMISMATCHED) {
-          return responseJson;
+            Constants.STR_UN_AUTH_USER) {
+          SnackbarToLogout();
         } else {
-          //SnackbarToLogout();
+          return responseJson;
         }
         break;
 
@@ -871,7 +876,7 @@ class ApiBaseHelper {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
         if (resReturnCode.status == 200) {
-//\\          print(response.body);
+         printWrapped('=======response_appointment'+response.body);
           return AppointmentsModel.fromJson(jsonDecode(response.body));
         } else {
           throw Exception(variable.strFailed);
@@ -1032,5 +1037,10 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  void printWrapped(String text) {
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 }
