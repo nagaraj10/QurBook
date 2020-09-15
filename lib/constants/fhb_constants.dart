@@ -263,6 +263,7 @@ const String mobileNumber = '9176117878';
 
 const String STR_NOTES = 'Notes';
 const String STR_ONLY_ONE = 'Can attach only one record';
+const String STR_UN_AUTH_USER = 'Unauthorized user';
 
 //for appointments
 const String Appointments_Title = "Appointments";
