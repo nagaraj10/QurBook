@@ -15,7 +15,6 @@ import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
-import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_router.dart' as router;
 import 'package:myfhb/constants/router_variable.dart' as routervariable;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -33,6 +32,7 @@ import 'package:provider/provider.dart' as provider;
 
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
+import 'my_family/viewmodel/my_family_view_model.dart';
 import 'src/ui/SplashScreen.dart';
 import 'src/ui/connectivity_bloc.dart';
 
@@ -268,6 +268,9 @@ class _MyFHBState extends State<MyFHB> {
           provider.ChangeNotifierProvider<HideProvider>(
             create: (_) => HideProvider(),
           ),
+          provider.ChangeNotifierProvider<MyFamilyViewModel>(
+            create: (_) => MyFamilyViewModel(),
+          )
         ],
         child: MaterialApp(
           title: Constants.APP_NAME,

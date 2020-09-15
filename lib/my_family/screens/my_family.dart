@@ -20,12 +20,14 @@ import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
+import 'package:myfhb/my_family/viewmodel/my_family_view_model.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:provider/provider.dart';
 
 class MyFamily extends StatefulWidget {
   @override
@@ -72,28 +74,29 @@ class _MyFamilyState extends State<MyFamily> {
   void initState() {
     super.initState();
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
-    _familyListBloc.getCustomRoles();
+    // _familyListBloc.getFamilyMembersList();
+    // _familyListBloc.getCustomRoles();
+
+    Provider.of<MyFamilyViewModel>(context, listen: false)
+        .getFamilyMembersInfo();
 
     PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        key: scaffold_state,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            saveMediaDialog(context);
-          },
-          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+  Widget build(BuildContext context) => Scaffold(
+      key: scaffold_state,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
         ),
-        body: getAllFamilyMembers());
-  }
+        onPressed: () {
+          saveMediaDialog(context);
+        },
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+      ),
+      body: getAllFamilyMembers());
 
   Widget getAllFamilyMembers() {
     Widget familyWidget;
@@ -102,51 +105,28 @@ class _MyFamilyState extends State<MyFamily> {
         ? PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
             ? getMyFamilyMembers(
                 PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
-            : StreamBuilder<ApiResponse<FamilyMembersList>>(
-                stream: _familyListBloc.familyMemberListStream,
-                builder: (context,
-                    AsyncSnapshot<ApiResponse<FamilyMembersList>> snapshot) {
-                  if (snapshot.hasData) {
-                    switch (snapshot.data.status) {
-                      case Status.LOADING:
-                        familyWidget = Center(
-                            child: SizedBox(
-                          child: CircularProgressIndicator(
-                            backgroundColor:
-                                Color(CommonUtil().getMyPrimaryColor()),
-                          ),
-                          width: 30,
-                          height: 30,
-                        ));
-                        break;
+            : Consumer<MyFamilyViewModel>(
+                builder: (context, quoteViewModel, child) {
+                final FamilyMembersList familyMembersList =
+                    quoteViewModel.familyMembersList;
+                if (familyMembersList != null) {
+                  firstTym = false;
+                  PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
+                      familyMembersList.response.data);
 
-                      case Status.ERROR:
-                        familyWidget = FHBBasicWidget.getRefreshContainerButton(
-                            snapshot.data.message, () {
-                          setState(() {});
-                        });
-                        break;
-
-                      case Status.COMPLETED:
-                        //rebuildFamilyBlock();
-                        firstTym = false;
-                        PreferenceUtil.saveFamilyData(
-                            Constants.KEY_FAMILYMEMBER,
-                            snapshot.data.data.response.data);
-
-                        familyWidget = getMyFamilyMembers(
-                            snapshot.data.data.response.data);
-                        break;
-                    }
-                  } else {
-                    familyWidget = Container(
-                      width: 100,
-                      height: 100,
-                    );
-                  }
-                  return familyWidget;
-                },
-              )
+                  return familyWidget =
+                      getMyFamilyMembers(familyMembersList.response.data);
+                } else {
+                  return Center(
+                      child: SizedBox(
+                    child: CircularProgressIndicator(
+                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                    ),
+                    width: 30,
+                    height: 30,
+                  ));
+                }
+              })
         : getMyFamilyMembers(
             PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER));
   }
@@ -219,9 +199,11 @@ class _MyFamilyState extends State<MyFamily> {
                       profilesSharedByMe: profilesSharedByMeAry,
                       currentPage: position - 1))
               .then((value) {
-            _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+            Provider.of<MyFamilyViewModel>(context, listen: false)
+                .getFamilyMembersInfo()
+                .then((value) {
               PreferenceUtil.saveFamilyData(
-                  Constants.KEY_FAMILYMEMBER, familyMembersList.response.data);
+                  Constants.KEY_FAMILYMEMBER, value.response.data);
             });
           });
         }
@@ -402,9 +384,9 @@ class _MyFamilyState extends State<MyFamily> {
                                       .then((userLinking) {
                                     if (userLinking.status == 200 &&
                                         userLinking.success) {
-                                      // Reload
-                                      _familyListBloc
-                                          .getFamilyMembersList()
+                                      Provider.of<MyFamilyViewModel>(context,
+                                              listen: false)
+                                          .getFamilyMembersInfo()
                                           .then((value) {
                                         if (value.status == 200 &&
                                             value.success) {
@@ -936,7 +918,9 @@ class _MyFamilyState extends State<MyFamily> {
               if (addFamilyOTPResponse.success &&
                   addFamilyOTPResponse.status == 200) {
                 if (addFamilyOTPResponse.response.data != null) {
-                  _familyListBloc.getFamilyMembersInfo().then((value) {
+                  Provider.of<MyFamilyViewModel>(context, listen: false)
+                      .getFamilyMembersInfo()
+                      .then((value) {
                     if (value.status == 200 && value.success) {
                       PreferenceUtil.saveFamilyData(
                               Constants.KEY_FAMILYMEMBER, value.response.data)
@@ -964,13 +948,6 @@ class _MyFamilyState extends State<MyFamily> {
                           isPrimaryNoSelected = false;
                           selectedRelationShip = null;
                           rebuildFamilyBlock();
-                          _familyListBloc
-                              .getFamilyMembersList()
-                              .then((familyMembersList) {
-                            PreferenceUtil.saveFamilyData(
-                                Constants.KEY_FAMILYMEMBER,
-                                familyMembersList.response.data);
-                          });
                         });
                       });
                     } else {
@@ -1001,7 +978,9 @@ class _MyFamilyState extends State<MyFamily> {
           } else {
             _familyListBloc.postUserLinking(jsonString).then((userLinking) {
               if (userLinking.success && userLinking.status == 200) {
-                _familyListBloc.getFamilyMembersList().then((value) {
+                Provider.of<MyFamilyViewModel>(context, listen: false)
+                    .getFamilyMembersInfo()
+                    .then((value) {
                   if (value.status == 200 && value.success) {
                     PreferenceUtil.saveFamilyData(
                             Constants.KEY_FAMILYMEMBER, value.response.data)
@@ -1029,13 +1008,6 @@ class _MyFamilyState extends State<MyFamily> {
                         isPrimaryNoSelected = false;
                         selectedRelationShip = null;
                         rebuildFamilyBlock();
-                        _familyListBloc
-                            .getFamilyMembersList()
-                            .then((familyMembersList) {
-                          PreferenceUtil.saveFamilyData(
-                              Constants.KEY_FAMILYMEMBER,
-                              familyMembersList.response.data);
-                        });
                       });
                     });
                   } else {
@@ -1068,7 +1040,9 @@ class _MyFamilyState extends State<MyFamily> {
   rebuildFamilyBlock() {
     _familyListBloc = null;
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
-    _familyListBloc.getCustomRoles();
+    // _familyListBloc.getFamilyMembersList();
+    // _familyListBloc.getCustomRoles();
+    Provider.of<MyFamilyViewModel>(context, listen: false)
+        .getFamilyMembersInfo();
   }
 }

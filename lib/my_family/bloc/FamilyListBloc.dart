@@ -93,19 +93,19 @@ class FamilyListBloc implements BaseBloc {
     }
     return familyResponseList;
   }
-
-  Future<FamilyMembersList> getFamilyMembersInfo() async {
-    FamilyMembersList familyResponseList;
-//    familyMemberListSink.add(ApiResponse.loading(variable.strFetchFamily));
-    try {
-      familyResponseList =
-          await _familyResponseListRepository.getFamilyMembersList();
-//      familyMemberListSink.add(ApiResponse.completed(familyResponseList));
-    } catch (e) {
-      familyMemberListSink.add(ApiResponse.error(e.toString()));
-    }
-    return familyResponseList;
-  }
+//
+//   Future<FamilyMembersList> getFamilyMembersInfo() async {
+//     FamilyMembersList familyResponseList;
+// //    familyMemberListSink.add(ApiResponse.loading(variable.strFetchFamily));
+//     try {
+//       familyResponseList =
+//           await _familyResponseListRepository.getFamilyMembersList();
+// //      familyMemberListSink.add(ApiResponse.completed(familyResponseList));
+//     } catch (e) {
+//       familyMemberListSink.add(ApiResponse.error(e.toString()));
+//     }
+//     return familyResponseList;
+//   }
 
   getCustomRoles() async {
     relationShipListSink.add(ApiResponse.loading(variable.strFetchRoles));

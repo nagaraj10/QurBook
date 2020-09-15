@@ -113,6 +113,7 @@ const String KEY_SHOWCASE_HOMESCREEN = 'KEY_SHOWCASE_HOMESCREEN';
 const String KEY_SHOWCASE_CAMERASCREEN = 'KEY_SHOWCASE_CAMERASCREEN';
 const String KEY_SHOWCASE_MAYA = 'KEY_SHOWCASE_MAYA';
 const String STR_OTPMISMATCHEDFOREMAIL = 'Verification Code Mismatched';
+const String STR_UN_AUTH_USER = 'STR_UN_AUTH_USER';
 const String KEY_SHOWCASE_SWITCH_PROFILE = 'KEY_SHOWCASE_SWITCH_PROFILE';
 const String CAMERA_DESC = 'Start capturing health records right away!';
 const String CAMERA_TITLE = 'Camera';
@@ -299,15 +300,15 @@ const String Appointments_chatImage = 'assets/navicons/chat.png';
 const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
 const String Appointments_newAppoinmentImage =
     'assets/icons/new-appointment.svg';
-const String Appointments_slot_format='yyyy-MM-dd HH:mm:ss';
-const String Appointments_time_format="hh:mm a";
-const String STATIC_HOUR='00';
-const String ZERO='0';
-const String callBack='Completed';
-const String Appointments_days=' days';
+const String Appointments_slot_format = 'yyyy-MM-dd HH:mm:ss';
+const String Appointments_time_format = "hh:mm a";
+const String STATIC_HOUR = '00';
+const String ZERO = '0';
+const String callBack = 'Completed';
+const String Appointments_days = ' days';
 const String PATIENT_FOLLOW_UP = 'Patient follow up';
-const String VERIFIED='Verified';
-const String NOT_VERIFIED='Not Verified';
+const String VERIFIED = 'Verified';
+const String NOT_VERIFIED = 'Not Verified';
 
 //ICON for Device Reading widgets
 
@@ -345,4 +346,3 @@ const String data_connected = "Mobile data connected";
 const String no_internet_conn = "No internet connection";
 const String failed_get_conn = "Failed to get connectivity.";
 const String failed_get_connectivity = "Failed to get internet connectivity.";
-
