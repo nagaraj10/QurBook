@@ -128,7 +128,7 @@ class _MyProvidersState extends State<MyProviders> {
         Icon(Icons.notifications),
         new SwitchProfile()
             .buildActions(context, _keyLoader, callBackToRefresh),
-        Icon(Icons.more_vert),
+        // Icon(Icons.more_vert),
       ],
     );
   }

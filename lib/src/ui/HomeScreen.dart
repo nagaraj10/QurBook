@@ -5,6 +5,7 @@ import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/notifications/myfhb_notifications.dart';
 import 'package:myfhb/schedules/my_schedules.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
@@ -12,6 +13,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -36,7 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
     MyFhbNotifications(),
     MyRecords(),
     SuperMaya(),
-    MySchedule(),
+    UserAccounts(
+            arguments: UserAccountsArguments(selectedIndex: 0)),
     MoreMenuScreen()
   ];
 
@@ -179,11 +182,11 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ImageIcon(
-                      AssetImage(variable.icon_schedule),
+                      AssetImage(variable.icon_profile),
                       color: widget.selectedPageIndex == 3
                           ? Colors.white
                           : Colors.black,
-                      size: 22,
+                      size: 24,
                     ),
                     widget.selectedPageIndex == 3
                         ? Container(
@@ -191,7 +194,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                             width: 0,
                           )
                         : Text(
-                            variable.strSchedule,
+                            variable.strProfile,
                             style: TextStyle(fontSize: 10),
                           )
                   ],

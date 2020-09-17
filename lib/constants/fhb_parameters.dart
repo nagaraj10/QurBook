@@ -314,8 +314,9 @@ const String strOxyTitle = "SPO2 Reading";
 const String strWgTitle = "Weight Measurments";
 const String strTmpTitle = "Temperature Readings";
 const String strLatestTitle = "Latest Readings";
-const String strDateYMD = "yMMMMd";
+const String strDateYMD = "yMMMd";
 const String strTimeHMS = "Hms";
+const String strTimeHM = "hh:mm";
 
 const String strsourceGoogle = "Google Fit";
 const String strsourceSheela = "SHEELA";

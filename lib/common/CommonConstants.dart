@@ -83,7 +83,7 @@ class CommonConstants {
 
   static String strGlucometerValue = 'mg/dL';
   static String strValue = 'Value';
-  static String strMemo = 'Memo (50)';
+  static String strMemo = 'Memo (500)';
   static String strTimeTaken = 'Time taken';
   static String strSugarLevel = 'sugarLevel';
   static String strTimeIntake = 'Time of Intake';

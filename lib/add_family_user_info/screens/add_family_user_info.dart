@@ -741,78 +741,76 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   // 4
   Widget _showEmailAddTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextField(
-              cursorColor: Theme.of(context).primaryColor,
-              controller: emailController,
-              maxLines: 1,
-              enabled: widget.arguments.fromClass == CommonConstants.user_update
-                  ? true
-                  : false,
-              keyboardType: TextInputType.text,
-              //          focusNode: emailFocus,
-              autofocus: false,
-              textInputAction: TextInputAction.done,
-              onSubmitted: (term) {
-                FocusScope.of(context).requestFocus(genderFocus);
-              },
-              style: new TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16.0,
-                  color: ColorUtils.blackcolor),
-              decoration: InputDecoration(
-                labelText: CommonConstants.email_address_optional,
-                hintText: CommonConstants.email_address_optional,
-                labelStyle: TextStyle(
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.w400,
-                    color: ColorUtils.myFamilyGreyColor),
-                hintStyle: TextStyle(
-                  fontSize: 14.0,
-                  color: ColorUtils.myFamilyGreyColor,
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextField(
+            cursorColor: Theme.of(context).primaryColor,
+            controller: emailController,
+            maxLines: 1,
+            enabled: widget.arguments.fromClass == CommonConstants.user_update
+                ? true
+                : false,
+            keyboardType: TextInputType.text,
+            //          focusNode: emailFocus,
+            autofocus: false,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (term) {
+              FocusScope.of(context).requestFocus(genderFocus);
+            },
+            style: new TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16.0,
+                color: ColorUtils.blackcolor),
+            decoration: InputDecoration(
+              labelText: CommonConstants.email_address_optional,
+              hintText: CommonConstants.email_address_optional,
+              labelStyle: TextStyle(
+                  fontSize: 13.0,
                   fontWeight: FontWeight.w400,
-                ),
-                border: new UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: ColorUtils.myFamilyGreyColor)),
+                  color: ColorUtils.myFamilyGreyColor),
+              hintStyle: TextStyle(
+                fontSize: 14.0,
+                color: ColorUtils.myFamilyGreyColor,
+                fontWeight: FontWeight.w400,
               ),
+              border: new UnderlineInputBorder(
+                  borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
             ),
-            widget.arguments.fromClass == CommonConstants.user_update
-                ? ((widget.arguments.sharedbyme.profileData.isEmailVerified ==
-                                null &&
-                            widget.arguments.sharedbyme.profileData.email !=
-                                '') ||
-                        (widget.arguments.sharedbyme.profileData
-                                    .isEmailVerified ==
-                                false &&
-                            widget.arguments.sharedbyme.profileData.email !=
-                                ''))
-                    ? GestureDetector(
-                        child: Text(variable.VerifyEmail,
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w400,
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor()))),
-                        onTap: () {
-                          new FHBUtils().check().then((intenet) {
-                            if (intenet != null && intenet) {
-                              verifyEmail();
-                            } else {
-                              new FHBBasicWidget().showInSnackBar(
-                                  Constants.STR_NO_CONNECTIVITY,
-                                  scaffold_state);
-                            }
-                          });
-                        },
-                      )
-                    : Text('')
-                : Text('')
-          ],
-        ));
+          ),
+          // widget.arguments.fromClass == CommonConstants.user_update
+          //     ? ((widget.arguments.sharedbyme.profileData.isEmailVerified ==
+          //                     null &&
+          //                 widget.arguments.sharedbyme.profileData.email !=
+          //                     '') ||
+          //             (widget.arguments.sharedbyme.profileData
+          //                         .isEmailVerified ==
+          //                     false &&
+          //                 widget.arguments.sharedbyme.profileData.email != ''))
+          //         ? GestureDetector(
+          //             child: Text(variable.VerifyEmail,
+          //                 style: TextStyle(
+          //                     fontSize: 13.0,
+          //                     fontWeight: FontWeight.w400,
+          //                     color:
+          //                         Color(new CommonUtil().getMyPrimaryColor()))),
+          //             onTap: () {
+          //               new FHBUtils().check().then((intenet) {
+          //                 if (intenet != null && intenet) {
+          //                   verifyEmail();
+          //                 } else {
+          //                   new FHBBasicWidget().showInSnackBar(
+          //                       Constants.STR_NO_CONNECTIVITY, scaffold_state);
+          //                 }
+          //               });
+          //             },
+          //           )
+          //         : Text('')
+          //     : Text('')
+        ],
+      ),
+    );
   }
 
   // 5

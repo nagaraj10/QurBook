@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_timer/flutter_timer.dart';
+import 'package:myfhb/video_call/widgets/custom_timer.dart';
 
 class CustomAppBar extends StatefulWidget {
   final String userName;
@@ -49,7 +49,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                           //todo this has to be uncomment in future
                         ],
                       ),
-                      TikTikTimer(
+                       CustomTimer(
                         backgroundColor: Colors.transparent,
                         initialDate: DateTime.now(),
                         running: _isTimerRun,
@@ -59,6 +59,16 @@ class _CustomAppBarState extends State<CustomAppBar> {
                         isRaised: false,
                         tracetime: (time) {},
                       ),
+                      // TikTikTimer(
+                      //   backgroundColor: Colors.transparent,
+                      //   initialDate: DateTime.now(),
+                      //   running: _isTimerRun,
+                      //   width: 50,
+                      //   timerTextStyle:
+                      //       TextStyle(color: Colors.white, fontSize: 12),
+                      //   isRaised: false,
+                      //   tracetime: (time) {},
+                      // ),
                     ],
                   ),
                 ),

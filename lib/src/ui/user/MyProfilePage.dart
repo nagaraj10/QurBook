@@ -202,32 +202,32 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       ),
                     ),
                   ),
-                  ((data.generalInfo.isEmailVerified == null &&
-                              data.generalInfo.email != '') ||
-                          (data.generalInfo.isEmailVerified == false &&
-                              data.generalInfo.email != ''))
-                      ? GestureDetector(
-                          child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text(Constants.VerifyEmail,
-                                  style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(new CommonUtil()
-                                          .getMyPrimaryColor())))),
-                          onTap: () {
-                            new FHBUtils().check().then((intenet) {
-                              if (intenet != null && intenet) {
-                                verifyEmail();
-                              } else {
-                                new FHBBasicWidget().showInSnackBar(
-                                    Constants.STR_NO_CONNECTIVITY,
-                                    scaffold_state);
-                              }
-                            });
-                          },
-                        )
-                      : Text('')
+                  // ((data.generalInfo.isEmailVerified == null &&
+                  //             data.generalInfo.email != '') ||
+                  //         (data.generalInfo.isEmailVerified == false &&
+                  //             data.generalInfo.email != ''))
+                  //     ? GestureDetector(
+                  //         child: Padding(
+                  //             padding: EdgeInsets.all(10),
+                  //             child: Text(Constants.VerifyEmail,
+                  //                 style: TextStyle(
+                  //                     fontSize: 13.0,
+                  //                     fontWeight: FontWeight.w400,
+                  //                     color: Color(new CommonUtil()
+                  //                         .getMyPrimaryColor())))),
+                  //         onTap: () {
+                  //           new FHBUtils().check().then((intenet) {
+                  //             if (intenet != null && intenet) {
+                  //               verifyEmail();
+                  //             } else {
+                  //               new FHBBasicWidget().showInSnackBar(
+                  //                   Constants.STR_NO_CONNECTIVITY,
+                  //                   scaffold_state);
+                  //             }
+                  //           });
+                  //         },
+                  //       )
+                  //     : Text('')
                 ],
               ),
 
