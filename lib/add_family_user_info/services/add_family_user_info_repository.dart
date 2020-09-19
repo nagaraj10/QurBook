@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:myfhb/add_family_user_info/models/CityListModel.dart';
 import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
 import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_info.dart';
 import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
@@ -43,7 +44,13 @@ class AddFamilyUserInfoRepository {
       File profilePic,
       String firstName,
       String middleName,
-      String lastName) async {
+      String lastName,
+      String cityId,
+      String stateId,
+      String addressLine1,
+      String addressLine2,
+      String zipcode,
+      bool fromFamily) async {
     String query = '';
 
     var response;
@@ -61,7 +68,13 @@ class AddFamilyUserInfoRepository {
               profilePic,
               firstName,
               middleName,
-              lastName),
+              lastName,
+              cityId,
+              stateId,
+              addressLine1,
+              addressLine2,
+              zipcode,
+              fromFamily),
           profilePic,
           webserviceCall.getUrlToUpdateDoctor(userID));
     } else {
@@ -78,7 +91,13 @@ class AddFamilyUserInfoRepository {
               profilePic,
               firstName,
               middleName,
-              lastName));
+              lastName,
+              cityId,
+              stateId,
+              addressLine1,
+              addressLine2,
+              zipcode,
+              fromFamily));
     }
 
     return UpdateAddFamilyInfo.fromJson(response);
@@ -102,7 +121,13 @@ class AddFamilyUserInfoRepository {
       File profilePic,
       String firstName,
       String middleName,
-      String lastName) async {
+      String lastName,
+      String cityId,
+      String stateId,
+      String addressLine1,
+      String addressLine2,
+      String zipcode,
+      bool fromFamily) async {
     String query = '';
 
     var response;
@@ -120,7 +145,13 @@ class AddFamilyUserInfoRepository {
               profilePic,
               firstName,
               middleName,
-              lastName),
+              lastName,
+              cityId,
+              stateId,
+              addressLine1,
+              addressLine2,
+              zipcode,
+              fromFamily),
           profilePic,
           webserviceCall.getUrlToUpdateDoctor(userID));
     } else {
@@ -137,7 +168,13 @@ class AddFamilyUserInfoRepository {
               profilePic,
               firstName,
               middleName,
-              lastName));
+              lastName,
+              cityId,
+              stateId,
+              addressLine1,
+              addressLine2,
+              zipcode,
+              fromFamily));
     }
 
     return UpdateAddFamilyInfo.fromJson(response);
@@ -149,5 +186,11 @@ class AddFamilyUserInfoRepository {
     var response = await _helper.verifyEmail(
         query.qr_Userprofile + userID + query.qr_sendVerificationMail);
     return VerifyEmailResponse.fromJson(response);
+  }
+
+  Future<CityListModel> getValuesBaseOnSearch(
+      String cityname, String apibody) async {
+    var response = await _helper.getValueBasedOnSearch(cityname, apibody);
+    return CityListModel.fromJson(response);
   }
 }
