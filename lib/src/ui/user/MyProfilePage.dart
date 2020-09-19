@@ -37,6 +37,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
+  var cntrlr_addr_one = TextEditingController();
+  var cntrlr_addr_two = TextEditingController();
+  var cntrlr_addr_city = TextEditingController();
+  var cntrlr_addr_state = TextEditingController();
+  var cntrlr_addr_zip = TextEditingController();
+
   @override
   void initState() {
     PreferenceUtil.init();
@@ -283,6 +289,61 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       hintText: CommonConstants.date_of_birth,
                       hintStyle: TextStyle(fontSize: 12),
                       labelText: CommonConstants.date_of_birth),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_one,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_line_1,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_two,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_line_2,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_city,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_city,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_state,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_state,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_zip,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_zip,
+                  ),
                 ),
               ),
             ],

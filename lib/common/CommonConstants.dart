@@ -215,6 +215,12 @@ class CommonConstants {
   static String middleName = "MiddleName";
   static String lastName = "LastName";
 
+  static const String addr_line_1 = "Address line 1*";
+  static const String addr_line_2 = "Address line 2";
+  static const String addr_city = "City*";
+  static const String addr_state = "State*";
+  static const String addr_zip = "Zipcode*";
+
   static String KEY_COUNTRYCODE = 'CountryCode';
   static String KEY_COUNTRYNAME = 'CountryName';
 

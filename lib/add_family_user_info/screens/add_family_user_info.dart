@@ -93,6 +93,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   final lastNameController = TextEditingController();
   FocusNode lastNameFocus = FocusNode();
 
+  var cntrlr_addr_one = TextEditingController();
+  var cntrlr_addr_two = TextEditingController();
+  var cntrlr_addr_city = TextEditingController();
+  var cntrlr_addr_state = TextEditingController();
+  var cntrlr_addr_zip = TextEditingController();
+
   String strErrorMsg = '';
   CommonUtil commonUtil = new CommonUtil();
 
@@ -101,6 +107,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   final double circleRadius = 100.0;
   final double circleBorderWidth = 2.0;
+
+  final _formkey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -614,6 +622,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       ],
                     ),
                     _showDateOfBirthTextField(),
+                    _userAddressInfo(),
                     _showSaveButton()
                   ])
             ]),
@@ -932,6 +941,84 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     );
   }
 
+  Widget _userAddressInfo() {
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      child: Form(
+        key: _formkey,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: cntrlr_addr_one,
+              enabled: true,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_line_1,
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'Address line1 can\'t be empty'
+                    : null;
+              },
+            ),
+            TextFormField(
+              controller: cntrlr_addr_two,
+              enabled: true,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_line_2,
+              ),
+            ),
+            TextFormField(
+              controller: cntrlr_addr_city,
+              enabled: true,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_city,
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'City can\'t be empty'
+                    : null;
+              },
+            ),
+            TextFormField(
+              controller: cntrlr_addr_state,
+              enabled: true,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_state,
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'State can\'t be empty'
+                    : null;
+              },
+            ),
+            TextFormField(
+              controller: cntrlr_addr_zip,
+              enabled: true,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_zip,
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'Zip can\'t be empty'
+                    : null;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _showSaveButton() {
     final GestureDetector addButtonWithGesture = new GestureDetector(
       onTap: _saveBtnTapped,
@@ -1173,159 +1260,164 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void _saveBtnTapped() {
     new FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
-        addFamilyUserInfoBloc.name = firstNameController.text;
-        addFamilyUserInfoBloc.email = emailController.text;
-        addFamilyUserInfoBloc.gender =
-            toBeginningOfSentenceCase(selectedGender.toLowerCase());
-        addFamilyUserInfoBloc.dateOfBirth = dateofBirthStr;
+        //address fields validation
+        if (_formkey.currentState.validate()) {
+          addFamilyUserInfoBloc.name = firstNameController.text;
+          addFamilyUserInfoBloc.email = emailController.text;
+          addFamilyUserInfoBloc.gender =
+              toBeginningOfSentenceCase(selectedGender.toLowerCase());
+          addFamilyUserInfoBloc.dateOfBirth = dateofBirthStr;
 
-        if (selectedBloodGroup != null && selectedBloodRange != null) {
-          addFamilyUserInfoBloc.bloodGroup =
-              selectedBloodGroup + ' ' + selectedBloodRange;
-        }
+          if (selectedBloodGroup != null && selectedBloodRange != null) {
+            addFamilyUserInfoBloc.bloodGroup =
+                selectedBloodGroup + ' ' + selectedBloodRange;
+          }
 
-        addFamilyUserInfoBloc.profilePic = imageURI;
+          addFamilyUserInfoBloc.profilePic = imageURI;
 
-        addFamilyUserInfoBloc.firstName = firstNameController.text;
-        addFamilyUserInfoBloc.middleName = middleNameController.text;
-        addFamilyUserInfoBloc.lastName = lastNameController.text;
+          addFamilyUserInfoBloc.firstName = firstNameController.text;
+          addFamilyUserInfoBloc.middleName = middleNameController.text;
+          addFamilyUserInfoBloc.lastName = lastNameController.text;
 
-        addFamilyUserInfoBloc.profileBanner = MySliverAppBar.imageURIProfile;
+          addFamilyUserInfoBloc.profileBanner = MySliverAppBar.imageURIProfile;
 
-        FamilyListBloc _familyListBloc = new FamilyListBloc();
+          FamilyListBloc _familyListBloc = new FamilyListBloc();
 
-        if (widget.arguments.fromClass == CommonConstants.my_family) {
-          addFamilyUserInfoBloc.relationship = selectedRelationShip.roleName;
-          addFamilyUserInfoBloc.userId =
-              widget.arguments.sharedbyme.profileData.id;
-          addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
+          if (widget.arguments.fromClass == CommonConstants.my_family) {
+            addFamilyUserInfoBloc.relationship = selectedRelationShip.roleName;
+            addFamilyUserInfoBloc.userId =
+                widget.arguments.sharedbyme.profileData.id;
+            addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
 
-          if (doValidation()) {
-            if (addFamilyUserInfoBloc.profileBanner != null) {
-              PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                  addFamilyUserInfoBloc.profileBanner.path);
-            }
-            CommonUtil.showLoadingDialog(
-                context, _keyLoader, variable.Please_Wait); //
+            if (doValidation()) {
+              if (addFamilyUserInfoBloc.profileBanner != null) {
+                PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+                    addFamilyUserInfoBloc.profileBanner.path);
+              }
+              CommonUtil.showLoadingDialog(
+                  context, _keyLoader, variable.Please_Wait); //
 
-            var signInData = {};
-            signInData[variable.strCountryCode] =
-                widget.arguments.sharedbyme.profileData.countryCode;
-            signInData[variable.strPhoneNumber] = mobileNoController.text;
-            signInData[variable.strFirstName] = firstNameController.text;
-            signInData[variable.strMiddleName] =
-                middleNameController.text.length == 0
-                    ? ''
-                    : middleNameController.text;
-            signInData[variable.strLastName] = lastNameController.text;
-            signInData[variable.strRelation] = selectedRelationShip.id;
-            var jsonString = convert.jsonEncode(signInData);
-            print(jsonString);
+              var signInData = {};
+              signInData[variable.strCountryCode] =
+                  widget.arguments.sharedbyme.profileData.countryCode;
+              signInData[variable.strPhoneNumber] = mobileNoController.text;
+              signInData[variable.strFirstName] = firstNameController.text;
+              signInData[variable.strMiddleName] =
+                  middleNameController.text.length == 0
+                      ? ''
+                      : middleNameController.text;
+              signInData[variable.strLastName] = lastNameController.text;
+              signInData[variable.strRelation] = selectedRelationShip.id;
+              var jsonString = convert.jsonEncode(signInData);
+              print(jsonString);
 
-            addFamilyUserInfoBloc.relationshipJsonString = jsonString;
+              addFamilyUserInfoBloc.relationshipJsonString = jsonString;
 
-            // 1
-            addFamilyUserInfoBloc.updateUserRelationShip().then((value) {
-              if (value.success && value.status == 200) {
-                // 2
-                addFamilyUserInfoBloc.updateUserProfile().then((value) {
-                  if (value.success && value.status == 200) {
-                    _familyListBloc.getFamilyMembersList().then((value) {
-                      PreferenceUtil.saveFamilyData(
-                              Constants.KEY_FAMILYMEMBER, value.response.data)
-                          .then((value) {
-                        //saveProfileImage();
-                        MySliverAppBar.imageURI = null;
-                        fetchedProfileData = null;
-                        imageURI = null;
+              // 1
+              addFamilyUserInfoBloc.updateUserRelationShip().then((value) {
+                if (value.success && value.status == 200) {
+                  // 2
+                  addFamilyUserInfoBloc.updateUserProfile().then((value) {
+                    if (value.success && value.status == 200) {
+                      _familyListBloc.getFamilyMembersList().then((value) {
+                        PreferenceUtil.saveFamilyData(
+                                Constants.KEY_FAMILYMEMBER, value.response.data)
+                            .then((value) {
+                          //saveProfileImage();
+                          MySliverAppBar.imageURI = null;
+                          fetchedProfileData = null;
+                          imageURI = null;
 
-                        Navigator.popUntil(context, (Route<dynamic> route) {
-                          bool shouldPop = false;
-                          if (route.settings.name == router.rt_UserAccounts) {
-                            shouldPop = true;
-                          }
-                          return shouldPop;
+                          Navigator.popUntil(context, (Route<dynamic> route) {
+                            bool shouldPop = false;
+                            if (route.settings.name == router.rt_UserAccounts) {
+                              shouldPop = true;
+                            }
+                            return shouldPop;
+                          });
                         });
                       });
-                    });
-                  }
-                });
-              }
-            });
-          } else {
-            Alert.displayAlertPlain(context,
-                title: variable.strError,
-                content: CommonConstants.all_fields_mandatory);
-          }
-        } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-          if (doValidation()) {
-            CommonUtil.showLoadingDialog(
-                context, _keyLoader, variable.Please_Wait);
-
-            addFamilyUserInfoBloc.updateSelfProfile().then((value) {
-              if (value != null && value.success && value.status == 200) {
-                saveProfileImage();
-                getUserProfileData();
-              } else {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                    .pop();
-
-                Navigator.popUntil(context, (Route<dynamic> route) {
-                  bool shouldPop = false;
-                  if (route.settings.name == router.rt_UserAccounts) {
-                    shouldPop = true;
-                  }
-                  return shouldPop;
-                });
-              }
-            });
-          } else {
-            showDialog(
-                context: context,
-                child: new AlertDialog(
-                  title: new Text(variable.strAPP_NAME),
-                  content: new Text(strErrorMsg),
-                ));
-          }
-        } else {
-          addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
-          addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
-          addFamilyUserInfoBloc.relationship = relationShipController.text;
-
-          if (doValidation()) {
-            if (addFamilyUserInfoBloc.profileBanner != null) {
-              PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                  addFamilyUserInfoBloc.profileBanner.path);
+                    }
+                  });
+                }
+              });
+            } else {
+              Alert.displayAlertPlain(context,
+                  title: variable.strError,
+                  content: CommonConstants.all_fields_mandatory);
             }
-            CommonUtil.showLoadingDialog(
-                context, _keyLoader, variable.Please_Wait); //
+          } else if (widget.arguments.fromClass ==
+              CommonConstants.user_update) {
+            if (doValidation()) {
+              CommonUtil.showLoadingDialog(
+                  context, _keyLoader, variable.Please_Wait);
 
-            addFamilyUserInfoBloc.updateUserProfile().then((value) {
-              if (value.success && value.status == 200) {
-                _familyListBloc.getFamilyMembersList().then((value) {
-                  PreferenceUtil.saveFamilyData(
-                          Constants.KEY_FAMILYMEMBER, value.response.data)
-                      .then((value) {
-                    //saveProfileImage();
-                    MySliverAppBar.imageURI = null;
-                    fetchedProfileData = null;
-                    imageURI = null;
+              addFamilyUserInfoBloc.updateSelfProfile().then((value) {
+                if (value != null && value.success && value.status == 200) {
+                  saveProfileImage();
+                  getUserProfileData();
+                } else {
+                  Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                      .pop();
 
-                    Navigator.popUntil(context, (Route<dynamic> route) {
-                      bool shouldPop = false;
-                      if (route.settings.name == router.rt_UserAccounts) {
-                        shouldPop = true;
-                      }
-                      return shouldPop;
+                  Navigator.popUntil(context, (Route<dynamic> route) {
+                    bool shouldPop = false;
+                    if (route.settings.name == router.rt_UserAccounts) {
+                      shouldPop = true;
+                    }
+                    return shouldPop;
+                  });
+                }
+              });
+            } else {
+              showDialog(
+                  context: context,
+                  child: new AlertDialog(
+                    title: new Text(variable.strAPP_NAME),
+                    content: new Text(strErrorMsg),
+                  ));
+            }
+          } else {
+            addFamilyUserInfoBloc.userId =
+                widget.arguments.addFamilyUserInfo.id;
+            addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
+            addFamilyUserInfoBloc.relationship = relationShipController.text;
+
+            if (doValidation()) {
+              if (addFamilyUserInfoBloc.profileBanner != null) {
+                PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+                    addFamilyUserInfoBloc.profileBanner.path);
+              }
+              CommonUtil.showLoadingDialog(
+                  context, _keyLoader, variable.Please_Wait); //
+
+              addFamilyUserInfoBloc.updateUserProfile().then((value) {
+                if (value.success && value.status == 200) {
+                  _familyListBloc.getFamilyMembersList().then((value) {
+                    PreferenceUtil.saveFamilyData(
+                            Constants.KEY_FAMILYMEMBER, value.response.data)
+                        .then((value) {
+                      //saveProfileImage();
+                      MySliverAppBar.imageURI = null;
+                      fetchedProfileData = null;
+                      imageURI = null;
+
+                      Navigator.popUntil(context, (Route<dynamic> route) {
+                        bool shouldPop = false;
+                        if (route.settings.name == router.rt_UserAccounts) {
+                          shouldPop = true;
+                        }
+                        return shouldPop;
+                      });
                     });
                   });
-                });
-              }
-            });
-          } else {
-            Alert.displayAlertPlain(context,
-                title: variable.Error,
-                content: CommonConstants.all_fields_mandatory);
+                }
+              });
+            } else {
+              Alert.displayAlertPlain(context,
+                  title: variable.Error,
+                  content: CommonConstants.all_fields_mandatory);
+            }
           }
         }
       } else {
