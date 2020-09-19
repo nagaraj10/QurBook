@@ -319,7 +319,7 @@ const String strTmpTitle = "Temperature Readings";
 const String strLatestTitle = "Latest Readings";
 const String strDateYMD = "yMMMd";
 const String strTimeHMS = "Hms";
-const String strTimeHM = "hh:mm";
+const String strTimeHM = "hh:mm a";
 
 const String strsourceGoogle = "Google Fit";
 const String strsourceSheela = "SHEELA";
