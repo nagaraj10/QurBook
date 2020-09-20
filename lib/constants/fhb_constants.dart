@@ -37,8 +37,8 @@ const String KEY_DEVICENAME = 'Device Name';
 const String STR_GLUCOMETER = 'Glucometer';
 const String STR_THERMOMETER = 'Thermometer';
 const String STR_BP_MONITOR = 'BP Monitor';
-const String STR_WEIGHING_SCALE = 'Weighing Scale';
-const String STR_PULSE_OXIMETER = 'Pulse Oximeter';
+const String STR_WEIGHING_SCALE = 'Weighing scale';
+const String STR_PULSE_OXIMETER = 'Pulse oximeter';
 const String STR_PRESCRIPTION = 'Prescription';
 const String STR_DEVICES = 'Devices';
 const String STR_LABREPORT = 'Lab Report';
@@ -300,15 +300,15 @@ const String Appointments_chatImage = 'assets/navicons/chat.png';
 const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
 const String Appointments_newAppoinmentImage =
     'assets/icons/new-appointment.svg';
-const String Appointments_slot_format='yyyy-MM-dd HH:mm:ss';
-const String Appointments_time_format="hh:mm a";
-const String STATIC_HOUR='00';
-const String ZERO='0';
-const String callBack='Completed';
-const String Appointments_days=' days';
+const String Appointments_slot_format = 'yyyy-MM-dd HH:mm:ss';
+const String Appointments_time_format = "hh:mm a";
+const String STATIC_HOUR = '00';
+const String ZERO = '0';
+const String callBack = 'Completed';
+const String Appointments_days = ' days';
 const String PATIENT_FOLLOW_UP = 'Patient follow up';
-const String VERIFIED='Verified';
-const String NOT_VERIFIED='Not Verified';
+const String VERIFIED = 'Verified';
+const String NOT_VERIFIED = 'Not Verified';
 
 //ICON for Device Reading widgets
 
@@ -346,4 +346,3 @@ const String data_connected = "Mobile data connected";
 const String no_internet_conn = "No internet connection";
 const String failed_get_conn = "Failed to get connectivity.";
 const String failed_get_connectivity = "Failed to get internet connectivity.";
-
