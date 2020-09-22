@@ -5,9 +5,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import 'package:myfhb/add_family_user_info/models/CityListModel.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -93,6 +95,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   final lastNameController = TextEditingController();
   FocusNode lastNameFocus = FocusNode();
 
+  var cntrlr_addr_one = TextEditingController();
+  var cntrlr_addr_two = TextEditingController();
+  var cntrlr_addr_city = TextEditingController();
+  var cntrlr_addr_state = TextEditingController();
+  var cntrlr_addr_zip = TextEditingController();
+
   String strErrorMsg = '';
   CommonUtil commonUtil = new CommonUtil();
 
@@ -101,6 +109,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   final double circleRadius = 100.0;
   final double circleBorderWidth = 2.0;
+
+  final _formkey = GlobalKey<FormState>();
+
+  String city = '';
+  String state = '';
+
+  CityData cityVal = new CityData();
+  CityData stateVal = new CityData();
 
   @override
   void initState() {
@@ -201,9 +217,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       updateProfile = true;
       addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.profileData
           .id; //widget.arguments.addFamilyUserInfo.id;
+      MyProfile myProf =
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
       if (widget.arguments.sharedbyme.profileData.isVirtualUser != null) {
-        MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
         mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
         emailController.text = myProf.response.data.generalInfo.email;
       } else {
@@ -229,6 +246,24 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 null
             ? widget.arguments.sharedbyme.profileData.qualifiedFullName.lastName
             : '';
+      }
+
+      if (myProf.response.data.generalInfo.addressLine1 != null) {
+        cntrlr_addr_one.text = myProf.response.data.generalInfo.addressLine1;
+      }
+      if (myProf.response.data.generalInfo.addressLine2 != null) {
+        cntrlr_addr_two.text = myProf.response.data.generalInfo.addressLine2;
+      }
+      if (myProf.response.data.generalInfo.city != null) {
+        cntrlr_addr_city.text = myProf.response.data.generalInfo.city.name;
+        cityVal.id = myProf.response.data.generalInfo.city.id;
+      }
+      if (myProf.response.data.generalInfo.state != null) {
+        cntrlr_addr_state.text = myProf.response.data.generalInfo.state.name;
+        stateVal.id = myProf.response.data.generalInfo.state.id;
+      }
+      if (myProf.response.data.generalInfo.pincode != null) {
+        cntrlr_addr_zip.text = myProf.response.data.generalInfo.pincode;
       }
 
       if (commonUtil.checkIfStringisNull(
@@ -614,6 +649,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       ],
                     ),
                     _showDateOfBirthTextField(),
+                    widget.arguments.fromClass == CommonConstants.user_update
+                        ? _userAddressInfo()
+                        : SizedBox(),
                     _showSaveButton()
                   ])
             ]),
@@ -741,78 +779,76 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   // 4
   Widget _showEmailAddTextField() {
     return Padding(
-        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TextField(
-              cursorColor: Theme.of(context).primaryColor,
-              controller: emailController,
-              maxLines: 1,
-              enabled: widget.arguments.fromClass == CommonConstants.user_update
-                  ? true
-                  : false,
-              keyboardType: TextInputType.text,
-              //          focusNode: emailFocus,
-              autofocus: false,
-              textInputAction: TextInputAction.done,
-              onSubmitted: (term) {
-                FocusScope.of(context).requestFocus(genderFocus);
-              },
-              style: new TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16.0,
-                  color: ColorUtils.blackcolor),
-              decoration: InputDecoration(
-                labelText: CommonConstants.email_address_optional,
-                hintText: CommonConstants.email_address_optional,
-                labelStyle: TextStyle(
-                    fontSize: 13.0,
-                    fontWeight: FontWeight.w400,
-                    color: ColorUtils.myFamilyGreyColor),
-                hintStyle: TextStyle(
-                  fontSize: 14.0,
-                  color: ColorUtils.myFamilyGreyColor,
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          TextField(
+            cursorColor: Theme.of(context).primaryColor,
+            controller: emailController,
+            maxLines: 1,
+            enabled: widget.arguments.fromClass == CommonConstants.user_update
+                ? true
+                : false,
+            keyboardType: TextInputType.text,
+            //          focusNode: emailFocus,
+            autofocus: false,
+            textInputAction: TextInputAction.done,
+            onSubmitted: (term) {
+              FocusScope.of(context).requestFocus(genderFocus);
+            },
+            style: new TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 16.0,
+                color: ColorUtils.blackcolor),
+            decoration: InputDecoration(
+              labelText: CommonConstants.email_address_optional,
+              hintText: CommonConstants.email_address_optional,
+              labelStyle: TextStyle(
+                  fontSize: 13.0,
                   fontWeight: FontWeight.w400,
-                ),
-                border: new UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: ColorUtils.myFamilyGreyColor)),
+                  color: ColorUtils.myFamilyGreyColor),
+              hintStyle: TextStyle(
+                fontSize: 14.0,
+                color: ColorUtils.myFamilyGreyColor,
+                fontWeight: FontWeight.w400,
               ),
+              border: new UnderlineInputBorder(
+                  borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
             ),
-            widget.arguments.fromClass == CommonConstants.user_update
-                ? ((widget.arguments.sharedbyme.profileData.isEmailVerified ==
-                                null &&
-                            widget.arguments.sharedbyme.profileData.email !=
-                                '') ||
-                        (widget.arguments.sharedbyme.profileData
-                                    .isEmailVerified ==
-                                false &&
-                            widget.arguments.sharedbyme.profileData.email !=
-                                ''))
-                    ? GestureDetector(
-                        child: Text(variable.VerifyEmail,
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w400,
-                                color: Color(
-                                    new CommonUtil().getMyPrimaryColor()))),
-                        onTap: () {
-                          new FHBUtils().check().then((intenet) {
-                            if (intenet != null && intenet) {
-                              verifyEmail();
-                            } else {
-                              new FHBBasicWidget().showInSnackBar(
-                                  Constants.STR_NO_CONNECTIVITY,
-                                  scaffold_state);
-                            }
-                          });
-                        },
-                      )
-                    : Text('')
-                : Text('')
-          ],
-        ));
+          ),
+          // widget.arguments.fromClass == CommonConstants.user_update
+          //     ? ((widget.arguments.sharedbyme.profileData.isEmailVerified ==
+          //                     null &&
+          //                 widget.arguments.sharedbyme.profileData.email !=
+          //                     '') ||
+          //             (widget.arguments.sharedbyme.profileData
+          //                         .isEmailVerified ==
+          //                     false &&
+          //                 widget.arguments.sharedbyme.profileData.email != ''))
+          //         ? GestureDetector(
+          //             child: Text(variable.VerifyEmail,
+          //                 style: TextStyle(
+          //                     fontSize: 13.0,
+          //                     fontWeight: FontWeight.w400,
+          //                     color:
+          //                         Color(new CommonUtil().getMyPrimaryColor()))),
+          //             onTap: () {
+          //               new FHBUtils().check().then((intenet) {
+          //                 if (intenet != null && intenet) {
+          //                   verifyEmail();
+          //                 } else {
+          //                   new FHBBasicWidget().showInSnackBar(
+          //                       Constants.STR_NO_CONNECTIVITY, scaffold_state);
+          //                 }
+          //               });
+          //             },
+          //           )
+          //         : Text('')
+          //     : Text('')
+        ],
+      ),
+    );
   }
 
   // 5
@@ -931,6 +967,163 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
             ),
           )),
+    );
+  }
+
+  Widget _userAddressInfo() {
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      child: Form(
+        key: _formkey,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: cntrlr_addr_one,
+              enabled: true,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_line_1,
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'Address line1 can\'t be empty'
+                    : null;
+              },
+            ),
+            TextFormField(
+              controller: cntrlr_addr_two,
+              enabled: true,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_line_2,
+              ),
+            ),
+            /*TextFormField(
+              controller: cntrlr_addr_city,
+              enabled: true,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_city,
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'City can\'t be empty'
+                    : null;
+              },
+            ),*/
+            TypeAheadFormField<CityData>(
+              textFieldConfiguration: TextFieldConfiguration(
+                  controller: cntrlr_addr_city,
+                  decoration: InputDecoration(
+                    hintText: "City",
+                    labelText: "City",
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(fontSize: 14.0),
+                  )),
+              suggestionsCallback: (pattern) async {
+                if (pattern.length >= 3) {
+                  return await getCitybasedOnSearch(
+                    pattern,
+                    'city',
+                  );
+                }
+              },
+              itemBuilder: (context, suggestion) {
+                return ListTile(
+                  title: Text(
+                    suggestion.name,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
+                  ),
+                );
+              },
+              transitionBuilder: (context, suggestionsBox, controller) {
+                return suggestionsBox;
+              },
+              onSuggestionSelected: (suggestion) {
+                cntrlr_addr_city.text = suggestion.name;
+                cityVal = suggestion;
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please select a city';
+                }
+                return null;
+              },
+              onSaved: (value) => this.city = value,
+            ),
+            /* TextFormField(
+              controller: cntrlr_addr_state,
+              enabled: true,
+              keyboardType: TextInputType.text,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_state,
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'State can\'t be empty'
+                    : null;
+              },
+            ),*/
+            TypeAheadFormField<CityData>(
+              textFieldConfiguration: TextFieldConfiguration(
+                  controller: cntrlr_addr_state,
+                  decoration: InputDecoration(
+                    hintText: "State",
+                    labelText: 'State',
+                    border: InputBorder.none,
+                    hintStyle: TextStyle(fontSize: 14.0),
+                  )),
+              suggestionsCallback: (pattern) async {
+                if (pattern.length >= 3) {
+                  return await getCitybasedOnSearch(
+                    pattern,
+                    'state',
+                  );
+                }
+              },
+              itemBuilder: (context, suggestion) {
+                return ListTile(
+                  title: Text(suggestion.name),
+                );
+              },
+              transitionBuilder: (context, suggestionsBox, controller) {
+                return suggestionsBox;
+              },
+              onSuggestionSelected: (suggestion) {
+                cntrlr_addr_state.text = suggestion.name;
+                stateVal = suggestion;
+              },
+              validator: (value) {
+                if (value.isEmpty) {
+                  return 'Please select a State';
+                }
+                return null;
+              },
+              onSaved: (value) => this.state = value,
+            ),
+            TextFormField(
+              controller: cntrlr_addr_zip,
+              enabled: true,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_zip,
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'Zip can\'t be empty'
+                    : null;
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -1175,6 +1368,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   void _saveBtnTapped() {
     new FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
+        //address fields validation
         addFamilyUserInfoBloc.name = firstNameController.text;
         addFamilyUserInfoBloc.email = emailController.text;
         addFamilyUserInfoBloc.gender =
@@ -1193,6 +1387,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         addFamilyUserInfoBloc.lastName = lastNameController.text;
 
         addFamilyUserInfoBloc.profileBanner = MySliverAppBar.imageURIProfile;
+
+        addFamilyUserInfoBloc.addressLine1 = cntrlr_addr_one.text;
+        addFamilyUserInfoBloc.addressLine2 = cntrlr_addr_two.text;
+        addFamilyUserInfoBloc.stateId = stateVal.id;
+        addFamilyUserInfoBloc.cityId = cityVal.id;
+        addFamilyUserInfoBloc.zipcode = cntrlr_addr_zip.text;
 
         FamilyListBloc _familyListBloc = new FamilyListBloc();
 
@@ -1230,7 +1430,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             addFamilyUserInfoBloc.updateUserRelationShip().then((value) {
               if (value.success && value.status == 200) {
                 // 2
-                addFamilyUserInfoBloc.updateUserProfile().then((value) {
+                addFamilyUserInfoBloc.updateUserProfile(false).then((value) {
                   if (value.success && value.status == 200) {
                     _familyListBloc.getFamilyMembersList().then((value) {
                       PreferenceUtil.saveFamilyData(
@@ -1260,34 +1460,36 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 content: CommonConstants.all_fields_mandatory);
           }
         } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-          if (doValidation()) {
-            CommonUtil.showLoadingDialog(
-                context, _keyLoader, variable.Please_Wait);
+          if (_formkey.currentState.validate()) {
+            if (doValidation()) {
+              CommonUtil.showLoadingDialog(
+                  context, _keyLoader, variable.Please_Wait);
 
-            addFamilyUserInfoBloc.updateSelfProfile().then((value) {
-              if (value != null && value.success && value.status == 200) {
-                saveProfileImage();
-                getUserProfileData();
-              } else {
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                    .pop();
+              addFamilyUserInfoBloc.updateSelfProfile(true).then((value) {
+                if (value != null && value.success && value.status == 200) {
+                  saveProfileImage();
+                  getUserProfileData();
+                } else {
+                  Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                      .pop();
 
-                Navigator.popUntil(context, (Route<dynamic> route) {
-                  bool shouldPop = false;
-                  if (route.settings.name == router.rt_UserAccounts) {
-                    shouldPop = true;
-                  }
-                  return shouldPop;
-                });
-              }
-            });
-          } else {
-            showDialog(
-                context: context,
-                child: new AlertDialog(
-                  title: new Text(variable.strAPP_NAME),
-                  content: new Text(strErrorMsg),
-                ));
+                  Navigator.popUntil(context, (Route<dynamic> route) {
+                    bool shouldPop = false;
+                    if (route.settings.name == router.rt_UserAccounts) {
+                      shouldPop = true;
+                    }
+                    return shouldPop;
+                  });
+                }
+              });
+            } else {
+              showDialog(
+                  context: context,
+                  child: new AlertDialog(
+                    title: new Text(variable.strAPP_NAME),
+                    content: new Text(strErrorMsg),
+                  ));
+            }
           }
         } else {
           addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
@@ -1302,7 +1504,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             CommonUtil.showLoadingDialog(
                 context, _keyLoader, variable.Please_Wait); //
 
-            addFamilyUserInfoBloc.updateUserProfile().then((value) {
+            addFamilyUserInfoBloc.updateUserProfile(false).then((value) {
               if (value.success && value.status == 200) {
                 _familyListBloc.getFamilyMembersList().then((value) {
                   PreferenceUtil.saveFamilyData(
@@ -1543,6 +1745,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         }
       }
     }
+  }
+
+  Future<List<CityData>> getCitybasedOnSearch(
+    String cityname,
+    String apibody,
+  ) {
+    Future<List<CityData>> citylist;
+    citylist = addFamilyUserInfoBloc.getCityDataList(cityname, apibody);
+    return citylist;
   }
 }
 

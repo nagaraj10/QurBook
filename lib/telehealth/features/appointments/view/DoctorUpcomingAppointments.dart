@@ -228,7 +228,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     String doctorId = doc.doctorId;
     String doctorName = doc.doctorName;
     String doctorPic = doc.doctorPic;
-    chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
+    chatViewModel.storePatientDetailsToFCM(
+        doctorId, doctorName, doctorPic, context);
   }
 
   void navigateToProviderScreen(doc, isReshedule) {
@@ -394,10 +395,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   void moveToBilsPage(String paymentMediaMetaId) async {
     List<String> paymentID = new List();
     paymentID.add(paymentMediaMetaId);
+    int position = await new AppointmentsCommonWidget()
+        .getCategoryPosition(Constants.STR_BILLS);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-        categoryPosition: new AppointmentsCommonWidget()
-            .getCategoryPosition(Constants.STR_BILLS),
+        categoryPosition: position,
         allowSelect: true,
         isAudioSelect: false,
         isNotesSelect: false,

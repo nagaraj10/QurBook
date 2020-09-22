@@ -38,7 +38,7 @@ const String STR_GLUCOMETER = 'Glucometer';
 const String STR_THERMOMETER = 'Thermometer';
 const String STR_BP_MONITOR = 'BP Monitor';
 const String STR_WEIGHING_SCALE = 'Weighing Scale';
-const String STR_PULSE_OXIMETER = 'Pulse Oximeter';
+const String STR_PULSE_OXIMETER = 'Pulse oximeter';
 const String STR_PRESCRIPTION = 'Prescription';
 const String STR_DEVICES = 'Devices';
 const String STR_LABREPORT = 'Lab Report';
@@ -264,6 +264,7 @@ const String mobileNumber = '9176117878';
 
 const String STR_NOTES = 'Notes';
 const String STR_ONLY_ONE = 'Can attach only one record';
+const String STR_UN_AUTH_USER = 'Unauthorized user';
 
 //for appointments
 const String Appointments_Title = "Appointments";

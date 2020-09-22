@@ -8,7 +8,7 @@ class DeviceData {
   String value_name;
   String value1;
   String value2;
-  Color color;
+  List<Color> color;
   DeviceData(
       {this.title,
       this.icon,

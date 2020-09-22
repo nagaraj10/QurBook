@@ -402,7 +402,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
     ));
 
-    
     if (ispdfPresent) {
       print('audioPath' + pdfFile);
       await ImageGallerySaver.saveFile(pdfFile).then((res) {
@@ -415,26 +414,26 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         DownloadMultipleImages(imagesPathMain).downloadFilesFromServer(contxt);
       } else {
         _currentImage = imagesPathMain[0];
-        try{
+        try {
           CommonUtil.downloadFile(_currentImage.response.data.fileContent,
-                _currentImage.response.data.fileType)
-            .then((filePath) async {
-          GallerySaver.saveImage(filePath.path, albumName: 'myfhb')
-              .then((value) {
-            if (value) {
-              Scaffold.of(contxt).showSnackBar(SnackBar(
-                content: const Text(variable.strFilesView),
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ));
-            } else {
-              Scaffold.of(contxt).showSnackBar(SnackBar(
-                content: const Text(variable.strFilesErrorDownload),
-                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-              ));
-            }
+                  _currentImage.response.data.fileType)
+              .then((filePath) async {
+            GallerySaver.saveImage(filePath.path, albumName: 'myfhb')
+                .then((value) {
+              if (value) {
+                Scaffold.of(contxt).showSnackBar(SnackBar(
+                  content: const Text(variable.strFilesView),
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                ));
+              } else {
+                Scaffold.of(contxt).showSnackBar(SnackBar(
+                  content: const Text(variable.strFilesErrorDownload),
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                ));
+              }
+            });
           });
-        });
-        }catch(e){
+        } catch (e) {
           print('$e exception thrown');
         }
       }

@@ -62,6 +62,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   Widget getBody(BuildContext context) {
     DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
     return Container(
+      child: getValues(context, _devicesmodel),
+      /*
       child: Column(
         children: [
           SizedBox(
@@ -72,6 +74,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           ),
         ],
       ),
+      */
     );
   }
 
@@ -82,13 +85,25 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (snapshot.hasData) {
             deviceValues = snapshot.data;
 
-            return ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: finalList.length,
-                itemBuilder: (context, i) {
-                  return Container(child: projectWidget(context, finalList[i]));
-                });
+            return Padding(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+              child: Wrap(
+                verticalDirection: VerticalDirection.up,
+                spacing: 10,
+                runSpacing: 10,
+                children: getDeviceCards(context, finalList),
+              ),
+            );
+
+            /*
+                          return ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: finalList.length,
+                              itemBuilder: (context, i) {
+                                return Container(child: projectWidget(context, finalList[i]));
+                              });
+                              */
           } else {
             return new Center(
               child: new CircularProgressIndicator(
@@ -116,7 +131,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             dateTimeStamp =
                 deviceValues.bloodPressure.entities[0].lastsyncdatetime;
             date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
 
             devicevalue1 =
                 deviceValues.bloodPressure.entities[0].systolic.toString();
@@ -135,7 +150,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             dateTimeStamp =
                 deviceValues.bloodGlucose.entities[0].lastsyncdatetime;
             date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
 
             devicevalue1 = deviceValues
                 .bloodGlucose.entities[0].bloodGlucoseLevel
@@ -151,7 +166,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
             dateTimeStamp =
                 deviceValues.oxygenSaturation.entities[0].lastsyncdatetime;
-            date = "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+            date =
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
             devicevalue1 = deviceValues
                 .oxygenSaturation.entities[0].oxygenSaturation
                 .toString();
@@ -166,7 +182,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (deviceValues.bodyTemperature.entities.isNotEmpty) {
             dateTimeStamp =
                 deviceValues.bodyTemperature.entities[0].lastsyncdatetime;
-            date ="${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+            date =
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
             devicevalue1 =
                 deviceValues.bodyTemperature.entities[0].temperature.toString();
           } else {
@@ -180,7 +197,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           if (deviceValues.bodyWeight.entities.isNotEmpty) {
             dateTimeStamp =
                 deviceValues.bodyWeight.entities[0].lastsyncdatetime;
-            date = "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHMS, variable.strenUs).format(dateTimeStamp)}";
+            date =
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
             devicevalue1 =
                 deviceValues.bodyWeight.entities[0].weight.toString();
           } else {
@@ -195,117 +213,107 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   Widget getDeviceData(BuildContext context, String date, String value1,
       String value2, DeviceData deviceData) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: Column(
-        children: <Widget>[
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ChangeNotifierProvider(
-                          create: (context) => DevicesViewModel(),
-                          child: EachDeviceValues(
-                            device_name: deviceData.value_name,
-                          ),
-                        )),
-              );
-            },
-            child: Container(
-              width: 220,
-              height: 150,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: deviceData.color,
-              ),
+    return Column(
+      children: <Widget>[
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChangeNotifierProvider(
+                        create: (context) => DevicesViewModel(),
+                        child: EachDeviceValues(
+                          device_name: deviceData.value_name,
+                        ),
+                      )),
+            );
+          },
+          child: Container(
+            width: 120,
+            height: 120,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                gradient: LinearGradient(colors: deviceData.color)
+                //color: deviceData.color,
+                ),
+            child: Padding(
+              padding: EdgeInsets.all(8),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(
-                    height: 5,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          date,
+                          style: TextStyle(fontSize: 11, color: Colors.white60),
+                        ),
+                      ),
+                      Image.asset(
+                        deviceData.icon,
+                        height: 24.0,
+                        width: 24.0,
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Image.asset(
-                          deviceData.icon,
-                          height: 30.0,
-                          width: 30.0,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              Text(
-                                parameters.strLatestTitle,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 12),
-                              ),
-                              Text(
-                                date,
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 12),
-                              ),
-                            ],
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            deviceData.value1,
+                            style: TextStyle(color: Colors.white, fontSize: 11),
                           ),
-                        )
-                      ],
-                    ),
+                          Text(
+                            value1.toString(),
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          deviceData.value2 != ''
+                              ? Text(
+                                  deviceData.value2,
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 11),
+                                )
+                              : SizedBox(
+                                  width: 0,
+                                ),
+                          value2.toString() != ''
+                              ? Text(
+                                  value2.toString(),
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                )
+                              : SizedBox(
+                                  width: 0,
+                                ),
+                        ],
+                      )
+                    ],
                   ),
-                  SizedBox(
-                    height: 5.0,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          children: [
-                            Text(
-                              deviceData.value1,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11),
-                            ),
-                            Text(
-                              value1.toString(),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Text(
-                              deviceData.value2,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 11),
-                            ),
-                            Text(
-                              value2.toString(),
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  )
                 ],
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  getDeviceCards(BuildContext context, List<DeviceData> finalList) {
+    List<Widget> deviceCards = [];
+
+    for (int i = 0; i < finalList.length; i++) {
+      deviceCards.add(projectWidget(context, finalList[i]));
+    }
+
+    return deviceCards;
   }
 }

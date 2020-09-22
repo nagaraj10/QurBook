@@ -64,6 +64,11 @@ const String qr_lastname = 'lastName=';
 const String qr_email = 'email=';
 const String qr_DSlash = '||';
 const String qr_OSlash = '|';
+const String qr_StateId = 'stateId=';
+const String qr_CityId = 'cityId=';
+const String qr_AddressLine1 = 'addressLine1=';
+const String qr_AddressLine2 = 'addressLine2=';
+const String qr_pincode='pincode=';
 
 const String qr_category_asc = 'categoryName.asc';
 const String qr_getprofilepic = 'getprofilepic/';
