@@ -520,5 +520,7 @@ const String appid_missing =
     'APP_ID missing, please provide your APP_ID in settings.dart';
 const String agora_not_starting = 'Agora Engine is not starting';
 const String exit_call = 'Do you want exit from call?';
+const String cancel_appointment = 'Are you want cancel Appointment?';
+const String warning = 'warning!';
 const String Yes = 'Yes';
 const String No = 'No';
