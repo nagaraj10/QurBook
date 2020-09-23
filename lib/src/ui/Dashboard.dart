@@ -169,120 +169,129 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         style: TextStyle(color: Colors.black54),
                       ))
                 ]),
-            body: Container(
-              decoration: imageURIProfile != null
-                  ? BoxDecoration(
-                      image: DecorationImage(
-                          image: new FileImage(imageURIProfile),
-                          fit: BoxFit.cover))
-                  : BoxDecoration(color: Colors.white),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    height: 20,
-                  ),
-                  Container(
-                      alignment: Alignment.topRight,
-                      child: (imageURIProfile != null)
-                          ? IconButton(
-                              icon: Icon(
-                                Icons.more_vert,
-                                color: Colors.black87,
-                                size: 30,
-                              ),
-                              onPressed: () {
-                                saveMediaDialog(context, false);
-                              },
-                            )
-                          : SizedBox.shrink()),
-                  Container(
-                    height: 150,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: Center(
-                      child: Container(
-                        child: Stack(
-                          children: <Widget>[
-                            Container(
-                              color: Colors.black.withOpacity(0.1),
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                top: 20,
-                              ),
-                              alignment: Alignment.topRight,
-                              child: imageURIProfile != null
-                                  ? SizedBox.shrink()
-                                  : Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          FHBBasicWidget.customShowCase(
-                                              _coverImage,
-                                              Constants.COVER_IMG_DESC,
-                                              Container(
-                                                  height: 60,
-                                                  width: 60,
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              30),
-                                                      gradient: LinearGradient(
-                                                          colors: [
-                                                            Color(CommonUtil()
-                                                                .getMyPrimaryColor()),
-                                                            Color(CommonUtil()
-                                                                .getMyGredientColor())
-                                                          ])),
-                                                  child: IconButton(
-                                                      icon: Icon(
-                                                        Icons.add_a_photo,
-                                                        color: Colors.white,
-                                                      ),
-                                                      onPressed: () {
-                                                        saveMediaDialog(
-                                                            context, false);
-                                                      })),
-                                              Constants.COVER_IMG_TITLE),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 10, left: 40, right: 40),
-                                            child: Text(
-                                              Constants.NO_DATA_DASHBOARD,
-                                              textAlign: TextAlign.center,
-                                              maxLines: 2,
-                                              style: TextStyle(
-                                                  color: Color(CommonUtil()
-                                                      .getMyPrimaryColor()),
-                                                  fontSize: 13,
-                                                  fontFamily:
-                                                      variable.font_poppins),
-                                            ),
-                                          )
-                                        ],
+            body: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  decoration: imageURIProfile != null
+                      ? BoxDecoration(
+                          image: DecorationImage(
+                              image: new FileImage(imageURIProfile),
+                              fit: BoxFit.cover))
+                      : BoxDecoration(color: Colors.white),
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 40, horizontal: 10),
+                          alignment: Alignment.topRight,
+                          child: (imageURIProfile != null)
+                              ? Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      gradient: LinearGradient(colors: [
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        Color(CommonUtil().getMyGredientColor())
+                                      ])),
+                                  child: IconButton(
+                                      icon: Icon(
+                                        Icons.add_a_photo,
+                                        color: Colors.white,
                                       ),
-                                    ),
+                                      onPressed: () {
+                                        saveMediaDialog(context, false);
+                                      }))
+                              : SizedBox.shrink()),
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: Center(
+                          child: Container(
+                            child: Stack(
+                              children: <Widget>[
+                                Container(
+                                  color: Colors.black.withOpacity(0.1),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    top: 20,
+                                  ),
+                                  alignment: Alignment.topRight,
+                                  child: imageURIProfile != null
+                                      ? SizedBox.shrink()
+                                      : Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              FHBBasicWidget.customShowCase(
+                                                  _coverImage,
+                                                  Constants.COVER_IMG_DESC,
+                                                  Container(
+                                                      height: 60,
+                                                      width: 60,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(30),
+                                                          gradient:
+                                                              LinearGradient(
+                                                                  colors: [
+                                                                Color(CommonUtil()
+                                                                    .getMyPrimaryColor()),
+                                                                Color(CommonUtil()
+                                                                    .getMyGredientColor())
+                                                              ])),
+                                                      child: IconButton(
+                                                          icon: Icon(
+                                                            Icons.add_a_photo,
+                                                            color: Colors.white,
+                                                          ),
+                                                          onPressed: () {
+                                                            saveMediaDialog(
+                                                                context, false);
+                                                          })),
+                                                  Constants.COVER_IMG_TITLE),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 10,
+                                                    left: 40,
+                                                    right: 40),
+                                                child: Text(
+                                                  Constants.NO_DATA_DASHBOARD,
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 2,
+                                                  style: TextStyle(
+                                                      color: Color(CommonUtil()
+                                                          .getMyPrimaryColor()),
+                                                      fontSize: 13,
+                                                      fontFamily: variable
+                                                          .font_poppins),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                  Container(
-                    height: 140,
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height - 200,
+                  child: ChangeNotifierProvider(
+                    create: (context) => DevicesViewModel(),
+                    child: ShowDevicesNew(),
                   ),
-                  Expanded(
-                    child: ChangeNotifierProvider(
-                      create: (context) => DevicesViewModel(),
-                      child: ShowDevicesNew(),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           );
         },

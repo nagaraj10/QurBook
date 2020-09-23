@@ -37,11 +37,11 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
-  var cntrlr_addr_one = TextEditingController();
-  var cntrlr_addr_two = TextEditingController();
-  var cntrlr_addr_city = TextEditingController();
-  var cntrlr_addr_state = TextEditingController();
-  var cntrlr_addr_zip = TextEditingController();
+  var cntrlr_addr_one = TextEditingController(text: '');
+  var cntrlr_addr_two = TextEditingController(text: '');
+  var cntrlr_addr_city = TextEditingController(text: '');
+  var cntrlr_addr_state = TextEditingController(text: '');
+  var cntrlr_addr_zip = TextEditingController(text: '');
 
   @override
   void initState() {
@@ -138,6 +138,22 @@ class _MyProfilePageState extends State<MyProfilePage> {
           : '';
       middleName.text = '';
       lastName.text = '';
+    }
+
+    if (data.generalInfo.addressLine1 != null) {
+      cntrlr_addr_one.text = data.generalInfo.addressLine1;
+    }
+    if (data.generalInfo.addressLine2 != null) {
+      cntrlr_addr_two.text = data.generalInfo.addressLine2;
+    }
+    if (data.generalInfo.city != null) {
+      cntrlr_addr_city.text = data.generalInfo.city.name;
+    }
+    if (data.generalInfo.state != null) {
+      cntrlr_addr_state.text = data.generalInfo.state.name;
+    }
+    if (data.generalInfo.pincode != null) {
+      cntrlr_addr_zip.text = data.generalInfo.pincode;
     }
 
     return Container(

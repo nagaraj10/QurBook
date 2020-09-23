@@ -135,11 +135,21 @@ class WebserviceCall {
       File profilePic,
       String firstName,
       String middleName,
-      String lastName) {
+      String lastName,
+      String cityId,
+      String stateId,
+      String addressLine1,
+      String addressLine2,
+      String zipcode,
+      bool fromFamily) {
     String query;
     query =
         "${variable.qr_generalInfo}${variable.qr_DSlash}${variable.qr_gender}${gender}${variable.qr_OSlash}${variable.qr_bloodgroup}${bloodGroup}${variable.qr_OSlash}${variable.qr_dateOfBirth}${dateOfBirth}${variable.qr_OSlash}${variable.qr_name}${name}${variable.qr_OSlash}${variable.qr_firstName}${firstName}${variable.qr_OSlash}${variable.qr_middleName}${middleName}${variable.qr_OSlash}${variable.qr_lastname}${lastName}${variable.qr_OSlash}${variable.qr_email}${email}";
 
+    if (fromFamily) {
+      query = query +
+          "${variable.qr_OSlash}${variable.qr_CityId}${cityId}${variable.qr_OSlash}${variable.qr_StateId}${stateId}${variable.qr_OSlash}${variable.qr_AddressLine2}${addressLine2}${variable.qr_OSlash}${variable.qr_AddressLine1}${addressLine1}${variable.qr_OSlash}${variable.qr_pincode}${zipcode}";
+    }
     /*query =
         variable.qr_sections +
         query;*/
