@@ -40,6 +40,7 @@ import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 
 class AddProviders extends StatefulWidget {
   DoctorsData data;
@@ -140,89 +141,96 @@ class AddProvidersState extends State<AddProviders> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: (){
+          Navigator.of(context).pop();
+        }),
+        flexibleSpace: GradientAppBar(),
+        title: Text('Add Provider'),
+      ),
       body: Container(
         constraints: BoxConstraints.expand(),
         child: SingleChildScrollView(
             child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height / 2,
-              child: Stack(
-                children: <Widget>[
-                  GoogleMap(
-                    scrollGesturesEnabled: false,
-                    mapType: MapType.normal,
-                    initialCameraPosition: kGooglePlex,
-                    onCameraMove: _onCameraMove,
-                    markers: Set.from(_markers),
-                    onMapCreated: _onMapCreated,
-                  ),
-                  Column(
-                    children: <Widget>[
-                      InkWell(
-                          onTap: () {
-                            if (widget.arguments.hasData == false) {
-                              Navigator.pushNamed(
-                                context,
-                                router.rt_AddAddress,
-                                arguments: AddAddressArguments(
-                                    providerType:
-                                        widget.arguments.searchKeyWord),
-                              ).then((value) {
-                                buildUI();
-                                getAddressesFromCoordinates();
-                              });
-                            }
-                          },
-                          child: Container(
-                            height: 40,
-                            color: Colors.white,
-                            margin:
-                                EdgeInsets.only(left: 10, right: 10, top: 40),
-                            child: Row(
-                              children: <Widget>[
-                                SizedBox(width: 10),
-                                InkWell(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: Image.asset(ImageUrlUtils.backImg,
-                                        width: 16,
-                                        height: 16,
-                                        fit: BoxFit.cover)),
-                                SizedBox(width: 10),
-                                Text(CommonConstants.searchPlaces,
-                                    style: TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.w400,
-                                        color: ColorUtils.greycolor1)),
-                              ],
-                            ),
-                          )),
-                      Visibility(
-                          visible: widget.arguments.hasData == true
-                              ? latitude == 0.0 ? true : false
-                              : false,
-                          child: Container(
-                            height: MediaQuery.of(context).size.height / 2 - 80,
-                            color: ColorUtils.blackcolor.withOpacity(0.7),
-                            child: Center(
-                              child: Text(
-                                CommonConstants.comingSoon,
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.white),
-                              ),
-                            ),
-                          ))
-                    ],
-                  )
-                ],
-              ),
-            ),
+            // Container(
+            //   width: MediaQuery.of(context).size.width,
+            //   height: MediaQuery.of(context).size.height / 2,
+            //   child: Stack(
+            //     children: <Widget>[
+            //       GoogleMap(
+            //         scrollGesturesEnabled: false,
+            //         mapType: MapType.normal,
+            //         initialCameraPosition: kGooglePlex,
+            //         onCameraMove: _onCameraMove,
+            //         markers: Set.from(_markers),
+            //         onMapCreated: _onMapCreated,
+            //       ),
+            //       Column(
+            //         children: <Widget>[
+            //           InkWell(
+            //               onTap: () {
+            //                 if (widget.arguments.hasData == false) {
+            //                   Navigator.pushNamed(
+            //                     context,
+            //                     router.rt_AddAddress,
+            //                     arguments: AddAddressArguments(
+            //                         providerType:
+            //                             widget.arguments.searchKeyWord),
+            //                   ).then((value) {
+            //                     buildUI();
+            //                     getAddressesFromCoordinates();
+            //                   });
+            //                 }
+            //               },
+            //               child: Container(
+            //                 height: 40,
+            //                 color: Colors.white,
+            //                 margin:
+            //                     EdgeInsets.only(left: 10, right: 10, top: 40),
+            //                 child: Row(
+            //                   children: <Widget>[
+            //                     SizedBox(width: 10),
+            //                     InkWell(
+            //                         onTap: () {
+            //                           Navigator.pop(context);
+            //                         },
+            //                         child: Image.asset(ImageUrlUtils.backImg,
+            //                             width: 16,
+            //                             height: 16,
+            //                             fit: BoxFit.cover)),
+            //                     SizedBox(width: 10),
+            //                     Text(CommonConstants.searchPlaces,
+            //                         style: TextStyle(
+            //                             fontSize: 16.0,
+            //                             fontWeight: FontWeight.w400,
+            //                             color: ColorUtils.greycolor1)),
+            //                   ],
+            //                 ),
+            //               )),
+            //           Visibility(
+            //               visible: widget.arguments.hasData == true
+            //                   ? latitude == 0.0 ? true : false
+            //                   : false,
+            //               child: Container(
+            //                 height: MediaQuery.of(context).size.height / 2 - 80,
+            //                 color: ColorUtils.blackcolor.withOpacity(0.7),
+            //                 child: Center(
+            //                   child: Text(
+            //                     CommonConstants.comingSoon,
+            //                     style: TextStyle(
+            //                         fontSize: 16.0,
+            //                         fontWeight: FontWeight.w400,
+            //                         color: Colors.white),
+            //                   ),
+            //                 ),
+            //               ))
+            //         ],
+            //       )
+            //     ],
+            //   ),
+            // ),
             SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.only(left: 10, top: 20, right: 10),

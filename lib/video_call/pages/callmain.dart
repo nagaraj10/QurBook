@@ -127,7 +127,7 @@ class CallMain extends StatelessWidget {
           return AlertDialog(
             title: Center(
               child: Text(
-                'warning!',
+                parameters.warning,
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

@@ -41,6 +41,7 @@ class MainActivity : FlutterActivity() {
     private val STREAM = Constants.CN_EVE_STREAM
     private var sharedValue: String? = null
     private var username: String? = null
+    private var bookingId: String? = null
     private var docId: String? = null
     private var docPic: String? = null
     private lateinit var mEventChannel:EventSink
@@ -236,8 +237,15 @@ class MainActivity : FlutterActivity() {
         username = intent.getStringExtra(getString(R.string.username))
         docId = intent.getStringExtra(getString(R.string.docId))
         docPic= intent.getStringExtra(getString(R.string.docPic))
+        bookingId= intent.getStringExtra(Constants.PROP_CANCEL_KEY)
         if(sharedValue!=null && username !=null && docId!=null && docPic !=null){
             sharedValue="$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}"
+        }else if(sharedValue==Constants.PROP_RESCHEDULE){
+            //todo redirect to telehealth page
+            sharedValue="${Constants.PROP_RESCHEDULE}&${docId!!}"
+        }else if(sharedValue==Constants.PROP_CANCEL_APPS){
+            //todo redirect to telehealth page
+            sharedValue="${Constants.PROP_CANCEL_APPS}&${bookingId!!}"
         }else{
             sharedValue=Constants.PROP_ACK
         }

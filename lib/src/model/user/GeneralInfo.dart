@@ -1,6 +1,8 @@
+import 'package:myfhb/src/model/user/City.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/src/model/user/State.dart';
 
 class GeneralInfo {
   String name;
@@ -20,25 +22,36 @@ class GeneralInfo {
   QualifiedFullName qualifiedFullName;
   String mappedDoctorId;
   String profilePicThumbnailURL;
+  String addressLine1;
+  String addressLine2;
+  String pincode;
+  City city;
+  State state;
 
-  GeneralInfo(
-      {this.name,
-      this.countryCode,
-      this.phoneNumber,
-      this.email,
-      this.gender,
-      this.bloodGroup,
-      this.createdBy,
-      this.isEmailVerified,
-      this.isVirtualUser,
-      this.isTempUser,
-      this.createdOn,
-      this.lastModifiedOn,
-      this.dateOfBirth,
-      this.profilePicThumbnail,
-      this.qualifiedFullName,
-      this.mappedDoctorId,
-      this.profilePicThumbnailURL});
+  GeneralInfo({
+    this.name,
+    this.countryCode,
+    this.phoneNumber,
+    this.email,
+    this.gender,
+    this.bloodGroup,
+    this.createdBy,
+    this.isEmailVerified,
+    this.isVirtualUser,
+    this.isTempUser,
+    this.createdOn,
+    this.lastModifiedOn,
+    this.dateOfBirth,
+    this.profilePicThumbnail,
+    this.qualifiedFullName,
+    this.mappedDoctorId,
+    this.profilePicThumbnailURL,
+    this.addressLine1,
+    this.addressLine2,
+    this.pincode,
+    this.city,
+    this.state,
+  });
 
   GeneralInfo.fromJson(Map<String, dynamic> json) {
     name = json[parameters.strName];
@@ -61,8 +74,17 @@ class GeneralInfo {
     qualifiedFullName = json[parameters.strqualifiedFullName] != null
         ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
         : null;
-    mappedDoctorId = json['mappedDoctorId'];
-    profilePicThumbnailURL = json['profilePicThumbnailURL'];
+    mappedDoctorId = json[parameters.strMappedDoctorId];
+    profilePicThumbnailURL = json[parameters.strProfilePicThumbnailURL];
+    addressLine1 = json[parameters.strAddressLine1];
+    addressLine2 = json[parameters.strAddressLine2];
+    pincode = json[parameters.strpincode];
+    city = json[parameters.strCity] != null
+        ? new City.fromJson(json[parameters.strCity])
+        : null;
+    state = json[parameters.strState] != null
+        ? new State.fromJson(json[parameters.strState])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -87,8 +109,17 @@ class GeneralInfo {
     if (this.qualifiedFullName != null) {
       data[parameters.strqualifiedFullName] = this.qualifiedFullName.toJson();
     }
-    data['mappedDoctorId'] = this.mappedDoctorId;
-    data['profilePicThumbnailURL'] = this.profilePicThumbnailURL;
+    data[parameters.strMappedDoctorId] = this.mappedDoctorId;
+    data[parameters.strProfilePicThumbnailURL] = this.profilePicThumbnailURL;
+    data[parameters.strAddressLine1] = this.addressLine1;
+    data[parameters.strAddressLine2] = this.addressLine2;
+    data[parameters.strpincode] = this.pincode;
+    if (this.city != null) {
+      data[parameters.strCity] = this.city.toJson();
+    }
+    if (this.state != null) {
+      data[parameters.strState] = this.state.toJson();
+    }
     return data;
   }
 }

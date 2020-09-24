@@ -371,8 +371,7 @@ class ApiBaseHelper {
       case 401:
         var responseJson = convert.jsonDecode(response.body.toString());
 
-        if (responseJson[parameters.strMessage] ==
-            Constants.STR_UN_AUTH_USER) {
+        if (responseJson[parameters.strMessage] == Constants.STR_UN_AUTH_USER) {
           SnackbarToLogout();
         } else {
           return responseJson;
@@ -876,7 +875,7 @@ class ApiBaseHelper {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
         if (resReturnCode.status == 200) {
-         printWrapped('=======response_appointment'+response.body);
+          printWrapped('=======response_appointment' + response.body);
           return AppointmentsModel.fromJson(jsonDecode(response.body));
         } else {
           throw Exception(variable.strFailed);
@@ -1042,5 +1041,22 @@ class ApiBaseHelper {
   void printWrapped(String text) {
     final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
+  }
+
+  getValueBasedOnSearch(String name, String apiname) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var response = await http.get(
+      (apiname == 'qualification' || apiname == 'city' || apiname == 'state')
+          ? '$_baseUrl/$apiname?isSearch=true&searchData=$name'
+          : '$_baseUrl/doctors/professional/search?type=$apiname&isSearch=true&data=$name',
+      headers: {HttpHeaders.authorizationHeader: authToken},
+    );
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+      return body;
+    } else {
+      throw Exception("Unable to perform request!");
+    }
   }
 }

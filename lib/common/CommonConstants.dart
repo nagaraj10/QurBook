@@ -83,7 +83,7 @@ class CommonConstants {
 
   static String strGlucometerValue = 'mg/dL';
   static String strValue = 'Value';
-  static String strMemo = 'Memo (50)';
+  static String strMemo = 'Memo (500)';
   static String strTimeTaken = 'Time taken';
   static String strSugarLevel = 'sugarLevel';
   static String strTimeIntake = 'Time of Intake';
@@ -214,6 +214,12 @@ class CommonConstants {
   static String firstName = "FirstName";
   static String middleName = "MiddleName";
   static String lastName = "LastName";
+
+  static const String addr_line_1 = "Address line 1*";
+  static const String addr_line_2 = "Address line 2";
+  static const String addr_city = "City*";
+  static const String addr_state = "State*";
+  static const String addr_zip = "Zipcode*";
 
   static String KEY_COUNTRYCODE = 'CountryCode';
   static String KEY_COUNTRYNAME = 'CountryName';

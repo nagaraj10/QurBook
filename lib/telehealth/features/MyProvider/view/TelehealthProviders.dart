@@ -13,11 +13,15 @@ import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNaviga
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigationMain.dart';
 import 'package:myfhb/telehealth/features/Devices/view/Devices.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
+import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/telehealth/features/telehealth/view/Telehealth.dart';
-
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../../../../src/ui/MyRecord.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 
 class TelehealthProviders extends StatefulWidget {
   static _TelehealthProvidersState of(BuildContext context) =>
@@ -34,6 +38,8 @@ class TelehealthProviders extends StatefulWidget {
 
 class _TelehealthProvidersState extends State<TelehealthProviders> {
   int _selectedIndex;
+  bool _isCancelDialogShouldShown = false;
+  String _bookingId;
   GlobalKey _bottomNavigationKey = GlobalKey();
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -60,11 +66,21 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   void initState() {
     super.initState();
     _selectedIndex = widget.arguments.selectedIndex;
+    if (widget.arguments.isCancelDialogShouldShow != null) {
+      _isCancelDialogShouldShown = widget.arguments.isCancelDialogShouldShow;
+      _bookingId = widget.arguments.bookingId;
+    }
+
     getAllValuesForBottom();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_isCancelDialogShouldShown) {
+      Future.delayed(Duration(seconds: 5), () {
+        showPromptToUser(context);
+      });
+    }
     return Scaffold(
       backgroundColor: const Color(0xFFf7f6f5),
       body: Center(
@@ -77,6 +93,71 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
       ),
       //bottomNavigationBar: BottomNavigationMain(),
     );
+  }
+
+  Future showPromptToUser(BuildContext context) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            title: Center(
+              child: Text(
+                parameters.warning,
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black.withOpacity(0.8)),
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  child: Text(
+                    parameters.cancel_appointment,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black.withOpacity(0.5)),
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    FlatButton(
+                      child: Text(parameters.Yes),
+                      onPressed: () async {
+                        //call the appointment cancel api
+                        FlutterToast toast = new FlutterToast();
+                        _isCancelDialogShouldShown = false;
+                        Navigator.of(context).pop(true);
+                        CancelAppointmentModel cancelAppointment =
+                            await AppointmentsViewModel()
+                                .fetchCancelAppointment([_bookingId]);
+
+                        if (cancelAppointment.status == 200 &&
+                            cancelAppointment.success == true) {
+                          toast.getToast(
+                              Constants.YOUR_BOOKING_SUCCESS, Colors.green);
+                        } else {
+                          toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
+                        }
+                      },
+                    ),
+                    FlatButton(
+                        child: Text(parameters.No),
+                        onPressed: () {
+                          _isCancelDialogShouldShown = false;
+                          Navigator.of(context).pop(false);
+                        }),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   void _myFunc(int index) {

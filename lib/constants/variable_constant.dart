@@ -159,6 +159,7 @@ const String icon_digit_googleFit = 'assets/settings/googlefit.png';
 const String icon_th = 'assets/navicons/th.png';
 const String icon_home = 'assets/navicons/home.png';
 const String icon_schedule = 'assets/navicons/schedule.png';
+const String icon_profile = 'assets/navicons/ic_profile_two.png';
 const String icon_more = 'assets/navicons/more.png';
 
 //for File
@@ -503,6 +504,7 @@ const String strTelehealth = 'TeleHealth';
 const String strMyRecords = 'My Records';
 const String strhome = 'Home';
 const String strSchedule = 'Schedules';
+const String strProfile = 'Profile';
 const String strMore = 'More';
 const String strClose = 'Close';
 

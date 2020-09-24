@@ -1,15 +1,24 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 
 import '../utils/PageNavigator.dart';
 
 class SplashScreen extends StatefulWidget {
+  final String nsRoute;
+  final String bookingID;
+  final String doctorID;
+
+  SplashScreen({this.nsRoute,this.bookingID,this.doctorID});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -34,7 +43,19 @@ class _SplashScreenState extends State<SplashScreen> {
             PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
         if (authToken != null) {
           if (deviceIfo) {
-            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+            if (widget.nsRoute == 'reschedule') {
+              Get.offAll(TelehealthProviders(
+                arguments: HomeScreenArguments(selectedIndex: 1),
+              ));
+            } else if (widget.nsRoute == 'cancel_appointment') {
+              //cancel appointments route
+              Get.offAll(TelehealthProviders(
+                arguments: HomeScreenArguments(
+                    selectedIndex: 0, isCancelDialogShouldShow: true,bookingId: widget.bookingID),
+              ));
+            } else {
+              PageNavigator.goToPermanent(context, router.rt_Dashboard);
+            }
           } else {
             FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
