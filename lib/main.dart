@@ -22,6 +22,7 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
@@ -270,7 +271,10 @@ class _MyFHBState extends State<MyFHB> {
           ),
           provider.ChangeNotifierProvider<MyFamilyViewModel>(
             create: (_) => MyFamilyViewModel(),
-          )
+          ),
+           provider.ChangeNotifierProvider<ChatScreenViewModel>(
+            create: (_) => ChatScreenViewModel(),
+          ),
         ],
         child: MaterialApp(
           title: Constants.APP_NAME,

@@ -10,7 +10,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:showcaseview/showcase_widget.dart';
 
-import 'ChatScreen.dart';
+import 'view/ChatScreen.dart';
 
 class SuperMaya extends StatefulWidget {
   @override
