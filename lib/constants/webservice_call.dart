@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as variable;
-import 'package:myfhb/common/CommonUtil.dart';
 
 class WebserviceCall {
   String getQueryToUpdateDoctor(bool isPreferred, String providerId) {
@@ -23,6 +23,14 @@ class WebserviceCall {
   String getUrlToUpdateDoctor(String userID) {
     String query;
     query = '${variable.qr_Userprofile}${userID}${variable.qr_slash}';
+
+    return query;
+  }
+
+  String getUrlToUpdateDoctorNew(String userID) {
+    String query;
+    query =
+        '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_section}${variable.qr_medicalPreferences}';
 
     return query;
   }
@@ -86,6 +94,18 @@ class WebserviceCall {
 
     query =
         "${variable.qr_Userprofile}${userID}${variable.qr_slash}${variable.qr_picture}";
+
+    return query;
+  }
+
+  String getQueryForFamilyMemberListNew() {
+    String query = '';
+    // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    String userID = CommonConstants.NEW_USER_ID;
+
+    query =
+        "${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_slash}${variable.qr_myconnection}";
 
     return query;
   }

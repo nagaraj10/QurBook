@@ -2,17 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/DoctorModel.dart';
-import 'package:myfhb/my_providers/models/HospitalModel.dart';
-import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
 import 'package:myfhb/my_providers/screens/my_providers_doctors_list.dart';
 import 'package:myfhb/my_providers/screens/my_providers_hospitals_list.dart';
 import 'package:myfhb/my_providers/screens/my_providers_labs_list.dart';
 
 class MyProvidersTabBar extends StatefulWidget {
-  MyProvidersData data;
+  MyProvidersResponseData data;
   TabController tabController;
   ProvidersBloc providersBloc;
   MyProviderState myProviderState;
@@ -31,58 +28,58 @@ class MyProvidersTabBar extends StatefulWidget {
 }
 
 class MyProviderTabBarState extends State<MyProvidersTabBar> {
-  List<HospitalsModel> hospitalsModel = new List();
-  List<DoctorsModel> doctorsModel = new List();
-  List<LaboratoryModel> labsModel = new List();
+  List<Hospitals> hospitalsModel = new List();
+  List<Doctors> doctorsModel = new List();
+  List labsModel = new List();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    hospitalsModel = widget.data.hospitalsModel;
-    doctorsModel = widget.data.doctorsModel;
-    labsModel = widget.data.laboratoryModel;
+    hospitalsModel = widget.data.hospitals;
+    doctorsModel = widget.data.doctors;
+    labsModel = widget.data.labs;
 
-    // 1
-    // Doctors
-    doctorsModel.sort((a, b) => a.name
-        .toString()
-        .toLowerCase()
-        .compareTo(b.name.toString().toLowerCase()));
-
-    doctorsModel.sort((a, b) => (a.isDefault
-            ? a.name
-                .toString()
-                .toLowerCase()
-                .compareTo(b.name.toString().toLowerCase())
-            : 0)
-        .compareTo(b.isDefault
-            ? a.name
-                .toString()
-                .toLowerCase()
-                .compareTo(b.name.toString().toLowerCase())
-            : 0));
-
-    // 2
-    // Hospital
-    hospitalsModel.sort((a, b) => a.name
-        .toString()
-        .toLowerCase()
-        .compareTo(b.name.toString().toLowerCase()));
-
-    hospitalsModel.sort((a, b) => (a.isDefault
-            ? a.name
-                .toString()
-                .toLowerCase()
-                .compareTo(b.name.toString().toLowerCase())
-            : 0)
-        .compareTo(b.isDefault
-            ? a.name
-                .toString()
-                .toLowerCase()
-                .compareTo(b.name.toString().toLowerCase())
-            : 0));
+    // // 1
+    // // Doctors
+    // doctorsModel.sort((a, b) => a.user.name
+    //     .toString()
+    //     .toLowerCase()
+    //     .compareTo(b.user.name.toString().toLowerCase()));
+    //
+    // doctorsModel.sort((a, b) => (a.user.isDefault
+    //         ? a.user.name
+    //             .toString()
+    //             .toLowerCase()
+    //             .compareTo(b.user.name.toString().toLowerCase())
+    //         : 0)
+    //     .compareTo(b.isDefault
+    //         ? a.user.name
+    //             .toString()
+    //             .toLowerCase()
+    //             .compareTo(b.user.name.toString().toLowerCase())
+    //         : 0));
+    //
+    // // 2
+    // // Hospital
+    // hospitalsModel.sort((a, b) => a.name
+    //     .toString()
+    //     .toLowerCase()
+    //     .compareTo(b.name.toString().toLowerCase()));
+    //
+    // hospitalsModel.sort((a, b) => (a.isDefault
+    //         ? a.name
+    //             .toString()
+    //             .toLowerCase()
+    //             .compareTo(b.name.toString().toLowerCase())
+    //         : 0)
+    //     .compareTo(b.isDefault
+    //         ? a.name
+    //             .toString()
+    //             .toLowerCase()
+    //             .compareTo(b.name.toString().toLowerCase())
+    //         : 0));
 
     // 3
     // Labs

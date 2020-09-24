@@ -527,3 +527,6 @@ const String cancel_appointment = 'Are you want cancel Appointment?';
 const String warning = 'warning!';
 const String Yes = 'Yes';
 const String No = 'No';
+
+const String id = 'id';
+const String healthOrganization = 'healthOrganization';

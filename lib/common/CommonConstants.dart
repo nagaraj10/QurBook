@@ -228,6 +228,12 @@ class CommonConstants {
 
   static String STR_RHTYPE = 'Rh type';
 
+  static String SEARCH_HOSPIT_ID = "6aa4195b-56c6-487d-8993-dfd1b39b1a49";
+  static String SEARCH_LAB_ID = "6aa4195b-56c6-487d-8993-dfd1b39b1a49";
+  static String NEW_BASE_URL = 'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/api/';
+  static String NEW_USER_ID = "6aa4195b-56c6-487d-8993-dfd1b39b1a49";
+  static String NEW_AUTH_TOKEN =
+      "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6eyJ1c2VySWQiOiI4NTg5MmYyZC04NDY3LTQyZTYtYTJkZC02NWYyNjI3ODBhMmIiLCJ1c2VyTmFtZSI6IisxNjE0MzAxMzkwNiJ9LCJpYXQiOjE2MDAxNTEzMTIsImV4cCI6MTYwMjc0MzMxMiwiaXNzIjoiRkhCIiwic3ViIjoiRkhCIn0.UISGi0e_Z7GfWY87IJ-YAchkkg-Fk4NXr63l06-SHWgP0GIj1jMIuesoLPkDPWLGQSw6Qmr62-nD-iKi2YV_Jz5AgoWTo9dBFSzFjRBVwXWKU0qn5uDZ_F-HeyiYylAklsRsLI0dm512y5H_sAn5M85O3h5T2dtBLZbYRzV7-HUDwjz_Ua9_0UvHdo0s9_gybEg8VgUvd2YfOYz3Y4OYKjaNVGsuqRf4-nm8BgU1mA0-VPw0EOOvhhOgjvlU1N5gy36IRrJfS-wpLtZF3rp3wFH68YNxa3ixe1BKS_uPHS4Mdvu0K731ewR7O3eycCYzMhHzgh4yRL1UWH8UxrVfxw";
   static final CommonConstants _instance = new CommonConstants.internal();
   static CountryMetrics countryMetrics;
   static UnitsMesurements unitsMeasurements;

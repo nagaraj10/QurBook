@@ -1,8 +1,6 @@
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/my_family/models/relationship_response_list.dart';
 
 class AddFamilyUserInfoArguments {
   AddFamilyUserInfo addFamilyUserInfo;
@@ -12,7 +10,7 @@ class AddFamilyUserInfoArguments {
   RelationShip relationShip;
   String id;
   bool isPrimaryNoSelected;
-  Sharedbyme sharedbyme;
+  SharedByUsers sharedbyme;
   String fromClass;
 
   AddFamilyUserInfoArguments(

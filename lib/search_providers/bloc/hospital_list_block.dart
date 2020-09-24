@@ -1,21 +1,27 @@
 import 'dart:async';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/search_providers/models/hospital_list_response.dart';
+import 'package:myfhb/search_providers/models/hospital_list_response_new.dart';
 import 'package:myfhb/search_providers/services/hospital_list_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
-
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class HospitalListBlock implements BaseBloc {
   HospitalListRepository _hospitalListRepository;
   StreamController _hospitalListController;
   StreamController _hospitalProfileImageControlller;
+  StreamController _hospitalListNewController;
 
   StreamSink<ApiResponse<HospitalListResponse>> get hospitalListSink =>
       _hospitalListController.sink;
   Stream<ApiResponse<HospitalListResponse>> get hospitalStream =>
       _hospitalListController.stream;
+
+  StreamSink<ApiResponse<HospitalsSearchListResponse>>
+      get hospitalListNewSink => _hospitalListNewController.sink;
+  Stream<ApiResponse<HospitalsSearchListResponse>> get hospitalNewStream =>
+      _hospitalListNewController.stream;
 
   @override
   void dispose() {
@@ -25,6 +31,9 @@ class HospitalListBlock implements BaseBloc {
   HospitalListBlock() {
     _hospitalListController =
         StreamController<ApiResponse<HospitalListResponse>>();
+
+    _hospitalListNewController =
+        StreamController<ApiResponse<HospitalsSearchListResponse>>();
 
     _hospitalListRepository = new HospitalListRepository();
   }
@@ -37,6 +46,17 @@ class HospitalListBlock implements BaseBloc {
       hospitalListSink.add(ApiResponse.completed(hospitalListResponse));
     } catch (e) {
       hospitalListSink.add(ApiResponse.error(e.toString()));
+    }
+  }
+
+  getHospitalListNew(String param) async {
+    hospitalListNewSink.add(ApiResponse.loading(variable.strGetHospitalList));
+    try {
+      HospitalsSearchListResponse hospitalListResponse =
+          await _hospitalListRepository.getHospitalFromSearchNew(param);
+      hospitalListNewSink.add(ApiResponse.completed(hospitalListResponse));
+    } catch (e) {
+      hospitalListNewSink.add(ApiResponse.error(e.toString()));
     }
   }
 

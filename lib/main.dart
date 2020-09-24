@@ -25,8 +25,6 @@ import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
-import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/services/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
@@ -296,7 +294,7 @@ class _MyFHBState extends State<MyFHB> {
           provider.ChangeNotifierProvider<MyFamilyViewModel>(
             create: (_) => MyFamilyViewModel(),
           ),
-           provider.ChangeNotifierProvider<ChatScreenViewModel>(
+          provider.ChangeNotifierProvider<ChatScreenViewModel>(
             create: (_) => ChatScreenViewModel(),
           ),
         ],

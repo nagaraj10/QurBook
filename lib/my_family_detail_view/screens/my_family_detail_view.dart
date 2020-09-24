@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/my_family_detail_view/bloc/my_family_detail_view_boc.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view_hospital.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view_insurance.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/fhb_query.dart' as query;
-
+import 'package:myfhb/src/utils/colors_utils.dart';
 
 class MyFamilyDetailView extends StatefulWidget {
   MyFamilyDetailViewArguments arguments;
@@ -55,10 +51,10 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
       PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, categoryData);
     });
 
-    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.profileData.id;
+    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.id;
 
-    PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID,
-        widget.arguments.sharedbyme.profileData.id);
+    PreferenceUtil.saveString(
+        Constants.KEY_FAMILYMEMBERID, widget.arguments.sharedbyme.id);
   }
 
   void _setActiveTabIndex() {
@@ -129,7 +125,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                             .then((value) {
                           PreferenceUtil.saveString(
                                   Constants.KEY_FAMILYMEMBERID,
-                                  widget.arguments.sharedbyme.profileData.id)
+                                  widget.arguments.sharedbyme.id)
                               .then((value) {
                             Navigator.pushNamed(context, router.rt_TakePicture)
                                 .then((value) {
@@ -142,8 +138,8 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                   }
                 }
               } else {
-                 new FHBBasicWidget().showInSnackBar(
-                              Constants.STR_NO_CONNECTIVITY, scaffold_state);
+                new FHBBasicWidget().showInSnackBar(
+                    Constants.STR_NO_CONNECTIVITY, scaffold_state);
               }
             });
           }),
@@ -153,7 +149,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
   Widget getHealthReportToDisplayInBody() {
     myFamilyDetailViewBloc = new MyFamilyDetailViewBloc();
-    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.profileData.id;
+    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.id;
 
     myFamilyDetailViewBloc.getHelthReportList();
 

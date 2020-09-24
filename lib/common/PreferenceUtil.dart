@@ -1,6 +1,11 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:core';
+
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/models/FamilyData.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
@@ -11,9 +16,6 @@ import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class PreferenceUtil {
   static Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -37,7 +39,6 @@ class PreferenceUtil {
 
   static Future<bool> saveMediaData(
       String keyProfile, MediaData mediaData) async {
-    
     var instance = await _prefs;
     String profile = json.encode(mediaData);
 
@@ -109,7 +110,6 @@ class PreferenceUtil {
 
   static Future<bool> saveProfileData(
       String keyProfile, MyProfile profileData) async {
-    
     var instance = await _prefs;
     String profile = json.encode(profileData);
 
@@ -199,7 +199,6 @@ class PreferenceUtil {
 
   static Future<bool> saveCompleteData(
       String keyCompletedData, CompleteData completeData) async {
-    
     var instance = await _prefs;
     String completeDataStr = json.encode(completeData);
 
@@ -251,6 +250,28 @@ class PreferenceUtil {
     } catch (e) {}
   }
 
+  static Future<bool> saveFamilyDataNew(
+      String keyFamily, FamilyMemberResult familyData) async {
+    var instance = await _prefs;
+
+    try {
+      String family = json.encode(familyData);
+
+      return instance.setString(keyFamily, family);
+    } catch (e) {
+      return instance.setString(keyFamily, null);
+    }
+  }
+
+  static FamilyMemberResult getFamilyDataNew(String keyFamily) {
+    try {
+      if (_prefsInstance == null) {}
+
+      return FamilyMemberResult.fromJson(
+          json.decode(_prefsInstance.getString(keyFamily)));
+    } catch (e) {}
+  }
+
   static Future<bool> saveFamilyRelationShip(
       String keyFamilyrel, RelationShipResponseList familyData) async {
     var instance = await _prefs;
@@ -295,16 +316,8 @@ class PreferenceUtil {
     } catch (e) {}
   }
 
-
   static save(String key, value) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(key, json.encode(value));
   }
-
-
-
-
-
-
-
 }

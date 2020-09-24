@@ -4,7 +4,7 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/widgets/my_providers_appbar.dart';
 import 'package:myfhb/my_providers/widgets/my_providers_tab_bar.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
@@ -20,7 +20,7 @@ class MyProviderState extends State<MyProvider>
   int _activeTabIndex = 0;
 
   ProvidersBloc _providersBloc;
-  MyProvidersResponseList myProvidersResponseList;
+  MyProvidersResponse myProvidersResponseList;
 
   @override
   void initState() {
@@ -103,7 +103,7 @@ class MyProviderState extends State<MyProvider>
         color: Color(fhbColors.bgColorContainer),
         child: myProvidersResponseList != null
             ? MyProvidersTabBar(
-                data: myProvidersResponseList.response.data,
+                data: myProvidersResponseList.result,
                 tabController: _tabController,
                 myProviderState: this,
               )

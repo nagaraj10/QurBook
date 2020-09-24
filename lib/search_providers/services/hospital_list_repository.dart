@@ -1,6 +1,8 @@
-import 'package:myfhb/search_providers/models/hospital_list_response.dart';
-import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/search_providers/models/hospital_list_response.dart';
+import 'package:myfhb/search_providers/models/hospital_list_response_new.dart';
+import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
 class HospitalListRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -12,6 +14,15 @@ class HospitalListRepository {
         "${query.qr_hopitals}${query.qr_SearchBy}${query.qr_keyword}${param}${query.qr_And}${query.qr_sortBy}${query.qr_name_asc}${query.qr_And}${query.qr_limit}${limit.toString()}",
         param);
     return HospitalListResponse.fromJson(response);
+  }
+
+  Future<HospitalsSearchListResponse> getHospitalFromSearchNew(
+      String param) async {
+    int limit = 10;
+
+    final response = await _helper.getHospitalListFromSearchNew(
+        "${query.qr_health_organization}${query.qr_health_Search}${param}${query.qr_id}${CommonConstants.SEARCH_HOSPIT_ID}");
+    return HospitalsSearchListResponse.fromJson(response);
   }
 
   Future<HospitalListResponse> gethopitalFromId(String hospitalId) async {
