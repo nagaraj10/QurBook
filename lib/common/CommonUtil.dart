@@ -1020,7 +1020,7 @@ class CommonUtil {
           value_name: parameters.strGlusoceLevel,
           value1: 'GL',
           value2: '',
-          color: [Colors.red, Colors.redAccent]));
+          color: [Colors.deepOrange, Colors.deepOrangeAccent]));
     }
 
     if (PreferenceUtil.getStringValue(Constants.oxyMon) != variable.strFalse) {
@@ -1044,7 +1044,7 @@ class CommonUtil {
           value_name: parameters.strWeight,
           value1: 'WT',
           value2: '',
-          color: [Colors.pink, Colors.pinkAccent]));
+          color: [Colors.amber[700], Colors.amber[300]]));
     }
     if (PreferenceUtil.getStringValue(Constants.thMon) != variable.strFalse) {
       devicelist.add(DeviceData(

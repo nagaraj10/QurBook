@@ -91,85 +91,94 @@ class _DashboardScreenState extends State<DashboardScreen> {
         builder: (context) {
           _myContext = context;
           return Scaffold(
-            key: scaffold_state,
-            bottomNavigationBar: BottomNavigationBar(
-                type: BottomNavigationBarType.fixed,
-                selectedFontSize: 10,
-                unselectedFontSize: 10,
-                items: <BottomNavigationBarItem>[
-                  BottomNavigationBarItem(
-                      icon: InkWell(
+              key: scaffold_state,
+              bottomNavigationBar: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  selectedFontSize: 10,
+                  unselectedFontSize: 10,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              navigateToTelehealthScreen(0);
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_th),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strTelehealth,
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              moveToFamilyOrprovider(2);
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_provider),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strMyProvider,
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
                           onTap: () {
-                            navigateToTelehealthScreen(0);
+                            moveToNextScreen(2);
                           },
-                          child: ImageIcon(
-                            AssetImage(variable.icon_th),
-                            color: Colors.black54,
-                          )),
-                      title: Text(
-                        variable.strTelehealth,
-                        style: TextStyle(color: Colors.black54),
-                      )),
-                  BottomNavigationBarItem(
-                      icon: InkWell(
-                          onTap: () {
-                            moveToFamilyOrprovider(2);
-                          },
-                          child: ImageIcon(
-                            AssetImage(variable.icon_provider),
-                            color: Colors.black54,
-                          )),
-                      title: Text(
-                        variable.strMyProvider,
-                        style: TextStyle(color: Colors.black54),
-                      )),
-                  BottomNavigationBarItem(
-                      icon: InkWell(
-                        onTap: () {
-                          moveToNextScreen(2);
-                        },
-                        child: Image.asset(
-                          variable.icon_maya,
-                          height: 25,
-                          width: 25,
+                          child: Image.asset(
+                            variable.icon_maya,
+                            height: 25,
+                            width: 25,
+                          ),
                         ),
-                      ),
-                      title: Text(
-                        'Sheela',
-                        style: TextStyle(color: Colors.black54),
-                      )),
-                  BottomNavigationBarItem(
-                      icon: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatHomeScreen()),
-                            );
-                          },
-                          child: ImageIcon(
-                            AssetImage(variable.icon_chat),
-                            color: Colors.black54,
-                          )),
-                      title: Text(
-                        variable.strChat,
-                        style: TextStyle(color: Colors.black54),
-                      )),
-                  BottomNavigationBarItem(
-                      icon: InkWell(
-                          onTap: () {
-                            moveToNextScreen(1);
-                          },
-                          child: ImageIcon(
-                            AssetImage(variable.icon_records),
-                            color: Colors.black54,
-                          )),
-                      title: Text(
-                        variable.strMyRecords,
-                        style: TextStyle(color: Colors.black54),
-                      ))
-                ]),
-            body: Stack(
+                        title: Text(
+                          'Sheela',
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatHomeScreen()),
+                              );
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_chat),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strChat,
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              moveToNextScreen(1);
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_records),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strMyRecords,
+                          style: TextStyle(color: Colors.black54),
+                        ))
+                  ]),
+              body: SingleChildScrollView(
+                //height: MediaQuery.of(context).size.height - 200,
+                child: ChangeNotifierProvider(
+                  create: (context) => DevicesViewModel(),
+                  child: ShowDevicesNew(),
+                ),
+              )
+
+              /*
+            Stack(
               alignment: Alignment.bottomCenter,
               children: [
                 Container(
@@ -293,7 +302,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ],
             ),
-          );
+
+            */
+              );
         },
       ),
     );
