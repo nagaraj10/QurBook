@@ -32,6 +32,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   List<DeviceData> finalList;
 
   String date;
+  String time;
   DateTime dateTimeStamp;
   var devicevalue1;
   var devicevalue2;
@@ -62,6 +63,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   Widget getBody(BuildContext context) {
     DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
     return Container(
+      margin: EdgeInsets.only(top: 40),
+      alignment: Alignment.center,
       child: getValues(context, _devicesmodel),
       /*
       child: Column(
@@ -88,7 +91,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             return Padding(
               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
               child: Wrap(
-                verticalDirection: VerticalDirection.up,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                runAlignment: WrapAlignment.center,
+                verticalDirection: VerticalDirection.down,
                 spacing: 10,
                 runSpacing: 10,
                 children: getDeviceCards(context, finalList),
@@ -131,7 +136,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             dateTimeStamp =
                 deviceValues.bloodPressure.entities[0].lastsyncdatetime;
             date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
+            time =
+                "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
 
             devicevalue1 =
                 deviceValues.bloodPressure.entities[0].systolic.toString();
@@ -142,7 +149,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             devicevalue1 = '';
           }
           return getDeviceData(
-              context, date, devicevalue1, devicevalue2, deviceData);
+              context, date, time, devicevalue1, devicevalue2, deviceData);
         }
       case parameters.strGlusoceLevel:
         {
@@ -150,8 +157,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             dateTimeStamp =
                 deviceValues.bloodGlucose.entities[0].lastsyncdatetime;
             date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
-
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
+            time =
+                "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
             devicevalue1 = deviceValues
                 .bloodGlucose.entities[0].bloodGlucoseLevel
                 .toString();
@@ -159,7 +167,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             date = 'Record not available';
             devicevalue1 = '';
           }
-          return getDeviceData(context, date, devicevalue1, '', deviceData);
+          return getDeviceData(
+              context, date, time, devicevalue1, '', deviceData);
         }
       case parameters.strOxgenSaturation:
         {
@@ -167,7 +176,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             dateTimeStamp =
                 deviceValues.oxygenSaturation.entities[0].lastsyncdatetime;
             date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
+            time =
+                "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
             devicevalue1 = deviceValues
                 .oxygenSaturation.entities[0].oxygenSaturation
                 .toString();
@@ -175,7 +186,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             date = 'Record not available';
             devicevalue1 = '';
           }
-          return getDeviceData(context, date, devicevalue1, '', deviceData);
+          return getDeviceData(
+              context, date, time, devicevalue1, '', deviceData);
         }
       case parameters.strTemperature:
         {
@@ -183,14 +195,17 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             dateTimeStamp =
                 deviceValues.bodyTemperature.entities[0].lastsyncdatetime;
             date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
+            time =
+                "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
             devicevalue1 =
                 deviceValues.bodyTemperature.entities[0].temperature.toString();
           } else {
             date = 'Record not available';
             devicevalue1 = '';
           }
-          return getDeviceData(context, date, devicevalue1, '', deviceData);
+          return getDeviceData(
+              context, date, time, devicevalue1, '', deviceData);
         }
       case parameters.strWeight:
         {
@@ -198,21 +213,24 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             dateTimeStamp =
                 deviceValues.bodyWeight.entities[0].lastsyncdatetime;
             date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)} ${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
+                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
+            time =
+                "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
             devicevalue1 =
                 deviceValues.bodyWeight.entities[0].weight.toString();
           } else {
             date = 'Record not available';
             devicevalue1 = '';
           }
-          return getDeviceData(context, date, devicevalue1, '', deviceData);
+          return getDeviceData(
+              context, date, time, devicevalue1, '', deviceData);
         }
     }
     //}
   }
 
-  Widget getDeviceData(BuildContext context, String date, String value1,
-      String value2, DeviceData deviceData) {
+  Widget getDeviceData(BuildContext context, String date, String time,
+      String value1, String value2, DeviceData deviceData) {
     return Column(
       children: <Widget>[
         GestureDetector(
@@ -229,12 +247,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             );
           },
           child: Container(
-            width: 120,
+            width: 180,
             height: 120,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 gradient: LinearGradient(colors: deviceData.color)
-                //color: deviceData.color,
+                //color: Colors.white,
                 ),
             child: Padding(
               padding: EdgeInsets.all(8),
@@ -245,42 +263,60 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Expanded(
-                        child: Text(
-                          date,
-                          style: TextStyle(fontSize: 11, color: Colors.white60),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              date,
+                              style:
+                                  TextStyle(fontSize: 13, color: Colors.white),
+                            ),
+                            Text(
+                              time,
+                              style: TextStyle(
+                                  fontSize: 11, color: Colors.white70),
+                            )
+                          ],
                         ),
                       ),
                       Image.asset(
                         deviceData.icon,
-                        height: 24.0,
-                        width: 24.0,
+                        height: 32.0,
+                        width: 32.0,
                         color: Colors.white,
                       ),
                     ],
                   ),
-                  Column(
+                  Row(
+                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
                             deviceData.value1,
-                            style: TextStyle(color: Colors.white, fontSize: 11),
+                            style:
+                                TextStyle(color: Colors.white70, fontSize: 11),
                           ),
                           Text(
                             value1.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(color: Colors.white, fontSize: 22),
                           ),
                         ],
                       ),
-                      Row(
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           deviceData.value2 != ''
                               ? Text(
                                   deviceData.value2,
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 11),
+                                      color: Colors.white70, fontSize: 11),
                                 )
                               : SizedBox(
                                   width: 0,
@@ -289,7 +325,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                               ? Text(
                                   value2.toString(),
                                   style: TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                                      color: Colors.white, fontSize: 22),
                                 )
                               : SizedBox(
                                   width: 0,
