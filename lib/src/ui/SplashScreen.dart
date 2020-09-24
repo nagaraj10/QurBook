@@ -18,7 +18,7 @@ class SplashScreen extends StatefulWidget {
   final String bookingID;
   final String doctorID;
 
-  SplashScreen({this.nsRoute,this.bookingID,this.doctorID});
+  SplashScreen({this.nsRoute, this.bookingID, this.doctorID});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -58,7 +58,9 @@ class _SplashScreenState extends State<SplashScreen> {
               //cancel appointments route
               Get.offAll(TelehealthProviders(
                 arguments: HomeScreenArguments(
-                    selectedIndex: 0, isCancelDialogShouldShow: true,bookingId: widget.bookingID),
+                    selectedIndex: 0,
+                    isCancelDialogShouldShow: true,
+                    bookingId: widget.bookingID),
               ));
             } else {
               PageNavigator.goToPermanent(context, router.rt_Dashboard);
