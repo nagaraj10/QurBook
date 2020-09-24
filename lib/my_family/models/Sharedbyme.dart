@@ -1,6 +1,6 @@
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Sharedbyme {
   ProfileData profileData;
@@ -28,6 +28,3 @@ class Sharedbyme {
     return data;
   }
 }
-
-
-

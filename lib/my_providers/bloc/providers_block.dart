@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
@@ -10,9 +10,9 @@ class ProvidersBloc implements BaseBloc {
   ProvidersListRepository _providersListRepository;
   StreamController _providersListControlller;
 
-  StreamSink<ApiResponse<MyProvidersResponseList>> get providersListSink =>
+  StreamSink<ApiResponse<MyProvidersResponse>> get providersListSink =>
       _providersListControlller.sink;
-  Stream<ApiResponse<MyProvidersResponseList>> get providersListStream =>
+  Stream<ApiResponse<MyProvidersResponse>> get providersListStream =>
       _providersListControlller.stream;
 
   @override
@@ -26,10 +26,9 @@ class ProvidersBloc implements BaseBloc {
     _providersListRepository = ProvidersListRepository();
   }
 
-  Future<MyProvidersResponseList> getMedicalPreferencesList() async {
-    providersListSink
-        .add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
-    MyProvidersResponseList myProvidersResponseList;
+  Future<MyProvidersResponse> getMedicalPreferencesList() async {
+    // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
+    MyProvidersResponse myProvidersResponseList;
     try {
       myProvidersResponseList =
           await _providersListRepository.getMedicalPreferencesList();

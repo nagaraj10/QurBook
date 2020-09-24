@@ -2,7 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:myfhb/my_family/screens/my_family.dart';
+import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
 import 'package:myfhb/schedules/add_appointments.dart';

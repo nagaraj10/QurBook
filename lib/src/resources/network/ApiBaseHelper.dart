@@ -4,9 +4,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -15,7 +15,6 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
-import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
@@ -23,15 +22,8 @@ import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.d
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:path/path.dart';
 
 import 'AppException.dart';
-import 'dart:async';
-import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/src/resources/network/AppException.dart';
-import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
@@ -167,6 +159,35 @@ class ApiBaseHelper {
     return response.data;
   }
 
+  Future<dynamic> updateTeleHealthProvidersNew(
+      String url, String jsonString) async {
+    Dio dio = new Dio();
+    dio.options.headers[variable.straccept] = variable.strAcceptVal;
+    dio.options.headers[variable.strAuthorization] =
+        CommonConstants.NEW_AUTH_TOKEN;
+
+    var response =
+        await dio.put(CommonConstants.NEW_BASE_URL + url, data: jsonString);
+    print(response.data);
+
+    return response.data;
+  }
+
+  Future<dynamic> getDoctorsListFromSearchNew(String url) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    try {
+      final response = await http.get(CommonConstants.NEW_BASE_URL + url,
+          headers: await headerRequest.getRequestHeadersForSearch());
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> addProviders(String url, String jsonData) async {
     var responseJson;
     try {
@@ -180,11 +201,26 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getHospitalListFromSearchNew(String url) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    try {
+      final response = await http.get(CommonConstants.NEW_BASE_URL + url,
+          headers: await headerRequest.getRequestHeadersAuthAcceptNew());
+
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> getMedicalPreferencesList(String url) async {
     var responseJson;
     try {
-      final response = await http.get(_baseUrl + url,
-          headers: await headerRequest.getRequestHeadersAuthAccept());
+      final response = await http.get(CommonConstants.NEW_BASE_URL + url,
+          headers: await headerRequest.getRequestHeadersAuthAcceptNew());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
@@ -325,6 +361,20 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getFamilyMembersListNew(String url) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    print(authToken);
+    var responseJson;
+    try {
+      final response = await http.get(CommonConstants.NEW_BASE_URL + url,
+          headers: await headerRequest.getRequestHeadersAuthAcceptNew());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> getProfileInfo(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
@@ -371,8 +421,7 @@ class ApiBaseHelper {
       case 401:
         var responseJson = convert.jsonDecode(response.body.toString());
 
-        if (responseJson[parameters.strMessage] ==
-            Constants.STR_UN_AUTH_USER) {
+        if (responseJson[parameters.strMessage] == Constants.STR_UN_AUTH_USER) {
           SnackbarToLogout();
         } else {
           return responseJson;
@@ -876,7 +925,7 @@ class ApiBaseHelper {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
         if (resReturnCode.status == 200) {
-         printWrapped('=======response_appointment'+response.body);
+          printWrapped('=======response_appointment' + response.body);
           return AppointmentsModel.fromJson(jsonDecode(response.body));
         } else {
           throw Exception(variable.strFailed);
@@ -1042,5 +1091,22 @@ class ApiBaseHelper {
   void printWrapped(String text) {
     final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
+  }
+
+  getValueBasedOnSearch(String name, String apiname) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var response = await http.get(
+      (apiname == 'qualification' || apiname == 'city' || apiname == 'state')
+          ? '$_baseUrl/$apiname?isSearch=true&searchData=$name'
+          : '$_baseUrl/doctors/professional/search?type=$apiname&isSearch=true&data=$name',
+      headers: {HttpHeaders.authorizationHeader: authToken},
+    );
+    if (response.statusCode == 200) {
+      final body = jsonDecode(response.body);
+      return body;
+    } else {
+      throw Exception("Unable to perform request!");
+    }
   }
 }

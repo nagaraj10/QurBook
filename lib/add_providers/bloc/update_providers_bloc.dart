@@ -103,7 +103,7 @@ class UpdateProvidersBloc implements BaseBloc {
     UpdateProvidersId updateProvidersId;
     try {
       updateProvidersId = await updateProvidersRepository
-          .updateDoctorsIdWithUserDetails(providerId, isPreferred);
+          .updateDoctorsIdWithUserDetailsNew(providerId, isPreferred);
 //      doctorsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       doctorsSink.add(ApiResponse.error(e.toString()));

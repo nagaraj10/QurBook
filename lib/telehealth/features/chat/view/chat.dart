@@ -50,10 +50,11 @@ class ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
-          child: _patientChatBar()),
+      // appBar: PreferredSize(
+      //     preferredSize:
+      //         Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
+      //     child: _patientChatBar()),
+      appBar: _patientChatBar(),
       body: ChatScreen(
         peerId: widget.peerId,
         peerAvatar: widget.peerAvatar,
@@ -156,7 +157,7 @@ class ChatState extends State<Chat> {
             children: <Widget>[
               CircleAvatar(
                 backgroundImage: NetworkImage(widget.peerAvatar),
-                radius: 25,
+                radius: 20,
               ),
               SizedBox(
                 width: 15,
@@ -181,9 +182,12 @@ class ChatState extends State<Chat> {
                           fontSize: 12,
                           color: Colors.white),
                     ),*/
+                    SizedBox(
+                      height: 5,
+                    ),
                     Text(
                       widget.lastDate != null
-                          ? 'Date: ' +
+                          ? 'Last Received: ' +
                               DateFormat('dd MMM kk:mm').format(
                                   DateTime.fromMillisecondsSinceEpoch(
                                       int.parse(widget.lastDate)))

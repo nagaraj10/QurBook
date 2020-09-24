@@ -1,0 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import '../../../../common/CommonUtil.dart';
+
+class PleaseWait extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              variable.strtapToSpeak,
+              style: TextStyle(
+                  fontSize: 25.0,
+                  color: Color(CommonUtil().getMyPrimaryColor())),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

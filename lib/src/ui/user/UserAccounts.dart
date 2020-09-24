@@ -11,7 +11,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/my_family/screens/my_family.dart';
+import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
@@ -111,7 +111,7 @@ class _UserAccountsState extends State<UserAccounts>
                               Navigator.pushNamed(
                                       context, router.rt_AddFamilyUserInfo,
                                       arguments: AddFamilyUserInfoArguments(
-                                          sharedbyme: sharedbyme,
+                                          // sharedbyme: sharedbyme,
                                           fromClass:
                                               CommonConstants.user_update))
                                   .then((value) {

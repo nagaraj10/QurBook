@@ -27,6 +27,7 @@
     <string name="user_notification_permission_error">WebRTC cannot work without permissions</string>
     <string name="user_notification_meeting_start_error">There was an error starting the meeting. Please try again</string>
     <string name="nsid">notificationId</string>
+    <string name="action_type_reschedule">reschedule</string>
     <string name="meetid">meeting_id</string>
     <string name="docId">doctorId</string>
     <string name="docPic">doctorPicture</string>
@@ -45,13 +46,17 @@
     <string name="pro_data">data</string>
     <string name="channel_incoming_desc">This is channel is for incoming call</string>
     <string name="channel_ack_desc">This is channel is for General Acknowledgements</string>
+    <string name="channel_cancel_apps_desc">This is channel belong to cancel notification</string>
     <string name="channel_call_alert_desc">This is channel is for Missed call Alert</string>
     <string name="channel1">Channel 1</string>
     <string name="channel_call">Incoming Call</string>
     <string name="missed_call_alert_title">Missed Call From</string>
     <string name="channel_ack">Acknowledgements</string>
+    <string name="channel_cancel_apps">Cancel Appointments</string>
     <string name="channel_miss_ns">Missed Alert</string>
     <string name="ns_act_accept">Accept</string>
+    <string name="ns_act_cancel">Cancel</string>
+    <string name="ns_act_reschedule">Reschedule</string>
     <string name="ns_act_decline">Decline</string>
     <string name="alert">Alert</string>
     <string name="msg_audio2video">Do you want switch from audio to video?</string>

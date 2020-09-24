@@ -1,17 +1,17 @@
+import 'dart:convert' as convert;
+
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_query.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
+import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
-import 'dart:convert' as convert;
-
-import 'package:myfhb/constants/router_variable.dart' as router;
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
@@ -20,12 +20,15 @@ import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 class ProvidersListRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+  // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+  String userID = CommonConstants.NEW_USER_ID;
 
-  Future<MyProvidersResponseList> getMedicalPreferencesList() async {
-    final response = await _helper.getMedicalPreferencesList(
-        query.qr_Userprofile + userID + query.qr_slash);
-    return MyProvidersResponseList.fromJson(response);
+  Future<MyProvidersResponse> getMedicalPreferencesList() async {
+    final response = await _helper.getMedicalPreferencesList(query.qr_user +
+        userID +
+        query.qr_sections +
+        query.qr_medicalPreferences);
+    return MyProvidersResponse.fromJson(response);
   }
 
   Future<TelehealthProviderModel> getTelehealthDoctorsList() async {

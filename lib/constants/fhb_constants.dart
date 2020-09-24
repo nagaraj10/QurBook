@@ -38,7 +38,7 @@ const String STR_GLUCOMETER = 'Glucometer';
 const String STR_THERMOMETER = 'Thermometer';
 const String STR_BP_MONITOR = 'BP Monitor';
 const String STR_WEIGHING_SCALE = 'Weighing Scale';
-const String STR_PULSE_OXIMETER = 'Pulse Oximeter';
+const String STR_PULSE_OXIMETER = 'Pulse oximeter';
 const String STR_PRESCRIPTION = 'Prescription';
 const String STR_DEVICES = 'Devices';
 const String STR_LABREPORT = 'Lab Report';
@@ -346,3 +346,5 @@ const String data_connected = "Mobile data connected";
 const String no_internet_conn = "No internet connection";
 const String failed_get_conn = "Failed to get connectivity.";
 const String failed_get_connectivity = "Failed to get internet connectivity.";
+
+const String KEY_FAMILYMEMBERNEW = 'familymembernew';

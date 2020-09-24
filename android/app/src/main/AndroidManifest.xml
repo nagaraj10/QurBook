@@ -73,6 +73,8 @@
         </receiver>
         <receiver android:name=".services.DeclineReciver" />
         <receiver android:name=".services.AcceptReceiver" />
+        <receiver android:name=".services.CancelAppointment" />
+        <receiver android:name=".services.RescheduleAppointment" />
         <receiver android:name=".services.OnTapNotification" />
         <service android:name=".services.AVServices"/>
         <service

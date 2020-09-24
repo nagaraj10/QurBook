@@ -34,4 +34,8 @@ object Constants {
     val PROP_NAME = "name"
     val PROP_CALL = "call"
     val PROP_ACK = "ack"
+    val PROP_RESCHEDULE = "reschedule"
+    val PROP_CANCEL_APPS = "cancel_appointment"
+    val PROP_CANCEL_KEY = "cancel_apps"
+    val PROP_DOC_KEY = "doctorId"
 }
