@@ -179,7 +179,6 @@ class _WebCognitoScreenState extends State<WebCognitoScreen> {
       id_token_string = parseJwtPayLoad(decodesstring)['token']
           ['ProviderPayload']['id_token'];
       print(id_token_string);
-
       token1 = parseJwtPayLoad(decodesstring)['token']['ProviderPayload'];
       print(token1);
       String countrycode =

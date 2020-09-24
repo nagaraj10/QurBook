@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -28,7 +29,13 @@ class _SplashScreenState extends State<SplashScreen> {
       var deviceIfo = PreferenceUtil.isKeyValid(Constants.KEY_DEVICEINFO);
       if (!isFirstTime) {
         PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, variable.strtrue);
-        PageNavigator.goToPermanent(context, router.rt_WebCognito);
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => PatientSignInScreen()),
+            (route) => false);
+
+        // PageNavigator.goToPermanent(context, router.rt_WebCognito);
       } else {
         String authToken =
             PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -52,7 +59,9 @@ class _SplashScreenState extends State<SplashScreen> {
             });
           }
         } else {
-          PageNavigator.goToPermanent(context, router.rt_WebCognito);
+          //PageNavigator.goToPermanent(context, router.rt_WebCognito);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => PatientSignInScreen()));
         }
       }
     });
