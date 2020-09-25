@@ -3,6 +3,7 @@ import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/SlotsResultModel.dart';
 
 class AvailableTimeSlotsModel {
+
   bool isSuccess;
   SlotsResultModel result;
 
