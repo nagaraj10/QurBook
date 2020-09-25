@@ -196,10 +196,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipController = TextEditingController(text: '');
     relationShipFocus = FocusNode();
 
-    if (sharedbyme.child.firstName != null) {
-      firstNameController.text = sharedbyme.child.firstName;
-      middleNameController.text = sharedbyme.child.middleName;
-      lastNameController.text = sharedbyme.child.lastName;
+    if (sharedbyme.child != null) {
+      if (sharedbyme.child.firstName != null) {
+        firstNameController.text = sharedbyme.child.firstName;
+        middleNameController.text = sharedbyme.child.middleName;
+        lastNameController.text = sharedbyme.child.lastName;
+      }
     } else {
       firstNameController.text = sharedbyme.child.name;
       middleNameController.text = '';
@@ -207,9 +209,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.child.isVirtualUser == true) {
-      MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-      mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
-      emailController.text = myProf.response.data.generalInfo.email;
+      try {
+        MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
+        emailController.text = myProf.response.data.generalInfo.email;
+      } catch (e) {
+        mobileNoController.text ="";
+        emailController.text ="";
+      }
     } else {
       mobileNoController.text =
           sharedbyme.child.userContactCollection3[0].phoneNumber;
@@ -225,10 +232,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           toBeginningOfSentenceCase(sharedbyme.child.gender.toLowerCase());
     }
 
-    // if (sharedbyme.child.userRoleCollection3[0].role.name != null) {
-    //   relationShipController.text =
-    //       sharedbyme.child.userRoleCollection3[0].role.name;
-    // }
+    if (sharedbyme.relationship != null) {
+      relationShipController.text = sharedbyme.relationship.name;
+    }
 
     if (sharedbyme.child.dateOfBirth != null) {
       dateOfBirthController.text =
