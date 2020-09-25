@@ -125,35 +125,37 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     PaintingBinding.instance.imageCache.clear();
 
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
-
-    if (PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL) != null) {
-      setState(() {
-        relationShipResponseList =
-            PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL);
-        getSelectedRelation();
-      });
-    } else {
-      addFamilyUserInfoBloc.getCustomRoles().then((value) {
+    try {
+      if (PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL) !=
+          null) {
         setState(() {
-          relationShipResponseList = value.relationShipAry;
-
-          PreferenceUtil.saveRelationshipArray(
-              Constants.KEY_FAMILYREL, value.relationShipAry);
+          relationShipResponseList =
+              PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL);
           getSelectedRelation();
         });
-      });
-    }
+      } else {
+        addFamilyUserInfoBloc.getCustomRoles().then((value) {
+          setState(() {
+            relationShipResponseList = value.relationShipAry;
 
-    if (widget.arguments.fromClass == CommonConstants.my_family) {
+            PreferenceUtil.saveRelationshipArray(
+                Constants.KEY_FAMILYREL, value.relationShipAry);
+            getSelectedRelation();
+          });
+        });
+      }
+    } catch (e) {}
+
+    /* if (widget.arguments.fromClass == CommonConstants.my_family) {
       for (var i = 0; i < relationShipResponseList.length; i++) {
         // if (relationShipResponseList[i].roleName ==
         //     widget.arguments.sharedbyme.linkedData.roleName) {
         //   selectedRelationShip = relationShipResponseList[i];
         // }
       }
-    }
+    }*/
     String profilebanner =
-    PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
+        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
     if (profilebanner != null) {
       MySliverAppBar.imageURIProfile = File(profilebanner);
     }
@@ -163,81 +165,98 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
 
       if (widget.arguments.sharedbyme.child.isVirtualUser != null) {
-        MyProfileModel myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-        if(myProf.result.userContactCollection3!=null){
-          if(myProf.result.userContactCollection3.length>0){
-            mobileNoController.text = myProf.result.userContactCollection3[0].phoneNumber;
-            emailController.text = myProf.result.userContactCollection3[0].email;
-          }
-        }
-
-        if (widget.arguments.fromClass == CommonConstants.user_update) {
-          MyProfileModel myProf = PreferenceUtil.getProfileData(
-              Constants.KEY_PROFILE);
-          mobileNoController.text = myProf.result.userContactCollection3[0].phoneNumber;
-          emailController.text = myProf.result.userContactCollection3[0].email;
-        } else {
-          // mobileNoController.text =
-          //     widget.arguments.sharedbyme.profileData.phoneNumber;
-          // emailController.text = widget.arguments.sharedbyme.profileData.email;
-        }
-
-        if (widget.arguments.sharedbyme.child.firstName != null) {
-          firstNameController.text =
-          widget.arguments.sharedbyme.child.firstName != null
-              ? widget.arguments.sharedbyme.child.firstName
-              : '';
-          middleNameController.text =
-          widget.arguments.sharedbyme.child.middleName != null
-              ? widget.arguments.sharedbyme.child.middleName
-              : '';
-          lastNameController.text =
-          widget.arguments.sharedbyme.child.lastName != null
-              ? widget.arguments.sharedbyme.child.lastName
-              : '';
-        } else {
-          firstNameController.text = '';
-        }
-        if (commonUtil
-            .checkIfStringisNull(
-            widget.arguments.sharedbyme.child.bloodGroup)) {
-          selectedBloodGroup = widget.arguments.sharedbyme.child.bloodGroup;
-
-          renameBloodGroup(selectedBloodGroup);
-        } else {
-          selectedBloodGroup = null;
-          selectedBloodRange = null;
-        }
-
-        if (widget.arguments.sharedbyme.child.gender != null) {
-          selectedGender = widget.arguments.sharedbyme.child.gender;
-        }
-
-        if (widget.arguments.sharedbyme.child.dateOfBirth != null) {
-          dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
-              widget.arguments.sharedbyme.child.dateOfBirth);
-          dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
-              widget.arguments.sharedbyme.child.dateOfBirth);
-        }
-      } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-        updateProfile = true;
-        addFamilyUserInfoBloc.userId = widget
-            .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
-
-        if (widget.arguments.sharedbyme.child.isVirtualUser != null) {
-          MyProfileModel myProf = PreferenceUtil.getProfileData(
-              Constants.KEY_PROFILE);
-          if(myProf.result.userContactCollection3!=null){
-            if(myProf.result.userContactCollection3.length>0){
+        try {
+          MyProfileModel myProf =
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3.length > 0) {
               mobileNoController.text =
                   myProf.result.userContactCollection3[0].phoneNumber;
-              emailController.text = myProf.result.userContactCollection3[0].email;
+              emailController.text =
+                  myProf.result.userContactCollection3[0].email;
+            }
+          }
+        } catch (e) {
+          mobileNoController.text = '';
+          emailController.text = '';
+        }
+      }
+    }
+    if (widget.arguments.fromClass == CommonConstants.user_update) {
+      try {
+        MyProfileModel myProf =
+            PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        mobileNoController.text =
+            myProf.result.userContactCollection3[0].phoneNumber;
+        emailController.text = myProf.result.userContactCollection3[0].email;
+      } catch (e) {
+        mobileNoController.text = '';
+        emailController.text = '';
+      }
+    } else {
+      // mobileNoController.text =
+      //     widget.arguments.sharedbyme.profileData.phoneNumber;
+      // emailController.text = widget.arguments.sharedbyme.profileData.email;
+    }
+
+    if (widget.arguments.sharedbyme != null) {
+      if (widget.arguments.sharedbyme.child.firstName != null) {
+        firstNameController.text =
+            widget.arguments.sharedbyme.child.firstName != null
+                ? widget.arguments.sharedbyme.child.firstName
+                : '';
+        middleNameController.text =
+            widget.arguments.sharedbyme.child.middleName != null
+                ? widget.arguments.sharedbyme.child.middleName
+                : '';
+        lastNameController.text =
+            widget.arguments.sharedbyme.child.lastName != null
+                ? widget.arguments.sharedbyme.child.lastName
+                : '';
+      } else {
+        firstNameController.text = '';
+      }
+      if (commonUtil
+          .checkIfStringisNull(widget.arguments.sharedbyme.child.bloodGroup)) {
+        selectedBloodGroup = widget.arguments.sharedbyme.child.bloodGroup;
+
+        renameBloodGroup(selectedBloodGroup);
+      } else {
+        selectedBloodGroup = null;
+        selectedBloodRange = null;
+      }
+
+      if (widget.arguments.sharedbyme.child.gender != null) {
+        selectedGender = widget.arguments.sharedbyme.child.gender;
+      }
+
+      if (widget.arguments.sharedbyme.child.dateOfBirth != null) {
+        dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
+            widget.arguments.sharedbyme.child.dateOfBirth);
+        dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
+            widget.arguments.sharedbyme.child.dateOfBirth);
+      }
+    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
+      updateProfile = true;
+      addFamilyUserInfoBloc.userId =
+          widget.arguments.id; //widget.arguments.addFamilyUserInfo.id;
+
+      if (widget.arguments.sharedbyme != null) {
+        if (widget.arguments.sharedbyme.child.isVirtualUser != null) {
+          MyProfileModel myProf =
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3.length > 0) {
+              mobileNoController.text =
+                  myProf.result.userContactCollection3[0].phoneNumber;
+              emailController.text =
+                  myProf.result.userContactCollection3[0].email;
             }
           }
 
           if (widget.arguments.fromClass == CommonConstants.user_update) {
-            MyProfileModel myProf = PreferenceUtil.getProfileData(
-                Constants.KEY_PROFILE);
+            MyProfileModel myProf =
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
             mobileNoController.text =
                 myProf.result.userContactCollection3[0].phoneNumber;
             emailController.text =
@@ -249,21 +268,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
           if (widget.arguments.sharedbyme.child.firstName != null) {
             firstNameController.text =
-            widget.arguments.sharedbyme.child.firstName != null
-                ? widget.arguments.sharedbyme.child.firstName
-                : '';
+                widget.arguments.sharedbyme.child.firstName != null
+                    ? widget.arguments.sharedbyme.child.firstName
+                    : '';
             middleNameController.text =
-            widget.arguments.sharedbyme.child.middleName != null
-                ? widget.arguments.sharedbyme.child.middleName
-                : '';
+                widget.arguments.sharedbyme.child.middleName != null
+                    ? widget.arguments.sharedbyme.child.middleName
+                    : '';
             lastNameController.text =
-            widget.arguments.sharedbyme.child.lastName != null
-                ? widget.arguments.sharedbyme.child.lastName
-                : '';
+                widget.arguments.sharedbyme.child.lastName != null
+                    ? widget.arguments.sharedbyme.child.lastName
+                    : '';
           }
 
-          if (commonUtil
-              .checkIfStringisNull(
+          if (commonUtil.checkIfStringisNull(
               widget.arguments.sharedbyme.child.bloodGroup)) {
             selectedBloodGroup = widget.arguments.sharedbyme.child.bloodGroup;
 
@@ -304,7 +322,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
             if (widget.arguments.isPrimaryNoSelected) {
               MyProfileModel myProf =
-              PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+                  PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
               mobileNoController.text =
                   myProf.result.userContactCollection3[0].phoneNumber;
               emailController.text =
@@ -323,8 +341,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             relationShipController.text =
                 widget.arguments.relationShip.roleName;
 
-            if (commonUtil
-                .checkIfStringisNull(value.result.bloodGroup)) {
+            if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
               selectedBloodGroup = value.result.bloodGroup;
 
               renameBloodGroup(selectedBloodGroup);
@@ -332,18 +349,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               selectedBloodGroup = null;
               selectedBloodRange = null;
             }
-            selectedGender = value.result.gender == null
-                ? null
-                : value.result.gender;
+            selectedGender =
+                value.result.gender == null ? null : value.result.gender;
 
             dateofBirthStr = value.result.dateOfBirth != null
-                ? new FHBUtils().getFormattedDateForUserBirth(
-                value.result.dateOfBirth)
+                ? new FHBUtils()
+                    .getFormattedDateForUserBirth(value.result.dateOfBirth)
                 : '';
-            dateOfBirthController.text =
-            value.result.dateOfBirth != null
-                ? new FHBUtils().getFormattedDateOnlyNew(
-                value.result.dateOfBirth)
+            dateOfBirthController.text = value.result.dateOfBirth != null
+                ? new FHBUtils()
+                    .getFormattedDateOnlyNew(value.result.dateOfBirth)
                 : '';
 
             if (firstTym) {
@@ -362,7 +377,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     }
   }
-
 
   void renameBloodGroup(String selectedBloodGroupClone) {
     if (selectedBloodGroupClone != null) {
@@ -457,26 +471,30 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             );
     } else {
       if (imageURI == null) {
-        if (widget.arguments.sharedbyme.child.profilePicThumbnailUrl != null) {
-          return Image.network(
-            widget.arguments.sharedbyme.child.profilePicThumbnailUrl,
-            fit: BoxFit.cover,
-            width: 60,
-            height: 60,
-          );
-        } else {
-          return Center(
-            child: Text(
-              widget.arguments.sharedbyme.child.firstName != null
-                  ? widget.arguments.sharedbyme.child.firstName[0].toUpperCase()
-                  : '',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 60.0,
-                fontWeight: FontWeight.w200,
+        if (widget.arguments.sharedbyme != null) {
+          if (widget.arguments.sharedbyme.child.profilePicThumbnailUrl !=
+              null) {
+            return Image.network(
+              widget.arguments.sharedbyme.child.profilePicThumbnailUrl,
+              fit: BoxFit.cover,
+              width: 60,
+              height: 60,
+            );
+          } else {
+            return Center(
+              child: Text(
+                widget.arguments.sharedbyme.child.firstName != null
+                    ? widget.arguments.sharedbyme.child.firstName[0]
+                        .toUpperCase()
+                    : '',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 60.0,
+                  fontWeight: FontWeight.w200,
+                ),
               ),
-            ),
-          );
+            );
+          }
         }
       } else {
         return Container(
@@ -554,7 +572,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
