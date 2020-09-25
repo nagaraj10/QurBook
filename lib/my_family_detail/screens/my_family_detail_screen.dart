@@ -225,10 +225,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           toBeginningOfSentenceCase(sharedbyme.child.gender.toLowerCase());
     }
 
-    if (sharedbyme.child.userRoleCollection3[0].role.name != null) {
-      relationShipController.text =
-          sharedbyme.child.userRoleCollection3[0].role.name;
-    }
+    // if (sharedbyme.child.userRoleCollection3[0].role.name != null) {
+    //   relationShipController.text =
+    //       sharedbyme.child.userRoleCollection3[0].role.name;
+    // }
 
     if (sharedbyme.child.dateOfBirth != null) {
       dateOfBirthController.text =

@@ -45,9 +45,11 @@ class FamilyMemberResult {
         sharedToUsers.add(new SharedToUsers.fromJson(v));
       });
     }
-    virtualUserParent = json['virtualUserParent'] != null
-        ? new VirtualUserParent.fromJson(json['virtualUserParent'])
-        : null;
+    try {
+      virtualUserParent = json['virtualUserParent'] != null
+          ? new VirtualUserParent.fromJson(json['virtualUserParent'])
+          : null;
+    } catch (e) {}
   }
 
   Map<String, dynamic> toJson() {
@@ -123,7 +125,7 @@ class Relationship {
   String code;
   String name;
   String description;
-  Null sortOrder;
+  String sortOrder;
   bool isActive;
   String createdBy;
   String createdOn;
@@ -178,7 +180,6 @@ class Child {
   String dateOfBirth;
   String bloodGroup;
   String countryCode;
-  String profilePicUrl;
   String profilePicThumbnailUrl;
   bool isTempUser;
   bool isVirtualUser;
@@ -187,8 +188,8 @@ class Child {
   bool isIeUser;
   bool isEmailVerified;
   bool isCpUser;
-  Null communicationPreferences;
-  Null medicalPreferences;
+  String communicationPreferences;
+  String medicalPreferences;
   bool isSignedIn;
   bool isActive;
   String createdBy;
@@ -209,7 +210,6 @@ class Child {
       this.dateOfBirth,
       this.bloodGroup,
       this.countryCode,
-      this.profilePicUrl,
       this.profilePicThumbnailUrl,
       this.isTempUser,
       this.isVirtualUser,
@@ -240,7 +240,6 @@ class Child {
     dateOfBirth = json['dateOfBirth'];
     bloodGroup = json['bloodGroup'];
     countryCode = json['countryCode'];
-    profilePicUrl = json['profilePicUrl'];
     profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
     isTempUser = json['isTempUser'];
     isVirtualUser = json['isVirtualUser'];
@@ -283,7 +282,6 @@ class Child {
     data['dateOfBirth'] = this.dateOfBirth;
     data['bloodGroup'] = this.bloodGroup;
     data['countryCode'] = this.countryCode;
-    data['profilePicUrl'] = this.profilePicUrl;
     data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
     data['isTempUser'] = this.isTempUser;
     data['isVirtualUser'] = this.isVirtualUser;
@@ -320,7 +318,6 @@ class UserContactCollection3 {
   String createdOn;
   String lastModifiedOn;
   String email;
-  PhoneNumberType phoneNumberType;
 
   UserContactCollection3(
       {this.id,
@@ -329,8 +326,7 @@ class UserContactCollection3 {
       this.isActive,
       this.createdOn,
       this.lastModifiedOn,
-      this.email,
-      this.phoneNumberType});
+      this.email});
 
   UserContactCollection3.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -340,9 +336,6 @@ class UserContactCollection3 {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     email = json['email'];
-    phoneNumberType = json['phoneNumberType'] != null
-        ? new PhoneNumberType.fromJson(json['phoneNumberType'])
-        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -354,9 +347,6 @@ class UserContactCollection3 {
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     data['email'] = this.email;
-    if (this.phoneNumberType != null) {
-      data['phoneNumberType'] = this.phoneNumberType.toJson();
-    }
     return data;
   }
 }
@@ -415,17 +405,15 @@ class UserRoleCollection3 {
   bool isActive;
   String createdOn;
   String lastModifiedOn;
-  Role role;
 
   UserRoleCollection3(
-      {this.id, this.isActive, this.createdOn, this.lastModifiedOn, this.role});
+      {this.id, this.isActive, this.createdOn, this.lastModifiedOn});
 
   UserRoleCollection3.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
-    role = json['role'] != null ? new Role.fromJson(json['role']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -434,9 +422,6 @@ class UserRoleCollection3 {
     data['isActive'] = this.isActive;
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.role != null) {
-      data['role'] = this.role.toJson();
-    }
     return data;
   }
 }

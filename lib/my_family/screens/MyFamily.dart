@@ -96,57 +96,54 @@ class _MyFamilyState extends State<MyFamily> {
   Widget getAllFamilyMembers() {
     Widget familyWidget;
 
-    return firstTym
+    return /*firstTym
         ? PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBERNEW) != null
             ? getMyFamilyMembers(
                 PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW))
-            : StreamBuilder<ApiResponse<FamilyMembers>>(
-                stream: _familyListBloc.familyMemberListNewStream,
-                builder: (context,
-                    AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
-                  if (snapshot.hasData) {
-                    switch (snapshot.data.status) {
-                      case Status.LOADING:
-                        familyWidget = Center(
-                            child: SizedBox(
-                          child: CircularProgressIndicator(
-                            backgroundColor:
-                                Color(CommonUtil().getMyPrimaryColor()),
-                          ),
-                          width: 30,
-                          height: 30,
-                        ));
-                        break;
+            :*/
+        StreamBuilder<ApiResponse<FamilyMembers>>(
+      stream: _familyListBloc.familyMemberListNewStream,
+      builder: (context, AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              familyWidget = Center(
+                  child: SizedBox(
+                child: CircularProgressIndicator(
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                ),
+                width: 30,
+                height: 30,
+              ));
+              break;
 
-                      case Status.ERROR:
-                        familyWidget = FHBBasicWidget.getRefreshContainerButton(
-                            snapshot.data.message, () {
-                          setState(() {});
-                        });
-                        break;
+            case Status.ERROR:
+              familyWidget = FHBBasicWidget.getRefreshContainerButton(
+                  snapshot.data.message, () {
+                setState(() {});
+              });
+              break;
 
-                      case Status.COMPLETED:
-                        //rebuildFamilyBlock();
-                        firstTym = false;
-                        PreferenceUtil.saveFamilyDataNew(
-                            Constants.KEY_FAMILYMEMBERNEW,
-                            snapshot.data.data.result);
+            case Status.COMPLETED:
+              //rebuildFamilyBlock();
+              firstTym = false;
+              PreferenceUtil.saveFamilyDataNew(
+                  Constants.KEY_FAMILYMEMBERNEW, snapshot.data.data.result);
 
-                        familyWidget =
-                            getMyFamilyMembers(snapshot.data.data.result);
-                        break;
-                    }
-                  } else {
-                    familyWidget = Container(
-                      width: 100,
-                      height: 100,
-                    );
-                  }
-                  return familyWidget;
-                },
-              )
-        : getMyFamilyMembers(
-            PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW));
+              familyWidget = getMyFamilyMembers(snapshot.data.data.result);
+              break;
+          }
+        } else {
+          familyWidget = Container(
+            width: 100,
+            height: 100,
+          );
+        }
+        return familyWidget;
+      },
+    );
+    // : getMyFamilyMembers(
+    //     PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW));
   }
 
   Widget getMyFamilyMembers(FamilyMemberResult data) {
@@ -247,7 +244,8 @@ class _MyFamilyState extends State<MyFamily> {
           child: Row(
             children: <Widget>[
               ClipOval(
-                child: position == 0
+                child:
+                    /*position == 0
                     ? myProfile.response.data.generalInfo
                                 .profilePicThumbnailURL ==
                             null
@@ -272,7 +270,8 @@ class _MyFamilyState extends State<MyFamily> {
                             width: 60,
                             height: 60,
                           )
-                    : data.child.profilePicThumbnailUrl == null
+                    :*/
+                    data.child.profilePicThumbnailUrl == null
                         ? Container(
                             width: 60,
                             height: 60,
@@ -322,50 +321,51 @@ class _MyFamilyState extends State<MyFamily> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 10.0),
-                    // Text(
-                    //   position == 0
-                    //       ? myProfile.response.data.generalInfo.countryCode +
-                    //           "-" +
-                    //           myProfile.response.data.generalInfo.phoneNumber
-                    //       : data.child.isVirtualUser != null
-                    //           ? PreferenceUtil.getProfileData(
-                    //                       Constants.KEY_PROFILE)
-                    //                   .response
-                    //                   .data
-                    //                   .generalInfo
-                    //                   .countryCode +
-                    //               "-" +
-                    //               PreferenceUtil.getProfileData(
-                    //                       Constants.KEY_PROFILE)
-                    //                   .response
-                    //                   .data
-                    //                   .generalInfo
-                    //                   .phoneNumber
-                    //           : data.child.userContactCollection3[0]
-                    //                       .phoneNumber !=
-                    //                   null
-                    //               ? data.child.userContactCollection3[0]
-                    //                   .phoneNumber
-                    //               : '',
-                    //   style: TextStyle(
-                    //       fontWeight: FontWeight.w400,
-                    //       color: ColorUtils.greycolor1),
-                    //   softWrap: false,
-                    //   overflow: TextOverflow.ellipsis,
-                    // ),
-                    // SizedBox(height: 10.0),
-                    // Text(
-                    //   position == 0
-                    //       ? variable.Self
-                    //       : data.child.userRoleCollection3[0].role.name != null
-                    //           ? data.child.userRoleCollection3[0].role.name
-                    //           : '',
-                    //   overflow: TextOverflow.ellipsis,
-                    //   softWrap: false,
-                    //   style: TextStyle(
-                    //       fontWeight: FontWeight.w400,
-                    //       color: Color(new CommonUtil().getMyPrimaryColor())),
-                    // ),
+                    Text(
+                      /*position == 0
+                          ? myProfile.response.data.generalInfo.countryCode +
+                              "-" +
+                              myProfile.response.data.generalInfo.phoneNumber
+                          : data.child.isVirtualUser != null
+                              ? PreferenceUtil.getProfileData(
+                                          Constants.KEY_PROFILE)
+                                      .response
+                                      .data
+                                      .generalInfo
+                                      .countryCode +
+                                  "-" +
+                                  PreferenceUtil.getProfileData(
+                                          Constants.KEY_PROFILE)
+                                      .response
+                                      .data
+                                      .generalInfo
+                                      .phoneNumber
+                              :*/
+                      data.child.userContactCollection3[0].phoneNumber != null
+                          ? data.child.userContactCollection3[0].phoneNumber
+                          : '',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: ColorUtils.greycolor1),
+                      softWrap: false,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 10.0),
+                    Text(
+                      position == 0
+                          ? variable.Self
+                          :
+                      data.relationship != null
+                          ? data.relationship.name != null
+                              ? data.relationship.name
+                              : ''
+                          : '',
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: false,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          color: Color(new CommonUtil().getMyPrimaryColor())),
+                    ),
                   ],
                 ),
               ),
