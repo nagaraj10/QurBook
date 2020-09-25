@@ -12,9 +12,9 @@ import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 
 class FamilyListView {
   FamilyData familyData;
@@ -54,7 +54,7 @@ class FamilyListView {
       Function(BuildContext context, String searchParam, String name)
           onTextFieldtap,
       GlobalKey<State> _keyLoader) {
-    MyProfile myProfile =
+    MyProfileModel myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
     ProfileData profileData = new ProfileData(
@@ -132,33 +132,19 @@ class FamilyListView {
                                               .linkedData
                                               .nickName ==
                                           variable.Self
-                                      ? myProfile.response.data.generalInfo
-                                                  .profilePicThumbnailURL !=
+                                      ? myProfile.result.profilePicThumbnailUrl !=
                                               null
                                           ? new FHBBasicWidget()
                                               .getProfilePicWidgeUsingUrl(
-                                                  myProfile
-                                                      .response
-                                                      .data
-                                                      .generalInfo
-                                                      .profilePicThumbnailURL)
+                                                  myProfile.result.profilePicThumbnailUrl)
                                           : Container(
                                               height: 50,
                                               width: 50,
                                               child: Center(
                                                   child: Text(
-                                                      myProfile
-                                                                  .response
-                                                                  .data
-                                                                  .generalInfo
-                                                                  .qualifiedFullName !=
+                                                      myProfile.result!=
                                                               null
-                                                          ? myProfile
-                                                              .response
-                                                              .data
-                                                              .generalInfo
-                                                              .qualifiedFullName
-                                                              .firstName[0]
+                                                          ? myProfile.result.firstName
                                                               .toUpperCase()
                                                           : '',
                                                       style: TextStyle(
@@ -187,7 +173,7 @@ class FamilyListView {
                                               width: 50,
                                               child: Center(
                                                 child: Text(
-                                                  sharedByMe[index]
+                                                  /*sharedByMe[index]
                                                               .profileData
                                                               .qualifiedFullName
                                                               .firstName !=
@@ -197,7 +183,7 @@ class FamilyListView {
                                                           .qualifiedFullName
                                                           .firstName[0]
                                                           .toUpperCase()
-                                                      : '',
+                                                      : */'',
                                                   style: TextStyle(
                                                       color: Color(CommonUtil()
                                                           .getMyPrimaryColor()),

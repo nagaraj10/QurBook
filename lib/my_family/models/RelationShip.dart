@@ -1,4 +1,3 @@
-
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class RelationShip {

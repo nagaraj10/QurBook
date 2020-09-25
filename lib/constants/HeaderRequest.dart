@@ -41,7 +41,6 @@ class HeaderRequest {
 
   Future<Map<String, String>> getRequestHeadersTimeSlot() async {
     Map<String, String> requestHeadersTimeSlot = new Map();
-
     requestHeadersTimeSlot['Authorization'] =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     requestHeadersTimeSlot['Content-Type'] = 'application/json';

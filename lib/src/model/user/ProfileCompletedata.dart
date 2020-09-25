@@ -3,7 +3,6 @@ import 'package:myfhb/src/model/user/DoctorIds.dart';
 import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
-import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 
 class ProfileCompleteData {
   int status;
@@ -76,7 +75,7 @@ class MyProfileData {
   ProfilePicThumbnailMain profilePicThumbnail;
   int oid;
   String countryCode;
-  QualifiedFullName qualifiedFullName;
+//  QualifiedFullName qualifiedFullName;
 
   MyProfileData(
       {this.id,
@@ -97,7 +96,7 @@ class MyProfileData {
       this.bloodGroup,
       this.profilePicThumbnail,
       this.oid,
-      this.countryCode,this.qualifiedFullName});
+      this.countryCode,/*this.qualifiedFullName*/});
 
   MyProfileData.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strData];
@@ -123,9 +122,9 @@ class MyProfileData {
         : null;
     oid = json[parameters.stroid];
     countryCode = json[parameters.strCountryCode];
-    qualifiedFullName = json[parameters.strqualifiedFullName] != null
+    /*qualifiedFullName = json[parameters.strqualifiedFullName] != null
         ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
-        : null;
+        : null;*/
   }
 
   Map<String, dynamic> toJson() {
@@ -153,9 +152,9 @@ class MyProfileData {
     }
     data[parameters.stroid] = this.oid;
     data[parameters.strCountryCode] = this.countryCode;
-    if (this.qualifiedFullName != null) {
+    /*if (this.qualifiedFullName != null) {
       data[parameters.strqualifiedFullName] = this.qualifiedFullName.toJson();
-    }
+    }*/
     return data;
   }
 }

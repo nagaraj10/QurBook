@@ -8,13 +8,14 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GetTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/SlotsAvailabilityViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +48,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
 }
 
 class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
-  MyProviderViewModel providerViewModel;
+  SlotsAvailabilityViewModel slotsAvailabilityViewModel = new SlotsAvailabilityViewModel();
   CommonWidgets commonWidgets = new CommonWidgets();
   DateTime _selectedValue = DateTime.now();
   DatePickerController _controller = DatePickerController();
@@ -89,10 +90,9 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   }
 
   Widget getTimeSlots() {
-    providerViewModel = Provider.of<MyProviderViewModel>(context);
 
-    return new FutureBuilder<SessionData>(
-      future: providerViewModel.fetchTimeSlots(
+    return new FutureBuilder<SlotsResultModel>(
+      future: slotsAvailabilityViewModel.fetchTimeSlots(
           _selectedValue.toString(), widget.doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {

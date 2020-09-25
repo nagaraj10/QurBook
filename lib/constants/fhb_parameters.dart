@@ -282,7 +282,7 @@ const String ok = 'Ok';
 const String yes = 'Yes';
 const String no = 'No';
 const String appointmentCreatedMessage =
-    'Created a new  appointment(s) successfully';
+    'Created a new appointment successfully.';
 const String someWentWrong = 'Booking appointment failed.. Some went wrong!';
 const String checkSlots = 'Checking available slots..';
 const String selectSlotsMsg = 'please select your time slot before you book';
@@ -494,6 +494,9 @@ const String strPlannedFollowupDate = "plannedFollowupDate";
 const String strPaymentInfo = "paymentInfo";
 //Add Family User Info
 const String make_a_choice = 'Make a Choice!';
+const String IS_SUCCESS = 'isSuccess';
+const String MESSAGE = 'message';
+const String RESULT = 'result';
 
 // Video call
 const String onresume = 'OnResume New';
@@ -538,3 +541,14 @@ const String strResult = 'result';
 
 const String strIsAiTranscription = 'isAiTranscription';
 const String strHealthRecordCategory = 'healthRecordCategory';
+
+//chat
+const String NICK_NAME = 'nickname';
+const String PHOTO_URL = 'photoUrl';
+const String ID = 'id';
+const String CREATED_AT = 'createdAt';
+const String CHATTING_WITH = 'chattingWith';
+const String DISPLAY_NAME = 'display_name';
+const String PROFILE_IMAGE = 'profile_image';
+const String ABOUT_ME = 'aboutMe';
+const String USERS = 'users';

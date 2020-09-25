@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';

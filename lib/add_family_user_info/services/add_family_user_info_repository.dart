@@ -9,7 +9,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/constants/webservice_call.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
 class AddFamilyUserInfoRepository {
@@ -22,7 +22,7 @@ class AddFamilyUserInfoRepository {
     return RelationShipResponseList.fromJson(response);
   }
 
-  Future<MyProfile> getMyProfileInfo(String userID) async {
+  Future<MyProfileModel> getMyProfileInfo(String userID) async {
     final response = await _helper.getProfileInfo(query.qr_Userprofile +
         userID +
         query.qr_slash +
@@ -30,7 +30,7 @@ class AddFamilyUserInfoRepository {
         query.qr_generalInfo +
         query.qr_OSlash +
         query.qr_isOriginalPicRequired);
-    return MyProfile.fromJson(response);
+    return MyProfileModel.fromJson(response);
   }
 
   Future<UpdateAddFamilyInfo> updateUserProfileInfo(

@@ -1,54 +1,26 @@
 class UpdatePaymentModel {
-  int status;
-  bool success;
-  String message;
-  Response response;
+  bool isSuccess;
+  Result result;
 
-  UpdatePaymentModel({this.status, this.success, this.message, this.response});
+  UpdatePaymentModel({this.isSuccess, this.result});
 
   UpdatePaymentModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
-    response = json['response'] != null
-        ? new Response.fromJson(json['response'])
-        : null;
+    isSuccess = json['isSuccess'];
+    result =
+    json['result'] != null ? new Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['success'] = this.success;
-    data['message'] = this.message;
-    if (this.response != null) {
-      data['response'] = this.response.toJson();
+    data['isSuccess'] = this.isSuccess;
+    if (this.result != null) {
+      data['result'] = this.result.toJson();
     }
     return data;
   }
 }
 
-class Response {
-  int count;
-  Data data;
-
-  Response({this.count, this.data});
-
-  Response.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
-    if (this.data != null) {
-      data['data'] = this.data.toJson();
-    }
-    return data;
-  }
-}
-
-class Data {
+class Result {
   String appointmentId;
   String bookingId;
   String paymentId;
@@ -57,7 +29,7 @@ class Data {
   AppointmentStatus appointmentStatus;
   AppointmentStatus paymentStatus;
 
-  Data(
+  Result(
       {this.appointmentId,
         this.bookingId,
         this.paymentId,
@@ -66,7 +38,7 @@ class Data {
         this.appointmentStatus,
         this.paymentStatus});
 
-  Data.fromJson(Map<String, dynamic> json) {
+  Result.fromJson(Map<String, dynamic> json) {
     appointmentId = json['appointmentId'];
     bookingId = json['bookingId'];
     paymentId = json['paymentId'];
@@ -99,16 +71,22 @@ class Data {
 
 class AppointmentStatus {
   String code;
+  String name;
+  String description;
 
-  AppointmentStatus({this.code});
+  AppointmentStatus({this.code, this.name, this.description});
 
   AppointmentStatus.fromJson(Map<String, dynamic> json) {
     code = json['code'];
+    name = json['name'];
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['code'] = this.code;
+    data['name'] = this.name;
+    data['description'] = this.description;
     return data;
   }
 }

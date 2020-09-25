@@ -92,11 +92,11 @@ const String qr_verifymail = 'verifyMail';
 
 const String qr_slotDate = 'date';
 const String qr_doctorid = 'doctorId';
-const String qr_getSlots = 'doctorSlots/getAvailability';
+const String qr_getSlots = 'doctor/checkavailability';
 const String qr_bookAppmnt = 'appointments';
 const String qr_update_payment = 'appointments/update-payment-status/';
 
-const String qr_created_by = 'createdBy';
+const String qr_created_by = 'bookedBy';
 const String qr_created_for = 'createdFor';
 const String qr_doctor_session_id = 'doctorSessionId';
 const String qr_schedule_date = 'scheduledDate';
@@ -173,3 +173,5 @@ const String qr_category = 'category';
 const String qr_health_record_type = 'health-record-type';
 const String qr_health_record = 'health-records';
 const String qr_filter = 'filter';
+
+//

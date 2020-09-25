@@ -8,7 +8,8 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/AvailableTimeSlotsModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -35,9 +36,9 @@ class _MyProvidersState extends State<MyProviders> {
 
   List<DoctorIds> doctorData = new List();
 
-  List<DoctorTimeSlotsModel> doctorTimeSlotsModel =
-      new List<DoctorTimeSlotsModel>();
-  List<SessionsTime> sessionTimeModel = new List<SessionsTime>();
+  List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
+      new List<AvailableTimeSlotsModel>();
+  List<SlotSessionsModel> sessionTimeModel = new List<SlotSessionsModel>();
   List<Slots> slotsModel = new List<Slots>();
 
   @override
