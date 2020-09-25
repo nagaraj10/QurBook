@@ -3,7 +3,6 @@ import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AvailableTimeSlotsModel.dart';
-import 'file:///C:/Users/fmohamed/Documents/Flutter%20Projects/asgard_myfhb/lib/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';

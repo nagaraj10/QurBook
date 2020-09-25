@@ -93,7 +93,7 @@ class HeaderRequest {
 
     Map<String, String> requestHeadersAuthAccept = new Map();
     requestHeadersAuthAccept['accept'] = 'application/json';
-    requestHeadersAuthAccept['authorization'] = CommonConstants.NEW_AUTH_TOKEN;
+    requestHeadersAuthAccept['authorization'] = authToken;
     return requestHeadersAuthAccept;
   }
 
