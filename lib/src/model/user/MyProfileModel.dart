@@ -1,4 +1,4 @@
-import 'package:myfhb/src/model/user/MyProviderResult.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
 
 class MyProfileModel {
   bool isSuccess;
