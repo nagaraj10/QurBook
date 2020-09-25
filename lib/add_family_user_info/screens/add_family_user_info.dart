@@ -1482,7 +1482,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   context, _keyLoader, variable.Please_Wait);
 
               addFamilyUserInfoBloc.updateSelfProfile(true).then((value) {
-                if (value != null && value.success && value.status == 200) {
+                if (value != null && value.isSuccess) {
                   saveProfileImage();
                   getUserProfileData();
                 } else {
