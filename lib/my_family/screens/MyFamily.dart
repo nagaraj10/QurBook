@@ -15,19 +15,15 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyData.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/my_family/viewmodel/my_family_view_model.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:provider/provider.dart';
 
 class MyFamily extends StatefulWidget {
   @override
@@ -74,73 +70,97 @@ class _MyFamilyState extends State<MyFamily> {
   void initState() {
     super.initState();
     _familyListBloc = new FamilyListBloc();
-    // _familyListBloc.getFamilyMembersList();
-    // _familyListBloc.getCustomRoles();
-
-    Provider.of<MyFamilyViewModel>(context, listen: false)
-        .getFamilyMembersInfo();
+    _familyListBloc.getFamilyMembersListNew();
+    _familyListBloc.getCustomRoles();
 
     PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      key: scaffold_state,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
+  Widget build(BuildContext context) {
+    return Scaffold(
+        key: scaffold_state,
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            saveMediaDialog(context);
+          },
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         ),
-        onPressed: () {
-          saveMediaDialog(context);
-        },
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-      ),
-      body: getAllFamilyMembers());
+        body: getAllFamilyMembers());
+  }
 
   Widget getAllFamilyMembers() {
     Widget familyWidget;
 
     return firstTym
-        ? PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
+        ? PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBERNEW) != null
             ? getMyFamilyMembers(
-                PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
-            : Consumer<MyFamilyViewModel>(
-                builder: (context, quoteViewModel, child) {
-                final FamilyMembersList familyMembersList =
-                    quoteViewModel.familyMembersList;
-                if (familyMembersList != null) {
-                  firstTym = false;
-                  PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
-                      familyMembersList.response.data);
+                PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW))
+            : StreamBuilder<ApiResponse<FamilyMembers>>(
+                stream: _familyListBloc.familyMemberListNewStream,
+                builder: (context,
+                    AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        familyWidget = Center(
+                            child: SizedBox(
+                          child: CircularProgressIndicator(
+                            backgroundColor:
+                                Color(CommonUtil().getMyPrimaryColor()),
+                          ),
+                          width: 30,
+                          height: 30,
+                        ));
+                        break;
 
-                  return familyWidget =
-                      getMyFamilyMembers(familyMembersList.response.data);
-                } else {
-                  return Center(
-                      child: SizedBox(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                    ),
-                    width: 30,
-                    height: 30,
-                  ));
-                }
-              })
+                      case Status.ERROR:
+                        familyWidget = FHBBasicWidget.getRefreshContainerButton(
+                            snapshot.data.message, () {
+                          setState(() {});
+                        });
+                        break;
+
+                      case Status.COMPLETED:
+                        //rebuildFamilyBlock();
+                        firstTym = false;
+                        PreferenceUtil.saveFamilyDataNew(
+                            Constants.KEY_FAMILYMEMBERNEW,
+                            snapshot.data.data.result);
+
+                        familyWidget =
+                            getMyFamilyMembers(snapshot.data.data.result);
+                        break;
+                    }
+                  } else {
+                    familyWidget = Container(
+                      width: 100,
+                      height: 100,
+                    );
+                  }
+                  return familyWidget;
+                },
+              )
         : getMyFamilyMembers(
-            PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER));
+            PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW));
   }
 
-  Widget getMyFamilyMembers(FamilyData data) {
+  Widget getMyFamilyMembers(FamilyMemberResult data) {
     return data != null
-        ? data.sharedbyme.length > 0
+        ? data.sharedByUsers.length > 0
             ? Container(
                 color: const Color(fhbColors.bgColorContainer),
                 child: ListView.builder(
                   padding: EdgeInsets.only(bottom: 20),
                   itemBuilder: (c, i) => getCardWidgetForUser(
-                      data.sharedbyme[i == 0 ? 0 : i - 1], i, data.sharedbyme),
-                  itemCount: data.sharedbyme.length + 1,
+                      data.sharedByUsers[i == 0 ? 0 : i - 1],
+                      i,
+                      data.sharedByUsers),
+                  itemCount: data.sharedByUsers.length + 1,
                 ))
             : Container(
                 child: Center(
@@ -178,8 +198,8 @@ class _MyFamilyState extends State<MyFamily> {
     return string[0].toUpperCase() + string.substring(1);
   }
 
-  Widget getCardWidgetForUser(
-      Sharedbyme data, int position, List<Sharedbyme> profilesSharedByMeAry) {
+  Widget getCardWidgetForUser(SharedByUsers data, int position,
+      List<SharedByUsers> profilesSharedByMeAry) {
     MyProfile myProfile;
     String fulName;
     try {
@@ -199,11 +219,9 @@ class _MyFamilyState extends State<MyFamily> {
                       profilesSharedByMe: profilesSharedByMeAry,
                       currentPage: position - 1))
               .then((value) {
-            Provider.of<MyFamilyViewModel>(context, listen: false)
-                .getFamilyMembersInfo()
-                .then((value) {
+            _familyListBloc.getFamilyMembersList().then((familyMembersList) {
               PreferenceUtil.saveFamilyData(
-                  Constants.KEY_FAMILYMEMBER, value.response.data);
+                  Constants.KEY_FAMILYMEMBER, familyMembersList.response.data);
             });
           });
         }
@@ -254,18 +272,15 @@ class _MyFamilyState extends State<MyFamily> {
                             width: 60,
                             height: 60,
                           )
-                    : data.profileData.profilePicThumbnailURL == null
+                    : data.child.profilePicThumbnailUrl == null
                         ? Container(
                             width: 60,
                             height: 60,
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
-                                data.profileData.qualifiedFullName.firstName !=
-                                        null
-                                    ? data.profileData.qualifiedFullName
-                                        .firstName[0]
-                                        .toUpperCase()
+                                data.child.firstName != null
+                                    ? data.child.firstName[0].toUpperCase()
                                     : '',
                                 style: TextStyle(
                                     fontSize: 22,
@@ -275,7 +290,7 @@ class _MyFamilyState extends State<MyFamily> {
                             ),
                           )
                         : Image.network(
-                            data.profileData.profilePicThumbnailURL,
+                            data.child.profilePicThumbnailUrl,
                             fit: BoxFit.cover,
                             width: 60,
                             height: 60,
@@ -296,60 +311,61 @@ class _MyFamilyState extends State<MyFamily> {
                               ? new CommonUtil()
                                   .titleCase(fulName.toLowerCase())
                               : ''
-                          : data.profileData.qualifiedFullName.firstName != null
-                              ? new CommonUtil().titleCase(data
-                                      .profileData.qualifiedFullName.firstName +
-                                  ' ' +
-                                  data.profileData.qualifiedFullName.lastName)
+                          : data.child.firstName != null
+                              ? new CommonUtil().titleCase(
+                                  data.child.firstName +
+                                      ' ' +
+                                      data.child.lastName)
                               : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                       softWrap: false,
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 10.0),
-                    Text(
-                      position == 0
-                          ? myProfile.response.data.generalInfo.countryCode +
-                              "-" +
-                              myProfile.response.data.generalInfo.phoneNumber
-                          : data.profileData.isVirtualUser != null
-                              ? PreferenceUtil.getProfileData(
-                                          Constants.KEY_PROFILE)
-                                      .response
-                                      .data
-                                      .generalInfo
-                                      .countryCode +
-                                  "-" +
-                                  PreferenceUtil.getProfileData(
-                                          Constants.KEY_PROFILE)
-                                      .response
-                                      .data
-                                      .generalInfo
-                                      .phoneNumber
-                              : data.profileData.phoneNumber != null
-                                  ? data.profileData.countryCode +
-                                      "-" +
-                                      data.profileData.phoneNumber
-                                  : '',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: ColorUtils.greycolor1),
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 10.0),
-                    Text(
-                      position == 0
-                          ? variable.Self
-                          : data.linkedData.roleName != null
-                              ? data.linkedData.roleName
-                              : '',
-                      overflow: TextOverflow.ellipsis,
-                      softWrap: false,
-                      style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          color: Color(new CommonUtil().getMyPrimaryColor())),
-                    ),
+                    // Text(
+                    //   position == 0
+                    //       ? myProfile.response.data.generalInfo.countryCode +
+                    //           "-" +
+                    //           myProfile.response.data.generalInfo.phoneNumber
+                    //       : data.child.isVirtualUser != null
+                    //           ? PreferenceUtil.getProfileData(
+                    //                       Constants.KEY_PROFILE)
+                    //                   .response
+                    //                   .data
+                    //                   .generalInfo
+                    //                   .countryCode +
+                    //               "-" +
+                    //               PreferenceUtil.getProfileData(
+                    //                       Constants.KEY_PROFILE)
+                    //                   .response
+                    //                   .data
+                    //                   .generalInfo
+                    //                   .phoneNumber
+                    //           : data.child.userContactCollection3[0]
+                    //                       .phoneNumber !=
+                    //                   null
+                    //               ? data.child.userContactCollection3[0]
+                    //                   .phoneNumber
+                    //               : '',
+                    //   style: TextStyle(
+                    //       fontWeight: FontWeight.w400,
+                    //       color: ColorUtils.greycolor1),
+                    //   softWrap: false,
+                    //   overflow: TextOverflow.ellipsis,
+                    // ),
+                    // SizedBox(height: 10.0),
+                    // Text(
+                    //   position == 0
+                    //       ? variable.Self
+                    //       : data.child.userRoleCollection3[0].role.name != null
+                    //           ? data.child.userRoleCollection3[0].role.name
+                    //           : '',
+                    //   overflow: TextOverflow.ellipsis,
+                    //   softWrap: false,
+                    //   style: TextStyle(
+                    //       fontWeight: FontWeight.w400,
+                    //       color: Color(new CommonUtil().getMyPrimaryColor())),
+                    // ),
                   ],
                 ),
               ),
@@ -373,7 +389,7 @@ class _MyFamilyState extends State<MyFamily> {
 
                                   var deLinkingData = {};
                                   deLinkingData[variable.strrelatedTo] =
-                                      data.profileData.id;
+                                      data.child.id;
                                   deLinkingData[variable.strrelationshipType] =
                                       variable.strparentToChild;
                                   var jsonString =
@@ -384,9 +400,9 @@ class _MyFamilyState extends State<MyFamily> {
                                       .then((userLinking) {
                                     if (userLinking.status == 200 &&
                                         userLinking.success) {
-                                      Provider.of<MyFamilyViewModel>(context,
-                                              listen: false)
-                                          .getFamilyMembersInfo()
+                                      // Reload
+                                      _familyListBloc
+                                          .getFamilyMembersList()
                                           .then((value) {
                                         if (value.status == 200 &&
                                             value.success) {
@@ -918,12 +934,10 @@ class _MyFamilyState extends State<MyFamily> {
               if (addFamilyOTPResponse.success &&
                   addFamilyOTPResponse.status == 200) {
                 if (addFamilyOTPResponse.response.data != null) {
-                  Provider.of<MyFamilyViewModel>(context, listen: false)
-                      .getFamilyMembersInfo()
-                      .then((value) {
-                    if (value.status == 200 && value.success) {
-                      PreferenceUtil.saveFamilyData(
-                              Constants.KEY_FAMILYMEMBER, value.response.data)
+                  _familyListBloc.getFamilyMembersInfo().then((value) {
+                    if (value.isSuccess) {
+                      PreferenceUtil.saveFamilyDataNew(
+                              Constants.KEY_FAMILYMEMBERNEW, value.result)
                           .then((value) {
                         Navigator.of(_keyLoader.currentContext,
                                 rootNavigator: true)
@@ -948,6 +962,13 @@ class _MyFamilyState extends State<MyFamily> {
                           isPrimaryNoSelected = false;
                           selectedRelationShip = null;
                           rebuildFamilyBlock();
+                          _familyListBloc
+                              .getFamilyMembersList()
+                              .then((familyMembersList) {
+                            PreferenceUtil.saveFamilyData(
+                                Constants.KEY_FAMILYMEMBER,
+                                familyMembersList.response.data);
+                          });
                         });
                       });
                     } else {
@@ -978,9 +999,7 @@ class _MyFamilyState extends State<MyFamily> {
           } else {
             _familyListBloc.postUserLinking(jsonString).then((userLinking) {
               if (userLinking.success && userLinking.status == 200) {
-                Provider.of<MyFamilyViewModel>(context, listen: false)
-                    .getFamilyMembersInfo()
-                    .then((value) {
+                _familyListBloc.getFamilyMembersList().then((value) {
                   if (value.status == 200 && value.success) {
                     PreferenceUtil.saveFamilyData(
                             Constants.KEY_FAMILYMEMBER, value.response.data)
@@ -1008,6 +1027,13 @@ class _MyFamilyState extends State<MyFamily> {
                         isPrimaryNoSelected = false;
                         selectedRelationShip = null;
                         rebuildFamilyBlock();
+                        _familyListBloc
+                            .getFamilyMembersList()
+                            .then((familyMembersList) {
+                          PreferenceUtil.saveFamilyData(
+                              Constants.KEY_FAMILYMEMBER,
+                              familyMembersList.response.data);
+                        });
                       });
                     });
                   } else {
@@ -1040,9 +1066,7 @@ class _MyFamilyState extends State<MyFamily> {
   rebuildFamilyBlock() {
     _familyListBloc = null;
     _familyListBloc = new FamilyListBloc();
-    // _familyListBloc.getFamilyMembersList();
-    // _familyListBloc.getCustomRoles();
-    Provider.of<MyFamilyViewModel>(context, listen: false)
-        .getFamilyMembersInfo();
+    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getCustomRoles();
   }
 }

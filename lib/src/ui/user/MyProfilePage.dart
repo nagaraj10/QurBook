@@ -37,6 +37,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
+  var cntrlr_addr_one = TextEditingController(text: '');
+  var cntrlr_addr_two = TextEditingController(text: '');
+  var cntrlr_addr_city = TextEditingController(text: '');
+  var cntrlr_addr_state = TextEditingController(text: '');
+  var cntrlr_addr_zip = TextEditingController(text: '');
+
   @override
   void initState() {
     PreferenceUtil.init();
@@ -134,6 +140,22 @@ class _MyProfilePageState extends State<MyProfilePage> {
       lastName.text = '';
     }
 
+    if (data.generalInfo.addressLine1 != null) {
+      cntrlr_addr_one.text = data.generalInfo.addressLine1;
+    }
+    if (data.generalInfo.addressLine2 != null) {
+      cntrlr_addr_two.text = data.generalInfo.addressLine2;
+    }
+    if (data.generalInfo.city != null) {
+      cntrlr_addr_city.text = data.generalInfo.city.name;
+    }
+    if (data.generalInfo.state != null) {
+      cntrlr_addr_state.text = data.generalInfo.state.name;
+    }
+    if (data.generalInfo.pincode != null) {
+      cntrlr_addr_zip.text = data.generalInfo.pincode;
+    }
+
     return Container(
         color: Colors.white,
         padding: EdgeInsets.all(20),
@@ -202,32 +224,32 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       ),
                     ),
                   ),
-                  ((data.generalInfo.isEmailVerified == null &&
-                              data.generalInfo.email != '') ||
-                          (data.generalInfo.isEmailVerified == false &&
-                              data.generalInfo.email != ''))
-                      ? GestureDetector(
-                          child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text(Constants.VerifyEmail,
-                                  style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(new CommonUtil()
-                                          .getMyPrimaryColor())))),
-                          onTap: () {
-                            new FHBUtils().check().then((intenet) {
-                              if (intenet != null && intenet) {
-                                verifyEmail();
-                              } else {
-                                new FHBBasicWidget().showInSnackBar(
-                                    Constants.STR_NO_CONNECTIVITY,
-                                    scaffold_state);
-                              }
-                            });
-                          },
-                        )
-                      : Text('')
+                  // ((data.generalInfo.isEmailVerified == null &&
+                  //             data.generalInfo.email != '') ||
+                  //         (data.generalInfo.isEmailVerified == false &&
+                  //             data.generalInfo.email != ''))
+                  //     ? GestureDetector(
+                  //         child: Padding(
+                  //             padding: EdgeInsets.all(10),
+                  //             child: Text(Constants.VerifyEmail,
+                  //                 style: TextStyle(
+                  //                     fontSize: 13.0,
+                  //                     fontWeight: FontWeight.w400,
+                  //                     color: Color(new CommonUtil()
+                  //                         .getMyPrimaryColor())))),
+                  //         onTap: () {
+                  //           new FHBUtils().check().then((intenet) {
+                  //             if (intenet != null && intenet) {
+                  //               verifyEmail();
+                  //             } else {
+                  //               new FHBBasicWidget().showInSnackBar(
+                  //                   Constants.STR_NO_CONNECTIVITY,
+                  //                   scaffold_state);
+                  //             }
+                  //           });
+                  //         },
+                  //       )
+                  //     : Text('')
                 ],
               ),
 
@@ -283,6 +305,61 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       hintText: CommonConstants.date_of_birth,
                       hintStyle: TextStyle(fontSize: 12),
                       labelText: CommonConstants.date_of_birth),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_one,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_line_1,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_two,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_line_2,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_city,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_city,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_state,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_state,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_zip,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_zip,
+                  ),
                 ),
               ),
             ],

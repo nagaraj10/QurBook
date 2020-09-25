@@ -349,23 +349,23 @@ class _AppointmentsState extends State<Appointments> {
                           ),
                           commonWidget.count(doc.slotNumber),
                           doc.followupDate == null
-                              ?  TextWidget(
-                                      fontsize: 10,
-                                      text: doc.plannedStartDateTime == null
-                                          ? ''
-                                          :DateFormat(Constants
+                              ? TextWidget(
+                                  fontsize: 10,
+                                  text: doc.plannedStartDateTime == null
+                                      ? ''
+                                      : DateFormat(Constants
                                                   .Appointments_time_format)
                                               .format(DateTime.parse(
                                                   doc.plannedStartDateTime))
                                               .toString() ??
                                           '',
-                                      fontWeight: FontWeight.w600,
-                                      colors: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                    )
+                                  fontWeight: FontWeight.w600,
+                                  colors: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
+                                )
                               : TextWidget(
                                   fontsize: 9,
-                                  text:Constants.Appointments_followUpStatus,
+                                  text: Constants.Appointments_followUpStatus,
                                   overflow: TextOverflow.visible,
                                   fontWeight: FontWeight.w400,
                                   colors: Colors.black38,
@@ -391,7 +391,9 @@ class _AppointmentsState extends State<Appointments> {
                           ),
                           TextWidget(
                             fontsize: 15,
-                            text: doc.followupFee ?? '',
+                            text: doc?.followupFee != null
+                                ? 'INR ${doc?.followupFee.split('.')[0]}'
+                                : '',
                             fontWeight: FontWeight.w600,
                             overflow: TextOverflow.visible,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),
@@ -454,10 +456,11 @@ class _AppointmentsState extends State<Appointments> {
   void moveToBilsPage(String paymentMediaMetaId) async {
     List<String> paymentID = new List();
     paymentID.add(paymentMediaMetaId);
+    int position = await new AppointmentsCommonWidget()
+        .getCategoryPosition(Constants.STR_BILLS);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-        categoryPosition: new AppointmentsCommonWidget()
-            .getCategoryPosition(Constants.STR_BILLS),
+        categoryPosition: position,
         allowSelect: true,
         isAudioSelect: false,
         isNotesSelect: false,

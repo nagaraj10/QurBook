@@ -166,6 +166,8 @@ const String strlinkedData = 'linkedData';
 const String strsharedbyme = 'sharedbyme';
 const String strsharedToMe = 'sharedToMe';
 const String strvirtualUserParent = 'virtualUserParent';
+const String strMappedDoctorId = 'mappedDoctorId';
+const String strProfilePicThumbnailURL = 'profilePicThumbnailURL';
 
 const String strmedicalPreferences = 'medicalPreferences';
 const String strpreferences = 'preferences';
@@ -245,6 +247,7 @@ const String strqualificationInfo = 'qualificationInfo';
 const String strmedicalCouncilInfo = 'medicalCouncilInfo';
 const String strspecialty = 'specialty';
 const String strclinicName = 'clinicName';
+const String strpincode = 'pincode';
 
 const String strdegree = 'degree';
 const String struniversity = 'university';
@@ -314,8 +317,9 @@ const String strOxyTitle = "SPO2 Reading";
 const String strWgTitle = "Weight Measurments";
 const String strTmpTitle = "Temperature Readings";
 const String strLatestTitle = "Latest Readings";
-const String strDateYMD = "yMMMMd";
+const String strDateYMD = "yMMMd";
 const String strTimeHMS = "Hms";
+const String strTimeHM = "hh:mm a";
 
 const String strsourceGoogle = "Google Fit";
 const String strsourceSheela = "SHEELA";
@@ -519,8 +523,13 @@ const String appid_missing =
     'APP_ID missing, please provide your APP_ID in settings.dart';
 const String agora_not_starting = 'Agora Engine is not starting';
 const String exit_call = 'Do you want exit from call?';
+const String cancel_appointment = 'Are you want cancel Appointment?';
+const String warning = 'warning!';
 const String Yes = 'Yes';
 const String No = 'No';
+
+const String id = 'id';
+const String healthOrganization = 'healthOrganization';
 
 //for the new models
 

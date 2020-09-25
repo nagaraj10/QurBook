@@ -1,6 +1,11 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:core';
+
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/models/FamilyData.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
@@ -14,9 +19,6 @@ import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class PreferenceUtil {
   static Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
@@ -247,6 +249,28 @@ class PreferenceUtil {
       if (_prefsInstance == null) {}
 
       return FamilyData.fromJson(
+          json.decode(_prefsInstance.getString(keyFamily)));
+    } catch (e) {}
+  }
+
+  static Future<bool> saveFamilyDataNew(
+      String keyFamily, FamilyMemberResult familyData) async {
+    var instance = await _prefs;
+
+    try {
+      String family = json.encode(familyData);
+
+      return instance.setString(keyFamily, family);
+    } catch (e) {
+      return instance.setString(keyFamily, null);
+    }
+  }
+
+  static FamilyMemberResult getFamilyDataNew(String keyFamily) {
+    try {
+      if (_prefsInstance == null) {}
+
+      return FamilyMemberResult.fromJson(
           json.decode(_prefsInstance.getString(keyFamily)));
     } catch (e) {}
   }

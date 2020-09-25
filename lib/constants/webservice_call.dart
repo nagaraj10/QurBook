@@ -1,10 +1,10 @@
 import 'dart:io';
 
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as variable;
-import 'package:myfhb/common/CommonUtil.dart';
 
 class WebserviceCall {
   String getQueryToUpdateDoctor(bool isPreferred, String providerId) {
@@ -23,6 +23,14 @@ class WebserviceCall {
   String getUrlToUpdateDoctor(String userID) {
     String query;
     query = '${variable.qr_Userprofile}${userID}${variable.qr_slash}';
+
+    return query;
+  }
+
+  String getUrlToUpdateDoctorNew(String userID) {
+    String query;
+    query =
+        '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_section}${variable.qr_medicalPreferences}';
 
     return query;
   }
@@ -90,6 +98,16 @@ class WebserviceCall {
     return query;
   }
 
+  String getQueryForFamilyMemberListNew() {
+    String query = '';
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    query =
+        "${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_slash}${variable.qr_myconnection}";
+
+    return query;
+  }
+
   String getQueryForPostUserDelinking() {
     String query = '';
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -135,11 +153,21 @@ class WebserviceCall {
       File profilePic,
       String firstName,
       String middleName,
-      String lastName) {
+      String lastName,
+      String cityId,
+      String stateId,
+      String addressLine1,
+      String addressLine2,
+      String zipcode,
+      bool fromFamily) {
     String query;
     query =
         "${variable.qr_generalInfo}${variable.qr_DSlash}${variable.qr_gender}${gender}${variable.qr_OSlash}${variable.qr_bloodgroup}${bloodGroup}${variable.qr_OSlash}${variable.qr_dateOfBirth}${dateOfBirth}${variable.qr_OSlash}${variable.qr_name}${name}${variable.qr_OSlash}${variable.qr_firstName}${firstName}${variable.qr_OSlash}${variable.qr_middleName}${middleName}${variable.qr_OSlash}${variable.qr_lastname}${lastName}${variable.qr_OSlash}${variable.qr_email}${email}";
 
+    if (fromFamily) {
+      query = query +
+          "${variable.qr_OSlash}${variable.qr_CityId}${cityId}${variable.qr_OSlash}${variable.qr_StateId}${stateId}${variable.qr_OSlash}${variable.qr_AddressLine2}${addressLine2}${variable.qr_OSlash}${variable.qr_AddressLine1}${addressLine1}${variable.qr_OSlash}${variable.qr_pincode}${zipcode}";
+    }
     /*query =
         variable.qr_sections +
         query;*/

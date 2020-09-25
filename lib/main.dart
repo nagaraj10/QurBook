@@ -22,6 +22,7 @@ import 'package:myfhb/schedules/add_reminders.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
+import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
@@ -117,12 +118,7 @@ void setValues(List<dynamic> values) {
   CommonUtil.GOOGLE_ADDRESS_FROM__LOCATION_URL = values[5];
   CommonUtil.GOOGLE_STATIC_MAP_URL = values[6];
   CommonUtil.BASE_URL_FROM_RES = values[7];
-  CommonUtil.BASE_COVER_IMAGE = values[8];
-  CommonUtil.COGNITO_AUTH_CODE = values[9];
-  CommonUtil.COGNITO_AUTH_TOKEN = values[10];
-  CommonUtil.COGNITO_URL = values[11];
-  CommonUtil.BASE_URL_V2 = values[12];
-  CommonUtil.BASEURL_DEVICE_READINGS = values[13];
+  CommonUtil.BASEURL_DEVICE_READINGS = values[8];
 }
 
 class MyFHB extends StatefulWidget {
@@ -153,7 +149,7 @@ class _MyFHBState extends State<MyFHB> {
   ValueNotifier<String> _msgListener = ValueNotifier('');
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
+  var globalContext;
   @override
   void initState() {
     // TODO: implement initState
@@ -211,6 +207,28 @@ class _MyFHBState extends State<MyFHB> {
       if (c_msg == 'ack') {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(selectedIndex: 0),
+        ));
+      } else if (passedValArr[0] == 'reschedule') {
+        Get.to(TelehealthProviders(
+          arguments: HomeScreenArguments(selectedIndex: 1),
+        ));
+        // History doc = History(
+        //   doctorId: '',
+        //   bookingId: '', //this shoould be booking id
+        // );
+
+        // Get.to(
+        //   ResheduleMain(
+        //     doc: doc,
+        //     isReshedule: true,
+        //   ),
+        // );
+      } else if (passedValArr[0] == 'cancel_appointment') {
+        Get.to(TelehealthProviders(
+          arguments: HomeScreenArguments(
+              selectedIndex: 0,
+              isCancelDialogShouldShow: true,
+              bookingId: passedValArr[1] ?? ''),
         ));
       } else if (passedValArr[4] == 'call') {
         try {
@@ -270,7 +288,10 @@ class _MyFHBState extends State<MyFHB> {
           ),
           provider.ChangeNotifierProvider<MyFamilyViewModel>(
             create: (_) => MyFamilyViewModel(),
-          )
+          ),
+          provider.ChangeNotifierProvider<ChatScreenViewModel>(
+            create: (_) => ChatScreenViewModel(),
+          ),
         ],
         child: MaterialApp(
           title: Constants.APP_NAME,
@@ -279,11 +300,32 @@ class _MyFHBState extends State<MyFHB> {
             primaryColor: Color(myPrimaryColor),
             accentColor: Colors.white,
           ),
-          home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
+          //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
+          home: findHomeWidget(navRoute),
           routes: routes,
           debugShowCheckedModeBanner: false,
           navigatorKey: Get.key,
         ));
+  }
+
+  Widget findHomeWidget(String navRoute) {
+    if (navRoute.isEmpty) {
+      return SplashScreen();
+    } else {
+      if (navRoute.split('&')[0] == 'reschedule') {
+        return SplashScreen(
+          nsRoute: 'reschedule',
+          doctorID: navRoute.split('&')[1],
+        );
+      } else if (navRoute.split('&')[0] == 'cancel_appointment') {
+        return SplashScreen(
+          nsRoute: 'cancel_appointment',
+          bookingID: navRoute.split('&')[1],
+        );
+      } else {
+        return StartTheCall();
+      }
+    }
   }
 
   Future<void> gettingResponseFromNative() async {

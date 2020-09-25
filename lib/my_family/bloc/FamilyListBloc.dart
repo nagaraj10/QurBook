@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/user_delinking_response.dart';
@@ -20,6 +21,13 @@ class FamilyListBloc implements BaseBloc {
       _familyListController.sink;
   Stream<ApiResponse<FamilyMembersList>> get familyMemberListStream =>
       _familyListController.stream;
+
+  StreamController _familyController;
+
+  StreamSink<ApiResponse<FamilyMembers>> get familyMemberListNewSink =>
+      _familyController.sink;
+  Stream<ApiResponse<FamilyMembers>> get familyMemberListNewStream =>
+      _familyController.stream;
 
   // 2
   StreamController _relationshipListController;
@@ -67,6 +75,7 @@ class FamilyListBloc implements BaseBloc {
     _familyResponseListRepository = FamilyMemberListRepository();
 
     _familyListController = StreamController<ApiResponse<FamilyMembersList>>();
+    _familyController = StreamController<ApiResponse<FamilyMembers>>();
 
     _relationshipListController =
         StreamController<ApiResponse<RelationShipResponseList>>();
@@ -93,19 +102,30 @@ class FamilyListBloc implements BaseBloc {
     }
     return familyResponseList;
   }
-//
-//   Future<FamilyMembersList> getFamilyMembersInfo() async {
-//     FamilyMembersList familyResponseList;
-// //    familyMemberListSink.add(ApiResponse.loading(variable.strFetchFamily));
-//     try {
-//       familyResponseList =
-//           await _familyResponseListRepository.getFamilyMembersList();
-// //      familyMemberListSink.add(ApiResponse.completed(familyResponseList));
-//     } catch (e) {
-//       familyMemberListSink.add(ApiResponse.error(e.toString()));
-//     }
-//     return familyResponseList;
-//   }
+
+  getFamilyMembersListNew() async {
+    FamilyMembers familyResponseList;
+    familyMemberListNewSink.add(ApiResponse.loading(variable.strFetchFamily));
+    try {
+      familyResponseList =
+          await _familyResponseListRepository.getFamilyMembersListNew();
+      familyMemberListNewSink.add(ApiResponse.completed(familyResponseList));
+    } catch (e) {
+      familyMemberListNewSink.add(ApiResponse.error(e.toString()));
+    }
+    return familyResponseList;
+  }
+
+  Future<FamilyMembers> getFamilyMembersInfo() async {
+    FamilyMembers familyResponseList;
+    try {
+      familyResponseList =
+          await _familyResponseListRepository.getFamilyMembersListNew();
+    } catch (e) {
+      familyMemberListNewSink.add(ApiResponse.error(e.toString()));
+    }
+    return familyResponseList;
+  }
 
   getCustomRoles() async {
     relationShipListSink.add(ApiResponse.loading(variable.strFetchRoles));

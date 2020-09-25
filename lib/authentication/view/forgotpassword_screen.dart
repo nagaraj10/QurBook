@@ -1,0 +1,163 @@
+import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/authentication/view/authentication_validator.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:myfhb/constants/variable_constant.dart';
+
+class ForgotPasswordScreen extends StatefulWidget {
+  @override
+  _ForgotPasswordScreenState createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final mobileController = TextEditingController();
+  bool _autoValidateBool = false;
+  var _ForgetPassKey = GlobalKey<FormState>();
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: Form(
+        key: _ForgetPassKey,
+        child: Container(
+          height: height,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: height * .1),
+                      AssetImageWidget(
+                        icon: myFHB_logo,
+                        height: 120,
+                        width: 120,
+                      ),
+                      SizedBox(height: 20),
+                      Text(strOtpShowText),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Column(
+                        children: [
+                          _resettextfields(
+                              strPhoneNumber, strPhoneHint, mobileController),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      _resetbutton(),
+                      SizedBox(height: height * .015),
+                      _gotosignintap(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _resettextfields(
+      String title, String hintText, TextEditingController controller,
+      {bool isPassword = false}) {
+    return Container(
+        margin: EdgeInsets.symmetric(vertical: 2),
+        child: TextFormField(
+          autovalidate: _autoValidateBool,
+          obscureText: isPassword,
+          controller: controller,
+          decoration: InputDecoration(
+              labelText: title,
+              hintText: strPhoneHint,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+                borderSide: BorderSide(
+                  color: Colors.deepPurple,
+                ),
+              )),
+          validator: (value) {
+            return AuthenticationValidator()
+                .phoneValidation(value, patternPhone, strPhoneCantEmpty);
+          },
+        ));
+  }
+
+  Widget _gotosignintap() {
+    return InkWell(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => PatientSignInScreen()));
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.all(15),
+        alignment: Alignment.bottomCenter,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              strBackTo,
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              strSignIn,
+              style: TextStyle(
+                  color: Color(0xff138fcf),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _resetbutton() {
+    return InkWell(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        if (_ForgetPassKey.currentState.validate()) {
+          _ForgetPassKey.currentState.save();
+        } else {
+          setState(() {
+            _autoValidateBool = true;
+          });
+        }
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+                  Color(0xff138fcf),
+                  Color(0xff138fcf),
+                ])),
+        child: Text(
+          strResetButton,
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
+      ),
+    );
+  }
+}

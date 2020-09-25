@@ -10,8 +10,8 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
@@ -162,7 +162,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return children;
   }
 
-  Widget _showPageData(Sharedbyme sharedbyme) {
+  Widget _showPageData(SharedByUsers sharedbyme) {
     nameController = TextEditingController(text: '');
     nameFocus = FocusNode();
 
@@ -196,45 +196,43 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipController = TextEditingController(text: '');
     relationShipFocus = FocusNode();
 
-    if (sharedbyme.profileData.qualifiedFullName != null) {
-      firstNameController.text =
-          sharedbyme.profileData.qualifiedFullName.firstName;
-      middleNameController.text =
-          sharedbyme.profileData.qualifiedFullName.middleName;
-      lastNameController.text =
-          sharedbyme.profileData.qualifiedFullName.lastName;
+    if (sharedbyme.child.firstName != null) {
+      firstNameController.text = sharedbyme.child.firstName;
+      middleNameController.text = sharedbyme.child.middleName;
+      lastNameController.text = sharedbyme.child.lastName;
     } else {
-      firstNameController.text = sharedbyme.profileData.name;
+      firstNameController.text = sharedbyme.child.name;
       middleNameController.text = '';
       lastNameController.text = '';
     }
 
-    if (sharedbyme.profileData.isVirtualUser == true) {
+    if (sharedbyme.child.isVirtualUser == true) {
       MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
       emailController.text = myProf.response.data.generalInfo.email;
     } else {
-      mobileNoController.text = sharedbyme.profileData.phoneNumber;
-      emailController.text = sharedbyme.profileData.email;
+      mobileNoController.text =
+          sharedbyme.child.userContactCollection3[0].phoneNumber;
+      emailController.text = sharedbyme.child.userContactCollection3[0].email;
     }
 
-    if (new CommonUtil()
-        .checkIfStringisNull(sharedbyme.profileData.bloodGroup)) {
-      renameBloodGroup(sharedbyme.profileData.bloodGroup);
+    if (new CommonUtil().checkIfStringisNull(sharedbyme.child.bloodGroup)) {
+      renameBloodGroup(sharedbyme.child.bloodGroup);
     }
 
-    if (sharedbyme.profileData.gender != null) {
-      genderController.text = toBeginningOfSentenceCase(
-          sharedbyme.profileData.gender.toLowerCase());
+    if (sharedbyme.child.gender != null) {
+      genderController.text =
+          toBeginningOfSentenceCase(sharedbyme.child.gender.toLowerCase());
     }
 
-    if (sharedbyme.linkedData.roleName != null) {
-      relationShipController.text = sharedbyme.linkedData.roleName;
+    if (sharedbyme.child.userRoleCollection3[0].role.name != null) {
+      relationShipController.text =
+          sharedbyme.child.userRoleCollection3[0].role.name;
     }
 
-    if (sharedbyme.profileData.dateOfBirth != null) {
-      dateOfBirthController.text = new FHBUtils()
-          .getFormattedDateOnlyNew(sharedbyme.profileData.dateOfBirth);
+    if (sharedbyme.child.dateOfBirth != null) {
+      dateOfBirthController.text =
+          new FHBUtils().getFormattedDateOnlyNew(sharedbyme.child.dateOfBirth);
     }
 
     String profilebanner =
@@ -264,12 +262,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                           child: Opacity(
                               opacity: 1,
                               child: ClipOval(
-                                child: sharedbyme.profileData
-                                            .profilePicThumbnailURL !=
+                                child: sharedbyme
+                                            .child.profilePicThumbnailUrl !=
                                         null
                                     ? Image.network(
-                                        sharedbyme
-                                            .profileData.profilePicThumbnailURL,
+                                        sharedbyme.child.profilePicThumbnailUrl,
                                         fit: BoxFit.cover,
                                         width: 100,
                                         height: 100,
@@ -281,15 +278,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                             .getMyPrimaryColor()),
                                         child: Center(
                                           child: Text(
-                                            sharedbyme
-                                                        .profileData
-                                                        .qualifiedFullName
-                                                        .firstName !=
-                                                    null
-                                                ? sharedbyme
-                                                    .profileData
-                                                    .qualifiedFullName
-                                                    .firstName[0]
+                                            sharedbyme.child.firstName != null
+                                                ? sharedbyme.child.firstName[0]
                                                     .toUpperCase()
                                                 : '',
                                             style: TextStyle(
@@ -821,7 +811,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     );
   }
 
-  Widget _showViewInsuranceButton(Sharedbyme sharedbyme) {
+  Widget _showViewInsuranceButton(SharedByUsers sharedbyme) {
     final GestureDetector viewInsuranceButtonWithGesture = new GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, router.rt_FamilyInsurance,
@@ -864,7 +854,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return viewInsuranceButtonWithGesture;
   }
 
-  Widget _showViewHospitalButton(Sharedbyme sharedbyme) {
+  Widget _showViewHospitalButton(SharedByUsers sharedbyme) {
     final GestureDetector viewHospitalButtonWithGesture = new GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, router.rt_FamilyInsurance,

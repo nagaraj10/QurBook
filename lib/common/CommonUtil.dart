@@ -77,11 +77,6 @@ class CommonUtil {
   static String GOOGLE_ADDRESS_FROM__LOCATION_URL = "";
   static String GOOGLE_STATIC_MAP_URL = "";
   static String BASE_URL_FROM_RES = "";
-  static String BASE_COVER_IMAGE = "";
-  static String BASE_URL_V2 = '';
-  static String COGNITO_AUTH_TOKEN = '';
-  static String COGNITO_AUTH_CODE = '';
-  static String COGNITO_URL = '';
   static String BASEURL_DEVICE_READINGS = '';
 
   CategoryData categoryDataObjClone = new CategoryData();
@@ -1013,7 +1008,7 @@ class CommonUtil {
           value_name: parameters.strDataTypeBP,
           value1: 'SYS',
           value2: 'DIS',
-          color: Colors.redAccent));
+          color: [Colors.teal, Colors.tealAccent]));
     }
     if (PreferenceUtil.getStringValue(Constants.glMon) != variable.strFalse) {
       devicelist.add(DeviceData(
@@ -1024,7 +1019,7 @@ class CommonUtil {
           value_name: parameters.strGlusoceLevel,
           value1: 'GL',
           value2: '',
-          color: Colors.orange));
+          color: [Colors.deepOrange, Colors.deepOrangeAccent]));
     }
 
     if (PreferenceUtil.getStringValue(Constants.oxyMon) != variable.strFalse) {
@@ -1036,7 +1031,7 @@ class CommonUtil {
           value_name: parameters.strOxgenSaturation,
           value1: 'OS',
           value2: '',
-          color: Colors.black26));
+          color: [Colors.blue, Colors.blueAccent]));
     }
 
     if (PreferenceUtil.getStringValue(Constants.wsMon) != variable.strFalse) {
@@ -1048,7 +1043,7 @@ class CommonUtil {
           value_name: parameters.strWeight,
           value1: 'WT',
           value2: '',
-          color: Colors.lightGreen));
+          color: [Colors.amber[700], Colors.amber[300]]));
     }
     if (PreferenceUtil.getStringValue(Constants.thMon) != variable.strFalse) {
       devicelist.add(DeviceData(
@@ -1059,7 +1054,7 @@ class CommonUtil {
           value_name: parameters.strTemperature,
           value1: 'TEMP',
           value2: '',
-          color: Colors.deepOrangeAccent));
+          color: [Colors.indigo, Colors.indigoAccent]));
     }
 
     return devicelist;

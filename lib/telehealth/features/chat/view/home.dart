@@ -485,7 +485,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Text(
                           document['createdAt'] != null
-                              ? 'Date: ' +
+                              ? 'Last Received: ' +
                                   DateFormat('dd MMM kk:mm').format(
                                       DateTime.fromMillisecondsSinceEpoch(
                                           int.parse(document['createdAt'])))
