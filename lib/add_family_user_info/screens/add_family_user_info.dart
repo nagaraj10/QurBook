@@ -22,6 +22,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
+import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -69,7 +70,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
   bool isCalled = false;
-  List<RelationShip> relationShipResponseList;
+  List<RelationsShipCollection> relationShipResponseList;
   RelationShip selectedRelationShip;
 
   DateTime dateTime = DateTime.now();
@@ -135,10 +136,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else {
       addFamilyUserInfoBloc.getCustomRoles().then((value) {
         setState(() {
-          relationShipResponseList = value.relationShipAry;
+          relationShipResponseList = value.result[0].referenceValueCollection;
 
-          PreferenceUtil.saveRelationshipArray(
-              Constants.KEY_FAMILYREL, value.relationShipAry);
+          PreferenceUtil.saveRelationshipArray(Constants.KEY_FAMILYREL,
+              value.result[0].referenceValueCollection);
           getSelectedRelation();
         });
       });
@@ -153,7 +154,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     }
     String profilebanner =
-    PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
+        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
     if (profilebanner != null) {
       MySliverAppBar.imageURIProfile = File(profilebanner);
     }
@@ -163,18 +164,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
 
       if (widget.arguments.sharedbyme.child.isVirtualUser != null) {
-        MyProfileModel myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-        if(myProf.result.userContactCollection3!=null){
-          if(myProf.result.userContactCollection3.length>0){
-            mobileNoController.text = myProf.result.userContactCollection3[0].phoneNumber;
-            emailController.text = myProf.result.userContactCollection3[0].email;
+        MyProfileModel myProf =
+            PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        if (myProf.result.userContactCollection3 != null) {
+          if (myProf.result.userContactCollection3.length > 0) {
+            mobileNoController.text =
+                myProf.result.userContactCollection3[0].phoneNumber;
+            emailController.text =
+                myProf.result.userContactCollection3[0].email;
           }
         }
 
         if (widget.arguments.fromClass == CommonConstants.user_update) {
-          MyProfileModel myProf = PreferenceUtil.getProfileData(
-              Constants.KEY_PROFILE);
-          mobileNoController.text = myProf.result.userContactCollection3[0].phoneNumber;
+          MyProfileModel myProf =
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          mobileNoController.text =
+              myProf.result.userContactCollection3[0].phoneNumber;
           emailController.text = myProf.result.userContactCollection3[0].email;
         } else {
           // mobileNoController.text =
@@ -184,22 +189,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (widget.arguments.sharedbyme.child.firstName != null) {
           firstNameController.text =
-          widget.arguments.sharedbyme.child.firstName != null
-              ? widget.arguments.sharedbyme.child.firstName
-              : '';
+              widget.arguments.sharedbyme.child.firstName != null
+                  ? widget.arguments.sharedbyme.child.firstName
+                  : '';
           middleNameController.text =
-          widget.arguments.sharedbyme.child.middleName != null
-              ? widget.arguments.sharedbyme.child.middleName
-              : '';
+              widget.arguments.sharedbyme.child.middleName != null
+                  ? widget.arguments.sharedbyme.child.middleName
+                  : '';
           lastNameController.text =
-          widget.arguments.sharedbyme.child.lastName != null
-              ? widget.arguments.sharedbyme.child.lastName
-              : '';
+              widget.arguments.sharedbyme.child.lastName != null
+                  ? widget.arguments.sharedbyme.child.lastName
+                  : '';
         } else {
           firstNameController.text = '';
         }
-        if (commonUtil
-            .checkIfStringisNull(
+        if (commonUtil.checkIfStringisNull(
             widget.arguments.sharedbyme.child.bloodGroup)) {
           selectedBloodGroup = widget.arguments.sharedbyme.child.bloodGroup;
 
@@ -225,19 +229,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
 
         if (widget.arguments.sharedbyme.child.isVirtualUser != null) {
-          MyProfileModel myProf = PreferenceUtil.getProfileData(
-              Constants.KEY_PROFILE);
-          if(myProf.result.userContactCollection3!=null){
-            if(myProf.result.userContactCollection3.length>0){
+          MyProfileModel myProf =
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3.length > 0) {
               mobileNoController.text =
                   myProf.result.userContactCollection3[0].phoneNumber;
-              emailController.text = myProf.result.userContactCollection3[0].email;
+              emailController.text =
+                  myProf.result.userContactCollection3[0].email;
             }
           }
 
           if (widget.arguments.fromClass == CommonConstants.user_update) {
-            MyProfileModel myProf = PreferenceUtil.getProfileData(
-                Constants.KEY_PROFILE);
+            MyProfileModel myProf =
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
             mobileNoController.text =
                 myProf.result.userContactCollection3[0].phoneNumber;
             emailController.text =
@@ -249,21 +254,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           }
           if (widget.arguments.sharedbyme.child.firstName != null) {
             firstNameController.text =
-            widget.arguments.sharedbyme.child.firstName != null
-                ? widget.arguments.sharedbyme.child.firstName
-                : '';
+                widget.arguments.sharedbyme.child.firstName != null
+                    ? widget.arguments.sharedbyme.child.firstName
+                    : '';
             middleNameController.text =
-            widget.arguments.sharedbyme.child.middleName != null
-                ? widget.arguments.sharedbyme.child.middleName
-                : '';
+                widget.arguments.sharedbyme.child.middleName != null
+                    ? widget.arguments.sharedbyme.child.middleName
+                    : '';
             lastNameController.text =
-            widget.arguments.sharedbyme.child.lastName != null
-                ? widget.arguments.sharedbyme.child.lastName
-                : '';
+                widget.arguments.sharedbyme.child.lastName != null
+                    ? widget.arguments.sharedbyme.child.lastName
+                    : '';
           }
 
-          if (commonUtil
-              .checkIfStringisNull(
+          if (commonUtil.checkIfStringisNull(
               widget.arguments.sharedbyme.child.bloodGroup)) {
             selectedBloodGroup = widget.arguments.sharedbyme.child.bloodGroup;
 
@@ -304,7 +308,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
             if (widget.arguments.isPrimaryNoSelected) {
               MyProfileModel myProf =
-              PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+                  PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
               mobileNoController.text =
                   myProf.result.userContactCollection3[0].phoneNumber;
               emailController.text =
@@ -321,10 +325,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             lastNameController.text = widget.arguments.enteredLastName;
 
             relationShipController.text =
-                widget.arguments.relationShip.roleName;
+                widget.arguments.relationShip.name;
 
-            if (commonUtil
-                .checkIfStringisNull(value.result.bloodGroup)) {
+            if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
               selectedBloodGroup = value.result.bloodGroup;
 
               renameBloodGroup(selectedBloodGroup);
@@ -332,18 +335,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               selectedBloodGroup = null;
               selectedBloodRange = null;
             }
-            selectedGender = value.result.gender == null
-                ? null
-                : value.result.gender;
+            selectedGender =
+                value.result.gender == null ? null : value.result.gender;
 
             dateofBirthStr = value.result.dateOfBirth != null
-                ? new FHBUtils().getFormattedDateForUserBirth(
-                value.result.dateOfBirth)
+                ? new FHBUtils()
+                    .getFormattedDateForUserBirth(value.result.dateOfBirth)
                 : '';
-            dateOfBirthController.text =
-            value.result.dateOfBirth != null
-                ? new FHBUtils().getFormattedDateOnlyNew(
-                value.result.dateOfBirth)
+            dateOfBirthController.text = value.result.dateOfBirth != null
+                ? new FHBUtils()
+                    .getFormattedDateOnlyNew(value.result.dateOfBirth)
                 : '';
 
             if (firstTym) {
@@ -362,7 +363,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     }
   }
-
 
   void renameBloodGroup(String selectedBloodGroupClone) {
     if (selectedBloodGroupClone != null) {
@@ -554,7 +554,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       },
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -1193,11 +1192,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             case Status.COMPLETED:
               isCalled = true;
 
-              relationShipResponseList = snapshot.data.data.relationShipAry;
+              relationShipResponseList = snapshot.data.data.result[0].referenceValueCollection;
 
               if (widget.arguments.fromClass == CommonConstants.my_family) {
                 for (var i = 0;
-                    i < snapshot.data.data.relationShipAry.length;
+                    i < snapshot.data.data.result[0].referenceValueCollection.length;
                     i++) {
                   // if (snapshot.data.data.relationShipAry[i].roleName ==
                   //     widget.arguments.sharedbyme.linkedData.roleName) {
@@ -1208,7 +1207,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               }
 
               familyWidget =
-                  getRelationshipDetails(snapshot.data.data.relationShipAry);
+                  getRelationshipDetails(snapshot.data.data.result[0].referenceValueCollection);
               break;
           }
         } else {
@@ -1223,7 +1222,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     );
   }
 
-  Widget getRelationshipDetails(List<RelationShip> data) {
+  Widget getRelationshipDetails(List<RelationsShipCollection> data) {
     return StatefulBuilder(builder: (context, setState) {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -1236,7 +1235,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     selectedRelationShip != null ? selectedRelationShip : null,
                 items: data.map((relationShipDetail) {
                   return DropdownMenuItem(
-                    child: new Text(relationShipDetail.roleName,
+                    child: new Text(relationShipDetail.name,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0,
@@ -1245,7 +1244,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         relationShipDetail != null ? relationShipDetail : null,
                   );
                 }).toList(),
-                onChanged: (RelationShip newValue) {
+                onChanged: (newValue) {
                   setState(() {
                     selectedRelationShip = newValue;
                   });

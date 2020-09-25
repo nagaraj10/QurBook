@@ -18,7 +18,7 @@ class AddFamilyUserInfoRepository {
 
   Future<RelationShipResponseList> getCustomRoles() async {
     final response =
-        await _helper.getCustomRoles(query.qr_customRole + query.qr_sort);
+        await _helper.getCustomRoles(query.qr_customRole);
     return RelationShipResponseList.fromJson(response);
   }
 

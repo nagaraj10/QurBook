@@ -8,11 +8,9 @@ import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
-import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
-import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/user/DoctorIds.dart';
 import 'package:myfhb/src/model/user/HospitalIds.dart';
@@ -300,19 +298,19 @@ class PreferenceUtil {
   }
 
   static Future<bool> saveRelationshipArray(
-      String familyRelation, List<RelationShip> relationShipAry) async {
+      String familyRelation, List<RelationsShipCollection> relationShipAry) async {
     var instance = await _prefs;
 
     return instance.setString(familyRelation, json.encode(relationShipAry));
   }
 
-  static List<RelationShip> getFamilyRelationship(String keyFamilyRelation) {
-    List<RelationShip> categoryData = new List();
+  static List<RelationsShipCollection> getFamilyRelationship(String keyFamilyRelation) {
+    List<RelationsShipCollection> categoryData = new List();
 
     try {
       if (_prefsInstance == null) {}
       json.decode(_prefsInstance.getString(keyFamilyRelation)).forEach((map) {
-        categoryData.add(new RelationShip.fromJson(map));
+        categoryData.add(new RelationsShipCollection.fromJson(map));
       });
 
       return categoryData;
