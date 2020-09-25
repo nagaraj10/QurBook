@@ -1,11 +1,10 @@
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'file:///C:/Users/fmohamed/Documents/Flutter%20Projects/asgard_myfhb/lib/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'dart:convert' as convert;
 
-class CreateAppointmentService{
-
+class CreateAppointmentService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<CreateAppointmentModel> bookAppointment(
@@ -44,6 +43,4 @@ class CreateAppointmentService{
     print(response);
     return CreateAppointmentModel.fromJson(response);
   }
-
-
 }

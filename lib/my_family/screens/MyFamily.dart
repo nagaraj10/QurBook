@@ -100,50 +100,53 @@ class _MyFamilyState extends State<MyFamily> {
         ? PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBERNEW) != null
             ? getMyFamilyMembers(
                 PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW))
-            :
-        StreamBuilder<ApiResponse<FamilyMembers>>(
-      stream: _familyListBloc.familyMemberListNewStream,
-      builder: (context, AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              familyWidget = Center(
-                  child: SizedBox(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                ),
-                width: 30,
-                height: 30,
-              ));
-              break;
+            : StreamBuilder<ApiResponse<FamilyMembers>>(
+                stream: _familyListBloc.familyMemberListNewStream,
+                builder: (context,
+                    AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        familyWidget = Center(
+                            child: SizedBox(
+                          child: CircularProgressIndicator(
+                            backgroundColor:
+                                Color(CommonUtil().getMyPrimaryColor()),
+                          ),
+                          width: 30,
+                          height: 30,
+                        ));
+                        break;
 
-            case Status.ERROR:
-              familyWidget = FHBBasicWidget.getRefreshContainerButton(
-                  snapshot.data.message, () {
-                setState(() {});
-              });
-              break;
+                      case Status.ERROR:
+                        familyWidget = FHBBasicWidget.getRefreshContainerButton(
+                            snapshot.data.message, () {
+                          setState(() {});
+                        });
+                        break;
 
-            case Status.COMPLETED:
-              //rebuildFamilyBlock();
-              firstTym = false;
-              PreferenceUtil.saveFamilyDataNew(
-                  Constants.KEY_FAMILYMEMBERNEW, snapshot.data.data.result);
+                      case Status.COMPLETED:
+                        //rebuildFamilyBlock();
+                        firstTym = false;
+                        PreferenceUtil.saveFamilyDataNew(
+                            Constants.KEY_FAMILYMEMBERNEW,
+                            snapshot.data.data.result);
 
-              familyWidget = getMyFamilyMembers(snapshot.data.data.result);
-              break;
-          }
-        } else {
-          familyWidget = Container(
-            width: 100,
-            height: 100,
-          );
-        }
-        return familyWidget;
-      },
-    )
-     : getMyFamilyMembers(
-         PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW));
+                        familyWidget =
+                            getMyFamilyMembers(snapshot.data.data.result);
+                        break;
+                    }
+                  } else {
+                    familyWidget = Container(
+                      width: 100,
+                      height: 100,
+                    );
+                  }
+                  return familyWidget;
+                },
+              )
+        : getMyFamilyMembers(
+            PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW));
   }
 
   Widget getMyFamilyMembers(FamilyMemberResult data) {
@@ -198,13 +201,11 @@ class _MyFamilyState extends State<MyFamily> {
   Widget getCardWidgetForUser(SharedByUsers data, int position,
       List<SharedByUsers> profilesSharedByMeAry) {
     MyProfileModel myProfile;
-    String fulName;
+    String fulName = '';
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       fulName = myProfile.result != null
-          ? myProfile.result.firstName +
-              ' ' +
-              myProfile.result.lastName
+          ? myProfile.result.firstName + ' ' + myProfile.result.lastName
           : '';
     } catch (e) {}
 
@@ -244,11 +245,57 @@ class _MyFamilyState extends State<MyFamily> {
           child: Row(
             children: <Widget>[
               ClipOval(
-                child:
-                    position == 0
-                    ? myProfile.result.profilePicThumbnailUrl ==
-                            null
-                        ? Container(
+                child: position == 0
+                    ? myProfile != null
+                        ? myProfile.result != null
+                            ? myProfile.result.profilePicThumbnailUrl == null
+                                ? Container(
+                                    width: 60,
+                                    height: 60,
+                                    color: Color(fhbColors.bgColorContainer),
+                                    child: Center(
+                                      child: Text(
+                                        fulName != null
+                                            ? fulName.toUpperCase()
+                                            : '',
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      ),
+                                    ),
+                                  )
+                                : Image.network(
+                                    myProfile.result.profilePicThumbnailUrl,
+                                    fit: BoxFit.cover,
+                                    width: 60,
+                                    height: 60,
+                                  )
+                            : data.child.profilePicThumbnailUrl == null
+                                ? Container(
+                                    width: 60,
+                                    height: 60,
+                                    color: Color(fhbColors.bgColorContainer),
+                                    child: Center(
+                                      child: Text(
+                                        data.child.firstName != null
+                                            ? data.child.firstName[0]
+                                                .toUpperCase()
+                                            : '',
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      ),
+                                    ),
+                                  )
+                                : Image.network(
+                                    data.child.profilePicThumbnailUrl,
+                                    fit: BoxFit.cover,
+                                    width: 60,
+                                    height: 60,
+                                  )
+                        : Container(
                             width: 60,
                             height: 60,
                             color: Color(fhbColors.bgColorContainer),
@@ -262,36 +309,19 @@ class _MyFamilyState extends State<MyFamily> {
                               ),
                             ),
                           )
-                        : Image.network(
-                            myProfile.result.profilePicThumbnailUrl,
-                            fit: BoxFit.cover,
-                            width: 60,
-                            height: 60,
-                          )
-                    :
-                    data.child.profilePicThumbnailUrl == null
-                        ? Container(
-                            width: 60,
-                            height: 60,
-                            color: Color(fhbColors.bgColorContainer),
-                            child: Center(
-                              child: Text(
-                                data.child.firstName != null
-                                    ? data.child.firstName[0].toUpperCase()
-                                    : '',
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
-                              ),
-                            ),
-                          )
-                        : Image.network(
-                            data.child.profilePicThumbnailUrl,
-                            fit: BoxFit.cover,
-                            width: 60,
-                            height: 60,
+                    : Container(
+                        width: 60,
+                        height: 60,
+                        color: Color(fhbColors.bgColorContainer),
+                        child: Center(
+                          child: Text(
+                            fulName != null ? fulName.toUpperCase() : '',
+                            style: TextStyle(
+                                fontSize: 22,
+                                color: Color(CommonUtil().getMyPrimaryColor())),
                           ),
+                        ),
+                      ),
               ),
               SizedBox(
                 width: 20,
@@ -321,20 +351,38 @@ class _MyFamilyState extends State<MyFamily> {
                     SizedBox(height: 10.0),
                     Text(
                       position == 0
-                          ? myProfile.result.countryCode +
-                              "-" +
-                              myProfile.result.userContactCollection3[0].phoneNumber
-                          : data.child.isVirtualUser != null
-                              ? PreferenceUtil.getProfileData(
-                                          Constants.KEY_PROFILE)
-                                      .result.countryCode +
-                                  "-" +
-                                  PreferenceUtil.getProfileData(
-                                          Constants.KEY_PROFILE)
-                                      .result.userContactCollection3[0].phoneNumber
-                              :
-                      data.child.userContactCollection3[0].phoneNumber != null
-                          ? data.child.userContactCollection3[0].phoneNumber
+                          ? myProfile != null
+                              ? myProfile.result != null
+                                  ? myProfile.result.countryCode +
+                                      "-" +
+                                      myProfile.result.userContactCollection3[0]
+                                          .phoneNumber
+                                  : data.child.isVirtualUser != null
+                                      ? (PreferenceUtil.getProfileData(Constants.KEY_PROFILE).result != null
+                                              ? PreferenceUtil.getProfileData(
+                                                      Constants.KEY_PROFILE)
+                                                  .result
+                                                  .countryCode
+                                              : '') +
+                                          "-" +
+                                          (PreferenceUtil.getProfileData(
+                                                          Constants.KEY_PROFILE)
+                                                      .result !=
+                                                  null
+                                              ? PreferenceUtil.getProfileData(
+                                                      Constants.KEY_PROFILE)
+                                                  .result
+                                                  .userContactCollection3[0]
+                                                  .phoneNumber
+                                              : data.child.userContactCollection3[0].phoneNumber !=
+                                                      null
+                                                  ? data
+                                                      .child
+                                                      .userContactCollection3[0]
+                                                      .phoneNumber
+                                                  : '')
+                                      : ''
+                              : ''
                           : '',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
@@ -346,12 +394,11 @@ class _MyFamilyState extends State<MyFamily> {
                     Text(
                       position == 0
                           ? variable.Self
-                          :
-                      data.relationship != null
-                          ? data.relationship.name != null
-                              ? data.relationship.name
-                              : ''
-                          : '',
+                          : data.relationship != null
+                              ? data.relationship.name != null
+                                  ? data.relationship.name
+                                  : ''
+                              : '',
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
                       style: TextStyle(
