@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:myfhb/add_family_user_info/models/CityListModel.dart';
 import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
+import 'package:myfhb/add_family_user_info/models/update_self_profile_model.dart';
 import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_info.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
@@ -172,13 +173,13 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     return updateAddFamilyRelationInfo;
   }
 
-  Future<UpdateAddFamilyInfo> updateSelfProfile(bool fromFamily) async {
+  Future<UpdateSelfProfileModel> updateSelfProfile(bool fromFamily) async {
     userProfileSink.add(ApiResponse.loading(variable.strUpdatedSelfProfile));
-    UpdateAddFamilyInfo updateAddFamilyInfo;
+    UpdateSelfProfileModel updateAddFamilyInfo;
 
     try {
       updateAddFamilyInfo =
-          await addFamilyUserInfoRepository.updateSelfProfileInfo(
+          await addFamilyUserInfoRepository.updateUserInfoNew(
               userId,
               name,
               phoneNo,

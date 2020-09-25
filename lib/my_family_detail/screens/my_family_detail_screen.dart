@@ -209,14 +209,20 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.child.isVirtualUser == true) {
-      MyProfileModel myProf =
-          PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-      if (myProf.result.userContactCollection3 != null) {
-        if (myProf.result.userContactCollection3.length > 0) {
-          mobileNoController.text =
-              myProf.result.userContactCollection3[0].phoneNumber;
-          emailController.text = myProf.result.userContactCollection3[0].email;
+      try {
+        MyProfileModel myProf =
+            PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        if (myProf.result.userContactCollection3 != null) {
+          if (myProf.result.userContactCollection3.length > 0) {
+            mobileNoController.text =
+                myProf.result.userContactCollection3[0].phoneNumber;
+            emailController.text =
+                myProf.result.userContactCollection3[0].email;
+          }
         }
+      } catch (e) {
+        mobileNoController.text = '';
+        emailController.text = '';
       }
     } else {
       mobileNoController.text =

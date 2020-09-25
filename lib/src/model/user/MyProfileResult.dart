@@ -1,3 +1,5 @@
+import 'AddressTypeModel.dart';
+import 'UserAddressCollection.dart';
 
 class MyProfileResult {
   String id;
@@ -13,8 +15,8 @@ class MyProfileResult {
   String profilePicThumbnailUrl;
   bool isTempUser;
   bool isVirtualUser;
-  String isMigrated;
-  String isClaimed;
+  bool isMigrated;
+  bool isClaimed;
   bool isIeUser;
   bool isEmailVerified;
   bool isCpUser;
@@ -28,6 +30,7 @@ class MyProfileResult {
   String lastModifiedOn;
   List<UserAddressCollection3> userAddressCollection3;
   List<UserContactCollection3> userContactCollection3;
+  List<UserRoleCollection3> userRoleCollection3;
 
   MyProfileResult(
       {this.id,
@@ -57,7 +60,8 @@ class MyProfileResult {
         this.lastModifiedBy,
         this.lastModifiedOn,
         this.userAddressCollection3,
-        this.userContactCollection3});
+        this.userContactCollection3,
+        this.userRoleCollection3});
 
   MyProfileResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -71,16 +75,8 @@ class MyProfileResult {
     bloodGroup = json['bloodGroup'];
     countryCode = json['countryCode'];
     profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    if(json['isTempUser']!=null){
-      isTempUser = json['isTempUser'];
-    }else{
-      isTempUser =false;
-    }
-    if(json['isVirtualUser']!=null){
-      isVirtualUser = json['isVirtualUser'];
-    }else{
-      isVirtualUser = false;
-    }
+    isTempUser = json['isTempUser'];
+    isVirtualUser = json['isVirtualUser'];
     isMigrated = json['isMigrated'];
     isClaimed = json['isClaimed'];
     isIeUser = json['isIeUser'];
@@ -104,6 +100,12 @@ class MyProfileResult {
       userContactCollection3 = new List<UserContactCollection3>();
       json['userContactCollection3'].forEach((v) {
         userContactCollection3.add(new UserContactCollection3.fromJson(v));
+      });
+    }
+    if (json['userRoleCollection3'] != null) {
+      userRoleCollection3 = new List<UserRoleCollection3>();
+      json['userRoleCollection3'].forEach((v) {
+        userRoleCollection3.add(new UserRoleCollection3.fromJson(v));
       });
     }
   }
@@ -144,52 +146,10 @@ class MyProfileResult {
       data['userContactCollection3'] =
           this.userContactCollection3.map((v) => v.toJson()).toList();
     }
-    return data;
-  }
-}
-
-
-class UserAddressCollection3 {
-  String id;
-  String addressLine1;
-  String addressLine2;
-  String pincode;
-  bool isPrimary;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-
-  UserAddressCollection3(
-      {this.id,
-        this.addressLine1,
-        this.addressLine2,
-        this.pincode,
-        this.isPrimary,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn});
-
-  UserAddressCollection3.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    addressLine1 = json['addressLine1'];
-    addressLine2 = json['addressLine2'];
-    pincode = json['pincode'];
-    isPrimary = json['isPrimary'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['addressLine1'] = this.addressLine1;
-    data['addressLine2'] = this.addressLine2;
-    data['pincode'] = this.pincode;
-    data['isPrimary'] = this.isPrimary;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
+    if (this.userRoleCollection3 != null) {
+      data['userRoleCollection3'] =
+          this.userRoleCollection3.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
@@ -202,6 +162,7 @@ class UserContactCollection3 {
   String createdOn;
   String lastModifiedOn;
   String email;
+  AddressType phoneNumberType;
 
   UserContactCollection3(
       {this.id,
@@ -210,7 +171,8 @@ class UserContactCollection3 {
         this.isActive,
         this.createdOn,
         this.lastModifiedOn,
-        this.email});
+        this.email,
+        this.phoneNumberType});
 
   UserContactCollection3.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -220,6 +182,9 @@ class UserContactCollection3 {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     email = json['email'];
+    phoneNumberType = json['phoneNumberType'] != null
+        ? new AddressType.fromJson(json['phoneNumberType'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -231,6 +196,89 @@ class UserContactCollection3 {
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
     data['email'] = this.email;
+    if (this.phoneNumberType != null) {
+      data['phoneNumberType'] = this.phoneNumberType.toJson();
+    }
+    return data;
+  }
+}
+
+class UserRoleCollection3 {
+  String id;
+  bool isActive;
+  String createdOn;
+  String lastModifiedOn;
+  Role role;
+
+  UserRoleCollection3(
+      {this.id, this.isActive, this.createdOn, this.lastModifiedOn, this.role});
+
+  UserRoleCollection3.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    isActive = json['isActive'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
+    role = json['role'] != null ? new Role.fromJson(json['role']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['isActive'] = this.isActive;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    if (this.role != null) {
+      data['role'] = this.role.toJson();
+    }
+    return data;
+  }
+}
+
+class Role {
+  String id;
+  String name;
+  bool isActive;
+  String createdOn;
+  String lastModifiedOn;
+  String roleCode;
+  String description;
+  bool isSystemRole;
+  bool isEnabled;
+
+  Role(
+      {this.id,
+        this.name,
+        this.isActive,
+        this.createdOn,
+        this.lastModifiedOn,
+        this.roleCode,
+        this.description,
+        this.isSystemRole,
+        this.isEnabled});
+
+  Role.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    isActive = json['isActive'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
+    roleCode = json['roleCode'];
+    description = json['description'];
+    isSystemRole = json['isSystemRole'];
+    isEnabled = json['isEnabled'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['isActive'] = this.isActive;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    data['roleCode'] = this.roleCode;
+    data['description'] = this.description;
+    data['isSystemRole'] = this.isSystemRole;
+    data['isEnabled'] = this.isEnabled;
     return data;
   }
 }

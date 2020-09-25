@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/MyProviderResult.dart';
-import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
+import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -154,14 +153,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
           cntrlr_addr_one.text = data.userAddressCollection3[0].addressLine1;
           cntrlr_addr_two.text = data.userAddressCollection3[0].addressLine2;
           cntrlr_addr_zip.text = data.userAddressCollection3[0].pincode;
+          cntrlr_addr_city.text = data.userAddressCollection3[0].city.name;
+          cntrlr_addr_state.text = data.userAddressCollection3[0].state.name;
         }
       }
-      /* if (data.generalInfo.city != null) {
-      cntrlr_addr_city.text = data.generalInfo.city.name;
-    }*/
-      /*if (data.generalInfo.state != null) {
-      cntrlr_addr_state.text = data.generalInfo.state.name;
-    }*/
     }
 
     return Container(

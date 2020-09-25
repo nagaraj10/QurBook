@@ -57,7 +57,7 @@ import 'package:myfhb/src/model/user/DoctorIds.dart';
 import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
-import 'package:myfhb/src/model/user/MyProviderResult.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
