@@ -12,7 +12,6 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';

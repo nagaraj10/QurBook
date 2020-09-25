@@ -1,6 +1,5 @@
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
-import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 
 class ProfileData {
   String userId;
@@ -16,7 +15,7 @@ class ProfileData {
   bool isVirtualUser;
   String createdBy;
   ProfilePicThumbnail profilePicThumbnail;
-  QualifiedFullName qualifiedFullName;
+  /*QualifiedFullName qualifiedFullName;*/
   String bloodGroup;
   String dateOfBirth;
   bool isTokenRefresh;
@@ -39,7 +38,7 @@ class ProfileData {
       this.isVirtualUser,
       this.createdBy,
       this.profilePicThumbnail,
-      this.qualifiedFullName,
+      /*this.qualifiedFullName,*/
       this.bloodGroup,
       this.dateOfBirth,
       this.isTokenRefresh,
@@ -66,9 +65,9 @@ class ProfileData {
           ? new ProfilePicThumbnail.fromJson(json['profilePicThumbnail'])
           : null;
     } catch (e) {}
-    qualifiedFullName = json[parameters.strqualifiedFullName] != null
+    /*qualifiedFullName = json[parameters.strqualifiedFullName] != null
         ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
-        : null;
+        : null;*/
     bloodGroup = json[parameters.strbloodGroup];
     dateOfBirth = json[parameters.strdateOfBirth];
     isTokenRefresh = json[parameters.strisTokenRefresh];
@@ -102,9 +101,9 @@ class ProfileData {
     data[parameters.strCountryCode] = this.countryCode;
     data[parameters.strIsEmailVerified] = this.isEmailVerified;
     data[parameters.strStatus] = this.status;
-    if (this.qualifiedFullName != null) {
+    /*if (this.qualifiedFullName != null) {
       data[parameters.strqualifiedFullName] = this.qualifiedFullName.toJson();
-    }
+    }*/
     data[parameters.strprofilePicThumbnailURL] = this.profilePicThumbnailURL;
     return data;
   }

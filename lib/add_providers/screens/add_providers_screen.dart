@@ -36,7 +36,7 @@ import 'package:myfhb/search_providers/models/doctors_data.dart';
 import 'package:myfhb/search_providers/models/hospital_data.dart';
 import 'package:myfhb/search_providers/models/lab_data.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -110,7 +110,7 @@ class AddProvidersState extends State<AddProviders> {
 
   Address address;
 
-  MyProfile selectedProfile;
+  MyProfileModel selectedProfile;
   String selectedFamilyMemberName;
 
   DoctorsListBlock _doctorsListBlock;
@@ -547,7 +547,7 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   Widget _showUser() {
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     return InkWell(
         onTap: () {
           if (widget.arguments.fromClass != router.rt_myprovider) {
@@ -591,15 +591,14 @@ class AddProvidersState extends State<AddProviders> {
                     color: Colors.white,
                   ),
                   child: myProfile
-                              .response.data.generalInfo.profilePicThumbnail !=
+                              .result.profilePicThumbnailUrl !=
                           null
                       ? getProfilePicWidget(myProfile
-                          .response.data.generalInfo.profilePicThumbnail)
+                          .result.profilePicThumbnailUrl)
                       : Center(
                           child: Text(
                             selectedFamilyMemberName == null
-                                ? myProfile.response.data.generalInfo
-                                    .qualifiedFullName.lastName
+                                ? myProfile.result.lastName
                                     .toUpperCase()
                                 : selectedFamilyMemberName[0].toUpperCase(),
                             style: TextStyle(
@@ -1179,16 +1178,16 @@ class AddProvidersState extends State<AddProviders> {
 
         setState(() {
           selectedFamilyMemberName =
-              profileData.response.data.generalInfo.qualifiedFullName.firstName;
+              profileData.result.firstName;
         });
       });
     });
   }
 
-  Widget getProfilePicWidget(ProfilePicThumbnailMain profilePicThumbnail) {
+  Widget getProfilePicWidget(String profilePicThumbnail) {
     return profilePicThumbnail != null
-        ? Image.memory(
-            Uint8List.fromList(profilePicThumbnail.data),
+        ? Image.network(
+            profilePicThumbnail,
             height: 30,
             width: 30,
             fit: BoxFit.cover,

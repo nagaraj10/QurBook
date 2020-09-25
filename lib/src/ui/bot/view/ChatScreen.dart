@@ -4,10 +4,10 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/bot/widgets/chatdata.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/src/model/bot/ConversationModel.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
@@ -24,7 +24,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   AnimationController _controller;
 
   Animation<double> _animation;
-  MyProfile myProfile =
+  MyProfileModel myProfile =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE_MAIN);
   ScrollController controller = new ScrollController();
 

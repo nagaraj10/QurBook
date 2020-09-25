@@ -12,7 +12,7 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
@@ -27,7 +27,7 @@ class MoreMenuScreen extends StatefulWidget {
 }
 
 class _MoreMenuScreenState extends State<MoreMenuScreen> {
-  MyProfile myProfile =
+  MyProfileModel myProfile =
       PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
   File profileImage;
 
@@ -92,37 +92,30 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   child: profileImage != null
                       ? Image.file(profileImage,
                           width: 50, height: 50, fit: BoxFit.cover)
-                      : FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile
-                          .response.data.generalInfo.profilePicThumbnailURL),
+                      : FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile.result.profilePicThumbnailUrl),
                 ),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      myProfile.response.data.generalInfo.qualifiedFullName !=
+                      myProfile.result !=
                               null
-                          ? toBeginningOfSentenceCase(myProfile
-                                      .response
-                                      .data
-                                      .generalInfo
-                                      .qualifiedFullName
-                                      .firstName ??
+                          ? toBeginningOfSentenceCase(myProfile.result.firstName??
                                   '') +
                               ' ' +
-                              toBeginningOfSentenceCase(myProfile.response.data
-                                      .generalInfo.qualifiedFullName.lastName ??
+                              toBeginningOfSentenceCase(myProfile.result.lastName ??
                                   '')
                           : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     Text(
-                      myProfile.response.data.generalInfo.countryCode +
+                      myProfile.result.countryCode +
                           ' ' +
-                          myProfile.response.data.generalInfo.phoneNumber,
+                          myProfile.result.userContactCollection3[0].phoneNumber,
                       style: TextStyle(fontSize: 12),
                     ),
                     Text(
-                      myProfile.response.data.generalInfo.email,
+                      myProfile.result.userContactCollection3[0].email,
                       style: TextStyle(fontSize: 11),
                     )
                   ],

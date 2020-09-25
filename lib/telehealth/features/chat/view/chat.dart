@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/PDFViewer.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
@@ -349,11 +349,11 @@ class ChatScreenState extends State<ChatScreen> {
 
   getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    patientName = myProfile.response.data.generalInfo.qualifiedFullName != null
-        ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    patientName = myProfile.result != null
+        ? myProfile.result.firstName +
             ' ' +
-            myProfile.response.data.generalInfo.qualifiedFullName.lastName
+            myProfile.result.lastName
         : '';
     patientPicUrl = getProfileURL();
 
@@ -361,9 +361,9 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   String getProfileURL() {
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     String patientPicURL =
-        myProfile.response.data.generalInfo.profilePicThumbnailURL;
+        myProfile.result.profilePicThumbnailUrl;
 
     return patientPicURL;
   }

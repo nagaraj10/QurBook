@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/telehealth/features/MyProvider/model/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 
 class GridViewNew extends StatefulWidget {

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/database/model/UnitsMesurement.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
