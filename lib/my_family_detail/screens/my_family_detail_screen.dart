@@ -15,7 +15,7 @@ import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -76,7 +76,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   RelationShip selectedRelationShip;
 
   DateTime dateTime = DateTime.now();
-  MyProfile myProfile;
+  MyProfileModel myProfile;
   bool isCalled = false;
 
   List<int> fetchedProfileData;
@@ -207,9 +207,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.child.isVirtualUser == true) {
-      MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-      mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
-      emailController.text = myProf.response.data.generalInfo.email;
+      MyProfileModel myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      if(myProf.result.userContactCollection3!=null){
+        if(myProf.result.userContactCollection3.length>0){
+          mobileNoController.text = myProf.result.userContactCollection3[0].phoneNumber;
+          emailController.text = myProf.result.userContactCollection3[0].email;
+        }
+      }
+
     } else {
       mobileNoController.text =
           sharedbyme.child.userContactCollection3[0].phoneNumber;

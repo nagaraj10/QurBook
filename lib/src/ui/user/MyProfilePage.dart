@@ -5,10 +5,10 @@ import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/model/user/MyProfileData.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/MyProviderResult.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
@@ -56,11 +56,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   Widget getProfileDetailClone() {
     Widget profileWidget;
+    MyProfileModel myProfile;
+    try{
+       myProfile =
+      PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      profileWidget = getProfileWidget(myProfile.result);
+    }catch(e){
+      profileWidget = getProfileWidget(null);
+    }
 
-    MyProfile myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-
-    profileWidget = getProfileWidget(myProfile.response.data);
 
     return profileWidget;
   }
@@ -100,60 +104,64 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  Widget getProfileWidget(MyProfileData data) {
-    if (data.generalInfo.phoneNumber != null) {
-      mobile.text = data.generalInfo.phoneNumber;
-    }
-    if (data.generalInfo.qualifiedFullName != null) {
-      name.text = toBeginningOfSentenceCase(
-          data.generalInfo.qualifiedFullName.firstName.toLowerCase() +
-              data.generalInfo.qualifiedFullName.lastName.toLowerCase());
-    }
-    if (data.generalInfo.email != null) {
-      email.text = data.generalInfo.email;
-    }
-    if (data.generalInfo.gender != null) {
-      gender.text =
-          toBeginningOfSentenceCase(data.generalInfo.gender.toLowerCase());
-    }
-    if (data.generalInfo.bloodGroup != null) {
-      renameBloodGroup(data.generalInfo.bloodGroup);
-    }
-    if (data.generalInfo.dateOfBirth != null) {
-      dob.text =
-          new FHBUtils().getFormattedDateOnlyNew(data.generalInfo.dateOfBirth);
-    }
-    if (data.generalInfo.qualifiedFullName != null) {
-      firstName.text = data.generalInfo.qualifiedFullName.firstName;
-      middleName.text =
-          (data.generalInfo.qualifiedFullName.middleName != null &&
-                  data.generalInfo.qualifiedFullName.middleName != '')
-              ? data.generalInfo.qualifiedFullName.middleName
-              : '';
-      lastName.text = data.generalInfo.qualifiedFullName.lastName;
-    } else {
-      firstName.text = data.generalInfo.qualifiedFullName != null
-          ? data.generalInfo.qualifiedFullName.firstName +
-              data.generalInfo.qualifiedFullName.lastName
-          : '';
-      middleName.text = '';
-      lastName.text = '';
-    }
+  Widget getProfileWidget(MyProfileResult data) {
+    if(data!=null) {
+      if (data.userContactCollection3 != null) {
+        if (data.userContactCollection3.length > 0) {
+          mobile.text = data.userContactCollection3[0].phoneNumber;
+        }
+      }
+      if (data != null) {
+        name.text = toBeginningOfSentenceCase(
+            data.firstName.toLowerCase() +
+                data.lastName.toLowerCase());
+      }
+      if (data.userContactCollection3 != null) {
+        if (data.userContactCollection3.length > 0) {
+          email.text = data.userContactCollection3[0].email;
+        }
+      }
+      if (data.gender != null) {
+        gender.text =
+            toBeginningOfSentenceCase(data.gender.toLowerCase());
+      }
+      if (data.bloodGroup != null) {
+        renameBloodGroup(data.bloodGroup);
+      }
+      if (data.dateOfBirth != null) {
+        dob.text =
+            new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth);
+      }
+      if (data != null) {
+        firstName.text = data.firstName;
+        middleName.text =
+        (data.middleName != null &&
+            data.middleName != '')
+            ? data.middleName
+            : '';
+        lastName.text = data.lastName;
+      } else {
+        firstName.text = data != null
+            ? data.firstName +
+            data.lastName
+            : '';
+        middleName.text = '';
+        lastName.text = '';
+      }
 
-    if (data.generalInfo.addressLine1 != null) {
-      cntrlr_addr_one.text = data.generalInfo.addressLine1;
-    }
-    if (data.generalInfo.addressLine2 != null) {
-      cntrlr_addr_two.text = data.generalInfo.addressLine2;
-    }
-    if (data.generalInfo.city != null) {
+      if (data.userAddressCollection3 != null) {
+        if (data.userAddressCollection3.length > 0) {
+          cntrlr_addr_one.text = data.userAddressCollection3[0].addressLine1;
+          cntrlr_addr_two.text = data.userAddressCollection3[0].addressLine2;
+          cntrlr_addr_zip.text = data.userAddressCollection3[0].pincode;
+        }
+      }
+      /* if (data.generalInfo.city != null) {
       cntrlr_addr_city.text = data.generalInfo.city.name;
-    }
-    if (data.generalInfo.state != null) {
+    }*/
+      /*if (data.generalInfo.state != null) {
       cntrlr_addr_state.text = data.generalInfo.state.name;
-    }
-    if (data.generalInfo.pincode != null) {
-      cntrlr_addr_zip.text = data.generalInfo.pincode;
+    }*/
     }
 
     return Container(

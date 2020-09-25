@@ -54,12 +54,11 @@ import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/sceretLoader.dart';
 import 'package:myfhb/src/model/secretmodel.dart';
 import 'package:myfhb/src/model/user/DoctorIds.dart';
-import 'package:myfhb/src/model/user/GeneralInfo.dart';
 import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/MyProviderResult.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
-import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:path/path.dart';
@@ -389,9 +388,9 @@ class CommonUtil {
   void logout(Function(SignOutResponse) moveToLoginPage) async {
     LoginBloc loginBloc = new LoginBloc();
 
-    MyProfile myProfile =
+    MyProfileModel myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    GeneralInfo generalInfo = myProfile.response.data.generalInfo;
+    MyProfileResult profileResult = myProfile.result;
     FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
     final token = await _firebaseMessaging.getToken();
@@ -399,7 +398,7 @@ class CommonUtil {
       // moveToLoginPage(signOutResponse);
       CommonUtil()
           .sendDeviceToken(PreferenceUtil.getStringValue(Constants.KEY_USERID),
-              generalInfo.email, generalInfo.phoneNumber, token, false)
+          profileResult.userContactCollection3[0].email, profileResult.userContactCollection3[0].phoneNumber, token, false)
           .then((value) {
         moveToLoginPage(signOutResponse);
       });
@@ -407,48 +406,32 @@ class CommonUtil {
   }
 
   Sharedbyme getProfileDetails() {
-    MyProfile myProfile =
+    MyProfileModel myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    GeneralInfo generalInfo = myProfile.response.data.generalInfo;
+    MyProfileResult myProfileResult = myProfile.result;
 
     LinkedData linkedData =
         new LinkedData(roleName: variable.Self, nickName: variable.Self);
-    ProfilePicThumbnail profilePicThumbnail =
-        generalInfo.profilePicThumbnail != null
-            ? new ProfilePicThumbnail(
-                type: generalInfo.profilePicThumbnail.type,
-                data: generalInfo.profilePicThumbnail.data)
-            : null;
 
-    QualifiedFullName qualifiedFullName = generalInfo.qualifiedFullName != null
-        ? new QualifiedFullName(
-            firstName: generalInfo.qualifiedFullName.firstName,
-            middleName: generalInfo.qualifiedFullName.middleName,
-            lastName: generalInfo.qualifiedFullName.lastName)
-        : null;
-
-    String fullName = generalInfo.qualifiedFullName != null
-        ? generalInfo.qualifiedFullName.firstName +
+     String fullName =  myProfileResult.firstName +
             ' ' +
-            generalInfo.qualifiedFullName.lastName
-        : '';
+        myProfileResult.lastName;
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         name: fullName ?? '',
-        email: generalInfo.email,
-        dateOfBirth: generalInfo.dateOfBirth,
-        gender: generalInfo.gender,
-        bloodGroup: generalInfo.bloodGroup,
-        isVirtualUser: generalInfo.isVirtualUser,
-        phoneNumber: generalInfo.phoneNumber,
-        createdOn: generalInfo.createdOn,
-        profilePicThumbnail: profilePicThumbnail,
-        qualifiedFullName: qualifiedFullName,
-        isEmailVerified: generalInfo.isEmailVerified,
-        isTempUser: generalInfo.isTempUser,
+        email: myProfileResult.userContactCollection3.length>0?myProfileResult.userContactCollection3[0].email:'',
+        dateOfBirth: myProfileResult.dateOfBirth,
+        gender: myProfileResult.gender,
+        bloodGroup: myProfileResult.bloodGroup,
+        isVirtualUser: myProfileResult.isVirtualUser,
+        phoneNumber: myProfileResult.userContactCollection3.length>0?myProfileResult.userContactCollection3[0].phoneNumber:'',
+        createdOn: myProfileResult.createdOn,
+        /*profilePicThumbnail: myProfileResult.profilePicThumbnailUrl,*/
+        isEmailVerified: myProfileResult.isEmailVerified,
+        isTempUser: myProfileResult.isTempUser,
         profilePicThumbnailURL:
-            myProfile.response.data.generalInfo.profilePicThumbnailURL);
+        myProfileResult.profilePicThumbnailUrl);
 
     return new Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
@@ -966,17 +949,16 @@ class CommonUtil {
     }
   }
 
-  Future<MyProfile> getUserProfileData() async {
+  Future<MyProfileModel> getUserProfileData() async {
     MyProfileBloc _myProfileBloc = new MyProfileBloc();
 
-    MyProfile myProfile = new MyProfile();
+    MyProfileModel myProfileModel = new MyProfileModel();
 
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
       if (profileData != null &&
-          profileData.status == 200 &&
-          profileData.success) {
+          profileData.isSuccess && profileData.result!=null) {
         PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
             .then((value) {
           try {
@@ -990,7 +972,7 @@ class CommonUtil {
             PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
           }
 
-          myProfile = profileData;
+          myProfileModel = profileData;
         });
       }
       return profileData;
@@ -1060,7 +1042,7 @@ class CommonUtil {
     return devicelist;
   }
 
-  Future<MyProfile> getMyProfile() async {
+  Future<MyProfileModel> getMyProfile() async {
     if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
       return PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     } else {

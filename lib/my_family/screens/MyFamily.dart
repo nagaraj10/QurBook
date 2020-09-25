@@ -19,7 +19,7 @@ import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/alert.dart';
@@ -96,11 +96,11 @@ class _MyFamilyState extends State<MyFamily> {
   Widget getAllFamilyMembers() {
     Widget familyWidget;
 
-    return /*firstTym
+    return firstTym
         ? PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBERNEW) != null
             ? getMyFamilyMembers(
                 PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW))
-            :*/
+            :
         StreamBuilder<ApiResponse<FamilyMembers>>(
       stream: _familyListBloc.familyMemberListNewStream,
       builder: (context, AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
@@ -141,9 +141,9 @@ class _MyFamilyState extends State<MyFamily> {
         }
         return familyWidget;
       },
-    );
-    // : getMyFamilyMembers(
-    //     PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW));
+    )
+     : getMyFamilyMembers(
+         PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW));
   }
 
   Widget getMyFamilyMembers(FamilyMemberResult data) {
@@ -197,14 +197,14 @@ class _MyFamilyState extends State<MyFamily> {
 
   Widget getCardWidgetForUser(SharedByUsers data, int position,
       List<SharedByUsers> profilesSharedByMeAry) {
-    MyProfile myProfile;
+    MyProfileModel myProfile;
     String fulName;
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-      fulName = myProfile.response.data.generalInfo.qualifiedFullName != null
-          ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+      fulName = myProfile.result != null
+          ? myProfile.result.firstName +
               ' ' +
-              myProfile.response.data.generalInfo.qualifiedFullName.lastName
+              myProfile.result.lastName
           : '';
     } catch (e) {}
 
@@ -245,9 +245,8 @@ class _MyFamilyState extends State<MyFamily> {
             children: <Widget>[
               ClipOval(
                 child:
-                    /*position == 0
-                    ? myProfile.response.data.generalInfo
-                                .profilePicThumbnailURL ==
+                    position == 0
+                    ? myProfile.result.profilePicThumbnailUrl ==
                             null
                         ? Container(
                             width: 60,
@@ -264,13 +263,12 @@ class _MyFamilyState extends State<MyFamily> {
                             ),
                           )
                         : Image.network(
-                            myProfile.response.data.generalInfo
-                                .profilePicThumbnailURL,
+                            myProfile.result.profilePicThumbnailUrl,
                             fit: BoxFit.cover,
                             width: 60,
                             height: 60,
                           )
-                    :*/
+                    :
                     data.child.profilePicThumbnailUrl == null
                         ? Container(
                             width: 60,
@@ -322,25 +320,19 @@ class _MyFamilyState extends State<MyFamily> {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      /*position == 0
-                          ? myProfile.response.data.generalInfo.countryCode +
+                      position == 0
+                          ? myProfile.result.countryCode +
                               "-" +
-                              myProfile.response.data.generalInfo.phoneNumber
+                              myProfile.result.userContactCollection3[0].phoneNumber
                           : data.child.isVirtualUser != null
                               ? PreferenceUtil.getProfileData(
                                           Constants.KEY_PROFILE)
-                                      .response
-                                      .data
-                                      .generalInfo
-                                      .countryCode +
+                                      .result.countryCode +
                                   "-" +
                                   PreferenceUtil.getProfileData(
                                           Constants.KEY_PROFILE)
-                                      .response
-                                      .data
-                                      .generalInfo
-                                      .phoneNumber
-                              :*/
+                                      .result.userContactCollection3[0].phoneNumber
+                              :
                       data.child.userContactCollection3[0].phoneNumber != null
                           ? data.child.userContactCollection3[0].phoneNumber
                           : '',

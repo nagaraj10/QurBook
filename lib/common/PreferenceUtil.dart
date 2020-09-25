@@ -17,7 +17,7 @@ import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/user/DoctorIds.dart';
 import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceUtil {
@@ -112,16 +112,16 @@ class PreferenceUtil {
   }
 
   static Future<bool> saveProfileData(
-      String keyProfile, MyProfile profileData) async {
+      String keyProfile, MyProfileModel profileData) async {
     var instance = await _prefs;
     String profile = json.encode(profileData);
 
     return instance.setString(keyProfile, profile);
   }
 
-  static MyProfile getProfileData(String keyProfile) {
+  static MyProfileModel getProfileData(String keyProfile) {
     if (_prefsInstance == null) {}
-    return MyProfile.fromJson(
+    return MyProfileModel.fromJson(
         json.decode(_prefsInstance.getString(keyProfile)));
   }
 

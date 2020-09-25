@@ -13,7 +13,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 
 import 'MyProfilePage.dart';
@@ -58,7 +58,7 @@ class _UserAccountsState extends State<UserAccounts>
   @override
   Widget build(BuildContext context) {
     try {
-      MyProfile myProfile =
+      MyProfileModel myProfile =
           PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
       Sharedbyme sharedbyme = new CommonUtil().getProfileDetails();

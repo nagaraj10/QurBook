@@ -7,7 +7,7 @@ import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_in
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -27,10 +27,10 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   // 2
   StreamController _myProfileController;
 
-  StreamSink<ApiResponse<MyProfile>> get myProfileSink =>
+  StreamSink<ApiResponse<MyProfileModel>> get myProfileSink =>
       _myProfileController.sink;
 
-  Stream<ApiResponse<MyProfile>> get myProfileStream =>
+  Stream<ApiResponse<MyProfileModel>> get myProfileStream =>
       _myProfileController.stream;
 
   // 3
@@ -93,7 +93,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     _relationshipListController =
         StreamController<ApiResponse<RelationShipResponseList>>();
 
-    _myProfileController = StreamController<ApiResponse<MyProfile>>();
+    _myProfileController = StreamController<ApiResponse<MyProfileModel>>();
 
     _userProfileController =
         StreamController<ApiResponse<UpdateAddFamilyInfo>>();
@@ -117,9 +117,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     return relationShipResponseList;
   }
 
-  Future<MyProfile> getMyProfileInfo() async {
+  Future<MyProfileModel> getMyProfileInfo() async {
     myProfileSink.add(ApiResponse.loading(variable.strFetchRoles));
-    MyProfile myProfile;
+    MyProfileModel myProfile;
 
     try {
       myProfile = await addFamilyUserInfoRepository.getMyProfileInfo(userId);
