@@ -8,8 +8,9 @@ class MyProvidersResponse {
   MyProvidersResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     message = json['message'];
-    result =
-    json['result'] != null ? new MyProvidersResponseData.fromJson(json['result']) : null;
+    result = json['result'] != null
+        ? new MyProvidersResponseData.fromJson(json['result'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -57,35 +58,35 @@ class MyProvidersResponseData {
 
   MyProvidersResponseData(
       {this.id,
-        this.name,
-        this.userName,
-        this.firstName,
-        this.middleName,
-        this.lastName,
-        this.gender,
-        this.dateOfBirth,
-        this.bloodGroup,
-        this.countryCode,
-        this.profilePicThumbnailUrl,
-        this.isTempUser,
-        this.isVirtualUser,
-        this.isMigrated,
-        this.isClaimed,
-        this.isIeUser,
-        this.isEmailVerified,
-        this.isCpUser,
-        this.communicationPreferences,
-        this.medicalPreferences,
-        this.isSignedIn,
-        this.isActive,
-        this.createdBy,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.doctors,
-        this.hospitals,
-        this.labs,
-        this.clinics});
+      this.name,
+      this.userName,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.gender,
+      this.dateOfBirth,
+      this.bloodGroup,
+      this.countryCode,
+      this.profilePicThumbnailUrl,
+      this.isTempUser,
+      this.isVirtualUser,
+      this.isMigrated,
+      this.isClaimed,
+      this.isIeUser,
+      this.isEmailVerified,
+      this.isCpUser,
+      this.communicationPreferences,
+      this.medicalPreferences,
+      this.isSignedIn,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.doctors,
+      this.hospitals,
+      this.labs,
+      this.clinics});
 
   MyProvidersResponseData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -127,10 +128,10 @@ class MyProvidersResponseData {
       });
     }
     if (json['labs'] != null) {
-      labs=List<dynamic>.from(json['labs'].map((x) => x));
+      labs = List<dynamic>.from(json['labs'].map((x) => x));
     }
     if (json['clinics'] != null) {
-     clinics= List<dynamic>.from(json['labs'].map((x) => x));
+      clinics = List<dynamic>.from(json['labs'].map((x) => x));
     }
   }
 
@@ -191,14 +192,14 @@ class Doctors {
 
   Doctors(
       {this.id,
-        this.specialization,
-        this.isTelehealthEnabled,
-        this.isMciVerified,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.user});
+      this.specialization,
+      this.isTelehealthEnabled,
+      this.isMciVerified,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.user});
 
   Doctors.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -259,31 +260,31 @@ class User {
 
   User(
       {this.id,
-        this.name,
-        this.userName,
-        this.firstName,
-        this.middleName,
-        this.lastName,
-        this.gender,
-        this.dateOfBirth,
-        this.bloodGroup,
-        this.countryCode,
-        this.profilePicThumbnailUrl,
-        this.isTempUser,
-        this.isVirtualUser,
-        this.isMigrated,
-        this.isClaimed,
-        this.isIeUser,
-        this.isEmailVerified,
-        this.isCpUser,
-        this.communicationPreferences,
-        this.medicalPreferences,
-        this.isSignedIn,
-        this.isActive,
-        this.createdBy,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn});
+      this.name,
+      this.userName,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.gender,
+      this.dateOfBirth,
+      this.bloodGroup,
+      this.countryCode,
+      this.profilePicThumbnailUrl,
+      this.isTempUser,
+      this.isVirtualUser,
+      this.isMigrated,
+      this.isClaimed,
+      this.isIeUser,
+      this.isEmailVerified,
+      this.isCpUser,
+      this.communicationPreferences,
+      this.medicalPreferences,
+      this.isSignedIn,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -296,7 +297,11 @@ class User {
     dateOfBirth = json['dateOfBirth'];
     bloodGroup = json['bloodGroup'];
     countryCode = json['countryCode'];
-    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+    if (json.containsKey('profilePicThumbnailUrl')) {
+      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
+    } else {
+      profilePicThumbnailUrl = null;
+    }
     isTempUser = json['isTempUser'];
     isVirtualUser = json['isVirtualUser'];
     isMigrated = json['isMigrated'];
@@ -356,11 +361,11 @@ class Hospitals {
 
   Hospitals(
       {this.id,
-        this.name,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.healthOrganizationType});
+      this.name,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.healthOrganizationType});
 
   Hospitals.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -400,14 +405,14 @@ class HealthOrganizationType {
 
   HealthOrganizationType(
       {this.id,
-        this.code,
-        this.name,
-        this.description,
-        this.sortOrder,
-        this.isActive,
-        this.createdBy,
-        this.createdOn,
-        this.lastModifiedOn});
+      this.code,
+      this.name,
+      this.description,
+      this.sortOrder,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedOn});
 
   HealthOrganizationType.fromJson(Map<String, dynamic> json) {
     id = json['id'];

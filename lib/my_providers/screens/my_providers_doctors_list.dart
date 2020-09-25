@@ -60,8 +60,9 @@ class MyProvidersDoctorsList extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     ClipOval(
-                        child:
-                            eachDoctorModel.user.profilePicThumbnailUrl != null
+                        child: eachDoctorModel.user != null
+                            ? eachDoctorModel.user.profilePicThumbnailUrl !=
+                                    null
                                 ? Image.network(
                                     eachDoctorModel.user.profilePicThumbnailUrl,
                                     height: 50,
@@ -72,7 +73,12 @@ class MyProvidersDoctorsList extends StatelessWidget {
                                     width: 50,
                                     height: 50,
                                     padding: EdgeInsets.all(12),
-                                    color: Color(fhbColors.bgColorContainer))),
+                                    color: Color(fhbColors.bgColorContainer))
+                            : Container(
+                                width: 50,
+                                height: 50,
+                                padding: EdgeInsets.all(12),
+                                color: Color(fhbColors.bgColorContainer))),
                     SizedBox(
                       width: 20,
                     ),
@@ -84,9 +90,11 @@ class MyProvidersDoctorsList extends StatelessWidget {
                         children: <Widget>[
                           SizedBox(height: 5),
                           AutoSizeText(
-                            eachDoctorModel.user.name != null
-                                ? toBeginningOfSentenceCase(
-                                    eachDoctorModel.user.name)
+                            eachDoctorModel.user != null
+                                ? eachDoctorModel.user.name != null
+                                    ? toBeginningOfSentenceCase(
+                                        eachDoctorModel.user.name)
+                                    : ''
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
