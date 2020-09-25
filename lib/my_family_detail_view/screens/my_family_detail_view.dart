@@ -8,6 +8,7 @@ import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view_hospit
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view_insurance.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
@@ -18,7 +19,6 @@ import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/fhb_query.dart' as query;
-
 
 class MyFamilyDetailView extends StatefulWidget {
   MyFamilyDetailViewArguments arguments;
@@ -36,7 +36,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   TabController tabController;
   int activeTabIndex = 0;
   MyFamilyDetailViewBloc myFamilyDetailViewBloc;
-  List<CategoryData> categoryData;
+  List<CategoryResult> categoryData;
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   @override
@@ -50,8 +50,8 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
     tabController.animateTo(activeTabIndex);
 
     myFamilyDetailViewBloc = new MyFamilyDetailViewBloc();
-    myFamilyDetailViewBloc.getCategoryList().then((value) {
-      categoryData = value.response.data;
+    myFamilyDetailViewBloc.getCategoryLists().then((value) {
+      categoryData = value.result;
       PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, categoryData);
     });
 
@@ -142,8 +142,8 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                   }
                 }
               } else {
-                 new FHBBasicWidget().showInSnackBar(
-                              Constants.STR_NO_CONNECTIVITY, scaffold_state);
+                new FHBBasicWidget().showInSnackBar(
+                    Constants.STR_NO_CONNECTIVITY, scaffold_state);
               }
             });
           }),
@@ -201,10 +201,10 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
       children: [
         Container(
             color: ColorUtils.greycolor,
-            child: MyFamilyDetailViewInsurance(completeData: completeData)),
+            child: MyFamilyDetailViewInsurance(completeData: null)),
         Container(
             color: ColorUtils.greycolor,
-            child: MyFamilyDetailViewHospital(completeData: completeData)),
+            child: MyFamilyDetailViewHospital(completeData: null)),
       ],
     );
   }

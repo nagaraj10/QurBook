@@ -36,18 +36,21 @@ import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Authentication/DeviceInfoSucess.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/CategoryInfo.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/DeviceReadings.dart';
-import 'package:myfhb/src/model/Health/Doctor.dart';
-import 'package:myfhb/src/model/Health/Hospital.dart';
 import 'package:myfhb/src/model/Health/Laboratory.dart';
+
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
+import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/sceretLoader.dart';
 import 'package:myfhb/src/model/secretmodel.dart';
 import 'package:myfhb/src/model/user/DoctorIds.dart';
@@ -90,20 +93,20 @@ class CommonUtil {
     return valueFromRes.myScerets;
   }
 
-  List<MediaMetaInfo> getDataForParticularCategoryDescription(
-      CompleteData completeData, String categoryDescription) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
-    List<MediaMetaInfo> bookMarkedData = new List();
-    List<MediaMetaInfo> unBookMarkedData = new List();
-    for (MediaMetaInfo mediaMetaInfo in completeData.mediaMetaInfo) {
-      if (mediaMetaInfo.metaInfo.categoryInfo.categoryDescription ==
-          categoryDescription) {
+  List<HealthResult> getDataForParticularCategoryDescription(
+      HealthRecordList completeData, String categoryDescription) {
+    List<HealthResult> mediaMetaInfoObj = new List();
+    List<HealthResult> bookMarkedData = new List();
+    List<HealthResult> unBookMarkedData = new List();
+    for (HealthResult mediaMetaInfo in completeData.result) {
+      if (mediaMetaInfo.metadata.healthRecordType.description
+          .contains(categoryDescription)) {
         if (categoryDescription == CommonConstants.categoryDescriptionDevice) {
-          if (mediaMetaInfo.metaInfo.deviceReadings != null &&
+          /* if (mediaMetaInfo.metaInfo.deviceReadings != null &&
               mediaMetaInfo.metaInfo.deviceReadings.length > 0 &&
               mediaMetaInfo.metaInfo.fileName != null) {
             mediaMetaInfoObj.add(mediaMetaInfo);
-          }
+          }*/
         } else {
           mediaMetaInfoObj.add(mediaMetaInfo);
         }
@@ -111,12 +114,13 @@ class CommonUtil {
     }
 
     mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
-      return mediaMetaInfoObjCopy.createdOn
-          .compareTo(mediaMetaInfoObjClone.createdOn);
+      return mediaMetaInfoObjCopy.metadata.healthRecordCategory.createdOn
+          .compareTo(
+              mediaMetaInfoObjClone.metadata.healthRecordCategory.createdOn);
     });
 
     //NOTE show the bookmarked data as first
-    for (MediaMetaInfo mmi in mediaMetaInfoObj) {
+    for (HealthResult mmi in mediaMetaInfoObj) {
       if (mmi.isBookmarked == true) {
         bookMarkedData.add(mmi);
       } else {
@@ -130,15 +134,15 @@ class CommonUtil {
     return mediaMetaInfoObj;
   }
 
-  List<MediaMetaInfo> getDataForInsurance(CompleteData completeData,
+  List<HealthResult> getDataForInsurance(HealthRecordList completeData,
       String categoryDescription, String mediaTypeDescription) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+    List<HealthResult> mediaMetaInfoObj = new List();
 
-    for (MediaMetaInfo mediaMetaInfo in completeData.mediaMetaInfo) {
-      if (mediaMetaInfo.metaInfo.categoryInfo != null) {
-        if (mediaMetaInfo.metaInfo.categoryInfo.categoryDescription ==
+    for (HealthResult mediaMetaInfo in completeData.result) {
+      if (mediaMetaInfo.metadata.healthRecordCategory != null) {
+        if (mediaMetaInfo.metadata.healthRecordCategory.categoryDescription ==
                 categoryDescription &&
-            mediaMetaInfo.metaInfo.mediaTypeInfo.description ==
+            mediaMetaInfo.metadata.healthRecordType.description ==
                 mediaTypeDescription) {
           mediaMetaInfoObj.add(mediaMetaInfo);
         }
@@ -146,21 +150,21 @@ class CommonUtil {
     }
 
     mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
-      return mediaMetaInfoObjCopy.createdOn
-          .compareTo(mediaMetaInfoObjClone.createdOn);
+      return mediaMetaInfoObjCopy.metadata.healthRecordType.createdOn
+          .compareTo(mediaMetaInfoObjClone.metadata.healthRecordType.createdOn);
     });
     return mediaMetaInfoObj;
   }
 
-  List<MediaMetaInfo> getDataForHospitals(CompleteData completeData,
+  List<HealthResult> getDataForHospitals(HealthRecordList completeData,
       String categoryDescription, String mediaTypeDescription) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+    List<HealthResult> mediaMetaInfoObj = new List();
 
-    for (MediaMetaInfo mediaMetaInfo in completeData.mediaMetaInfo) {
-      if (mediaMetaInfo.metaInfo.categoryInfo != null) {
-        if (mediaMetaInfo.metaInfo.categoryInfo.categoryDescription ==
+    for (HealthResult mediaMetaInfo in completeData.result) {
+      if (mediaMetaInfo.metadata.healthRecordCategory != null) {
+        if (mediaMetaInfo.metadata.healthRecordCategory.categoryDescription ==
                 categoryDescription &&
-            mediaMetaInfo.metaInfo.mediaTypeInfo.description ==
+            mediaMetaInfo.metadata.healthRecordType.description ==
                 mediaTypeDescription) {
           mediaMetaInfoObj.add(mediaMetaInfo);
         }
@@ -168,23 +172,23 @@ class CommonUtil {
     }
 
     mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
-      return mediaMetaInfoObjCopy.createdOn
-          .compareTo(mediaMetaInfoObjClone.createdOn);
+      return mediaMetaInfoObjCopy.metadata.healthRecordType.createdOn
+          .compareTo(mediaMetaInfoObjClone.metadata.healthRecordType.createdOn);
     });
     return mediaMetaInfoObj;
   }
 
-  MediaData getMediaTypeInfoForParticularLabel(
-      String mediaId, List<MediaData> mediaDataList, String categoryName) {
-    MediaData mediaDataObj = new MediaData();
-    MediaData selectedMediaData;
+  MediaResult getMediaTypeInfoForParticularLabel(
+      String mediaId, List<MediaResult> mediaDataList, String categoryName) {
+    MediaResult mediaDataObj = new MediaResult();
+    MediaResult selectedMediaData;
     try {
       selectedMediaData = PreferenceUtil.getMediaData(Constants.KEY_MEDIADATA);
     } catch (e) {}
 
-    for (MediaData mediaData in mediaDataList) {
+    for (MediaResult mediaData in mediaDataList) {
       if (categoryName == Constants.STR_IDDOCS) {
-        if (mediaData.categoryId == mediaId &&
+        if (mediaData.healthRecordCategory.id == mediaId &&
             mediaData.description == selectedMediaData.description) {
           mediaDataObj = mediaData;
           (mediaDataObj.name + ' for ' + mediaDataObj.toString());
@@ -192,7 +196,7 @@ class CommonUtil {
           // break;
         }
       } else {
-        if (mediaData.categoryId == mediaId) {
+        if (mediaData.healthRecordCategory.id == mediaId) {
           mediaDataObj = mediaData;
         }
       }
@@ -201,10 +205,10 @@ class CommonUtil {
     return mediaDataObj;
   }
 
-  CategoryData getCategoryObjForSelectedLabel(
-      String categoryId, List<CategoryData> categoryList) {
-    CategoryData categoryObj = new CategoryData();
-    for (CategoryData categoryData in categoryList) {
+  CategoryResult getCategoryObjForSelectedLabel(
+      String categoryId, List<CategoryResult> categoryList) {
+    CategoryResult categoryObj = new CategoryResult();
+    for (CategoryResult categoryData in categoryList) {
       if (categoryData.id == categoryId) {
         categoryObj = categoryData;
       }
@@ -239,12 +243,12 @@ class CommonUtil {
     return date;
   }
 
-  getDocumentImageWidget(MediaMetaInfo data) async {
+  getDocumentImageWidget(HealthResult data) async {
     HealthReportListForUserBlock _healthReportListForUserBlock;
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
 
     List<dynamic> imageList = new List();
-    if (data.mediaMasterIds.isNotEmpty) {
+    if (data.healthRecordCollection.isNotEmpty) {
       List<MediaMasterIds> mediMasterId =
           new CommonUtil().getMetaMasterIdList(data);
       int k = 0;
@@ -266,10 +270,10 @@ class CommonUtil {
     }
   }
 
-  List<DeviceModel> getAllDevices(List<MediaData> mediaList) {
+  List<DeviceModel> getAllDevices(List<MediaResult> mediaList) {
     List<DeviceModel> deviceList = new List();
 
-    for (MediaData mediaMetaInfo in mediaList) {
+    for (MediaResult mediaMetaInfo in mediaList) {
       if (mediaMetaInfo.description
           .split("_")
           .contains(CommonConstants.categoryDescriptionDevice)) {
@@ -279,10 +283,10 @@ class CommonUtil {
     return deviceList;
   }
 
-  MediaData getMediaTypeInfoForParticularDevice(
-      String deviceName, List<MediaData> mediaDataList) {
-    MediaData mediaDataObj = new MediaData();
-    for (MediaData mediaData in mediaDataList) {
+  MediaResult getMediaTypeInfoForParticularDevice(
+      String deviceName, List<MediaResult> mediaDataList) {
+    MediaResult mediaDataObj = new MediaResult();
+    for (MediaResult mediaData in mediaDataList) {
       if (mediaData.name == deviceName) {
         mediaDataObj = mediaData;
 
@@ -320,10 +324,11 @@ class CommonUtil {
         });
   }
 
-  List<MediaMasterIds> getMetaMasterIdList(MediaMetaInfo data) {
-    List<MediaMasterIds> mediaMasterIdsList = new List();
-    if (data.mediaMasterIds.length > 0) {
-      for (MediaMasterIds mediaMasterIds in data.mediaMasterIds) {
+  List<MediaMasterIds> getMetaMasterIdList(HealthResult data) {
+    List<HealthRecordCollection> mediaMasterIdsList = new List();
+    if (data.healthRecordCollection.length > 0) {
+      for (HealthRecordCollection mediaMasterIds
+          in data.healthRecordCollection) {
         if (mediaMasterIds.fileType == "image/jpg" ||
             mediaMasterIds.fileType == "image/png")
           mediaMasterIdsList.add(mediaMasterIds);
@@ -347,10 +352,10 @@ class CommonUtil {
   }
 
   String getMediaMasterIDForPdfTypeStr(
-      List<MediaMasterIds> mediaMasterIdsList) {
+      List<HealthRecordCollection> mediaMasterIdsList) {
     String mediaMasterId;
 
-    for (MediaMasterIds mediaMasterIdsObj in mediaMasterIdsList) {
+    for (HealthRecordCollection mediaMasterIdsObj in mediaMasterIdsList) {
       if (mediaMasterIdsObj.fileType == 'application/pdf') {
         mediaMasterId = mediaMasterIdsObj.id;
       }
@@ -359,7 +364,7 @@ class CommonUtil {
     return mediaMasterId;
   }
 
-  bookMarkRecord(MediaMetaInfo data, Function _refresh) {
+  bookMarkRecord(HealthResult data, Function _refresh) {
     BookmarkRecordBloc _bookmarkRecordBloc = new BookmarkRecordBloc();
 
     List<String> mediaIds = [];
@@ -375,9 +380,8 @@ class CommonUtil {
     _bookmarkRecordBloc
         .bookMarcRecord(mediaIds, _isRecordBookmarked)
         .then((bookmarkRecordResponse) {
-      _healthReportListForUserBlock.getHelthReportList().then((value) {
-        PreferenceUtil.saveCompleteData(
-                Constants.KEY_COMPLETE_DATA, value.response.data)
+      _healthReportListForUserBlock.getHelthReportLists().then((value) {
+        PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
             .then((value) {
           if (bookmarkRecordResponse.success) {
             _refresh();
@@ -578,8 +582,8 @@ class CommonUtil {
     return removeDuplicatevalues(categoryDataList);
   }
 
-  CompleteData getMediaTypeInfo(List<Data> data) {
-    CompleteData completeData;
+  HealthRecordList getMediaTypeInfo(List<Data> data) {
+    HealthRecordList completeData;
     List<MediaMetaInfo> mediaMetaInfoList = new List();
 
     for (Data dataObj in data) {
@@ -656,7 +660,7 @@ class CommonUtil {
           longitude: dataObj.metaInfo.hospital.longitude,
           name: dataObj.metaInfo.hospital.name,
           website: dataObj.metaInfo.hospital.website,
-          zipcode: dataObj.metaInfo.hospital.zipcode,
+          //zipcode: dataObj.metaInfo.hospital.zipcode,
         );
       } else {
         hospital = null;
@@ -710,8 +714,8 @@ class CommonUtil {
           memoText: dataObj.metaInfo.memoText,
           memoTextRaw: dataObj.metaInfo.memoTextRaw,
           sourceName: dataObj.metaInfo.sourceName,
-          doctor: doctor,
-          hospital: hospital,
+          // doctor: doctor,
+          // hospital: hospital,
           laboratory: laboratory,
           deviceReadings: deviceReadings);
 
@@ -732,7 +736,7 @@ class CommonUtil {
       mediaMetaInfoList.add(mediaMetaInfo);
     }
 
-    completeData = new CompleteData(mediaMetaInfo: mediaMetaInfoList);
+    //completeData = new HealthRecordList(mediaMetaInfo: mediaMetaInfoList);
 
     return completeData;
   }
@@ -760,10 +764,10 @@ class CommonUtil {
   }
 
   String getMediaMasterIDForAudioFileType(
-      List<MediaMasterIds> mediaMasterIdsList) {
+      List<HealthRecordCollection> mediaMasterIdsList) {
     String mediaMasterId = '';
 
-    for (MediaMasterIds mediaMasterIdsObj in mediaMasterIdsList) {
+    for (HealthRecordCollection mediaMasterIdsObj in mediaMasterIdsList) {
       if (mediaMasterIdsObj.fileType == Constants.audioFileType ||
           mediaMasterIdsObj.fileType == Constants.audioFileTypeAppStream) {
         mediaMasterId = mediaMasterIdsObj.id;
@@ -914,9 +918,9 @@ class CommonUtil {
   }
 
   String getIdForDescription(
-      List<CategoryData> categoryData, String categoryName) {
+      List<CategoryResult> categoryData, String categoryName) {
     String categoryId;
-    for (CategoryData categoryDataObj in categoryData) {
+    for (CategoryResult categoryDataObj in categoryData) {
       if (categoryDataObj.categoryName == categoryName) {
         categoryId = categoryDataObj.id;
       }

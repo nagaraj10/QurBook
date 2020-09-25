@@ -129,11 +129,8 @@ class SwitchProfile {
     _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
           .then((value) {
-        _healthReportListForUserBlock
-            .getHelthReportList(condtion: false)
-            .then((value) {
-          PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value.response.data)
+        _healthReportListForUserBlock.getHelthReportLists().then((value) {
+          PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
               .then((value) {
             Navigator.of(keyLoader.currentContext, rootNavigator: true).pop();
             new CommonUtil()

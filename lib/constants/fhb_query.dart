@@ -144,3 +144,11 @@ const String qr_get_media_master = '/getmediamaster/';
 const String qr_userid = 'userId';
 const String qr_mediaMetaId = 'mediaMetaId';
 const String qr_sharerecord = 'sharerecord';
+
+//queries for the asgard
+const String qr_category = 'category';
+
+//for asgard mediType
+const String qr_health_record_type = 'health-record-type';
+const String qr_health_record = 'health-records';
+const String qr_filter = 'filter';

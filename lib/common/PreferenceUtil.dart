@@ -4,8 +4,11 @@ import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
+import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/user/DoctorIds.dart';
 import 'package:myfhb/src/model/user/HospitalIds.dart';
 import 'package:myfhb/src/model/user/LaboratoryIds.dart';
@@ -36,22 +39,21 @@ class PreferenceUtil {
   }
 
   static Future<bool> saveMediaData(
-      String keyProfile, MediaData mediaData) async {
-    
+      String keyProfile, MediaResult mediaData) async {
     var instance = await _prefs;
     String profile = json.encode(mediaData);
 
     return instance.setString(keyProfile, profile);
   }
 
-  static MediaData getMediaData(String keyProfile) {
+  static MediaResult getMediaData(String keyProfile) {
     if (_prefsInstance == null) {}
-    return MediaData.fromJson(
+    return MediaResult.fromJson(
         json.decode(_prefsInstance.getString(keyProfile)));
   }
 
   static Future<bool> saveMediaType(
-      String membershipKey, List<MediaData> mediaDataList) async {
+      String membershipKey, List<MediaResult> mediaDataList) async {
     var instance = await _prefs;
 
     return instance.setString(membershipKey, json.encode(mediaDataList));
@@ -67,14 +69,14 @@ class PreferenceUtil {
     return instance.setString(key, value);
   } */
 
-  static List<MediaData> getMediaType() {
-    List<MediaData> mediaData = new List();
+  static List<MediaResult> getMediaType() {
+    List<MediaResult> mediaData = new List();
 
     if (_prefsInstance == null) {}
     json
         .decode(_prefsInstance.getString(Constants.KEY_METADATA))
         .forEach((map) {
-      mediaData.add(new MediaData.fromJson(map));
+      mediaData.add(new MediaResult.fromJson(map));
     });
 
     return mediaData;
@@ -94,10 +96,10 @@ class PreferenceUtil {
   }
 
   static Future<bool> saveCategoryList(
-      String membershipKey, List<CategoryData> categoryList) async {
+      String membershipKey, List<CategoryResult> categoryList) async {
     var instance = await _prefs;
 
-    for (CategoryData categoryData in categoryList) {
+    for (CategoryResult categoryData in categoryList) {
       if (categoryData.categoryDescription ==
           CommonConstants.categoryDescriptionVoiceRecord) {
         saveString(Constants.KEY_VOICE_ID, categoryData.id);
@@ -109,7 +111,6 @@ class PreferenceUtil {
 
   static Future<bool> saveProfileData(
       String keyProfile, MyProfile profileData) async {
-    
     var instance = await _prefs;
     String profile = json.encode(profileData);
 
@@ -122,15 +123,15 @@ class PreferenceUtil {
         json.decode(_prefsInstance.getString(keyProfile)));
   }
 
-  static List<CategoryData> getCategoryType() {
-    List<CategoryData> categoryData = new List();
+  static List<CategoryResult> getCategoryType() {
+    List<CategoryResult> categoryData = new List();
 
     try {
       if (_prefsInstance == null) {}
       json
           .decode(_prefsInstance.getString(Constants.KEY_CATEGORYLIST))
           .forEach((map) {
-        categoryData.add(new CategoryData.fromJson(map));
+        categoryData.add(new CategoryResult.fromJson(map));
       });
 
       return categoryData;
@@ -198,29 +199,28 @@ class PreferenceUtil {
   }
 
   static Future<bool> saveCompleteData(
-      String keyCompletedData, CompleteData completeData) async {
-    
+      String keyCompletedData, HealthRecordList completeData) async {
     var instance = await _prefs;
     String completeDataStr = json.encode(completeData);
 
     return instance.setString(keyCompletedData, completeDataStr);
   }
 
-  static CompleteData getCompleteData(String keyCompletedData) {
+  static HealthRecordList getCompleteData(String keyCompletedData) {
     try {
       if (_prefsInstance == null) {}
-      return CompleteData.fromJson(
+      return HealthRecordList.fromJson(
           json.decode(_prefsInstance.getString(keyCompletedData)));
     } catch (e) {}
   }
 
-  static List<CategoryData> getCategoryTypeDisplay(String key) {
-    List<CategoryData> categoryData = new List();
+  static List<CategoryResult> getCategoryTypeDisplay(String key) {
+    List<CategoryResult> categoryData = new List();
 
     try {
       if (_prefsInstance == null) {}
       json.decode(_prefsInstance.getString(key)).forEach((map) {
-        categoryData.add(new CategoryData.fromJson(map));
+        categoryData.add(new CategoryResult.fromJson(map));
       });
 
       return categoryData;
@@ -295,16 +295,8 @@ class PreferenceUtil {
     } catch (e) {}
   }
 
-
   static save(String key, value) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(key, json.encode(value));
   }
-
-
-
-
-
-
-
 }

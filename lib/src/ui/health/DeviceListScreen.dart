@@ -9,11 +9,12 @@ import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class DeviceListScreen extends StatefulWidget {
-  final CompleteData completeData;
+  final HealthRecordList completeData;
   final Function callBackToRefresh;
 
   final String categoryName;
@@ -54,8 +55,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
     return _getWidgetToDisplayDeviceList(widget.completeData);
   }
 
-  Widget _getWidgetToDisplayDeviceList(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget _getWidgetToDisplayDeviceList(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionDevice);
@@ -92,7 +93,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
     widget.callBackToRefresh();
   }
 
-  Widget getCardWidgetForDevice(MediaMetaInfo data, int position) {
+  Widget getCardWidgetForDevice(HealthResult data, int position) {
     return InkWell(
       onLongPress: () {
         if (widget.allowSelect) {
@@ -149,9 +150,9 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   radius: 25,
                   backgroundColor: const Color(fhbColors.bgColorContainer),
                   child: Image.network(
-                    data.metaInfo.mediaTypeInfo.url != null
+                   /* data.metaInfo.mediaTypeInfo.url != null
                         ? data.metaInfo.mediaTypeInfo.url
-                        : Constants.BASE_URL + data.metaInfo.categoryInfo.logo,
+                        : */Constants.BASE_URL + data.metadata.healthRecordCategory.logo,
                     height: 25,
                     width: 25,
                     color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -167,16 +168,16 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        data.metaInfo.mediaTypeInfo.name != null
+                        data.metadata.healthRecordType.name != null
                             ? toBeginningOfSentenceCase(
-                                data.metaInfo.mediaTypeInfo.name)
+                            data.metadata.healthRecordType.name)
                             : '',
                         style: TextStyle(fontWeight: FontWeight.w500),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        new FHBUtils().getFormattedDateString(data.createdOn),
+                        new FHBUtils().getFormattedDateString(data.metadata.dateOfVisit),
                         style: TextStyle(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w200,
@@ -214,8 +215,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                             new CommonUtil().bookMarkRecord(data, _refresh);
                           }),
 
-                      (data.metaInfo.hasVoiceNotes != null &&
-                          data.metaInfo.hasVoiceNotes)
+                      (data.metadata.hasVoiceNotes != null &&
+                          data.metadata.hasVoiceNotes)
                           ? Icon(
                         Icons.mic,
                         color: Colors.black54,

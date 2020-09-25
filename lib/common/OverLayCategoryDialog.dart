@@ -5,6 +5,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
 
 class OverlayCategoryDialog extends ModalRoute<void> {
@@ -105,7 +106,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
   List<Widget> getWidgetsFordevices(BuildContext context) {
     List<Widget> categoryWidgetList = new List();
 
-    List<CategoryData> catgoryDataList = PreferenceUtil.getCategoryTypeDisplay(
+    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryTypeDisplay(
         Constants.KEY_CATEGORYLIST_VISIBLE);
 
     for (int i = 0; i < catgoryDataList.length; i++) {

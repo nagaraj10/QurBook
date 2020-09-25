@@ -9,11 +9,12 @@ import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class LabReportListScreen extends StatefulWidget {
-  final CompleteData completeData;
+  final HealthRecordList completeData;
   final Function callBackToRefresh;
 
   final String categoryName;
@@ -27,7 +28,6 @@ class LabReportListScreen extends StatefulWidget {
   final bool isAudioSelect;
   final bool showDetails;
 
-
   LabReportListScreen(
       this.completeData,
       this.callBackToRefresh,
@@ -36,7 +36,10 @@ class LabReportListScreen extends StatefulWidget {
       this.getDataForParticularLabel,
       this.mediaSelected,
       this.allowSelect,
-      this.mediaMeta,this.isNotesSelect,this.isAudioSelect,this.showDetails);
+      this.mediaMeta,
+      this.isNotesSelect,
+      this.isAudioSelect,
+      this.showDetails);
 
   @override
   _LabReportListScreenState createState() => _LabReportListScreenState();
@@ -60,8 +63,8 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
     return _getWidgetToDisplayLabReport(widget.completeData);
   }
 
-  Widget _getWidgetToDisplayLabReport(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget _getWidgetToDisplayLabReport(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionLabReport);
@@ -98,7 +101,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
     widget.callBackToRefresh();
   }
 
-  Widget getCardWidgetForLabReport(MediaMetaInfo mediaMetaInfo, int position) {
+  Widget getCardWidgetForLabReport(HealthResult mediaMetaInfo, int position) {
     return InkWell(
       onLongPress: () {
         if (widget.allowSelect) {
@@ -109,18 +112,17 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
         }
       },
       onTap: () {
-          if (widget.allowSelect && widget.showDetails==false) {
-            bool condition;
-            if (widget.mediaMeta.contains(mediaMetaInfo.id)) {
-              condition = false;
-            } else {
-              condition = true;
-            }
-            mediaMetaInfo.isSelected = !mediaMetaInfo.isSelected;
+        if (widget.allowSelect && widget.showDetails == false) {
+          bool condition;
+          if (widget.mediaMeta.contains(mediaMetaInfo.id)) {
+            condition = false;
+          } else {
+            condition = true;
+          }
+          mediaMetaInfo.isSelected = !mediaMetaInfo.isSelected;
 
-            // setState(() {});
-            widget.mediaSelected(mediaMetaInfo.id, condition);
-          
+          // setState(() {});
+          widget.mediaSelected(mediaMetaInfo.id, condition);
         } else {
           Navigator.push(
             context,
@@ -131,141 +133,143 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
             ),
           );
         }
-        },
+      },
       child: Container(
-          //height: 90,
-          padding: EdgeInsets.all(10.0),
-          margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-          decoration: BoxDecoration(
-            color:Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-             BoxShadow(
-                      color: const Color(fhbColors.cardShadowColor),
-                      blurRadius: 16, // has the effect of softening the shadow
-                      spreadRadius: 0, // has the effect of extending the shadow
-                    )
-            ],
-          ),
-          child:
-             Row(
-            children: <Widget>[
-              mediaMetaInfo.metaInfo.laboratory != null
-                  ? ClipOval(
-                      child: (mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
-                                  null &&
-                              mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
-                                  'null' &&
-                              mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
-                                  '')
-                          ? Image.network(
-                              Constants.BASE_URL +
-                                  mediaMetaInfo
-                                      .metaInfo.laboratory.logoThumbnail,
-                              width: 50,
-                              height: 50,
-                            )
-                          : mediaMetaInfo.metaInfo.categoryInfo.logo != null
-                              ? Container(
-                                  width: 50,
-                                  height: 50,
-                                  padding: EdgeInsets.all(10),
-                                  child: Image.network(
-                                    Constants.BASE_URL +
-                                        mediaMetaInfo
-                                            .metaInfo.categoryInfo.logo,
-                                    color: Color(
-                                      CommonUtil().getMyPrimaryColor(),
-                                    ),
+        //height: 90,
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(fhbColors.cardShadowColor),
+              blurRadius: 16, // has the effect of softening the shadow
+              spreadRadius: 0, // has the effect of extending the shadow
+            )
+          ],
+        ),
+        child: Row(
+          children: <Widget>[
+            /* mediaMetaInfo.metaInfo.laboratory != null
+                ? ClipOval(
+                    child: (mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
+                                null &&
+                            mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
+                                'null' &&
+                            mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
+                                '')
+                        ? Image.network(
+                            Constants.BASE_URL +
+                                mediaMetaInfo.metaInfo.laboratory.logoThumbnail,
+                            width: 50,
+                            height: 50,
+                          )
+                        : mediaMetaInfo.metadata.healthRecordCategory.logo !=
+                                null
+                            ? Container(
+                                width: 50,
+                                height: 50,
+                                padding: EdgeInsets.all(10),
+                                child: Image.network(
+                                  Constants.BASE_URL +
+                                      mediaMetaInfo
+                                          .metadata.healthRecordCategory.logo,
+                                  color: Color(
+                                    CommonUtil().getMyPrimaryColor(),
                                   ),
-                                  color: const Color(
-                                    fhbColors.bgColorContainer,
-                                  ),
-                                )
-                              : Container(
-                                  width: 50,
-                                  height: 50,
-                                ))
-                  : Container(
-                      width: 50,
-                      height: 50,
-                    ),
-              SizedBox(width: 20),
-              Expanded(
-                flex: 6,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      mediaMetaInfo.metaInfo.laboratory.name != null
-                          ? toBeginningOfSentenceCase(
-                              mediaMetaInfo.metaInfo.laboratory.name)
-                          : '',
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      mediaMetaInfo.metaInfo.doctor != null
-                          ? toBeginningOfSentenceCase(
-                              mediaMetaInfo.metaInfo.doctor.name)
-                          : '',
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      new FHBUtils()
-                          .getFormattedDateString(mediaMetaInfo.createdOn),
-                      style: TextStyle(
-                          color: Colors.grey[400],
-                          fontWeight: FontWeight.w200,
-                          fontSize: 12),
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    IconButton(
-                        icon: mediaMetaInfo.isBookmarked
-                            ? ImageIcon(
-                                AssetImage(variable.icon_record_fav_active),
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                size: 20,
+                                ),
+                                color: const Color(
+                                  fhbColors.bgColorContainer,
+                                ),
                               )
-                            : ImageIcon(
-                                AssetImage(variable.icon_record_fav),
-                                color: Colors.black,
-                                size: 20,
-                              ),
-                        onPressed: () {
-                          new CommonUtil()
-                              .bookMarkRecord(mediaMetaInfo, _refresh);
-                        }),
-
-                    (mediaMetaInfo.metaInfo.hasVoiceNotes != null &&
-                        mediaMetaInfo.metaInfo.hasVoiceNotes)
-                        ? Icon(
-                      Icons.mic,
-                      color: Colors.black54,
-                    )
-                        : Container(), widget.mediaMeta.contains(mediaMetaInfo.id)
-                        ? Icon(Icons.done,color: Color(new CommonUtil().getMyPrimaryColor()),)
-                        : SizedBox(),
-                  ],
-                ),
+                            : Container(
+                                width: 50,
+                                height: 50,
+                              ))
+                : Container(
+                    width: 50,
+                    height: 50,
+                  ),*/
+            SizedBox(width: 20),
+            Expanded(
+              flex: 6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  /*Text(
+                    mediaMetaInfo.metaInfo.laboratory.name != null
+                        ? toBeginningOfSentenceCase(
+                            mediaMetaInfo.metaInfo.laboratory.name)
+                        : '',
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),*/
+                  Text(
+                    mediaMetaInfo.metadata.doctor != null
+                        ? toBeginningOfSentenceCase(
+                            mediaMetaInfo.metadata.doctor.name)
+                        : '',
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.grey, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    new FHBUtils().getFormattedDateString(
+                        mediaMetaInfo.metadata.healthRecordType.createdOn),
+                    style: TextStyle(
+                        color: Colors.grey[400],
+                        fontWeight: FontWeight.w200,
+                        fontSize: 12),
+                  )
+                ],
               ),
-            ],
-          ),
-           ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  IconButton(
+                      icon: mediaMetaInfo.isBookmarked
+                          ? ImageIcon(
+                              AssetImage(variable.icon_record_fav_active),
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                              size: 20,
+                            )
+                          : ImageIcon(
+                              AssetImage(variable.icon_record_fav),
+                              color: Colors.black,
+                              size: 20,
+                            ),
+                      onPressed: () {
+                        new CommonUtil()
+                            .bookMarkRecord(mediaMetaInfo, _refresh);
+                      }),
+                  (mediaMetaInfo.metadata.hasVoiceNotes != null &&
+                          mediaMetaInfo.metadata.hasVoiceNotes)
+                      ? Icon(
+                          Icons.mic,
+                          color: Colors.black54,
+                        )
+                      : Container(),
+                  widget.mediaMeta.contains(mediaMetaInfo.id)
+                      ? Icon(
+                          Icons.done,
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                        )
+                      : SizedBox(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

@@ -38,6 +38,8 @@ class ApiBaseHelper {
   final String _baseUrlV2 = Constants.BASEURL_V2;
   final String _baseUrlDeviceReading = CommonUtil.BASEURL_DEVICE_READINGS;
 
+  final String _baseUrlNew = 'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/api/';
+
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
   HeaderRequest headerRequest = new HeaderRequest();
@@ -212,6 +214,20 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getCategoryLists(String url) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    try {
+      final response = await http.get(_baseUrlNew + url.trim(),
+          headers: await headerRequest.getAuths());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   /**
    * The below method helps to get health record list from server for a particular userID using the get method,
    * it contains one parameter which describ ethe URL  type
@@ -371,8 +387,7 @@ class ApiBaseHelper {
       case 401:
         var responseJson = convert.jsonDecode(response.body.toString());
 
-        if (responseJson[parameters.strMessage] ==
-            Constants.STR_UN_AUTH_USER) {
+        if (responseJson[parameters.strMessage] == Constants.STR_UN_AUTH_USER) {
           SnackbarToLogout();
         } else {
           return responseJson;
@@ -876,7 +891,7 @@ class ApiBaseHelper {
         var resReturnCode =
             AppointmentsModel.fromJson(jsonDecode(response.body));
         if (resReturnCode.status == 200) {
-         printWrapped('=======response_appointment'+response.body);
+          printWrapped('=======response_appointment' + response.body);
           return AppointmentsModel.fromJson(jsonDecode(response.body));
         } else {
           throw Exception(variable.strFailed);
@@ -1042,5 +1057,32 @@ class ApiBaseHelper {
   void printWrapped(String text) {
     final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
+  }
+
+  Future<dynamic> getMediaTypesList(String url) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    try {
+      final response = await http.get(_baseUrlNew + url,
+          headers: await headerRequest.getAuths());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  getHealthRecordLists(String jsonData, String url) async {
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrlNew + url,
+          body: jsonData,
+          headers: await headerRequest.getRequestHeadersAuthContents());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
   }
 }

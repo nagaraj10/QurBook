@@ -13,11 +13,12 @@ import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class HealthReportListScreen extends StatefulWidget {
-  final CompleteData completeData;
+  final HealthRecordList completeData;
 
   final Function callBackToRefresh;
 
@@ -60,7 +61,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    _healthReportListForUserBlock.getHelthReportList();
+    _healthReportListForUserBlock.getHelthReportLists();
     _bookmarkRecordBloc = BookmarkRecordBloc();
 
     PreferenceUtil.init();
@@ -73,8 +74,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     return _getWidgetToDisplayHealthRecords(widget.completeData);
   }
 
-  Widget _getWidgetToDisplayHealthRecords(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget _getWidgetToDisplayHealthRecords(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionPrescription);
@@ -113,8 +114,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   }
 
   Widget getCardWidgetForPrescription(
-      MediaMetaInfo mediaMetaInfoObj, int position) {
-    if (mediaMetaInfoObj.metaInfo.doctor != null)
+      HealthResult mediaMetaInfoObj, int position) {
+    if (mediaMetaInfoObj.metadata.doctor != null)
       return InkWell(
           onLongPress: () {
             if (widget.allowSelect) {
@@ -164,9 +165,9 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
             child: Row(
               children: <Widget>[
                 ClipOval(
-                    child: mediaMetaInfoObj.metaInfo.doctor != null
+                    child: mediaMetaInfoObj.metadata.doctor != null
                         ? CommonUtil().getDoctorProfileImageWidget(
-                            mediaMetaInfoObj.metaInfo.doctor.id)
+                            mediaMetaInfoObj.metadata.doctor.id)
                         : Container(
                             width: 50,
                             height: 50,
@@ -180,9 +181,9 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     children: <Widget>[
                       Text(
                         toBeginningOfSentenceCase(
-                            mediaMetaInfoObj.metaInfo.doctor != null
-                                ? mediaMetaInfoObj.metaInfo.doctor.name != null
-                                    ? mediaMetaInfoObj.metaInfo.doctor.name
+                            mediaMetaInfoObj.metadata.doctor != null
+                                ? mediaMetaInfoObj.metadata.doctor.name != null
+                                    ? mediaMetaInfoObj.metadata.doctor.name
                                     : ''
                                 : ''),
                         softWrap: false,
@@ -190,13 +191,13 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Visibility(
-                          visible: mediaMetaInfoObj.metaInfo.hospital != null
+                          visible: mediaMetaInfoObj.metadata.hospital != null
                               ? true
                               : false,
                           child: Text(
-                            mediaMetaInfoObj.metaInfo.hospital != null
+                            mediaMetaInfoObj.metadata.hospital != null
                                 ? toBeginningOfSentenceCase(
-                                    mediaMetaInfoObj.metaInfo.hospital.name)
+                                    mediaMetaInfoObj.metadata.hospital.name)
                                 : '',
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -205,8 +206,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                 fontWeight: FontWeight.w500),
                           )),
                       Text(
-                        new FHBUtils()
-                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
+                        new FHBUtils().getFormattedDateString(
+                            mediaMetaInfoObj.metadata.dateOfVisit),
                         style: TextStyle(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w200,
@@ -238,8 +239,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                             new CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
-                      (mediaMetaInfoObj.metaInfo.hasVoiceNotes != null &&
-                              mediaMetaInfoObj.metaInfo.hasVoiceNotes)
+                      (mediaMetaInfoObj.metadata.hasVoiceNotes != null &&
+                              mediaMetaInfoObj.metadata.hasVoiceNotes)
                           ? Icon(
                               Icons.mic,
                               color: Colors.black54,

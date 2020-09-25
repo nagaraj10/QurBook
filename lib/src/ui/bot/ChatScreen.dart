@@ -439,9 +439,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   void refreshData() {
     var _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    _healthReportListForUserBlock.getHelthReportList().then((value) {
-      PreferenceUtil.saveCompleteData(
-          constants.KEY_COMPLETE_DATA, value.response.data);
+    _healthReportListForUserBlock.getHelthReportLists().then((value) {
+      PreferenceUtil.saveCompleteData(constants.KEY_COMPLETE_DATA, value);
     });
   }
 }
