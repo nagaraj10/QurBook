@@ -207,7 +207,6 @@ class _VerifyPatientState extends State<VerifyPatient> {
           userId: await PreferenceUtil.getStringValue(strKeyConfirmUserToken),
         );
         Map<String, dynamic> map = logInModel.toJson();
-        PreferenceUtil.saveString(strKeyConfirmUserNumber, widget.PhoneNumber);
         OtpModel.PatientSignupOtp response =
             await authViewModel.verifyPatient(map);
         print(response.toString());
@@ -257,24 +256,15 @@ class _VerifyPatientState extends State<VerifyPatient> {
   }
 
   Future<String> _getPatientDetails() async {
-    decodesstring = await PreferenceUtil.getStringValue(strKeyVerifyOtpService);
-    print(decodesstring);
+    decodesstring =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     saveuser.auth_token = decodesstring;
     if (widget.from == strFromSignUp) {
       String userId =
-          await PreferenceUtil.getStringValue(strKeyConfirmUserToken);
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       saveuser.userId = userId;
       print(userId);
-      user_mobile_no =
-          await PreferenceUtil.getStringValue(strKeyConfirmUserNumber);
-      print(user_mobile_no);
-      saveuser.phone_number = user_mobile_no;
-      PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no)
-          .then((onValue) {});
-      PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring)
-          .then((onValue) {});
-      print(decodesstring);
-      PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, userId)
+      PreferenceUtil.saveString(Constants.MOB_NUM, widget.PhoneNumber)
           .then((onValue) {});
       PreferenceUtil.saveString(Constants.KEY_USERID, userId)
           .then((onValue) {});
@@ -304,12 +294,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
       });
     } else {
       String userId = parseJwtPayLoad(decodesstring)[strToken][strUserId];
-      print(userId);
       saveuser.userId = userId;
-      print(userId);
       id_token_string = parseJwtPayLoad(decodesstring)[strToken]
           [strProviderPayLoad][strIdToken];
-      print(id_token_string);
       var id_tokens = parseJwtPayLoad(id_token_string);
       print(id_tokens);
       user_mobile_no = id_tokens[strphonenumber];

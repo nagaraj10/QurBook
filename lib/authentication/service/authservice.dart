@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/authentication/model/error_response_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class AuthService {
   String _auth_base_url = 'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/api/auth/';
@@ -21,7 +22,8 @@ class AuthService {
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
         String responseString = responseResult[strResult][strUserId];
-        PreferenceUtil.saveString(strKeyConfirmUserToken, responseString);
+        await PreferenceUtil.saveString(
+            Constants.KEY_USERID_MAIN, responseString);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -43,7 +45,7 @@ class AuthService {
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
         String responseString = responseResult[strResult];
-        PreferenceUtil.saveString(strKeyVerifyOtpToken, responseString);
+        await PreferenceUtil.saveString(strKeyVerifyOtpToken, responseString);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -85,7 +87,8 @@ class AuthService {
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
         String responseString = responseResult[strResult];
-        PreferenceUtil.saveString(strKeyVerifyOtpService, responseString);
+        await PreferenceUtil.saveString(
+            Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -109,7 +112,8 @@ class AuthService {
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
         String responseString = responseResult[strResult];
-        PreferenceUtil.saveString(strKeyVerifyOtpService, responseString);
+        await PreferenceUtil.saveString(
+            Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
       } else {
         return createErrorJsonString(response);
