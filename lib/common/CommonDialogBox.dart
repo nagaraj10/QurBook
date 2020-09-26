@@ -17,8 +17,11 @@ import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
+import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -54,8 +57,8 @@ class CommonDialogBox {
   var doctorsData, hospitalData, labData;
   String audioPathMain = '';
   bool containsAudioMain = false;
-  CategoryData categoryDataObj = new CategoryData();
-  MediaData mediaDataObj = new MediaData();
+  CategoryResult categoryDataObj = new CategoryResult();
+  MediaResult mediaDataObj = new MediaResult();
   File imageFile;
   HealthReportListForUserBlock _healthReportListForUserBlock =
       new HealthReportListForUserBlock();
@@ -66,9 +69,9 @@ class CommonDialogBox {
   MediaMetaInfo mediaMetaInfo;
   String metaInfoId = '';
   bool modeOfSave;
-  MediaData selectedMediaData;
+  MediaResult selectedMediaData;
 
-  List<MediaData> mediaDataAry = PreferenceUtil.getMediaType();
+  List<MediaResult> mediaDataAry = PreferenceUtil.getMediaType();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   FocusNode dateOfBirthFocus = FocusNode();
@@ -84,22 +87,22 @@ class CommonDialogBox {
       Function updateUI,
       Function(bool, String) updateAudioUI,
       List<String> imagePath,
-      MediaMetaInfo mediaMetaInfo,
+      HealthResult mediaMetaInfo,
       bool modeOfSaveClone,
       TextEditingController fileNameClone) {
     try {
       modeOfSave = modeOfSaveClone;
 
       if (mediaMetaInfo != null) {
-        doctorsData = mediaMetaInfo.metaInfo.doctor != null
-            ? mediaMetaInfo.metaInfo.doctor
+        doctorsData = mediaMetaInfo.metadata.doctor != null
+            ? mediaMetaInfo.metadata.doctor
             : null;
-        hospitalData = mediaMetaInfo.metaInfo.hospital != null
-            ? mediaMetaInfo.metaInfo.hospital
+        hospitalData = mediaMetaInfo.metadata.hospital != null
+            ? mediaMetaInfo.metadata.hospital
             : null;
-        labData = mediaMetaInfo.metaInfo.laboratory != null
+        /* labData = mediaMetaInfo.metaInfo.laboratory != null
             ? mediaMetaInfo.metaInfo.laboratory
-            : null;
+            : null;*/
         mediaMetaInfo = mediaMetaInfo != null ? mediaMetaInfo : null;
 
         if (mediaMetaInfo != null) {
@@ -110,8 +113,8 @@ class CommonDialogBox {
 
     dateOfVisit.text = dateOfVisitClone.text;
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metaInfo.memoText != null
-          ? mediaMetaInfo.metaInfo.memoText
+      loadMemoText(mediaMetaInfo.metadata.memoText != null
+          ? mediaMetaInfo.metadata.memoText
           : '');
     } else {
       memoController.text = '';
@@ -273,7 +276,7 @@ class CommonDialogBox {
       Function updateUI,
       Function(bool, String) updateAudioUI,
       List<String> imagePath,
-      MediaMetaInfo mediaMetaInfo,
+      HealthResult mediaMetaInfo,
       bool modeOfSaveClone,
       TextEditingController fileNameClone) {
     try {
@@ -282,13 +285,13 @@ class CommonDialogBox {
       if (mediaMetaInfo != null) {
         mediaMetaInfo = mediaMetaInfo != null ? mediaMetaInfo : null;
 
-        doctorsData = mediaMetaInfo.metaInfo.doctor;
+        doctorsData = mediaMetaInfo.metadata.doctor;
 
-        labData = mediaMetaInfo.metaInfo.laboratory != null
-            ? mediaMetaInfo.metaInfo.laboratory
-            : null;
-        hospitalData = mediaMetaInfo.metaInfo.hospital != null
-            ? mediaMetaInfo.metaInfo.hospital
+        /* labData = mediaMetaInfo.metadata.laboratory != null
+            ? mediaMetaInfo.metadata.laboratory
+            : null;*/
+        hospitalData = mediaMetaInfo.metadata.hospital != null
+            ? mediaMetaInfo.metadata.hospital
             : null;
 
         if (mediaMetaInfo != null) {
@@ -309,8 +312,8 @@ class CommonDialogBox {
     imagePathMain.addAll(imagePath);
     setFileName(fileNameClone.text);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfo.metaInfo.memoText != null
-          ? mediaMetaInfo.metaInfo.memoText
+      loadMemoText(mediaMetaInfo.metadata.memoText != null
+          ? mediaMetaInfo.metadata.memoText
           : '');
     } else {
       memoController.text = '';
@@ -456,7 +459,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String> imagePath,
       Function(bool, String) updateAudioUI,
-      MediaMetaInfo mediaMetaInfoClone,
+      HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController fileNameClone) {
     if (mediaMetaInfoClone != null) {
@@ -467,8 +470,8 @@ class CommonDialogBox {
     modeOfSave = modeOfSaveClone;
     imagePathMain.addAll(imagePath);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
-          ? mediaMetaInfoClone.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metadata.memoText != null
+          ? mediaMetaInfoClone.metadata.memoText
           : '');
     } else {
       memoController.text = '';
@@ -561,7 +564,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String> imagePath,
       Function(bool, String) updateAudioUI,
-      MediaMetaInfo mediaMetaInfoClone,
+      HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController fileNameClone,
       TextEditingController dateOfVisitClone,
@@ -580,23 +583,23 @@ class CommonDialogBox {
 
     setFileName(fileNameClone.text);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
-          ? mediaMetaInfoClone.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metadata.memoText != null
+          ? mediaMetaInfoClone.metadata.memoText
           : '');
     } else {
       memoController.text = '';
     }
 
-    List<MediaData> mediaDataAry = [];
+    List<MediaResult> mediaDataAry = [];
 
-    for (MediaData mediaData in PreferenceUtil.getMediaType()) {
+    for (MediaResult mediaData in PreferenceUtil.getMediaType()) {
       var categorySplitAry = mediaData.description.split('_');
       if (categorySplitAry[0] == CommonConstants.categoryDescriptionIDDocs) {
         mediaDataAry.add(mediaData);
       }
     }
 
-    for (MediaData mediaData in mediaDataAry) {
+    for (MediaResult mediaData in mediaDataAry) {
       var mediaDataClone = mediaData.name.split(' ');
       if (mediaDataClone.length > 0) {
         if (idType != '' && idType != null) {
@@ -669,7 +672,7 @@ class CommonDialogBox {
               child: new DropdownButton(
                 hint: new Text("Select ID Type"),
                 value: selectedMediaData,
-                onChanged: (MediaData newValue) {
+                onChanged: (MediaResult newValue) {
                   setState(() {
                     selectedMediaData = newValue;
                     PreferenceUtil.saveMediaData(
@@ -741,7 +744,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String> imagePath,
       Function(bool, String) updateAudioUI,
-      MediaMetaInfo mediaMetaInfoClone,
+      HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       List<bool> isSelectedClone,
@@ -762,8 +765,8 @@ class CommonDialogBox {
     isSelected = isSelectedClone;
     setFileName(fileNameClone.text);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
-          ? mediaMetaInfoClone.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metadata.memoText != null
+          ? mediaMetaInfoClone.metadata.memoText
           : '');
     } else {
       memoController.text = '';
@@ -906,7 +909,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String> imagePath,
       Function(bool, String) updateAudioUI,
-      MediaMetaInfo mediaMetaInfoClone,
+      HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController fileNameClone) {
@@ -924,8 +927,8 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
     setFileName(fileNameClone.text);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
-          ? mediaMetaInfoClone.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metadata.memoText != null
+          ? mediaMetaInfoClone.metadata.memoText
           : '');
     } else {
       memoController.text = '';
@@ -1053,7 +1056,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String> imagePath,
       Function(bool, String) updateAudioUI,
-      MediaMetaInfo mediaMetaInfoClone,
+      HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController fileNameClone) {
@@ -1072,8 +1075,8 @@ class CommonDialogBox {
     setFileName(fileNameClone.text);
 
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
-          ? mediaMetaInfoClone.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metadata.memoText != null
+          ? mediaMetaInfoClone.metadata.memoText
           : '');
     } else {
       memoController.text = '';
@@ -1178,7 +1181,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String> imagePath,
       Function(bool, String) updateAudioUI,
-      MediaMetaInfo mediaMetaInfoClone,
+      HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController pulseClone,
@@ -1199,8 +1202,8 @@ class CommonDialogBox {
 
     setFileName(fileNameClone.text);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
-          ? mediaMetaInfoClone.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metadata.memoText != null
+          ? mediaMetaInfoClone.metadata.memoText
           : '');
     } else {
       memoController.text = '';
@@ -1317,7 +1320,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String> imagePath,
       Function(bool, String) updateAudioUI,
-      MediaMetaInfo mediaMetaInfoClone,
+      HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController deviceControllerClone,
       TextEditingController pulseClone,
@@ -1339,8 +1342,8 @@ class CommonDialogBox {
     diaStolicPressure.text = diastolicPressureClone.text;
     setFileName(fileNameClone.text);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
-          ? mediaMetaInfoClone.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metadata.memoText != null
+          ? mediaMetaInfoClone.metadata.memoText
           : '');
     } else {
       memoController.text = '';
@@ -1592,12 +1595,12 @@ class CommonDialogBox {
       if (modeOfSave) {
         postMainData[parameters.struserId] = userID;
       }
-      List<CategoryData> catgoryDataList = PreferenceUtil.getCategoryType();
+      List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType();
 
       categoryDataObj = new CommonUtil()
           .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
       postMediaData[parameters.strcategoryInfo] = categoryDataObj.toJson();
-      List<MediaData> metaDataFromSharedPrefernce =
+      List<MediaResult> metaDataFromSharedPrefernce =
           PreferenceUtil.getMediaType();
 
       if (categoryName != Constants.STR_DEVICES) {
@@ -1729,11 +1732,9 @@ class CommonDialogBox {
               PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
               PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
 
-              _healthReportListForUserBlock
-                  .getHelthReportList(condtion: false)
-                  .then((value) {
+              _healthReportListForUserBlock.getHelthReportLists().then((value) {
                 PreferenceUtil.saveCompleteData(
-                    Constants.KEY_COMPLETE_DATA, value.response.data);
+                    Constants.KEY_COMPLETE_DATA, value);
 
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
@@ -1776,11 +1777,9 @@ class CommonDialogBox {
                   savedMetaDataResponse.response.data.mediaMetaID,
                   onRefresh: onRefresh);
             } else {
-              _healthReportListForUserBlock
-                  .getHelthReportList(condtion: false)
-                  .then((value) {
+              _healthReportListForUserBlock.getHelthReportLists().then((value) {
                 PreferenceUtil.saveCompleteData(
-                        Constants.KEY_COMPLETE_DATA, value.response.data)
+                        Constants.KEY_COMPLETE_DATA, value)
                     .then((value) {
                   if (categoryName == Constants.STR_NOTES) {
                     Navigator.of(_keyLoader.currentContext, rootNavigator: true)
@@ -1823,11 +1822,9 @@ class CommonDialogBox {
           _healthReportListForUserBlock
               .saveImage(audioPathMain, mediaMetaID, '')
               .then((postImageResponse) {
-            _healthReportListForUserBlock
-                .getHelthReportList(condtion: false)
-                .then((value) {
+            _healthReportListForUserBlock.getHelthReportLists().then((value) {
               PreferenceUtil.saveCompleteData(
-                      Constants.KEY_COMPLETE_DATA, value.response.data)
+                      Constants.KEY_COMPLETE_DATA, value)
                   .then((value) {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
@@ -1843,11 +1840,8 @@ class CommonDialogBox {
             });
           });
         } else if (k == imagePathMain.length - 1) {
-          _healthReportListForUserBlock
-              .getHelthReportList(condtion: false)
-              .then((value) {
-            PreferenceUtil.saveCompleteData(
-                    Constants.KEY_COMPLETE_DATA, value.response.data)
+          _healthReportListForUserBlock.getHelthReportLists().then((value) {
+            PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
                 .then((value) {
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
@@ -1862,11 +1856,8 @@ class CommonDialogBox {
             });
           });
         } else if (k == imagePathMain.length && modeOfSave == true) {
-          _healthReportListForUserBlock
-              .getHelthReportList(condtion: false)
-              .then((value) {
-            PreferenceUtil.saveCompleteData(
-                    Constants.KEY_COMPLETE_DATA, value.response.data)
+          _healthReportListForUserBlock.getHelthReportLists().then((value) {
+            PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
                 .then((value) {
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
@@ -1893,11 +1884,8 @@ class CommonDialogBox {
       _healthReportListForUserBlock
           .saveImage(audioPathMain, mediaMetaID, '')
           .then((postImageResponse) {
-        _healthReportListForUserBlock
-            .getHelthReportList(condtion: false)
-            .then((value) {
-          PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value.response.data)
+        _healthReportListForUserBlock.getHelthReportLists().then((value) {
+          PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
               .then((value) {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
@@ -2283,7 +2271,7 @@ class CommonDialogBox {
       Function(bool, String) deleteAudioFunction,
       List<String> imagePath,
       Function(bool, String) updateAudioUI,
-      MediaMetaInfo mediaMetaInfoClone,
+      HealthResult mediaMetaInfoClone,
       bool modeOfSaveClone,
       TextEditingController fileNameClone,
       Function(bool) refresh) {
@@ -2295,8 +2283,8 @@ class CommonDialogBox {
     modeOfSave = modeOfSaveClone;
     if (imagePath != null) imagePathMain.addAll(imagePath);
     if (modeOfSave) {
-      loadMemoText(mediaMetaInfoClone.metaInfo.memoText != null
-          ? mediaMetaInfoClone.metaInfo.memoText
+      loadMemoText(mediaMetaInfoClone.metadata.memoText != null
+          ? mediaMetaInfoClone.metadata.memoText
           : '');
     } else {
       memoController.text = '';

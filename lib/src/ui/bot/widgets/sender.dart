@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/FHBBasicWidget.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../model/bot/ConversationModel.dart';
-import '../../../model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 
 class SenderLayout extends StatelessWidget {
   final Conversation c;
-  MyProfile myProfile =
+  MyProfileModel myProfile =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE_MAIN);
 
   SenderLayout(this.c);
@@ -67,7 +67,7 @@ class SenderLayout extends StatelessWidget {
           height: 40,
           width: 40,
           child: FHBBasicWidget().getProfilePicWidgeUsingUrl(
-              myProfile.response.data.generalInfo.profilePicThumbnailURL),
+              myProfile.result.profilePicThumbnailUrl),
         )),
         SizedBox(width: 20),
       ],

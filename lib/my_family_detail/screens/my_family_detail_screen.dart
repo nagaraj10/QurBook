@@ -11,11 +11,11 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
+import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -73,10 +73,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   FocusNode dateOfBirthFocus = FocusNode();
 
   RelationShipResponseList relationShipResponseList;
-  RelationShip selectedRelationShip;
+  RelationsShipCollection selectedRelationShip;
 
   DateTime dateTime = DateTime.now();
-  MyProfile myProfile;
+  MyProfileModel myProfile;
   bool isCalled = false;
 
   List<int> fetchedProfileData;
@@ -196,10 +196,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipController = TextEditingController(text: '');
     relationShipFocus = FocusNode();
 
-    if (sharedbyme.child.firstName != null) {
-      firstNameController.text = sharedbyme.child.firstName;
-      middleNameController.text = sharedbyme.child.middleName;
-      lastNameController.text = sharedbyme.child.lastName;
+    if (sharedbyme.child != null) {
+      if (sharedbyme.child.firstName != null) {
+        firstNameController.text = sharedbyme.child.firstName;
+        middleNameController.text = sharedbyme.child.middleName;
+        lastNameController.text = sharedbyme.child.lastName;
+      }
     } else {
       firstNameController.text = sharedbyme.child.name;
       middleNameController.text = '';
@@ -207,9 +209,21 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
 
     if (sharedbyme.child.isVirtualUser == true) {
-      MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-      mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
-      emailController.text = myProf.response.data.generalInfo.email;
+      try {
+        MyProfileModel myProf =
+            PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+        if (myProf.result.userContactCollection3 != null) {
+          if (myProf.result.userContactCollection3.length > 0) {
+            mobileNoController.text =
+                myProf.result.userContactCollection3[0].phoneNumber;
+            emailController.text =
+                myProf.result.userContactCollection3[0].email;
+          }
+        }
+      } catch (e) {
+        mobileNoController.text = '';
+        emailController.text = '';
+      }
     } else {
       mobileNoController.text =
           sharedbyme.child.userContactCollection3[0].phoneNumber;
@@ -225,9 +239,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           toBeginningOfSentenceCase(sharedbyme.child.gender.toLowerCase());
     }
 
-    if (sharedbyme.child.userRoleCollection3[0].role.name != null) {
-      relationShipController.text =
-          sharedbyme.child.userRoleCollection3[0].role.name;
+    if (sharedbyme.relationship != null) {
+      relationShipController.text = sharedbyme.relationship.name;
     }
 
     if (sharedbyme.child.dateOfBirth != null) {
@@ -944,9 +957,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.relationship),
                 value: selectedRelationShip,
-                items: data.relationShipAry.map((relationShipDetail) {
+                items: data.result.map((relationShipDetail) {
                   return DropdownMenuItem(
-                    child: new Text(relationShipDetail.roleName,
+                    child: new Text(relationShipDetail.name,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0,
@@ -954,7 +967,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     value: relationShipDetail,
                   );
                 }).toList(),
-                onChanged: (RelationShip newValue) {
+                onChanged: (newValue) {
                   setState(() {
                     selectedRelationShip = newValue;
                   });

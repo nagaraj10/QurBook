@@ -13,7 +13,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 
 import 'MyProfilePage.dart';
@@ -57,22 +57,24 @@ class _UserAccountsState extends State<UserAccounts>
 
   @override
   Widget build(BuildContext context) {
-    MyProfile myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    try {
+      MyProfileModel myProfile =
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
-    Sharedbyme sharedbyme = new CommonUtil().getProfileDetails();
+      Sharedbyme sharedbyme = new CommonUtil().getProfileDetails();
 
-    String profilebanner =
-        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
-    if (profilebanner != null) {
-      imageURIProfile = File(profilebanner);
-    }
+      String profilebanner =
+          PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
+      if (profilebanner != null) {
+        imageURIProfile = File(profilebanner);
+      }
 
-    String profileImageFile =
-        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
-    if (profileImageFile != null) {
-      profileImage = File(profileImageFile);
-    }
+      String profileImageFile =
+          PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+      if (profileImageFile != null) {
+        profileImage = File(profileImageFile);
+      }
+    } catch (e) {}
 
     return Scaffold(
       backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
@@ -140,42 +142,42 @@ class _UserAccountsState extends State<UserAccounts>
                         Container(
                           height: 30,
                           width: 30,
-                          child: ClipOval(
-                            child: profileImage != null
-                                ? Image.file(profileImage,
-                                    fit: BoxFit.cover, width: 100, height: 100)
-                                : FHBBasicWidget().getProfilePicWidgeUsingUrl(
-                                    myProfile.response.data.generalInfo
-                                        .profilePicThumbnailURL),
-                          ),
+                          // child: ClipOval(
+                          //   child: profileImage != null
+                          //       ? Image.file(profileImage,
+                          //           fit: BoxFit.cover, width: 100, height: 100)
+                          //       : FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                          //           myProfile.response.data.generalInfo
+                          //               .profilePicThumbnailURL),
+                          // ),
                         ),
                         SizedBox(width: 10),
-                        Text(
-                          myProfile.response.data.generalInfo
-                                      .qualifiedFullName !=
-                                  null
-                              ? toBeginningOfSentenceCase(myProfile
-                                          .response
-                                          .data
-                                          .generalInfo
-                                          .qualifiedFullName
-                                          .firstName ??
-                                      '') +
-                                  ' ' +
-                                  toBeginningOfSentenceCase(myProfile
-                                          .response
-                                          .data
-                                          .generalInfo
-                                          .qualifiedFullName
-                                          .lastName ??
-                                      '')
-                              : '',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w400),
-                          overflow: TextOverflow.fade,
-                        )
+                        // Text(
+                        //   myProfile.response.data.generalInfo
+                        //               .qualifiedFullName !=
+                        //           null
+                        //       ? toBeginningOfSentenceCase(myProfile
+                        //                   .response
+                        //                   .data
+                        //                   .generalInfo
+                        //                   .qualifiedFullName
+                        //                   .firstName ??
+                        //               '') +
+                        //           ' ' +
+                        //           toBeginningOfSentenceCase(myProfile
+                        //                   .response
+                        //                   .data
+                        //                   .generalInfo
+                        //                   .qualifiedFullName
+                        //                   .lastName ??
+                        //               '')
+                        //       : '',
+                        //   style: TextStyle(
+                        //       color: Colors.white,
+                        //       fontSize: 13.0,
+                        //       fontWeight: FontWeight.w400),
+                        //   overflow: TextOverflow.fade,
+                        // )
                       ],
                     ),
                   ),

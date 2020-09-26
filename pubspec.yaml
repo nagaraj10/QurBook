@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   
   gmiwidgetspackage:
-    path: E:\Flutter\common_widgets
+    path: D:\commonWidget
 
   # The following adds the Cupertino Icons font to your application.
   flutter_launcher_icons: ^0.7.0
@@ -96,6 +96,10 @@ dependencies:
   simple_pdf_viewer: ^0.2.2
   flutter_typeahead: ^1.8.8
 
+
+
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -156,16 +160,15 @@ flutter:
     - family: Poppins
       fonts:
         - asset: assets/fonts/Poppins-Light.ttf
-          weight: 300
-        - asset: assets/fonts/Poppins-Regular.ttf
+          weight: 300          
+        - asset: assets/fonts/Poppins-Regular.ttf          
           weight: 400
-        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf          
           weight: 500
-        - asset: assets/fonts/Poppins-SemiBold.ttf
+        - asset: assets/fonts/Poppins-SemiBold.ttf          
           weight: 600
         - asset: assets/fonts/Poppins-Bold.ttf
           weight: 700
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
-

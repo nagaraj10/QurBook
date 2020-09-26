@@ -27,7 +27,6 @@ import 'AppException.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
-  final String _baseUrlV2 = Constants.BASEURL_V2;
   final String _baseUrlDeviceReading = CommonUtil.BASEURL_DEVICE_READINGS;
 
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -248,6 +247,20 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getCategoryLists(String url) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    try {
+      final response = await http.get(_baseUrl + url.trim(),
+          headers: await headerRequest.getAuths());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   /**
    * The below method helps to get health record list from server for a particular userID using the get method,
    * it contains one parameter which describ ethe URL  type
@@ -366,7 +379,7 @@ class ApiBaseHelper {
     print(authToken);
     var responseJson;
     try {
-      final response = await http.get(CommonConstants.NEW_BASE_URL + url,
+      final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -1030,11 +1043,11 @@ class ApiBaseHelper {
     var responseJson;
     try {
       if (isActive) {
-        final response = await http.post(CommonUtil.COGNITO_URL + url,
+        final response = await http.post(_baseUrl + url,
             headers: requestHeadersAuthAccept, body: jsonBody);
         responseJson = _returnResponse(response);
       } else {
-        final response = await http.post(CommonUtil.COGNITO_URL + url,
+        final response = await http.post(_baseUrl + url,
             headers: requestHeadersAuthAccept, body: jsonBody);
         responseJson = _returnResponse(response);
       }
@@ -1098,7 +1111,7 @@ class ApiBaseHelper {
 
     var response = await http.get(
       (apiname == 'qualification' || apiname == 'city' || apiname == 'state')
-          ? '$_baseUrl/$apiname?isSearch=true&searchData=$name'
+          ? '$_baseUrl$apiname?isSearch=true&searchData=$name'
           : '$_baseUrl/doctors/professional/search?type=$apiname&isSearch=true&data=$name',
       headers: {HttpHeaders.authorizationHeader: authToken},
     );
@@ -1108,5 +1121,44 @@ class ApiBaseHelper {
     } else {
       throw Exception("Unable to perform request!");
     }
+  }
+
+  Future<dynamic> getMediaTypesList(String url) async {
+    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+
+    var responseJson;
+    try {
+      final response = await http.get(_baseUrl + url,
+          headers: await headerRequest.getAuths());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  getHealthRecordLists(String jsonData, String url) async {
+    var responseJson;
+    try {
+      final response = await http.post(_baseUrl + url,
+          body: jsonData,
+          headers: await headerRequest.getRequestHeadersAuthContents());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> updateSelfProfileNew(String url, String jsonBody) async {
+    var responseJson;
+    try {
+      final response =
+          await http.put(_baseUrl + url, body: jsonBody, headers: await headerRequest.getRequestHeadersAuthContent());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
   }
 }

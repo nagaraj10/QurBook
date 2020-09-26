@@ -3,8 +3,6 @@ library fhb_constants;
 import 'package:myfhb/common/CommonUtil.dart';
 
 String BASE_URL = CommonUtil.BASE_URL_FROM_RES;
-String BASEURL_COVERIMAGE = CommonUtil.BASE_COVER_IMAGE;
-String BASEURL_V2 = CommonUtil.BASE_URL_V2;
 
 const String APP_NAME = 'myFHB';
 const String MOB_NUM = 'Mobile number';

@@ -27,6 +27,7 @@ class WebserviceCall {
     return query;
   }
 
+
   String getUrlToUpdateDoctorNew(String userID) {
     String query;
     query =
@@ -100,9 +101,7 @@ class WebserviceCall {
 
   String getQueryForFamilyMemberListNew() {
     String query = '';
-    // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
-
-    String userID = CommonConstants.NEW_USER_ID;
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
 
     query =
         "${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_slash}${variable.qr_myconnection}";
@@ -175,5 +174,40 @@ class WebserviceCall {
         query;*/
 
     return query;
+  }
+
+  String getQueryForUserUpdate(String userID) {
+    String query;
+    query = '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_section}${variable.qr_generalInfo}';
+
+    return query;
+  }
+
+  String makeJsonForUpdateProfile(String userID,
+      String name,
+      String phoneNo,
+      String email,
+      String gender,
+      String bloodGroup,
+      String dateOfBirth,
+      File profilePic,
+      String firstName,
+      String middleName,
+      String lastName,
+      String cityId,
+      String stateId,
+      String addressLine1,
+      String addressLine2,
+      String zipcode){
+
+    var input = {};
+    input[variable.qr_gender_p] = gender;
+    input[variable.qr_bloodgroup_p] = bloodGroup;
+    input[variable.qr_dateOfBirth_p] = dateOfBirth;
+    input[variable.qr_name_p] = name;
+    input[variable.qr_firstName_p] = firstName;
+    input[variable.qr_middleName_p] = middleName;
+    input[variable.qr_lastname_p] = lastName;
+    input[variable.qr_email_p] = email;
   }
 }

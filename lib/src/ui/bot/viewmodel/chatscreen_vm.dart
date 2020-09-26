@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/bot/service/sheela_service.dart';
 import 'package:uuid/uuid.dart';
 import '../../../../common/PreferenceUtil.dart';
@@ -11,7 +12,6 @@ import '../../../model/bot/ConversationModel.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../../../model/bot/SpeechModelResponse.dart';
-import '../../../model/user/MyProfile.dart';
 import '../../../utils/FHBUtils.dart';
 
 class ChatScreenViewModel extends ChangeNotifier {
@@ -19,14 +19,14 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   ChatScreenViewModel({this.controller});
 
-  static MyProfile prof =
+  static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE_MAIN);
   List<Conversation> conversations = new List();
   static var uuid = Uuid().v1();
   var user_id = PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
-  var user_name = prof.response.data.generalInfo.qualifiedFullName != null
-      ? prof.response.data.generalInfo.qualifiedFullName.firstName +
-          prof.response.data.generalInfo.qualifiedFullName.lastName
+  var user_name = prof.result != null
+      ? prof.result.firstName +
+          prof.result.lastName
       : '';
   var auth_token = PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
   var isMayaSpeaks = -1;
@@ -52,9 +52,9 @@ class ChatScreenViewModel extends ChangeNotifier {
     Conversation model = new Conversation(
       isMayaSaid: false,
       text: variable.strhiMaya,
-      name: prof.response.data.generalInfo.qualifiedFullName != null
-          ? prof.response.data.generalInfo.qualifiedFullName.firstName +
-              prof.response.data.generalInfo.qualifiedFullName.lastName
+      name: prof.result != null
+          ? prof.result.firstName +
+              prof.result.lastName
           : '',
       timeStamp: date,
     );
@@ -90,9 +90,9 @@ class ChatScreenViewModel extends ChangeNotifier {
           Conversation model = new Conversation(
             isMayaSaid: true,
             text: res.text,
-            name: prof.response.data.generalInfo.qualifiedFullName != null
-                ? prof.response.data.generalInfo.qualifiedFullName.firstName +
-                    prof.response.data.generalInfo.qualifiedFullName.lastName
+            name: prof.result != null
+                ? prof.result.firstName +
+                    prof.result.lastName
                 : '',
             imageUrl: res.imageURL,
             timeStamp: date,
@@ -136,9 +136,9 @@ class ChatScreenViewModel extends ChangeNotifier {
         Conversation model = new Conversation(
           isMayaSaid: false,
           text: response,
-          name: prof.response.data.generalInfo.qualifiedFullName != null
-              ? prof.response.data.generalInfo.qualifiedFullName.firstName +
-                  prof.response.data.generalInfo.qualifiedFullName.lastName
+          name: prof.result != null
+              ? prof.result.firstName +
+                  prof.result.lastName
               : '',
           timeStamp: date,
         );
@@ -150,9 +150,8 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   void refreshData() {
     var _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    _healthReportListForUserBlock.getHelthReportList().then((value) {
-      PreferenceUtil.saveCompleteData(
-          constants.KEY_COMPLETE_DATA, value.response.data);
+    _healthReportListForUserBlock.getHelthReportLists().then((value) {
+      PreferenceUtil.saveCompleteData(constants.KEY_COMPLETE_DATA, value);
     });
   }
 }

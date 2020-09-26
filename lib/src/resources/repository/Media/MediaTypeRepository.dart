@@ -1,4 +1,5 @@
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -37,5 +38,11 @@ class MediaTypeRepository {
         query.qr_rawMedia +
         metaMasterID);
     return response;
+  }
+
+  Future<MediaDataList> getMediaTypes() async {
+    final response =
+        await _helper.getMediaTypesList(query.qr_health_record_type);
+    return MediaDataList.fromJson(response);
   }
 }

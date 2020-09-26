@@ -14,7 +14,6 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
-import 'package:myfhb/src/ui/authentication/WebCognitoScreen.dart';
 import 'package:myfhb/src/ui/camera/TakePictureScreen.dart';
 import 'package:myfhb/src/ui/camera/take_picture_screen_for_devices.dart';
 import 'package:myfhb/src/ui/dashboard.dart';
@@ -84,7 +83,6 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_IntroSlider: (BuildContext context) => IntroSliderPage(),
     router.rt_Feedbacks: (BuildContext context) => Feedbacks(),
     router.rt_FeedbackSucess: (BuildContext context) => FeedbackSuccess(),
-    router.rt_WebCognito: (BuildContext context) => WebCognitoScreen(),
     router.rt_TelehealthProvider: (BuildContext context) => TelehealthProviders(
         arguments: ModalRoute.of(context).settings.arguments),
     router.rt_CallMain: (BuildContext context) =>

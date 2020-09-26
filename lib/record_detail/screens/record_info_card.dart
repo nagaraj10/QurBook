@@ -6,6 +6,7 @@ import 'package:myfhb/src/model/Health/DeviceReadings.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/DashSeparator.dart';
@@ -16,7 +17,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class RecordInfoCard {
-  Widget getCardForPrescription(MetaInfo metaInfo, String createdDate) {
+  Widget getCardForPrescription(Metadata metaInfo, String createdDate) {
     return Container(
         padding: EdgeInsets.all(20),
         color: Colors.white,
@@ -109,7 +110,7 @@ class RecordInfoCard {
         ));
   }
 
-  Widget getCardForMedicalRecord(MetaInfo metaInfo, String createdDate) {
+  Widget getCardForMedicalRecord(Metadata metaInfo, String createdDate) {
     return Container(
         padding: EdgeInsets.all(20),
         color: Colors.white,
@@ -199,7 +200,7 @@ class RecordInfoCard {
         ));
   }
 
-  Widget getCardForLab(MetaInfo metaInfo, String createdDate) {
+  Widget getCardForLab(Metadata metaInfo, String createdDate) {
     return Container(
         padding: EdgeInsets.all(20),
         color: Colors.white,
@@ -220,7 +221,7 @@ class RecordInfoCard {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                CircleAvatar(
+                /*  CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
                   backgroundImage: metaInfo.laboratory != null
@@ -229,14 +230,14 @@ class RecordInfoCard {
                               metaInfo.laboratory.logoThumbnail)
                           : null
                       : null,
-                ),
+                ),*/
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        metaInfo.laboratory != null
+                        /*metaInfo.laboratory != null
                             ? metaInfo.laboratory.name != null
                                 ? Text(
                                     toBeginningOfSentenceCase(
@@ -252,7 +253,7 @@ class RecordInfoCard {
                                   )
                             : SizedBox(
                                 height: 0,
-                              ),
+                              ),*/
                         metaInfo.doctor != null
                             ? Text(
                                 toBeginningOfSentenceCase(metaInfo.doctor.name),
@@ -289,7 +290,7 @@ class RecordInfoCard {
         ));
   }
 
-  Widget getCardForDevices(MetaInfo metaInfo, String createdOn) {
+  Widget getCardForDevices(Metadata metaInfo, String createdOn) {
     return Container(
         padding: EdgeInsets.all(20),
         color: Colors.white,
@@ -309,7 +310,7 @@ class RecordInfoCard {
               ],
             ),
             Text(
-              metaInfo.mediaTypeInfo.name,
+              metaInfo.healthRecordType.name,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
             metaInfo.memoText != null
@@ -321,11 +322,11 @@ class RecordInfoCard {
             SizedBox(
               height: 10,
             ),
-            metaInfo.deviceReadings != null
+            /* metaInfo.deviceReadings != null
                 ? getDeviceReadings(metaInfo.deviceReadings)
                 : Container(
                     height: 0,
-                  ),
+                  ),*/
             Text(
               metaInfo.memoText,
               style: TextStyle(fontSize: 13),
@@ -337,7 +338,7 @@ class RecordInfoCard {
         ));
   }
 
-  getCardForBillsAndOthers(MetaInfo metaInfo, String createdDate) {
+  getCardForBillsAndOthers(Metadata metaInfo, String createdDate) {
     return Container(
       padding: EdgeInsets.all(20),
       color: Colors.white,
@@ -385,7 +386,7 @@ class RecordInfoCard {
     );
   }
 
-  getCardForIDDocs(MetaInfo metaInfo, String createdDate) {
+  getCardForIDDocs(Metadata metaInfo, String createdDate) {
     return Container(
         padding: EdgeInsets.all(20),
         color: Colors.white,
@@ -408,9 +409,9 @@ class RecordInfoCard {
               metaInfo.fileName,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
-            metaInfo.dateOfExpiry != null
+            metaInfo.dateOfVisit != null
                 ? Text(
-                    variable.strValidThru + metaInfo.dateOfExpiry,
+                    variable.strValidThru + metaInfo.dateOfVisit,
                     style: TextStyle(fontSize: 13),
                   )
                 : SizedBox(height: 0),
