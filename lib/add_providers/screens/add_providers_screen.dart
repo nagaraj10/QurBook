@@ -460,25 +460,26 @@ class AddProvidersState extends State<AddProviders> {
         addressLine2 = widget.arguments.labsModel.addressLine2;
       }
     }
+    try {
+      setState(() {
+        lastMapPosition = center;
 
-    setState(() {
-      lastMapPosition = center;
+        kGooglePlex = CameraPosition(
+          target: center,
+          zoom: 12,
+        );
 
-      kGooglePlex = CameraPosition(
-        target: center,
-        zoom: 12,
-      );
+        if (latitude != 0.0 && longtiude != 0.0) {
+          addMarker();
+        }
 
-      if (latitude != 0.0 && longtiude != 0.0) {
-        addMarker();
-      }
-
-      if (googleMapControll != null) {
-        googleMapControll.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: center, zoom: 12.0, bearing: 45.0, tilt: 45.0)));
-      }
-    });
+        if (googleMapControll != null) {
+          googleMapControll.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: center, zoom: 12.0, bearing: 45.0, tilt: 45.0)));
+        }
+      });
+    } catch (e) {}
   }
 
   getCurrentLocation() async {
@@ -547,7 +548,10 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   Widget _showUser() {
-    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    MyProfileModel myProfile;
+    try {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    } catch (e) {}
     return InkWell(
         onTap: () {
           if (widget.arguments.fromClass != router.rt_myprovider) {
@@ -590,17 +594,24 @@ class AddProvidersState extends State<AddProviders> {
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
                   ),
-                  child: myProfile
-                              .result.profilePicThumbnailUrl !=
-                          null
-                      ? getProfilePicWidget(myProfile
-                          .result.profilePicThumbnailUrl)
+                  child: myProfile != null
+                      ? myProfile.result.profilePicThumbnailUrl != null
+                          ? getProfilePicWidget(
+                              myProfile.result.profilePicThumbnailUrl)
+                          : Center(
+                              child: Text(
+                                selectedFamilyMemberName == null
+                                    ? myProfile.result.lastName.toUpperCase()
+                                    : selectedFamilyMemberName[0].toUpperCase(),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            )
                       : Center(
                           child: Text(
-                            selectedFamilyMemberName == null
-                                ? myProfile.result.lastName
-                                    .toUpperCase()
-                                : selectedFamilyMemberName[0].toUpperCase(),
+                            '',
                             style: TextStyle(
                                 fontSize: 14,
                                 color: Color(CommonUtil().getMyPrimaryColor())),
@@ -1177,8 +1188,7 @@ class AddProvidersState extends State<AddProviders> {
         new CommonUtil().getMedicalPreference();
 
         setState(() {
-          selectedFamilyMemberName =
-              profileData.result.firstName;
+          selectedFamilyMemberName = profileData.result.firstName;
         });
       });
     });

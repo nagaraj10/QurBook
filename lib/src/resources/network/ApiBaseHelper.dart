@@ -218,7 +218,7 @@ class ApiBaseHelper {
   Future<dynamic> getMedicalPreferencesList(String url) async {
     var responseJson;
     try {
-      final response = await http.get(CommonConstants.NEW_BASE_URL + url,
+      final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
       responseJson = _returnResponse(response);
     } on SocketException {

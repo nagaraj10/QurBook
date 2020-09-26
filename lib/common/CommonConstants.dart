@@ -228,8 +228,9 @@ class CommonConstants {
 
   static String STR_RHTYPE = 'Rh type';
 
-  static String SEARCH_HOSPIT_ID = "6aa4195b-56c6-487d-8993-dfd1b39b1a49";
-  static String SEARCH_LAB_ID = "6aa4195b-56c6-487d-8993-dfd1b39b1a49";
+  static String SEARCH_HOSPIT_ID = "67240f46-65dc-41e0-b03f-cc4e4433ee6e";
+  static String SEARCH_LAB_ID = "34c16c83-2ae6-40e4-9643-5d929eb135e4";
+
   static String NEW_BASE_URL = 'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/api/';
   static String NEW_USER_ID = "6aa4195b-56c6-487d-8993-dfd1b39b1a49";
   static String NEW_AUTH_TOKEN =

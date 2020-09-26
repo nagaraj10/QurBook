@@ -109,9 +109,11 @@ class MyProvidersResponseData {
     isCpUser = json['isCpUser'];
     communicationPreferences = json['communicationPreferences'];
     medicalPreferences = json['medicalPreferences'];
-    isSignedIn = json['isSignedIn'];
+    try {
+      isSignedIn = json['isSignedIn'];
+      createdBy = json['createdBy'];
+    } catch (e) {}
     isActive = json['isActive'];
-    createdBy = json['createdBy'];
     createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
