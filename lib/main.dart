@@ -121,6 +121,17 @@ void setValues(List<dynamic> values) {
   CommonUtil.BASEURL_DEVICE_READINGS = values[8];
 }
 
+Widget buildError(BuildContext context, FlutterErrorDetails error) {
+  return Scaffold(
+    body: Center(
+      child: Text(
+        "${error.library}",
+        style: Theme.of(context).textTheme.title,
+      ),
+    ),
+  );
+}
+
 class MyFHB extends StatefulWidget {
   @override
   _MyFHBState createState() => _MyFHBState();
@@ -276,36 +287,43 @@ class _MyFHBState extends State<MyFHB> {
     flutterLocalNotificationsPlugin.initialize(platform,
         onSelectNotification: notificationAction);
     return provider.MultiProvider(
-        providers: [
-          provider.ChangeNotifierProvider<ConnectivityBloc>(
-            create: (_) => ConnectivityBloc(),
-          ),
-          provider.ChangeNotifierProvider<CallStatus>(
-            create: (_) => CallStatus(),
-          ),
-          provider.ChangeNotifierProvider<HideProvider>(
-            create: (_) => HideProvider(),
-          ),
-          provider.ChangeNotifierProvider<MyFamilyViewModel>(
-            create: (_) => MyFamilyViewModel(),
-          ),
-          provider.ChangeNotifierProvider<ChatScreenViewModel>(
-            create: (_) => ChatScreenViewModel(),
-          ),
-        ],
-        child: MaterialApp(
-          title: Constants.APP_NAME,
-          theme: ThemeData(
-            fontFamily: variable.font_poppins,
-            primaryColor: Color(myPrimaryColor),
-            accentColor: Colors.white,
-          ),
-          //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
-          home: findHomeWidget(navRoute),
-          routes: routes,
-          debugShowCheckedModeBanner: false,
-          navigatorKey: Get.key,
-        ));
+      providers: [
+        provider.ChangeNotifierProvider<ConnectivityBloc>(
+          create: (_) => ConnectivityBloc(),
+        ),
+        provider.ChangeNotifierProvider<CallStatus>(
+          create: (_) => CallStatus(),
+        ),
+        provider.ChangeNotifierProvider<HideProvider>(
+          create: (_) => HideProvider(),
+        ),
+        provider.ChangeNotifierProvider<MyFamilyViewModel>(
+          create: (_) => MyFamilyViewModel(),
+        ),
+        provider.ChangeNotifierProvider<ChatScreenViewModel>(
+          create: (_) => ChatScreenViewModel(),
+        ),
+      ],
+      child: MaterialApp(
+        title: Constants.APP_NAME,
+        theme: ThemeData(
+          fontFamily: variable.font_poppins,
+          primaryColor: Color(myPrimaryColor),
+          accentColor: Colors.white,
+        ),
+        //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
+        home: findHomeWidget(navRoute),
+        routes: routes,
+        debugShowCheckedModeBanner: false,
+        navigatorKey: Get.key,
+        builder: (BuildContext context, Widget widget) {
+         ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+           return buildError(context, errorDetails);
+         };
+         return widget;
+       },
+      ),
+    );
   }
 
   Widget findHomeWidget(String navRoute) {

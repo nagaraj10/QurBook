@@ -443,7 +443,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
   }
 
   void checkOTPResponse(AddFamilyOTPResponse addFamilyOTPResponse) {
-    if (addFamilyOTPResponse.success && addFamilyOTPResponse.status == 200) {
+    if (addFamilyOTPResponse.isSuccess) {
       Alert.displayConfirmation(
         context,
         title: variable.strSucess,
@@ -457,13 +457,15 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                       enteredLastName: widget.arguments.enteredLastName,
                       relationShip: widget.arguments.relationShip,
                       isPrimaryNoSelected: widget.arguments.isPrimaryNoSelected,
-                      addFamilyUserInfo: addFamilyOTPResponse.response.data))
+                      addFamilyUserInfo: addFamilyOTPResponse.result != null
+                          ? addFamilyOTPResponse.result
+                          : ''))
               .then((value) {});
         },
       );
     } else {
       Alert.displayAlertPlain(context,
-          title: variable.strError, content: addFamilyOTPResponse.message);
+          title: variable.strError, content: 'Error Adding Family member');
     }
   }
 
@@ -493,13 +495,12 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
       _familyListBloc
           .postUserLinkingForPrimaryNo(jsonString)
           .then((addFamilyOTPResponse) {
-        if (addFamilyOTPResponse.success &&
-            addFamilyOTPResponse.status == 200) {
+        if (addFamilyOTPResponse.isSuccess) {
           new FHBBasicWidget()
-              .showInSnackBar(addFamilyOTPResponse.message, scaffold_state);
+              .showInSnackBar('New Family has been added', scaffold_state);
         } else {
           new FHBBasicWidget()
-              .showInSnackBar(addFamilyOTPResponse.message, scaffold_state);
+              .showInSnackBar('Error Adding Family member', scaffold_state);
         }
       });
     } else {

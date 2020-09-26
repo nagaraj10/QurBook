@@ -22,6 +22,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
+import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -69,7 +70,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
   bool isCalled = false;
-  List<RelationShip> relationShipResponseList;
+  List<RelationsShipCollection> relationShipResponseList;
   RelationShip selectedRelationShip;
 
   DateTime dateTime = DateTime.now();
@@ -131,16 +132,24 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         setState(() {
           relationShipResponseList =
               PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL);
+
+          PreferenceUtil.saveRelationshipArray(
+              Constants.KEY_FAMILYREL, relationShipResponseList);
           getSelectedRelation();
         });
       } else {
         addFamilyUserInfoBloc.getCustomRoles().then((value) {
           setState(() {
-            relationShipResponseList = value.relationShipAry;
+            if (value.result[0] != null) {
+              if (value.result[0].referenceValueCollection.isNotEmpty) {
+                relationShipResponseList =
+                    value.result[0].referenceValueCollection;
 
-            PreferenceUtil.saveRelationshipArray(
-                Constants.KEY_FAMILYREL, value.relationShipAry);
-            getSelectedRelation();
+                PreferenceUtil.saveRelationshipArray(
+                    Constants.KEY_FAMILYREL, relationShipResponseList);
+                getSelectedRelation();
+              }
+            }
           });
         });
       }
@@ -338,8 +347,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             middleNameController.text = widget.arguments.enteredMiddleName;
             lastNameController.text = widget.arguments.enteredLastName;
 
-            relationShipController.text =
-                widget.arguments.relationShip.roleName;
+            relationShipController.text = widget.arguments.relationShip.name;
 
             if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
               selectedBloodGroup = value.result.bloodGroup;
@@ -1210,11 +1218,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             case Status.COMPLETED:
               isCalled = true;
 
-              relationShipResponseList = snapshot.data.data.relationShipAry;
+              relationShipResponseList =
+                  snapshot.data.data.result[0].referenceValueCollection;
 
               if (widget.arguments.fromClass == CommonConstants.my_family) {
                 for (var i = 0;
-                    i < snapshot.data.data.relationShipAry.length;
+                    i <
+                        snapshot.data.data.result[0].referenceValueCollection
+                            .length;
                     i++) {
                   // if (snapshot.data.data.relationShipAry[i].roleName ==
                   //     widget.arguments.sharedbyme.linkedData.roleName) {
@@ -1224,8 +1235,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 }
               }
 
-              familyWidget =
-                  getRelationshipDetails(snapshot.data.data.relationShipAry);
+              familyWidget = getRelationshipDetails(
+                  snapshot.data.data.result[0].referenceValueCollection);
               break;
           }
         } else {
@@ -1240,7 +1251,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     );
   }
 
-  Widget getRelationshipDetails(List<RelationShip> data) {
+  Widget getRelationshipDetails(List<RelationsShipCollection> data) {
     return StatefulBuilder(builder: (context, setState) {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -1253,7 +1264,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     selectedRelationShip != null ? selectedRelationShip : null,
                 items: data.map((relationShipDetail) {
                   return DropdownMenuItem(
-                    child: new Text(relationShipDetail.roleName,
+                    child: new Text(relationShipDetail.name,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0,
@@ -1262,7 +1273,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         relationShipDetail != null ? relationShipDetail : null,
                   );
                 }).toList(),
-                onChanged: (RelationShip newValue) {
+                onChanged: (newValue) {
                   setState(() {
                     selectedRelationShip = newValue;
                   });
@@ -1482,7 +1493,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   context, _keyLoader, variable.Please_Wait);
 
               addFamilyUserInfoBloc.updateSelfProfile(true).then((value) {
-                if (value != null && value.success && value.status == 200) {
+                if (value != null && value.isSuccess) {
                   saveProfileImage();
                   getUserProfileData();
                 } else {

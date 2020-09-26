@@ -36,7 +36,7 @@ class MyFamilyViewModel with ChangeNotifier {
   Future<RelationShipResponseList> getCustomRoles() async {
     try {
       final response =
-          await _helper.getCustomRoles(query.qr_customRole + query.qr_sort);
+          await _helper.getCustomRoles(query.qr_customRole);
       ;
       relationShipResponseList = RelationShipResponseList.fromJson(response);
       notifyListeners();

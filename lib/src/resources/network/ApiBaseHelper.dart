@@ -1111,7 +1111,7 @@ class ApiBaseHelper {
 
     var response = await http.get(
       (apiname == 'qualification' || apiname == 'city' || apiname == 'state')
-          ? '$_baseUrl/$apiname?isSearch=true&searchData=$name'
+          ? '$_baseUrl$apiname?isSearch=true&searchData=$name'
           : '$_baseUrl/doctors/professional/search?type=$apiname&isSearch=true&data=$name',
       headers: {HttpHeaders.authorizationHeader: authToken},
     );
@@ -1143,6 +1143,18 @@ class ApiBaseHelper {
       final response = await http.post(_baseUrl + url,
           body: jsonData,
           headers: await headerRequest.getRequestHeadersAuthContents());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> updateSelfProfileNew(String url, String jsonBody) async {
+    var responseJson;
+    try {
+      final response =
+          await http.put(_baseUrl + url, body: jsonBody, headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
