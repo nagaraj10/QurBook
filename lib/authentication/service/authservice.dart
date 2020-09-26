@@ -20,7 +20,7 @@ class AuthService {
       );
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
-        String responseString = responseResult["result"];
+        String responseString = responseResult[strResult][strUserId];
         PreferenceUtil.saveString(strKeyConfirmUserToken, responseString);
         return responseResult;
       } else {
@@ -42,7 +42,7 @@ class AuthService {
       );
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
-        String responseString = responseResult["result"];
+        String responseString = responseResult[strResult];
         PreferenceUtil.saveString(strKeyVerifyOtpToken, responseString);
         return responseResult;
       } else {
@@ -59,8 +59,6 @@ class AuthService {
         _auth_base_url + strResendConfirmCode,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
-          c_auth_key:
-              '$strBearer ${await PreferenceUtil.getStringValue(strKeyConfirmUserToken)}',
         },
         body: jsonEncode(params),
       );
@@ -81,15 +79,13 @@ class AuthService {
         _auth_base_url + strUserVerifyEndpoint,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
-          'Authorization':
-              'Bearer ${await PreferenceUtil.getStringValue(strKeyConfirmUserToken)}',
         },
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
-        String responseString = responseResult["result"];
-        PreferenceUtil.saveString(strKeyConfirmUserService, responseString);
+        String responseString = responseResult[strResult];
+        PreferenceUtil.saveString(strKeyVerifyOtpService, responseString);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -105,14 +101,14 @@ class AuthService {
         _auth_base_url + strOtpVerifyEndpoint,
         headers: <String, String>{
           c_content_type_key: c_content_type_val,
-          'Authorization':
-              'Bearer ${await PreferenceUtil.getStringValue(strKeyVerifyOtpToken)}',
+          c_auth_key:
+              '$strBearer ${await PreferenceUtil.getStringValue(strKeyVerifyOtpToken)}',
         },
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
-        String responseString = responseResult["result"];
+        String responseString = responseResult[strResult];
         PreferenceUtil.saveString(strKeyVerifyOtpService, responseString);
         return responseResult;
       } else {
