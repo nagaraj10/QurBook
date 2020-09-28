@@ -188,7 +188,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   _checkResponse(PatientForgotPasswordModel response) {
     if (response.isSuccess) {
-      toast.getToast(response.message, Colors.red);
+      toast.getToast(response.message, Colors.lightBlue);
       Navigator.push(
           context,
           MaterialPageRoute(

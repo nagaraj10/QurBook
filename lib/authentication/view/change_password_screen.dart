@@ -210,7 +210,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   _checkResponse(PatientConfirmPasswordModel response) {
     if (response.isSuccess) {
-      toast.getToast(response.message, Colors.red);
+      toast.getToast(response.message, Colors.lightBlue);
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
