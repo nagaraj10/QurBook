@@ -66,7 +66,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       SizedBox(height: 10),
                       _resetbutton(),
                       SizedBox(height: height * .015),
-                     // _gotosignintap(),
+                      // _gotosignintap(),
                     ],
                   ),
                 ),
