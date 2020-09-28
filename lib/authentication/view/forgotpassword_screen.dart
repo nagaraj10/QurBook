@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/authentication/model/forgot_password_model.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
+import 'package:myfhb/authentication/view/change_password_screen.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
+import 'package:myfhb/authentication/model/forgot_password_model.dart'
+    as forgotPasswordModel;
 import 'package:myfhb/constants/variable_constant.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -13,7 +19,16 @@ class ForgotPasswordScreen extends StatefulWidget {
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final mobileController = TextEditingController();
   bool _autoValidateBool = false;
+  FlutterToast toast = new FlutterToast();
+  AuthViewModel authViewModel;
   var _ForgetPassKey = GlobalKey<FormState>();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    authViewModel = new AuthViewModel();
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -123,10 +138,20 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   Widget _resetbutton() {
     return InkWell(
-      onTap: () {
+      onTap: () async {
         FocusScope.of(context).unfocus();
         if (_ForgetPassKey.currentState.validate()) {
           _ForgetPassKey.currentState.save();
+          PatientForgotPasswordModel logInModel =
+              new PatientForgotPasswordModel(
+            userName: mobileController.text,
+            source: strSource,
+          );
+          Map<String, dynamic> map = logInModel.toJson();
+          forgotPasswordModel.PatientForgotPasswordModel response =
+              await authViewModel.resetPassword(map);
+          print(response.toString());
+          _checkResponse(response);
         } else {
           setState(() {
             _autoValidateBool = true;
@@ -159,5 +184,19 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         ),
       ),
     );
+  }
+
+  _checkResponse(PatientForgotPasswordModel response) {
+    if (response.isSuccess) {
+      toast.getToast(response.message, Colors.red);
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ChangePasswordScreen(
+                    userName: mobileController.text,
+                  )));
+    } else {
+      toast.getToast(response.message, Colors.red);
+    }
   }
 }

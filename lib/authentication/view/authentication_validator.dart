@@ -25,6 +25,21 @@ class AuthenticationValidator {
     return null;
   }
 
+  String confirmPasswordValidation(String password, String confirmpassword,
+      String pattern, String validText) {
+    RegExp regexPassword = new RegExp(pattern);
+    if (password.length == 0) {
+      return strPassCantEmpty;
+    } else if (password.length < 6) {
+      return strPasswordCheck;
+    } else if (!regexPassword.hasMatch(password)) {
+      return strPasswordMultiChecks;
+    } else if (password != confirmpassword) {
+      return strConfirmPasswordText;
+    }
+    return null;
+  }
+
   String emailValidation(String email, String pattern, String validText) {
     RegExp regexEmail = new RegExp(pattern);
     if (email.length == 0) {

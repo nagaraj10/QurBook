@@ -75,6 +75,8 @@ const String strOtpCantEmpty = 'Otp can\'t be empty';
 const String strValidOtp = 'Otp should have six characters';
 const String strPasswordMultiChecks =
     'Password should one special character, number, lowercase and uppercase alphabets';
+const String strConfirmPasswordText =
+    'New password and confirm password should be same';
 const String strPasswordCheck = 'Password should more than six characters';
 const String strNeedAcoount = 'Sign up with a new account';
 const String strFromLogin = 'AfterLogin';
@@ -111,6 +113,8 @@ const String strKeyConfirmUserNumber = 'confirm_usernumber';
 const String strKeyVerifyOtpToken = 'verify_otptoken';
 const String strKeyConfirmUserService = 'confirm_userservice';
 const String strKeyVerifyOtpService = 'verify_otpservice';
+const String strKeyForgotPassword = 'forgot-password';
+const String strKeyConfirmForgotPassword = 'confirm-forgot-password';
 final Pattern patternPhone = r'^(?:[+0]9)?[0-9]{11}$';
 final Pattern patternOtp = r'(^[0-9]{6}$)';
 final Pattern patternChar = r'^[a-z]+$';
