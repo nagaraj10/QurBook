@@ -8,6 +8,7 @@ class PatientSignUp {
   String message;
   bool isSuccess;
   List<UserContactCollection3> userContactCollection3;
+  Result result;
 
   PatientSignUp(
       {this.firstName,
@@ -16,7 +17,8 @@ class PatientSignUp {
       this.password,
       this.message,
       this.isSuccess,
-      this.userContactCollection3});
+      this.userContactCollection3,
+      this.result});
 
   PatientSignUp.fromJson(Map<String, dynamic> json) {
     firstName = json[strfirstName];
@@ -31,6 +33,8 @@ class PatientSignUp {
         userContactCollection3.add(new UserContactCollection3.fromJson(v));
       });
     }
+    result =
+        json[strResult] != null ? new Result.fromJson(json[strResult]) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +48,9 @@ class PatientSignUp {
     if (this.userContactCollection3 != null) {
       data[struserContactCollection3] =
           this.userContactCollection3.map((v) => v.toJson()).toList();
+    }
+    if (this.result != null) {
+      data[strResult] = this.result.toJson();
     }
     return data;
   }
@@ -67,6 +74,25 @@ class UserContactCollection3 {
     data[strphoneNumber] = this.phoneNumber;
     data[stremail] = this.email;
     data[strisPrimary] = this.isPrimary;
+    return data;
+  }
+}
+
+class Result {
+  String userId;
+  String userName;
+
+  Result({this.userId, this.userName});
+
+  Result.fromJson(Map<String, dynamic> json) {
+    userId = json[strUserId];
+    userName = json[struserName];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data[strUserId] = this.userId;
+    data[struserName] = this.userName;
     return data;
   }
 }

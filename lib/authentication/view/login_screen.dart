@@ -12,6 +12,7 @@ import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/patientlogin_model.dart'
     as loginModel;
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 
 class PatientSignInScreen extends StatefulWidget {

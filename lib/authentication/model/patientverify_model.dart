@@ -4,6 +4,7 @@ class PatientSignupOtp {
   String verificationCode;
   String userName;
   String source;
+  String userId;
   String message;
   bool isSuccess;
 
@@ -11,6 +12,7 @@ class PatientSignupOtp {
       {this.verificationCode,
       this.userName,
       this.source,
+        this.userId,
       this.message,
       this.isSuccess});
 
@@ -18,6 +20,7 @@ class PatientSignupOtp {
     verificationCode = json[strverificationCode];
     userName = json[struserName];
     source = json[strsource];
+    userId = json[strUserId];
     message = json[strmessage];
     isSuccess = json[strIsSuccess];
   }
@@ -27,6 +30,7 @@ class PatientSignupOtp {
     data[strverificationCode] = this.verificationCode;
     data[struserName] = this.userName;
     data[strsource] = this.source;
+    data[strUserId] = this.userId;
     data[strmessage] = this.message;
     data[strIsSuccess] = this.isSuccess;
     return data;

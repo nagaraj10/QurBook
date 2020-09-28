@@ -89,7 +89,7 @@ const String strSignUpEndpoint = 'register-user';
 const String strSignEndpoint = 'login';
 const String strUserVerifyEndpoint = 'confirm-user';
 const String strOtpVerifyEndpoint = 'verify-otp';
-const String strResult = 'result';
+const String strResult = "result";
 const String strmessage = "message";
 const String strIsSuccess = 'isSuccess';
 const String strStatus = "status";
@@ -107,6 +107,7 @@ const String strNewPasswordAgainHintText = 'Enter New Password Again';
 
 //Strings used for Validations
 const String strKeyConfirmUserToken = 'confirm_usertoken';
+const String strKeyConfirmUserNumber = 'confirm_usernumber';
 const String strKeyVerifyOtpToken = 'verify_otptoken';
 const String strKeyConfirmUserService = 'confirm_userservice';
 const String strKeyVerifyOtpService = 'verify_otpservice';

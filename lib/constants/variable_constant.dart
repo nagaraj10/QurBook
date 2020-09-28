@@ -575,6 +575,15 @@ Map<String, dynamic> parseJwtPayLoad(String token) {
   return payloadMap;
 }
 
+Map<String, dynamic> parseSignUpJwtPayLoad(String token) {
+  final payload = _decodeBase64(token);
+  final payloadMap = json.decode(payload);
+  if (payloadMap is! Map<String, dynamic>) {
+    throw Exception('invalid payload');
+  }
+  return payloadMap;
+}
+
 Map<String, dynamic> parseJwtHeader(String token) {
   final parts = token.split('.');
   if (parts.length != 3) {

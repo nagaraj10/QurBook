@@ -198,18 +198,26 @@ class _VerifyPatientState extends State<VerifyPatient> {
     FocusScope.of(context).unfocus();
     if (_OtpKey.currentState.validate()) {
       _OtpKey.currentState.save();
-      PatientSignupOtp logInModel = new PatientSignupOtp(
-        verificationCode: OtpController.text,
-        userName: widget.PhoneNumber,
-        source: strSource,
-      );
-      Map<String, dynamic> map = logInModel.toJson();
+
       if (widget.from == strFromSignUp) {
+        PatientSignupOtp logInModel = new PatientSignupOtp(
+          verificationCode: OtpController.text,
+          userName: widget.PhoneNumber,
+          source: strSource,
+          userId: await PreferenceUtil.getStringValue(strKeyConfirmUserToken),
+        );
+        Map<String, dynamic> map = logInModel.toJson();
         OtpModel.PatientSignupOtp response =
             await authViewModel.verifyPatient(map);
         print(response.toString());
         _checkResponse(response);
       } else {
+        PatientSignupOtp logInModel = new PatientSignupOtp(
+          verificationCode: OtpController.text,
+          userName: widget.PhoneNumber,
+          source: strSource,
+        );
+        Map<String, dynamic> map = logInModel.toJson();
         OtpModel.PatientSignupOtp response = await authViewModel.verifyOtp(map);
         print(response.toString());
         _checkResponse(response);
@@ -223,12 +231,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
 
   _checkResponse(PatientSignupOtp response) {
     if (response.isSuccess) {
-      if (widget.from == strFromSignUp) {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => PatientSignInScreen()));
-      } else {
-        _getPatientDetails();
-      }
+      _getPatientDetails();
     } else {
       toast.getToast(response.message, Colors.red);
     }
@@ -238,6 +241,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
     ResendOtpModel logInModel = new ResendOtpModel(
       userName: widget.PhoneNumber,
       source: strSource,
+      userId: await PreferenceUtil.getStringValue(strKeyConfirmUserToken),
     );
     Map<String, dynamic> map = logInModel.toJson();
     ResendModel.ResendOtpModel response = await authViewModel.resendOtp(map);
@@ -252,63 +256,97 @@ class _VerifyPatientState extends State<VerifyPatient> {
   }
 
   Future<String> _getPatientDetails() async {
-    decodesstring = await PreferenceUtil.getStringValue(strKeyVerifyOtpService);
-    print(decodesstring);
+    decodesstring =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     saveuser.auth_token = decodesstring;
-    String userId = parseJwtPayLoad(decodesstring)[strToken][strUserId];
-    print(userId);
-    saveuser.userId = userId;
-    print(userId);
-    id_token_string = parseJwtPayLoad(decodesstring)[strToken]
-        [strProviderPayLoad][strIdToken];
-    print(id_token_string);
-    var id_tokens = parseJwtPayLoad(id_token_string);
-    print(id_tokens);
-    user_mobile_no = id_tokens[strphonenumber];
-    print(id_tokens[strphonenumber]);
-    saveuser.family_name = id_tokens[strFamilyName];
-    print(id_tokens[strFamilyName]);
-    saveuser.phone_number = id_tokens[strphonenumber];
-    String ph = id_tokens[strphonenumber];
-    print(id_tokens[strphonenumber]);
-    saveuser.given_name = id_tokens[strGivenName];
-    print(id_tokens[strGivenName]);
-    saveuser.email = id_tokens[stremail];
-    print(id_tokens[stremail]);
-    PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no)
-        .then((onValue) {});
-    PreferenceUtil.saveString(Constants.KEY_EMAIL, saveuser.email)
-        .then((onValue) {});
-    PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring)
-        .then((onValue) {});
-    print(decodesstring);
-    PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, userId)
-        .then((onValue) {});
-    PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {});
-    PreferenceUtil.save(strUserDetails, saveuser);
-    authToken = decodesstring;
-    FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-    final token = await _firebaseMessaging.getToken();
-    CommonUtil()
-        .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
-        .then((value) {
-      if (value != null) {
-        Future.delayed(Duration(seconds: 3), () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => DashboardScreen()));
-          //Navigator.pop(context, 'code:${mURL}');
-        });
-      } else {
-        new FHBBasicWidget().showDialogWithTwoButtons(context, () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => DashboardScreen()));
-        }, value.message, strConfirmDialog);
-      }
-    });
+    if (widget.from == strFromSignUp) {
+      String userId =
+          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+      saveuser.userId = userId;
+      print(userId);
+      PreferenceUtil.saveString(Constants.MOB_NUM, widget.PhoneNumber)
+          .then((onValue) {});
+      PreferenceUtil.saveString(Constants.KEY_USERID, userId)
+          .then((onValue) {});
+      PreferenceUtil.save(strUserDetails, saveuser);
+      authToken = decodesstring;
+      FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+      final token = await _firebaseMessaging.getToken();
+      CommonUtil()
+          .sendDeviceToken(userId, '', user_mobile_no, token, true)
+          .then((value) {
+        if (value != null) {
+          Future.delayed(Duration(seconds: 3), () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => DashboardScreen()));
+            //Navigator.pop(context, 'code:${mURL}');
+          });
+        } else {
+          new FHBBasicWidget().showDialogWithTwoButtons(context, () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => DashboardScreen()));
+          }, value.message, strConfirmDialog);
+        }
+      });
+    } else {
+      String userId = parseJwtPayLoad(decodesstring)[strToken][strUserId];
+      saveuser.userId = userId;
+      id_token_string = parseJwtPayLoad(decodesstring)[strToken]
+          [strProviderPayLoad][strIdToken];
+      var id_tokens = parseJwtPayLoad(id_token_string);
+      print(id_tokens);
+      user_mobile_no = id_tokens[strphonenumber];
+      print(id_tokens[strphonenumber]);
+      saveuser.family_name = id_tokens[strFamilyName];
+      print(id_tokens[strFamilyName]);
+      saveuser.phone_number = id_tokens[strphonenumber];
+      String ph = id_tokens[strphonenumber];
+      print(id_tokens[strphonenumber]);
+      saveuser.given_name = id_tokens[strGivenName];
+      print(id_tokens[strGivenName]);
+      saveuser.email = id_tokens[stremail];
+      print(id_tokens[stremail]);
+      PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no)
+          .then((onValue) {});
+      PreferenceUtil.saveString(Constants.KEY_EMAIL, saveuser.email)
+          .then((onValue) {});
+      PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring)
+          .then((onValue) {});
+      print(decodesstring);
+      PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, userId)
+          .then((onValue) {});
+      PreferenceUtil.saveString(Constants.KEY_USERID, userId)
+          .then((onValue) {});
+      PreferenceUtil.save(strUserDetails, saveuser);
+      authToken = decodesstring;
+      FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+      final token = await _firebaseMessaging.getToken();
+      CommonUtil()
+          .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
+          .then((value) {
+        if (value != null) {
+          Future.delayed(Duration(seconds: 3), () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => DashboardScreen()));
+            //Navigator.pop(context, 'code:${mURL}');
+          });
+        } else {
+          new FHBBasicWidget().showDialogWithTwoButtons(context, () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) => DashboardScreen()));
+          }, value.message, strConfirmDialog);
+        }
+      });
+    }
+
     // redirecting to dashboard screen using userid
   }
 
