@@ -1,6 +1,7 @@
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/relationships.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
 
 class AddFamilyUserInfoArguments {
   Result addFamilyUserInfo;
@@ -12,6 +13,7 @@ class AddFamilyUserInfoArguments {
   bool isPrimaryNoSelected;
   SharedByUsers sharedbyme;
   String fromClass;
+  MyProfileResult myProfileResult;
 
   AddFamilyUserInfoArguments(
       {this.addFamilyUserInfo,
@@ -22,5 +24,5 @@ class AddFamilyUserInfoArguments {
       this.id,
       this.isPrimaryNoSelected,
       this.sharedbyme,
-      this.fromClass});
+      this.fromClass,this.myProfileResult});
 }

@@ -189,3 +189,5 @@ const String qr_CityId_p = 'cityId';
 const String qr_AddressLine1_p = 'addressLine1';
 const String qr_AddressLine2_p = 'addressLine2';
 const String qr_pincode_p = 'pincode';
+
+const String qr_delink = 'de-link';

@@ -57,9 +57,9 @@ class _UserAccountsState extends State<UserAccounts>
 
   @override
   Widget build(BuildContext context) {
+    MyProfileModel myProfile;
     try {
-      MyProfileModel myProfile =
-          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
       Sharedbyme sharedbyme = new CommonUtil().getProfileDetails();
 
@@ -113,7 +113,7 @@ class _UserAccountsState extends State<UserAccounts>
                               Navigator.pushNamed(
                                       context, router.rt_AddFamilyUserInfo,
                                       arguments: AddFamilyUserInfoArguments(
-                                          // sharedbyme: sharedbyme,
+                                          myProfileResult: myProfile.result,
                                           fromClass:
                                               CommonConstants.user_update))
                                   .then((value) {

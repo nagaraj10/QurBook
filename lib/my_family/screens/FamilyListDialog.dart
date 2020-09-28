@@ -35,7 +35,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
     super.initState();
 
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getFamilyMembersListNew();
   }
 
   @override
@@ -189,7 +189,8 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                                 child: sharedByMe[index].linkedData.nickName ==
                                         variable.Self
                                     ? new FHBBasicWidget()
-                                        .getProfilePicWidgeUsingUrl(myProfile.result.profilePicThumbnailUrl)
+                                        .getProfilePicWidgeUsingUrl(myProfile
+                                            .result.profilePicThumbnailUrl)
                                     : Image.memory(
                                         Uint8List.fromList(sharedByMe[index]
                                             .profileData

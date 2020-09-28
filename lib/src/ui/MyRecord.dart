@@ -270,9 +270,18 @@ class _MyRecordsState extends State<MyRecords> {
               if (categoryDataList.length > 0) {
                 categoryDataList.clear();
               }
+              if (snapshot.data.data.result != null &&
+                  snapshot.data.data.result.length > 0) {
+                categoryDataList.addAll(snapshot.data.data.result);
+                return getMainWidgets(categoryDataList);
+              } else {
+                return Container(
+                  width: 100,
+                  height: 100,
+                  child: Text(''),
+                );
+              }
 
-              categoryDataList.addAll(snapshot.data.data.result);
-              return getMainWidgets(categoryDataList);
               break;
           }
         } else {

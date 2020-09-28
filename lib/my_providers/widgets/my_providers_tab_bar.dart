@@ -36,10 +36,11 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    hospitalsModel = widget.data.hospitals;
-    doctorsModel = widget.data.doctors;
-    labsModel = widget.data.labs;
+    if (widget.data != null) {
+      hospitalsModel = widget.data.hospitals;
+      doctorsModel = widget.data.doctors;
+      labsModel = widget.data.labs;
+    }
 
     // // 1
     // // Doctors
@@ -107,7 +108,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
     return TabBarView(
       controller: widget.tabController,
       children: [
-        doctorsModel.length > 0
+        doctorsModel != null && doctorsModel.length > 0
             ? Container(
                 color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersDoctorsList(

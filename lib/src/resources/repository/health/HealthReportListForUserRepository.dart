@@ -151,8 +151,8 @@ class HealthReportListForUserRepository {
   }
 
   Future<HealthRecordList> getHealthReportLists() async {
-    //String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    String userID = '6aa4195b-56c6-487d-8993-dfd1b39b1a49';
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    //String userID = '6aa4195b-56c6-487d-8993-dfd1b39b1a49';
     var requestParam = {};
     requestParam[query.qr_userid] = userID;
 

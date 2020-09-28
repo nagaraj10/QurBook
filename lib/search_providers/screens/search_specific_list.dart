@@ -389,9 +389,9 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
-                      data[i].user.firstName,
-                      data[i].user.userAddressCollection3[0].addressLine1,
-                      data[i].id,
+                      data[i].firstName,
+                      data[i].addressLine1,
+                      data[i].doctorId,
                       '',
                       data[i],
                       HospitalsListResult(),
@@ -510,7 +510,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                         child: getDataToView(
                             widget.arguments.searchWord ==
                                     CommonConstants.doctors
-                                ? data.user.name
+                                ? data.name
                                 : widget.arguments.searchWord ==
                                         CommonConstants.hospitals
                                     ? hospitalData.name
@@ -528,7 +528,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                     : passLaboratoryValue(labData, context);
           } else {
             passdataToNextScreen(
-                data.user.name, context, data, hospitalData, labData);
+                data.name, context, data, hospitalData, labData);
           }
         });
   }

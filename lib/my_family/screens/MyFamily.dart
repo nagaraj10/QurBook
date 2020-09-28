@@ -217,9 +217,9 @@ class _MyFamilyState extends State<MyFamily> {
                       profilesSharedByMe: profilesSharedByMeAry,
                       currentPage: position - 1))
               .then((value) {
-            _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+            _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
               PreferenceUtil.saveFamilyData(
-                  Constants.KEY_FAMILYMEMBER, familyMembersList.response.data);
+                  Constants.KEY_FAMILYMEMBER, familyMembersList.result);
             });
           });
         }
@@ -435,13 +435,13 @@ class _MyFamilyState extends State<MyFamily> {
                                       convert.jsonEncode(deLinkingData);
 
                                   _familyListBloc
-                                      .postUserDeLinking(jsonString)
+                                      .postUserDeLinking(jsonString.toString())
                                       .then((userLinking) {
                                     if (userLinking.status == 200 &&
                                         userLinking.success) {
                                       // Reload
                                       _familyListBloc
-                                          .getFamilyMembersList()
+                                          .getFamilyMembersListNew()
                                           .then((value) {
                                         if (value.status == 200 &&
                                             value.success) {
@@ -451,7 +451,7 @@ class _MyFamilyState extends State<MyFamily> {
                                               .pop();
                                           PreferenceUtil.saveFamilyData(
                                                   Constants.KEY_FAMILYMEMBER,
-                                                  value.response.data)
+                                                  value.result)
                                               .then((value) {
                                             rebuildFamilyBlock();
                                             setState(() {});
@@ -969,11 +969,10 @@ class _MyFamilyState extends State<MyFamily> {
           addFamilyMemberRequest['isVirtualUser'] = true;
           addFamilyMemberRequest['firstName'] = firstNameController.text;
           addFamilyMemberRequest['lastName'] = lastNameController.text;
-          addFamilyMemberRequest['dateOfBirth'] = lastNameController.text;
+          addFamilyMemberRequest['dateOfBirth'] = null;
           addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
-          addFamilyMemberRequest['phoneNumber'] =
-              mobileNoController.text.replaceAll('+91', '');
-          addFamilyMemberRequest['email'] = lastNameController.text;
+          addFamilyMemberRequest['phoneNumber'] = mobileNoController.text;
+          addFamilyMemberRequest['email'] = '';
           addFamilyMemberRequest['isPrimary'] = true;
 
           var jsonString = convert.jsonEncode(addFamilyMemberRequest);
@@ -1004,6 +1003,8 @@ class _MyFamilyState extends State<MyFamily> {
                                     enteredLastName: lastNameController.text,
                                     relationShip: selectedRelationShip,
                                     isPrimaryNoSelected: isPrimaryNoSelected,
+                                    id: addFamilyOTPResponse
+                                        .result.childInfo.id,
                                     addFamilyUserInfo:
                                         addFamilyOTPResponse.result != null
                                             ? addFamilyOTPResponse.result
@@ -1015,11 +1016,11 @@ class _MyFamilyState extends State<MyFamily> {
                           selectedRelationShip = null;
                           rebuildFamilyBlock();
                           _familyListBloc
-                              .getFamilyMembersList()
+                              .getFamilyMembersListNew()
                               .then((familyMembersList) {
                             PreferenceUtil.saveFamilyData(
                                 Constants.KEY_FAMILYMEMBER,
-                                familyMembersList.response.data);
+                                familyMembersList.result);
                           });
                         });
                       });
@@ -1051,10 +1052,10 @@ class _MyFamilyState extends State<MyFamily> {
           } else {
             _familyListBloc.postUserLinking(jsonString).then((userLinking) {
               if (userLinking.success && userLinking.status == 200) {
-                _familyListBloc.getFamilyMembersList().then((value) {
+                _familyListBloc.getFamilyMembersListNew().then((value) {
                   if (value.status == 200 && value.success) {
                     PreferenceUtil.saveFamilyData(
-                            Constants.KEY_FAMILYMEMBER, value.response.data)
+                            Constants.KEY_FAMILYMEMBER, value.result)
                         .then((value) {
                       Navigator.of(_keyLoader.currentContext,
                               rootNavigator: true)
@@ -1080,11 +1081,11 @@ class _MyFamilyState extends State<MyFamily> {
                         selectedRelationShip = null;
                         rebuildFamilyBlock();
                         _familyListBloc
-                            .getFamilyMembersList()
+                            .getFamilyMembersListNew()
                             .then((familyMembersList) {
                           PreferenceUtil.saveFamilyData(
                               Constants.KEY_FAMILYMEMBER,
-                              familyMembersList.response.data);
+                              familyMembersList.result);
                         });
                       });
                     });
@@ -1118,7 +1119,7 @@ class _MyFamilyState extends State<MyFamily> {
   rebuildFamilyBlock() {
     _familyListBloc = null;
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getFamilyMembersListNew();
     _familyListBloc.getCustomRoles();
   }
 }

@@ -15,6 +15,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
@@ -71,8 +72,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   MyProviderViewModel providerViewModel;
   CreateAppointMentViewModel createAppointMentViewModel;
   FamilyListBloc _familyListBloc;
-  FamilyMembersList familyMembersModel = new FamilyMembersList();
-  List<Sharedbyme> sharedbyme = new List();
+  FamilyMembers familyMembersModel = new FamilyMembers();
+  List<SharedByUsers> sharedbyme = new List();
   FlutterToast toast = new FlutterToast();
   FamilyData familyData = new FamilyData();
 
@@ -115,7 +116,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     selectedId = createdBy;
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getFamilyMembersListNew();
 
     _categoryListBlock = null;
     _categoryListBlock = new CategoryListBlock();
@@ -130,14 +131,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     healthRecords.addAll(voiceIds);
   }
 
-  Future<FamilyMembersList> getList() async {
-    _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+  Future<FamilyMembers> getList() async {
+    _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
       familyMembersModel = familyMembersList;
 
       for (int i = 0;
-          i < familyMembersModel.response.data.sharedbyme.length;
+          i < familyMembersModel.result.sharedByUsers.length;
           i++) {
-        sharedbyme.add(familyMembersModel.response.data.sharedbyme[i]);
+        sharedbyme.add(familyMembersModel.result.sharedByUsers[i]);
       }
     });
 

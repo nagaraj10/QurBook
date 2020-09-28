@@ -30,8 +30,7 @@ class UpdateProvidersRepository {
   // Doctors
   Future<UpdateProvidersId> updateDoctorsIdWithUserDetailsNew(
       String providerId, bool isPreferred) async {
-    String userID = CommonConstants.NEW_USER_ID;
-
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     Map<String, String> doctorDic = new Map();
     doctorDic[parameters.id] = providerId;
 
@@ -52,8 +51,7 @@ class UpdateProvidersRepository {
   // Hospitals
   Future<UpdateProvidersId> updateHospitalsIdWithUserDetails(
       String providerId, bool isPreferred) async {
-    // String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    String userID = CommonConstants.NEW_USER_ID;
+    String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     Map<String, String> healthOrganizationDic = new Map();
     healthOrganizationDic[parameters.id] = providerId;
@@ -74,9 +72,7 @@ class UpdateProvidersRepository {
   // Labs
   Future<UpdateProvidersId> updateLabsIdWithUserDetails(
       String providerId, bool isPreferred) async {
-    // String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
-
-    String userID = CommonConstants.NEW_USER_ID;
+    String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     Map<String, String> healthOrganizationDic = new Map();
     healthOrganizationDic[parameters.id] = providerId;

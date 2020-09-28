@@ -127,7 +127,7 @@ class AddProvidersState extends State<AddProviders> {
     updateProvidersBloc = UpdateProvidersBloc();
 
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getFamilyMembersListNew();
 
     _myProfileBloc = new MyProfileBloc();
     _doctorsListBlock = new DoctorsListBlock();
@@ -266,7 +266,7 @@ class AddProvidersState extends State<AddProviders> {
                             _familyListBloc = new FamilyListBloc();
                           }
                           _familyListBloc
-                              .getFamilyMembersList()
+                              .getFamilyMembersListNew()
                               .then((familyMembersList) {
                             // Hide Loading
                             Navigator.of(_keyLoader.currentContext,
@@ -345,8 +345,8 @@ class AddProvidersState extends State<AddProviders> {
     if (widget.arguments.fromClass != router.rt_myprovider) {
       if (widget.arguments.hasData) {
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-          doctorController.text = widget.arguments.data.user.name != null
-              ? toBeginningOfSentenceCase(widget.arguments.data.user.name)
+          doctorController.text = widget.arguments.data.name != null
+              ? toBeginningOfSentenceCase(widget.arguments.data.name)
               : '';
 //          isPreferred = widget.arguments.data.isUserDefined ?? false;
           isPreferred = false;
@@ -460,25 +460,26 @@ class AddProvidersState extends State<AddProviders> {
         addressLine2 = widget.arguments.labsModel.addressLine2;
       }
     }
+    try {
+      setState(() {
+        lastMapPosition = center;
 
-    setState(() {
-      lastMapPosition = center;
+        kGooglePlex = CameraPosition(
+          target: center,
+          zoom: 12,
+        );
 
-      kGooglePlex = CameraPosition(
-        target: center,
-        zoom: 12,
-      );
+        if (latitude != 0.0 && longtiude != 0.0) {
+          addMarker();
+        }
 
-      if (latitude != 0.0 && longtiude != 0.0) {
-        addMarker();
-      }
-
-      if (googleMapControll != null) {
-        googleMapControll.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: center, zoom: 12.0, bearing: 45.0, tilt: 45.0)));
-      }
-    });
+        if (googleMapControll != null) {
+          googleMapControll.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: center, zoom: 12.0, bearing: 45.0, tilt: 45.0)));
+        }
+      });
+    } catch (e) {}
   }
 
   getCurrentLocation() async {
@@ -547,7 +548,10 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   Widget _showUser() {
-    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    MyProfileModel myProfile;
+    try {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    } catch (e) {}
     return InkWell(
         onTap: () {
           if (widget.arguments.fromClass != router.rt_myprovider) {
@@ -558,7 +562,7 @@ class AddProvidersState extends State<AddProviders> {
               _familyListBloc = null;
               _familyListBloc = new FamilyListBloc();
             }
-            _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+            _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
               // Hide Loading
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
@@ -590,17 +594,24 @@ class AddProvidersState extends State<AddProviders> {
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
                   ),
-                  child: myProfile
-                              .result.profilePicThumbnailUrl !=
-                          null
-                      ? getProfilePicWidget(myProfile
-                          .result.profilePicThumbnailUrl)
+                  child: myProfile != null
+                      ? myProfile.result.profilePicThumbnailUrl != null
+                          ? getProfilePicWidget(
+                              myProfile.result.profilePicThumbnailUrl)
+                          : Center(
+                              child: Text(
+                                selectedFamilyMemberName == null
+                                    ? myProfile.result.lastName.toUpperCase()
+                                    : selectedFamilyMemberName[0].toUpperCase(),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            )
                       : Center(
                           child: Text(
-                            selectedFamilyMemberName == null
-                                ? myProfile.result.lastName
-                                    .toUpperCase()
-                                : selectedFamilyMemberName[0].toUpperCase(),
+                            '',
                             style: TextStyle(
                                 fontSize: 14,
                                 color: Color(CommonUtil().getMyPrimaryColor())),
@@ -885,7 +896,7 @@ class AddProvidersState extends State<AddProviders> {
           if (widget.arguments.fromClass == router.rt_myprovider) {
             updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
           } else {
-            updateProvidersBloc.providerId = widget.arguments.data.id;
+            updateProvidersBloc.providerId = widget.arguments.data.doctorId;
           }
 
           updateDoctorsIdWithUserDetails();
@@ -916,7 +927,7 @@ class AddProvidersState extends State<AddProviders> {
           if (widget.arguments.fromClass == router.rt_myprovider) {
             updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
           } else {
-            updateProvidersBloc.providerId = widget.arguments.data.id;
+            updateProvidersBloc.providerId = widget.arguments.data.doctorId;
           }
           updateDoctorsIdWithUserDetails();
         } else if (widget.arguments.searchKeyWord ==
@@ -1177,8 +1188,7 @@ class AddProvidersState extends State<AddProviders> {
         new CommonUtil().getMedicalPreference();
 
         setState(() {
-          selectedFamilyMemberName =
-              profileData.result.firstName;
+          selectedFamilyMemberName = profileData.result.firstName;
         });
       });
     });

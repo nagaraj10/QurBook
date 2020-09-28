@@ -8,17 +8,23 @@ class MyProvidersResponse {
   MyProvidersResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     message = json['message'];
-    result = json['result'] != null
-        ? new MyProvidersResponseData.fromJson(json['result'])
-        : null;
+    if (json.containsKey('diagnostics')) {
+      result = null;
+    } else {
+      result = json['result'] != null
+          ? new MyProvidersResponseData.fromJson(json['result'])
+          : null;
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
+    if (data.containsKey('diagnostics')) {
+      data['result'] = null;
+    } else {
+      if (this.result != null) data['result'] = this.result.toJson();
     }
     return data;
   }
@@ -109,9 +115,11 @@ class MyProvidersResponseData {
     isCpUser = json['isCpUser'];
     communicationPreferences = json['communicationPreferences'];
     medicalPreferences = json['medicalPreferences'];
-    isSignedIn = json['isSignedIn'];
+    try {
+      isSignedIn = json['isSignedIn'];
+      createdBy = json['createdBy'];
+    } catch (e) {}
     isActive = json['isActive'];
-    createdBy = json['createdBy'];
     createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];

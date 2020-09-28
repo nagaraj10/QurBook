@@ -144,10 +144,10 @@ class SwitchProfile {
       GlobalKey<State> _keyLoader, GlobalKey<ScaffoldState> scaffold_state) {
     new FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
-        _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+        _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
           if (familyMembersList.response.data != null) {
             PreferenceUtil.saveFamilyData(
-                Constants.KEY_FAMILYMEMBER, familyMembersList.response.data);
+                Constants.KEY_FAMILYMEMBER, familyMembersList.result);
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
             getDialogBoxWithFamilyMemberScrap(familyMembersList.response.data);
           } else {

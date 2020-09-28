@@ -230,7 +230,7 @@ class PreferenceUtil {
   //save family data to preference
 
   static Future<bool> saveFamilyData(
-      String keyFamily, FamilyData familyData) async {
+      String keyFamily, FamilyMemberResult familyData) async {
     var instance = await _prefs;
 
     try {
