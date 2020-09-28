@@ -127,7 +127,7 @@ class AddProvidersState extends State<AddProviders> {
     updateProvidersBloc = UpdateProvidersBloc();
 
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getFamilyMembersListNew();
 
     _myProfileBloc = new MyProfileBloc();
     _doctorsListBlock = new DoctorsListBlock();
@@ -266,7 +266,7 @@ class AddProvidersState extends State<AddProviders> {
                             _familyListBloc = new FamilyListBloc();
                           }
                           _familyListBloc
-                              .getFamilyMembersList()
+                              .getFamilyMembersListNew()
                               .then((familyMembersList) {
                             // Hide Loading
                             Navigator.of(_keyLoader.currentContext,
@@ -345,8 +345,8 @@ class AddProvidersState extends State<AddProviders> {
     if (widget.arguments.fromClass != router.rt_myprovider) {
       if (widget.arguments.hasData) {
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-          doctorController.text = widget.arguments.data.user.name != null
-              ? toBeginningOfSentenceCase(widget.arguments.data.user.name)
+          doctorController.text = widget.arguments.data.name != null
+              ? toBeginningOfSentenceCase(widget.arguments.data.name)
               : '';
 //          isPreferred = widget.arguments.data.isUserDefined ?? false;
           isPreferred = false;
@@ -562,7 +562,7 @@ class AddProvidersState extends State<AddProviders> {
               _familyListBloc = null;
               _familyListBloc = new FamilyListBloc();
             }
-            _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+            _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
               // Hide Loading
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
@@ -896,7 +896,7 @@ class AddProvidersState extends State<AddProviders> {
           if (widget.arguments.fromClass == router.rt_myprovider) {
             updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
           } else {
-            updateProvidersBloc.providerId = widget.arguments.data.id;
+            updateProvidersBloc.providerId = widget.arguments.data.doctorId;
           }
 
           updateDoctorsIdWithUserDetails();
@@ -927,7 +927,7 @@ class AddProvidersState extends State<AddProviders> {
           if (widget.arguments.fromClass == router.rt_myprovider) {
             updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
           } else {
-            updateProvidersBloc.providerId = widget.arguments.data.id;
+            updateProvidersBloc.providerId = widget.arguments.data.doctorId;
           }
           updateDoctorsIdWithUserDetails();
         } else if (widget.arguments.searchKeyWord ==

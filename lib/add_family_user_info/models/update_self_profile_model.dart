@@ -8,7 +8,8 @@ class UpdateSelfProfileModel {
   UpdateSelfProfileModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     message = json['message'];
-    result = json['result'] != null ? new Result.fromJson(json['result']) : null;
+    result =
+        json['result'] != null ? new Result.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {

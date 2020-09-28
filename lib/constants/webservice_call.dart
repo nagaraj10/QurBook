@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:myfhb/common/CommonConstants.dart';
@@ -5,6 +6,8 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as variable;
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
 
 class WebserviceCall {
   String getQueryToUpdateDoctor(bool isPreferred, String providerId) {
@@ -27,6 +30,13 @@ class WebserviceCall {
     return query;
   }
 
+  String getQueryDoctorUpdate(String userID) {
+    String query;
+    query =
+        '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_sections}${variable.qr_generalInfo}';
+
+    return query;
+  }
 
   String getUrlToUpdateDoctorNew(String userID) {
     String query;
@@ -178,12 +188,14 @@ class WebserviceCall {
 
   String getQueryForUserUpdate(String userID) {
     String query;
-    query = '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_section}${variable.qr_generalInfo}';
+    query =
+        '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_section}${variable.qr_generalInfo}';
 
     return query;
   }
 
-  String makeJsonForUpdateProfile(String userID,
+  String makeJsonForUpdateProfile(
+      String userID,
       String name,
       String phoneNo,
       String email,
@@ -198,8 +210,8 @@ class WebserviceCall {
       String stateId,
       String addressLine1,
       String addressLine2,
-      String zipcode){
-
+      String zipcode,
+      MyProfileModel myProfileModel) {
     var input = {};
     input[variable.qr_gender_p] = gender;
     input[variable.qr_bloodgroup_p] = bloodGroup;
@@ -209,5 +221,24 @@ class WebserviceCall {
     input[variable.qr_middleName_p] = middleName;
     input[variable.qr_lastname_p] = lastName;
     input[variable.qr_email_p] = email;
+    var query = json.encode(input);
+
+    MyProfileResult profileResult = myProfileModel.result;
+
+    var queryProfile = profileResult.toJson();
+    var profilequery = json.encode(queryProfile);
+    profilequery = profilequery.replaceAll('\n', '');
+
+    return profilequery.toString();
+  }
+
+  String getQueryForPostUserDelinkingNew() {
+    String query = '';
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    query =
+        "${variable.qr_userlinking}${variable.qr_slash}${variable.qr_delink}";
+
+    return query;
   }
 }

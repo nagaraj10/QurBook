@@ -11,6 +11,8 @@ import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/constants/webservice_call.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/city_list_model.dart';
+import 'package:myfhb/src/model/user/state_list_model.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
 class AddFamilyUserInfoRepository {
@@ -18,8 +20,7 @@ class AddFamilyUserInfoRepository {
   WebserviceCall webserviceCall = new WebserviceCall();
 
   Future<RelationShipResponseList> getCustomRoles() async {
-    final response =
-        await _helper.getCustomRoles(query.qr_customRole);
+    final response = await _helper.getCustomRoles(query.qr_customRole);
     return RelationShipResponseList.fromJson(response);
   }
 
@@ -121,7 +122,8 @@ class AddFamilyUserInfoRepository {
       String addressLine1,
       String addressLine2,
       String zipcode,
-      bool fromFamily) async {
+      bool fromFamily,
+      MyProfileModel myProfileModel) async {
     String query = '';
 
     var response;
@@ -150,7 +152,7 @@ class AddFamilyUserInfoRepository {
           webserviceCall.getUrlToUpdateDoctor(userID));
     } else {
       response = await _helper.updateSelfProfileNew(
-          webserviceCall.getUrlToUpdateDoctor(userID),
+          webserviceCall.getQueryDoctorUpdate(userID),
           webserviceCall.makeJsonForUpdateProfile(
               userID,
               name,
@@ -167,7 +169,8 @@ class AddFamilyUserInfoRepository {
               stateId,
               addressLine1,
               addressLine2,
-              zipcode));
+              zipcode,
+              myProfileModel));
     }
 
     return UpdateSelfProfileModel.fromJson(response);
@@ -258,9 +261,15 @@ class AddFamilyUserInfoRepository {
     return VerifyEmailResponse.fromJson(response);
   }
 
-  Future<CityListModel> getValuesBaseOnSearch(
+  Future<CityModel> getValuesBaseOnSearch(
       String cityname, String apibody) async {
     var response = await _helper.getValueBasedOnSearch(cityname, apibody);
-    return CityListModel.fromJson(response);
+    return CityModel.fromJson(response);
+  }
+
+  Future<StateModel> getStateValuesBaseOnSearch(
+      String stateName, String apibody) async {
+    var response = await _helper.getValueBasedOnSearch(stateName, apibody);
+    return StateModel.fromJson(response);
   }
 }

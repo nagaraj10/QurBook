@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -37,8 +39,7 @@ class FamilyMemberListRepository {
   }
 
   Future<RelationShipResponseList> getCustomRoles() async {
-    final response =
-        await _helper.getCustomRoles(query.qr_customRole);
+    final response = await _helper.getCustomRoles(query.qr_customRole);
     return RelationShipResponseList.fromJson(response);
   }
 
@@ -57,7 +58,7 @@ class FamilyMemberListRepository {
 
   Future<UserDeLinkingResponseList> postUserDeLinking(String jsonString) async {
     final response = await _helper.addUserDeLinking(
-        webserviceCall.getQueryForPostUserDelinking(), jsonString);
+        webserviceCall.getQueryForPostUserDelinkingNew(), jsonString);
     return UserDeLinkingResponseList.fromJson(response);
   }
 }

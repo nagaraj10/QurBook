@@ -56,14 +56,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
   Widget getProfileDetailClone() {
     Widget profileWidget;
     MyProfileModel myProfile;
-    try{
-       myProfile =
-      PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    try {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
       profileWidget = getProfileWidget(myProfile.result);
-    }catch(e){
+    } catch (e) {
       profileWidget = getProfileWidget(null);
     }
-
 
     return profileWidget;
   }
@@ -85,7 +83,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           }
         }
       } else {
-        var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
+        var bloodGroupSplitName = selectedBloodGroupClone.split('');
         if (bloodGroupSplitName.length > 1) {
           for (String bloodGroup in variable.bloodGroupArray) {
             if (bloodGroupSplitName[0] == bloodGroup) {
@@ -104,7 +102,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   }
 
   Widget getProfileWidget(MyProfileResult data) {
-    if(data!=null) {
+    if (data != null) {
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3.length > 0) {
           mobile.text = data.userContactCollection3[0].phoneNumber;
@@ -112,8 +110,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
       }
       if (data != null) {
         name.text = toBeginningOfSentenceCase(
-            data.firstName.toLowerCase() +
-                data.lastName.toLowerCase());
+            data.firstName.toLowerCase() + data.lastName.toLowerCase());
       }
       if (data.userContactCollection3 != null) {
         if (data.userContactCollection3.length > 0) {
@@ -121,29 +118,22 @@ class _MyProfilePageState extends State<MyProfilePage> {
         }
       }
       if (data.gender != null) {
-        gender.text =
-            toBeginningOfSentenceCase(data.gender.toLowerCase());
+        gender.text = toBeginningOfSentenceCase(data.gender.toLowerCase());
       }
       if (data.bloodGroup != null) {
         renameBloodGroup(data.bloodGroup);
       }
       if (data.dateOfBirth != null) {
-        dob.text =
-            new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth);
+        dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth);
       }
       if (data != null) {
         firstName.text = data.firstName;
-        middleName.text =
-        (data.middleName != null &&
-            data.middleName != '')
+        middleName.text = (data.middleName != null && data.middleName != '')
             ? data.middleName
             : '';
         lastName.text = data.lastName;
       } else {
-        firstName.text = data != null
-            ? data.firstName +
-            data.lastName
-            : '';
+        firstName.text = data != null ? data.firstName + data.lastName : '';
         middleName.text = '';
         lastName.text = '';
       }

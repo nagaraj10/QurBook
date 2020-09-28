@@ -1,3 +1,5 @@
+import 'package:myfhb/src/model/user/State.dart';
+
 import 'AddressTypeModel.dart';
 
 class UserAddressCollection3 {
@@ -15,16 +17,16 @@ class UserAddressCollection3 {
 
   UserAddressCollection3(
       {this.id,
-        this.addressLine1,
-        this.addressLine2,
-        this.pincode,
-        this.isPrimary,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.addressType,
-        this.city,
-        this.state});
+      this.addressLine1,
+      this.addressLine2,
+      this.pincode,
+      this.isPrimary,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.addressType,
+      this.city,
+      this.state});
 
   UserAddressCollection3.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -64,6 +66,7 @@ class UserAddressCollection3 {
     return data;
   }
 }
+
 class City {
   String id;
   String name;
@@ -86,43 +89,6 @@ class City {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    return data;
-  }
-}
-
-class State {
-  String id;
-  String name;
-  String countryCode;
-  bool isActive;
-  String createdOn;
-  String lastModifiedOn;
-
-  State(
-      {this.id,
-        this.name,
-        this.countryCode,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn});
-
-  State.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    countryCode = json['countryCode'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    lastModifiedOn = json['lastModifiedOn'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['countryCode'] = this.countryCode;
     data['isActive'] = this.isActive;
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;

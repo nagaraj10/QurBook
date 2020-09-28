@@ -163,10 +163,9 @@ class ApiBaseHelper {
     Dio dio = new Dio();
     dio.options.headers[variable.straccept] = variable.strAcceptVal;
     dio.options.headers[variable.strAuthorization] =
-        CommonConstants.NEW_AUTH_TOKEN;
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
-    var response =
-        await dio.put(CommonConstants.NEW_BASE_URL + url, data: jsonString);
+    var response = await dio.put(_baseUrl + url, data: jsonString);
     print(response.data);
 
     return response.data;
@@ -177,7 +176,7 @@ class ApiBaseHelper {
 
     var responseJson;
     try {
-      final response = await http.get(CommonConstants.NEW_BASE_URL + url,
+      final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersForSearch());
 
       responseJson = _returnResponse(response);
@@ -1110,9 +1109,7 @@ class ApiBaseHelper {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var response = await http.get(
-      (apiname == 'qualification' || apiname == 'city' || apiname == 'state')
-          ? '$_baseUrl$apiname?isSearch=true&searchData=$name'
-          : '$_baseUrl/doctors/professional/search?type=$apiname&isSearch=true&data=$name',
+      '$_baseUrl$apiname/search/$name',
       headers: {HttpHeaders.authorizationHeader: authToken},
     );
     if (response.statusCode == 200) {
@@ -1153,8 +1150,9 @@ class ApiBaseHelper {
   Future<dynamic> updateSelfProfileNew(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response =
-          await http.put(_baseUrl + url, body: jsonBody, headers: await headerRequest.getRequestHeadersAuthContent());
+      final response = await http.put(_baseUrl + url,
+          body: jsonBody,
+          headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
