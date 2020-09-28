@@ -42,15 +42,19 @@ class AuthViewModel extends ChangeNotifier {
     return resend;
   }
 
-  Future<PatientForgotPasswordModel> resetPassword(Map<String, dynamic> params) async {
+  Future<PatientForgotPasswordModel> resetPassword(
+      Map<String, dynamic> params) async {
     var resetResponse = await _authService.forgotPasswordservice(params);
-    PatientForgotPasswordModel reset = PatientForgotPasswordModel.fromJson(resetResponse);
+    PatientForgotPasswordModel reset =
+        PatientForgotPasswordModel.fromJson(resetResponse);
     return reset;
   }
 
-  Future<PatientConfirmPasswordModel> confirmPassword(Map<String, dynamic> params) async {
+  Future<PatientConfirmPasswordModel> confirmPassword(
+      Map<String, dynamic> params) async {
     var resetResponse = await _authService.forgotConfirmPasswordservice(params);
-    PatientConfirmPasswordModel reset = PatientConfirmPasswordModel.fromJson(resetResponse);
+    PatientConfirmPasswordModel reset =
+        PatientConfirmPasswordModel.fromJson(resetResponse);
     return reset;
   }
 }
