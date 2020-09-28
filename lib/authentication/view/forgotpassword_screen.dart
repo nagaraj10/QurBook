@@ -66,7 +66,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       SizedBox(height: 10),
                       _resetbutton(),
                       SizedBox(height: height * .015),
-                      _gotosignintap(),
+                     // _gotosignintap(),
                     ],
                   ),
                 ),
@@ -150,7 +150,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           Map<String, dynamic> map = logInModel.toJson();
           forgotPasswordModel.PatientForgotPasswordModel response =
               await authViewModel.resetPassword(map);
-          print(response.toString());
           _checkResponse(response);
         } else {
           setState(() {
