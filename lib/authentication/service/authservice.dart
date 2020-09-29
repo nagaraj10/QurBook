@@ -75,6 +75,47 @@ class AuthService {
     }
   }
 
+  Future<dynamic> forgotPasswordservice(Map<String, dynamic> params) async {
+    try {
+      final response = await http.post(
+        _auth_base_url + strKeyForgotPassword,
+        headers: <String, String>{
+          c_content_type_key: c_content_type_val,
+        },
+        body: jsonEncode(params),
+      );
+      if (response.statusCode == 200) {
+        var responseResult = jsonDecode(response.body);
+        return responseResult;
+      } else {
+        return createErrorJsonString(response);
+      }
+    } on SocketException {
+      return spocketException();
+    }
+  }
+
+  Future<dynamic> forgotConfirmPasswordservice(
+      Map<String, dynamic> params) async {
+    try {
+      final response = await http.post(
+        _auth_base_url + strKeyConfirmForgotPassword,
+        headers: <String, String>{
+          c_content_type_key: c_content_type_val,
+        },
+        body: jsonEncode(params),
+      );
+      if (response.statusCode == 200) {
+        var responseResult = jsonDecode(response.body);
+        return responseResult;
+      } else {
+        return createErrorJsonString(response);
+      }
+    } on SocketException {
+      return spocketException();
+    }
+  }
+
   Future<dynamic> verifyPatientService(Map<String, dynamic> params) async {
     try {
       final response = await http.post(

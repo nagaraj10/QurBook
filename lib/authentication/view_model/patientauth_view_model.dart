@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/authentication/model/confirm_password_model.dart';
+import 'package:myfhb/authentication/model/forgot_password_model.dart';
 import 'package:myfhb/authentication/model/patientverify_model.dart';
 import 'package:myfhb/authentication/model/patientlogin_model.dart';
 import 'package:myfhb/authentication/model/patientsignup_model.dart';
@@ -38,5 +40,21 @@ class AuthViewModel extends ChangeNotifier {
     var resendResponse = await _authService.resendOtpservice(params);
     ResendOtpModel resend = ResendOtpModel.fromJson(resendResponse);
     return resend;
+  }
+
+  Future<PatientForgotPasswordModel> resetPassword(
+      Map<String, dynamic> params) async {
+    var resetResponse = await _authService.forgotPasswordservice(params);
+    PatientForgotPasswordModel reset =
+        PatientForgotPasswordModel.fromJson(resetResponse);
+    return reset;
+  }
+
+  Future<PatientConfirmPasswordModel> confirmPassword(
+      Map<String, dynamic> params) async {
+    var resetResponse = await _authService.forgotConfirmPasswordservice(params);
+    PatientConfirmPasswordModel reset =
+        PatientConfirmPasswordModel.fromJson(resetResponse);
+    return reset;
   }
 }
