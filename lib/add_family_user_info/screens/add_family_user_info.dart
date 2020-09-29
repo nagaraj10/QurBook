@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
@@ -25,6 +26,7 @@ import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
+import 'package:myfhb/src/model/user/AddressTypeModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
@@ -76,7 +78,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
   bool isCalled = false;
   List<RelationsShipCollection> relationShipResponseList;
-  RelationShip selectedRelationShip;
+  RelationsShipCollection selectedRelationShip;
 
   DateTime dateTime = DateTime.now();
   MyProfileModel myProfile;
@@ -106,6 +108,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   var cntrlr_addr_city = TextEditingController();
   var cntrlr_addr_state = TextEditingController();
   var cntrlr_addr_zip = TextEditingController();
+
+  var dialogContext;
 
   String strErrorMsg = '';
   CommonUtil commonUtil = new CommonUtil();
@@ -160,14 +164,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     } catch (e) {}
 
-    /* if (widget.arguments.fromClass == CommonConstants.my_family) {
+    if (widget.arguments.fromClass == CommonConstants.my_family) {
       for (var i = 0; i < relationShipResponseList.length; i++) {
-        // if (relationShipResponseList[i].roleName ==
-        //     widget.arguments.sharedbyme.linkedData.roleName) {
-        //   selectedRelationShip = relationShipResponseList[i];
-        // }
+        if (relationShipResponseList[i].name ==
+            widget.arguments.sharedbyme.relationship.name) {
+          selectedRelationShip = relationShipResponseList[i];
+        }
       }
-    }*/
+    }
     String profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
     if (profilebanner != null) {
@@ -224,8 +228,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 ? widget.arguments.sharedbyme.child.middleName
                 : '';
         lastNameController.text =
-            widget.arguments.myProfileResult.lastName != null
-                ? widget.arguments.myProfileResult.lastName
+            widget.arguments.sharedbyme.child.lastName != null
+                ? widget.arguments.sharedbyme.child.lastName
                 : '';
       } else {
         firstNameController.text = '';
@@ -252,7 +256,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       updateProfile = true;
-      addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult
+      addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.child
           .id; //widget.arguments.addFamilyUserInfo.id;
 
       if (widget.arguments.fromClass == CommonConstants.user_update) {
@@ -591,6 +595,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    dialogContext = context;
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
@@ -1214,19 +1219,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               relationShipResponseList =
                   snapshot.data.data.result[0].referenceValueCollection;
 
-              if (widget.arguments.fromClass == CommonConstants.my_family) {
-                for (var i = 0;
-                    i <
-                        snapshot.data.data.result[0].referenceValueCollection
-                            .length;
-                    i++) {
-                  // if (snapshot.data.data.relationShipAry[i].roleName ==
-                  //     widget.arguments.sharedbyme.linkedData.roleName) {
-                  //   selectedRelationShip =
-                  //       snapshot.data.data.relationShipAry[i];
-                  // }
-                }
-              }
+              // if (widget.arguments.fromClass == CommonConstants.my_family) {
+              //   for (var i = 0;
+              //       i <
+              //           snapshot.data.data.result[0].referenceValueCollection
+              //               .length;
+              //       i++) {
+              //     if (snapshot.data.data.result[0].name ==
+              //         widget.arguments.sharedbyme.relationship.name) {
+              //       selectedRelationShip =
+              //           snapshot.data.data.result[0].name;
+              //     }
+              //   }
+              // }
 
               familyWidget = getRelationshipDetails(
                   snapshot.data.data.result[0].referenceValueCollection);
@@ -1390,211 +1395,148 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     new FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
         //address fields validation
-        addFamilyUserInfoBloc.name = firstNameController.text;
-        addFamilyUserInfoBloc.email = emailController.text;
-        addFamilyUserInfoBloc.gender =
-            toBeginningOfSentenceCase(selectedGender.toLowerCase());
-        addFamilyUserInfoBloc.dateOfBirth = dateofBirthStr;
-
-        if (selectedBloodGroup != null && selectedBloodRange != null) {
-          addFamilyUserInfoBloc.bloodGroup =
-              selectedBloodGroup + '' + selectedBloodRange;
-        }
-
-        addFamilyUserInfoBloc.profilePic = imageURI;
-
-        addFamilyUserInfoBloc.firstName = firstNameController.text;
-        addFamilyUserInfoBloc.middleName = middleNameController.text;
-        addFamilyUserInfoBloc.lastName = lastNameController.text;
-
-        addFamilyUserInfoBloc.profileBanner = MySliverAppBar.imageURIProfile;
-
-        addFamilyUserInfoBloc.addressLine1 = cntrlr_addr_one.text;
-        addFamilyUserInfoBloc.addressLine2 = cntrlr_addr_two.text;
-        addFamilyUserInfoBloc.stateId = stateVal.id;
-        addFamilyUserInfoBloc.cityId = cityVal.id;
-        addFamilyUserInfoBloc.zipcode = cntrlr_addr_zip.text;
-
-        MyProfileModel myProf =
-            PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-
-        MyProfileResult profileResult = myProf.result;
-        profileResult.firstName = firstNameController.text;
-        profileResult.middleName = middleNameController.text;
-        profileResult.lastName = lastNameController.text;
-        profileResult.firstName = firstNameController.text;
-        if (selectedBloodGroup != null && selectedBloodRange != null) {
-          profileResult.bloodGroup =
-              selectedBloodGroup + ' ' + selectedBloodRange;
-        }
-        profileResult.userAddressCollection3[0].pincode = cntrlr_addr_zip.text;
-        profileResult.userAddressCollection3[0].addressLine1 =
-            cntrlr_addr_one.text;
-        profileResult.userAddressCollection3[0].addressLine2 =
-            cntrlr_addr_two.text;
-        profileResult.userAddressCollection3[0].state = stateVal;
-        profileResult.userAddressCollection3[0].city = new City(
-            id: cityVal.id,
-            isActive: cityVal.isActive,
-            name: cityVal.name,
-            createdOn: cityVal.createdOn,
-            lastModifiedOn: cityVal.lastModifiedOn);
-
-        profileResult.dateOfBirth = dateOfBirthController.text;
-        addFamilyUserInfoBloc.myProfileModel = myProf;
-
-        FamilyListBloc _familyListBloc = new FamilyListBloc();
-
-        if (widget.arguments.fromClass == CommonConstants.my_family) {
-          addFamilyUserInfoBloc.relationship = selectedRelationShip.roleName;
-          addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.id;
-          addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
-
-          if (doValidation()) {
-            if (addFamilyUserInfoBloc.profileBanner != null) {
-              PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                  addFamilyUserInfoBloc.profileBanner.path);
-            }
-            CommonUtil.showLoadingDialog(
-                context, _keyLoader, variable.Please_Wait); //
-
-            var signInData = {};
-            signInData[variable.strCountryCode] =
-                widget.arguments.sharedbyme.child.countryCode;
-            signInData[variable.strPhoneNumber] = mobileNoController.text;
-            signInData[variable.strFirstName] = firstNameController.text;
-            signInData[variable.strMiddleName] =
-                middleNameController.text.length == 0
-                    ? ''
-                    : middleNameController.text;
-            signInData[variable.strLastName] = lastNameController.text;
-            signInData[variable.strRelation] = selectedRelationShip.id;
-            var jsonString = convert.jsonEncode(signInData);
-            print(jsonString);
-
-            addFamilyUserInfoBloc.relationshipJsonString = jsonString;
-
-            // 1
-            addFamilyUserInfoBloc.updateUserRelationShip().then((value) {
-              if (value.success && value.status == 200) {
-                // 2
-                addFamilyUserInfoBloc.updateUserProfile(false).then((value) {
-                  if (value.success && value.status == 200) {
-                    _familyListBloc.getFamilyMembersListNew().then((value) {
-                      PreferenceUtil.saveFamilyData(
-                              Constants.KEY_FAMILYMEMBER, value.result)
-                          .then((value) {
-                        //saveProfileImage();
-                        MySliverAppBar.imageURI = null;
-                        fetchedProfileData = null;
-                        imageURI = null;
-
-                        Navigator.popUntil(context, (Route<dynamic> route) {
-                          bool shouldPop = false;
-                          if (route.settings.name == router.rt_UserAccounts) {
-                            shouldPop = true;
-                          }
-                          return shouldPop;
-                        });
-                      });
-                    });
-                  }
-                });
-              }
-            });
-          } else {
-            Alert.displayAlertPlain(context,
-                title: variable.strError,
-                content: CommonConstants.all_fields_mandatory);
+        if (_formkey.currentState.validate()) {
+          /* addFamilyUserInfoBloc.name = firstNameController.text;
+          addFamilyUserInfoBloc.email = emailController.text;
+          if (selectedGender != null) {
+            addFamilyUserInfoBloc.gender =
+                toBeginningOfSentenceCase(selectedGender.toLowerCase());
           }
-        } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-          if (_formkey.currentState.validate()) {
-            if (doValidation()) {
-              CommonUtil.showLoadingDialog(
-                  context, _keyLoader, variable.Please_Wait);
 
-              addFamilyUserInfoBloc.updateSelfProfile(true).then((value) {
-                if (value != null && value.isSuccess) {
-                  saveProfileImage();
-                  getUserProfileData();
-                } else {
-                  Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                      .pop();
+          addFamilyUserInfoBloc.dateOfBirth = dateofBirthStr;
 
-                  Navigator.popUntil(context, (Route<dynamic> route) {
-                    bool shouldPop = false;
-                    if (route.settings.name == router.rt_UserAccounts) {
-                      shouldPop = true;
-                    }
-                    return shouldPop;
-                  });
-                }
-              });
-            } else {
-              showDialog(
-                  context: context,
-                  child: new AlertDialog(
-                    title: new Text(variable.strAPP_NAME),
-                    content: new Text(strErrorMsg),
-                  ));
-            }
+          if (selectedBloodGroup != null && selectedBloodRange != null) {
+            addFamilyUserInfoBloc.bloodGroup =
+                selectedBloodGroup + '' + selectedBloodRange;
           }
-        } else {
-          addFamilyUserInfoBloc.userId = widget.arguments.id;
-          addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
-          addFamilyUserInfoBloc.relationship = relationShipController.text;
 
-          MyProfileModel myProf = new MyProfileModel();
+          addFamilyUserInfoBloc.profilePic = imageURI;
 
-          MyProfileResult profileResult = new MyProfileResult();
+          addFamilyUserInfoBloc.firstName = firstNameController.text;
+          addFamilyUserInfoBloc.middleName = middleNameController.text;
+          addFamilyUserInfoBloc.lastName = lastNameController.text;
+
+          addFamilyUserInfoBloc.profileBanner = MySliverAppBar.imageURIProfile;
+
+          addFamilyUserInfoBloc.addressLine1 = cntrlr_addr_one.text;
+          addFamilyUserInfoBloc.addressLine2 = cntrlr_addr_two.text;
+          addFamilyUserInfoBloc.stateId = stateVal.id;
+          addFamilyUserInfoBloc.cityId = cityVal.id;
+          addFamilyUserInfoBloc.zipcode = cntrlr_addr_zip.text;
+
+          MyProfileModel myProf =
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+
+          MyProfileResult profileResult = myProf.result;
           profileResult.firstName = firstNameController.text;
           profileResult.middleName = middleNameController.text;
           profileResult.lastName = lastNameController.text;
-          profileResult.dateOfBirth = dateOfBirthController.text;
-          profileResult.id = widget.arguments.id;
 
           if (selectedBloodGroup != null && selectedBloodRange != null) {
             profileResult.bloodGroup =
                 selectedBloodGroup + ' ' + selectedBloodRange;
           }
-          UserAddressCollection3 userAddressCollection3 =
-              new UserAddressCollection3();
-          userAddressCollection3.id = '65bd984d-1d69-4d90-9569-b807bc080d3c';
-          userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
-          userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
-          userAddressCollection3.pincode = cntrlr_addr_zip.text;
-          userAddressCollection3.city = new City(
+          profileResult.userAddressCollection3[0].pincode =
+              cntrlr_addr_zip.text;
+          profileResult.userAddressCollection3[0].addressLine1 =
+              cntrlr_addr_one.text;
+          profileResult.userAddressCollection3[0].addressLine2 =
+              cntrlr_addr_two.text;
+          profileResult.userAddressCollection3[0].isPrimary= true;    
+          profileResult.userAddressCollection3[0].isActive= true;    
+          profileResult.userAddressCollection3[0].createdOn= ''; //FIXME this must be actual value
+          profileResult.userAddressCollection3[0].lastModifiedOn= ''; //FIXME this must be actual value
+          profileResult.userAddressCollection3[0].createdBy= ''; //FIXME this must be actual value
+
+          profileResult.userAddressCollection3[0].state = stateVal;
+          profileResult.userAddressCollection3[0].city = new City(
               id: cityVal.id,
               isActive: cityVal.isActive,
               name: cityVal.name,
               createdOn: cityVal.createdOn,
               lastModifiedOn: cityVal.lastModifiedOn);
-          userAddressCollection3.state = stateVal;
-          List<UserAddressCollection3> userAddressCollection3List = new List();
-          userAddressCollection3List.add(userAddressCollection3);
-          profileResult.userAddressCollection3 = userAddressCollection3List;
 
-          myProf.result = profileResult;
-          addFamilyUserInfoBloc.myProfileModel = myProf;
+          profileResult.dateOfBirth = dateOfBirthController.text;
+          addFamilyUserInfoBloc.myProfileModel = myProf; */
 
-          if (doValidation()) {
-            if (addFamilyUserInfoBloc.profileBanner != null) {
-              PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                  addFamilyUserInfoBloc.profileBanner.path);
+          FamilyListBloc _familyListBloc = new FamilyListBloc();
+
+          if (widget.arguments.fromClass == CommonConstants.my_family) {
+            addFamilyUserInfoBloc.relationship = selectedRelationShip.name;
+            addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.child.id;
+            addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
+
+            if (doValidation()) {
+              if (addFamilyUserInfoBloc.profileBanner != null) {
+                PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+                    addFamilyUserInfoBloc.profileBanner.path);
+              }
+              CommonUtil.showLoadingDialog(
+                  context, _keyLoader, variable.Please_Wait); //
+
+              var signInData = {};
+              signInData[variable.strCountryCode] =
+                  widget.arguments.sharedbyme.child.countryCode;
+              signInData[variable.strPhoneNumber] = mobileNoController.text;
+              signInData[variable.strFirstName] = firstNameController.text;
+              signInData[variable.strMiddleName] =
+                  middleNameController.text.length == 0
+                      ? ''
+                      : middleNameController.text;
+              signInData[variable.strLastName] = lastNameController.text;
+              signInData[variable.strRelation] = selectedRelationShip.id;
+              var jsonString = convert.jsonEncode(signInData);
+              print(jsonString);
+
+              addFamilyUserInfoBloc.relationshipJsonString = jsonString;
+
+              // 1
+              addFamilyUserInfoBloc.updateUserRelationShip().then((value) {
+                if (value.success && value.status == 200) {
+                  // 2
+                  addFamilyUserInfoBloc.updateUserProfile(false).then((value) {
+                    if (value.success && value.status == 200) {
+                      _familyListBloc.getFamilyMembersListNew().then((value) {
+                        PreferenceUtil.saveFamilyData(
+                                Constants.KEY_FAMILYMEMBER, value.result)
+                            .then((value) {
+                          //saveProfileImage();
+                          MySliverAppBar.imageURI = null;
+                          fetchedProfileData = null;
+                          imageURI = null;
+
+                          Navigator.popUntil(context, (Route<dynamic> route) {
+                            bool shouldPop = false;
+                            if (route.settings.name == router.rt_UserAccounts) {
+                              shouldPop = true;
+                            }
+                            return shouldPop;
+                          });
+                        });
+                      });
+                    }
+                  });
+                }
+              });
+            } else {
+              Alert.displayAlertPlain(context,
+                  title: variable.strError,
+                  content: CommonConstants.all_fields_mandatory);
             }
-            CommonUtil.showLoadingDialog(
-                context, _keyLoader, variable.Please_Wait); //
+          } else if (widget.arguments.fromClass ==
+              CommonConstants.user_update) {
+            if (_formkey.currentState.validate()) {
+              if (doValidation()) {
+                CommonUtil.showLoadingDialog(
+                    context, _keyLoader, variable.Please_Wait);
 
-            addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
-              if (value != null && value.isSuccess) {
-                _familyListBloc.getFamilyMembersListNew().then((value) {
-                  PreferenceUtil.saveFamilyData(
-                          Constants.KEY_FAMILYMEMBER, value.result)
-                      .then((value) {
-                    //saveProfileImage();
-                    MySliverAppBar.imageURI = null;
-                    fetchedProfileData = null;
-                    imageURI = null;
+                addFamilyUserInfoBloc.updateSelfProfile(true).then((value) {
+                  if (value != null && value.isSuccess) {
+                    saveProfileImage();
+                    getUserProfileData();
+                  } else {
+                    Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                        .pop();
 
                     Navigator.popUntil(context, (Route<dynamic> route) {
                       bool shouldPop = false;
@@ -1603,15 +1545,135 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       }
                       return shouldPop;
                     });
-                  });
+                  }
                 });
+              } else {
+                showDialog(
+                    context: context,
+                    child: new AlertDialog(
+                      title: new Text(variable.strAPP_NAME),
+                      content: new Text(strErrorMsg),
+                    ));
               }
-            });
+            }
           } else {
-            Alert.displayAlertPlain(context,
-                title: variable.Error,
-                content: CommonConstants.all_fields_mandatory);
+            addFamilyUserInfoBloc.userId = widget.arguments.id;
+            addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
+            addFamilyUserInfoBloc.relationship = relationShipController.text;
+
+            MyProfileModel myProf = new MyProfileModel();
+
+            MyProfileResult profileResult = new MyProfileResult();
+            profileResult.firstName = firstNameController.text;
+            profileResult.middleName = middleNameController.text;
+            profileResult.lastName = lastNameController.text;
+            profileResult.dateOfBirth = dateOfBirthController.text;
+            profileResult.id = widget.arguments.id;
+            profileResult.isIeUser = false;
+            profileResult.isCpUser = false;
+            profileResult.isSignedIn = false;
+            profileResult.isActive = true;
+            // profileResult.createdBy=null;
+            // profileResult.createdOn=null;
+            profileResult.lastModifiedBy = null;
+            profileResult.lastModifiedOn = null;
+
+            if (selectedBloodGroup != null && selectedBloodRange != null) {
+              profileResult.bloodGroup =
+                  selectedBloodGroup + ' ' + selectedBloodRange;
+            }
+            UserAddressCollection3 userAddressCollection3 =
+                new UserAddressCollection3();
+            //userAddressCollection3.id = null;
+            userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
+            userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
+            userAddressCollection3.pincode = cntrlr_addr_zip.text;
+            userAddressCollection3.city = new City(
+                id: cityVal.id,
+                isActive: cityVal.isActive,
+                name: cityVal.name,
+                createdOn: cityVal.createdOn,
+                lastModifiedOn: cityVal.lastModifiedOn);
+            userAddressCollection3.state = stateVal;
+
+            userAddressCollection3.isPrimary = true;
+            userAddressCollection3.isActive = true;
+            userAddressCollection3.createdOn =
+                DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+            userAddressCollection3.lastModifiedOn = null;
+            userAddressCollection3.createdBy = widget.arguments.id;
+            userAddressCollection3.addressType = AddressType(
+              // TODO this would be com from drop down
+              id: '02b0eeab-f7ec-48d1-8ba3-a6cf9acbc46c',
+              code: 'WRKADD',
+              name: 'Work or Office Address',
+              description: 'Work or Office Address',
+              sortOrder: 2,
+              isActive: true,
+              createdBy: widget.arguments.id,
+              createdOn:
+                  DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+              lastModifiedOn: null,
+            );
+
+            List<UserAddressCollection3> userAddressCollection3List =
+                new List();
+            userAddressCollection3List.add(userAddressCollection3);
+            profileResult.userAddressCollection3 = userAddressCollection3List;
+
+            myProf.result = profileResult;
+            addFamilyUserInfoBloc.myProfileModel = myProf;
+
+            if (doValidation()) {
+              if (addFamilyUserInfoBloc.profileBanner != null) {
+                PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+                    addFamilyUserInfoBloc.profileBanner.path);
+              }
+              CommonUtil.showLoadingDialog(
+                  dialogContext, _keyLoader, variable.Please_Wait); //
+
+              addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
+                if (value != null && value.isSuccess) {
+                  _familyListBloc.getFamilyMembersListNew().then((value) {
+                    PreferenceUtil.saveFamilyData(
+                            Constants.KEY_FAMILYMEMBER, value.result)
+                        .then((value) {
+                      //saveProfileImage();
+                      MySliverAppBar.imageURI = null;
+                      fetchedProfileData = null;
+                      imageURI = null;
+                      Navigator.pop(dialogContext);
+                      Navigator.pop(dialogContext);
+                      //Get.offAllNamed(router.rt_UserAccounts);
+                      // Navigator.of(context).popUntil(
+                      //     ModalRoute.withName(router.rt_UserAccounts));
+                      // Navigator.popUntil(dialogContext, (Route<dynamic> route) {
+                      //   bool shouldPop = false;
+                      //   if (route.settings.name == router.rt_UserAccounts) {
+                      //     shouldPop = true;
+                      //   }
+                      //   return shouldPop;
+                      // });
+
+                      //Navigator.of(context).popUntil();
+                    });
+                  });
+                } else {
+                  Navigator.pop(dialogContext);
+                  Alert.displayAlertPlain(context,
+                      title: variable.Error, content: value.message);
+                }
+              });
+            } else {
+              Navigator.pop(dialogContext);
+              Alert.displayAlertPlain(context,
+                  title: variable.Error,
+                  content: CommonConstants.all_fields_mandatory);
+            }
           }
+        } else {
+          //address validation not valid.
+          print('invalid user input');
         }
       } else {
         new FHBBasicWidget()
@@ -1640,7 +1702,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (lastNameController.text == '') {
       isValid = false;
       strErrorMsg = variable.enterLastName;
-    } else if (selectedGender.length == 0) {
+    } else if (selectedGender == null) {
       isValid = false;
       strErrorMsg = variable.selectGender;
     } else if (dateOfBirthController.text.length == 0) {

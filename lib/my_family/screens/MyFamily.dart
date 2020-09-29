@@ -161,7 +161,8 @@ class _MyFamilyState extends State<MyFamily> {
                       i,
                       data.sharedByUsers),
                   itemCount: data.sharedByUsers.length + 1,
-                ))
+                ),
+              )
             : Container(
                 child: Center(
                   child: Padding(
@@ -256,7 +257,7 @@ class _MyFamilyState extends State<MyFamily> {
                                     child: Center(
                                       child: Text(
                                         fulName != null
-                                            ? fulName.toUpperCase()
+                                            ? fulName[0].toUpperCase()
                                             : '',
                                         style: TextStyle(
                                             fontSize: 22,
@@ -301,7 +302,7 @@ class _MyFamilyState extends State<MyFamily> {
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
-                                fulName != null ? fulName.toUpperCase() : '',
+                                fulName != null ? fulName[0].toUpperCase() : '',
                                 style: TextStyle(
                                     fontSize: 22,
                                     color: Color(
@@ -315,7 +316,7 @@ class _MyFamilyState extends State<MyFamily> {
                         color: Color(fhbColors.bgColorContainer),
                         child: Center(
                           child: Text(
-                            fulName != null ? fulName.toUpperCase() : '',
+                            fulName != null ? fulName[0].toUpperCase() : '',
                             style: TextStyle(
                                 fontSize: 22,
                                 color: Color(CommonUtil().getMyPrimaryColor())),
@@ -994,22 +995,21 @@ class _MyFamilyState extends State<MyFamily> {
 
                         Navigator.pop(context);
                         Navigator.pushNamed(
-                                context, router.rt_AddFamilyUserInfo,
-                                arguments: AddFamilyUserInfoArguments(
-                                    fromClass: CommonConstants.add_family,
-                                    enteredFirstName: firstNameController.text,
-                                    enteredMiddleName:
-                                        middleNameController.text,
-                                    enteredLastName: lastNameController.text,
-                                    relationShip: selectedRelationShip,
-                                    isPrimaryNoSelected: isPrimaryNoSelected,
-                                    id: addFamilyOTPResponse
-                                        .result.childInfo.id,
-                                    addFamilyUserInfo:
-                                        addFamilyOTPResponse.result != null
-                                            ? addFamilyOTPResponse.result
-                                            : ''))
-                            .then((value) {
+                          context,
+                          router.rt_AddFamilyUserInfo,
+                          arguments: AddFamilyUserInfoArguments(
+                              fromClass: CommonConstants.add_family,
+                              enteredFirstName: firstNameController.text,
+                              enteredMiddleName: middleNameController.text,
+                              enteredLastName: lastNameController.text,
+                              relationShip: selectedRelationShip,
+                              isPrimaryNoSelected: isPrimaryNoSelected,
+                              id: addFamilyOTPResponse.result.childInfo.id,
+                              addFamilyUserInfo:
+                                  addFamilyOTPResponse.result != null
+                                      ? addFamilyOTPResponse.result
+                                      : ''),
+                        ).then((value) {
                           mobileNoController.text = '';
                           nameController.text = '';
                           isPrimaryNoSelected = false;

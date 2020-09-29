@@ -426,7 +426,7 @@ class CommonUtil {
         bloodGroup: myProfileResult.bloodGroup,
         isVirtualUser: myProfileResult.isVirtualUser,
         phoneNumber: myProfileResult.userContactCollection3.length>0?myProfileResult.userContactCollection3[0].phoneNumber:'',
-        createdOn: myProfileResult.createdOn,
+        //createdOn: myProfileResult.createdOn,
         /*profilePicThumbnail: myProfileResult.profilePicThumbnailUrl,*/
         isEmailVerified: myProfileResult.isEmailVerified,
         isTempUser: myProfileResult.isTempUser,

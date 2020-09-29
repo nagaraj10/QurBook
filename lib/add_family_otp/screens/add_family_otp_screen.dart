@@ -34,6 +34,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
   TextEditingController controller2 = new TextEditingController();
   TextEditingController controller3 = new TextEditingController();
   TextEditingController controller4 = new TextEditingController();
+  TextEditingController controller5 = new TextEditingController();
+  TextEditingController controller6 = new TextEditingController();
   TextEditingController currController = new TextEditingController();
 
   AddFamilyOTPBloc _addFamilyOTPBloc;
@@ -47,6 +49,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     controller2.dispose();
     controller3.dispose();
     controller4.dispose();
+    controller5.dispose();
+    controller6.dispose();
   }
 
   @override
@@ -175,20 +179,23 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
               ),
             ),
             Expanded(
-                flex: 2,
-                child: ListView(children: <Widget>[
+              flex: 2,
+              child: ListView(
+                children: <Widget>[
                   GridView.count(
-                      crossAxisCount: 6,
-                      crossAxisSpacing: 10,
-                      shrinkWrap: true,
-                      primary: false,
-                      scrollDirection: Axis.vertical,
-                      children: List<Container>.generate(
-                          6,
-                          (int index) => Container(
-                                constraints: BoxConstraints(maxWidth: 20),
-                                child: widgetList[index],
-                              ))),
+                    crossAxisCount: 6,
+                    crossAxisSpacing: 10,
+                    shrinkWrap: true,
+                    primary: false,
+                    scrollDirection: Axis.vertical,
+                    children: List<Container>.generate(
+                      6,
+                      (int index) => Container(
+                        constraints: BoxConstraints(maxWidth: 20),
+                        child: widgetList[index],
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 20),
                   Text(
                     variable.strdidtReceive,
@@ -199,179 +206,182 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
                     textAlign: TextAlign.center,
                   ),
                   FlatButton(
-                      onPressed: () {
-                        generateOtp(widget.arguments.selectedCountryCode,
-                            widget.arguments.enteredMobNumber);
-                      },
-                      child: Text(
-                        variable.strResendCode,
-                        style: TextStyle(
-                            //color: Colors.deepPurple[300],
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                            fontWeight: FontWeight.w600),
-                      )),
-                  SizedBox(height: 20)
-                ])),
+                    onPressed: () {
+                      generateOtp(widget.arguments.selectedCountryCode,
+                          widget.arguments.enteredMobNumber);
+                    },
+                    child: Text(
+                      variable.strResendCode,
+                      style: TextStyle(
+                          //color: Colors.deepPurple[300],
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
+            ),
             Expanded(
-                flex: 3,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, top: 8.0, right: 8.0, bottom: 0.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField(variable.numOne);
-                                },
-                                child: getNumberWidet(variable.numOne),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField(variable.numTwo);
-                                },
-                                child: getNumberWidet(variable.numTwo),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField(variable.numThree);
-                                },
-                                child: getNumberWidet(variable.numThree),
-                              ),
-                            ],
-                          ),
+              flex: 3,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, top: 8.0, right: 8.0, bottom: 0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numOne);
+                              },
+                              child: getNumberWidet(variable.numOne),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numTwo);
+                              },
+                              child: getNumberWidet(variable.numTwo),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numThree);
+                              },
+                              child: getNumberWidet(variable.numThree),
+                            ),
+                          ],
                         ),
                       ),
-                      new Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField(variable.numFour);
-                                },
-                                child: getNumberWidet(variable.numFour),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField(variable.numFive);
-                                },
-                                child: getNumberWidet(variable.numFive),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField(variable.numSix);
-                                },
-                                child: getNumberWidet(variable.numSix),
-                              ),
-                            ],
-                          ),
+                    ),
+                    new Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numFour);
+                              },
+                              child: getNumberWidet(variable.numFour),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numFive);
+                              },
+                              child: getNumberWidet(variable.numFive),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numSix);
+                              },
+                              child: getNumberWidet(variable.numSix),
+                            ),
+                          ],
                         ),
                       ),
-                      new Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField(variable.numSeven);
-                                },
-                                child: getNumberWidet(variable.numSeven),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField(variable.numEight);
-                                },
-                                child: getNumberWidet(variable.numEight),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField(variable.numNine);
-                                },
-                                child: getNumberWidet(variable.numNine),
-                              ),
-                            ],
-                          ),
+                    ),
+                    new Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numSeven);
+                              },
+                              child: getNumberWidet(variable.numSeven),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numEight);
+                              },
+                              child: getNumberWidet(variable.numEight),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numNine);
+                              },
+                              child: getNumberWidet(variable.numNine),
+                            ),
+                          ],
                         ),
                       ),
-                      new Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              MaterialButton(
-                                  onPressed: () {
-                                    deleteText();
-                                  },
-                                  child: Icon(
-                                    Icons.backspace,
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor()),
-                                  )),
-                              MaterialButton(
+                    ),
+                    new Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            MaterialButton(
                                 onPressed: () {
-                                  inputTextToField(variable.numZero);
-                                },
-                                child: getNumberWidet(variable.numZero),
-                              ),
-                              //submitButton(_otpVerifyBloc)
-                              MaterialButton(
-                                onPressed: () {
-                                  if (controller1.text.length > 0 &&
-                                      controller2.text.length > 0 &&
-                                      controller3.text.length > 0 &&
-                                      controller4.text.length > 0) {
-                                    String otp =
-                                        '${controller1.text}${controller2.text}${controller3.text}${controller4.text}';
-                                    _addFamilyOTPBloc.fromClass =
-                                        CommonConstants.add_family_otp;
-                                    _addFamilyOTPBloc
-                                        .verifyAddFamilyOtp(
-                                            widget.arguments.enteredMobNumber,
-                                            widget
-                                                .arguments.selectedCountryCode,
-                                            otp)
-                                        .then((otpResponse) {
-                                      checkOTPResponse(otpResponse);
-                                    });
-                                  } else {
-                                    Alert.displayAlertPlain(context,
-                                        title: variable.strError,
-                                        content: CommonConstants.all_fields);
-                                  }
-                                  //matchOtp();
+                                  deleteText();
                                 },
                                 child: Icon(
-                                  Icons.done,
+                                  Icons.backspace,
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
-                                ),
+                                )),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numZero);
+                              },
+                              child: getNumberWidet(variable.numZero),
+                            ),
+                            //submitButton(_otpVerifyBloc)
+                            MaterialButton(
+                              onPressed: () {
+                                if (controller1.text.length > 0 &&
+                                    controller2.text.length > 0 &&
+                                    controller3.text.length > 0 &&
+                                    controller4.text.length > 0) {
+                                  String otp =
+                                      '${controller1.text}${controller2.text}${controller3.text}${controller4.text}';
+                                  _addFamilyOTPBloc.fromClass =
+                                      CommonConstants.add_family_otp;
+                                  _addFamilyOTPBloc
+                                      .verifyAddFamilyOtp(
+                                          widget.arguments.enteredMobNumber,
+                                          widget.arguments.selectedCountryCode,
+                                          otp)
+                                      .then((otpResponse) {
+                                    checkOTPResponse(otpResponse);
+                                  });
+                                } else {
+                                  Alert.displayAlertPlain(context,
+                                      title: variable.strError,
+                                      content: CommonConstants.all_fields);
+                                }
+                                //matchOtp();
+                              },
+                              child: Icon(
+                                Icons.done,
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                )),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ));
   }
@@ -400,6 +410,18 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
       controller4.text = str;
       currController = controller4;
     }
+
+    //Edit fifth textField
+    else if (currController == controller5) {
+      controller5.text = str;
+      currController = controller5;
+    }
+
+    //Edit sixth textField
+    else if (currController == controller6) {
+      controller6.text = str;
+      currController = controller6;
+    }
   }
 
   void deleteText() {
@@ -421,6 +443,12 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     } else if (currController == controller4) {
       controller3.text = "";
       currController = controller3;
+    } else if (currController == controller5) {
+      controller4.text = "";
+      currController = controller4;
+    } else if (currController == controller6) {
+      controller5.text = "";
+      currController = controller5;
     }
   }
 

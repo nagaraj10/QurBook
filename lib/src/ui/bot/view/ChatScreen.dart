@@ -28,6 +28,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       PreferenceUtil.getProfileData(constants.KEY_PROFILE_MAIN);
   ScrollController controller = new ScrollController();
 
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -44,7 +46,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   @override
   void dispose() {
     _controller.dispose();
-    _backToPrevious();
     super.dispose();
   }
 
@@ -59,40 +60,54 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: GradientAppBar(),
-        title: Text(variable.strMaya),
-        leading: IconButton(
+    return WillPopScope(
+      onWillPop: () async {
+        if (!isLoading) {
+          _backToPrevious();
+          return true;
+        }
+        return false;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          flexibleSpace: GradientAppBar(),
+          title: Text(variable.strMaya),
+          leading: IconButton(
             icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
             ),
-            onPressed: _backToPrevious),
-      ),
-      body: Consumer<ChatScreenViewModel>(
-        builder: (contxt, model, child) {
-          return ChatData(conversations: model.getMyConversations);
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (getMyViewModel().isLoading) {
-            //do nothing
-          } else if (getMyViewModel().getisMayaSpeaks <= 0) {
-            stopTTSEngine();
-            getMyViewModel().gettingReposnseFromNative();
-          } else {
-            getMyViewModel().gettingReposnseFromNative();
-          }
-        },
-        child: Icon(
-          Icons.mic,
-          color: Colors.white,
+            onPressed: () {
+              if (!isLoading) {
+                _backToPrevious();
+              }
+            },
+          ),
         ),
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        body: Consumer<ChatScreenViewModel>(
+          builder: (contxt, model, child) {
+            return ChatData(conversations: model.getMyConversations);
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            if (getMyViewModel().isLoading) {
+              //do nothing
+            } else if (getMyViewModel().getisMayaSpeaks <= 0) {
+              stopTTSEngine();
+              getMyViewModel().gettingReposnseFromNative();
+            } else {
+              getMyViewModel().gettingReposnseFromNative();
+            }
+          },
+          child: Icon(
+            Icons.mic,
+            color: Colors.white,
+          ),
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 

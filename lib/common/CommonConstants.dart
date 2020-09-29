@@ -167,6 +167,8 @@ class CommonConstants {
 
   static String all_fields = 'Please fill all the fields';
 
+  static String profile_update_fail = 'unable to add Family member';
+
   static String view_insurance = 'View Insurance';
 
   static String view_hospital = 'View Hospital';

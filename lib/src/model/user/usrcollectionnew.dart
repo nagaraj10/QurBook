@@ -3,7 +3,7 @@ import 'package:myfhb/src/model/user/State.dart';
 import 'AddressTypeModel.dart';
 
 class UserAddressCollection3 {
-  //String id;
+  String id;
   String addressLine1;
   String addressLine2;
   String pincode;
@@ -17,8 +17,7 @@ class UserAddressCollection3 {
   State state;
 
   UserAddressCollection3(
-      {
-        //this.id,
+      {this.id,
       this.addressLine1,
       this.addressLine2,
       this.pincode,
@@ -32,7 +31,7 @@ class UserAddressCollection3 {
       this.state});
 
   UserAddressCollection3.fromJson(Map<String, dynamic> json) {
-    //id = json['id'];
+    id = json['id'];
     addressLine1 = json['addressLine1'];
     addressLine2 = json['addressLine2'];
     pincode = json['pincode'];
@@ -50,7 +49,7 @@ class UserAddressCollection3 {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    //data['id'] = this.id;
+    data['id'] = this.id;
     data['addressLine1'] = this.addressLine1;
     data['addressLine2'] = this.addressLine2;
     data['pincode'] = this.pincode;

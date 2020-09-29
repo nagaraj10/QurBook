@@ -24,8 +24,8 @@ class MyProfileResult {
   String medicalPreferences;
   bool isSignedIn;
   bool isActive;
-  String createdBy;
-  String createdOn;
+  // String createdBy;
+  // String createdOn;
   String lastModifiedBy;
   String lastModifiedOn;
   List<UserAddressCollection3> userAddressCollection3;
@@ -55,8 +55,8 @@ class MyProfileResult {
         this.medicalPreferences,
         this.isSignedIn,
         this.isActive,
-        this.createdBy,
-        this.createdOn,
+        // this.createdBy,
+        // this.createdOn,
         this.lastModifiedBy,
         this.lastModifiedOn,
         this.userAddressCollection3,
@@ -86,8 +86,8 @@ class MyProfileResult {
     medicalPreferences = json['medicalPreferences'];
     isSignedIn = json['isSignedIn'];
     isActive = json['isActive'];
-    createdBy = json['createdBy'];
-    createdOn = json['createdOn'];
+    // createdBy = json['createdBy'];
+    // createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['userAddressCollection3'] != null) {
@@ -134,8 +134,8 @@ class MyProfileResult {
     data['medicalPreferences'] = this.medicalPreferences;
     data['isSignedIn'] = this.isSignedIn;
     data['isActive'] = this.isActive;
-    data['createdBy'] = this.createdBy;
-    data['createdOn'] = this.createdOn;
+    // data['createdBy'] = this.createdBy;
+    // data['createdOn'] = this.createdOn;
     data['lastModifiedBy'] = this.lastModifiedBy;
     data['lastModifiedOn'] = this.lastModifiedOn;
     if (this.userAddressCollection3 != null) {

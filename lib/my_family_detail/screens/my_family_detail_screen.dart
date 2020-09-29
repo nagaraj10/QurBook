@@ -225,9 +225,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         emailController.text = '';
       }
     } else {
-      mobileNoController.text =
+      if(sharedbyme.child.userContactCollection3.isNotEmpty){
+        mobileNoController.text =
           sharedbyme.child.userContactCollection3[0].phoneNumber;
       emailController.text = sharedbyme.child.userContactCollection3[0].email;
+      }
     }
 
     if (new CommonUtil().checkIfStringisNull(sharedbyme.child.bloodGroup)) {

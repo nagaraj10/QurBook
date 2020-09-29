@@ -98,10 +98,11 @@ class ChatScreenViewModel extends ChangeNotifier {
             timeStamp: date,
           );
           conversations.add(model);
+           isLoading = true;
           notifyListeners();
-          isLoading = true;
           Future.delayed(Duration(seconds: 4), () {
             isLoading = false;
+            notifyListeners();
             isMayaSpeaks = 0;
             if (!stopTTSNow) {
               variable.tts_platform.invokeMethod(variable.strtts, {
