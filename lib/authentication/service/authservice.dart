@@ -164,6 +164,28 @@ class AuthService {
     }
   }
 
+  Future<dynamic> changePasswordservice(Map<String, dynamic> params) async {
+    try {
+      final response = await http.post(
+        _auth_base_url + strKeyChangeUserService,
+        headers: <String, String>{
+          c_content_type_key: c_content_type_val,
+          c_auth_key:
+              '$strBearer ${await PreferenceUtil.getStringValue(strKeyVerifyOtpService)}',
+        },
+        body: jsonEncode(params),
+      );
+      if (response.statusCode == 200) {
+        var responseResult = jsonDecode(response.body);
+        return responseResult;
+      } else {
+        return createErrorJsonString(response);
+      }
+    } on SocketException {
+      return spocketException();
+    }
+  }
+
   dynamic createErrorJsonString(http.Response response) {
     ErrorModelResponse errorModelResponse =
         ErrorModelResponse.fromJson(jsonDecode(response.body));

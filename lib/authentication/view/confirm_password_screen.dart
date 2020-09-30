@@ -2,23 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
-import 'package:myfhb/authentication/model/change_password_model.dart';
+import 'package:myfhb/authentication/model/confirm_password_model.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
-import 'package:myfhb/authentication/model/change_password_model.dart'
-    as changePasswordModel;
+import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
+import 'package:myfhb/authentication/model/confirm_password_model.dart'
+    as confirmPasswordModel;
 
 class ChangePasswordScreen extends StatefulWidget {
+  ChangePasswordScreen({this.userName});
+  String userName;
   @override
   _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
 }
 
 class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
-  final OldPasswordController = TextEditingController();
+  final CodeController = TextEditingController();
   final NewPasswordController = TextEditingController();
   final NewPasswordAgainController = TextEditingController();
-  FlutterToast toast = new FlutterToast();
   var isLoading = false;
+  FlutterToast toast = new FlutterToast();
   var _ChangePasswordKey = GlobalKey<FormState>();
   bool _autoValidateBool = false;
   AuthViewModel authViewModel;
@@ -64,8 +67,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           _changepasswordTextFields(
                             TextFormField(
                               decoration: InputDecoration(
-                                hintText: strOldPasswordHintTxt,
-                                labelText: strOldPasswordHintTxt,
+                                hintText: strCodeHintText,
+                                labelText: strCodeHintText,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
@@ -73,12 +76,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                   ),
                                 ),
                               ),
-                              controller: OldPasswordController,
+                              controller: CodeController,
                               autovalidate: _autoValidateBool,
                               validator: (value) {
                                 return AuthenticationValidator()
-                                    .passwordValidation(value, patternPassword,
-                                        strPassCantEmpty);
+                                    .phoneOtpValidation(
+                                        value, patternOtp, strEnterOtpp);
                               },
                               onSaved: (value) {},
                             ),
@@ -187,14 +190,15 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     FocusScope.of(context).unfocus();
     if (_ChangePasswordKey.currentState.validate()) {
       _ChangePasswordKey.currentState.save();
-      ChangePasswordModel logInModel = new ChangePasswordModel(
-        newPassword: NewPasswordAgainController.text,
-        oldPassword: OldPasswordController.text,
+      PatientConfirmPasswordModel logInModel = new PatientConfirmPasswordModel(
+        verificationCode: CodeController.text,
+        userName: widget.userName,
         source: strSource,
+        password: NewPasswordController.text,
       );
       Map<String, dynamic> map = logInModel.toJson();
-      changePasswordModel.ChangePasswordModel response =
-          await authViewModel.changePassword(map);
+      confirmPasswordModel.PatientConfirmPasswordModel response =
+          await authViewModel.confirmPassword(map);
       print(response.toString());
       _checkResponse(response);
     } else {
@@ -204,10 +208,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     }
   }
 
-  _checkResponse(ChangePasswordModel response) {
+  _checkResponse(PatientConfirmPasswordModel response) {
     if (response.isSuccess) {
       toast.getToast(response.message, Colors.lightBlue);
-      Navigator.pop(context);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => PatientSignInScreen()),
+          (route) => false);
     } else {
       toast.getToast(response.message, Colors.red);
     }

@@ -106,9 +106,11 @@ const String strChangeButtonText = 'Change Password';
 const String strCodeHintText = 'Code';
 const String strNewPasswordHintTxt = 'New Password';
 const String strNewPasswordAgainHintText = 'Enter New Password Again';
+const String strOldPasswordHintTxt = 'Old Password';
 
 //Strings used for Validations
 const String strKeyConfirmUserToken = 'confirm_usertoken';
+const String strKeyChangeUserService = 'change-password';
 const String strKeyConfirmUserNumber = 'confirm_usernumber';
 const String strKeyVerifyOtpToken = 'verify_otptoken';
 const String strKeyConfirmUserService = 'confirm_userservice';
@@ -140,3 +142,7 @@ const String strUser = "user";
 const String strFirebaseToken = 'Firebase Token from Login Page';
 const String strNetworkIssue = 'Please Check Network Connection';
 const String strresendOtp = 'Resend Otp';
+
+//Strings used in ChangePassword
+const String strNewPassword = 'newPassword';
+const String strOldPassword = 'oldPassword';
