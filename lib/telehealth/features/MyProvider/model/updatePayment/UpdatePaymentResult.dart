@@ -1,26 +1,6 @@
-class UpdatePaymentModel {
-  bool isSuccess;
-  Result result;
+import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/AppointmentStatus.dart';
 
-  UpdatePaymentModel({this.isSuccess, this.result});
-
-  UpdatePaymentModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json['isSuccess'];
-    result =
-    json['result'] != null ? new Result.fromJson(json['result']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isSuccess'] = this.isSuccess;
-    if (this.result != null) {
-      data['result'] = this.result.toJson();
-    }
-    return data;
-  }
-}
-
-class Result {
+class UpdatePaymentResult {
   String appointmentId;
   String bookingId;
   String paymentId;
@@ -29,7 +9,7 @@ class Result {
   AppointmentStatus appointmentStatus;
   AppointmentStatus paymentStatus;
 
-  Result(
+  UpdatePaymentResult(
       {this.appointmentId,
         this.bookingId,
         this.paymentId,
@@ -38,7 +18,7 @@ class Result {
         this.appointmentStatus,
         this.paymentStatus});
 
-  Result.fromJson(Map<String, dynamic> json) {
+  UpdatePaymentResult.fromJson(Map<String, dynamic> json) {
     appointmentId = json['appointmentId'];
     bookingId = json['bookingId'];
     paymentId = json['paymentId'];
@@ -65,28 +45,6 @@ class Result {
     if (this.paymentStatus != null) {
       data['paymentStatus'] = this.paymentStatus.toJson();
     }
-    return data;
-  }
-}
-
-class AppointmentStatus {
-  String code;
-  String name;
-  String description;
-
-  AppointmentStatus({this.code, this.name, this.description});
-
-  AppointmentStatus.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    name = json['name'];
-    description = json['description'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['code'] = this.code;
-    data['name'] = this.name;
-    data['description'] = this.description;
     return data;
   }
 }

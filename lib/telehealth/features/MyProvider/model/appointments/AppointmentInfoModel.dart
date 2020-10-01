@@ -1,3 +1,5 @@
+import 'package:myfhb/constants/fhb_parameters.dart';
+
 class AppointmentInfoModel {
   bool isFollowUp;
   String slotNumber;
@@ -15,7 +17,7 @@ class AppointmentInfoModel {
   String actualStartDateTime;
   String actualEndDateTime;
   String plannedFollowupDate;
-  String isFollowup;
+  bool isFollowup;
   String lastModifiedOn;
   String id;
   bool isHealthRecordShared;
@@ -49,80 +51,80 @@ class AppointmentInfoModel {
         this.createdOn});
 
   AppointmentInfoModel.fromJson(Map<String, dynamic> json) {
-    isFollowUp = json['isFollowUp'];
-    slotNumber = json['slotNumber'];
-    doctorSession = json['doctorSession'] != null
-        ? new DoctorSession.fromJson(json['doctorSession'])
+    isFollowUp = json[strIsFollowUp_C];
+    slotNumber = json[strSlotNumber];
+    doctorSession = json[strDoctorSession] != null
+        ? new DoctorSession.fromJson(json[strDoctorSession])
         : null;
-    isActive = json['isActive'];
-    lastModifiedBy = json['lastModifiedBy'] != null
-        ? new DoctorSession.fromJson(json['lastModifiedBy'])
+    isActive = json[strIsActive];
+    lastModifiedBy = json[strlastModifiedBy] != null
+        ? new DoctorSession.fromJson(json[strlastModifiedBy])
         : null;
-    bookedFor = json['bookedFor'] != null
-        ? new DoctorSession.fromJson(json['bookedFor'])
+    bookedFor = json[strBookedFor] != null
+        ? new DoctorSession.fromJson(json[strBookedFor])
         : null;
-    createdBy = json['createdBy'] != null
-        ? new DoctorSession.fromJson(json['createdBy'])
+    createdBy = json[strCreatedBy] != null
+        ? new DoctorSession.fromJson(json[strCreatedBy])
         : null;
-    bookedBy = json['bookedBy'] != null
-        ? new DoctorSession.fromJson(json['bookedBy'])
+    bookedBy = json[strBookedBy] != null
+        ? new DoctorSession.fromJson(json[strBookedBy])
         : null;
-    bookingId = json['bookingId'];
-    plannedStartDateTime = json['plannedStartDateTime'];
-    plannedEndDateTime = json['plannedEndDateTime'];
-    status = json['status'] != null
-        ? new DoctorSession.fromJson(json['status'])
+    bookingId = json[strBookingId_S];
+    plannedStartDateTime = json[strPlannedStartDateTime];
+    plannedEndDateTime = json[strPlannedEndDateTime];
+    status = json[strStatus] != null
+        ? new DoctorSession.fromJson(json[strStatus])
         : null;
-    doctorSessionId = json['doctorSessionId'];
-    actualStartDateTime = json['actualStartDateTime'];
-    actualEndDateTime = json['actualEndDateTime'];
-    plannedFollowupDate = json['plannedFollowupDate'];
-    isFollowup = json['isFollowup'];
-    lastModifiedOn = json['lastModifiedOn'];
-    id = json['id'];
-    isHealthRecordShared = json['isHealthRecordShared'];
-    isRefunded = json['isRefunded'];
-    isFollowupFee = json['isFollowupFee'];
-    createdOn = json['createdOn'];
+    doctorSessionId = json[strDoctorSessionId];
+    actualStartDateTime = json[strActualStartDateTime];
+    actualEndDateTime = json[strActualEndDateTime];
+    plannedFollowupDate = json[strPlannedFollowupDate];
+    isFollowup = json[strIsFollowUp_S];
+    lastModifiedOn = json[strLastModifiedOn];
+    id = json[strId];
+    isHealthRecordShared = json[strIsHealthRecordShared];
+    isRefunded = json[strIsRefunded];
+    isFollowupFee = json[strIsFollowUpFee];
+    createdOn = json[strCreatedOn];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['isFollowUp'] = this.isFollowUp;
-    data['slotNumber'] = this.slotNumber;
+    data[strIsFollowUp_C] = this.isFollowUp;
+    data[strSlotNumber] = this.slotNumber;
     if (this.doctorSession != null) {
-      data['doctorSession'] = this.doctorSession.toJson();
+      data[strDoctorSession] = this.doctorSession.toJson();
     }
-    data['isActive'] = this.isActive;
+    data[strIsActive] = this.isActive;
     if (this.lastModifiedBy != null) {
-      data['lastModifiedBy'] = this.lastModifiedBy.toJson();
+      data[strlastModifiedBy] = this.lastModifiedBy.toJson();
     }
     if (this.bookedFor != null) {
-      data['bookedFor'] = this.bookedFor.toJson();
+      data[strBookedFor] = this.bookedFor.toJson();
     }
     if (this.createdBy != null) {
-      data['createdBy'] = this.createdBy.toJson();
+      data[strCreatedBy] = this.createdBy.toJson();
     }
     if (this.bookedBy != null) {
-      data['bookedBy'] = this.bookedBy.toJson();
+      data[strBookedBy] = this.bookedBy.toJson();
     }
-    data['bookingId'] = this.bookingId;
-    data['plannedStartDateTime'] = this.plannedStartDateTime;
-    data['plannedEndDateTime'] = this.plannedEndDateTime;
+    data[strBookingId_S] = this.bookingId;
+    data[strPlannedStartDateTime] = this.plannedStartDateTime;
+    data[strPlannedEndDateTime] = this.plannedEndDateTime;
     if (this.status != null) {
-      data['status'] = this.status.toJson();
+      data[strStatus] = this.status.toJson();
     }
-    data['doctorSessionId'] = this.doctorSessionId;
-    data['actualStartDateTime'] = this.actualStartDateTime;
-    data['actualEndDateTime'] = this.actualEndDateTime;
-    data['plannedFollowupDate'] = this.plannedFollowupDate;
-    data['isFollowup'] = this.isFollowup;
-    data['lastModifiedOn'] = this.lastModifiedOn;
-    data['id'] = this.id;
-    data['isHealthRecordShared'] = this.isHealthRecordShared;
-    data['isRefunded'] = this.isRefunded;
-    data['isFollowupFee'] = this.isFollowupFee;
-    data['createdOn'] = this.createdOn;
+    data[strDoctorSessionId] = this.doctorSessionId;
+    data[strActualStartDateTime] = this.actualStartDateTime;
+    data[strActualEndDateTime] = this.actualEndDateTime;
+    data[strPlannedFollowupDate] = this.plannedFollowupDate;
+    data[strIsFollowUp_S] = this.isFollowup;
+    data[strLastModifiedOn] = this.lastModifiedOn;
+    data[strId] = this.id;
+    data[strIsHealthRecordShared] = this.isHealthRecordShared;
+    data[strIsRefunded] = this.isRefunded;
+    data[strIsFollowUpFee] = this.isFollowupFee;
+    data[strCreatedOn] = this.createdOn;
     return data;
   }
 }
@@ -133,12 +135,12 @@ class DoctorSession {
   DoctorSession({this.id});
 
   DoctorSession.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+    id = json[strId];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
+    data[strId] = this.id;
     return data;
   }
 }

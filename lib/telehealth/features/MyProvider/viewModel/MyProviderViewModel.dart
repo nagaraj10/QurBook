@@ -1,17 +1,11 @@
 import 'package:flutter/cupertino.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/AvailableTimeSlotsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/Data.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/SlotsResultModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 
 class MyProviderViewModel extends ChangeNotifier {
   List<GetAllPatientsModel> mockDoctors = List<GetAllPatientsModel>();

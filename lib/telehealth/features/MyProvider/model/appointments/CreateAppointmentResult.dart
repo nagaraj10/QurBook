@@ -1,3 +1,4 @@
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/AppointmentInfoModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/PayloadModel.dart';
 
@@ -8,21 +9,21 @@ class CreateAppointmentResult {
   CreateAppointmentResult({this.appointmentInfo, this.paymentInfo});
 
   CreateAppointmentResult.fromJson(Map<String, dynamic> json) {
-    appointmentInfo = json['appointmentInfo'] != null
-        ? new AppointmentInfoModel.fromJson(json['appointmentInfo'])
+    appointmentInfo = json[strAppointmentInfo] != null
+        ? new AppointmentInfoModel.fromJson(json[strAppointmentInfo])
         : null;
-    paymentInfo = json['paymentInfo'] != null
-        ? new PaymentInfo.fromJson(json['paymentInfo'])
+    paymentInfo = json[strPaymentInfo] != null
+        ? new PaymentInfo.fromJson(json[strPaymentInfo])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.appointmentInfo != null) {
-      data['appointmentInfo'] = this.appointmentInfo.toJson();
+      data[strAppointmentInfo] = this.appointmentInfo.toJson();
     }
     if (this.paymentInfo != null) {
-      data['paymentInfo'] = this.paymentInfo.toJson();
+      data[strPaymentInfo] = this.paymentInfo.toJson();
     }
     return data;
   }

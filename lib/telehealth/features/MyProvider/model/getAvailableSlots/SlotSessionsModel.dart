@@ -1,3 +1,6 @@
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/WeekdayPreference.dart';
+
 class SlotSessionsModel {
   String doctorSessionId;
   String sessionStartTime;
@@ -62,46 +65,3 @@ class SlotSessionsModel {
   }
 }
 
-class WeekdayPreference {
-  String day;
-  bool isAvailable;
-
-  WeekdayPreference({this.day, this.isAvailable});
-
-  WeekdayPreference.fromJson(Map<String, dynamic> json) {
-    day = json['Day'];
-    isAvailable = json['isAvailable'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Day'] = this.day;
-    data['isAvailable'] = this.isAvailable;
-    return data;
-  }
-}
-
-class Slots {
-  String startTime;
-  String endTime;
-  String isAvailable;
-  int slotNumber;
-
-  Slots({this.startTime, this.endTime, this.isAvailable, this.slotNumber});
-
-  Slots.fromJson(Map<String, dynamic> json) {
-    startTime = json['startTime'];
-    endTime = json['endTime'];
-    isAvailable = json['isAvailable'];
-    slotNumber = json['slotNumber'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['startTime'] = this.startTime;
-    data['endTime'] = this.endTime;
-    data['isAvailable'] = this.isAvailable;
-    data['slotNumber'] = this.slotNumber;
-    return data;
-  }
-}

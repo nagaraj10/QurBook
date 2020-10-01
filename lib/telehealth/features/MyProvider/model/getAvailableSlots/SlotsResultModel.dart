@@ -1,5 +1,4 @@
-
-import 'package:myfhb/telehealth/features/MyProvider/model/SlotSessionsModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 
 class SlotsResultModel {
   String doctorId;

@@ -1,3 +1,4 @@
+import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/PaymentGateWayDetail.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/PaymentModel.dart';
 
@@ -9,19 +10,19 @@ class PayloadModel {
 
   PayloadModel.fromJson(Map<String, dynamic> json) {
     payment =
-    json['payment'] != null ? new PaymentModel.fromJson(json['payment']) : null;
-    paymentGatewayDetail = json['paymentGatewayDetail'] != null
-        ? new PaymentGatewayDetail.fromJson(json['paymentGatewayDetail'])
+    json[strPayment] != null ? new PaymentModel.fromJson(json[strPayment]) : null;
+    paymentGatewayDetail = json[strPaymentGateWayDetail] != null
+        ? new PaymentGatewayDetail.fromJson(json[strPaymentGateWayDetail])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     if (this.payment != null) {
-      data['payment'] = this.payment.toJson();
+      data[strPayment] = this.payment.toJson();
     }
     if (this.paymentGatewayDetail != null) {
-      data['paymentGatewayDetail'] = this.paymentGatewayDetail.toJson();
+      data[strPaymentGateWayDetail] = this.paymentGatewayDetail.toJson();
     }
     return data;
   }

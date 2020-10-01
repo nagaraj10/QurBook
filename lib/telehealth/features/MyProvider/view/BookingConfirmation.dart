@@ -26,8 +26,8 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
@@ -807,7 +807,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   Future<CreateAppointmentModel> bookAppointmentCall(
       String createdBy,
-      String createdFor,
+      String bookedFor,
       String doctorSessionId,
       String scheduleDate,
       String slotNumber,
@@ -818,7 +818,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     CreateAppointmentModel bookAppointmentModel =
         await createAppointMentViewModel.putBookAppointment(
             createdBy,
-            createdFor,
+            bookedFor,
             doctorSessionId,
             scheduleDate,
             slotNumber,
@@ -832,7 +832,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   bookAppointment(
       String createdBy,
-      String createdFor,
+      String bookedFor,
       String doctorSessionId,
       String scheduleDate,
       String slotNumber,
@@ -849,7 +849,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         if (value != null && value.success) {
           bookAppointmentCall(
                   createdBy,
-                  createdFor,
+                  bookedFor,
                   doctorSessionId,
                   scheduleDate,
                   slotNumber,

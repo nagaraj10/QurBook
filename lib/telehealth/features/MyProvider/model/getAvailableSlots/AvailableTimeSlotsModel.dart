@@ -1,6 +1,5 @@
-
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/SlotsResultModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 
 class AvailableTimeSlotsModel {
 
@@ -10,16 +9,16 @@ class AvailableTimeSlotsModel {
   AvailableTimeSlotsModel({this.isSuccess, this.result});
 
   AvailableTimeSlotsModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[IS_SUCCESS];
+    isSuccess = json[strIsSuccess];
     result =
-    json[RESULT] != null ? new SlotsResultModel.fromJson(json[RESULT]) : null;
+    json[strResult] != null ? new SlotsResultModel.fromJson(json[strResult]) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[IS_SUCCESS] = this.isSuccess;
+    data[strIsSuccess] = this.isSuccess;
     if (this.result != null) {
-      data[RESULT] = this.result.toJson();
+      data[strResult] = this.result.toJson();
     }
     return data;
   }
