@@ -29,10 +29,11 @@ class UpdateProvidersRepository {
   // 1
   // Doctors
   Future<UpdateProvidersId> updateDoctorsIdWithUserDetailsNew(
-      String providerId, bool isPreferred) async {
+      String providerId, bool isPreferred, String provideRefernceId) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     Map<String, String> doctorDic = new Map();
     doctorDic[parameters.id] = providerId;
+    doctorDic[parameters.strReferenceId] = provideRefernceId;
 
     var jsonData = {};
     jsonData[parameters.strdoctor] = [doctorDic];

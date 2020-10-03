@@ -8,23 +8,17 @@ class MyProvidersResponse {
   MyProvidersResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     message = json['message'];
-    if (json.containsKey('diagnostics')) {
-      result = null;
-    } else {
-      result = json['result'] != null
-          ? new MyProvidersResponseData.fromJson(json['result'])
-          : null;
-    }
+    result = json['result'] != null
+        ? new MyProvidersResponseData.fromJson(json['result'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['isSuccess'] = this.isSuccess;
     data['message'] = this.message;
-    if (data.containsKey('diagnostics')) {
-      data['result'] = null;
-    } else {
-      if (this.result != null) data['result'] = this.result.toJson();
+    if (this.result != null) {
+      data['result'] = this.result.toJson();
     }
     return data;
   }
@@ -49,8 +43,8 @@ class MyProvidersResponseData {
   bool isIeUser;
   bool isEmailVerified;
   bool isCpUser;
-  dynamic communicationPreferences;
-  dynamic medicalPreferences;
+  String communicationPreferences;
+  String medicalPreferences;
   bool isSignedIn;
   bool isActive;
   String createdBy;
@@ -59,8 +53,8 @@ class MyProvidersResponseData {
   String lastModifiedOn;
   List<Doctors> doctors;
   List<Hospitals> hospitals;
-  List<dynamic> labs;
-  List<dynamic> clinics;
+  List<Hospitals> labs;
+  List<Hospitals> clinics;
 
   MyProvidersResponseData(
       {this.id,
@@ -115,11 +109,9 @@ class MyProvidersResponseData {
     isCpUser = json['isCpUser'];
     communicationPreferences = json['communicationPreferences'];
     medicalPreferences = json['medicalPreferences'];
-    try {
-      isSignedIn = json['isSignedIn'];
-      createdBy = json['createdBy'];
-    } catch (e) {}
+    isSignedIn = json['isSignedIn'];
     isActive = json['isActive'];
+    createdBy = json['createdBy'];
     createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
@@ -136,10 +128,16 @@ class MyProvidersResponseData {
       });
     }
     if (json['labs'] != null) {
-      labs = List<dynamic>.from(json['labs'].map((x) => x));
+      labs = new List<Hospitals>();
+      json['labs'].forEach((v) {
+        labs.add(new Hospitals.fromJson(v));
+      });
     }
     if (json['clinics'] != null) {
-      clinics = List<dynamic>.from(json['labs'].map((x) => x));
+      clinics = new List<Hospitals>();
+      json['clinics'].forEach((v) {
+        clinics.add(new Hospitals.fromJson(v));
+      });
     }
   }
 
@@ -249,6 +247,7 @@ class User {
   String dateOfBirth;
   String bloodGroup;
   String countryCode;
+  String profilePicUrl;
   String profilePicThumbnailUrl;
   bool isTempUser;
   bool isVirtualUser;
@@ -257,14 +256,14 @@ class User {
   bool isIeUser;
   bool isEmailVerified;
   bool isCpUser;
-  dynamic communicationPreferences;
-  dynamic medicalPreferences;
+  String communicationPreferences;
+  String medicalPreferences;
   bool isSignedIn;
   bool isActive;
   String createdBy;
   String createdOn;
   String lastModifiedBy;
-  dynamic lastModifiedOn;
+  String lastModifiedOn;
 
   User(
       {this.id,
@@ -277,6 +276,7 @@ class User {
       this.dateOfBirth,
       this.bloodGroup,
       this.countryCode,
+      this.profilePicUrl,
       this.profilePicThumbnailUrl,
       this.isTempUser,
       this.isVirtualUser,
@@ -305,11 +305,8 @@ class User {
     dateOfBirth = json['dateOfBirth'];
     bloodGroup = json['bloodGroup'];
     countryCode = json['countryCode'];
-    if (json.containsKey('profilePicThumbnailUrl')) {
-      profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
-    } else {
-      profilePicThumbnailUrl = null;
-    }
+    profilePicUrl = json['profilePicUrl'];
+    profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
     isTempUser = json['isTempUser'];
     isVirtualUser = json['isVirtualUser'];
     isMigrated = json['isMigrated'];
@@ -339,6 +336,7 @@ class User {
     data['dateOfBirth'] = this.dateOfBirth;
     data['bloodGroup'] = this.bloodGroup;
     data['countryCode'] = this.countryCode;
+    data['profilePicUrl'] = this.profilePicUrl;
     data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
     data['isTempUser'] = this.isTempUser;
     data['isVirtualUser'] = this.isVirtualUser;
@@ -409,7 +407,7 @@ class HealthOrganizationType {
   bool isActive;
   String createdBy;
   String createdOn;
-  dynamic lastModifiedOn;
+  String lastModifiedOn;
 
   HealthOrganizationType(
       {this.id,

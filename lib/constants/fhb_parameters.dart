@@ -563,4 +563,4 @@ const String strIsHealthRecordShared = 'isHealthRecordShared';
 const String strPayment = 'payment';
 const String strPaymentGateWayDetail = 'paymentGatewayDetail';
 
-
+const String strReferenceId = 'doctorReferenceId';

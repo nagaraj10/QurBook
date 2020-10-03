@@ -9,6 +9,7 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 class UpdateProvidersBloc implements BaseBloc {
   UpdateProvidersRepository updateProvidersRepository;
   String providerId;
+  String providerReferenceId;
   bool isPreferred;
 
   // 1
@@ -102,8 +103,9 @@ class UpdateProvidersBloc implements BaseBloc {
     doctorsSink.add(ApiResponse.loading(variable.strUpdatingDoctor));
     UpdateProvidersId updateProvidersId;
     try {
-      updateProvidersId = await updateProvidersRepository
-          .updateDoctorsIdWithUserDetailsNew(providerId, isPreferred);
+      updateProvidersId =
+          await updateProvidersRepository.updateDoctorsIdWithUserDetailsNew(
+              providerId, isPreferred, providerReferenceId);
 //      doctorsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       doctorsSink.add(ApiResponse.error(e.toString()));

@@ -30,7 +30,7 @@ class MyProvidersTabBar extends StatefulWidget {
 class MyProviderTabBarState extends State<MyProvidersTabBar> {
   List<Hospitals> hospitalsModel = new List();
   List<Doctors> doctorsModel = new List();
-  List labsModel = new List();
+  List<Hospitals> labsModel = new List();
 
   @override
   void initState() {
@@ -89,7 +89,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
         .toLowerCase()
         .compareTo(b.name.toString().toLowerCase()));
 
-    labsModel.sort((a, b) => (a.isDefault
+    /*  labsModel.sort((a, b) => (a.isDefault
             ? a.name
                 .toString()
                 .toLowerCase()
@@ -100,7 +100,7 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                 .toString()
                 .toLowerCase()
                 .compareTo(b.name.toString().toLowerCase())
-            : 0));
+            : 0));*/
   }
 
   @override

@@ -35,7 +35,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
               Navigator.pushNamed(context, router.rt_AddProvider,
                       arguments: AddProvidersArguments(
                           searchKeyWord: CommonConstants.hospitals,
-                          // hospitalsModel: eachHospitalModel,
+                          hospitalsModel: eachHospitalModel,
                           fromClass: router.rt_myprovider,
                           hasData: true))
                   .then((value) {

@@ -10,12 +10,13 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
 import 'my_provider.dart';
 
 class MyProvidersLabsList extends StatelessWidget {
-  List<LaboratoryModel> labsModel;
+  List<Hospitals> labsModel;
   ProvidersBloc providersBloc;
   MyProviderState myProviderState;
 
@@ -31,7 +32,7 @@ class MyProvidersLabsList extends StatelessWidget {
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
-        LaboratoryModel eachLabModel = labsModel[index];
+        Hospitals eachLabModel = labsModel[index];
         return InkWell(
             onTap: () {
               Navigator.pushNamed(context, router.rt_AddProvider,
@@ -61,19 +62,19 @@ class MyProvidersLabsList extends StatelessWidget {
                 ),
                 child: Row(
                   children: <Widget>[
-                    ClipOval(
-                        child: eachLabModel.logo != null
-                            ? Image.network(
-                                Constants.BASE_URL + eachLabModel.logo,
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                              )
-                            : Container(
-                                width: 50,
-                                height: 50,
-                                padding: EdgeInsets.all(12),
-                                color: Color(fhbColors.bgColorContainer))),
+                    // ClipOval(
+                    //     child: eachHospitalModel.logo != null
+                    //         ? Image.network(
+                    //             Constants.BASE_URL + eachHospitalModel.logo,
+                    //             height: 50,
+                    //             width: 50,
+                    //             fit: BoxFit.cover,
+                    //           )
+                    //         : Container(
+                    //             width: 50,
+                    //             height: 50,
+                    //             padding: EdgeInsets.all(12),
+                    //             color: Color(fhbColors.bgColorContainer))),
                     SizedBox(
                       width: 20,
                     ),
@@ -96,18 +97,18 @@ class MyProvidersLabsList extends StatelessWidget {
                             textAlign: TextAlign.start,
                           ),
                           SizedBox(height: 5),
-                          AutoSizeText(
-                            eachLabModel.addressLine1 != null
-                                ? eachLabModel.addressLine1
-                                : '' + eachLabModel.addressLine2 != null
-                                    ? eachLabModel.addressLine2
-                                    : '',
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w400,
-                                color: ColorUtils.lightgraycolor),
-                          ),
+                          // AutoSizeText(
+                          //   eachHospitalModel.addressLine1 != null
+                          //       ? eachHospitalModel.addressLine1
+                          //       : '' + eachHospitalModel.addressLine2 != null
+                          //           ? eachHospitalModel.addressLine2
+                          //           : '',
+                          //   maxLines: 1,
+                          //   style: TextStyle(
+                          //       fontSize: 13.0,
+                          //       fontWeight: FontWeight.w400,
+                          //       color: ColorUtils.lightgraycolor),
+                          // ),
                           SizedBox(height: 5),
                         ],
                       ),
@@ -116,11 +117,11 @@ class MyProvidersLabsList extends StatelessWidget {
                         flex: 1,
                         child: Container(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               InkWell(
-                                  child: eachLabModel.isDefault == true
+                                  child: eachLabModel.isActive == true
                                       ? ImageIcon(
                                           AssetImage(
                                               variable.icon_record_fav_active),
