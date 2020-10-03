@@ -1,7 +1,8 @@
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'file:///C:/Users/fmohamed/Documents/Flutter%20Projects/asgard_myfhb/lib/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
 import 'dart:convert' as convert;
+
+import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
 
 class UpdatePaymentService{
 
