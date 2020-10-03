@@ -1,7 +1,8 @@
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/AvailableTimeSlotsModel.dart';
 import 'dart:convert' as convert;
+
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
 
 
 class SlotsAvailabilityService{

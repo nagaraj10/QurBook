@@ -4,7 +4,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/model/forgot_password_model.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
-import 'package:myfhb/authentication/view/change_password_screen.dart';
+import 'package:myfhb/authentication/view/confirm_password_screen.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/forgot_password_model.dart'

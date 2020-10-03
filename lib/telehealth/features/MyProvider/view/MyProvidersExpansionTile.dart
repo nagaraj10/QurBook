@@ -6,8 +6,9 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/AvailableTimeSlotsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/SlotSessionsModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 

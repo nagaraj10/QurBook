@@ -1,4 +1,4 @@
-import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
+import 'file:///C:/Users/fmohamed/Documents/Flutter%20Projects/asgard_myfhb/lib/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/services/updatePaymentService.dart';
 
 class UpdatePaymentViewModel{

@@ -96,8 +96,8 @@ const String qr_getSlots = 'doctor/checkavailability';
 const String qr_bookAppmnt = 'appointments';
 const String qr_update_payment = 'appointments/update-payment-status/';
 
-const String qr_created_by = 'bookedBy';
-const String qr_created_for = 'createdFor';
+const String qr_created_by = 'createdBy';
+const String qr_booked_for = 'bookedFor';
 const String qr_doctor_session_id = 'doctorSessionId';
 const String qr_schedule_date = 'scheduledDate';
 const String qr_slot_number = 'slotNumber';
@@ -135,6 +135,7 @@ const String qr_LastSyncHK = '?source=Apple Health';
 const String RESHEDULE_SOURCE = "rescheduleSource";
 const String BOOKING_IDS = "bookingIds";
 const String BOOKING_ID = "bookingId";
+const String BOOKING_ID_CAPS = "bookingID";
 const String META_IDS = "mediaMetaIds";
 const String INCLUDE_MEDIA = "includeMedia";
 const String RESHEDULED_DATE = "rescheduledDate";

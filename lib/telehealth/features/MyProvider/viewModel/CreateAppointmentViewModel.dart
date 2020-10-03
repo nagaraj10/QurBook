@@ -9,7 +9,7 @@ class CreateAppointMentViewModel {
 
   Future<CreateAppointmentModel> putBookAppointment(
       String createdBy,
-      String createdFor,
+      String bookedFor,
       String doctorSessionId,
       String scheduleDate,
       String slotNumber,
@@ -21,7 +21,7 @@ class CreateAppointMentViewModel {
       CreateAppointmentModel bookAppointmentModel =
           await createAppointmentService.bookAppointment(
               createdBy,
-              createdFor,
+              bookedFor,
               doctorSessionId,
               scheduleDate,
               slotNumber,

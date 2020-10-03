@@ -9,20 +9,20 @@ class CreateAppointmentModel {
   CreateAppointmentModel({this.isSuccess, this.message, this.result});
 
   CreateAppointmentModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[IS_SUCCESS];
-    message = json[MESSAGE];
+    isSuccess = json[strIsSuccess];
+    message = json[strMessage];
     result =
-    json[RESULT] != null
-        ? new CreateAppointmentResult.fromJson(json[RESULT])
+    json[strResult] != null
+        ? new CreateAppointmentResult.fromJson(json[strResult])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[IS_SUCCESS] = this.isSuccess;
-    data[MESSAGE] = this.message;
+    data[strIsSuccess] = this.isSuccess;
+    data[strMessage] = this.message;
     if (this.result != null) {
-      data[RESULT] = this.result.toJson();
+      data[strResult] = this.result.toJson();
     }
     return data;
   }

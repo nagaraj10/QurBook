@@ -8,7 +8,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
+import 'file:///C:/Users/fmohamed/Documents/Flutter%20Projects/asgard_myfhb/lib/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/ResultPage.dart';

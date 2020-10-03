@@ -1,5 +1,7 @@
 library fhb_parmeters;
 
+import 'package:myfhb/telehealth/features/appointments/view/appointments.dart';
+
 const String strStatus = 'status';
 const String strSuccess = 'isSuccess';
 const String strMessage = 'message';
@@ -494,9 +496,6 @@ const String strPlannedFollowupDate = "plannedFollowupDate";
 const String strPaymentInfo = "paymentInfo";
 //Add Family User Info
 const String make_a_choice = 'Make a Choice!';
-const String IS_SUCCESS = 'isSuccess';
-const String MESSAGE = 'message';
-const String RESULT = 'result';
 
 // Video call
 const String onresume = 'OnResume New';
@@ -552,3 +551,16 @@ const String DISPLAY_NAME = 'display_name';
 const String PROFILE_IMAGE = 'profile_image';
 const String ABOUT_ME = 'aboutMe';
 const String USERS = 'users';
+
+//appointment
+const String strIsFollowUp_C = 'isFollowUp';
+const String strDoctorSession = 'doctorSession';
+const String strBookedFor = 'bookedFor';
+const String strBookedBy = 'bookedBy';
+const String strBookingId_S = 'bookingId';
+const String strIsFollowUp_S = 'isFollowup';
+const String strIsHealthRecordShared = 'isHealthRecordShared';
+const String strPayment = 'payment';
+const String strPaymentGateWayDetail = 'paymentGatewayDetail';
+
+

@@ -1,5 +1,5 @@
-import 'package:myfhb/telehealth/features/MyProvider/model/AvailableTimeSlotsModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/SlotsResultModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/services/slotsAvailabilityService.dart';
 
 class SlotsAvailabilityViewModel{
