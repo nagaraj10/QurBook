@@ -21,15 +21,17 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/user/AddressTypeModel.dart';
+import 'package:myfhb/src/model/user/City.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
-import 'package:myfhb/src/model/user/UserAddressCollection.dart';
+//import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/model/user/city_list_model.dart';
 import 'package:myfhb/src/model/user/state_list_model.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
@@ -136,7 +138,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     try {
-      if (PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL) !=
+      /* if (PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL) !=
           null) {
         setState(() {
           relationShipResponseList =
@@ -146,7 +148,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               Constants.KEY_FAMILYREL, relationShipResponseList);
           getSelectedRelation();
         });
-      } else {
+      } else { */
         addFamilyUserInfoBloc.getCustomRoles().then((value) {
           setState(() {
             if (value.result[0] != null) {
@@ -154,23 +156,23 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 relationShipResponseList =
                     value.result[0].referenceValueCollection;
 
-                PreferenceUtil.saveRelationshipArray(
-                    Constants.KEY_FAMILYREL, relationShipResponseList);
+               /*  PreferenceUtil.saveRelationshipArray(
+                    Constants.KEY_FAMILYREL, relationShipResponseList); */
                 getSelectedRelation();
               }
             }
           });
         });
-      }
+      //}
     } catch (e) {}
 
     if (widget.arguments.fromClass == CommonConstants.my_family) {
-      for (var i = 0; i < relationShipResponseList.length; i++) {
+      /* for (var i = 0; i < relationShipResponseList?.length; i++) {
         if (relationShipResponseList[i].name ==
             widget.arguments.sharedbyme.relationship.name) {
           selectedRelationShip = relationShipResponseList[i];
         }
-      }
+      } */
     }
     String profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
@@ -341,7 +343,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
       }
     } else {
-      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
+      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;  
       addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
         myProfile = value;
 

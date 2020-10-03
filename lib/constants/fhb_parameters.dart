@@ -1,7 +1,7 @@
 library fhb_parmeters;
 
 const String strStatus = 'status';
-const String strSuccess = 'success';
+const String strSuccess = 'isSuccess';
 const String strMessage = 'message';
 const String strResponse = 'response';
 const String strData = 'data';

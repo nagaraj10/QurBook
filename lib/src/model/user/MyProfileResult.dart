@@ -1,5 +1,6 @@
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
+
 import 'AddressTypeModel.dart';
-import 'UserAddressCollection.dart';
 
 class MyProfileResult {
   String id;

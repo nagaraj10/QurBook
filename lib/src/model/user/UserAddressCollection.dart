@@ -1,3 +1,4 @@
+import 'package:myfhb/src/model/user/City.dart';
 import 'package:myfhb/src/model/user/State.dart';
 
 import 'AddressTypeModel.dart';
@@ -72,7 +73,7 @@ class UserAddressCollection3 {
   }
 }
 
-class City {
+/* class City {
   String id;
   String name;
   bool isActive;
@@ -99,4 +100,4 @@ class City {
     data['lastModifiedOn'] = this.lastModifiedOn;
     return data;
   }
-}
+} */

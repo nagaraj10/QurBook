@@ -1,3 +1,7 @@
+import 'package:myfhb/src/model/user/AddressTypeModel.dart';
+import 'package:myfhb/src/model/user/City.dart';
+import 'package:myfhb/src/model/user/State.dart';
+
 class FamilyMembers {
   bool isSuccess;
   String message;
@@ -198,6 +202,7 @@ class Child {
   String lastModifiedOn;
   List<UserContactCollection3> userContactCollection3;
   List<UserRoleCollection3> userRoleCollection3;
+  List<UserAddressCollection3> userAddressCollection3;
 
   Child(
       {this.id,
@@ -227,7 +232,8 @@ class Child {
       this.lastModifiedBy,
       this.lastModifiedOn,
       this.userContactCollection3,
-      this.userRoleCollection3});
+      this.userRoleCollection3,
+      this.userAddressCollection3});
 
   Child.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -268,6 +274,12 @@ class Child {
         userRoleCollection3.add(new UserRoleCollection3.fromJson(v));
       });
     }
+    if (json['userAddressCollection3'] != null) {
+      userAddressCollection3 = new List<UserAddressCollection3>();
+      json['userAddressCollection3'].forEach((v) {
+        userAddressCollection3.add(new UserAddressCollection3.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -306,9 +318,76 @@ class Child {
       data['userRoleCollection3'] =
           this.userRoleCollection3.map((v) => v.toJson()).toList();
     }
+    if (this.userAddressCollection3 != null) {
+      data['userAddressCollection3'] =
+          this.userAddressCollection3.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }
+
+class UserAddressCollection3 {
+  //String id;
+  String addressLine1;
+  String addressLine2;
+  String pincode;
+  bool isPrimary;
+  bool isActive;
+  String createdOn;
+  String createdBy;
+  String lastModifiedOn;
+  AddressType addressType;
+  City city;
+  State state;
+
+  UserAddressCollection3(
+      {
+        //this.id,
+      this.addressLine1,
+      this.addressLine2,
+      this.pincode,
+      this.isPrimary,
+      this.isActive,
+      this.createdOn,
+      this.createdBy,
+      this.lastModifiedOn,
+      this.addressType,
+      this.city,
+      this.state});
+
+  UserAddressCollection3.fromJson(Map<String, dynamic> json) {
+    //id = json['id'];
+    addressLine1 = json['addressLine1'];
+    addressLine2 = json['addressLine2'];
+    pincode = json['pincode'];
+    isPrimary = json['isPrimary'];
+    isActive = json['isActive'];
+    createdOn = json['createdOn'];
+    createdBy = json['createdBy'];
+    lastModifiedOn = json['lastModifiedOn'];
+    addressType = json['addressType'];
+    city = json['city'];
+    state = json['state'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    //data['id'] = this.id;
+    data['addressLine1'] = this.addressLine1;
+    data['addressLine2'] = this.addressLine2;
+    data['pincode'] = this.pincode;
+    data['isPrimary'] = this.isPrimary;
+    data['isActive'] = this.isActive;
+    data['createdOn'] = this.createdOn;
+    data['createdBy'] = this.createdBy;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    data['addressType'] = this.addressType;
+    data['city'] = this.city;
+    data['state'] = this.state;
+    return data;
+  }
+}
+
 
 class UserContactCollection3 {
   String id;

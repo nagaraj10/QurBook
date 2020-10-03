@@ -99,56 +99,62 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          title: Text(
-            CommonConstants.my_family_title,
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-              fontSize: 18,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop(true);
+        return true;
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            title: Text(
+              CommonConstants.my_family_title,
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+                fontSize: 18,
+              ),
             ),
-          ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 20,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 20,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
+                            arguments: AddFamilyUserInfoArguments(
+                                sharedbyme: widget
+                                    .arguments.profilesSharedByMe[_currentPage],
+                                fromClass: CommonConstants.my_family))
+                        .then((value) {});
+                  })
+            ]),
+        body: PageView(
+            scrollDirection: Axis.horizontal,
+            physics: ClampingScrollPhysics(),
+            controller: PageController(
+                initialPage: _currentPage,
+                keepPage: false,
+                viewportFraction: 1.0),
+            onPageChanged: (int page) {
+              setState(() {
+                _currentPage = page;
+              });
             },
-          ),
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {
-                  Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
-                          arguments: AddFamilyUserInfoArguments(
-                              sharedbyme: widget
-                                  .arguments.profilesSharedByMe[_currentPage],
-                              fromClass: CommonConstants.my_family))
-                      .then((value) {});
-                })
-          ]),
-      body: PageView(
-          scrollDirection: Axis.horizontal,
-          physics: ClampingScrollPhysics(),
-          controller: PageController(
-              initialPage: _currentPage,
-              keepPage: false,
-              viewportFraction: 1.0),
-          onPageChanged: (int page) {
-            setState(() {
-              _currentPage = page;
-            });
-          },
-          children: buildMyFamilDetailPages()),
-      bottomSheet: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _buildPageIndicator(),
+            children: buildMyFamilDetailPages()),
+        bottomSheet: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: _buildPageIndicator(),
+        ),
       ),
     );
   }
@@ -197,7 +203,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipFocus = FocusNode();
 
     if (sharedbyme.child != null) {
-      if (sharedbyme.child.firstName != null) {
+      if (sharedbyme.child.firstName != null &&
+          sharedbyme.child.lastName != null) {
         firstNameController.text = sharedbyme.child.firstName;
         middleNameController.text = sharedbyme.child.middleName;
         lastNameController.text = sharedbyme.child.lastName;
@@ -208,32 +215,54 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       lastNameController.text = '';
     }
 
-    if (sharedbyme.child.isVirtualUser == true) {
+    if (sharedbyme?.child?.isVirtualUser == null) {
       try {
-        MyProfileModel myProf =
-            PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-        if (myProf.result.userContactCollection3 != null) {
-          if (myProf.result.userContactCollection3.length > 0) {
-            mobileNoController.text =
-                myProf.result.userContactCollection3[0].phoneNumber;
-            emailController.text =
-                myProf.result.userContactCollection3[0].email;
+          MyProfileModel myProf =
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3.length > 0) {
+              mobileNoController.text =
+                  myProf.result.userContactCollection3[0].phoneNumber;
+              emailController.text =
+                  myProf.result.userContactCollection3[0].email;
+            }
           }
+        } catch (e) {
+          mobileNoController.text = '';
+          emailController.text = '';
         }
-      } catch (e) {
-        mobileNoController.text = '';
-        emailController.text = '';
-      }
-    } else {
-      if(sharedbyme.child.userContactCollection3.isNotEmpty){
-        mobileNoController.text =
-          sharedbyme.child.userContactCollection3[0].phoneNumber;
-      emailController.text = sharedbyme.child.userContactCollection3[0].email;
-      }
+
+      /* if (sharedbyme.child.isVirtualUser == true) {
+        try {
+          MyProfileModel myProf =
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3.length > 0) {
+              mobileNoController.text =
+                  myProf.result.userContactCollection3[0].phoneNumber;
+              emailController.text =
+                  myProf.result.userContactCollection3[0].email;
+            }
+          }
+        } catch (e) {
+          mobileNoController.text = '';
+          emailController.text = '';
+        }
+      } else {
+        if (sharedbyme.child.userContactCollection3.isNotEmpty) {
+          mobileNoController.text =
+              sharedbyme.child.userContactCollection3[0].phoneNumber;
+          emailController.text =
+              sharedbyme.child.userContactCollection3[0].email;
+        }
+      } */
     }
 
     if (new CommonUtil().checkIfStringisNull(sharedbyme.child.bloodGroup)) {
-      renameBloodGroup(sharedbyme.child.bloodGroup);
+      //renameBloodGroup(sharedbyme.child.bloodGroup);
+      String bloodGroup = sharedbyme.child.bloodGroup;
+      bloodGroupController.text = bloodGroup.split(' ')[0];
+      bloodRangeController.text = bloodGroup.split(' ')[1];
     }
 
     if (sharedbyme.child.gender != null) {

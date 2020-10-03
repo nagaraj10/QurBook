@@ -442,7 +442,7 @@ class CommonUtil {
       _myProfileBloc
           .getCompleteProfileData(Constants.KEY_USERID)
           .then((profileCompleteData) {
-        if (profileCompleteData.response.data.medicalPreferences != null) {
+        if (profileCompleteData?.response?.data?.medicalPreferences != null) {
           MedicalPreferences medicalPreferences =
               profileCompleteData.response.data.medicalPreferences;
 
