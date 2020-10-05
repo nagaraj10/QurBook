@@ -265,50 +265,6 @@ const String mobileNumber = '9176117878';
 const String STR_NOTES = 'Notes';
 const String STR_ONLY_ONE = 'Can attach only one record';
 
-//for appointments
-const String Appointments_Title = "Appointments";
-const String Appointments_upcoming = "Upcoming Appointments";
-
-const String Appointments_joinCall = 'Join Call';
-const String Appointments_history = "Appoinment History";
-const String Appointments_hours = "Hrs";
-const String Appointments_minutes = "Mins";
-const String Appointments_chat = "Chat";
-const String Appointments_notes = 'Notes';
-const String Appointments_records = 'Records';
-const String Appointments_receipt = 'Receipt';
-const String Appointments_reshedule = 'Reshedule';
-const String Appointments_cancel = 'Cancel';
-const String Appointments_new = 'New Appointment';
-const String YOUR_BOOKING_SUCCESS =
-    "Your booking has been cancelled succesfully..";
-const String YOUR_RESHEDULE_SUCCESS =
-    "Your booking has been resheduled succesfully..";
-const String BOOKING_CANCEL = "Booking cancellation failed.. Plesae try again!";
-const String RESHEDULE_CANCEL = "Resheduling failed.. Plesae try again!";
-const String RESHEDULE_SUCCESS_MESSAGE =
-    "Appointment reschedule done successfully";
-const String SLOT_NOT_AVAILABLE = "Slot is not available.. Please try again!";
-const String Appointments_followUpStatus = 'Next follow up on';
-const String Appointments_notesImage = 'assets/icons/notes.png';
-const String Appointments_voiceNotesImage = 'assets/icons/voice-notes.png';
-const String Appointments_recordsImage = 'assets/icons/records.png';
-const String Appointments_receiptImage = 'assets/icons/receipt.png';
-const String Appointments_resheduleImage = 'assets/icons/reschedule.png';
-const String Appointments_cancelImage = 'assets/icons/wrong.png';
-const String Appointments_chatImage = 'assets/navicons/chat.png';
-const String Appointments_prescriptionImage = 'assets/icons/prescription.png';
-const String Appointments_newAppoinmentImage =
-    'assets/icons/new-appointment.svg';
-const String Appointments_slot_format = 'yyyy-MM-dd HH:mm:ss';
-const String Appointments_time_format = "hh:mm a";
-const String STATIC_HOUR = '00';
-const String ZERO = '0';
-const String callBack = 'Completed';
-const String Appointments_days = ' days';
-const String PATIENT_FOLLOW_UP = 'Patient follow up';
-const String VERIFIED = 'Verified';
-const String NOT_VERIFIED = 'Not Verified';
 
 //ICON for Device Reading widgets
 

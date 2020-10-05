@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -7,26 +6,23 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
-import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/DoctorTimeSlotWidget.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
-import 'package:myfhb/telehealth/features/chat/view/chat.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DoctorUpcomingAppointments extends StatefulWidget {
-  History doc;
+  Past doc;
   String hour;
   String minute;
   String days;
@@ -43,51 +39,17 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
   FlutterToast toast = new FlutterToast();
   List<String> bookingIds = new List();
-  AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
+  List<String> dates = new List();
+
+  CancelAppointmentViewModel cancelAppointmentViewModel;
   SharedPreferences prefs;
   ChatViewModel chatViewModel = ChatViewModel();
-
-  /* Timer timer;
-  String hour;
-  String minutes;
-  String days;*/
 
   @override
   void initState() {
     // TODO: implement initState
-    /*timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      if (widget.doc.plannedStartDateTime != null) {
-        String hours, min;
-        int dys;
-        DateTime dob1 = DateFormat("yyyy-MM-dd HH:mm:ss")
-            .parse(widget.doc.plannedStartDateTime);
-        DateTime dob2 =
-            DateFormat("yyyy-MM-dd HH:mm:ss").parse('${DateTime.now()}');
-        Duration dur = dob1.difference(dob2);
-        dys = dur.inDays;
-        hours = dur.inHours >= 0 && dur.inHours <= 24
-            ? (dur.inHours.remainder(24)).round().toString().padLeft(2, '0')
-            : '00';
-        min = dur.inHours >= 0 && dur.inHours <= 24
-            ? (dur.inMinutes.remainder(60)).toString().padLeft(2, '0')
-            : '00';
-        setState(() {
-          hour = dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
-              ? '00'
-              : hours;
-          minutes = dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
-              ? '00'
-              : min;
-          days = dys >= 0 ? dys.toString() : '0';
-        });
-      } else {
-        setState(() {
-          hour = '00';
-          minutes = '00';
-          days = '0';
-        });
-      }
-    });*/
+    cancelAppointmentViewModel =
+        Provider.of<CancelAppointmentViewModel>(context, listen: false);
     super.initState();
   }
 
@@ -106,15 +68,12 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
             Container(
                 padding: EdgeInsets.all(8),
                 child: Stack(
-//                  crossAxisAlignment: CrossAxisAlignment.start,
-//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Container(
-//                      width:MediaQuery.of(context).size.width/1.8,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          docPhotoView(widget.doc),
+                          commonWidget.docPhotoView(widget.doc),
                           SizedBoxWidget(
                             width: 10,
                           ),
@@ -123,16 +82,28 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               commonWidget.docName(
-                                  context, widget.doc.doctorName),
+                                  context,
+                                  widget.doc.doctor.user.firstName +
+                                      ' ' +
+                                      widget.doc.doctor.user.lastName),
                               SizedBoxWidget(height: 3.0, width: 0),
-                              widget.doc.specialization == null
+                              widget.doc?.doctor?.specialization == null
                                   ? Container()
-                                  : commonWidget.docStatus(
-                                      context, widget.doc.specialization ?? ''),
-                              widget.doc.specialization == null
+                                  : commonWidget.docStatus(context,
+                                      widget.doc.doctor.specialization ?? ''),
+                              widget.doc.doctor.specialization == null
                                   ? Container()
                                   : SizedBox(height: 3.0),
-                              commonWidget.docLoc(context, widget.doc.location),
+                              commonWidget.docLoc(
+                                  context,
+                                  widget
+                                          .doc
+                                          ?.doctor
+                                          ?.user
+                                          ?.userAddressCollection3[0]
+                                          ?.city
+                                          ?.name ??
+                                      ''),
                               SizedBox(height: 5.0),
                               DoctorTimeSlotWidget(
                                 doc: widget.doc,
@@ -163,7 +134,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                 : 15,
                           ),
                           SizedBoxWidget(
-                            height: widget.doc.specialization == null ? 30 : 40,
+                            height: widget.doc?.doctor?.specialization == null
+                                ? 30
+                                : 40,
                           ),
                           commonWidget.count(widget.doc.slotNumber),
                           TextWidget(
@@ -201,7 +174,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                 children: [
                   commonWidget.iconWithText(Constants.Appointments_receiptImage,
                       Colors.black38, Constants.Appointments_receipt, () {
-                    moveToBilsPage(widget.doc.paymentMediaMetaId);
+                    moveToBilsPage(widget.doc.healthRecord);
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(
@@ -223,12 +196,13 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         ));
   }
 
-  void goToChatIntegration(History doc) {
+  void goToChatIntegration(Past doc) {
     //chat integration start
-    String doctorId = doc.doctorId;
-    String doctorName = doc.doctorName;
-    String doctorPic = doc.doctorPic;
-    chatViewModel.storePatientDetailsToFCM(doctorId, doctorName, doctorPic, context);
+    String doctorId = doc.doctor.id;
+    String doctorName = doc.doctor.user.name;
+    String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
+    chatViewModel.storePatientDetailsToFCM(
+        doctorId, doctorName, doctorPic, context);
   }
 
   void navigateToProviderScreen(doc, isReshedule) {
@@ -242,44 +216,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     ).then((value) => widget.onChanged(Constants.callBack));
   }
 
-  Widget docPhotoView(History doc) {
-    return Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(50),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFFe3e2e2),
-                blurRadius: 16,
-                // has the effect of softening the shadow
-                spreadRadius: 5.0,
-                // has the effect of extending the shadow
-                offset: Offset(
-                  0.0, // horizontal, move right 10
-                  0.0, // vertical, move down 10
-                ),
-              )
-            ]),
-        child: ClipOval(
-          child: Container(
-            child: //Container(color: Color(fhbColors.bgColorContainer)),
-                doc.doctorPic == null
-                    ? Container(color: Color(fhbColors.bgColorContainer))
-                    : Image.network(
-                        doc.doctorPic,
-                        fit: BoxFit.cover,
-                        height: 40,
-                        width: 40,
-                      ),
-            color: Color(fhbColors.bgColorContainer),
-            height: 50,
-            width: 50,
-          ),
-        ));
-  }
-
-  _displayDialog(BuildContext context, List<History> appointments) async {
+  _displayDialog(BuildContext context, List<Past> appointments) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -369,9 +306,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         });
   }
 
-  getCancelAppoitment(List<History> appointments) {
+  getCancelAppoitment(List<Past> appointments) {
     cancelAppointment(appointments).then((value) {
-      if (value.status == 200 && value.success == true) {
+      if (value == null) {
+        toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
+      } else if ( value.isSuccess == true) {
         widget.onChanged(Constants.callBack);
         toast.getToast(Constants.YOUR_BOOKING_SUCCESS, Colors.green);
       } else {
@@ -381,19 +320,25 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   }
 
   Future<CancelAppointmentModel> cancelAppointment(
-      List<History> appointments) async {
+      List<Past> appointments) async {
     for (int i = 0; i < appointments.length; i++) {
       bookingIds.add(appointments[i].bookingId);
+      dates.add(appointments[i].plannedStartDateTime);
     }
     CancelAppointmentModel cancelAppointment =
-        await appointmentsViewModel.fetchCancelAppointment(bookingIds);
+        await cancelAppointmentViewModel.fetchCancelAppointment(bookingIds, dates);
 
     return cancelAppointment;
   }
 
-  void moveToBilsPage(String paymentMediaMetaId) async {
+  void moveToBilsPage(HealthRecord healthRecord) async {
     List<String> paymentID = new List();
-    paymentID.add(paymentMediaMetaId);
+    if (healthRecord!=null && healthRecord.bills != null &&
+        healthRecord.bills.length > 0) {
+      for (int i = 0; i < healthRecord.bills.length; i++) {
+          paymentID.add(healthRecord.bills[i]);
+      }
+    }
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
         categoryPosition: new AppointmentsCommonWidget()

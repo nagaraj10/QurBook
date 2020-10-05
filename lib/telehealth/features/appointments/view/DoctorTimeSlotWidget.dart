@@ -1,17 +1,17 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as Constants;
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'package:myfhb/telehealth/features/appointments/model/timeModel.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
+import 'package:provider/provider.dart';
 
 class DoctorTimeSlotWidget extends StatefulWidget {
-  History doc;
+  Past doc;
   ValueChanged<String> onChanged;
 
   DoctorTimeSlotWidget({this.doc, this.onChanged});
@@ -25,6 +25,8 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
   String hour;
   String minutes;
   String days;
+  Time time;
+  AppointmentsListViewModel appointmentsViewModel;
 
   @override
   void dispose() {
@@ -36,36 +38,17 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
   @override
   void initState() {
     // TODO: implement initState
+    appointmentsViewModel =
+        Provider.of<AppointmentsListViewModel>(context, listen: false);
     timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
       if (widget.doc.plannedStartDateTime != null) {
-        String hours, min;
-        int dys;
-        DateTime dob1 = DateFormat(Constants.Appointments_slot_format)
-            .parse(widget.doc.plannedStartDateTime);
-        DateTime dob2 = DateFormat(Constants.Appointments_slot_format)
-            .parse('${DateTime.now()}');
-        Duration dur = dob1.difference(dob2);
-        dys = dur.inDays;
-        hours = dur.inHours >= 0 && dur.inHours <= 24
-            ? (dur.inHours.remainder(24))
-                .round()
-                .toString()
-                .padLeft(2, Constants.ZERO)
-            : Constants.STATIC_HOUR;
-        min = dur.inHours >= 0 && dur.inHours <= 24
-            ? (dur.inMinutes.remainder(60))
-                .toString()
-                .padLeft(2, Constants.ZERO)
-            : Constants.STATIC_HOUR;
         setState(() {
-          hour = dur.inHours.remainder(24).toInt() <= 0 || dur.inHours >= 24
-              ? Constants.STATIC_HOUR
-              : hours;
-          minutes =  dur.inHours >= 24 || int.parse(min) <=0
-              ? Constants.STATIC_HOUR
-              : min;
-//
-          days = dys >= 0 ? dys.toString() : Constants.ZERO;
+          hour = appointmentsViewModel
+              .getTimeSlot(widget.doc.plannedStartDateTime).hours;
+          minutes = appointmentsViewModel
+              .getTimeSlot(widget.doc.plannedStartDateTime).minutes;
+          days = appointmentsViewModel
+              .getTimeSlot(widget.doc.plannedStartDateTime).daysCount;
         });
       } else {
         setState(() {
@@ -91,9 +74,6 @@ class DoctorTimeSlotWidgetState extends State<DoctorTimeSlotWidget> {
                     minutes == Constants.STATIC_HOUR) ||
                 hour == null ||
                 minutes == null)
-//        ||
-//                hour.length == 0 ||
-//                minute.length == 0)
             ? Container()
             : Row(
                 children: [

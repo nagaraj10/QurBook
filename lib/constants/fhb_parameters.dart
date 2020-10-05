@@ -456,38 +456,6 @@ const String strOxygen = "oxygenSaturation";
 const String strentities = "entities";
 const String strUser = "user";
 
-// For Telehealth Appointments
-const String strHistory="history";
-const String strUpcoming="upcoming";
-const String strAppointmentId="appointmentId";
-const String strHealthRecord="healthRecord";
-const String strPlannedStartDateTime="plannedStartDateTime";
-const String strPlannedEndDateTime="plannedEndDateTime";
-const String strSlotNumber="slotNumber";
-const String strIsRefunded="isRefunded";
-const String strBookingID="bookingID";
-const String strSharedMedicalRecordsId="sharedMedicalRecordsId";
-const String strIsMedicalRecordsShared="isMedicalRecordsShared";
-const String strDoctorPic="doctorPic";
-const String strDoctorName="doctorName";
-const String strDoctorSessionId="doctorSessionId";
-const String strPatientId="patientId";
-const String strActualStartDateTime="actualStartDateTime";
-const String strActualEndDateTime="actualEndDateTime";
-const String strFollowupDate="followupDate";
-const String strFollowupFee="followupFee";
-const String strPaymentMediaMetaId="paymentMediaMetaId";
-const String strRefundMediaMetaId="refundMediaMetaId";
-const String strPrescription="prescription";
-const String strVoice="voice";
-const String strrx="rx";
-const String strothers="others";
-const String strCreatedFor="createdFor";
-const String strStatusId="statusId";
-const String strIsFollowUpFee="isFollowUpFee";
-const String strAppointmentInfo="appointmentInfo";
-const String strPlannedFollowupDate="plannedFollowupDate";
-const String strPaymentInfo="paymentInfo";
 //Add Family User Info
 const String make_a_choice = 'Make a Choice!';
 
