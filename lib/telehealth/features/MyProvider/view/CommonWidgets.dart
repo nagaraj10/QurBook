@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Languages.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/ProfilePic.dart';

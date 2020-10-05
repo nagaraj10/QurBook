@@ -10,12 +10,12 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/my_family/models/RelationShip.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
+import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -73,10 +73,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   FocusNode dateOfBirthFocus = FocusNode();
 
   RelationShipResponseList relationShipResponseList;
-  RelationShip selectedRelationShip;
+  RelationsShipCollection selectedRelationShip;
 
   DateTime dateTime = DateTime.now();
-  MyProfile myProfile;
+  MyProfileModel myProfile;
   bool isCalled = false;
 
   List<int> fetchedProfileData;
@@ -99,56 +99,62 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          title: Text(
-            CommonConstants.my_family_title,
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-              fontSize: 18,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop(true);
+        return true;
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            title: Text(
+              CommonConstants.my_family_title,
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+                fontSize: 18,
+              ),
             ),
-          ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 20,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 20,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
+                            arguments: AddFamilyUserInfoArguments(
+                                sharedbyme: widget
+                                    .arguments.profilesSharedByMe[_currentPage],
+                                fromClass: CommonConstants.my_family))
+                        .then((value) {});
+                  })
+            ]),
+        body: PageView(
+            scrollDirection: Axis.horizontal,
+            physics: ClampingScrollPhysics(),
+            controller: PageController(
+                initialPage: _currentPage,
+                keepPage: false,
+                viewportFraction: 1.0),
+            onPageChanged: (int page) {
+              setState(() {
+                _currentPage = page;
+              });
             },
-          ),
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {
-                  Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
-                          arguments: AddFamilyUserInfoArguments(
-                              sharedbyme: widget
-                                  .arguments.profilesSharedByMe[_currentPage],
-                              fromClass: CommonConstants.my_family))
-                      .then((value) {});
-                })
-          ]),
-      body: PageView(
-          scrollDirection: Axis.horizontal,
-          physics: ClampingScrollPhysics(),
-          controller: PageController(
-              initialPage: _currentPage,
-              keepPage: false,
-              viewportFraction: 1.0),
-          onPageChanged: (int page) {
-            setState(() {
-              _currentPage = page;
-            });
-          },
-          children: buildMyFamilDetailPages()),
-      bottomSheet: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _buildPageIndicator(),
+            children: buildMyFamilDetailPages()),
+        bottomSheet: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: _buildPageIndicator(),
+        ),
       ),
     );
   }
@@ -162,7 +168,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return children;
   }
 
-  Widget _showPageData(Sharedbyme sharedbyme) {
+  Widget _showPageData(SharedByUsers sharedbyme) {
     nameController = TextEditingController(text: '');
     nameFocus = FocusNode();
 
@@ -196,45 +202,81 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipController = TextEditingController(text: '');
     relationShipFocus = FocusNode();
 
-    if (sharedbyme.profileData.qualifiedFullName != null) {
-      firstNameController.text =
-          sharedbyme.profileData.qualifiedFullName.firstName;
-      middleNameController.text =
-          sharedbyme.profileData.qualifiedFullName.middleName;
-      lastNameController.text =
-          sharedbyme.profileData.qualifiedFullName.lastName;
+    if (sharedbyme.child != null) {
+      if (sharedbyme.child.firstName != null &&
+          sharedbyme.child.lastName != null) {
+        firstNameController.text = sharedbyme.child.firstName;
+        middleNameController.text = sharedbyme.child.middleName;
+        lastNameController.text = sharedbyme.child.lastName;
+      }
     } else {
-      firstNameController.text = sharedbyme.profileData.name;
+      firstNameController.text = sharedbyme.child.name;
       middleNameController.text = '';
       lastNameController.text = '';
     }
 
-    if (sharedbyme.profileData.isVirtualUser == true) {
-      MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-      mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
-      emailController.text = myProf.response.data.generalInfo.email;
-    } else {
-      mobileNoController.text = sharedbyme.profileData.phoneNumber;
-      emailController.text = sharedbyme.profileData.email;
+    if (sharedbyme?.child?.isVirtualUser == null) {
+      try {
+          MyProfileModel myProf =
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3.length > 0) {
+              mobileNoController.text =
+                  myProf.result.userContactCollection3[0].phoneNumber;
+              emailController.text =
+                  myProf.result.userContactCollection3[0].email;
+            }
+          }
+        } catch (e) {
+          mobileNoController.text = '';
+          emailController.text = '';
+        }
+
+      /* if (sharedbyme.child.isVirtualUser == true) {
+        try {
+          MyProfileModel myProf =
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3.length > 0) {
+              mobileNoController.text =
+                  myProf.result.userContactCollection3[0].phoneNumber;
+              emailController.text =
+                  myProf.result.userContactCollection3[0].email;
+            }
+          }
+        } catch (e) {
+          mobileNoController.text = '';
+          emailController.text = '';
+        }
+      } else {
+        if (sharedbyme.child.userContactCollection3.isNotEmpty) {
+          mobileNoController.text =
+              sharedbyme.child.userContactCollection3[0].phoneNumber;
+          emailController.text =
+              sharedbyme.child.userContactCollection3[0].email;
+        }
+      } */
     }
 
-    if (new CommonUtil()
-        .checkIfStringisNull(sharedbyme.profileData.bloodGroup)) {
-      renameBloodGroup(sharedbyme.profileData.bloodGroup);
+    if (new CommonUtil().checkIfStringisNull(sharedbyme.child.bloodGroup)) {
+      //renameBloodGroup(sharedbyme.child.bloodGroup);
+      String bloodGroup = sharedbyme.child.bloodGroup;
+      bloodGroupController.text = bloodGroup.split(' ')[0];
+      bloodRangeController.text = bloodGroup.split(' ')[1];
     }
 
-    if (sharedbyme.profileData.gender != null) {
-      genderController.text = toBeginningOfSentenceCase(
-          sharedbyme.profileData.gender.toLowerCase());
+    if (sharedbyme.child.gender != null) {
+      genderController.text =
+          toBeginningOfSentenceCase(sharedbyme.child.gender.toLowerCase());
     }
 
-    if (sharedbyme.linkedData.roleName != null) {
-      relationShipController.text = sharedbyme.linkedData.roleName;
+    if (sharedbyme.relationship != null) {
+      relationShipController.text = sharedbyme.relationship.name;
     }
 
-    if (sharedbyme.profileData.dateOfBirth != null) {
-      dateOfBirthController.text = new FHBUtils()
-          .getFormattedDateOnlyNew(sharedbyme.profileData.dateOfBirth);
+    if (sharedbyme.child.dateOfBirth != null) {
+      dateOfBirthController.text =
+          new FHBUtils().getFormattedDateOnlyNew(sharedbyme.child.dateOfBirth);
     }
 
     String profilebanner =
@@ -264,12 +306,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                           child: Opacity(
                               opacity: 1,
                               child: ClipOval(
-                                child: sharedbyme.profileData
-                                            .profilePicThumbnailURL !=
+                                child: sharedbyme
+                                            .child.profilePicThumbnailUrl !=
                                         null
                                     ? Image.network(
-                                        sharedbyme
-                                            .profileData.profilePicThumbnailURL,
+                                        sharedbyme.child.profilePicThumbnailUrl,
                                         fit: BoxFit.cover,
                                         width: 100,
                                         height: 100,
@@ -281,15 +322,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                             .getMyPrimaryColor()),
                                         child: Center(
                                           child: Text(
-                                            sharedbyme
-                                                        .profileData
-                                                        .qualifiedFullName
-                                                        .firstName !=
-                                                    null
-                                                ? sharedbyme
-                                                    .profileData
-                                                    .qualifiedFullName
-                                                    .firstName[0]
+                                            sharedbyme.child.firstName != null
+                                                ? sharedbyme.child.firstName[0]
                                                     .toUpperCase()
                                                 : '',
                                             style: TextStyle(
@@ -821,7 +855,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     );
   }
 
-  Widget _showViewInsuranceButton(Sharedbyme sharedbyme) {
+  Widget _showViewInsuranceButton(SharedByUsers sharedbyme) {
     final GestureDetector viewInsuranceButtonWithGesture = new GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, router.rt_FamilyInsurance,
@@ -864,7 +898,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return viewInsuranceButtonWithGesture;
   }
 
-  Widget _showViewHospitalButton(Sharedbyme sharedbyme) {
+  Widget _showViewHospitalButton(SharedByUsers sharedbyme) {
     final GestureDetector viewHospitalButtonWithGesture = new GestureDetector(
       onTap: () {
         Navigator.pushNamed(context, router.rt_FamilyInsurance,
@@ -954,9 +988,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.relationship),
                 value: selectedRelationShip,
-                items: data.relationShipAry.map((relationShipDetail) {
+                items: data.result.map((relationShipDetail) {
                   return DropdownMenuItem(
-                    child: new Text(relationShipDetail.roleName,
+                    child: new Text(relationShipDetail.name,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0,
@@ -964,7 +998,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     value: relationShipDetail,
                   );
                 }).toList(),
-                onChanged: (RelationShip newValue) {
+                onChanged: (newValue) {
                   setState(() {
                     selectedRelationShip = newValue;
                   });

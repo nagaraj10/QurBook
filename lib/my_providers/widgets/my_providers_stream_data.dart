@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 
@@ -15,10 +16,10 @@ class MyProvidersStreamData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<ApiResponse<MyProvidersResponseList>>(
+    return StreamBuilder<ApiResponse<MyProvidersResponse>>(
       stream: providersBloc.providersListStream,
       builder: (context,
-          AsyncSnapshot<ApiResponse<MyProvidersResponseList>> snapshot) {
+          AsyncSnapshot<ApiResponse<MyProvidersResponse>> snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
@@ -40,7 +41,7 @@ class MyProvidersStreamData extends StatelessWidget {
 
             case Status.COMPLETED:
               return MyProvidersTabBar(
-                  data: snapshot.data.data.response.data,
+                  data: snapshot.data.data.result,
                   tabController: tabController,
                   providersBloc: providersBloc);
               break;

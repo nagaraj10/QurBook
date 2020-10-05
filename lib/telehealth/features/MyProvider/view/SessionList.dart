@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GridViewNew.dart';
 
 class SessionList extends StatefulWidget {
-  final List<SessionsTime> sessionData;
+  final List<SlotSessionsModel> sessionData;
   Function(int, int) selectedPosition;
 
   SessionList({this.sessionData, this.selectedPosition});

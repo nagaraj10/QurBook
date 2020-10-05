@@ -2,18 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/model/user/MyProfileData.dart';
-import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
+import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -37,6 +36,12 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
+  var cntrlr_addr_one = TextEditingController(text: '');
+  var cntrlr_addr_two = TextEditingController(text: '');
+  var cntrlr_addr_city = TextEditingController(text: '');
+  var cntrlr_addr_state = TextEditingController(text: '');
+  var cntrlr_addr_zip = TextEditingController(text: '');
+
   @override
   void initState() {
     PreferenceUtil.init();
@@ -50,11 +55,13 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   Widget getProfileDetailClone() {
     Widget profileWidget;
-
-    MyProfile myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-
-    profileWidget = getProfileWidget(myProfile.response.data);
+    MyProfileModel myProfile;
+    try {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      profileWidget = getProfileWidget(myProfile.result);
+    } catch (e) {
+      profileWidget = getProfileWidget(null);
+    }
 
     return profileWidget;
   }
@@ -76,7 +83,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
           }
         }
       } else {
-        var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
+        var bloodGroupSplitName = selectedBloodGroupClone.split('');
         if (bloodGroupSplitName.length > 1) {
           for (String bloodGroup in variable.bloodGroupArray) {
             if (bloodGroupSplitName[0] == bloodGroup) {
@@ -94,44 +101,52 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  Widget getProfileWidget(MyProfileData data) {
-    if (data.generalInfo.phoneNumber != null) {
-      mobile.text = data.generalInfo.phoneNumber;
-    }
-    if (data.generalInfo.qualifiedFullName != null) {
-      name.text = toBeginningOfSentenceCase(
-          data.generalInfo.qualifiedFullName.firstName.toLowerCase() +
-              data.generalInfo.qualifiedFullName.lastName.toLowerCase());
-    }
-    if (data.generalInfo.email != null) {
-      email.text = data.generalInfo.email;
-    }
-    if (data.generalInfo.gender != null) {
-      gender.text =
-          toBeginningOfSentenceCase(data.generalInfo.gender.toLowerCase());
-    }
-    if (data.generalInfo.bloodGroup != null) {
-      renameBloodGroup(data.generalInfo.bloodGroup);
-    }
-    if (data.generalInfo.dateOfBirth != null) {
-      dob.text =
-          new FHBUtils().getFormattedDateOnlyNew(data.generalInfo.dateOfBirth);
-    }
-    if (data.generalInfo.qualifiedFullName != null) {
-      firstName.text = data.generalInfo.qualifiedFullName.firstName;
-      middleName.text =
-          (data.generalInfo.qualifiedFullName.middleName != null &&
-                  data.generalInfo.qualifiedFullName.middleName != '')
-              ? data.generalInfo.qualifiedFullName.middleName
-              : '';
-      lastName.text = data.generalInfo.qualifiedFullName.lastName;
-    } else {
-      firstName.text = data.generalInfo.qualifiedFullName != null
-          ? data.generalInfo.qualifiedFullName.firstName +
-              data.generalInfo.qualifiedFullName.lastName
-          : '';
-      middleName.text = '';
-      lastName.text = '';
+  Widget getProfileWidget(MyProfileResult data) {
+    if (data != null) {
+      if (data.userContactCollection3 != null) {
+        if (data.userContactCollection3.length > 0) {
+          mobile.text = data.userContactCollection3[0].phoneNumber;
+        }
+      }
+      if (data != null) {
+        name.text = toBeginningOfSentenceCase(
+            data.firstName.toLowerCase() + data.lastName.toLowerCase());
+      }
+      if (data.userContactCollection3 != null) {
+        if (data.userContactCollection3.length > 0) {
+          email.text = data.userContactCollection3[0].email;
+        }
+      }
+      if (data.gender != null) {
+        gender.text = toBeginningOfSentenceCase(data.gender.toLowerCase());
+      }
+      if (data.bloodGroup != null) {
+        renameBloodGroup(data.bloodGroup);
+      }
+      if (data.dateOfBirth != null) {
+        dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth);
+      }
+      if (data != null) {
+        firstName.text = data.firstName;
+        middleName.text = (data.middleName != null && data.middleName != '')
+            ? data.middleName
+            : '';
+        lastName.text = data.lastName;
+      } else {
+        firstName.text = data != null ? data.firstName + data.lastName : '';
+        middleName.text = '';
+        lastName.text = '';
+      }
+
+      if (data.userAddressCollection3 != null) {
+        if (data.userAddressCollection3.length > 0) {
+          cntrlr_addr_one.text = data.userAddressCollection3[0].addressLine1;
+          cntrlr_addr_two.text = data.userAddressCollection3[0].addressLine2;
+          cntrlr_addr_zip.text = data.userAddressCollection3[0].pincode;
+          cntrlr_addr_city.text = data.userAddressCollection3[0].city.name;
+          cntrlr_addr_state.text = data.userAddressCollection3[0].state.name;
+        }
+      }
     }
 
     return Container(
@@ -202,32 +217,32 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       ),
                     ),
                   ),
-                  ((data.generalInfo.isEmailVerified == null &&
-                              data.generalInfo.email != '') ||
-                          (data.generalInfo.isEmailVerified == false &&
-                              data.generalInfo.email != ''))
-                      ? GestureDetector(
-                          child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text(Constants.VerifyEmail,
-                                  style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(new CommonUtil()
-                                          .getMyPrimaryColor())))),
-                          onTap: () {
-                            new FHBUtils().check().then((intenet) {
-                              if (intenet != null && intenet) {
-                                verifyEmail();
-                              } else {
-                                new FHBBasicWidget().showInSnackBar(
-                                    Constants.STR_NO_CONNECTIVITY,
-                                    scaffold_state);
-                              }
-                            });
-                          },
-                        )
-                      : Text('')
+                  // ((data.generalInfo.isEmailVerified == null &&
+                  //             data.generalInfo.email != '') ||
+                  //         (data.generalInfo.isEmailVerified == false &&
+                  //             data.generalInfo.email != ''))
+                  //     ? GestureDetector(
+                  //         child: Padding(
+                  //             padding: EdgeInsets.all(10),
+                  //             child: Text(Constants.VerifyEmail,
+                  //                 style: TextStyle(
+                  //                     fontSize: 13.0,
+                  //                     fontWeight: FontWeight.w400,
+                  //                     color: Color(new CommonUtil()
+                  //                         .getMyPrimaryColor())))),
+                  //         onTap: () {
+                  //           new FHBUtils().check().then((intenet) {
+                  //             if (intenet != null && intenet) {
+                  //               verifyEmail();
+                  //             } else {
+                  //               new FHBBasicWidget().showInSnackBar(
+                  //                   Constants.STR_NO_CONNECTIVITY,
+                  //                   scaffold_state);
+                  //             }
+                  //           });
+                  //         },
+                  //       )
+                  //     : Text('')
                 ],
               ),
 
@@ -283,6 +298,61 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       hintText: CommonConstants.date_of_birth,
                       hintStyle: TextStyle(fontSize: 12),
                       labelText: CommonConstants.date_of_birth),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_one,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_line_1,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_two,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_line_2,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_city,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_city,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_state,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_state,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_zip,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_zip,
+                  ),
                 ),
               ),
             ],

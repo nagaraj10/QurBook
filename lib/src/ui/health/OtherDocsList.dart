@@ -7,11 +7,12 @@ import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class OtherDocsList extends StatefulWidget {
-  final CompleteData completeData;
+  final HealthRecordList completeData;
   final Function callBackToRefresh;
   final String categoryName;
   final String categoryId;
@@ -61,8 +62,8 @@ class _OtherDocsState extends State<OtherDocsList> {
     return getWidgetToDisplayOtherDocsList(widget.completeData);
   }
 
-  Widget getWidgetToDisplayOtherDocsList(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget getWidgetToDisplayOtherDocsList(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, widget.categoryDescription);
@@ -100,7 +101,7 @@ class _OtherDocsState extends State<OtherDocsList> {
     widget.callBackToRefresh();
   }
 
-  getCardWidgetForOtherDocs(MediaMetaInfo mediaMetaInfoObj, int i) {
+  getCardWidgetForOtherDocs(HealthResult mediaMetaInfoObj, int i) {
     return InkWell(
         onLongPress: () {
           if (widget.allowSelect) {
@@ -155,10 +156,11 @@ class _OtherDocsState extends State<OtherDocsList> {
                 radius: 25,
                 backgroundColor: const Color(fhbColors.bgColorContainer),
                 child: Image.network(
-                  mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                  /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                       ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                      : Constants.BASE_URL +
-                          mediaMetaInfoObj.metaInfo.categoryInfo.logo,
+                      :*/
+                  Constants.BASE_URL +
+                      mediaMetaInfoObj.metadata.healthRecordCategory.logo,
                   height: 25,
                   width: 25,
                   color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -175,16 +177,16 @@ class _OtherDocsState extends State<OtherDocsList> {
                   children: <Widget>[
                     SizedBox(height: 10.0),
                     Text(
-                      mediaMetaInfoObj.metaInfo.fileName != null
-                          ? mediaMetaInfoObj.metaInfo.fileName
+                      mediaMetaInfoObj.metadata.fileName != null
+                          ? mediaMetaInfoObj.metadata.fileName
                           : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                       overflow: TextOverflow.fade,
                       softWrap: false,
                     ),
                     Text(
-                      new FHBUtils()
-                          .getFormattedDateString(mediaMetaInfoObj.createdOn),
+                      new FHBUtils().getFormattedDateString(
+                          mediaMetaInfoObj.metadata.healthRecordType.createdOn),
                       style: TextStyle(color: Colors.grey[400], fontSize: 12),
                     )
                   ],
@@ -213,8 +215,8 @@ class _OtherDocsState extends State<OtherDocsList> {
                           new CommonUtil()
                               .bookMarkRecord(mediaMetaInfoObj, _refresh);
                         }),
-                    (mediaMetaInfoObj.metaInfo.hasVoiceNotes != null &&
-                            mediaMetaInfoObj.metaInfo.hasVoiceNotes)
+                    (mediaMetaInfoObj.metadata.hasVoiceNotes != null &&
+                            mediaMetaInfoObj.metadata.hasVoiceNotes)
                         ? Icon(
                             Icons.mic,
                             color: Colors.black54,

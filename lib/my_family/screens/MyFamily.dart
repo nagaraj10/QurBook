@@ -15,19 +15,15 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyData.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/my_family/models/RelationShip.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
-import 'package:myfhb/my_family/viewmodel/my_family_view_model.dart';
+import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:provider/provider.dart';
 
 class MyFamily extends StatefulWidget {
   @override
@@ -65,83 +61,155 @@ class _MyFamilyState extends State<MyFamily> {
 
   // Option 2
   String selectedBloodGroup;
-  RelationShip selectedRelationShip;
+  RelationsShipCollection selectedRelationShip;
 
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+
+  var dialogContext;
 
   @override
   void initState() {
     super.initState();
     _familyListBloc = new FamilyListBloc();
-    // _familyListBloc.getFamilyMembersList();
-    // _familyListBloc.getCustomRoles();
-
-    Provider.of<MyFamilyViewModel>(context, listen: false)
-        .getFamilyMembersInfo();
+    _familyListBloc.getFamilyMembersListNew();
+    _familyListBloc.getCustomRoles();
 
     PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-      key: scaffold_state,
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
+  Widget build(BuildContext context) {
+    dialogContext = context;
+    return Scaffold(
+        key: scaffold_state,
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            saveMediaDialog(context);
+          },
+          backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         ),
-        onPressed: () {
-          saveMediaDialog(context);
-        },
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-      ),
-      body: getAllFamilyMembers());
+        body: getAllFamilyMembers());
+  }
 
   Widget getAllFamilyMembers() {
     Widget familyWidget;
 
-    return firstTym
-        ? PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER) != null
-            ? getMyFamilyMembers(
-                PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER))
-            : Consumer<MyFamilyViewModel>(
-                builder: (context, quoteViewModel, child) {
-                final FamilyMembersList familyMembersList =
-                    quoteViewModel.familyMembersList;
-                if (familyMembersList != null) {
-                  firstTym = false;
-                  PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
-                      familyMembersList.response.data);
+    return StreamBuilder<ApiResponse<FamilyMembers>>(
+      stream: _familyListBloc.familyMemberListNewStream,
+      builder: (context, AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              familyWidget = Center(
+                  child: SizedBox(
+                child: CircularProgressIndicator(
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                ),
+                width: 30,
+                height: 30,
+              ));
+              break;
 
-                  return familyWidget =
-                      getMyFamilyMembers(familyMembersList.response.data);
-                } else {
-                  return Center(
-                      child: SizedBox(
-                    child: CircularProgressIndicator(
-                      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-                    ),
-                    width: 30,
-                    height: 30,
-                  ));
-                }
-              })
+            case Status.ERROR:
+              familyWidget = FHBBasicWidget.getRefreshContainerButton(
+                  snapshot.data.message, () {
+                setState(() {});
+              });
+              break;
+
+            case Status.COMPLETED:
+              //rebuildFamilyBlock();
+              firstTym = false;
+              /* PreferenceUtil.saveFamilyDataNew(
+                            Constants.KEY_FAMILYMEMBERNEW,
+                            snapshot.data.data.result); */
+
+              familyWidget = getMyFamilyMembers(snapshot.data.data.result);
+              break;
+          }
+        } else {
+          familyWidget = Container(
+            width: 100,
+            height: 100,
+          );
+        }
+        return familyWidget;
+      },
+    );
+
+    /* return firstTym
+        ? PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBERNEW) != null
+            ? getMyFamilyMembers(
+                PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW))
+            : StreamBuilder<ApiResponse<FamilyMembers>>(
+                stream: _familyListBloc.familyMemberListNewStream,
+                builder: (context,
+                    AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
+                  if (snapshot.hasData) {
+                    switch (snapshot.data.status) {
+                      case Status.LOADING:
+                        familyWidget = Center(
+                            child: SizedBox(
+                          child: CircularProgressIndicator(
+                            backgroundColor:
+                                Color(CommonUtil().getMyPrimaryColor()),
+                          ),
+                          width: 30,
+                          height: 30,
+                        ));
+                        break;
+
+                      case Status.ERROR:
+                        familyWidget = FHBBasicWidget.getRefreshContainerButton(
+                            snapshot.data.message, () {
+                          setState(() {});
+                        });
+                        break;
+
+                      case Status.COMPLETED:
+                        //rebuildFamilyBlock();
+                        firstTym = false;
+                        PreferenceUtil.saveFamilyDataNew(
+                            Constants.KEY_FAMILYMEMBERNEW,
+                            snapshot.data.data.result);
+
+                        familyWidget =
+                            getMyFamilyMembers(snapshot.data.data.result);
+                        break;
+                    }
+                  } else {
+                    familyWidget = Container(
+                      width: 100,
+                      height: 100,
+                    );
+                  }
+                  return familyWidget;
+                },
+              )
         : getMyFamilyMembers(
-            PreferenceUtil.getFamilyData(Constants.KEY_FAMILYMEMBER));
+            PreferenceUtil.getFamilyDataNew(Constants.KEY_FAMILYMEMBERNEW)); */
   }
 
-  Widget getMyFamilyMembers(FamilyData data) {
+  Widget getMyFamilyMembers(FamilyMemberResult data) {
     return data != null
-        ? data.sharedbyme.length > 0
+        ? data.sharedByUsers.length > 0
             ? Container(
                 color: const Color(fhbColors.bgColorContainer),
                 child: ListView.builder(
+                  shrinkWrap: true,
                   padding: EdgeInsets.only(bottom: 20),
                   itemBuilder: (c, i) => getCardWidgetForUser(
-                      data.sharedbyme[i == 0 ? 0 : i - 1], i, data.sharedbyme),
-                  itemCount: data.sharedbyme.length + 1,
-                ))
+                      data.sharedByUsers[i == 0 ? 0 : i - 1],
+                      i,
+                      data.sharedByUsers),
+                  itemCount: data.sharedByUsers.length + 1,
+                ),
+              )
             : Container(
                 child: Center(
                   child: Padding(
@@ -178,33 +246,39 @@ class _MyFamilyState extends State<MyFamily> {
     return string[0].toUpperCase() + string.substring(1);
   }
 
-  Widget getCardWidgetForUser(
-      Sharedbyme data, int position, List<Sharedbyme> profilesSharedByMeAry) {
-    MyProfile myProfile;
-    String fulName;
+  Widget getCardWidgetForUser(SharedByUsers data, int position,
+      List<SharedByUsers> profilesSharedByMeAry) {
+    /* String familyMemberName = '';
+    if (data?.child != null) {
+      familyMemberName = '${data.child.firstName} ${data.child.lastName}';
+    } */
+    MyProfileModel myProfile;
+    String fulName = '';
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-      fulName = myProfile.response.data.generalInfo.qualifiedFullName != null
-          ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
-              ' ' +
-              myProfile.response.data.generalInfo.qualifiedFullName.lastName
+      fulName = myProfile.result != null
+          ? myProfile.result.firstName + ' ' + myProfile.result.lastName
           : '';
     } catch (e) {}
 
     return InkWell(
       onTap: () {
         if (position != 0) {
-          Navigator.pushNamed(context, router.rt_FamilyDetailScreen,
-                  arguments: MyFamilyDetailArguments(
-                      profilesSharedByMe: profilesSharedByMeAry,
-                      currentPage: position - 1))
-              .then((value) {
-            Provider.of<MyFamilyViewModel>(context, listen: false)
-                .getFamilyMembersInfo()
-                .then((value) {
+          Navigator.pushNamed(
+            context,
+            router.rt_FamilyDetailScreen,
+            arguments: MyFamilyDetailArguments(
+                profilesSharedByMe: profilesSharedByMeAry,
+                currentPage: position - 1),
+          ).then((value) {
+            if (value) {
+              setState(() {});
+            }
+
+            /*  _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
               PreferenceUtil.saveFamilyData(
-                  Constants.KEY_FAMILYMEMBER, value.response.data);
-            });
+                  Constants.KEY_FAMILYMEMBER, familyMembersList.result);
+            }); */
           });
         }
       },
@@ -230,16 +304,14 @@ class _MyFamilyState extends State<MyFamily> {
             children: <Widget>[
               ClipOval(
                 child: position == 0
-                    ? myProfile.response.data.generalInfo
-                                .profilePicThumbnailURL ==
-                            null
+                    ? data?.child?.profilePicThumbnailUrl == null
                         ? Container(
                             width: 60,
                             height: 60,
                             color: Color(fhbColors.bgColorContainer),
                             child: Center(
                               child: Text(
-                                fulName != null ? fulName.toUpperCase() : '',
+                                fulName != null ? fulName[0].toUpperCase() : '',
                                 style: TextStyle(
                                     fontSize: 22,
                                     color: Color(
@@ -248,38 +320,103 @@ class _MyFamilyState extends State<MyFamily> {
                             ),
                           )
                         : Image.network(
-                            myProfile.response.data.generalInfo
-                                .profilePicThumbnailURL,
+                            data.child.profilePicThumbnailUrl,
                             fit: BoxFit.cover,
                             width: 60,
                             height: 60,
                           )
-                    : data.profileData.profilePicThumbnailURL == null
-                        ? Container(
-                            width: 60,
-                            height: 60,
-                            color: Color(fhbColors.bgColorContainer),
-                            child: Center(
-                              child: Text(
-                                data.profileData.qualifiedFullName.firstName !=
-                                        null
-                                    ? data.profileData.qualifiedFullName
-                                        .firstName[0]
-                                        .toUpperCase()
-                                    : '',
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
-                              ),
-                            ),
-                          )
-                        : Image.network(
-                            data.profileData.profilePicThumbnailURL,
-                            fit: BoxFit.cover,
-                            width: 60,
-                            height: 60,
+                    : Container(
+                        width: 60,
+                        height: 60,
+                        color: Color(fhbColors.bgColorContainer),
+                        child: Center(
+                          child: Text(
+                            fulName != null
+                                ? fulName[0].toUpperCase()
+                                : '',
+                            style: TextStyle(
+                                fontSize: 22,
+                                color: Color(CommonUtil().getMyPrimaryColor())),
                           ),
+                        ),
+                      ),
+
+                /* ? myProfile != null
+                        ? myProfile.result != null
+                            ? myProfile.result.profilePicThumbnailUrl == null
+                                ? Container(
+                                    width: 60,
+                                    height: 60,
+                                    color: Color(fhbColors.bgColorContainer),
+                                    child: Center(
+                                      child: Text(
+                                        fulName != null
+                                            ? fulName[0].toUpperCase()
+                                            : '',
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      ),
+                                    ),
+                                  )
+                                : Image.network(
+                                    myProfile.result.profilePicThumbnailUrl,
+                                    fit: BoxFit.cover,
+                                    width: 60,
+                                    height: 60,
+                                  )
+                            : data.child.profilePicThumbnailUrl == null
+                                ? Container(
+                                    width: 60,
+                                    height: 60,
+                                    color: Color(fhbColors.bgColorContainer),
+                                    child: Center(
+                                      child: Text(
+                                        data.child.firstName != null
+                                            ? data.child.firstName[0]
+                                                .toUpperCase()
+                                            : '',
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      ),
+                                    ),
+                                  )
+                                : Image.network(
+                                    data.child.profilePicThumbnailUrl,
+                                    fit: BoxFit.cover,
+                                    width: 60,
+                                    height: 60,
+                                  )
+                        : Container(
+                            width: 60,
+                            height: 60,
+                            color: Color(fhbColors.bgColorContainer),
+                            child: Center(
+                              child: Text(
+                                fulName != null ? fulName[0].toUpperCase() : '',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            ),
+                          )
+                    : Container(
+                        width: 60,
+                        height: 60,
+                        color: Color(fhbColors.bgColorContainer),
+                        child: Center(
+                          child: Text(
+                            fulName != null ? fulName[0].toUpperCase() : '',
+                            style: TextStyle(
+                                fontSize: 22,
+                                color: Color(CommonUtil().getMyPrimaryColor())),
+                          ),
+                        ),
+                      ), */
               ),
               SizedBox(
                 width: 20,
@@ -296,11 +433,11 @@ class _MyFamilyState extends State<MyFamily> {
                               ? new CommonUtil()
                                   .titleCase(fulName.toLowerCase())
                               : ''
-                          : data.profileData.qualifiedFullName.firstName != null
-                              ? new CommonUtil().titleCase(data
-                                      .profileData.qualifiedFullName.firstName +
-                                  ' ' +
-                                  data.profileData.qualifiedFullName.lastName)
+                          : data.child.firstName != null
+                              ? new CommonUtil().titleCase(
+                                  data.child.firstName +
+                                      ' ' +
+                                      data.child.lastName)
                               : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                       softWrap: false,
@@ -309,28 +446,39 @@ class _MyFamilyState extends State<MyFamily> {
                     SizedBox(height: 10.0),
                     Text(
                       position == 0
-                          ? myProfile.response.data.generalInfo.countryCode +
-                              "-" +
-                              myProfile.response.data.generalInfo.phoneNumber
-                          : data.profileData.isVirtualUser != null
-                              ? PreferenceUtil.getProfileData(
-                                          Constants.KEY_PROFILE)
-                                      .response
-                                      .data
-                                      .generalInfo
-                                      .countryCode +
-                                  "-" +
-                                  PreferenceUtil.getProfileData(
-                                          Constants.KEY_PROFILE)
-                                      .response
-                                      .data
-                                      .generalInfo
-                                      .phoneNumber
-                              : data.profileData.phoneNumber != null
-                                  ? data.profileData.countryCode +
-                                      "-" +
-                                      data.profileData.phoneNumber
-                                  : '',
+                          ? myProfile != null
+                              ? myProfile.result != null
+                                  ? /* myProfile.result.countryCode +
+                                      "-" + */
+                                      myProfile.result.userContactCollection3[0]
+                                          .phoneNumber
+                                  : data.child.isVirtualUser != null
+                                      ? (PreferenceUtil.getProfileData(Constants.KEY_PROFILE).result != null
+                                              ? PreferenceUtil.getProfileData(
+                                                      Constants.KEY_PROFILE)
+                                                  .result
+                                                  .countryCode
+                                              : '') +
+                                          "-" +
+                                          (PreferenceUtil.getProfileData(
+                                                          Constants.KEY_PROFILE)
+                                                      .result !=
+                                                  null
+                                              ? PreferenceUtil.getProfileData(
+                                                      Constants.KEY_PROFILE)
+                                                  .result
+                                                  .userContactCollection3[0]
+                                                  .phoneNumber
+                                              : data.child.userContactCollection3[0].phoneNumber !=
+                                                      null
+                                                  ? data
+                                                      .child
+                                                      .userContactCollection3[0]
+                                                      .phoneNumber
+                                                  : '')
+                                      : ''
+                              : ''
+                          : '',
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           color: ColorUtils.greycolor1),
@@ -341,8 +489,10 @@ class _MyFamilyState extends State<MyFamily> {
                     Text(
                       position == 0
                           ? variable.Self
-                          : data.linkedData.roleName != null
-                              ? data.linkedData.roleName
+                          : data.relationship != null
+                              ? data.relationship.name != null
+                                  ? data.relationship.name
+                                  : ''
                               : '',
                       overflow: TextOverflow.ellipsis,
                       softWrap: false,
@@ -368,39 +518,43 @@ class _MyFamilyState extends State<MyFamily> {
                                 if (intenet != null && intenet) {
                                   Navigator.pop(context);
 
-                                  CommonUtil.showLoadingDialog(context,
+                                  CommonUtil.showLoadingDialog(dialogContext,
                                       _keyLoader, variable.Please_Wait);
 
                                   var deLinkingData = {};
                                   deLinkingData[variable.strrelatedTo] =
-                                      data.profileData.id;
+                                      data.child.id;
                                   deLinkingData[variable.strrelationshipType] =
                                       variable.strparentToChild;
                                   var jsonString =
                                       convert.jsonEncode(deLinkingData);
 
                                   _familyListBloc
-                                      .postUserDeLinking(jsonString)
+                                      .postUserDeLinking(jsonString.toString())
                                       .then((userLinking) {
-                                    if (userLinking.status == 200 &&
-                                        userLinking.success) {
-                                      Provider.of<MyFamilyViewModel>(context,
-                                              listen: false)
-                                          .getFamilyMembersInfo()
+                                    if (userLinking.isSuccess) {
+                                      // Reload
+                                      Navigator.pop(dialogContext);
+                                      _familyListBloc
+                                          .getFamilyMembersListNew()
                                           .then((value) {
                                         if (value.status == 200 &&
                                             value.success) {
-                                          Navigator.of(
+                                          rebuildFamilyBlock();
+                                          setState(() {});
+                                          /* Navigator.of(
                                                   _keyLoader.currentContext,
                                                   rootNavigator: true)
-                                              .pop();
-                                          PreferenceUtil.saveFamilyData(
+                                              .pop(); */
+
+                                          //Navigator.pop(dialogContext);
+                                          /*  PreferenceUtil.saveFamilyData(
                                                   Constants.KEY_FAMILYMEMBER,
-                                                  value.response.data)
+                                                  value.result)
                                               .then((value) {
                                             rebuildFamilyBlock();
                                             setState(() {});
-                                          });
+                                          }); */
                                         } else {
                                           Navigator.of(
                                                   _keyLoader.currentContext,
@@ -463,7 +617,7 @@ class _MyFamilyState extends State<MyFamily> {
     selectedRelationShip = null;
     rebuildFamilyBlock();
 
-    List<RelationShip> data =
+    List<RelationsShipCollection> data =
         PreferenceUtil.getFamilyRelationship(Constants.keyFamily);
 
     return showDialog<void>(
@@ -633,13 +787,14 @@ class _MyFamilyState extends State<MyFamily> {
 
             case Status.COMPLETED:
               isCalled = true;
-              PreferenceUtil.saveRelationshipArray(
-                  Constants.KEY_FAMILYREL, snapshot.data.data.relationShipAry);
-              relationShipResponseList = snapshot.data.data;
+              if (snapshot.data.data.result[0] != null) {
+                PreferenceUtil.saveRelationshipArray(Constants.KEY_FAMILYREL,
+                    snapshot?.data?.data?.result[0]?.referenceValueCollection);
+                relationShipResponseList = snapshot.data.data;
 
-              familyWidget =
-                  getRelationshipDetails(snapshot.data.data.relationShipAry);
-
+                familyWidget = getRelationshipDetails(
+                    snapshot?.data.data?.result[0]?.referenceValueCollection);
+              }
               break;
           }
         } else {
@@ -653,7 +808,7 @@ class _MyFamilyState extends State<MyFamily> {
     );
   }
 
-  Widget getRelationshipDetails(List<RelationShip> data) {
+  Widget getRelationshipDetails(List<RelationsShipCollection> data) {
     return StatefulBuilder(builder: (context, setState) {
       return Expanded(
           flex: 8,
@@ -663,7 +818,7 @@ class _MyFamilyState extends State<MyFamily> {
             value: selectedRelationShip,
             items: data.map((relationShipDetail) {
               return DropdownMenuItem(
-                child: new Text(relationShipDetail.roleName,
+                child: new Text(relationShipDetail.name,
                     style: new TextStyle(
                         fontWeight: FontWeight.w500,
                         fontSize: 16.0,
@@ -671,7 +826,7 @@ class _MyFamilyState extends State<MyFamily> {
                 value: relationShipDetail,
               );
             }).toList(),
-            onChanged: (RelationShip newValue) {
+            onChanged: (newValue) {
               setState(() {
                 selectedRelationShip = newValue;
               });
@@ -896,34 +1051,80 @@ class _MyFamilyState extends State<MyFamily> {
           CommonUtil.showLoadingDialog(
               context, _keyLoader, variable.Please_Wait);
 
-          var signInData = {};
-          signInData[variable.strCountryCode] = '+' + _selected.dialingCode;
-          signInData[variable.strPhoneNumber] =
-              mobileNoController.text.replaceAll('+91', '');
-          signInData[variable.strisPrimaryUser] = isPrimaryNoSelected;
-          signInData[variable.strFirstName] = firstNameController.text;
-          signInData[variable.strMiddleName] =
-              middleNameController.text.length > 0
-                  ? middleNameController.text
-                  : '';
-          signInData[variable.strLastName] = lastNameController.text;
-          signInData[variable.strRelation] = selectedRelationShip.id;
+          // var signInData = {};
+          // signInData[variable.strCountryCode] = '+' + _selected.dialingCode;
+          // signInData[variable.strPhoneNumber] =
+          //     mobileNoController.text.replaceAll('+91', '');
+          // signInData[variable.strisPrimaryUser] = isPrimaryNoSelected;
+          // signInData[variable.strFirstName] = firstNameController.text;
+          // signInData[variable.strMiddleName] =
+          //     middleNameController.text.length > 0
+          //         ? middleNameController.text
+          //         : '';
+          // signInData[variable.strLastName] = lastNameController.text;
+          // signInData[variable.strRelation] = selectedRelationShip.id;
 
-          var jsonString = convert.jsonEncode(signInData);
+          var addFamilyMemberRequest = {};
+          addFamilyMemberRequest['isVirtualUser'] = true;
+          addFamilyMemberRequest['firstName'] = firstNameController.text;
+          addFamilyMemberRequest['lastName'] = lastNameController.text;
+          addFamilyMemberRequest['dateOfBirth'] = null;
+          addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
+          addFamilyMemberRequest['phoneNumber'] = mobileNoController.text;
+          addFamilyMemberRequest['email'] = '';
+          addFamilyMemberRequest['isPrimary'] = true;
+
+          var jsonString = convert.jsonEncode(addFamilyMemberRequest);
 
           if (isPrimaryNoSelected) {
             _familyListBloc
                 .postUserLinkingForPrimaryNo(jsonString)
                 .then((addFamilyOTPResponse) {
-              if (addFamilyOTPResponse.success &&
-                  addFamilyOTPResponse.status == 200) {
-                if (addFamilyOTPResponse.response.data != null) {
-                  Provider.of<MyFamilyViewModel>(context, listen: false)
-                      .getFamilyMembersInfo()
-                      .then((value) {
-                    if (value.status == 200 && value.success) {
-                      PreferenceUtil.saveFamilyData(
-                              Constants.KEY_FAMILYMEMBER, value.response.data)
+              if (addFamilyOTPResponse.isSuccess) {
+                if (addFamilyOTPResponse.result != null) {
+                  _familyListBloc.getFamilyMembersInfo().then((value) {
+                    if (value.isSuccess) {
+
+                      Navigator.of(_keyLoader.currentContext,
+                                rootNavigator: true)
+                            .pop();
+
+                        Navigator.pop(context);
+                        Navigator.pushNamed(
+                          context,
+                          router.rt_AddFamilyUserInfo,
+                          arguments: AddFamilyUserInfoArguments(
+                              fromClass: CommonConstants.add_family,
+                              enteredFirstName: firstNameController.text,
+                              enteredMiddleName: middleNameController.text,
+                              enteredLastName: lastNameController.text,
+                              relationShip: selectedRelationShip,
+                              isPrimaryNoSelected: isPrimaryNoSelected,
+                              id: addFamilyOTPResponse.result.childInfo.id,
+                              addFamilyUserInfo:
+                                  addFamilyOTPResponse.result != null
+                                      ? addFamilyOTPResponse.result
+                                      : ''),
+                        ).then((value) {
+                          mobileNoController.text = '';
+                          nameController.text = '';
+                          isPrimaryNoSelected = false;
+                          selectedRelationShip = null;
+                          rebuildFamilyBlock();
+                          /* _familyListBloc
+                              .getFamilyMembersListNew()
+                              .then((familyMembersList) {
+                            PreferenceUtil.saveFamilyData(
+                                Constants.KEY_FAMILYMEMBER,
+                                familyMembersList.result);
+                          }); */
+                        });
+
+
+
+
+                      /* PreferenceUtil.saveFamilyDataNew(
+                              Constants.KEY_FAMILYMEMBERNEW, value.result)
                           .then((value) {
                         Navigator.of(_keyLoader.currentContext,
                                 rootNavigator: true)
@@ -931,25 +1132,35 @@ class _MyFamilyState extends State<MyFamily> {
 
                         Navigator.pop(context);
                         Navigator.pushNamed(
-                                context, router.rt_AddFamilyUserInfo,
-                                arguments: AddFamilyUserInfoArguments(
-                                    fromClass: CommonConstants.add_family,
-                                    enteredFirstName: firstNameController.text,
-                                    enteredMiddleName:
-                                        middleNameController.text,
-                                    enteredLastName: lastNameController.text,
-                                    relationShip: selectedRelationShip,
-                                    isPrimaryNoSelected: isPrimaryNoSelected,
-                                    addFamilyUserInfo:
-                                        addFamilyOTPResponse.response.data))
-                            .then((value) {
+                          context,
+                          router.rt_AddFamilyUserInfo,
+                          arguments: AddFamilyUserInfoArguments(
+                              fromClass: CommonConstants.add_family,
+                              enteredFirstName: firstNameController.text,
+                              enteredMiddleName: middleNameController.text,
+                              enteredLastName: lastNameController.text,
+                              relationShip: selectedRelationShip,
+                              isPrimaryNoSelected: isPrimaryNoSelected,
+                              id: addFamilyOTPResponse.result.childInfo.id,
+                              addFamilyUserInfo:
+                                  addFamilyOTPResponse.result != null
+                                      ? addFamilyOTPResponse.result
+                                      : ''),
+                        ).then((value) {
                           mobileNoController.text = '';
                           nameController.text = '';
                           isPrimaryNoSelected = false;
                           selectedRelationShip = null;
                           rebuildFamilyBlock();
+                          _familyListBloc
+                              .getFamilyMembersListNew()
+                              .then((familyMembersList) {
+                            PreferenceUtil.saveFamilyData(
+                                Constants.KEY_FAMILYMEMBER,
+                                familyMembersList.result);
+                          });
                         });
-                      });
+                      }); */
                     } else {
                       Navigator.of(_keyLoader.currentContext,
                               rootNavigator: true)
@@ -964,7 +1175,7 @@ class _MyFamilyState extends State<MyFamily> {
                       .pop();
                   Alert.displayAlertPlain(context,
                       title: variable.Error,
-                      content: addFamilyOTPResponse.message);
+                      content: 'Error Adding Family member');
                 }
               } else {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
@@ -972,18 +1183,16 @@ class _MyFamilyState extends State<MyFamily> {
 
                 Alert.displayAlertPlain(context,
                     title: variable.Error,
-                    content: addFamilyOTPResponse.message);
+                    content: 'Error Adding Family member');
               }
             });
           } else {
             _familyListBloc.postUserLinking(jsonString).then((userLinking) {
               if (userLinking.success && userLinking.status == 200) {
-                Provider.of<MyFamilyViewModel>(context, listen: false)
-                    .getFamilyMembersInfo()
-                    .then((value) {
+                _familyListBloc.getFamilyMembersListNew().then((value) {
                   if (value.status == 200 && value.success) {
                     PreferenceUtil.saveFamilyData(
-                            Constants.KEY_FAMILYMEMBER, value.response.data)
+                            Constants.KEY_FAMILYMEMBER, value.result)
                         .then((value) {
                       Navigator.of(_keyLoader.currentContext,
                               rootNavigator: true)
@@ -1008,6 +1217,13 @@ class _MyFamilyState extends State<MyFamily> {
                         isPrimaryNoSelected = false;
                         selectedRelationShip = null;
                         rebuildFamilyBlock();
+                        _familyListBloc
+                            .getFamilyMembersListNew()
+                            .then((familyMembersList) {
+                          PreferenceUtil.saveFamilyData(
+                              Constants.KEY_FAMILYMEMBER,
+                              familyMembersList.result);
+                        });
                       });
                     });
                   } else {
@@ -1040,9 +1256,7 @@ class _MyFamilyState extends State<MyFamily> {
   rebuildFamilyBlock() {
     _familyListBloc = null;
     _familyListBloc = new FamilyListBloc();
-    // _familyListBloc.getFamilyMembersList();
-    // _familyListBloc.getCustomRoles();
-    Provider.of<MyFamilyViewModel>(context, listen: false)
-        .getFamilyMembersInfo();
+    _familyListBloc.getFamilyMembersListNew();
+    _familyListBloc.getCustomRoles();
   }
 }

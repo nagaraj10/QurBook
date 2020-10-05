@@ -15,7 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/main.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
@@ -57,10 +57,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     print(patientId);
 
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    patientName = myProfile.response.data.generalInfo.qualifiedFullName != null
-        ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
-            myProfile.response.data.generalInfo.qualifiedFullName.lastName
+    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    patientName = myProfile.result != null
+        ? myProfile.result.firstName +
+        myProfile.result.firstName
         : '';
     return patientId;
   }
@@ -485,7 +485,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Text(
                           document['createdAt'] != null
-                              ? 'Date: ' +
+                              ? 'Last Received: ' +
                                   DateFormat('dd MMM kk:mm').format(
                                       DateTime.fromMillisecondsSinceEpoch(
                                           int.parse(document['createdAt'])))

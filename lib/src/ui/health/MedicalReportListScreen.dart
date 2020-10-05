@@ -10,25 +10,35 @@ import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class MedicalReportListScreen extends StatefulWidget {
-  final CompleteData completeData;
+  final HealthRecordList completeData;
   final Function callBackToRefresh;
   final String categoryName;
   final String categoryId;
   final Function(String, String) getDataForParticularLabel;
-   final Function(String, bool) mediaSelected;
+  final Function(String, bool) mediaSelected;
   final bool allowSelect;
-    List<String> mediaMeta;
-final bool isNotesSelect;
+  List<String> mediaMeta;
+  final bool isNotesSelect;
   final bool isAudioSelect;
   final bool showDetails;
 
-
-  MedicalReportListScreen(this.completeData, this.callBackToRefresh,
-      this.categoryName, this.categoryId, this.getDataForParticularLabel,this.mediaSelected,this.allowSelect,this.mediaMeta,this.isNotesSelect,this.isAudioSelect,this.showDetails);
+  MedicalReportListScreen(
+      this.completeData,
+      this.callBackToRefresh,
+      this.categoryName,
+      this.categoryId,
+      this.getDataForParticularLabel,
+      this.mediaSelected,
+      this.allowSelect,
+      this.mediaMeta,
+      this.isNotesSelect,
+      this.isAudioSelect,
+      this.showDetails);
 
   @override
   _MedicalReportListScreenState createState() =>
@@ -44,7 +54,6 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-   
 
     super.initState();
   }
@@ -54,8 +63,8 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
     return _getWidgetToDisplayMedicalrecords(widget.completeData);
   }
 
-  Widget _getWidgetToDisplayMedicalrecords(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget _getWidgetToDisplayMedicalrecords(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionMedicalReport);
@@ -92,19 +101,18 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
     widget.callBackToRefresh();
   }
 
-  Widget getCardWidgetForMedicalRecords(MediaMetaInfo data, int i) {
+  Widget getCardWidgetForMedicalRecords(HealthResult data, int i) {
     return InkWell(
         onLongPress: () {
-        if (widget.allowSelect) {
-          data.isSelected = !data.isSelected;
-          
-          setState(() {});
-          widget.mediaSelected(
-              data.id, data.isSelected);
-        }
-      },
+          if (widget.allowSelect) {
+            data.isSelected = !data.isSelected;
+
+            setState(() {});
+            widget.mediaSelected(data.id, data.isSelected);
+          }
+        },
         onTap: () {
-          if (widget.allowSelect && widget.showDetails==false) {
+          if (widget.allowSelect && widget.showDetails == false) {
             bool condition;
             if (widget.mediaMeta.contains(data.id)) {
               condition = false;
@@ -115,142 +123,138 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
 
             // setState(() {});
             widget.mediaSelected(data.id, condition);
-          
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RecordDetailScreen(
-                data: data,
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RecordDetailScreen(
+                  data: data,
+                ),
               ),
-            ),
-          );
-        }
+            );
+          }
         },
         child: Container(
-            //height: 90,
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-            decoration: BoxDecoration(
+          //height: 90,
+          padding: EdgeInsets.all(10.0),
+          margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+          decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             boxShadow: [
-              
               BoxShadow(
                 color: const Color(fhbColors.cardShadowColor),
                 blurRadius: 16, // has the effect of softening the shadow
                 spreadRadius: 0, // has the effect of extending the shadow
               )
             ],
-            ),
-            child:
-              Row(
-              children: <Widget>[
-                ClipOval(
-                    child: data.metaInfo.hospital != null
-                        ? data.metaInfo.hospital.logoThumbnail != null
-                            ? Image.network(
-                                Constants.BASE_URL +
-                                    data.metaInfo.hospital.logoThumbnail,
-                                height: 50,
-                                width: 50,
-                              )
-                            : Container(
-                                padding: EdgeInsets.all(10),
-                                child: Image.network(
-                                  Constants.BASE_URL +
-                                      data.metaInfo.categoryInfo.logo,
-                                  height: 30,
-                                  width: 30,
-                                  color: Color(
-                                    CommonUtil().getMyPrimaryColor(),
-                                  ),
-                                ),
-                                color: const Color(
-                                  fhbColors.bgColorContainer,
-                                ),
-                              )
-                        : Container(
-                            height: 50,
-                            width: 50,
-                            color: Colors.grey[200],
-                          )),
-                SizedBox(width: 20),
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      data.metaInfo.hospital != null
-                          ? Text(
-                              data.metaInfo.hospital.name != null
-                                  ? toBeginningOfSentenceCase(
-                                      data.metaInfo.hospital.name)
-                                  : '',
-                              style: TextStyle(fontWeight: FontWeight.w500),
+          ),
+          child: Row(
+            children: <Widget>[
+              ClipOval(
+                  child: data.metadata.hospital != null
+                      ? data.metadata.hospital.logoThumbnail != null
+                          ? Image.network(
+                              Constants.BASE_URL +
+                                  data.metadata.hospital.logoThumbnail,
+                              height: 50,
+                              width: 50,
                             )
-                          : Text(''),
-                      Text(
-                        data.metaInfo.doctor != null
-                            ? toBeginningOfSentenceCase(
-                                data.metaInfo.doctor.name)
-                            : '',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      Text(
-                        new FHBUtils().getFormattedDateString(data.createdOn),
-                        style: TextStyle(
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w200,
-                            fontSize: 12),
-                      )
-                    ],
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                   
-                      IconButton(
-                       
-                          icon: data.isBookmarked
-                              ? ImageIcon(
-                                  AssetImage(
-                                      variable.icon_record_fav_active),
-                                  //TODO chnage theme
-                                  color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
-                                  size: 20,
-                                )
-                              : ImageIcon(
-                                  AssetImage(variable.icon_record_fav),
-                                  color: Colors.black,
-                                  size: 20,
+                          : Container(
+                              padding: EdgeInsets.all(10),
+                              child: Image.network(
+                                Constants.BASE_URL +
+                                    data.metadata.healthRecordCategory.logo,
+                                height: 30,
+                                width: 30,
+                                color: Color(
+                                  CommonUtil().getMyPrimaryColor(),
                                 ),
-                          onPressed: () {
-                            new CommonUtil().bookMarkRecord(data, _refresh);
-                          }),
-
-                      (data.metaInfo.hasVoiceNotes != null &&
-                          data.metaInfo.hasVoiceNotes)
-                          ? Icon(
-                        Icons.mic,
-                        color: Colors.black54,
-                      )
-                          : Container(), widget.mediaMeta.contains(data.id)
-                          ? Icon(Icons.done,color: Color(new CommonUtil().getMyPrimaryColor()),)
-                          : SizedBox(),
-                    ],
-                  ),
+                              ),
+                              color: const Color(
+                                fhbColors.bgColorContainer,
+                              ),
+                            )
+                      : Container(
+                          height: 50,
+                          width: 50,
+                          color: Colors.grey[200],
+                        )),
+              SizedBox(width: 20),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    data.metadata.hospital != null
+                        ? Text(
+                            data.metadata.hospital.name != null
+                                ? toBeginningOfSentenceCase(
+                                    data.metadata.hospital.name)
+                                : '',
+                            style: TextStyle(fontWeight: FontWeight.w500),
+                          )
+                        : Text(''),
+                    Text(
+                      data.metadata.doctor != null
+                          ? toBeginningOfSentenceCase(data.metadata.doctor.name)
+                          : '',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Text(
+                      new FHBUtils().getFormattedDateString(
+                          data.metadata.healthRecordType.createdOn),
+                      style: TextStyle(
+                          color: Colors.grey[400],
+                          fontWeight: FontWeight.w200,
+                          fontSize: 12),
+                    )
+                  ],
                 ),
-              ],
-            ),
-            
-            ));
+              ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                        icon: data.isBookmarked
+                            ? ImageIcon(
+                                AssetImage(variable.icon_record_fav_active),
+                                //TODO chnage theme
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                size: 20,
+                              )
+                            : ImageIcon(
+                                AssetImage(variable.icon_record_fav),
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                        onPressed: () {
+                          new CommonUtil().bookMarkRecord(data, _refresh);
+                        }),
+                    (data.metadata.hasVoiceNotes != null &&
+                            data.metadata.hasVoiceNotes)
+                        ? Icon(
+                            Icons.mic,
+                            color: Colors.black54,
+                          )
+                        : Container(),
+                    widget.mediaMeta.contains(data.id)
+                        ? Icon(
+                            Icons.done,
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                          )
+                        : SizedBox(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {

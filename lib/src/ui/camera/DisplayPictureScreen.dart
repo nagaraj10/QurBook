@@ -20,8 +20,10 @@ import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
+import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
@@ -72,9 +74,9 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
 
-  MediaData mediaDataObj = new MediaData();
+  MediaResult mediaDataObj = new MediaResult();
 
-  CategoryData categoryDataObj = new CategoryData();
+  CategoryResult categoryDataObj = new CategoryResult();
 
   var doctorsData, hospitalData, labData;
 
@@ -638,7 +640,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     pulse = new TextEditingController(text: '');
     diaStolicPressure = new TextEditingController(text: '');
 
-    List<CategoryData> catgoryDataList = PreferenceUtil.getCategoryType();
+    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType();
 
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
@@ -826,7 +828,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     postMainData[parameters.struserId] = userID;
 
     postMediaData[parameters.strcategoryInfo] = categoryDataObj.toJson();
-    List<MediaData> metaDataFromSharedPrefernce = PreferenceUtil.getMediaType();
+    List<MediaResult> metaDataFromSharedPrefernce = PreferenceUtil.getMediaType();
 
     if (categoryName != Constants.STR_DEVICES) {
       mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(

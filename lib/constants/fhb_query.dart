@@ -16,9 +16,9 @@ const String qr_keyword = 'keyword=';
 const String qr_picture = 'myconnection?isOriginalPicRequired=false';
 const String qr_doctors = 'doctors/';
 const String qr_profilePic = '/getprofilepic';
-const String qr_customRole = 'customRoles/';
+const String qr_customRole = 'reference-data?search-name=Relationship';
 const String qr_sort = '?sortBy=roleName.asc&limit=50';
-const String qr_userlinking = 'userLinking/';
+const String qr_userlinking = 'user-relationship';
 const String qr_userDelinking = 'userDelinking/';
 const String qr_getMediaData = 'getmediameta/';
 const String qr_slash = '/';
@@ -64,6 +64,11 @@ const String qr_lastname = 'lastName=';
 const String qr_email = 'email=';
 const String qr_DSlash = '||';
 const String qr_OSlash = '|';
+const String qr_StateId = 'stateId=';
+const String qr_CityId = 'cityId=';
+const String qr_AddressLine1 = 'addressLine1=';
+const String qr_AddressLine2 = 'addressLine2=';
+const String qr_pincode = 'pincode=';
 
 const String qr_category_asc = 'categoryName.asc';
 const String qr_getprofilepic = 'getprofilepic/';
@@ -87,12 +92,12 @@ const String qr_verifymail = 'verifyMail';
 
 const String qr_slotDate = 'date';
 const String qr_doctorid = 'doctorId';
-const String qr_getSlots = 'doctorSlots/getAvailability';
+const String qr_getSlots = 'doctor/checkavailability';
 const String qr_bookAppmnt = 'appointments';
 const String qr_update_payment = 'appointments/update-payment-status/';
 
 const String qr_created_by = 'createdBy';
-const String qr_created_for = 'createdFor';
+const String qr_booked_for = 'bookedFor';
 const String qr_doctor_session_id = 'doctorSessionId';
 const String qr_schedule_date = 'scheduledDate';
 const String qr_slot_number = 'slotNumber';
@@ -129,6 +134,7 @@ const String qr_LastSyncHK = '?source=Apple Health';
 
 
 const String BOOKING_ID = "bookingId";
+const String BOOKING_ID_CAPS = "bookingID";
 const String META_IDS = "mediaMetaIds";
 const String INCLUDE_MEDIA = "includeMedia";
 
@@ -138,3 +144,45 @@ const String qr_get_media_master = '/getmediamaster/';
 const String qr_userid = 'userId';
 const String qr_mediaMetaId = 'mediaMetaId';
 const String qr_sharerecord = 'sharerecord';
+
+const String qr_myconnection = 'myconnection/';
+
+const String qr_id = '?id=';
+const String qr_user = 'user/';
+const String qr_section = '?section=';
+
+const String qr_doctor = 'doctor/';
+const String qr_SearchText = 'searchText=';
+const String qr_include = 'include=';
+const String qr_personal = 'personal';
+const String qr_name_desc = 'desc';
+const String qr_skip = 'skip=';
+
+const String qr_health_organization = 'health-organization/';
+const String qr_health_Search = 'search/';
+
+//queries for the asgard
+const String qr_category = 'category';
+
+//for asgard mediType
+const String qr_health_record_type = 'health-record-type';
+const String qr_health_record = 'health-records';
+const String qr_filter = 'filter';
+
+//for update profile new
+
+const String qr_gender_p = 'gender';
+const String qr_bloodgroup_p = 'bloodGroup';
+const String qr_dateOfBirth_p = 'dateOfBirth';
+const String qr_name_p = 'name';
+const String qr_firstName_p = 'firstName';
+const String qr_middleName_p = 'middleName';
+const String qr_lastname_p = 'lastName';
+const String qr_email_p = 'email';
+const String qr_StateId_p = 'stateId';
+const String qr_CityId_p = 'cityId';
+const String qr_AddressLine1_p = 'addressLine1';
+const String qr_AddressLine2_p = 'addressLine2';
+const String qr_pincode_p = 'pincode';
+
+const String qr_delink = 'de-link';

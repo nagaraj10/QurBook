@@ -12,6 +12,7 @@ import 'package:myfhb/src/model/Health/PostImageResponse.dart';
 import 'package:myfhb/src/model/Health/SavedMetaDataResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -21,6 +22,8 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 class HealthReportListForUserBlock implements BaseBloc {
   HealthReportListForUserRepository _healthReportListForUserRepository;
   StreamController _categoryListControlller;
+  StreamController _healthListControlllers;
+
   StreamController _doctorsProfileImageControlller;
   StreamController _metaDataController;
   StreamController _imageDataController;
@@ -33,6 +36,12 @@ class HealthReportListForUserBlock implements BaseBloc {
       _categoryListControlller.sink;
   Stream<ApiResponse<UserHealthResponseList>> get healthReportStream =>
       _categoryListControlller.stream;
+
+  //modified for asgard
+  StreamSink<ApiResponse<HealthRecordList>> get healthReportListSinks =>
+      _healthListControlllers.sink;
+  Stream<ApiResponse<HealthRecordList>> get healthReportStreams =>
+      _healthListControlllers.stream;
 
   StreamSink<ApiResponse<Uint8List>> get profileImageSink =>
       _doctorsProfileImageControlller.sink;
@@ -66,6 +75,7 @@ class HealthReportListForUserBlock implements BaseBloc {
   @override
   void dispose() {
     _categoryListControlller?.close();
+    _healthListControlllers?.close();
     _doctorsProfileImageControlller?.close();
     _metaDataController?.close();
     _imageDataController?.close();
@@ -78,6 +88,7 @@ class HealthReportListForUserBlock implements BaseBloc {
   HealthReportListForUserBlock() {
     _categoryListControlller =
         StreamController<ApiResponse<UserHealthResponseList>>();
+    _healthListControlllers = StreamController<ApiResponse<HealthRecordList>>();
 
     _healthReportListForUserRepository = HealthReportListForUserRepository();
 
@@ -225,6 +236,20 @@ class HealthReportListForUserBlock implements BaseBloc {
       imageListSink.add(ApiResponse.error(e.toString()));
     }
 
+    return userHealthResponseList;
+  }
+
+  Future<HealthRecordList> getHelthReportLists() async {
+    HealthRecordList userHealthResponseList;
+    healthReportListSinks
+        .add(ApiResponse.loading(variable.strGettingHealthRecords));
+    try {
+      userHealthResponseList =
+          await _healthReportListForUserRepository.getHealthReportLists();
+      healthReportListSinks.add(ApiResponse.completed(userHealthResponseList));
+    } catch (e) {
+      healthReportListSink.add(ApiResponse.error(e.toString()));
+    }
     return userHealthResponseList;
   }
 }

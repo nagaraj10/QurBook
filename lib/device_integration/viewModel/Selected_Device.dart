@@ -98,9 +98,10 @@ class _SelectedDeviceState extends State<SelectedDevice> {
               width: 150,
               height: 150,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-                color: widget.deviceData.color,
-              ),
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: LinearGradient(colors: widget.deviceData.color)
+                  //color: widget.deviceData.color,
+                  ),
               child: Column(
                 children: [
                   SizedBox(

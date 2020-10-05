@@ -2,15 +2,18 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
+import 'package:myfhb/add_family_user_info/models/update_self_profile_model.dart';
 import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_info.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/State.dart';
+import 'package:myfhb/src/model/user/city_list_model.dart';
+import 'package:myfhb/src/model/user/state_list_model.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-
 
 class AddFamilyUserInfoBloc extends BaseBloc {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
@@ -27,10 +30,10 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   // 2
   StreamController _myProfileController;
 
-  StreamSink<ApiResponse<MyProfile>> get myProfileSink =>
+  StreamSink<ApiResponse<MyProfileModel>> get myProfileSink =>
       _myProfileController.sink;
 
-  Stream<ApiResponse<MyProfile>> get myProfileStream =>
+  Stream<ApiResponse<MyProfileModel>> get myProfileStream =>
       _myProfileController.stream;
 
   // 3
@@ -70,7 +73,14 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       relationship,
       firstName,
       middleName,
-      lastName;
+      lastName,
+      addressLine1,
+      addressLine2,
+      cityId,
+      stateId,
+      zipcode;
+
+  MyProfileModel myProfileModel;
 
   String relationshipJsonString;
 
@@ -93,7 +103,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     _relationshipListController =
         StreamController<ApiResponse<RelationShipResponseList>>();
 
-    _myProfileController = StreamController<ApiResponse<MyProfile>>();
+    _myProfileController = StreamController<ApiResponse<MyProfileModel>>();
 
     _userProfileController =
         StreamController<ApiResponse<UpdateAddFamilyInfo>>();
@@ -117,9 +127,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     return relationShipResponseList;
   }
 
-  Future<MyProfile> getMyProfileInfo() async {
+  Future<MyProfileModel> getMyProfileInfo() async {
     myProfileSink.add(ApiResponse.loading(variable.strFetchRoles));
-    MyProfile myProfile;
+    MyProfileModel myProfile;
 
     try {
       myProfile = await addFamilyUserInfoRepository.getMyProfileInfo(userId);
@@ -130,7 +140,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     return myProfile;
   }
 
-  Future<UpdateAddFamilyInfo> updateUserProfile() async {
+  Future<UpdateAddFamilyInfo> updateUserProfile(bool fromFamily) async {
     userProfileSink.add(ApiResponse.loading(variable.strUpdatingProfile));
     UpdateAddFamilyInfo updateAddFamilyInfo;
 
@@ -147,7 +157,13 @@ class AddFamilyUserInfoBloc extends BaseBloc {
               profilePic,
               firstName,
               middleName,
-              lastName);
+              lastName,
+              cityId,
+              stateId,
+              addressLine1,
+              addressLine2,
+              zipcode,
+              fromFamily);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));
@@ -157,7 +173,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   }
 
   Future<UpdateAddFamilyRelationInfo> updateUserRelationShip() async {
-    updateRelationshipSink.add(ApiResponse.loading(variable.strUpdateUserRelation));
+    updateRelationshipSink
+        .add(ApiResponse.loading(variable.strUpdateUserRelation));
     UpdateAddFamilyRelationInfo updateAddFamilyRelationInfo;
 
     try {
@@ -171,25 +188,31 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     return updateAddFamilyRelationInfo;
   }
 
-  Future<UpdateAddFamilyInfo> updateSelfProfile() async {
+  Future<UpdateSelfProfileModel> updateSelfProfile(bool fromFamily) async {
     userProfileSink.add(ApiResponse.loading(variable.strUpdatedSelfProfile));
-    UpdateAddFamilyInfo updateAddFamilyInfo;
+    UpdateSelfProfileModel updateAddFamilyInfo;
 
     try {
-      updateAddFamilyInfo =
-          await addFamilyUserInfoRepository.updateSelfProfileInfo(
-              userId,
-              name,
-              phoneNo,
-              email,
-              gender,
-              bloodGroup,
-              dateOfBirth,
-              profilePic,
-              firstName,
-              middleName,
-              lastName);
-//      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
+      updateAddFamilyInfo = await addFamilyUserInfoRepository.updateUserInfoNew(
+          userId,
+          name,
+          phoneNo,
+          email,
+          gender,
+          bloodGroup,
+          dateOfBirth,
+          profilePic,
+          firstName,
+          middleName,
+          lastName,
+          cityId,
+          stateId,
+          addressLine1,
+          addressLine2,
+          zipcode,
+          fromFamily,
+          myProfileModel);
+      //userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));
     }
@@ -209,5 +232,22 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     }
 
     return verifyEmailResponse;
+  }
+
+  Future<List<CityResult>> getCityDataList(
+      String cityname, String apibody) async {
+    CityModel cityListModel;
+
+    cityListModel = await addFamilyUserInfoRepository.getValuesBaseOnSearch(
+        cityname, apibody);
+    return cityListModel.result;
+  }
+
+  Future<List<State>> geStateDataList(String cityname, String apibody) async {
+    StateModel stateModel;
+
+    stateModel = await addFamilyUserInfoRepository.getStateValuesBaseOnSearch(
+        cityname, apibody);
+    return stateModel.result;
   }
 }

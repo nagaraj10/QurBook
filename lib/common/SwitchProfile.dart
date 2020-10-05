@@ -11,7 +11,7 @@ import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 
 class SwitchProfile {
@@ -28,7 +28,7 @@ class SwitchProfile {
     context = _context;
     keyLoader = _keyLoader;
     callBackToRefresh = _callBackToRefresh;
-    MyProfile myProfile;
+    MyProfileModel myProfile;
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     } catch (e) {
@@ -57,23 +57,19 @@ class SwitchProfile {
               radius: 15,
               child: ClipOval(
                   child: myProfile != null
-                      ? myProfile.response.data.generalInfo
-                                  .profilePicThumbnailURL !=
+                      ? myProfile.result.profilePicThumbnailUrl !=
                               null
                           ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
-                              myProfile.response.data.generalInfo
-                                  .profilePicThumbnailURL)
+                              myProfile.result.profilePicThumbnailUrl)
                           : Container(
                               height: 50,
                               width: 50,
                               color: Color(fhbColors.bgColorContainer),
                               child: Center(
                                 child: Text(
-                                  myProfile.response.data.generalInfo
-                                              .qualifiedFullName.firstName !=
+                                  myProfile.result.firstName !=
                                           null
-                                      ? myProfile.response.data.generalInfo
-                                          .qualifiedFullName.firstName[0]
+                                      ? myProfile.result.firstName
                                           .toUpperCase()
                                       : '',
                                   style: TextStyle(
@@ -129,11 +125,8 @@ class SwitchProfile {
     _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
           .then((value) {
-        _healthReportListForUserBlock
-            .getHelthReportList(condtion: false)
-            .then((value) {
-          PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value.response.data)
+        _healthReportListForUserBlock.getHelthReportLists().then((value) {
+          PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value)
               .then((value) {
             Navigator.of(keyLoader.currentContext, rootNavigator: true).pop();
             new CommonUtil()
@@ -151,10 +144,10 @@ class SwitchProfile {
       GlobalKey<State> _keyLoader, GlobalKey<ScaffoldState> scaffold_state) {
     new FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
-        _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+        _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
           if (familyMembersList.response.data != null) {
             PreferenceUtil.saveFamilyData(
-                Constants.KEY_FAMILYMEMBER, familyMembersList.response.data);
+                Constants.KEY_FAMILYMEMBER, familyMembersList.result);
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
             getDialogBoxWithFamilyMemberScrap(familyMembersList.response.data);
           } else {

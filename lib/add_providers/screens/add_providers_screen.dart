@@ -36,7 +36,7 @@ import 'package:myfhb/search_providers/models/doctors_data.dart';
 import 'package:myfhb/search_providers/models/hospital_data.dart';
 import 'package:myfhb/search_providers/models/lab_data.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -110,7 +110,7 @@ class AddProvidersState extends State<AddProviders> {
 
   Address address;
 
-  MyProfile selectedProfile;
+  MyProfileModel selectedProfile;
   String selectedFamilyMemberName;
 
   DoctorsListBlock _doctorsListBlock;
@@ -127,7 +127,7 @@ class AddProvidersState extends State<AddProviders> {
     updateProvidersBloc = UpdateProvidersBloc();
 
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getFamilyMembersListNew();
 
     _myProfileBloc = new MyProfileBloc();
     _doctorsListBlock = new DoctorsListBlock();
@@ -266,7 +266,7 @@ class AddProvidersState extends State<AddProviders> {
                             _familyListBloc = new FamilyListBloc();
                           }
                           _familyListBloc
-                              .getFamilyMembersList()
+                              .getFamilyMembersListNew()
                               .then((familyMembersList) {
                             // Hide Loading
                             Navigator.of(_keyLoader.currentContext,
@@ -357,12 +357,12 @@ class AddProvidersState extends State<AddProviders> {
               : '';
 //          isPreferred = widget.arguments.hospitalData.isUserDefined ?? false;
           isPreferred = false;
-          latitude = widget.arguments.hospitalData.latitude == null
-              ? 0.0
-              : double.parse(widget.arguments.hospitalData.latitude);
-          longtiude = widget.arguments.hospitalData.longitude == null
-              ? 0.0
-              : double.parse(widget.arguments.hospitalData.longitude);
+          // latitude = widget.arguments.hospitalData.latitude == null
+          //     ? 0.0
+          //     : double.parse(widget.arguments.hospitalData.latitude);
+          // longtiude = widget.arguments.hospitalData.longitude == null
+          //     ? 0.0
+          //     : double.parse(widget.arguments.hospitalData.longitude);
 
           center = LatLng(latitude, longtiude);
 
@@ -375,17 +375,17 @@ class AddProvidersState extends State<AddProviders> {
 //          isPreferred = widget.arguments.labData.isUserDefined ?? false;
           isPreferred = false;
 
-          latitude = widget.arguments.labData.latitude == null
-              ? 0.0
-              : double.parse(widget.arguments.labData.latitude);
-          longtiude = widget.arguments.labData.longitude == null
-              ? 0.0
-              : double.parse(widget.arguments.labData.longitude);
-
-          center = LatLng(latitude, longtiude);
-
-          addressLine1 = widget.arguments.labData.addressLine1;
-          addressLine2 = widget.arguments.labData.addressLine2;
+          // latitude = widget.arguments.labData.latitude == null
+          //     ? 0.0
+          //     : double.parse(widget.arguments.labData.latitude);
+          // longtiude = widget.arguments.labData.longitude == null
+          //     ? 0.0
+          //     : double.parse(widget.arguments.labData.longitude);
+          //
+          // center = LatLng(latitude, longtiude);
+          //
+          // addressLine1 = widget.arguments.labData.addressLine1;
+          // addressLine2 = widget.arguments.labData.addressLine2;
         }
       } else {
         isPreferred = false;
@@ -426,10 +426,10 @@ class AddProvidersState extends State<AddProviders> {
         doctorController.text = widget.arguments.hospitalsModel.name != null
             ? toBeginningOfSentenceCase(widget.arguments.hospitalsModel.name)
             : '';
-        isPreferred = widget.arguments.hospitalsModel.isDefault;
-        myprovidersPreferred = widget.arguments.hospitalsModel.isDefault;
+        // isPreferred = widget.arguments.hospitalsModel.isDefault;
+        //myprovidersPreferred = widget.arguments.hospitalsModel.isDefault;
 
-        latitude = widget.arguments.hospitalsModel.latitude == null
+        /* latitude = widget.arguments.hospitalsModel.latitude == null
             ? 0.0
             : double.parse(widget.arguments.hospitalsModel.latitude);
         longtiude = widget.arguments.hospitalsModel.longitude == null
@@ -439,12 +439,12 @@ class AddProvidersState extends State<AddProviders> {
         center = LatLng(latitude, longtiude);
 
         addressLine1 = widget.arguments.hospitalsModel.addressLine1;
-        addressLine2 = widget.arguments.hospitalsModel.addressLine2;
+        addressLine2 = widget.arguments.hospitalsModel.addressLine2;*/
       } else {
         doctorController.text = widget.arguments.labsModel.name != null
             ? toBeginningOfSentenceCase(widget.arguments.labsModel.name)
             : '';
-        isPreferred = widget.arguments.labsModel.isDefault;
+        /* isPreferred = widget.arguments.labsModel.isDefault;
         myprovidersPreferred = widget.arguments.labsModel.isDefault;
 
         latitude = widget.arguments.labsModel.latitude == null
@@ -457,28 +457,29 @@ class AddProvidersState extends State<AddProviders> {
         center = LatLng(latitude, longtiude);
 
         addressLine1 = widget.arguments.labsModel.addressLine1;
-        addressLine2 = widget.arguments.labsModel.addressLine2;
+        addressLine2 = widget.arguments.labsModel.addressLine2;*/
       }
     }
+    try {
+      setState(() {
+        lastMapPosition = center;
 
-    setState(() {
-      lastMapPosition = center;
+        kGooglePlex = CameraPosition(
+          target: center,
+          zoom: 12,
+        );
 
-      kGooglePlex = CameraPosition(
-        target: center,
-        zoom: 12,
-      );
+        if (latitude != 0.0 && longtiude != 0.0) {
+          addMarker();
+        }
 
-      if (latitude != 0.0 && longtiude != 0.0) {
-        addMarker();
-      }
-
-      if (googleMapControll != null) {
-        googleMapControll.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-                target: center, zoom: 12.0, bearing: 45.0, tilt: 45.0)));
-      }
-    });
+        if (googleMapControll != null) {
+          googleMapControll.animateCamera(CameraUpdate.newCameraPosition(
+              CameraPosition(
+                  target: center, zoom: 12.0, bearing: 45.0, tilt: 45.0)));
+        }
+      });
+    } catch (e) {}
   }
 
   getCurrentLocation() async {
@@ -547,7 +548,10 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   Widget _showUser() {
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    MyProfileModel myProfile;
+    try {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    } catch (e) {}
     return InkWell(
         onTap: () {
           if (widget.arguments.fromClass != router.rt_myprovider) {
@@ -558,7 +562,7 @@ class AddProvidersState extends State<AddProviders> {
               _familyListBloc = null;
               _familyListBloc = new FamilyListBloc();
             }
-            _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+            _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
               // Hide Loading
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
@@ -590,18 +594,24 @@ class AddProvidersState extends State<AddProviders> {
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
                   ),
-                  child: myProfile
-                              .response.data.generalInfo.profilePicThumbnail !=
-                          null
-                      ? getProfilePicWidget(myProfile
-                          .response.data.generalInfo.profilePicThumbnail)
+                  child: myProfile != null
+                      ? myProfile.result.profilePicThumbnailUrl != null
+                          ? getProfilePicWidget(
+                              myProfile.result.profilePicThumbnailUrl)
+                          : Center(
+                              child: Text(
+                                selectedFamilyMemberName == null
+                                    ? myProfile.result.lastName.toUpperCase()
+                                    : selectedFamilyMemberName[0].toUpperCase(),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            )
                       : Center(
                           child: Text(
-                            selectedFamilyMemberName == null
-                                ? myProfile.response.data.generalInfo
-                                    .qualifiedFullName.lastName
-                                    .toUpperCase()
-                                : selectedFamilyMemberName[0].toUpperCase(),
+                            '',
                             style: TextStyle(
                                 fontSize: 14,
                                 color: Color(CommonUtil().getMyPrimaryColor())),
@@ -884,9 +894,13 @@ class AddProvidersState extends State<AddProviders> {
 
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
           if (widget.arguments.fromClass == router.rt_myprovider) {
-            updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
+            updateProvidersBloc.providerId = widget.arguments.data.doctorId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.data.doctorReferenceId;
           } else {
-            updateProvidersBloc.providerId = widget.arguments.data.id;
+            updateProvidersBloc.providerId = widget.arguments.data.doctorId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.data.doctorReferenceId;
           }
 
           updateDoctorsIdWithUserDetails();
@@ -915,9 +929,13 @@ class AddProvidersState extends State<AddProviders> {
 
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
           if (widget.arguments.fromClass == router.rt_myprovider) {
-            updateProvidersBloc.providerId = widget.arguments.doctorsModel.id;
+            updateProvidersBloc.providerId = widget.arguments.data.doctorId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.data.doctorReferenceId;
           } else {
-            updateProvidersBloc.providerId = widget.arguments.data.id;
+            updateProvidersBloc.providerId = widget.arguments.data.doctorId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.data.doctorReferenceId;
           }
           updateDoctorsIdWithUserDetails();
         } else if (widget.arguments.searchKeyWord ==
@@ -1178,17 +1196,16 @@ class AddProvidersState extends State<AddProviders> {
         new CommonUtil().getMedicalPreference();
 
         setState(() {
-          selectedFamilyMemberName =
-              profileData.response.data.generalInfo.qualifiedFullName.firstName;
+          selectedFamilyMemberName = profileData.result.firstName;
         });
       });
     });
   }
 
-  Widget getProfilePicWidget(ProfilePicThumbnailMain profilePicThumbnail) {
+  Widget getProfilePicWidget(String profilePicThumbnail) {
     return profilePicThumbnail != null
-        ? Image.memory(
-            Uint8List.fromList(profilePicThumbnail.data),
+        ? Image.network(
+            profilePicThumbnail,
             height: 30,
             width: 30,
             fit: BoxFit.cover,

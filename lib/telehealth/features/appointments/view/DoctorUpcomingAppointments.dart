@@ -7,6 +7,7 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
@@ -339,10 +340,11 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
           paymentID.add(healthRecord.bills[i]);
       }
     }
+    int position = await new AppointmentsCommonWidget()
+        .getCategoryPosition(Constants.STR_BILLS);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-        categoryPosition: new AppointmentsCommonWidget()
-            .getCategoryPosition(Constants.STR_BILLS),
+        categoryPosition: position,
         allowSelect: true,
         isAudioSelect: false,
         isNotesSelect: false,

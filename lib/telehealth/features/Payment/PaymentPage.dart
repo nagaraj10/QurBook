@@ -8,21 +8,20 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/UpdatePaymentModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/ResultPage.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class PaymentPage extends StatefulWidget {
   final String redirectUrl;
   final String paymentId;
-  final String appointmentId;
 
   PaymentPage(
       {Key key,
       @required this.redirectUrl,
-      @required this.paymentId,
-      @required this.appointmentId})
+      @required this.paymentId})
       : super(key: key);
 
   @override
@@ -32,18 +31,16 @@ class PaymentPage extends StatefulWidget {
 class _WebViewExampleState extends State<PaymentPage> {
   String PAYMENT_URL;
   String paymentId;
-  String appointmentId;
-  MyProviderViewModel providerViewModel;
+  UpdatePaymentViewModel updatePaymentViewModel;
 
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
 
   @override
   void initState() {
-    providerViewModel = new MyProviderViewModel();
+    updatePaymentViewModel = new UpdatePaymentViewModel();
     PAYMENT_URL = widget.redirectUrl;
     paymentId = widget.paymentId;
-    appointmentId = widget.appointmentId;
   }
 
   @override
@@ -80,7 +77,7 @@ class _WebViewExampleState extends State<PaymentPage> {
                 String paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
 
                 updatePayment(
-                    paymentId, appointmentId, paymentOrderId, paymentRequestId);
+                    paymentId, paymentOrderId, paymentRequestId);
               } else {
                 callResultPage(false, '');
               }
@@ -119,15 +116,14 @@ class _WebViewExampleState extends State<PaymentPage> {
         });
   }
 
-  updatePayment(String paymentId, String appointmentId, String paymentOrderId,
+  updatePayment(String paymentId,String paymentOrderId,
       String paymentRequestId) {
     updatePaymentStatus(
-            paymentId, appointmentId, paymentOrderId, paymentRequestId)
+            paymentId, paymentOrderId, paymentRequestId)
         .then((value) {
-      if (value.status == 200 &&
-          value.success == true &&
-          value.response.data.paymentStatus.code == PAYSUC) {
-        callResultPage(true, value.response.data.paymentOrderId);
+      if (value.isSuccess == true &&
+          value.result.paymentStatus.code == PAYSUC) {
+        callResultPage(true, value.result.paymentOrderId);
       } else {
         callResultPage(false, '');
       }
@@ -136,12 +132,11 @@ class _WebViewExampleState extends State<PaymentPage> {
 
   Future<UpdatePaymentModel> updatePaymentStatus(
       String paymentId,
-      String appointmentId,
       String paymentOrderId,
       String paymentRequestId) async {
     UpdatePaymentModel updatePaymentModel =
-        await providerViewModel.updatePaymentStatus(
-            paymentId, appointmentId, paymentOrderId, paymentRequestId);
+        await updatePaymentViewModel.updatePaymentStatus(
+            paymentId, paymentOrderId, paymentRequestId);
 
     return updatePaymentModel;
   }

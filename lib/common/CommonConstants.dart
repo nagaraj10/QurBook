@@ -83,7 +83,7 @@ class CommonConstants {
 
   static String strGlucometerValue = 'mg/dL';
   static String strValue = 'Value';
-  static String strMemo = 'Memo (50)';
+  static String strMemo = 'Memo (500)';
   static String strTimeTaken = 'Time taken';
   static String strSugarLevel = 'sugarLevel';
   static String strTimeIntake = 'Time of Intake';
@@ -167,6 +167,8 @@ class CommonConstants {
 
   static String all_fields = 'Please fill all the fields';
 
+  static String profile_update_fail = 'unable to add Family member';
+
   static String view_insurance = 'View Insurance';
 
   static String view_hospital = 'View Hospital';
@@ -215,6 +217,12 @@ class CommonConstants {
   static String middleName = "MiddleName";
   static String lastName = "LastName";
 
+  static const String addr_line_1 = "Address line 1*";
+  static const String addr_line_2 = "Address line 2";
+  static const String addr_city = "City*";
+  static const String addr_state = "State*";
+  static const String addr_zip = "Zipcode*";
+
   static String KEY_COUNTRYCODE = 'CountryCode';
   static String KEY_COUNTRYNAME = 'CountryName';
 
@@ -222,6 +230,13 @@ class CommonConstants {
 
   static String STR_RHTYPE = 'Rh type';
 
+  static String SEARCH_HOSPIT_ID = "67240f46-65dc-41e0-b03f-cc4e4433ee6e";
+  static String SEARCH_LAB_ID = "34c16c83-2ae6-40e4-9643-5d929eb135e4";
+
+  static String NEW_BASE_URL = 'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/api/';
+  static String NEW_USER_ID = "6aa4195b-56c6-487d-8993-dfd1b39b1a49";
+  static String NEW_AUTH_TOKEN =
+      "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6eyJ1c2VySWQiOiI4NTg5MmYyZC04NDY3LTQyZTYtYTJkZC02NWYyNjI3ODBhMmIiLCJ1c2VyTmFtZSI6IisxNjE0MzAxMzkwNiJ9LCJpYXQiOjE2MDAxNTEzMTIsImV4cCI6MTYwMjc0MzMxMiwiaXNzIjoiRkhCIiwic3ViIjoiRkhCIn0.UISGi0e_Z7GfWY87IJ-YAchkkg-Fk4NXr63l06-SHWgP0GIj1jMIuesoLPkDPWLGQSw6Qmr62-nD-iKi2YV_Jz5AgoWTo9dBFSzFjRBVwXWKU0qn5uDZ_F-HeyiYylAklsRsLI0dm512y5H_sAn5M85O3h5T2dtBLZbYRzV7-HUDwjz_Ua9_0UvHdo0s9_gybEg8VgUvd2YfOYz3Y4OYKjaNVGsuqRf4-nm8BgU1mA0-VPw0EOOvhhOgjvlU1N5gy36IRrJfS-wpLtZF3rp3wFH68YNxa3ixe1BKS_uPHS4Mdvu0K731ewR7O3eycCYzMhHzgh4yRL1UWH8UxrVfxw";
   static final CommonConstants _instance = new CommonConstants.internal();
   static CountryMetrics countryMetrics;
   static UnitsMesurements unitsMeasurements;

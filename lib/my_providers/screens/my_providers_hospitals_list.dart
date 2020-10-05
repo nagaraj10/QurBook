@@ -5,17 +5,15 @@ import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/HospitalModel.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 
 import 'my_provider.dart';
 
 class MyProvidersHospitalsList extends StatelessWidget {
-  List<HospitalsModel> hospitalsModel;
+  List<Hospitals> hospitalsModel;
   ProvidersBloc providersBloc;
   MyProviderState myProviderState;
 
@@ -31,7 +29,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
-        HospitalsModel eachHospitalModel = hospitalsModel[index];
+        Hospitals eachHospitalModel = hospitalsModel[index];
         return InkWell(
             onTap: () {
               Navigator.pushNamed(context, router.rt_AddProvider,
@@ -60,19 +58,19 @@ class MyProvidersHospitalsList extends StatelessWidget {
                 ),
                 child: Row(
                   children: <Widget>[
-                    ClipOval(
-                        child: eachHospitalModel.logo != null
-                            ? Image.network(
-                                Constants.BASE_URL + eachHospitalModel.logo,
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                              )
-                            : Container(
-                                width: 50,
-                                height: 50,
-                                padding: EdgeInsets.all(12),
-                                color: Color(fhbColors.bgColorContainer))),
+                    // ClipOval(
+                    //     child: eachHospitalModel.logo != null
+                    //         ? Image.network(
+                    //             Constants.BASE_URL + eachHospitalModel.logo,
+                    //             height: 50,
+                    //             width: 50,
+                    //             fit: BoxFit.cover,
+                    //           )
+                    //         : Container(
+                    //             width: 50,
+                    //             height: 50,
+                    //             padding: EdgeInsets.all(12),
+                    //             color: Color(fhbColors.bgColorContainer))),
                     SizedBox(
                       width: 20,
                     ),
@@ -96,18 +94,18 @@ class MyProvidersHospitalsList extends StatelessWidget {
                             textAlign: TextAlign.start,
                           ),
                           SizedBox(height: 5),
-                          AutoSizeText(
-                            eachHospitalModel.addressLine1 != null
-                                ? eachHospitalModel.addressLine1
-                                : '' + eachHospitalModel.addressLine2 != null
-                                    ? eachHospitalModel.addressLine2
-                                    : '',
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w400,
-                                color: ColorUtils.lightgraycolor),
-                          ),
+                          // AutoSizeText(
+                          //   eachHospitalModel.addressLine1 != null
+                          //       ? eachHospitalModel.addressLine1
+                          //       : '' + eachHospitalModel.addressLine2 != null
+                          //           ? eachHospitalModel.addressLine2
+                          //           : '',
+                          //   maxLines: 1,
+                          //   style: TextStyle(
+                          //       fontSize: 13.0,
+                          //       fontWeight: FontWeight.w400,
+                          //       color: ColorUtils.lightgraycolor),
+                          // ),
                           SizedBox(height: 5),
                         ],
                       ),
@@ -120,7 +118,7 @@ class MyProvidersHospitalsList extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               InkWell(
-                                  child: eachHospitalModel.isDefault == true
+                                  child: eachHospitalModel.isActive == true
                                       ? ImageIcon(
                                           AssetImage(
                                               variable.icon_record_fav_active),

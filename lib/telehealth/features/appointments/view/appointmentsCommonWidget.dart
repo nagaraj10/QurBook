@@ -80,7 +80,6 @@ class AppointmentsCommonWidget {
     List<String> notesId = new List();
     List<String> voiceIds = new List();
 
-
     String notesCount =
         doc.healthRecord.notes == null ? 0.toString() : 1.toString();
     String voiceNotesCount =
@@ -333,57 +332,49 @@ class AppointmentsCommonWidget {
         ));
   }
 
-  List<CategoryData> getCategoryList() {
+  Future<List<CategoryData>> getCategoryList() async {
     CategoryListBlock _categoryListBlock = new CategoryListBlock();
-
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
-      _categoryListBlock.getCategoryList().then((value) {
-        categoryDataList = value.response.data;
-
-        filteredCategoryData =
-            new CommonUtil().fliterCategories(categoryDataList);
-
-        filteredCategoryData.add(categoryDataObjClone);
-      });
+      final value = await _categoryListBlock.getCategoryList();
+      categoryDataList = value.response.data;
+      filteredCategoryData =
+          new CommonUtil().fliterCategories(categoryDataList);
+      filteredCategoryData.add(categoryDataObjClone);
       return filteredCategoryData;
     } else {
       return filteredCategoryData;
     }
   }
 
-  getCategoryPosition(String categoryName) {
+  getCategoryPosition(String categoryName) async {
     int categoryPosition;
     switch (categoryName) {
       case Constants.STR_NOTES:
-        categoryPosition = pickPosition(categoryName);
+        categoryPosition = await pickPosition(categoryName);
         return categoryPosition;
         break;
-
       case Constants.STR_PRESCRIPTION:
-        categoryPosition = pickPosition(categoryName);
+        categoryPosition = await pickPosition(categoryName);
         return categoryPosition;
         break;
-
       case Constants.STR_VOICERECORDS:
-        categoryPosition = pickPosition(categoryName);
+        categoryPosition = await pickPosition(categoryName);
         return categoryPosition;
         break;
-
       case Constants.STR_BILLS:
-        categoryPosition = pickPosition(categoryName);
+        categoryPosition = await pickPosition(categoryName);
         return categoryPosition;
         break;
       default:
         categoryPosition = 0;
         return categoryPosition;
-
         break;
     }
   }
 
-  int pickPosition(String categoryName) {
+  Future<int> pickPosition(String categoryName) async {
     int position = 0;
-    List<CategoryData> categoryDataList = getCategoryList();
+    List<CategoryData> categoryDataList = await getCategoryList();
     for (int i = 0; i < categoryDataList.length; i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         position = i;

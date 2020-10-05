@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/database/model/UnitsMesurement.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -502,5 +501,26 @@ class FHBBasicWidget {
           ),
         ) ??
         false;
+  }
+
+  Widget getRichTextFieldWithNoCallbacks(
+      BuildContext context, TextEditingController searchController) {
+    return Container(
+      height: MediaQuery.of(context).size.height / 5,
+      child: TextField(
+        decoration: InputDecoration(
+            disabledBorder:
+                OutlineInputBorder(borderSide: BorderSide(width: 5)),
+            hintStyle: TextStyle(fontSize: 13),
+            //hintText: MESSAGE_HINT,
+            border: OutlineInputBorder(
+                borderSide: BorderSide(width: 5),
+                borderRadius: BorderRadius.circular(7))),
+        controller: searchController,
+        maxLength: 500,
+        maxLines: 4,
+        onChanged: (value) {},
+      ),
+    );
   }
 }

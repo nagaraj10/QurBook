@@ -19,10 +19,15 @@ import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Category/catergory_data_list.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/src/model/Media/media_data_list.dart';
+import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/model/TabModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
@@ -68,7 +73,7 @@ class MyRecords extends StatefulWidget {
 
 class _MyRecordsState extends State<MyRecords> {
   List<TabModel> tabModelList = new List();
-  CategoryListBlock _categoryListBlock;
+  CategoryListBlock _categoryListBlocks;
   HealthReportListForUserBlock _healthReportListForUserBlock;
   MediaTypeBlock _mediaTypeBlock;
   TextEditingController _searchQueryController = TextEditingController();
@@ -83,8 +88,8 @@ class _MyRecordsState extends State<MyRecords> {
 
   GlobalSearchBloc _globalSearchBloc;
   bool fromSearch = false;
-  List<CategoryData> categoryDataList = new List();
-  CompleteData completeData;
+  List<CategoryResult> categoryDataList = new List();
+  HealthRecordList completeData;
   List<MediaData> mediaData = new List();
 
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
@@ -93,7 +98,7 @@ class _MyRecordsState extends State<MyRecords> {
   final GlobalKey _cameraKey = GlobalKey();
   final GlobalKey _voiceKey = GlobalKey();
   BuildContext _myContext;
-  CategoryData categoryDataObjClone = new CategoryData();
+  CategoryResult categoryDataObjClone = new CategoryResult();
 
   List<String> selectedMedia = new List();
 
@@ -194,7 +199,7 @@ class _MyRecordsState extends State<MyRecords> {
                     setState(() {});
                   });
                 case Status.COMPLETED:
-                  _categoryListBlock = null;
+                  _categoryListBlocks = null;
                   //rebuildAllBlocks();
                   return snapshot.data.data.response.count == 0
                       ? getEmptyCard()
@@ -213,9 +218,9 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   Widget getWidgetForSearchedMedia(List<Data> data) {
-    List<CategoryData> categoryDataList;
+    List<CategoryResult> categoryDataList;
 
-    categoryDataList = new CommonUtil().getAllCategoryList(data);
+    // categoryDataList = new CommonUtil().getAllCategoryList(data);
     completeData = new CommonUtil().getMediaTypeInfo(data);
     print('getWidgetForSearchedMedia');
     PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, completeData);
@@ -228,67 +233,75 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   Widget getResponseFromApiWidget() {
-    List<CategoryData> categoryDataFromPrefernce =
+    List<CategoryResult> categoryDataFromPrefernce =
         PreferenceUtil.getCategoryType();
-    if (categoryDataFromPrefernce != null &&
+    /* if (categoryDataFromPrefernce != null &&
         categoryDataFromPrefernce.length > 0)
       return getMainWidgets(categoryDataFromPrefernce);
-    else
-      return StreamBuilder<ApiResponse<CategoryResponseList>>(
-        stream: _categoryListBlock.categoryListStream,
-        builder: (context,
-            AsyncSnapshot<ApiResponse<CategoryResponseList>> snapshot) {
-          if (snapshot.hasData) {
-            switch (snapshot.data.status) {
-              case Status.LOADING:
-                return Center(
-                    child: SizedBox(
-                  child: CircularProgressIndicator(
-                    backgroundColor:
-                        Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
-                  width: 30,
-                  height: 30,
-                ));
-                break;
+    else*/
+    return StreamBuilder<ApiResponse<CategoryDataList>>(
+      stream: _categoryListBlocks.categoryListStreams,
+      builder:
+          (context, AsyncSnapshot<ApiResponse<CategoryDataList>> snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return Center(
+                  child: SizedBox(
+                child: CircularProgressIndicator(
+                  backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+                ),
+                width: 30,
+                height: 30,
+              ));
+              break;
 
-              case Status.ERROR:
-                return FHBBasicWidget.getRefreshContainerButton(
-                    snapshot.data.message, () {
-                  setState(() {});
-                });
-                break;
+            case Status.ERROR:
+              return FHBBasicWidget.getRefreshContainerButton(
+                  snapshot.data.message, () {
+                setState(() {});
+              });
+              break;
 
-              case Status.COMPLETED:
-                _categoryListBlock = null;
-                _categoryListBlock = new CategoryListBlock();
+            case Status.COMPLETED:
+              _categoryListBlocks = null;
+              _categoryListBlocks = new CategoryListBlock();
 
-                if (categoryDataList.length > 0) {
-                  categoryDataList.clear();
-                }
-
-                categoryDataList.addAll(snapshot.data.data.response.data);
+              if (categoryDataList.length > 0) {
+                categoryDataList.clear();
+              }
+              if (snapshot.data.data.result != null &&
+                  snapshot.data.data.result.length > 0) {
+                categoryDataList.addAll(snapshot.data.data.result);
                 return getMainWidgets(categoryDataList);
-                break;
-            }
-          } else {
-            return Container(
-              width: 100,
-              height: 100,
-            );
+              } else {
+                return Container(
+                  width: 100,
+                  height: 100,
+                  child: Text(''),
+                );
+              }
+
+              break;
           }
-        },
-      );
+        } else {
+          return Container(
+            width: 100,
+            height: 100,
+          );
+        }
+      },
+    );
   }
 
-  Widget getMainWidgets(List<CategoryData> data) {
-    _categoryListBlock = null;
-    _categoryListBlock = new CategoryListBlock();
-    List<CategoryData> categoryData = new List();
+  Widget getMainWidgets(List<CategoryResult> data) {
+    _categoryListBlocks = null;
+    _categoryListBlocks = new CategoryListBlock();
+    List<CategoryResult> categoryData = new List();
     if (!fromSearch) {
       PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, data);
 
-      List<CategoryData> categoryDataFromPrefernce =
+      List<CategoryResult> categoryDataFromPrefernce =
           PreferenceUtil.getCategoryTypeDisplay(
               Constants.KEY_CATEGORYLIST_VISIBLE);
       if (categoryDataFromPrefernce != null &&
@@ -447,28 +460,28 @@ class _MyRecordsState extends State<MyRecords> {
   }
 
   void rebuildAllBlocks() {
-    if (_categoryListBlock == null) {
-      _categoryListBlock = new CategoryListBlock();
-      _categoryListBlock.getCategoryList();
-    } else if (_categoryListBlock != null) {
-      _categoryListBlock = null;
-      _categoryListBlock = new CategoryListBlock();
-      _categoryListBlock.getCategoryList();
+    if (_categoryListBlocks == null) {
+      _categoryListBlocks = new CategoryListBlock();
+      _categoryListBlocks.getCategoryLists();
+    } else if (_categoryListBlocks != null) {
+      _categoryListBlocks = null;
+      _categoryListBlocks = new CategoryListBlock();
+      _categoryListBlocks.getCategoryLists();
     }
 
     if (_healthReportListForUserBlock == null) {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportList();
+      _healthReportListForUserBlock.getHelthReportLists();
     } else if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
 
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportList();
+      _healthReportListForUserBlock.getHelthReportLists();
     }
 
     if (_mediaTypeBlock == null) {
       _mediaTypeBlock = new MediaTypeBlock();
-      _mediaTypeBlock.getMediTypes();
+      _mediaTypeBlock.getMediTypesList();
     }
     if (_familyListBloc == null) {
       _familyListBloc = new FamilyListBloc();
@@ -483,9 +496,9 @@ class _MyRecordsState extends State<MyRecords> {
     }
   }
 
-  List<CategoryData> fliterCategories(List<CategoryData> data) {
-    List<CategoryData> filteredCategoryData = new List();
-    for (CategoryData dataObj in data) {
+  List<CategoryResult> fliterCategories(List<CategoryResult> data) {
+    List<CategoryResult> filteredCategoryData = new List();
+    for (CategoryResult dataObj in data) {
       if (dataObj.isDisplay &&
           dataObj.categoryName != Constants.STR_FEEDBACK &&
           dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
@@ -497,7 +510,7 @@ class _MyRecordsState extends State<MyRecords> {
     }
 
     int i = 0;
-    for (CategoryData categoryDataObj in filteredCategoryData) {
+    for (CategoryResult categoryDataObj in filteredCategoryData) {
       if (categoryDataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
         categoryDataObjClone = categoryDataObj;
@@ -532,13 +545,13 @@ class CustomTabView extends StatefulWidget {
   final ValueChanged<int> onPositionChange;
   final ValueChanged<double> onScroll;
   final int initPosition;
-  List<CategoryData> categoryData;
+  List<CategoryResult> categoryData;
 
   GlobalKey cameraKey;
   GlobalKey voiceKey;
   GlobalKey<ScaffoldState> scaffold_state;
   bool fromSearch;
-  CompleteData completeData;
+  HealthRecordList completeData;
   List<String> selectedMedia = new List();
   bool allowSelect;
   bool allowSelectNotes;
@@ -714,7 +727,7 @@ class _CustomTabsState extends State<CustomTabView>
     );
   }
 
-  Widget getAllTabsToDisplayInBodyClone(List<CategoryData> data) {
+  Widget getAllTabsToDisplayInBodyClone(List<CategoryResult> data) {
     rebuildAllBlocks();
     if (widget.selectedMedia == null) {
       widget.selectedMedia = new List();
@@ -805,74 +818,17 @@ class _CustomTabsState extends State<CustomTabView>
     ]);
   }
 
-  Widget getAllTabsToDisplayInBody(List<CategoryData> data) {
-    CompleteData completeDataFromPreference =
-        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
-    return widget.fromSearch
-        ? getMediTypeForlabels(data, widget.completeData)
-        : /*completeDataFromPreference != null
-            ? getMediTypeForlabels(data, completeDataFromPreference)
-            :*/
-        StreamBuilder<ApiResponse<UserHealthResponseList>>(
-            stream: _healthReportListForUserBlock.healthReportStream,
-            builder: (context,
-                AsyncSnapshot<ApiResponse<UserHealthResponseList>> snapshot) {
-              if (snapshot.hasData) {
-                switch (snapshot.data.status) {
-                  case Status.LOADING:
-                    return Scaffold(
-                      backgroundColor: Colors.white,
-                      body: Center(
-                          child: SizedBox(
-                        child: CircularProgressIndicator(
-                          backgroundColor:
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                        ),
-                        width: 30,
-                        height: 30,
-                      )),
-                    );
-                    break;
-
-                  case Status.ERROR:
-                    return FHBBasicWidget.getRefreshContainerButton(
-                        snapshot.data.message, () {
-                      setState(() {});
-                    });
-                    break;
-
-                  case Status.COMPLETED:
-                    _healthReportListForUserBlock = null;
-                    rebuildAllBlocks();
-                    if (!widget.fromSearch) {
-                      PreferenceUtil.saveCompleteData(
-                          Constants.KEY_COMPLETE_DATA,
-                          snapshot.data.data.response.data);
-                    }
-
-                    return getMediTypeForlabels(
-                        data, snapshot.data.data.response.data);
-                    break;
-                }
-              } else {
-                return Container(height: 0, color: Colors.white);
-              }
-            },
-          );
-  }
-
-  Widget getAllTabsToDisplayInBodyDemo(List<CategoryData> data) {
-    CompleteData completeDataFromPreference =
+  Widget getAllTabsToDisplayInBody(List<CategoryResult> data) {
+    HealthRecordList completeDataFromPreference =
         PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
     return widget.fromSearch
         ? getMediTypeForlabels(data, widget.completeData)
         : completeDataFromPreference != null
             ? getMediTypeForlabels(data, completeDataFromPreference)
-            : StreamBuilder<ApiResponse<UserHealthResponseList>>(
-                stream: _healthReportListForUserBlock.healthReportStream,
+            : StreamBuilder<ApiResponse<HealthRecordList>>(
+                stream: _healthReportListForUserBlock.healthReportStreams,
                 builder: (context,
-                    AsyncSnapshot<ApiResponse<UserHealthResponseList>>
-                        snapshot) {
+                    AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
                   if (snapshot.hasData) {
                     switch (snapshot.data.status) {
                       case Status.LOADING:
@@ -902,12 +858,10 @@ class _CustomTabsState extends State<CustomTabView>
                         rebuildAllBlocks();
                         if (!widget.fromSearch) {
                           PreferenceUtil.saveCompleteData(
-                              Constants.KEY_COMPLETE_DATA,
-                              snapshot.data.data.response.data);
+                              Constants.KEY_COMPLETE_DATA, snapshot.data.data);
                         }
 
-                        return getMediTypeForlabels(
-                            data, snapshot.data.data.response.data);
+                        return getMediTypeForlabels(data, snapshot.data.data);
                         break;
                     }
                   } else {
@@ -915,6 +869,60 @@ class _CustomTabsState extends State<CustomTabView>
                   }
                 },
               );
+  }
+
+  Widget getAllTabsToDisplayInBodyDemo(List<CategoryResult> data) {
+    HealthRecordList completeDataFromPreference =
+        PreferenceUtil.getCompleteData(Constants.KEY_COMPLETE_DATA);
+    return widget.fromSearch
+        ? getMediTypeForlabels(data, widget.completeData)
+        /*: completeDataFromPreference != null
+            ? getMediTypeForlabels(data, completeDataFromPreference)
+            */
+        : StreamBuilder<ApiResponse<HealthRecordList>>(
+            stream: _healthReportListForUserBlock.healthReportStreams,
+            builder: (context,
+                AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
+              if (snapshot.hasData) {
+                switch (snapshot.data.status) {
+                  case Status.LOADING:
+                    return Scaffold(
+                      backgroundColor: Colors.white,
+                      body: Center(
+                          child: SizedBox(
+                        child: CircularProgressIndicator(
+                          backgroundColor:
+                              Color(new CommonUtil().getMyPrimaryColor()),
+                        ),
+                        width: 30,
+                        height: 30,
+                      )),
+                    );
+                    break;
+
+                  case Status.ERROR:
+                    return FHBBasicWidget.getRefreshContainerButton(
+                        snapshot.data.message, () {
+                      setState(() {});
+                    });
+                    break;
+
+                  case Status.COMPLETED:
+                    _healthReportListForUserBlock = null;
+                    rebuildAllBlocks();
+                    if (!widget.fromSearch) {
+                      PreferenceUtil.saveCompleteData(
+                          Constants.KEY_COMPLETE_DATA, snapshot.data.data);
+                    }
+
+                    return getMediTypeForlabels(data, snapshot.data.data);
+                    break;
+                }
+              } else {
+                return Container(height: 0, color: Colors.white);
+              }
+            },
+          );
   }
 
   void rebuildAllBlocks() {
@@ -929,17 +937,17 @@ class _CustomTabsState extends State<CustomTabView>
 
     if (_healthReportListForUserBlock == null) {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportList();
+      _healthReportListForUserBlock.getHelthReportLists();
     } else if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
 
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportList();
+      _healthReportListForUserBlock.getHelthReportLists();
     }
 
     if (_mediaTypeBlock == null) {
       _mediaTypeBlock = new MediaTypeBlock();
-      _mediaTypeBlock.getMediTypes();
+      _mediaTypeBlock.getMediTypesList();
     }
     if (_familyListBloc == null) {
       _familyListBloc = new FamilyListBloc();
@@ -955,24 +963,24 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   Widget getMediTypeForlabels(
-      List<CategoryData> data, CompleteData completeData) {
+      List<CategoryResult> data, HealthRecordList completeData) {
     if (_mediaTypeBlock == null) {
       _mediaTypeBlock = new MediaTypeBlock();
-      _mediaTypeBlock.getMediTypes();
+      _mediaTypeBlock.getMediTypesList();
     } else {
       _mediaTypeBlock = null;
       _mediaTypeBlock = new MediaTypeBlock();
-      _mediaTypeBlock.getMediTypes();
+      _mediaTypeBlock.getMediTypesList();
     }
 
-    List<MediaData> selectedMediaData = PreferenceUtil.getMediaType();
+    List<MediaResult> selectedMediaData = PreferenceUtil.getMediaType();
 
     return selectedMediaData != null
         ? getStackBody(data, completeData, selectedMediaData)
-        : StreamBuilder<ApiResponse<MediaTypesResponse>>(
-            stream: _mediaTypeBlock.mediaTypeStream,
-            builder: (context,
-                AsyncSnapshot<ApiResponse<MediaTypesResponse>> snapshot) {
+        : StreamBuilder<ApiResponse<MediaDataList>>(
+            stream: _mediaTypeBlock.mediaTypeStreams,
+            builder:
+                (context, AsyncSnapshot<ApiResponse<MediaDataList>> snapshot) {
               if (snapshot.hasData) {
                 switch (snapshot.data.status) {
                   case Status.LOADING:
@@ -999,10 +1007,10 @@ class _CustomTabsState extends State<CustomTabView>
                   case Status.COMPLETED:
                     _mediaTypeBlock = null;
                     rebuildAllBlocks();
-                    PreferenceUtil.saveMediaType(Constants.KEY_METADATA,
-                        snapshot.data.data.response.data);
+                    PreferenceUtil.saveMediaType(
+                        Constants.KEY_METADATA, snapshot.data.data.result);
                     return getStackBody(
-                        data, completeData, snapshot.data.data.response.data);
+                        data, completeData, snapshot.data.data.result);
                     break;
                 }
               } else {
@@ -1012,8 +1020,8 @@ class _CustomTabsState extends State<CustomTabView>
           );
   }
 
-  Widget getStackBody(List<CategoryData> data, CompleteData completeData,
-      List<MediaData> mediaData) {
+  Widget getStackBody(List<CategoryResult> data, HealthRecordList completeData,
+      List<MediaResult> mediaData) {
     if (mediaData == null) {
       return Container();
     }
@@ -1067,11 +1075,11 @@ class _CustomTabsState extends State<CustomTabView>
     callBackToRefresh();
   }
 
-  List<Widget> _getAllDataForTheTabs(List<CategoryData> data,
-      CompleteData completeData, List<MediaData> mediaData) {
+  List<Widget> _getAllDataForTheTabs(List<CategoryResult> data,
+      HealthRecordList completeData, List<MediaResult> mediaData) {
     List<Widget> tabWidgetList = new List();
     //data.sort((a, b) => a.categoryName.compareTo(b.categoryName));
-    for (CategoryData dataObj in data) {
+    for (CategoryResult dataObj in data) {
       /* if (dataObj
                                 .isDisplay && dataObj.categoryName != Constants.STR_FEEDBACK) {*/
       if (dataObj.categoryDescription ==
@@ -1259,7 +1267,7 @@ class _CustomTabsState extends State<CustomTabView>
     }
   }
 
-  List<Widget> getAllTabsToDisplayInHeader(List<CategoryData> data) {
+  List<Widget> getAllTabsToDisplayInHeader(List<CategoryResult> data) {
     List<Widget> tabWidgetList = new List();
 
     data.sort((a, b) {
@@ -1268,7 +1276,7 @@ class _CustomTabsState extends State<CustomTabView>
           .compareTo(b.categoryDescription.toLowerCase());
     });
 
-    for (CategoryData dataObj in data) {
+    for (CategoryResult dataObj in data) {
       /* if (dataObj
                                 .isDisplay ) {*/
       tabWidgetList.add(Column(children: [

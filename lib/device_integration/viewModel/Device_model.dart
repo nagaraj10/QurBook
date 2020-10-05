@@ -35,7 +35,8 @@ class DevicesViewModel with ChangeNotifier {
         value_name: parameters.strDataTypeBP,
         value1: 'SYS',
         value2: 'DIS',
-        color: Colors.redAccent));
+        color: [Colors.teal, Colors.tealAccent]));
+
     devicelist.add(DeviceData(
         title: Constants.STR_GLUCOMETER,
         icon: Constants.Devices_GL,
@@ -44,7 +45,7 @@ class DevicesViewModel with ChangeNotifier {
         value_name: parameters.strGlusoceLevel,
         value1: 'GL',
         value2: '',
-        color: Colors.orange));
+        color: [Colors.red, Colors.redAccent]));
     devicelist.add(DeviceData(
         title: Constants.STR_PULSE_OXIMETER,
         icon: Constants.Devices_OxY,
@@ -53,7 +54,7 @@ class DevicesViewModel with ChangeNotifier {
         value_name: parameters.strOxgenSaturation,
         value1: 'OS',
         value2: '',
-        color: Colors.blueAccent));
+        color: [Colors.blue, Colors.blueAccent]));
     devicelist.add(DeviceData(
         title: Constants.STR_THERMOMETER,
         icon: Constants.Devices_THM,
@@ -62,7 +63,7 @@ class DevicesViewModel with ChangeNotifier {
         value_name: parameters.strTemperature,
         value1: 'TEMP',
         value2: '',
-        color: Colors.deepOrangeAccent));
+        color: [Colors.pink, Colors.pinkAccent]));
     devicelist.add(DeviceData(
         title: Constants.STR_WEIGHING_SCALE,
         icon: Constants.Devices_WS,
@@ -71,7 +72,7 @@ class DevicesViewModel with ChangeNotifier {
         value_name: parameters.strWeight,
         value1: 'WT',
         value2: '',
-        color: Colors.lightGreen));
+        color: [Colors.indigo, Colors.indigoAccent]));
     return devicelist;
   }
 

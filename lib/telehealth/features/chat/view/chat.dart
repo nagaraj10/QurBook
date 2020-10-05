@@ -14,7 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/PDFViewer.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
@@ -50,10 +50,11 @@ class ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-          preferredSize:
-              Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
-          child: _patientChatBar()),
+      // appBar: PreferredSize(
+      //     preferredSize:
+      //         Size.fromHeight(MediaQuery.of(context).size.height * 0.15),
+      //     child: _patientChatBar()),
+      appBar: _patientChatBar(),
       body: ChatScreen(
         peerId: widget.peerId,
         peerAvatar: widget.peerAvatar,
@@ -156,7 +157,7 @@ class ChatState extends State<Chat> {
             children: <Widget>[
               CircleAvatar(
                 backgroundImage: NetworkImage(widget.peerAvatar),
-                radius: 25,
+                radius: 20,
               ),
               SizedBox(
                 width: 15,
@@ -181,9 +182,12 @@ class ChatState extends State<Chat> {
                           fontSize: 12,
                           color: Colors.white),
                     ),*/
+                    SizedBox(
+                      height: 5,
+                    ),
                     Text(
                       widget.lastDate != null
-                          ? 'Date: ' +
+                          ? 'Last Received: ' +
                               DateFormat('dd MMM kk:mm').format(
                                   DateTime.fromMillisecondsSinceEpoch(
                                       int.parse(widget.lastDate)))
@@ -345,11 +349,11 @@ class ChatScreenState extends State<ChatScreen> {
 
   getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    patientName = myProfile.response.data.generalInfo.qualifiedFullName != null
-        ? myProfile.response.data.generalInfo.qualifiedFullName.firstName +
+    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    patientName = myProfile.result != null
+        ? myProfile.result.firstName +
             ' ' +
-            myProfile.response.data.generalInfo.qualifiedFullName.lastName
+            myProfile.result.lastName
         : '';
     patientPicUrl = getProfileURL();
 
@@ -357,9 +361,9 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   String getProfileURL() {
-    MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     String patientPicURL =
-        myProfile.response.data.generalInfo.profilePicThumbnailURL;
+        myProfile.result.profilePicThumbnailUrl;
 
     return patientPicURL;
   }

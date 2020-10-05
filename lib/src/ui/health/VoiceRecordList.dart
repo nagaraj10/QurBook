@@ -8,11 +8,12 @@ import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
 
 class VoiceRecordList extends StatefulWidget {
-  final CompleteData completeData;
+  final HealthRecordList completeData;
   final Function callBackToRefresh;
   final String categoryName;
   final String categoryId;
@@ -27,7 +28,6 @@ class VoiceRecordList extends StatefulWidget {
   final bool allowSelect;
   final bool showDetails;
 
-
   VoiceRecordList(
       this.completeData,
       this.callBackToRefresh,
@@ -39,7 +39,8 @@ class VoiceRecordList extends StatefulWidget {
       this.allowSelect,
       this.mediaMeta,
       this.isNotesSelect,
-      this.isAudioSelect,this.showDetails);
+      this.isAudioSelect,
+      this.showDetails);
 
   @override
   _VoiceRecordListState createState() => new _VoiceRecordListState();
@@ -63,8 +64,8 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
     return getWidgetToDisplayVoiceRecords(widget.completeData);
   }
 
-  Widget getWidgetToDisplayVoiceRecords(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget getWidgetToDisplayVoiceRecords(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionVoiceRecord);
@@ -101,7 +102,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
     widget.callBackToRefresh();
   }
 
-  getCardWidgetForVoiceRecords(MediaMetaInfo mediaMetaInfoObj, int i) {
+  getCardWidgetForVoiceRecords(HealthResult mediaMetaInfoObj, int i) {
     return InkWell(
         onLongPress: () {
           if (widget.isAudioSelect) {
@@ -113,7 +114,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
           }
         },
         onTap: () {
-          if (widget.isAudioSelect && widget.showDetails==false) {
+          if (widget.isAudioSelect && widget.showDetails == false) {
             bool condition;
             if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
               condition = false;
@@ -156,10 +157,10 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                     radius: 25,
                     backgroundColor: const Color(fhbColors.bgColorContainer),
                     child: Image.network(
-                      mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                     /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                           ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                          : Constants.BASE_URL +
-                              mediaMetaInfoObj.metaInfo.categoryInfo.logo,
+                          : */Constants.BASE_URL +
+                              mediaMetaInfoObj.metadata.healthRecordCategory.logo,
                       height: 25,
                       width: 25,
                       color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -173,8 +174,8 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                     children: <Widget>[
                       SizedBox(height: 10.0),
                       Text(
-                        mediaMetaInfoObj.metaInfo.fileName != null
-                            ? mediaMetaInfoObj.metaInfo.fileName
+                        mediaMetaInfoObj.metadata.fileName != null
+                            ? mediaMetaInfoObj.metadata.fileName
                             : '',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
@@ -184,7 +185,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                       ),
                       Text(
                         new FHBUtils()
-                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
+                            .getFormattedDateString(mediaMetaInfoObj.metadata.healthRecordType.createdOn),
                         style: TextStyle(color: Colors.grey[400], fontSize: 12),
                       )
                     ],
@@ -213,8 +214,8 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                             new CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
-                      (mediaMetaInfoObj.metaInfo.hasVoiceNotes != null &&
-                              mediaMetaInfoObj.metaInfo.hasVoiceNotes)
+                      (mediaMetaInfoObj.metadata.hasVoiceNotes != null &&
+                              mediaMetaInfoObj.metadata.hasVoiceNotes)
                           ? Icon(
                               Icons.mic,
                               color: Colors.black54,

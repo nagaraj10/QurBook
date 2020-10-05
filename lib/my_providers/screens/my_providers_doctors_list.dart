@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,13 +8,13 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/DoctorModel.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
 import 'my_provider.dart';
 
 class MyProvidersDoctorsList extends StatelessWidget {
-  List<DoctorsModel> doctorsModel;
+  List<Doctors> doctorsModel;
   ProvidersBloc providersBloc;
   MyProviderState myProviderState;
 
@@ -31,13 +29,13 @@ class MyProvidersDoctorsList extends StatelessWidget {
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
-        DoctorsModel eachDoctorModel = doctorsModel[index];
+        Doctors eachDoctorModel = doctorsModel[index];
         return InkWell(
             onTap: () {
               Navigator.pushNamed(context, router.rt_AddProvider,
                       arguments: AddProvidersArguments(
                           searchKeyWord: CommonConstants.doctors,
-                          doctorsModel: eachDoctorModel,
+                          // doctorsModel: eachDoctorModel,
                           fromClass: router.rt_myprovider,
                           hasData: true))
                   .then((value) {
@@ -62,13 +60,20 @@ class MyProvidersDoctorsList extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     ClipOval(
-                        child: eachDoctorModel.profilePicThumbnailUrl != null
-                            ? Image.network(
-                                eachDoctorModel.profilePicThumbnailUrl,
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                              )
+                        child: eachDoctorModel.user != null
+                            ? eachDoctorModel.user.profilePicThumbnailUrl !=
+                                    null
+                                ? Image.network(
+                                    eachDoctorModel.user.profilePicThumbnailUrl,
+                                    height: 50,
+                                    width: 50,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(
+                                    width: 50,
+                                    height: 50,
+                                    padding: EdgeInsets.all(12),
+                                    color: Color(fhbColors.bgColorContainer))
                             : Container(
                                 width: 50,
                                 height: 50,
@@ -85,9 +90,11 @@ class MyProvidersDoctorsList extends StatelessWidget {
                         children: <Widget>[
                           SizedBox(height: 5),
                           AutoSizeText(
-                            eachDoctorModel.name != null
-                                ? toBeginningOfSentenceCase(
-                                    eachDoctorModel.name)
+                            eachDoctorModel.user != null
+                                ? eachDoctorModel.user.name != null
+                                    ? toBeginningOfSentenceCase(
+                                        eachDoctorModel.user.name)
+                                    : ''
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
@@ -123,7 +130,7 @@ class MyProvidersDoctorsList extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               InkWell(
-                                  child: eachDoctorModel.isDefault == true
+                                  child: eachDoctorModel.isActive == true
                                       ? ImageIcon(
                                           AssetImage(
                                               variable.icon_record_fav_active),

@@ -1,5 +1,4 @@
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
-import 'package:myfhb/src/model/user/QualifiedFullName.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 
@@ -22,7 +21,7 @@ class FamilyMemberData {
   String countryCode;
   bool isEmailVerified;
   String status;
-  QualifiedFullName qualifiedFullName;
+  /*QualifiedFullName qualifiedFullName;*/
 
   FamilyMemberData(
       {this.id,
@@ -43,7 +42,7 @@ class FamilyMemberData {
       this.countryCode,
       this.isEmailVerified,
       this.status,
-      this.qualifiedFullName});
+      /*this.qualifiedFullName*/});
 
   FamilyMemberData.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
@@ -66,9 +65,9 @@ class FamilyMemberData {
     countryCode = json[parameters.strCountryCode];
     isEmailVerified = json[parameters.strisEmailVerified];
     status = json[parameters.strStatus];
-    qualifiedFullName = json[parameters.strqualifiedFullName] != null
+    /*qualifiedFullName = json[parameters.strqualifiedFullName] != null
         ? new QualifiedFullName.fromJson(json[parameters.strqualifiedFullName])
-        : null;
+        : null;*/
   }
 
   Map<String, dynamic> toJson() {
@@ -93,9 +92,9 @@ class FamilyMemberData {
     data[parameters.strCountryCode] = this.countryCode;
     data[parameters.strisEmailVerified] = this.isEmailVerified;
     data[parameters.strStatus] = this.status;
-    if (this.qualifiedFullName != null) {
+    /*if (this.qualifiedFullName != null) {
       data[parameters.strqualifiedFullName] = this.qualifiedFullName.toJson();
-    }
+    }*/
     return data;
   }
 }

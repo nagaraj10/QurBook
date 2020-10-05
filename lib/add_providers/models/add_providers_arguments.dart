@@ -2,14 +2,15 @@ import 'package:myfhb/add_address/models/place.dart';
 import 'package:myfhb/my_providers/models/DoctorModel.dart';
 import 'package:myfhb/my_providers/models/HospitalModel.dart';
 import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
-import 'package:myfhb/search_providers/models/doctors_data.dart';
-import 'package:myfhb/search_providers/models/hospital_data.dart';
-import 'package:myfhb/search_providers/models/lab_data.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
+import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
+import 'package:myfhb/search_providers/models/hospital_list_response_new.dart';
+import 'package:myfhb/search_providers/models/labs_list_response_new.dart';
 
 class AddProvidersArguments {
-  DoctorsData data;
-  HospitalData hospitalData;
-  LabData labData;
+  DoctorsListResult data;
+  HospitalsListResult hospitalData;
+  LabListResult labData;
 
   String searchKeyWord;
   bool hasData;
@@ -17,8 +18,8 @@ class AddProvidersArguments {
   String fromClass;
 
   DoctorsModel doctorsModel;
-  HospitalsModel hospitalsModel;
-  LaboratoryModel labsModel;
+  Hospitals hospitalsModel;
+  Hospitals labsModel;
   PlaceDetail placeDetail;
   Place place;
   String confirmAddressDescription;

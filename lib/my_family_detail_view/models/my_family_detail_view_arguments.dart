@@ -1,9 +1,8 @@
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 
 class MyFamilyDetailViewArguments {
   int index;
-  Sharedbyme sharedbyme;
+  SharedByUsers sharedbyme;
 
   MyFamilyDetailViewArguments({
     this.index,

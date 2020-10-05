@@ -15,6 +15,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
@@ -25,10 +26,11 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/BookAppointmentModel.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/DoctorTimeSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
@@ -41,7 +43,7 @@ class BookingConfirmation extends StatefulWidget {
   final List<DoctorIds> docs;
   final int i;
   final DateTime selectedDate;
-  final List<SessionsTime> sessionData;
+  final List<SlotSessionsModel> sessionData;
   final int rowPosition;
   final int itemPosition;
   final bool isFollowUp;
@@ -68,9 +70,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   CommonWidgets commonWidgets = new CommonWidgets();
   CommonUtil commonUtil = new CommonUtil();
   MyProviderViewModel providerViewModel;
+  CreateAppointMentViewModel createAppointMentViewModel;
   FamilyListBloc _familyListBloc;
-  FamilyMembersList familyMembersModel = new FamilyMembersList();
-  List<Sharedbyme> sharedbyme = new List();
+  FamilyMembers familyMembersModel = new FamilyMembers();
+  List<SharedByUsers> sharedbyme = new List();
   FlutterToast toast = new FlutterToast();
   FamilyData familyData = new FamilyData();
 
@@ -109,10 +112,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   @override
   void initState() {
     providerViewModel = new MyProviderViewModel();
+    createAppointMentViewModel = new CreateAppointMentViewModel();
     createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     selectedId = createdBy;
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getFamilyMembersListNew();
 
     _categoryListBlock = null;
     _categoryListBlock = new CategoryListBlock();
@@ -127,14 +131,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     healthRecords.addAll(voiceIds);
   }
 
-  Future<FamilyMembersList> getList() async {
-    _familyListBloc.getFamilyMembersList().then((familyMembersList) {
+  Future<FamilyMembers> getList() async {
+    _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
       familyMembersModel = familyMembersList;
 
       for (int i = 0;
-          i < familyMembersModel.response.data.sharedbyme.length;
+          i < familyMembersModel.result.sharedByUsers.length;
           i++) {
-        sharedbyme.add(familyMembersModel.response.data.sharedbyme[i]);
+        sharedbyme.add(familyMembersModel.result.sharedByUsers[i]);
       }
     });
 
@@ -801,9 +805,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         });
   }
 
-  Future<BookAppointmentModel> bookAppointmentCall(
+  Future<CreateAppointmentModel> bookAppointmentCall(
       String createdBy,
-      String createdFor,
+      String bookedFor,
       String doctorSessionId,
       String scheduleDate,
       String slotNumber,
@@ -811,10 +815,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       bool isFollowUp,
       List<String> healthRecords,
       {History doc}) async {
-    BookAppointmentModel bookAppointmentModel =
-        await providerViewModel.putBookAppointment(
+    CreateAppointmentModel bookAppointmentModel =
+        await createAppointMentViewModel.putBookAppointment(
             createdBy,
-            createdFor,
+            bookedFor,
             doctorSessionId,
             scheduleDate,
             slotNumber,
@@ -828,7 +832,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   bookAppointment(
       String createdBy,
-      String createdFor,
+      String bookedFor,
       String doctorSessionId,
       String scheduleDate,
       String slotNumber,
@@ -845,7 +849,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         if (value != null && value.success) {
           bookAppointmentCall(
                   createdBy,
-                  createdFor,
+                  bookedFor,
                   doctorSessionId,
                   scheduleDate,
                   slotNumber,
@@ -855,17 +859,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   doc: doc)
               .then((value) {
             if (value != null) {
-              if (value.status != null &&
-                  value.success != null &&
-                  value.message != null) {
-                if (value.status == 200 &&
-                    value.success == true &&
+              if (value.isSuccess != null &&
+                  value.message != null &&
+                  value.result != null) {
+                if (value.isSuccess == true &&
                     value.message == appointmentCreatedMessage) {
-                  if (value.response.data.paymentInfo.longurl != null) {
+                  if (value.result.paymentInfo.payload.paymentGatewayDetail.responseInfo.result.paymentRequest.longurl != null) {
                     goToPaymentPage(
-                        value.response.data.paymentInfo.longurl,
-                        value.response.data.paymentInfo.payment.id,
-                        value.response.data.appointmentInfo.id);
+                        value.result.paymentInfo.payload.paymentGatewayDetail.responseInfo.result.paymentRequest.longurl,
+                        value.result.paymentInfo.payload.payment.id);
                   } else {
                     pr.hide();
                     toast.getToast(noUrl, Colors.red);
@@ -897,14 +899,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     }
   }
 
-  goToPaymentPage(String longurl, String paymentId, String appointmentId) {
+  goToPaymentPage(String longurl, String paymentId) {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => PaymentPage(
                 redirectUrl: longurl,
-                paymentId: paymentId,
-                appointmentId: appointmentId)));
+                paymentId: paymentId)));
   }
 
   Widget getTitle(String title) {

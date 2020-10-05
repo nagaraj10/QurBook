@@ -1,7 +1,9 @@
 library fhb_parmeters;
 
+import 'package:myfhb/telehealth/features/appointments/view/appointments.dart';
+
 const String strStatus = 'status';
-const String strSuccess = 'success';
+const String strSuccess = 'isSuccess';
 const String strMessage = 'message';
 const String strResponse = 'response';
 const String strData = 'data';
@@ -166,6 +168,8 @@ const String strlinkedData = 'linkedData';
 const String strsharedbyme = 'sharedbyme';
 const String strsharedToMe = 'sharedToMe';
 const String strvirtualUserParent = 'virtualUserParent';
+const String strMappedDoctorId = 'mappedDoctorId';
+const String strProfilePicThumbnailURL = 'profilePicThumbnailURL';
 
 const String strmedicalPreferences = 'medicalPreferences';
 const String strpreferences = 'preferences';
@@ -245,6 +249,7 @@ const String strqualificationInfo = 'qualificationInfo';
 const String strmedicalCouncilInfo = 'medicalCouncilInfo';
 const String strspecialty = 'specialty';
 const String strclinicName = 'clinicName';
+const String strpincode = 'pincode';
 
 const String strdegree = 'degree';
 const String struniversity = 'university';
@@ -279,7 +284,7 @@ const String ok = 'Ok';
 const String yes = 'Yes';
 const String no = 'No';
 const String appointmentCreatedMessage =
-    'Created a new  appointment(s) successfully';
+    'Created a new appointment successfully.';
 const String someWentWrong = 'Booking appointment failed.. Some went wrong!';
 const String checkSlots = 'Checking available slots..';
 const String selectSlotsMsg = 'please select your time slot before you book';
@@ -314,8 +319,9 @@ const String strOxyTitle = "SPO2 Reading";
 const String strWgTitle = "Weight Measurments";
 const String strTmpTitle = "Temperature Readings";
 const String strLatestTitle = "Latest Readings";
-const String strDateYMD = "yMMMMd";
+const String strDateYMD = "yMMMd";
 const String strTimeHMS = "Hms";
+const String strTimeHM = "hh:mm a";
 
 const String strsourceGoogle = "Google Fit";
 const String strsourceSheela = "SHEELA";
@@ -456,6 +462,40 @@ const String strOxygen = "oxygenSaturation";
 const String strentities = "entities";
 const String strUser = "user";
 
+
+// For Telehealth Appointments
+const String strHistory = "history";
+const String strUpcoming = "upcoming";
+const String strAppointmentId = "appointmentId";
+const String strHealthRecord = "healthRecord";
+const String strPlannedStartDateTime = "plannedStartDateTime";
+const String strPlannedEndDateTime = "plannedEndDateTime";
+const String strSlotNumber = "slotNumber";
+const String strIsRefunded = "isRefunded";
+const String strBookingID = "bookingID";
+const String strSharedMedicalRecordsId = "sharedMedicalRecordsId";
+const String strIsMedicalRecordsShared = "isMedicalRecordsShared";
+const String strDoctorPic = "doctorPic";
+const String strDoctorName = "doctorName";
+const String strDoctorSessionId = "doctorSessionId";
+const String strPatientId = "patientId";
+const String strActualStartDateTime = "actualStartDateTime";
+const String strActualEndDateTime = "actualEndDateTime";
+const String strFollowupDate = "followupDate";
+const String strFollowupFee = "followupFee";
+const String strPaymentMediaMetaId = "paymentMediaMetaId";
+const String strRefundMediaMetaId = "refundMediaMetaId";
+const String strPrescription = "prescription";
+const String strVoice = "voice";
+const String strrx = "rx";
+const String strothers = "others";
+const String strCreatedFor = "createdFor";
+const String strStatusId = "statusId";
+const String strIsFollowUpFee = "isFollowUpFee";
+const String strAppointmentInfo = "appointmentInfo";
+const String strPlannedFollowupDate = "plannedFollowupDate";
+const String strPaymentInfo = "paymentInfo";
+
 //Add Family User Info
 const String make_a_choice = 'Make a Choice!';
 
@@ -487,5 +527,42 @@ const String appid_missing =
     'APP_ID missing, please provide your APP_ID in settings.dart';
 const String agora_not_starting = 'Agora Engine is not starting';
 const String exit_call = 'Do you want exit from call?';
+const String cancel_appointment = 'Are you want cancel Appointment?';
+const String warning = 'warning!';
 const String Yes = 'Yes';
 const String No = 'No';
+
+const String id = 'id';
+const String healthOrganization = 'healthOrganization';
+
+//for the new models
+
+const String strIsSuccess = 'isSuccess';
+const String strResult = 'result';
+
+const String strIsAiTranscription = 'isAiTranscription';
+const String strHealthRecordCategory = 'healthRecordCategory';
+
+//chat
+const String NICK_NAME = 'nickname';
+const String PHOTO_URL = 'photoUrl';
+const String ID = 'id';
+const String CREATED_AT = 'createdAt';
+const String CHATTING_WITH = 'chattingWith';
+const String DISPLAY_NAME = 'display_name';
+const String PROFILE_IMAGE = 'profile_image';
+const String ABOUT_ME = 'aboutMe';
+const String USERS = 'users';
+
+//appointment
+const String strIsFollowUp_C = 'isFollowUp';
+const String strDoctorSession = 'doctorSession';
+const String strBookedFor = 'bookedFor';
+const String strBookedBy = 'bookedBy';
+const String strBookingId_S = 'bookingId';
+const String strIsFollowUp_S = 'isFollowup';
+const String strIsHealthRecordShared = 'isHealthRecordShared';
+const String strPayment = 'payment';
+const String strPaymentGateWayDetail = 'paymentGatewayDetail';
+
+const String strReferenceId = 'doctorReferenceId';

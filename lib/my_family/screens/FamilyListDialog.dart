@@ -14,7 +14,7 @@ import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
@@ -35,7 +35,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
     super.initState();
 
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getFamilyMembersListNew();
   }
 
   @override
@@ -144,7 +144,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   }
 
   Widget setupAlertDialoadContainer(List<Sharedbyme> sharedByMe) {
-    MyProfile myProfile =
+    MyProfileModel myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
     ProfileData profileData = new ProfileData(
@@ -190,10 +190,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                                         variable.Self
                                     ? new FHBBasicWidget()
                                         .getProfilePicWidgeUsingUrl(myProfile
-                                            .response
-                                            .data
-                                            .generalInfo
-                                            .profilePicThumbnailURL)
+                                            .result.profilePicThumbnailUrl)
                                     : Image.memory(
                                         Uint8List.fromList(sharedByMe[index]
                                             .profileData

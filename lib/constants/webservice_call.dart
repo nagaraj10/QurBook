@@ -1,10 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as variable;
-import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
 
 class WebserviceCall {
   String getQueryToUpdateDoctor(bool isPreferred, String providerId) {
@@ -23,6 +26,22 @@ class WebserviceCall {
   String getUrlToUpdateDoctor(String userID) {
     String query;
     query = '${variable.qr_Userprofile}${userID}${variable.qr_slash}';
+
+    return query;
+  }
+
+  String getQueryDoctorUpdate(String userID) {
+    String query;
+    query =
+        '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_sections}${variable.qr_generalInfo}';
+
+    return query;
+  }
+
+  String getUrlToUpdateDoctorNew(String userID) {
+    String query;
+    query =
+        '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_section}${variable.qr_medicalPreferences}';
 
     return query;
   }
@@ -90,6 +109,16 @@ class WebserviceCall {
     return query;
   }
 
+  String getQueryForFamilyMemberListNew() {
+    String query = '';
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    query =
+        "${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_slash}${variable.qr_myconnection}";
+
+    return query;
+  }
+
   String getQueryForPostUserDelinking() {
     String query = '';
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
@@ -135,14 +164,80 @@ class WebserviceCall {
       File profilePic,
       String firstName,
       String middleName,
-      String lastName) {
+      String lastName,
+      String cityId,
+      String stateId,
+      String addressLine1,
+      String addressLine2,
+      String zipcode,
+      bool fromFamily) {
     String query;
     query =
         "${variable.qr_generalInfo}${variable.qr_DSlash}${variable.qr_gender}${gender}${variable.qr_OSlash}${variable.qr_bloodgroup}${bloodGroup}${variable.qr_OSlash}${variable.qr_dateOfBirth}${dateOfBirth}${variable.qr_OSlash}${variable.qr_name}${name}${variable.qr_OSlash}${variable.qr_firstName}${firstName}${variable.qr_OSlash}${variable.qr_middleName}${middleName}${variable.qr_OSlash}${variable.qr_lastname}${lastName}${variable.qr_OSlash}${variable.qr_email}${email}";
 
+    if (fromFamily) {
+      query = query +
+          "${variable.qr_OSlash}${variable.qr_CityId}${cityId}${variable.qr_OSlash}${variable.qr_StateId}${stateId}${variable.qr_OSlash}${variable.qr_AddressLine2}${addressLine2}${variable.qr_OSlash}${variable.qr_AddressLine1}${addressLine1}${variable.qr_OSlash}${variable.qr_pincode}${zipcode}";
+    }
     /*query =
         variable.qr_sections +
         query;*/
+
+    return query;
+  }
+
+  String getQueryForUserUpdate(String userID) {
+    String query;
+    query =
+        '${variable.qr_User}${variable.qr_slash}${userID}${variable.qr_section}${variable.qr_generalInfo}';
+
+    return query;
+  }
+
+  String makeJsonForUpdateProfile(
+      String userID,
+      String name,
+      String phoneNo,
+      String email,
+      String gender,
+      String bloodGroup,
+      String dateOfBirth,
+      File profilePic,
+      String firstName,
+      String middleName,
+      String lastName,
+      String cityId,
+      String stateId,
+      String addressLine1,
+      String addressLine2,
+      String zipcode,
+      MyProfileModel myProfileModel) {
+    var input = {};
+    input[variable.qr_gender_p] = gender;
+    input[variable.qr_bloodgroup_p] = bloodGroup;
+    input[variable.qr_dateOfBirth_p] = dateOfBirth;
+    input[variable.qr_name_p] = name;
+    input[variable.qr_firstName_p] = firstName;
+    input[variable.qr_middleName_p] = middleName;
+    input[variable.qr_lastname_p] = lastName;
+    input[variable.qr_email_p] = email;
+    var query = json.encode(input);
+
+    MyProfileResult profileResult = myProfileModel.result;
+
+    var queryProfile = profileResult.toJson();
+    var profilequery = json.encode(queryProfile);
+    profilequery = profilequery.replaceAll('\n', '');
+
+    return profilequery.toString();
+  }
+
+  String getQueryForPostUserDelinkingNew() {
+    String query = '';
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+
+    query =
+        "${variable.qr_userlinking}${variable.qr_slash}${variable.qr_delink}";
 
     return query;
   }

@@ -87,12 +87,12 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
           onTap: () {},
         ),
         SwitchProfile().buildActions(context, _key, callBackToRefresh),
-        IconWidget(
-          icon: Icons.more_vert,
-          colors: Colors.white,
-          size: 24,
-          onTap: () {},
-        ),
+        // IconWidget(
+        //   icon: Icons.more_vert,
+        //   colors: Colors.white,
+        //   size: 24,
+        //   onTap: () {},
+        // ),
       ],
     );
   }
