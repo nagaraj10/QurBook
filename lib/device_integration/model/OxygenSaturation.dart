@@ -1,48 +1,49 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as param;
 
 class OxygenSaturation {
-  OxygenSaturation({
-    this.isSuccess,
-    this.entities,
-  });
+    OxygenSaturation({
+        this.isSuccess,
+        this.entities,
+    });
 
-  bool isSuccess;
-  List<OxygenSaturationEntity> entities;
+    bool isSuccess;
+    List<OxygenSaturationEntity> entities;
 
-  factory OxygenSaturation.fromJson(Map<String, dynamic> json) =>
-      OxygenSaturation(
-        isSuccess: json[is_Success],
-        entities: List<OxygenSaturationEntity>.from(
-            json[strentities].map((x) => OxygenSaturationEntity.fromJson(x))),
-      );
+    factory OxygenSaturation.fromJson(Map<String, dynamic> json) => OxygenSaturation(
+        isSuccess: json[param.is_Success],
+        entities: List<OxygenSaturationEntity>.from(json[param.strentities].map((x) => OxygenSaturationEntity.fromJson(x))),
+    );
 
-  Map<String, dynamic> toJson() => {
-        is_Success: isSuccess,
-        strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
-      };
+    Map<String, dynamic> toJson() => {
+        param.is_Success: isSuccess,
+        param.strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
+    };
 }
 
 class OxygenSaturationEntity {
-  OxygenSaturationEntity({
-    this.lastsyncdatetime,
-    this.oxygenSaturation,
-    this.source,
-  });
+    OxygenSaturationEntity({
+        //this.id,
+        this.startDateTime,
+        this.endDateTime,
+        this.oxygenSaturation,
+    });
 
-  DateTime lastsyncdatetime;
-  int oxygenSaturation;
-  String source;
+    //String id;
+    DateTime startDateTime;
+    DateTime endDateTime;
+    int oxygenSaturation;
 
-  factory OxygenSaturationEntity.fromJson(Map<String, dynamic> json) =>
-      OxygenSaturationEntity(
-        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
-        oxygenSaturation: json[strParamOxygen],
-        source: json[strsourcetype],
-      );
+    factory OxygenSaturationEntity.fromJson(Map<String, dynamic> json) => OxygenSaturationEntity(
+        //id: json["id"],
+        startDateTime: DateTime.parse(json[param.strsyncStartDate]),
+        endDateTime: DateTime.parse(json[param.strsyncEndDate]),
+        oxygenSaturation: json[param.strParamOxygen],
+    );
 
-  Map<String, dynamic> toJson() => {
-        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
-        strParamOxygen: oxygenSaturation,
-        strsourcetype: source,
-      };
+    Map<String, dynamic> toJson() => {
+        // "id": id,
+        param.strsyncStartDate: startDateTime.toIso8601String(),
+        param.strsyncEndDate: endDateTime.toIso8601String(),
+        param.strParamOxygen: oxygenSaturation,
+    };
 }

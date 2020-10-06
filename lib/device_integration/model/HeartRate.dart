@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as param;
 
 class HeartRate {
   HeartRate({
@@ -10,38 +10,42 @@ class HeartRate {
   List<HeartRateEntity> entities;
 
   factory HeartRate.fromJson(Map<String, dynamic> json) => HeartRate(
-        isSuccess: json[is_Success],
+        isSuccess: json[param.is_Success],
         entities: List<HeartRateEntity>.from(
-            json[strentities].map((x) => HeartRateEntity.fromJson(x))),
+            json[param.strentities].map((x) => HeartRateEntity.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        is_Success: isSuccess,
-        strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
+        param.is_Success: isSuccess,
+        param.strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
       };
 }
 
 class HeartRateEntity {
   HeartRateEntity({
-    this.lastsyncdatetime,
+    //this.id,
+    this.startDateTime,
+    this.endDateTime,
     this.bpm,
-    this.source,
   });
 
-  DateTime lastsyncdatetime;
+  //String id;
+  DateTime startDateTime;
+  DateTime endDateTime;
   int bpm;
-  String source;
 
   factory HeartRateEntity.fromJson(Map<String, dynamic> json) =>
       HeartRateEntity(
-        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
-        bpm: json[strParamHeartRate],
-        source: json[strsourcetype],
+        //id: json["id"],
+        startDateTime: DateTime.parse(json[param.strsyncStartDate]),
+        endDateTime: DateTime.parse(json[param.strsyncEndDate]),
+        bpm: json[param.strParamHeartRate],
       );
 
   Map<String, dynamic> toJson() => {
-        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
-        strParamHeartRate: bpm,
-        strsourcetype: source,
+        //"id": id,
+        param.strsyncStartDate: startDateTime.toIso8601String(),
+        param.strsyncEndDate: endDateTime.toIso8601String(),
+        param.strParamHeartRate: bpm,
       };
 }

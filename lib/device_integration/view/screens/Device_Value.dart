@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+import 'package:myfhb/widgets/GradientAppBar.dart';
+
 import 'package:myfhb/device_integration/model/BPValues.dart';
 import 'package:myfhb/device_integration/model/GulcoseValues.dart';
 import 'package:myfhb/device_integration/model/OxySaturationValues.dart';
 import 'package:myfhb/device_integration/model/TemperatureValues.dart';
 import 'package:myfhb/device_integration/model/WeightValues.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:provider/provider.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:intl/intl.dart';
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class EachDeviceValues extends StatelessWidget {
   EachDeviceValues({this.device_name});
@@ -422,7 +425,6 @@ Widget buildRow(String type, String date, String value1, String value2,
 }
 
 Widget TypeIcon(String type) {
-  print(type);
   if (type == strsourceHK) {
     return Image.asset(
       'assets/devices/fit.png',

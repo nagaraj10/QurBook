@@ -1,11 +1,10 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
-import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/database/services/database_helper.dart';
 import 'package:myfhb/device_integration/services/fetchGoogleFitData.dart';
 import 'package:myfhb/src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
 import 'package:myfhb/device_integration/model/myFHBResponseModel.dart';
+import 'package:myfhb/device_integration/model/LastSyncResponse.dart';
 import 'dart:convert' show json;
 import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/constants/fhb_parameters.dart' as params;
 
 class SyncGoogleFitData {
   GoogleFitData _gfHelper;
@@ -28,12 +27,17 @@ class SyncGoogleFitData {
   }
 
   Future<bool> syncGoogleFitData() async {
-    var response;
+    var response = '';
     String startTime = "";
     String endTime = "";
+    String errorString = "";
 
-    if (!await isGoogleFitSignedIn()) {
-      return false;
+    if (await isGoogleFitSignedIn()) {
+      if (!await activateGoogleFit()) {
+        throw "Failed to login GoogleFit account";
+      }
+    } else {
+      throw "GoogleFit is deactivated. Please activate and sync again";
     }
 
     DateTime lastSynctime = await getLastSynctime();
@@ -53,45 +57,73 @@ class SyncGoogleFitData {
     }
     try {
       String bpParams = await _gfHelper.getBPSummary(startTime, endTime);
-      if (bpParams != null) {
-        response = await postGoogleFitData(bpParams);
+      if (bpParams == params.strDataTypeBP) {
+        errorString = '$errorString ${params.strDataTypeBP},';
+      } else {
+        if (bpParams != null) {
+          response = await postGoogleFitData(bpParams);
+        }
       }
 
       response = "";
       String weightParams =
           await _gfHelper.getWeightSummary(startTime, endTime);
-      if (weightParams != null) {
-        response = await postGoogleFitData(weightParams);
+      if (weightParams == params.strWeight) {
+        errorString = '$errorString ${params.strWeight},';
+      } else {
+        if (weightParams != null) {
+          response = await postGoogleFitData(weightParams);
+        }
       }
-
       response = "";
       String heartRateParams =
           await _gfHelper.getHeartRateSummary(startTime, endTime);
-      if (heartRateParams != null) {
-        response = await postGoogleFitData(heartRateParams);
+      if (heartRateParams == params.strHeartRate) {
+        errorString = '$errorString ${params.strHeartRate},';
+      } else {
+        if (heartRateParams != null) {
+          response = await postGoogleFitData(heartRateParams);
+        }
       }
-
       response = "";
       String glucoseParams =
           await _gfHelper.getBloodGlucoseSummary(startTime, endTime);
-      if (glucoseParams != null) {
-        response = await postGoogleFitData(glucoseParams);
+      if (glucoseParams == params.strGlusoceLevel) {
+        errorString = '$errorString ${params.strGlusoceLevel},';
+      } else {
+        if (glucoseParams != null) {
+          response = await postGoogleFitData(glucoseParams);
+        }
       }
 
       response = "";
       String temperatureParams =
           await _gfHelper.getBodyTempSummary(startTime, endTime);
-      if (temperatureParams != null) {
-        response = await postGoogleFitData(temperatureParams);
+      if (temperatureParams == params.strTemperature) {
+        errorString = '$errorString ${params.strTemperature},';
+      } else {
+        if (temperatureParams != null) {
+          response = await postGoogleFitData(temperatureParams);
+        }
       }
 
       response = "";
       String oxygenParams =
           await _gfHelper.getOxygenSaturationSummary(startTime, endTime);
-      if (oxygenParams != null) {
-        response = await postGoogleFitData(oxygenParams);
+      if (oxygenParams == params.strOxgenSaturation) {
+        errorString = '$errorString ${params.strOxgenSaturation},';
+      } else {
+        if (oxygenParams != null) {
+          response = await postGoogleFitData(oxygenParams);
+        }
       }
-    } catch (e) {}
+      if (errorString.isNotEmpty) {
+        throw "Failed to sync $errorString ";
+      }
+      return true;
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future<dynamic> postGoogleFitData(String params) async {
@@ -101,7 +133,9 @@ class SyncGoogleFitData {
       var response = await _deviceHealthRecord.postDeviceData(params);
 
       return response;
-    } catch (e) {}
+    } catch (e) {
+      throw e;
+    }
   }
 
   Future<dynamic> getLastSynctime() async {
@@ -110,9 +144,13 @@ class SyncGoogleFitData {
       var lastsyncDetails =
           await _deviceHealthRecord.getLastsynctime(query.qr_LastSyncGF);
       String jsonstr = json.encode(lastsyncDetails);
-      LastSync lastSync = lastSyncFromJson(jsonstr);
-      if (!lastSync.isSuccess) return null;
-      return lastSync.result[0].lastSyncDateTime;
-    } catch (e) {}
+      LatestSync lastSync = latestSyncFromJson(jsonstr);
+
+      if (!lastSync.isSuccess) {
+        return null;
+      }
+      return lastSync.result.lastSyncDateTime;
+    } catch (e) {
+    }
   }
 }

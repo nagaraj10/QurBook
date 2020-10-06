@@ -340,6 +340,14 @@ const String is_Success = "isSuccess";
 const String strsourcetype = "sourceType";
 
 //Data Params for device readings
+//DataCollections
+const String strBloodPressureCollection = "bloodPressureCollection";
+const String strBloodGlucoseCollection = "bloodGlucoseCollection";
+const String strBodyTemperatureCollection = "bodyTemperatureCollection";
+const String strHearRateCollection = "heartRateCollection";
+const String strOxygenCollection = "oxygenSaturationCollection";
+const String strWeightCollection = "bodyWeightCollection";
+
 //BP
 const String strBPMonitor = "BP Monitor";
 const String strDataTypeBP = "Blood Pressure";
