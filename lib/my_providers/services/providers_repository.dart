@@ -32,7 +32,7 @@ class ProvidersListRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.getTelehealthDoctorsList(
-        query.qr_Userprofile +
+        query.qr_User +
             userID +
             query.qr_slash +
             query.qr_sections +

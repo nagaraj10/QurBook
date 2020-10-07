@@ -540,7 +540,7 @@ const String warning = 'warning!';
 const String Yes = 'Yes';
 const String No = 'No';
 
-const String id = 'id';
+const String id = 'doctorId';
 const String healthOrganization = 'healthOrganization';
 
 //for the new models

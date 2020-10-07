@@ -1,5 +1,7 @@
 import 'package:myfhb/add_address/models/place.dart';
 import 'package:myfhb/my_providers/models/DoctorModel.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/Hospital.dart';
 import 'package:myfhb/my_providers/models/HospitalModel.dart';
 import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
@@ -17,7 +19,7 @@ class AddProvidersArguments {
   String searchText;
   String fromClass;
 
-  DoctorsModel doctorsModel;
+  Doctors doctorsModel;
   Hospitals hospitalsModel;
   Hospitals labsModel;
   PlaceDetail placeDetail;

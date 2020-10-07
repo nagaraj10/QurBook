@@ -8,6 +8,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/Hospital.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 
 import 'my_provider.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';

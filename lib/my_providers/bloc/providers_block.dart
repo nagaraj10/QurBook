@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
@@ -14,6 +15,8 @@ class ProvidersBloc implements BaseBloc {
       _providersListControlller.sink;
   Stream<ApiResponse<MyProvidersResponse>> get providersListStream =>
       _providersListControlller.stream;
+
+  List<Doctors> doctors = new List();
 
   @override
   void dispose() {
@@ -32,10 +35,35 @@ class ProvidersBloc implements BaseBloc {
     try {
       myProvidersResponseList =
           await _providersListRepository.getMedicalPreferencesList();
+      doctors = myProvidersResponseList.result.doctors;
     } catch (e) {
       providersListSink.add(ApiResponse.error(e.toString()));
     }
 
     return myProvidersResponseList;
+  }
+
+  List<Doctors> getFilterDoctorListNew(String doctorName) {
+    List<Doctors> filterDoctorData = new List();
+    for (Doctors doctorData in doctors) {
+      if(doctorData.user.name!=null && doctorData.user.name!=''){
+        if (doctorData.user.name
+            .toLowerCase()
+            .trim()
+            .contains(doctorName.toLowerCase().trim()) /*||
+          doctorData.specialization
+              .toLowerCase()
+              .trim()
+              .contains(doctorName.toLowerCase().trim())*/ /*||
+          doctorData.city
+              .toLowerCase()
+              .trim()
+              .contains(doctorName.toLowerCase().trim())*/) {
+          filterDoctorData.add(doctorData);
+        }
+      }
+
+    }
+    return filterDoctorData;
   }
 }

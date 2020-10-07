@@ -32,7 +32,7 @@ class UpdateProvidersRepository {
       String providerId, bool isPreferred, String provideRefernceId) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     Map<String, String> doctorDic = new Map();
-    doctorDic[parameters.id] = providerId;
+    doctorDic[parameters.doctorId] = providerId;
     doctorDic[parameters.strReferenceId] = provideRefernceId;
 
     var jsonData = {};
@@ -54,11 +54,15 @@ class UpdateProvidersRepository {
       String providerId, bool isPreferred) async {
     String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
+    Map<String, String> hospitalDic = new Map();
+    hospitalDic[parameters.doctorId] = null;
+    hospitalDic[parameters.strReferenceId] = null;
+
     Map<String, String> healthOrganizationDic = new Map();
-    healthOrganizationDic[parameters.id] = providerId;
+    healthOrganizationDic[parameters.strId] = providerId;
 
     var jsonData = {};
-    jsonData[parameters.strdoctor] = [];
+    jsonData[parameters.strdoctor] = [hospitalDic];
     jsonData[parameters.healthOrganization] = [healthOrganizationDic];
 
     var jsonString = convert.jsonEncode(jsonData);

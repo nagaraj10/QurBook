@@ -207,6 +207,7 @@ class ApiBaseHelper {
 
     var responseJson;
     try {
+      print(CommonConstants.NEW_BASE_URL + url);
       final response = await http.get(CommonConstants.NEW_BASE_URL + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
 
@@ -840,6 +841,7 @@ class ApiBaseHelper {
   Future<dynamic> getTelehealthDoctorsList(String url) async {
     var responseJson;
     try {
+      print(_baseUrl + url);
       final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);

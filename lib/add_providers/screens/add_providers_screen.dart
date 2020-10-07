@@ -27,8 +27,10 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/my_providers/models/DoctorModel.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/HospitalModel.dart';
 import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/search_providers/bloc/doctors_list_block.dart';
 import 'package:myfhb/search_providers/bloc/hospital_list_block.dart';
 import 'package:myfhb/search_providers/bloc/labs_list_block.dart';
@@ -51,7 +53,7 @@ class AddProviders extends StatefulWidget {
   String searchText;
   String fromClass;
 
-  DoctorsModel doctorsModel;
+  Doctors doctorsModel;
   HospitalsModel hospitalsModel;
   LaboratoryModel labsModel;
 
@@ -408,20 +410,20 @@ class AddProvidersState extends State<AddProviders> {
       }
     } else {
       if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
-        doctorController.text = widget.arguments.doctorsModel.name != null
-            ? toBeginningOfSentenceCase(widget.arguments.doctorsModel.name)
+        doctorController.text = widget.arguments.doctorsModel.user.name != null
+            ? toBeginningOfSentenceCase(widget.arguments.doctorsModel.user.name)
             : '';
-        isPreferred = widget.arguments.doctorsModel.isDefault;
-        myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
-        addressLine1 = widget.arguments.doctorsModel.addressLine1;
-        addressLine2 = widget.arguments.doctorsModel.addressLine2;
+        /*isPreferred = widget.arguments.data.isDefault;
+        myprovidersPreferred = widget.arguments.data.isDefault;*/
+        /*addressLine1 = widget.arguments.data.addressLine1;
+        addressLine2 = widget.arguments.data.addressLine2;*/
 
-        latitude = widget.arguments.doctorsModel.latitude == null
+       /* latitude = widget.arguments.data.latitude == null
             ? 0.0
-            : double.parse(widget.arguments.doctorsModel.latitude);
-        longtiude = widget.arguments.doctorsModel.longitude == null
+            : double.parse(widget.arguments.data.latitude);
+        longtiude = widget.arguments.data.longitude == null
             ? 0.0
-            : double.parse(widget.arguments.doctorsModel.longitude);
+            : double.parse(widget.arguments.data.longitude);*/
       } else if (widget.arguments.searchKeyWord == CommonConstants.hospitals) {
         doctorController.text = widget.arguments.hospitalsModel.name != null
             ? toBeginningOfSentenceCase(widget.arguments.hospitalsModel.name)

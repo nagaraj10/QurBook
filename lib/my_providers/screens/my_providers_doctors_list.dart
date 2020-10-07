@@ -8,6 +8,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
@@ -35,7 +36,7 @@ class MyProvidersDoctorsList extends StatelessWidget {
               Navigator.pushNamed(context, router.rt_AddProvider,
                       arguments: AddProvidersArguments(
                           searchKeyWord: CommonConstants.doctors,
-                          // doctorsModel: eachDoctorModel,
+                           doctorsModel: eachDoctorModel,
                           fromClass: router.rt_myprovider,
                           hasData: true))
                   .then((value) {
