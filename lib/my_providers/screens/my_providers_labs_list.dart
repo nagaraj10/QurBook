@@ -5,43 +5,52 @@ import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/Hospital.dart';
-import 'package:myfhb/my_providers/models/LaborartoryModel.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/my_providers/models/Hospitals.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 
 import 'my_provider.dart';
 
-class MyProvidersLabsList extends StatelessWidget {
-  List<Hospitals> labsModel;
-  ProvidersBloc providersBloc;
-  MyProviderState myProviderState;
+class MyProvidersLabsList extends StatefulWidget {
+
+  final List<Hospitals> labsModel;
+  final ProvidersBloc providersBloc;
+  final MyProviderState myProviderState;
 
   MyProvidersLabsList(
       {this.labsModel, this.providersBloc, this.myProviderState});
 
   @override
+  _MyProvidersLabsList createState() => _MyProvidersLabsList();
+
+}
+class _MyProvidersLabsList extends State<MyProvidersLabsList>{
+
+  List<Hospitals> labsModel;
+  ProvidersBloc providersBloc;
+  MyProviderState myProviderState;
+  MyProviderViewModel providerViewModel;
+
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    providerViewModel = new MyProviderViewModel();
     return buildPlayersList();
   }
 
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
-        Hospitals eachLabModel = labsModel[index];
+        Hospitals eachLabModel = widget.labsModel[index];
         return InkWell(
             onTap: () {
               Navigator.pushNamed(context, router.rt_AddProvider,
-                      arguments: AddProvidersArguments(
-                          searchKeyWord: CommonConstants.labs,
-                          labsModel: eachLabModel,
-                          fromClass: router.rt_myprovider,
-                          hasData: true))
+                  arguments: AddProvidersArguments(
+                      searchKeyWord: CommonConstants.labs,
+                      labsModel: eachLabModel,
+                      fromClass: router.rt_myprovider,
+                      hasData: true))
                   .then((value) {
 //                providersBloc.getMedicalPreferencesList();
                 myProviderState.refreshPage();
@@ -122,18 +131,29 @@ class MyProvidersLabsList extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               InkWell(
-                                  child: eachLabModel.isActive == true
+                                  onTap: (){
+                                    providerViewModel
+                                        .bookMarkHealthOrg(!(eachLabModel.isActive), eachLabModel)
+                                        .then((status) {
+                                      if (status) {
+                                        print('onClick');
+                                        providersBloc.labs.clear();
+                                        setState(() {});
+                                      }
+                                    });
+                                  },
+                                  child: eachLabModel.isDefault == true
                                       ? ImageIcon(
-                                          AssetImage(
-                                              variable.icon_record_fav_active),
-                                          color: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
-                                          size: 20,
-                                        )
+                                    AssetImage(
+                                        variable.icon_record_fav_active),
+                                    color: Color(new CommonUtil()
+                                        .getMyPrimaryColor()),
+                                    size: 20,
+                                  )
                                       : Container(
-                                          height: 0,
-                                          width: 0,
-                                        )),
+                                    height: 0,
+                                    width: 0,
+                                  )),
                             ],
                           ),
                         )),
@@ -146,7 +166,9 @@ class MyProvidersLabsList extends StatelessWidget {
           color: Colors.transparent,
         );
       },
-      itemCount: labsModel.length,
+      itemCount: widget.labsModel.length,
     );
   }
+
 }
+

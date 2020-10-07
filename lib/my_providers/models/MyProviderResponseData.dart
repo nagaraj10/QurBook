@@ -1,5 +1,5 @@
 import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/Hospital.dart';
+import 'package:myfhb/my_providers/models/Hospitals.dart';
 
 class MyProvidersResponseData {
   String id;

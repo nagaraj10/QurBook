@@ -186,3 +186,7 @@ const String qr_AddressLine2_p = 'addressLine2';
 const String qr_pincode_p = 'pincode';
 
 const String qr_delink = 'de-link';
+const String qr_healthOrgTypeId = '?healthOrganizationTypeId=';
+const String qr_limitSearchText = '&limit=1&searchText=';
+const String qr_sortByDesc = '&sortBy=desc&skip=0';
+const String qr_patient_update_default = 'patient-provider-mapping/';

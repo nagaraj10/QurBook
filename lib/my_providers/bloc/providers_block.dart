@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
@@ -17,6 +18,8 @@ class ProvidersBloc implements BaseBloc {
       _providersListControlller.stream;
 
   List<Doctors> doctors = new List();
+  List<Hospitals> hospitals = new List();
+  List<Hospitals> labs = new List();
 
   @override
   void dispose() {
@@ -25,7 +28,7 @@ class ProvidersBloc implements BaseBloc {
 
   ProvidersBloc() {
     _providersListControlller =
-        StreamController<ApiResponse<MyProvidersResponseList>>();
+        StreamController<ApiResponse<MyProvidersResponse>>();
     _providersListRepository = ProvidersListRepository();
   }
 
@@ -36,6 +39,8 @@ class ProvidersBloc implements BaseBloc {
       myProvidersResponseList =
           await _providersListRepository.getMedicalPreferencesList();
       doctors = myProvidersResponseList.result.doctors;
+      hospitals = myProvidersResponseList.result.hospitals;
+      labs = myProvidersResponseList.result.labs;
     } catch (e) {
       providersListSink.add(ApiResponse.error(e.toString()));
     }

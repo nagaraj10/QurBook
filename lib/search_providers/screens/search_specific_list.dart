@@ -27,6 +27,7 @@ class SearchSpecificList extends StatefulWidget {
   SearchArguments arguments;
 
   bool toPreviousScreen;
+
   SearchSpecificList({this.arguments, this.toPreviousScreen});
 
   @override
@@ -141,7 +142,13 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           ),
           new Expanded(
               child: value == ''
-                  ? getEmptyCard()
+                  ?
+                  //getEmptyCard()
+                  Container(
+                      child: Center(
+                        child: Text(variable.strNodata),
+                      ),
+                    )
                   : widget.arguments.searchWord == CommonConstants.doctors
                       ? getResponseFromApiWidgetForDoctors()
                       : widget.arguments.searchWord == CommonConstants.hospitals
@@ -183,9 +190,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           case Status.COMPLETED:
             rebuildBlockObject();
             return snapshot.data.data.result == null
-                ? getEmptyCard()
+                ?  Container(
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            )
+            //getEmptyCard()
                 : snapshot.data.data.result.length == 0
-                    ? getEmptyCard()
+                    ?  Container(
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            )
+            //getEmptyCard()
                     : Container(
                         child:
                             getAllDatasInDoctorsList(snapshot.data.data.result),
@@ -227,9 +244,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
             rebuildBlockObject();
 
             return snapshot.data.data.result == null
-                ? getEmptyCard()
+                ?  Container(
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            )
+            //getEmptyCard()
                 : snapshot.data.data.result.length == 0
-                    ? getEmptyCard()
+                    ?  Container(
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            )
+            //getEmptyCard()
                     : Container(
                         child: getAllDatasInHospitalList(
                             snapshot.data.data.result),
@@ -270,9 +297,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           case Status.COMPLETED:
             rebuildBlockObject();
             return snapshot.data.data.result == null
-                ? getEmptyCard()
+                ?  Container(
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            )
+            //getEmptyCard()
                 : snapshot.data.data.result.length == 0
-                    ? getEmptyCard()
+                    ?  Container(
+              child: Center(
+                child: Text(variable.strNodata),
+              ),
+            )
+            //getEmptyCard()
                     : Container(
                         child: getAllDatasInLabsList(snapshot.data.data.result),
                         margin: EdgeInsets.all(5),
@@ -420,9 +457,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
-                      data[i].name,
+                      data[i].healthOrganizationName,
                       data[i].addressLine1,
-                      data[i].id,
+                      data[i].healthOrganizationId != null
+                          ? data[i].healthOrganizationId
+                          : data[i].healthOrganizationReferenceId,
                       null,
                       DoctorsListResult(),
                       data[i],
@@ -451,9 +490,11 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 itemBuilder: (c, i) => Container(
                   padding: EdgeInsets.only(top: 2, bottom: 2),
                   child: getCardToDisplaySearchList(
-                      data[i].name,
-                      data[i].healthOrganizationType.name,
-                      data[i].id,
+                      data[i].healthOrganizationName,
+                      data[i].addressLine1,
+                      data[i].healthOrganizationId != null
+                          ? data[i].healthOrganizationId
+                          : data[i].healthOrganizationReferenceId,
                       '',
                       DoctorsListResult(),
                       HospitalsListResult(),
@@ -513,8 +554,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                 ? data.name
                                 : widget.arguments.searchWord ==
                                         CommonConstants.hospitals
-                                    ? hospitalData.name
-                                    : labData.name,
+                                    ? hospitalData.healthOrganizationName
+                                    : labData.healthOrganizationName,
                             address,
                             id),
                       ))

@@ -17,7 +17,7 @@ class LabsListRepository {
 
   Future<LabsSearchListResponse> getLabsFromSearchNew(String param) async {
     final response = await _helper.getHospitalListFromSearchNew(
-        "${query.qr_health_organization}${query.qr_health_Search}${param}${query.qr_id}${CommonConstants.SEARCH_LAB_ID}");
+        "${query.qr_health_organization}${query.qr_health_Search}${query.qr_healthOrgTypeId}${CommonConstants.SEARCH_LAB_ID}${query.qr_limitSearchText}$param${query.qr_sortByDesc}");
     return LabsSearchListResponse.fromJson(response);
   }
 

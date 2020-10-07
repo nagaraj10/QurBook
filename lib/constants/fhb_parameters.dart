@@ -573,4 +573,7 @@ const String strIsHealthRecordShared = 'isHealthRecordShared';
 const String strPayment = 'payment';
 const String strPaymentGateWayDetail = 'paymentGatewayDetail';
 
-const String strReferenceId = 'doctorReferenceId';
+const String strDoctorReferenceId = 'doctorReferenceId';
+const String strHealthOrganizationId = 'healthOrganizationId';
+const String strHealthOrganizationReferenceId = 'healthOrganizationReferenceId';
+const String strpatient = 'patient';

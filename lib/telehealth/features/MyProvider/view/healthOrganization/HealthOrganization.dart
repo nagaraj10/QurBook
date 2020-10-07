@@ -270,7 +270,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
                   commonWidgets.getBookMarkedIcon(docs[i], () {
-                    providerViewModel
+                    /*providerViewModel
                         .bookMarkDoctor(!(docs[i].isDefault), docs[i])
                         .then((status) {
                       if (status) {
@@ -278,7 +278,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                         providerViewModel.doctorIdsList.clear();
                         setState(() {});
                       }
-                    });
+                    });*/
                   }),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],

@@ -1,4 +1,5 @@
 import 'package:myfhb/my_providers/models/User.dart';
+import 'UserProfessionalCollection.dart';
 
 class Doctors {
   String id;
@@ -10,6 +11,9 @@ class Doctors {
   String lastModifiedBy;
   String lastModifiedOn;
   User user;
+  List<DoctorProfessionalDetailCollection> doctorProfessionalDetailCollection;
+  bool isDefault;
+  String providerPatientMappingId;
 
   Doctors(
       {this.id,
@@ -20,7 +24,10 @@ class Doctors {
         this.createdOn,
         this.lastModifiedBy,
         this.lastModifiedOn,
-        this.user});
+        this.user,
+        this.doctorProfessionalDetailCollection,
+        this.isDefault,
+        this.providerPatientMappingId});
 
   Doctors.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -32,6 +39,16 @@ class Doctors {
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
     user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    if (json['doctorProfessionalDetailCollection'] != null) {
+      doctorProfessionalDetailCollection =
+      new List<DoctorProfessionalDetailCollection>();
+      json['doctorProfessionalDetailCollection'].forEach((v) {
+        doctorProfessionalDetailCollection
+            .add(new DoctorProfessionalDetailCollection.fromJson(v));
+      });
+    }
+    isDefault = json['isDefault'];
+    providerPatientMappingId = json['providerPatientMappingId'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +64,17 @@ class Doctors {
     if (this.user != null) {
       data['user'] = this.user.toJson();
     }
+    if (this.doctorProfessionalDetailCollection != null) {
+      data['doctorProfessionalDetailCollection'] = this
+          .doctorProfessionalDetailCollection
+          .map((v) => v.toJson())
+          .toList();
+    }
+    data['isDefault'] = this.isDefault;
+    data['providerPatientMappingId'] = this.providerPatientMappingId;
     return data;
   }
 }
+
+
+

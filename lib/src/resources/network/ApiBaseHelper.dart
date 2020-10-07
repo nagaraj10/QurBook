@@ -203,7 +203,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getHospitalListFromSearchNew(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    //String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
@@ -221,6 +221,7 @@ class ApiBaseHelper {
   Future<dynamic> getMedicalPreferencesList(String url) async {
     var responseJson;
     try {
+      print(_baseUrl + url);
       final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
       responseJson = _returnResponse(response);

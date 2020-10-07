@@ -1,6 +1,7 @@
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 
 class SlotsResultModel {
+  String healthOrganizationId;
   String doctorId;
   String date;
   String day;
@@ -8,9 +9,10 @@ class SlotsResultModel {
   List<SlotSessionsModel> sessions;
 
   SlotsResultModel(
-      {this.doctorId, this.date, this.day, this.sessionCounts, this.sessions});
+      {this.healthOrganizationId,this.doctorId, this.date, this.day, this.sessionCounts, this.sessions});
 
   SlotsResultModel.fromJson(Map<String, dynamic> json) {
+    healthOrganizationId = json['healthOrganizationId'];
     doctorId = json['doctorId'];
     date = json['date'];
     day = json['day'];
@@ -25,6 +27,7 @@ class SlotsResultModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['healthOrganizationId'] = this.healthOrganizationId;
     data['doctorId'] = this.doctorId;
     data['date'] = this.date;
     data['day'] = this.day;

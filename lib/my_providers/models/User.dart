@@ -1,3 +1,7 @@
+import 'UserAddressCollection.dart';
+import 'UserContactCollection.dart';
+import 'UserRoleCollection.dart';
+
 class User {
   String id;
   String name;
@@ -26,6 +30,9 @@ class User {
   String createdOn;
   String lastModifiedBy;
   String lastModifiedOn;
+  List<UserContactCollection3> userContactCollection3;
+  List<UserRoleCollection3> userRoleCollection3;
+  List<UserAddressCollection3> userAddressCollection3;
 
   User(
       {this.id,
@@ -54,7 +61,10 @@ class User {
         this.createdBy,
         this.createdOn,
         this.lastModifiedBy,
-        this.lastModifiedOn});
+        this.lastModifiedOn,
+        this.userContactCollection3,
+        this.userRoleCollection3,
+        this.userAddressCollection3});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -84,6 +94,24 @@ class User {
     createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
+    if (json['userContactCollection3'] != null) {
+      userContactCollection3 = new List<UserContactCollection3>();
+      json['userContactCollection3'].forEach((v) {
+        userContactCollection3.add(new UserContactCollection3.fromJson(v));
+      });
+    }
+    if (json['userRoleCollection3'] != null) {
+      userRoleCollection3 = new List<UserRoleCollection3>();
+      json['userRoleCollection3'].forEach((v) {
+        userRoleCollection3.add(new UserRoleCollection3.fromJson(v));
+      });
+    }
+    if (json['userAddressCollection3'] != null) {
+      userAddressCollection3 = new List<UserAddressCollection3>();
+      json['userAddressCollection3'].forEach((v) {
+        userAddressCollection3.add(new UserAddressCollection3.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -115,6 +143,18 @@ class User {
     data['createdOn'] = this.createdOn;
     data['lastModifiedBy'] = this.lastModifiedBy;
     data['lastModifiedOn'] = this.lastModifiedOn;
+    if (this.userContactCollection3 != null) {
+      data['userContactCollection3'] =
+          this.userContactCollection3.map((v) => v.toJson()).toList();
+    }
+    if (this.userRoleCollection3 != null) {
+      data['userRoleCollection3'] =
+          this.userRoleCollection3.map((v) => v.toJson()).toList();
+    }
+    if (this.userAddressCollection3 != null) {
+      data['userAddressCollection3'] =
+          this.userAddressCollection3.map((v) => v.toJson()).toList();
+    }
     return data;
   }
 }

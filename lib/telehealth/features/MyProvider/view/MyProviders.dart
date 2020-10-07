@@ -275,7 +275,7 @@ class _MyProvidersState extends State<MyProviders> {
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
                   commonWidgets.getBookMarkedIcon(docs[i], () {
-                    providerViewModel
+                    /*providerViewModel
                         .bookMarkDoctor(!(docs[i].isDefault), docs[i])
                         .then((status) {
                       if (status) {
@@ -283,7 +283,7 @@ class _MyProvidersState extends State<MyProviders> {
                         providerViewModel.doctorIdsList.clear();
                         setState(() {});
                       }
-                    });
+                    });*/
                   }),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
@@ -653,7 +653,7 @@ class _MyProvidersState extends State<MyProviders> {
                         : SizedBox(),
                     commonWidgets.getSizeBoxWidth(15.0),
                     commonWidgets.getBookMarkedIconNew(docs[i], () {
-                    /*providerViewModel
+                    providerViewModel
                         .bookMarkDoctor(!(docs[i].isActive), docs[i])
                         .then((status) {
                       if (status) {
@@ -661,7 +661,7 @@ class _MyProvidersState extends State<MyProviders> {
                         providerViewModel.doctorIdsList.clear();
                         setState(() {});
                       }
-                    });*/
+                    });
                   }),
                     commonWidgets.getSizeBoxWidth(10.0),
                   ],

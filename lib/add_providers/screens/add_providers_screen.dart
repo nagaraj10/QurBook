@@ -354,8 +354,8 @@ class AddProvidersState extends State<AddProviders> {
           isPreferred = false;
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
-          doctorController.text = widget.arguments.hospitalData.name != null
-              ? toBeginningOfSentenceCase(widget.arguments.hospitalData.name)
+          doctorController.text = widget.arguments.hospitalData.healthOrganizationName != null
+              ? toBeginningOfSentenceCase(widget.arguments.hospitalData.healthOrganizationName)
               : '';
 //          isPreferred = widget.arguments.hospitalData.isUserDefined ?? false;
           isPreferred = false;
@@ -371,8 +371,8 @@ class AddProvidersState extends State<AddProviders> {
           addressLine1 = widget.arguments.hospitalData.addressLine1;
           addressLine2 = widget.arguments.hospitalData.addressLine2;
         } else {
-          doctorController.text = widget.arguments.labData.name != null
-              ? toBeginningOfSentenceCase(widget.arguments.labData.name)
+          doctorController.text = widget.arguments.labData.healthOrganizationName != null
+              ? toBeginningOfSentenceCase(widget.arguments.labData.healthOrganizationName)
               : '';
 //          isPreferred = widget.arguments.labData.isUserDefined ?? false;
           isPreferred = false;
@@ -413,10 +413,10 @@ class AddProvidersState extends State<AddProviders> {
         doctorController.text = widget.arguments.doctorsModel.user.name != null
             ? toBeginningOfSentenceCase(widget.arguments.doctorsModel.user.name)
             : '';
-        /*isPreferred = widget.arguments.data.isDefault;
-        myprovidersPreferred = widget.arguments.data.isDefault;*/
-        /*addressLine1 = widget.arguments.data.addressLine1;
-        addressLine2 = widget.arguments.data.addressLine2;*/
+        isPreferred = widget.arguments.doctorsModel.isDefault;
+        myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
+        addressLine1 = widget.arguments.doctorsModel.user.userAddressCollection3[0].addressLine1;
+        addressLine2 = widget.arguments.doctorsModel.user.userAddressCollection3[0].addressLine2;
 
        /* latitude = widget.arguments.data.latitude == null
             ? 0.0
@@ -428,38 +428,38 @@ class AddProvidersState extends State<AddProviders> {
         doctorController.text = widget.arguments.hospitalsModel.name != null
             ? toBeginningOfSentenceCase(widget.arguments.hospitalsModel.name)
             : '';
-        // isPreferred = widget.arguments.hospitalsModel.isDefault;
-        //myprovidersPreferred = widget.arguments.hospitalsModel.isDefault;
+         isPreferred = widget.arguments.hospitalsModel.isDefault;
+        myprovidersPreferred = widget.arguments.hospitalsModel.isDefault;
 
-        /* latitude = widget.arguments.hospitalsModel.latitude == null
+         /*latitude = widget.arguments.hospitalsModel.latitude == null
             ? 0.0
             : double.parse(widget.arguments.hospitalsModel.latitude);
         longtiude = widget.arguments.hospitalsModel.longitude == null
             ? 0.0
             : double.parse(widget.arguments.hospitalsModel.longitude);
 
-        center = LatLng(latitude, longtiude);
+        center = LatLng(latitude, longtiude);*/
 
-        addressLine1 = widget.arguments.hospitalsModel.addressLine1;
-        addressLine2 = widget.arguments.hospitalsModel.addressLine2;*/
+        addressLine1 = widget.arguments.hospitalsModel.healthOrganizationAddressCollection[0].addressLine1;
+        addressLine2 = widget.arguments.hospitalsModel.healthOrganizationAddressCollection[0].addressLine2;
       } else {
         doctorController.text = widget.arguments.labsModel.name != null
             ? toBeginningOfSentenceCase(widget.arguments.labsModel.name)
             : '';
-        /* isPreferred = widget.arguments.labsModel.isDefault;
+         isPreferred = widget.arguments.labsModel.isDefault;
         myprovidersPreferred = widget.arguments.labsModel.isDefault;
 
-        latitude = widget.arguments.labsModel.latitude == null
-            ? 0.0
-            : double.parse(widget.arguments.labsModel.latitude);
-        longtiude = widget.arguments.labsModel.longitude == null
-            ? 0.0
-            : double.parse(widget.arguments.labsModel.longitude);
+//        latitude = widget.arguments.labsModel.latitude == null
+//            ? 0.0
+//            : double.parse(widget.arguments.labsModel.latitude);
+//        longtiude = widget.arguments.labsModel.longitude == null
+//            ? 0.0
+//            : double.parse(widget.arguments.labsModel.longitude);
+//
+//        center = LatLng(latitude, longtiude);
 
-        center = LatLng(latitude, longtiude);
-
-        addressLine1 = widget.arguments.labsModel.addressLine1;
-        addressLine2 = widget.arguments.labsModel.addressLine2;*/
+        addressLine1 = widget.arguments.labsModel.healthOrganizationAddressCollection[0].addressLine1;
+        addressLine2 = widget.arguments.labsModel.healthOrganizationAddressCollection[0].addressLine2;
       }
     }
     try {
@@ -909,16 +909,21 @@ class AddProvidersState extends State<AddProviders> {
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
           if (widget.arguments.fromClass == router.rt_myprovider) {
-            updateProvidersBloc.providerId = widget.arguments.hospitalsModel.id;
+            updateProvidersBloc.providerId = widget.arguments.hospitalData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId =
+               widget.arguments.hospitalData.healthOrganizationReferenceId;
           } else {
-            updateProvidersBloc.providerId = widget.arguments.hospitalData.id;
+            updateProvidersBloc.providerId = widget.arguments.hospitalData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.hospitalData.healthOrganizationReferenceId;
           }
           updateHospitalsIdWithUserDetails();
         } else {
           if (widget.arguments.fromClass == router.rt_myprovider) {
             updateProvidersBloc.providerId = widget.arguments.labsModel.id;
           } else {
-            updateProvidersBloc.providerId = widget.arguments.labData.id;
+            updateProvidersBloc.providerId = widget.arguments.labData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId = widget.arguments.labData.healthOrganizationReferenceId;
           }
           updateLabsIdWithUserDetails();
 //          }
@@ -943,16 +948,22 @@ class AddProvidersState extends State<AddProviders> {
         } else if (widget.arguments.searchKeyWord ==
             CommonConstants.hospitals) {
           if (widget.arguments.fromClass == router.rt_myprovider) {
-            updateProvidersBloc.providerId = widget.arguments.hospitalsModel.id;
+            updateProvidersBloc.providerId = widget.arguments.hospitalData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.hospitalData.healthOrganizationReferenceId;
           } else {
-            updateProvidersBloc.providerId = widget.arguments.hospitalData.id;
+            updateProvidersBloc.providerId = widget.arguments.hospitalData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.hospitalData.healthOrganizationReferenceId;
           }
           updateHospitalsIdWithUserDetails();
         } else {
           if (widget.arguments.fromClass == router.rt_myprovider) {
-            updateProvidersBloc.providerId = widget.arguments.labsModel.id;
+            updateProvidersBloc.providerId = widget.arguments.labData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId = widget.arguments.labData.healthOrganizationReferenceId;
           } else {
-            updateProvidersBloc.providerId = widget.arguments.labData.id;
+            updateProvidersBloc.providerId = widget.arguments.labData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId = widget.arguments.labData.healthOrganizationReferenceId;
           }
           updateLabsIdWithUserDetails();
         }
