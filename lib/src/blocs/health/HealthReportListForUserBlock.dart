@@ -13,6 +13,7 @@ import 'package:myfhb/src/model/Health/SavedMetaDataResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
 
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -32,6 +33,8 @@ class HealthReportListForUserBlock implements BaseBloc {
   StreamController _metaDataUpdateController;
   StreamController _imageListController;
 
+  StreamController _healthRecordController;
+
   StreamSink<ApiResponse<UserHealthResponseList>> get healthReportListSink =>
       _categoryListControlller.sink;
   Stream<ApiResponse<UserHealthResponseList>> get healthReportStream =>
@@ -48,9 +51,9 @@ class HealthReportListForUserBlock implements BaseBloc {
   Stream<ApiResponse<Uint8List>> get profileImageStream =>
       _doctorsProfileImageControlller.stream;
 
-  StreamSink<ApiResponse<SavedMetaDataResponse>> get metadataListSink =>
+  StreamSink<ApiResponse<HealthRecordSuccess>> get metadataListSink =>
       _metaDataController.sink;
-  Stream<ApiResponse<SavedMetaDataResponse>> get metaDataStream =>
+  Stream<ApiResponse<HealthRecordSuccess>> get metaDataStream =>
       _metaDataController.stream;
   StreamSink<ApiResponse<PostImageResponse>> get imageDataSink =>
       _imageDataController.sink;
@@ -72,6 +75,11 @@ class HealthReportListForUserBlock implements BaseBloc {
   Stream<ApiResponse<List<ImageDocumentResponse>>> get imageListStream =>
       _imageListController.stream;
 
+  StreamSink<ApiResponse<HealthRecordSuccess>> get healthRecordSink =>
+      _healthRecordController.sink;
+  Stream<ApiResponse<HealthRecordSuccess>> get healthRecordStream =>
+      _healthRecordController.stream;
+
   @override
   void dispose() {
     _categoryListControlller?.close();
@@ -83,6 +91,7 @@ class HealthReportListForUserBlock implements BaseBloc {
     _moveDataController?.close();
     _metaDataUpdateController?.close();
     _imageListController?.close();
+    _healthRecordController?.close();
   }
 
   HealthReportListForUserBlock() {
@@ -92,8 +101,7 @@ class HealthReportListForUserBlock implements BaseBloc {
 
     _healthReportListForUserRepository = HealthReportListForUserRepository();
 
-    _metaDataController =
-        StreamController<ApiResponse<SavedMetaDataResponse>>();
+    _metaDataController = StreamController<ApiResponse<HealthRecordSuccess>>();
     _imageDataController = StreamController<ApiResponse<PostImageResponse>>();
 
     _moveDataController =
@@ -104,6 +112,8 @@ class HealthReportListForUserBlock implements BaseBloc {
 
     _imageListController =
         StreamController<ApiResponse<List<ImageDocumentResponse>>>();
+    _healthRecordController =
+        StreamController<ApiResponse<HealthRecordSuccess>>();
   }
 
   Future<UserHealthResponseList> getHelthReportList({bool condtion}) async {
@@ -126,7 +136,7 @@ class HealthReportListForUserBlock implements BaseBloc {
     try {
       saveMetaDataResponse =
           await _healthReportListForUserRepository.postMediaData(jsonData);
-      metadataListSink.add(ApiResponse.completed(saveMetaDataResponse));
+      // metadataListSink.add(ApiResponse.completed(saveMetaDataResponse));
     } catch (e) {
       metadataListSink.add(ApiResponse.error(e.toString()));
     }
@@ -251,5 +261,19 @@ class HealthReportListForUserBlock implements BaseBloc {
       healthReportListSink.add(ApiResponse.error(e.toString()));
     }
     return userHealthResponseList;
+  }
+
+  Future<HealthRecordSuccess> createHealtRecords(
+      String jsonData, List<String> imagePaths, String audioPath) async {
+    HealthRecordSuccess healthRecordSuccess;
+    healthRecordSink.add(ApiResponse.loading(variable.strSubmitting));
+    try {
+      healthRecordSuccess = await _healthReportListForUserRepository
+          .createMediaData(jsonData, imagePaths, audioPath);
+      // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
+    } catch (e) {
+      healthRecordSink.add(ApiResponse.error(e.toString()));
+    }
+    return healthRecordSuccess;
   }
 }

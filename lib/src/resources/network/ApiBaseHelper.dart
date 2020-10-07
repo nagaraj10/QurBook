@@ -16,6 +16,7 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/model/appointmentsModel.dart';
@@ -24,6 +25,7 @@ import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
 
 import 'AppException.dart';
+import 'package:http_parser/http_parser.dart';
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
@@ -76,11 +78,10 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> deleteHealthRecord(
-      String url, String healthRecordData) async {
+      String url) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
-          body: healthRecordData,
+      final response = await http.delete(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -1158,5 +1159,81 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<dynamic> createMediaData(String url, String payload,
+      List<String> imagePaths, String audioPath) async {
+    String authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    Dio dio = new Dio();
+    dio.options.headers['content-type'] = 'multipart/form-data';
+    dio.options.headers["authorization"] = authToken;
+    FormData formData;
+
+    /*List<MultipartFile> multiPartFiles = new List();
+    if (imagePaths != null && imagePaths.length > 0) {
+      for (String filePath in imagePaths) {
+        String fileNoun = new File(filePath).path.split('/').last;
+        var multiPartObj = await MultipartFile.fromFile(new File(filePath).path,
+            filename: fileNoun);
+
+        multiPartFiles.add(multiPartObj);
+      }
+      if (audioPath != null && audioPath != '') {
+        String fileNoun = new File(audioPath).path.split('/').last;
+
+        var multiPartObj = await MultipartFile.fromFile(
+            new File(audioPath).path,
+            filename: fileNoun);
+
+        multiPartFiles.add(multiPartObj);
+      }
+    }*/
+
+    if (imagePaths != null && imagePaths.length > 0) {
+      formData = new FormData.fromMap({
+        'metadata': payload,
+        'userId': userId,
+        'isBookmarked': true,
+      });
+
+      for (var image in imagePaths) {
+        File fileName = new File(image);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("fileName",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }
+
+      /*if (audioPath != null && audioPath != '') {
+        File fileName = new File(audioPath);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("fileName",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }*/
+    } else {
+      formData = new FormData.fromMap(
+          {'metadata': payload, 'userId': userId, 'isBookmarked ': true});
+    }
+    var response;
+    try {
+      response = await dio.post(_baseUrl + url, data: formData);
+
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+        return response;
+      } else {
+        return response;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+      print(e);
+      return response;
+    }
   }
 }

@@ -1,15 +1,17 @@
-class HealthRecordList {
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
+
+class HealthRecordSuccess {
   bool isSuccess;
-  List<HealthResult> result;
+  List<Result> result;
 
-  HealthRecordList({this.isSuccess, this.result});
+  HealthRecordSuccess({this.isSuccess, this.result});
 
-  HealthRecordList.fromJson(Map<String, dynamic> json) {
+  HealthRecordSuccess.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<HealthResult>();
+      result = new List<Result>();
       json['result'].forEach((v) {
-        result.add(new HealthResult.fromJson(v));
+        result.add(new Result.fromJson(v));
       });
     }
   }
@@ -24,7 +26,7 @@ class HealthRecordList {
   }
 }
 
-class HealthResult {
+class Result {
   String id;
   String healthRecordTypeId;
   String healthRecordTypeName;
@@ -34,12 +36,11 @@ class HealthResult {
   bool isDraft;
   bool isVisible;
   bool isActive;
-  String isCompleted;
+  bool isCompleted;
   String doctorId;
   List<HealthRecordCollection> healthRecordCollection;
-  bool isSelected;
 
-  HealthResult(
+  Result(
       {this.id,
       this.healthRecordTypeId,
       this.healthRecordTypeName,
@@ -51,10 +52,9 @@ class HealthResult {
       this.isActive,
       this.isCompleted,
       this.doctorId,
-      this.healthRecordCollection,
-      this.isSelected});
+      this.healthRecordCollection});
 
-  HealthResult.fromJson(Map<String, dynamic> json) {
+  Result.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     healthRecordTypeId = json['healthRecordTypeId'];
     healthRecordTypeName = json['healthRecordTypeName'];
@@ -109,8 +109,8 @@ class Metadata {
   String sourceName;
   String memoTextRaw;
   Doctor doctor;
-  String fileName;
   Hospital hospital;
+  String fileName;
 
   Metadata(
       {this.healthRecordCategory,
@@ -122,8 +122,8 @@ class Metadata {
       this.sourceName,
       this.memoTextRaw,
       this.doctor,
-      this.fileName,
-      this.hospital});
+      this.hospital,
+      this.fileName});
 
   Metadata.fromJson(Map<String, dynamic> json) {
     healthRecordCategory = json['healthRecordCategory'] != null
@@ -138,17 +138,14 @@ class Metadata {
     isDraft = json['isDraft'];
     sourceName = json['sourceName'];
     memoTextRaw = json['memoTextRaw'];
+
     fileName = json['fileName'];
     try {
-      if (json.containsKey('doctor')) {
-        doctor =
-            json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
-      }
-      if (json.containsKey('hospital')) {
-        hospital = json['hospital'] != null
-            ? new Hospital.fromJson(json['hospital'])
-            : null;
-      }
+      doctor =
+          json['doctor'] != null ? new Doctor.fromJson(json['doctor']) : null;
+      hospital = json['hospital'] != null
+          ? new Hospital.fromJson(json['hospital'])
+          : null;
     } catch (e) {}
   }
 
@@ -169,10 +166,10 @@ class Metadata {
     if (this.doctor != null) {
       data['doctor'] = this.doctor.toJson();
     }
-    data['fileName'] = this.fileName;
     if (this.hospital != null) {
       data['hospital'] = this.hospital.toJson();
     }
+    data['fileName'] = this.fileName;
     return data;
   }
 }
@@ -185,7 +182,7 @@ class HealthRecordCategory {
   bool isDisplay;
   bool isActive;
   String createdOn;
-  String lastModifiedOn;
+  Null lastModifiedOn;
 
   HealthRecordCategory(
       {this.id,
@@ -231,7 +228,7 @@ class HealthRecordType {
   bool isAiTranscription;
   bool isActive;
   String createdOn;
-  String lastModifiedOn;
+  Null lastModifiedOn;
 
   HealthRecordType(
       {this.id,
@@ -272,16 +269,16 @@ class HealthRecordType {
 }
 
 class Doctor {
-  String doctorId;
-  String userId;
+  Null doctorId;
+  Null userId;
   String name;
   String firstName;
   String lastName;
-  String specialization;
+  Null specialization;
   String doctorReferenceId;
   String addressLine1;
   String addressLine2;
-  String profilePicThumbnailUrl;
+  Null profilePicThumbnailUrl;
   bool isTelehealthEnabled;
   bool isMciVerified;
 
@@ -336,14 +333,14 @@ class Hospital {
   String id;
   String name;
   String addressLine1;
-  String addressLine2;
-  String city;
-  String state;
-  String pincode;
+  Null addressLine2;
+  Null city;
+  Null state;
+  Null pincode;
   bool isReferenced;
   bool isActive;
   String createdOn;
-  String lastModifiedOn;
+  Null lastModifiedOn;
   HealthOrganizationType healthOrganizationType;
   CreatedBy createdBy;
 
@@ -377,9 +374,9 @@ class Hospital {
     healthOrganizationType = json['healthOrganizationType'] != null
         ? new HealthOrganizationType.fromJson(json['healthOrganizationType'])
         : null;
-    /*createdBy = json['createdBy'] != null
+    createdBy = json['createdBy'] != null
         ? new CreatedBy.fromJson(json['createdBy'])
-        : null;*/
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -398,9 +395,9 @@ class Hospital {
     if (this.healthOrganizationType != null) {
       data['healthOrganizationType'] = this.healthOrganizationType.toJson();
     }
-    /*  if (this.createdBy != null) {
+    if (this.createdBy != null) {
       data['createdBy'] = this.createdBy.toJson();
-    }*/
+    }
     return data;
   }
 }
@@ -414,7 +411,7 @@ class HealthOrganizationType {
   bool isActive;
   String createdBy;
   String createdOn;
-  String lastModifiedOn;
+  Null lastModifiedOn;
 
   HealthOrganizationType(
       {this.id,
@@ -459,15 +456,15 @@ class CreatedBy {
   String name;
   String userName;
   String firstName;
-  String middleName;
+  Null middleName;
   String lastName;
-  String gender;
-  String dateOfBirth;
-  String bloodGroup;
-  String countryCode;
-  String profilePicUrl;
-  String profilePicThumbnailUrl;
-  bool isTempUser;
+  Null gender;
+  Null dateOfBirth;
+  Null bloodGroup;
+  Null countryCode;
+  Null profilePicUrl;
+  Null profilePicThumbnailUrl;
+  Null isTempUser;
   Null isVirtualUser;
   Null isMigrated;
   Null isClaimed;
@@ -571,43 +568,6 @@ class CreatedBy {
     data['createdOn'] = this.createdOn;
     data['lastModifiedBy'] = this.lastModifiedBy;
     data['lastModifiedOn'] = this.lastModifiedOn;
-    return data;
-  }
-}
-
-class HealthRecordCollection {
-  String id;
-  String fileType;
-  String healthRecordUrl;
-  bool isActive;
-  String createdOn;
-  String createdBy;
-
-  HealthRecordCollection(
-      {this.id,
-      this.fileType,
-      this.healthRecordUrl,
-      this.isActive,
-      this.createdOn,
-      this.createdBy});
-
-  HealthRecordCollection.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    fileType = json['fileType'];
-    healthRecordUrl = json['healthRecordUrl'];
-    isActive = json['isActive'];
-    createdOn = json['createdOn'];
-    createdBy = json['createdBy'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['fileType'] = this.fileType;
-    data['healthRecordUrl'] = this.healthRecordUrl;
-    data['isActive'] = this.isActive;
-    data['createdOn'] = this.createdOn;
-    data['createdBy'] = this.createdBy;
     return data;
   }
 }

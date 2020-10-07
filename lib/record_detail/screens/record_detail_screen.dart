@@ -489,10 +489,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
   }
 
-  deleteRecord(String id) {
-    List<String> mediaIds = [];
-    mediaIds.add(id);
-    _deleteRecordBloc.deleteRecord(mediaIds).then((deleteRecordResponse) {
+  deleteRecord(String metaId) {
+
+    _deleteRecordBloc.deleteRecord(metaId).then((deleteRecordResponse) {
       if (deleteRecordResponse.success) {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);

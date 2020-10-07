@@ -152,15 +152,15 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
           child: Row(
             children: <Widget>[
               ClipOval(
-                  child: data.metadata.hospital != null
-                      ? data.metadata.hospital.logoThumbnail != null
+                  child:/* data.metadata.hospital != null
+                      ? data.metadata.hospital.l != null
                           ? Image.network(
                               Constants.BASE_URL +
                                   data.metadata.hospital.logoThumbnail,
                               height: 50,
                               width: 50,
                             )
-                          : Container(
+                          :*/ Container(
                               padding: EdgeInsets.all(10),
                               child: Image.network(
                                 Constants.BASE_URL +
@@ -175,11 +175,11 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                                 fhbColors.bgColorContainer,
                               ),
                             )
-                      : Container(
+                      /*: Container(
                           height: 50,
                           width: 50,
                           color: Colors.grey[200],
-                        )),
+                        )*/),
               SizedBox(width: 20),
               Expanded(
                 flex: 6,

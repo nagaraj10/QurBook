@@ -15,12 +15,14 @@ import 'package:myfhb/search_providers/models/hospital_data.dart';
 import 'package:myfhb/search_providers/models/lab_data.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
+import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
+import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
@@ -1599,10 +1601,14 @@ class CommonDialogBox {
 
       categoryDataObj = new CommonUtil()
           .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
-      postMediaData[parameters.strcategoryInfo] = categoryDataObj.toJson();
-      List<MediaResult> metaDataFromSharedPrefernce =
-          PreferenceUtil.getMediaType();
+      postMediaData[parameters.strhealthRecordCategory] =
+          categoryDataObj.toJson();
+      MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
 
+      MediaDataList mediaTypesResponse =
+          await _mediaTypeBlock.getMediTypesList();
+
+      List<MediaResult> metaDataFromSharedPrefernce = mediaTypesResponse.result;
       if (categoryName != Constants.STR_DEVICES) {
         mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(
             categoryID, metaDataFromSharedPrefernce, categoryName);
@@ -1611,7 +1617,7 @@ class CommonDialogBox {
             deviceName, metaDataFromSharedPrefernce);
       }
 
-      postMediaData[parameters.strmediaTypeInfo] = mediaDataObj.toJson();
+      postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
 
       postMediaData[parameters.strmemoText] = memoController.text;
 
@@ -1721,9 +1727,25 @@ class CommonDialogBox {
         postMainData[parameters.strIsActive] = true;
       }
 
-      var params = json.encode(postMainData);
+      var params = json.encode(postMediaData);
+      print(params);
 
-      if (imagePath != null) {
+      _healthReportListForUserBlock
+          .createHealtRecords(params.toString(), imagePath, audioPathMain)
+          .then((value) {
+        if (value.isSuccess) {
+          _healthReportListForUserBlock.getHelthReportLists().then((value) {
+            PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+            Navigator.of(context).pop();
+            Navigator.of(context).pop();
+          });
+        } else {
+          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+        }
+      });
+      /*if (imagePath != null) {
         if (modeOfSave) {
           _healthReportListForUserBlock
               .updateMedia(params.toString(), metaInfoId)
@@ -1795,7 +1817,7 @@ class CommonDialogBox {
             }
           }
         });
-      }
+      }*/
     } else {
       showDialog(
           context: context,
@@ -2323,7 +2345,8 @@ class CommonDialogBox {
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
-            fhbBasicWidget.getRichTextFieldWithNoCallbacks(context, memoController),
+            fhbBasicWidget.getRichTextFieldWithNoCallbacks(
+                context, memoController),
             SizedBox(
               height: 15,
             ),

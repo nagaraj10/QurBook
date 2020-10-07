@@ -46,7 +46,6 @@ import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
@@ -397,8 +396,12 @@ class CommonUtil {
     loginBloc.logout().then((signOutResponse) {
       // moveToLoginPage(signOutResponse);
       CommonUtil()
-          .sendDeviceToken(PreferenceUtil.getStringValue(Constants.KEY_USERID),
-          profileResult.userContactCollection3[0].email, profileResult.userContactCollection3[0].phoneNumber, token, false)
+          .sendDeviceToken(
+              PreferenceUtil.getStringValue(Constants.KEY_USERID),
+              profileResult.userContactCollection3[0].email,
+              profileResult.userContactCollection3[0].phoneNumber,
+              token,
+              false)
           .then((value) {
         moveToLoginPage(signOutResponse);
       });
@@ -413,25 +416,27 @@ class CommonUtil {
     LinkedData linkedData =
         new LinkedData(roleName: variable.Self, nickName: variable.Self);
 
-     String fullName =  myProfileResult.firstName +
-            ' ' +
-        myProfileResult.lastName;
+    String fullName =
+        myProfileResult.firstName + ' ' + myProfileResult.lastName;
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         name: fullName ?? '',
-        email: myProfileResult.userContactCollection3.length>0?myProfileResult.userContactCollection3[0].email:'',
+        email: myProfileResult.userContactCollection3.length > 0
+            ? myProfileResult.userContactCollection3[0].email
+            : '',
         dateOfBirth: myProfileResult.dateOfBirth,
         gender: myProfileResult.gender,
         bloodGroup: myProfileResult.bloodGroup,
         isVirtualUser: myProfileResult.isVirtualUser,
-        phoneNumber: myProfileResult.userContactCollection3.length>0?myProfileResult.userContactCollection3[0].phoneNumber:'',
+        phoneNumber: myProfileResult.userContactCollection3.length > 0
+            ? myProfileResult.userContactCollection3[0].phoneNumber
+            : '',
         //createdOn: myProfileResult.createdOn,
         /*profilePicThumbnail: myProfileResult.profilePicThumbnailUrl,*/
         isEmailVerified: myProfileResult.isEmailVerified,
         isTempUser: myProfileResult.isTempUser,
-        profilePicThumbnailURL:
-        myProfileResult.profilePicThumbnailUrl);
+        profilePicThumbnailURL: myProfileResult.profilePicThumbnailUrl);
 
     return new Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
@@ -609,14 +614,15 @@ class CommonUtil {
       Doctor doctor;
       if (dataObj.metaInfo.doctor != null) {
         doctor = new Doctor(
-            id: dataObj.metaInfo.doctor.id,
-            city: dataObj.metaInfo.doctor.city,
-            description: dataObj.metaInfo.doctor.description,
-            email: dataObj.metaInfo.doctor.email,
-            isUserDefined: dataObj.metaInfo.doctor.isUserDefined,
-            name: dataObj.metaInfo.doctor.name,
-            specialization: dataObj.metaInfo.doctor.specialization,
-            state: dataObj.metaInfo.doctor.state);
+          doctorId: dataObj.metaInfo.doctor.id,
+          //city: dataObj.metaInfo.doctor.city,
+          //description: dataObj.metaInfo.doctor.description,
+          //email: dataObj.metaInfo.doctor.email,
+          //isUserDefined: dataObj.metaInfo.doctor.isUserDefined,
+          name: dataObj.metaInfo.doctor.name,
+          specialization: dataObj.metaInfo.doctor.specialization,
+          //state: dataObj.metaInfo.doctor.state
+        );
       } else {
         doctor = null;
       }
@@ -627,17 +633,19 @@ class CommonUtil {
         hospital = new Hospital(
           addressLine1: dataObj.metaInfo.hospital.addressLine1,
           addressLine2: dataObj.metaInfo.hospital.addressLine2,
-          branch: dataObj.metaInfo.hospital.branch,
-          city: dataObj.metaInfo.hospital.city,
+          /*  branch: dataObj.metaInfo.hospital.branch,
           description: dataObj.metaInfo.hospital.description,
           email: dataObj.metaInfo.hospital.email,
-          id: dataObj.metaInfo.hospital.id,
           isUserDefined: dataObj.metaInfo.hospital.isUserDefined,
           latitude: dataObj.metaInfo.hospital.latitude,
           logoThumbnail: dataObj.metaInfo.hospital.logoThumbnail,
           longitude: dataObj.metaInfo.hospital.longitude,
+          website: dataObj.metaInfo.hospital.website,*/
+
+          city: dataObj.metaInfo.hospital.city,
+          id: dataObj.metaInfo.hospital.id,
+
           name: dataObj.metaInfo.hospital.name,
-          website: dataObj.metaInfo.hospital.website,
           //zipcode: dataObj.metaInfo.hospital.zipcode,
         );
       } else {
@@ -958,7 +966,8 @@ class CommonUtil {
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
       if (profileData != null &&
-          profileData.isSuccess && profileData.result!=null) {
+          profileData.isSuccess &&
+          profileData.result != null) {
         PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
             .then((value) {
           try {

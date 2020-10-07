@@ -41,7 +41,8 @@ class RecordInfoCard {
                 ClipOval(
                     child: metaInfo.doctor != null
                         ? new CommonUtil().getDoctorProfileImageWidget(metaInfo
-                            .doctor.id) //getDoctorProfileImageWidget(metaInfo)
+                            .doctor
+                            .doctorId) //getDoctorProfileImageWidget(metaInfo)
                         : Container(
                             width: 50,
                             height: 50,
@@ -134,12 +135,14 @@ class RecordInfoCard {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
-                  backgroundImage: metaInfo.hospital != null
+                  backgroundImage:
+                      /*metaInfo.hospital != null
                       ? metaInfo.hospital.logoThumbnail != null
                           ? NetworkImage(Constants.BASE_URL +
                               metaInfo.hospital.logoThumbnail)
                           : null
-                      : null,
+                      :*/
+                      null,
                 ),
                 Expanded(
                   child: Padding(

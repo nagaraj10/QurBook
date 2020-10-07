@@ -564,3 +564,5 @@ const String strPayment = 'payment';
 const String strPaymentGateWayDetail = 'paymentGatewayDetail';
 
 const String strReferenceId = 'doctorReferenceId';
+const String strhealthRecordCategory = 'healthRecordCategory';
+const String strhealthRecordType = 'healthRecordType';

@@ -14,6 +14,7 @@ import 'package:myfhb/src/model/Health/SavedMetaDataResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
 
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
@@ -161,5 +162,26 @@ class HealthReportListForUserRepository {
 
     final response = await _helper.getHealthRecordLists(jsonString, queryVal);
     return HealthRecordList.fromJson(response);
+  }
+
+  Future<HealthRecordSuccess> createMediaData(
+      String jsonString, List<String> imagePaths, String audioPath) async {
+    String id;
+
+    try {
+      String familyId =
+          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+      if (familyId.length > 0) {
+        id = familyId;
+      } else {
+        id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      }
+    } catch (e) {
+      id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    }
+
+    var response = await _helper.createMediaData(
+        query.qr_health_record, jsonString, imagePaths, audioPath);
+    return HealthRecordSuccess.fromJson(response.data);
   }
 }

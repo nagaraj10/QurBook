@@ -254,7 +254,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       // Store the picture in the temp directory.
                                       // Find the temp directory using the `path_provider` plugin.
                                       (await getTemporaryDirectory()).path,
-                                      'Prescription_${DateTime.now()}.jpg',
+                                      'Prescription_${DateTime.now().minute}.jpg'
+                                          .trim(),
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.
@@ -396,7 +397,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       // Store the picture in the temp directory.
                                       // Find the temp directory using the `path_provider` plugin.
                                       (await getTemporaryDirectory()).path,
-                                      'Prescription_${DateTime.now()}.jpg',
+                                      'Prescription_${DateTime.now().minute}.jpg'
+                                          .trim(),
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.

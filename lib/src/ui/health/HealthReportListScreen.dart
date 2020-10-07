@@ -167,7 +167,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                 ClipOval(
                     child: mediaMetaInfoObj.metadata.doctor != null
                         ? CommonUtil().getDoctorProfileImageWidget(
-                            mediaMetaInfoObj.metadata.doctor.id)
+                            mediaMetaInfoObj.metadata.doctor.doctorId)
                         : Container(
                             width: 50,
                             height: 50,
@@ -206,8 +206,9 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                 fontWeight: FontWeight.w500),
                           )),
                       Text(
-                        new FHBUtils().getFormattedDateString(
-                            mediaMetaInfoObj.metadata.dateOfVisit),
+                        /*new FHBUtils().getFormattedDateString(
+                            mediaMetaInfoObj.metadata.dateOfVisit)*/
+                        mediaMetaInfoObj.metadata.dateOfVisit,
                         style: TextStyle(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w200,

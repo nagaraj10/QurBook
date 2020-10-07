@@ -43,7 +43,7 @@ dependencies:
   avatar_glow: ^1.1.0
   google_maps_flutter: ^0.5.22
   auto_size_text: ^2.1.0
-  dio: ^3.0.8
+  dio: ^3.0.10
   flutter_sound: ^2.0.4
   flutter_google_places: ^0.2.3
   geocoder: ^0.2.1
