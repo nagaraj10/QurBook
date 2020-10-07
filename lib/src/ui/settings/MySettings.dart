@@ -9,6 +9,7 @@ import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
+import 'AppleHealthSettings.dart';
 import 'dart:io';
 
 class MySettings extends StatefulWidget {
@@ -28,6 +29,8 @@ class _MySettingsState extends State<MySettings> {
   bool _isOxyActive = false;
   bool _isTHActive = false;
   bool _isWSActive = false;
+  bool _isHealthFirstTime = false;
+
   List<DeviceData> selectedList;
   DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
   @override
@@ -80,12 +83,21 @@ class _MySettingsState extends State<MySettings> {
               variable.strFalse
           ? false
           : true;
+      _isHealthFirstTime =
+          PreferenceUtil.getStringValue(Constants.isHealthFirstTime) ==
+                  variable.strFalse
+              ? false
+              : true;
     });
     if (_firstTym) {
       _firstTym = false;
       _isGFActive = false;
       PreferenceUtil.saveString(Constants.activateGF, _firstTym.toString());
       PreferenceUtil.saveString(Constants.isFirstTym, _firstTym.toString());
+    }
+    if (_isHealthFirstTime) {
+      _isHKActive = false;
+      PreferenceUtil.saveString(Constants.activateHK, _isHKActive.toString());
     }
   }
 
@@ -260,11 +272,26 @@ class _MySettingsState extends State<MySettings> {
                                       activeColor: Color(
                                           new CommonUtil().getMyPrimaryColor()),
                                       onChanged: (bool newValue) {
-                                        newValue == true
-                                            ? _deviceDataHelper
-                                                .activateHealthKit()
-                                            : _deviceDataHelper
-                                                .deactivateHealthKit();
+                                        if (_isHealthFirstTime) {
+                                          _isHealthFirstTime = false;
+                                          PreferenceUtil.saveString(
+                                              Constants.isHealthFirstTime,
+                                              _isHealthFirstTime.toString());
+
+                                          newValue == true
+                                              ? _deviceDataHelper
+                                                  .activateHealthKit()
+                                              : _deviceDataHelper
+                                                  .deactivateHealthKit();
+                                          
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HealthApp()),
+                                          );
+                                        }
                                         setState(() {
                                           _isHKActive = newValue;
 
