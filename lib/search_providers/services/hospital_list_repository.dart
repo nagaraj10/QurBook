@@ -21,7 +21,7 @@ class HospitalListRepository {
     int limit = 10;
 
     final response = await _helper.getHospitalListFromSearchNew(
-        "${query.qr_health_organization}${query.qr_health_Search}${param}${query.qr_id}${CommonConstants.SEARCH_HOSPIT_ID}");
+        "${query.qr_health_organization}${query.qr_health_Search}${query.qr_healthOrgTypeId}${CommonConstants.SEARCH_HOSPIT_ID}${query.qr_limitSearchText}$param${query.qr_sortByDesc}");
     return HospitalsSearchListResponse.fromJson(response);
   }
 

@@ -90,6 +90,8 @@ class HeaderRequest {
     String authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
+    printWrapped(authToken);
+
     Map<String, String> requestHeadersAuthAccept = new Map();
     requestHeadersAuthAccept['accept'] = 'application/json';
     requestHeadersAuthAccept['authorization'] = authToken;

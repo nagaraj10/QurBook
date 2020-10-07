@@ -7,13 +7,14 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as Constants;
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 
 class AppointmentsCommonWidget {
   List<CategoryData> filteredCategoryData = new List();
@@ -74,85 +75,7 @@ class AppointmentsCommonWidget {
     );
   }
 
-//  Widget docTimeSlot(BuildContext context, History doc, hour, minute, daysNum) {
-//    return daysNum != '0' && daysNum != null
-//        ? TextWidget(
-//            fontsize: 10,
-//            text: daysNum + ' days',
-//            fontWeight: FontWeight.w500,
-//            colors: Colors.black,
-//          )
-//        : ((hour == '00' && minute == '00') || hour == null || minute == null)
-////        ||
-////                hour.length == 0 ||
-////                minute.length == 0)
-//            ? Container()
-//            : Row(
-//                children: [
-//                  ClipRect(
-//                    child: Container(
-//                      decoration: BoxDecoration(
-//                        border: Border.all(
-//                            color: Color(new CommonUtil().getMyPrimaryColor())),
-//                      ),
-//                      height: 29,
-//                      width: 25,
-//                      alignment: Alignment.center,
-//                      padding: EdgeInsets.all(2.0),
-//                      child: Column(
-//                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                        children: [
-//                          TextWidget(
-//                            fontsize: 10,
-//                            text: hour,
-//                            fontWeight: FontWeight.w500,
-//                            colors: Colors.grey,
-//                          ),
-//                          TextWidget(
-//                            fontsize: 5,
-//                            text: Constants.Appointments_hours,
-//                            fontWeight: FontWeight.w500,
-//                            colors: Color(new CommonUtil().getMyPrimaryColor()),
-//                          ),
-//                        ],
-//                      ),
-//                    ),
-//                  ),
-//                  SizedBoxWidget(width: 2.0),
-//                  ClipRect(
-//                    child: Container(
-//                      decoration: BoxDecoration(
-//                        border: Border.all(
-//                            color: Color(new CommonUtil().getMyPrimaryColor())),
-//                      ),
-//                      height: 29,
-//                      width: 25,
-//                      alignment: Alignment.center,
-//                      padding: EdgeInsets.all(2.0),
-//                      child: Column(
-//                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                        children: [
-//                          TextWidget(
-//                            fontsize: 10,
-//                            text: minute,
-//                            fontWeight: FontWeight.w500,
-//                            colors: Colors.grey,
-//                          ),
-//                          TextWidget(
-//                            fontsize: 5,
-//                            text: Constants.Appointments_minutes,
-//                            fontWeight: FontWeight.w500,
-//                            colors: Color(new CommonUtil().getMyPrimaryColor()),
-//                          ),
-//                        ],
-//                      ),
-//                    ),
-//                  )
-//                ],
-//              );
-//  }
-
-  Widget docIcons(History doc, BuildContext context) {
+  Widget docIcons(Past doc, BuildContext context) {
     List<String> recordIds = new List();
     List<String> notesId = new List();
     List<String> voiceIds = new List();
@@ -169,10 +92,10 @@ class AppointmentsCommonWidget {
     String rxCount = (healthRecord + otherRecords).toString();
 
     if (int.parse(notesCount) > 0 && doc.healthRecord.notes != null) {
-      notesId.add(doc.healthRecord.notes.mediaMetaId);
+      notesId.add(doc.healthRecord.notes);
     }
     if (int.parse(voiceNotesCount) > 0 && doc.healthRecord.voice != null) {
-      voiceIds.add(doc.healthRecord.voice.mediaMetaId);
+      voiceIds.add(doc.healthRecord.voice);
     }
     if (int.parse(rxCount) > 0) {
       if (otherRecords > 0) {
@@ -462,5 +385,42 @@ class AppointmentsCommonWidget {
     } else {
       return position;
     }
+  }
+
+  Widget docPhotoView(Past doc) {
+    return Container(
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(50),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(0xFFe3e2e2),
+                blurRadius: 16,
+                // has the effect of softening the shadow
+                spreadRadius: 5.0,
+                // has the effect of extending the shadow
+                offset: Offset(
+                  0.0, // horizontal, move right 10
+                  0.0, // vertical, move down 10
+                ),
+              )
+            ]),
+        child: ClipOval(
+          child: Container(
+            child: //Container(color: Color(fhbColors.bgColorContainer)),
+            doc?.doctor?.user?.profilePicThumbnailUrl == null
+                ? Container(color: Color(fhbColors.bgColorContainer))
+                : Image.network(
+              doc.doctor.user.profilePicThumbnailUrl,
+              fit: BoxFit.cover,
+              height: 40,
+              width: 40,
+            ),
+            color: Color(fhbColors.bgColorContainer),
+            height: 50,
+            width: 50,
+          ),
+        ));
   }
 }

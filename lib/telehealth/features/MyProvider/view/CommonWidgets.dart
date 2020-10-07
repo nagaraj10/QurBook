@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
@@ -110,6 +111,25 @@ class CommonWidgets {
                 color: Colors.black,
                 size: fhbStyles.imageWidth,
               ));
+  }
+
+
+  Widget getBookMarkedIconNew(Doctors docs, Function onClick) {
+    return GestureDetector(
+        onTap: () {
+          onClick();
+        },
+        child: docs.isActive
+            ? ImageIcon(
+          AssetImage('assets/icons/record_fav_active.png'),
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          size: fhbStyles.imageWidth,
+        )
+            : ImageIcon(
+          AssetImage('assets/icons/record_fav.png'),
+          color: Colors.black,
+          size: fhbStyles.imageWidth,
+        ));
   }
 
   Widget getGridView() {
@@ -340,6 +360,21 @@ class CommonWidgets {
     );
   }
 
+  Widget getDoctorStatusWidgetNew(Doctors docs, int position) {
+    return Container(
+      alignment: Alignment.bottomRight,
+      child: Container(
+        width: 10.0,
+        height: 10.0,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: getDoctorStatus('${docs.isActive}', position)
+          //color: getDoctorStatus('5'),
+        ),
+      ),
+    );
+  }
+
   BoxDecoration getCardDecoration() {
     return BoxDecoration(
       color: Colors.white,
@@ -385,4 +420,87 @@ class CommonWidgets {
 
     return languageWidget;
   }
+
+  Widget showDoctorDetailViewNew(Doctors docs, BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            content: Container(
+              width: MediaQuery.of(context).size.width - 20,
+              child: Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Positioned(
+                    top: -1.0,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: getClipOvalImageNew(
+                                docs.user.profilePicThumbnailUrl,
+                                fhbStyles.detailClipImage),
+                          ),
+                          getSizeBoxWidth(10.0),
+                          Expanded(
+                            // flex: 4,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                getTextForDoctors('${docs.user.name}'),
+                                docs.specialization != null
+                                    ? getDoctoSpecialist(
+                                    '${docs.specialization}')
+                                    : SizedBox(),
+                                //getDoctorsAddress('${docs.city}'),
+                                /*(docs.languages != null &&
+                                    docs.languages.length > 0)
+                                    ? getTextForDoctors('Can Speak')
+                                    : SizedBox(),
+                                (docs.languages != null &&
+                                    docs.languages.length > 0)
+                                    ? Row(children: getLanguages(docs))
+                                    : SizedBox(),*/
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      getSizedBox(20),
+                      getTextForDoctors('About'),
+                      /*getHospitalDetails(docs.professionalDetails != null
+                          ? docs.professionalDetails[0].aboutMe
+                          : ''),*/
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [],
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
 }

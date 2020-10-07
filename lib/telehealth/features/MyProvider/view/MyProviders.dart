@@ -1,12 +1,19 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseData.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/search_providers/models/search_arguments.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
@@ -18,6 +25,7 @@ import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../../SearchWidget/view/SearchWidget.dart';
 import 'DoctorSessionTimeSlot.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class MyProviders extends StatefulWidget {
   @override
@@ -36,16 +44,20 @@ class _MyProvidersState extends State<MyProviders> {
   bool isSearch = false;
 
   List<DoctorIds> doctorData = new List();
+  List<Doctors> doctors = new List();
 
   List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
-      new List<AvailableTimeSlotsModel>();
+  new List<AvailableTimeSlotsModel>();
   List<SlotSessionsModel> sessionTimeModel = new List<SlotSessionsModel>();
   List<Slots> slotsModel = new List<Slots>();
+  ProvidersBloc _providersBloc;
+  MyProvidersResponse myProvidersResponseList;
 
   @override
   void initState() {
     super.initState();
     getDataForProvider();
+    _providersBloc = new ProvidersBloc();
   }
 
   @override
@@ -61,7 +73,7 @@ class _MyProvidersState extends State<MyProviders> {
             ),
             // you can put Icon as well, it accepts any widget.
             title:
-                getTitle() /* Column(
+            getTitle() /* Column(
             children: [
               Text("My Providers"),
             ],
@@ -72,30 +84,38 @@ class _MyProvidersState extends State<MyProviders> {
                 .buildActions(context, _keyLoader, callBackToRefresh),
             Icon(Icons.more_vert),
           ],*/
-            ),
+        ),
         body: Container(
             child: Column(
-          children: [
-            SearchWidget(
-              onChanged: (doctorsName) {
-                if (doctorsName != '' && doctorsName.length > 3) {
-                  isSearch = true;
-                  onSearched(doctorsName);
-                } else {
-                  setState(() {
-                    isSearch = false;
-                  });
-                }
-              },
-            ),
-            Expanded(
-              child: (providerViewModel.doctorIdsList != null &&
+              children: [
+                SearchWidget(
+                  onChanged: (doctorsName) {
+                    if (doctorsName != '' && doctorsName.length > 3) {
+                      isSearch = true;
+                      onSearchedNew(doctorsName);
+                    } else {
+                      setState(() {
+                        isSearch = false;
+                      });
+                    }
+                  },
+                ),
+                Expanded(
+                  /* child: (providerViewModel.doctorIdsList != null &&
                       providerViewModel.doctorIdsList.length > 0)
                   ? providerListWidget(providerViewModel.doctorIdsList)
-                  : getDoctorProviderList(),
-            )
-          ],
-        )),
+                  : getDoctorProviderList(),*/
+                  child: myProvidersResponseList != null??myProvidersResponseList.isSuccess
+                      ? myProviderList(myProvidersResponseList)
+                      : getDoctorProviderListNew(),
+                  /*:Container(
+                    child: Center(
+                      child: Text(variable.strNoDoctordata),
+                    ),
+                  ),*/
+                )
+              ],
+            )),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             //PageNavigator.goTo(context, '/add_appointments');
@@ -175,7 +195,10 @@ class _MyProvidersState extends State<MyProviders> {
   Widget expandedListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
       padding: EdgeInsets.all(10.0),
-      width: MediaQuery.of(context).size.width,
+      width: MediaQuery
+          .of(context)
+          .size
+          .width,
       child: ExpandableButton(
         child: Column(
           children: [
@@ -227,32 +250,32 @@ class _MyProvidersState extends State<MyProviders> {
                 children: [
                   Expanded(
                       child: Row(
-                    children: [
-                      commonWidgets.getTextForDoctors('${docs[i].name}'),
-                      commonWidgets.getSizeBoxWidth(10.0),
-                      commonWidgets.getIcon(
-                          width: fhbStyles.imageWidth,
-                          height: fhbStyles.imageHeight,
-                          icon: Icons.info,
-                          onTap: () {
-                            print('on Info pressed');
-                            commonWidgets.showDoctorDetailView(
-                                docs[i], context);
-                          }),
-                    ],
-                  )),
+                        children: [
+                          commonWidgets.getTextForDoctors('${docs[i].name}'),
+                          commonWidgets.getSizeBoxWidth(10.0),
+                          commonWidgets.getIcon(
+                              width: fhbStyles.imageWidth,
+                              height: fhbStyles.imageHeight,
+                              icon: Icons.info,
+                              onTap: () {
+                                print('on Info pressed');
+                                commonWidgets.showDoctorDetailView(
+                                    docs[i], context);
+                              }),
+                        ],
+                      )),
                   docs[i].isActive
                       ? commonWidgets.getIcon(
-                          width: fhbStyles.imageWidth,
-                          height: fhbStyles.imageHeight,
-                          icon: Icons.check_circle,
-                          onTap: () {
-                            print('on check  pressed');
-                          })
+                      width: fhbStyles.imageWidth,
+                      height: fhbStyles.imageHeight,
+                      icon: Icons.check_circle,
+                      onTap: () {
+                        print('on check  pressed');
+                      })
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
                   commonWidgets.getBookMarkedIcon(docs[i], () {
-                    providerViewModel
+                    /*providerViewModel
                         .bookMarkDoctor(!(docs[i].isDefault), docs[i])
                         .then((status) {
                       if (status) {
@@ -260,7 +283,7 @@ class _MyProvidersState extends State<MyProviders> {
                         providerViewModel.doctorIdsList.clear();
                         setState(() {});
                       }
-                    });
+                    });*/
                   }),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
@@ -290,21 +313,21 @@ class _MyProvidersState extends State<MyProviders> {
                 Expanded(
                     child: docs[i].professionalDetails != null
                         ? docs[i].professionalDetails[0].specialty != null
-                            ? docs[i].professionalDetails[0].specialty.name !=
-                                    null
-                                ? commonWidgets.getDoctoSpecialist(
-                                    '${docs[i].professionalDetails[0].specialty.name}')
-                                : SizedBox()
-                            : SizedBox()
+                        ? docs[i].professionalDetails[0].specialty.name !=
+                        null
+                        ? commonWidgets.getDoctoSpecialist(
+                        '${docs[i].professionalDetails[0].specialty.name}')
+                        : SizedBox()
+                        : SizedBox()
                         : SizedBox()),
                 docs[i].fees != null
                     ? docs[i].fees.consulting != null
-                        ? (docs[i].fees.consulting != null &&
-                                docs[i].fees.consulting != '')
-                            ? commonWidgets.getDoctoSpecialist(
-                                'INR ${docs[i].fees.consulting.fee}')
-                            : SizedBox()
-                        : SizedBox()
+                    ? (docs[i].fees.consulting != null &&
+                    docs[i].fees.consulting != '')
+                    ? commonWidgets.getDoctoSpecialist(
+                    'INR ${docs[i].fees.consulting.fee}')
+                    : SizedBox()
+                    : SizedBox()
                     : SizedBox(),
                 commonWidgets.getSizeBoxWidth(10.0),
               ]),
@@ -314,12 +337,12 @@ class _MyProvidersState extends State<MyProviders> {
                 children: [
                   Expanded(
                       child:
-                          commonWidgets.getDoctorsAddress('${docs[i].city}')),
+                      commonWidgets.getDoctorsAddress('${docs[i].city}')),
                   docs[i].isMCIVerified
                       ? commonWidgets.getMCVerified(
-                          docs[i].isMCIVerified, 'Verified')
+                      docs[i].isMCIVerified, 'Verified')
                       : commonWidgets.getMCVerified(
-                          docs[i].isMCIVerified, 'Not Verified'),
+                      docs[i].isMCIVerified, 'Not Verified'),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               )
@@ -341,7 +364,7 @@ class _MyProvidersState extends State<MyProviders> {
     doctorData.clear();
     if (doctorName != null) {
       for (DoctorIds fiterData
-          in providerViewModel.getFilterDoctorList(doctorName)) {
+      in providerViewModel.getFilterDoctorList(doctorName)) {
         doctorData.add(fiterData);
       }
     }
@@ -349,11 +372,22 @@ class _MyProvidersState extends State<MyProviders> {
     setState(() {});
   }
 
+  onSearchedNew(String doctorName) async {
+    doctors.clear();
+    if (doctorName != null) {
+      /*for (Doctors fiterData
+      in _providersBloc.getFilterDoctorListNew(doctorName)) {
+        doctors.add(fiterData);*/
+      doctors = await _providersBloc.getFilterDoctorListNew(doctorName);
+      }
+    setState(() {});
+  }
+
   Widget getFees(DoctorIds doctorId) {
     return doctorId.fees != null
         ? commonWidgets.getHospitalDetails(doctorId.fees.consulting != null
-            ? variable.strRs + ' ' + doctorId.fees.consulting.fee
-            : '')
+        ? variable.strRs + ' ' + doctorId.fees.consulting.fee
+        : '')
         : Text('');
   }
 
@@ -379,19 +413,300 @@ class _MyProvidersState extends State<MyProviders> {
     );
   }
 
+  Widget getDoctorProviderListNew() {
+    return new FutureBuilder<MyProvidersResponse>(
+      future: _providersBloc.getMedicalPreferencesList(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return new Center(
+            child: new CircularProgressIndicator(
+              backgroundColor: Colors.grey,
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return new Text('Error: ${snapshot.error}');
+        } else {
+          final items = snapshot.data ??
+              <MyProvidersResponseData>[]; // handle the case that data is null
+
+          return myProviderList(snapshot.data);
+        }
+      },
+    );
+  }
+
   Widget providerListWidget(List<DoctorIds> doctorList) {
     return (doctorList != null && doctorList.length > 0)
         ? new ListView.builder(
-            itemBuilder: (BuildContext ctx, int i) =>
-                doctorsListItem(ctx, i, isSearch ? doctorData : doctorList),
-            itemCount: isSearch
-                ? doctorData.length
-                : providerViewModel.doctorIdsList.length,
-          )
+      itemBuilder: (BuildContext ctx, int i) =>
+          doctorsListItem(ctx, i, isSearch ? doctorData : doctorList),
+      itemCount: isSearch
+          ? doctorData.length
+          : providerViewModel.doctorIdsList.length,
+    )
         : Container(
-            child: Center(
-              child: Text(variable.strNoDoctordata),
-            ),
-          );
+      child: Center(
+        child: Text(variable.strNoDoctordata),
+      ),
+    );
   }
+
+  Widget myProviderList(MyProvidersResponse myProvidersResponse) {
+        return (myProvidersResponse != null && myProvidersResponse.isSuccess)?ListView.separated(
+      itemBuilder: (BuildContext context, index)=>
+          providerDoctorItemWidget(index,isSearch ? doctors : myProvidersResponse.result.doctors),
+      separatorBuilder: (BuildContext context, index) {
+        return Divider(
+          height: 0,
+          color: Colors.transparent,
+        );
+      },
+      itemCount:isSearch
+          ? doctors.length
+          :myProvidersResponse.result.doctors.length,
+    ): Container(
+      child: Center(
+        child: Text(variable.strNoDoctordata),
+      ),
+    );
+  }
+
+  Widget providerListItem(Doctors eachDoctorModel) {
+    return InkWell(
+        onTap: () {},
+        child: Container(
+            padding: EdgeInsets.all(10),
+            margin: EdgeInsets.only(left: 12, right: 12, top: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(fhbColors.cardShadowColor),
+                  blurRadius: 16, // has the effect of softening the shadow
+                  spreadRadius: 0, // has the effect of extending the shadow
+                )
+              ],
+            ),
+            child: Row(
+              children: <Widget>[
+                ClipOval(
+                    child: eachDoctorModel.user != null
+                        ? eachDoctorModel.user.profilePicThumbnailUrl !=
+                        null
+                        ? Image.network(
+                      eachDoctorModel.user.profilePicThumbnailUrl,
+                      height: 50,
+                      width: 50,
+                      fit: BoxFit.cover,
+                    )
+                        : Container(
+                        width: 50,
+                        height: 50,
+                        padding: EdgeInsets.all(12),
+                        color: Color(fhbColors.bgColorContainer))
+                        : Container(
+                        width: 50,
+                        height: 50,
+                        padding: EdgeInsets.all(12),
+                        color: Color(fhbColors.bgColorContainer))),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  flex: 6,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      SizedBox(height: 5),
+                      AutoSizeText(
+                        eachDoctorModel.user != null
+                            ? eachDoctorModel.user.name != null
+                            ? toBeginningOfSentenceCase(
+                            eachDoctorModel.user.name)
+                            : ''
+                            : '',
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      SizedBox(height: 5),
+                      eachDoctorModel.specialization != null
+                          ? AutoSizeText(
+                        eachDoctorModel.specialization != null
+                            ? toBeginningOfSentenceCase(
+                            eachDoctorModel.specialization)
+                            : '',
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontSize: 13.0,
+                            fontWeight: FontWeight.w400,
+                            color: ColorUtils.lightgraycolor),
+                        textAlign: TextAlign.start,
+                      )
+                          : SizedBox(height: 0, width: 0),
+                      SizedBox(height: 5),
+                    ],
+                  ),
+                ),
+                Expanded(
+                    flex: 1,
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          InkWell(
+                              child: eachDoctorModel.isActive == true
+                                  ? ImageIcon(
+                                AssetImage(
+                                    variable.icon_record_fav_active),
+                                color: Color(new CommonUtil()
+                                    .getMyPrimaryColor()),
+                                size: 20,
+                              )
+                                  : Container(
+                                height: 0,
+                                width: 0,
+                              )),
+                        ],
+                      ),
+                    )),
+              ],
+            )));
+  }
+
+  Widget providerDoctorItemWidget(int i, List<Doctors> docs) {
+    return Container(
+      padding: EdgeInsets.all(12.0),
+      margin: EdgeInsets.only(left: 15, right: 15, top: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFFe3e2e2),
+            blurRadius: 16, // has the effect of softening the shadow
+            spreadRadius: 5.0, // has the effect of extending the shadow
+            offset: Offset(
+              0.0, // horizontal, move right 10
+              0.0, // vertical, move down 10
+            ),
+          )
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          new Stack(
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Container(
+                alignment: Alignment.center,
+                child: commonWidgets.getClipOvalImageNew(
+                    docs[i].user.profilePicThumbnailUrl, fhbStyles.cardClipImage),
+              ),
+              new Positioned(
+                bottom: 0.0,
+                right: 2.0,
+                child: commonWidgets.getDoctorStatusWidgetNew(docs[i], i),
+              )
+            ],
+          ),
+          commonWidgets.getSizeBoxWidth(10.0),
+          Expanded(
+            flex: 4,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Row(
+                  children: [
+                    Expanded(
+                        child: Row(
+                          children: [
+                            commonWidgets.getTextForDoctors('${docs[i].user.name}'),
+                            commonWidgets.getSizeBoxWidth(10.0),
+                            commonWidgets.getIcon(
+                                width: fhbStyles.imageWidth,
+                                height: fhbStyles.imageHeight,
+                                icon: Icons.info,
+                                onTap: () {
+                                  print('on Info pressed');
+                                  commonWidgets.showDoctorDetailViewNew(
+                                      docs[i], context);
+                                }),
+                          ],
+                        )),
+                    docs[i].isActive
+                        ? commonWidgets.getIcon(
+                        width: fhbStyles.imageWidth,
+                        height: fhbStyles.imageHeight,
+                        icon: Icons.check_circle,
+                        onTap: () {
+                          print('on check  pressed');
+                        })
+                        : SizedBox(),
+                    commonWidgets.getSizeBoxWidth(15.0),
+                    commonWidgets.getBookMarkedIconNew(docs[i], () {
+                    providerViewModel
+                        .bookMarkDoctor(!(docs[i].isActive), docs[i])
+                        .then((status) {
+                      if (status) {
+                        print('onClick');
+                        providerViewModel.doctorIdsList.clear();
+                        setState(() {});
+                      }
+                    });
+                  }),
+                    commonWidgets.getSizeBoxWidth(10.0),
+                  ],
+                ),
+                commonWidgets.getSizedBox(5.0),
+
+                Row(
+                    children: [
+                  Expanded(
+                      child:docs[i].specialization != null
+                          ? commonWidgets.getDoctoSpecialist(
+                          '${docs[i].specialization}')
+                          : SizedBox()),
+                  /*docs[i].fees != null
+                    ? docs[i].fees.consulting != null
+                    ? (docs[i].fees.consulting != null &&
+                    docs[i].fees.consulting != '')
+                    ? commonWidgets.getDoctoSpecialist(
+                    'INR ${docs[i].fees.consulting.fee}')
+                    : SizedBox()
+                    : SizedBox()
+                    : SizedBox(),*/
+                  commonWidgets.getSizeBoxWidth(10.0),
+                ]),
+                commonWidgets.getSizedBox(5.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child:
+                      commonWidgets.getDoctorsAddress('Dubai')),
+                    docs[i].isMciVerified
+                        ? commonWidgets.getMCVerified(
+                        docs[i].isMciVerified, 'Verified')
+                        : commonWidgets.getMCVerified(
+                        docs[i].isMciVerified, 'Not Verified'),
+                    commonWidgets.getSizeBoxWidth(10.0),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+      );
+  }
+
 }

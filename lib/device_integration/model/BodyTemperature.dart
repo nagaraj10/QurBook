@@ -1,52 +1,54 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
+import 'RefrenceValueMeta.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as param;
 
 class BodyTemperature {
-  BodyTemperature({
-    this.isSuccess,
-    this.entities,
-  });
+    BodyTemperature({
+        this.isSuccess,
+        this.entities,
+    });
 
-  bool isSuccess;
-  List<BodyTemperatureEntity> entities;
+    bool isSuccess;
+    List<BodyTemperatureEntity> entities;
 
-  factory BodyTemperature.fromJson(Map<String, dynamic> json) =>
-      BodyTemperature(
-        isSuccess: json[is_Success],
-        entities: List<BodyTemperatureEntity>.from(
-            json[strentities].map((x) => BodyTemperatureEntity.fromJson(x))),
-      );
+    factory BodyTemperature.fromJson(Map<String, dynamic> json) => BodyTemperature(
+        isSuccess: json[param.is_Success],
+        entities: List<BodyTemperatureEntity>.from(json[param.strentities].map((x) => BodyTemperatureEntity.fromJson(x))),
+    );
 
-  Map<String, dynamic> toJson() => {
-        is_Success: isSuccess,
-        strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
-      };
+    Map<String, dynamic> toJson() => {
+        param.is_Success: isSuccess,
+        param.strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
+    };
 }
 
 class BodyTemperatureEntity {
-  BodyTemperatureEntity({
-    this.lastsyncdatetime,
-    this.temperature,
-    this.temperatureunit,
-    this.source,
-  });
+    BodyTemperatureEntity({
+        // this.id,
+        this.startDateTime,
+        this.endDateTime,
+        this.temperature,
+        this.temperatureUnit,
+    });
 
-  DateTime lastsyncdatetime;
-  String temperature;
-  String temperatureunit;
-  String source;
+    // String id;
+    DateTime startDateTime;
+    DateTime endDateTime;
+    String temperature;
+    RefrenceValueMeta temperatureUnit;
 
-  factory BodyTemperatureEntity.fromJson(Map<String, dynamic> json) =>
-      BodyTemperatureEntity(
-        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
-        temperature: json[strParamTemp],
-        temperatureunit: json[strParamTempUnit],
-        source: json[strsourcetype],
-      );
+    factory BodyTemperatureEntity.fromJson(Map<String, dynamic> json) => BodyTemperatureEntity(
+        // id: json["id"],
+        startDateTime: DateTime.parse(json[param.strsyncStartDate]),
+        endDateTime: DateTime.parse(json[param.strsyncEndDate]),
+        temperature: json[param.strParamTemp],
+        temperatureUnit: RefrenceValueMeta.fromJson(json[param.strParamTempUnit]),
+    );
 
-  Map<String, dynamic> toJson() => {
-        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
-        strParamTemp: temperature,
-        strParamTempUnit: temperatureunit,
-        strsourcetype: source,
-      };
+    Map<String, dynamic> toJson() => {
+        // "id": id,
+        param.strsyncStartDate: startDateTime.toIso8601String(),
+        param.strsyncEndDate: endDateTime.toIso8601String(),
+        param.strParamTemp : temperature,
+        param.strParamTempUnit : temperatureUnit.toJson(),
+    };
 }

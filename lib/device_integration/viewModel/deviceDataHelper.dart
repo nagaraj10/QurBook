@@ -1,5 +1,7 @@
 import 'package:myfhb/Device_Integration/services/syncHealthKitData.dart';
 import 'package:myfhb/device_integration/services/syncGoogleFitData.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/material.dart';
 
 class DeviceDataHelper {
   SyncGoogleFitData _syncGoogleFitData = SyncGoogleFitData();
@@ -10,19 +12,37 @@ class DeviceDataHelper {
   }
 
   Future<bool> activateGoogleFit() async {
-    return await _syncGoogleFitData.activateGoogleFit();
+    bool bRet = await _syncGoogleFitData.activateGoogleFit();
+    if (!bRet) {
+      Fluttertoast.showToast(
+          msg: 'Failed to activate GoogleFit', backgroundColor: Colors.red);
+    }
+    return bRet;
   }
 
   Future<bool> deactivateGoogleFit() async {
-    return await _syncGoogleFitData.deactivateGoogleFit();
+    bool bRet = await _syncGoogleFitData.deactivateGoogleFit();
+    if (!bRet) {
+      Fluttertoast.showToast(
+          msg: 'Failed to deactivate GoogleFit', backgroundColor: Colors.red);
+    }
+    return bRet;
   }
 
   Future<void> syncGoogleFit() async {
-    await _syncGoogleFitData.syncGoogleFitData();
+    try {
+      await _syncGoogleFitData.syncGoogleFitData();
+    } catch (e) {
+      Fluttertoast.showToast(msg: '${e}', backgroundColor: Colors.red);
+    }
   }
 
   Future<void> activateHealthKit() async {
-    await _syncHealthKitData.activateHealthKit();
+    try {
+      await _syncHealthKitData.activateHealthKit();
+    } catch (e) {
+      Fluttertoast.showToast(msg: '${e}', backgroundColor: Colors.red);
+    }
   }
 
   Future<void> deactivateHealthKit() async {
@@ -30,6 +50,10 @@ class DeviceDataHelper {
   }
 
   Future<void> syncHealthKit() async {
-    await _syncHealthKitData.syncHealthKitData();
+    try {
+      await _syncHealthKitData.syncHealthKitData();
+    } catch (e) {
+      Fluttertoast.showToast(msg: '${e}', backgroundColor: Colors.red);
+    }
   }
 }

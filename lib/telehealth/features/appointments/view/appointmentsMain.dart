@@ -5,11 +5,15 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/appointments/view/DoctorUpcomingAppointments.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointments.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleAppointments.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
+    as Constants;
 import 'package:provider/provider.dart';
 
 class AppointmentsMain extends StatefulWidget {
@@ -23,12 +27,20 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
-      body: ChangeNotifierProvider(
-        create: (context) => AppointmentsViewModel(),
-        child: Appointments(),
-      ),
-    );
+        appBar: appBar(),
+        body: MultiProvider(
+          providers: [
+            ChangeNotifierProvider(
+              create: (context) => AppointmentsListViewModel(),
+            ),
+            ChangeNotifierProvider<CancelAppointmentViewModel>(
+              create: (_) => CancelAppointmentViewModel(),
+            ),
+            ChangeNotifierProvider<ResheduleAppointmentViewModel>(
+              create: (_) => ResheduleAppointmentViewModel(),
+            ),
+          ],child: Appointments(),
+        ));
   }
 
   Widget appBar() {
@@ -72,8 +84,7 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
           icon: Icons.notifications,
           colors: Colors.white,
           size: 22,
-          onTap: () {
-          },
+          onTap: () {},
         ),
         SwitchProfile().buildActions(context, _key, callBackToRefresh),
         // IconWidget(

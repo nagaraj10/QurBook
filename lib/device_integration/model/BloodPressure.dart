@@ -1,4 +1,4 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as param;
 
 class BloodPressure {
   BloodPressure({
@@ -10,42 +10,46 @@ class BloodPressure {
   List<BloodPressureEntity> entities;
 
   factory BloodPressure.fromJson(Map<String, dynamic> json) => BloodPressure(
-        isSuccess: json[is_Success],
+        isSuccess: json[param.is_Success],
         entities: List<BloodPressureEntity>.from(
-            json[strentities].map((x) => BloodPressureEntity.fromJson(x))),
+            json[param.strentities].map((x) => BloodPressureEntity.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        is_Success: isSuccess,
-        strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
+        param.is_Success: isSuccess,
+        param.strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
       };
 }
 
 class BloodPressureEntity {
   BloodPressureEntity({
-    this.lastsyncdatetime,
+    // this.id,
+    this.startDateTime,
+    this.endDateTime,
     this.systolic,
     this.diastolic,
-    this.source,
   });
 
-  DateTime lastsyncdatetime;
+  // String id;
+  DateTime startDateTime;
+  DateTime endDateTime;
   int systolic;
   int diastolic;
-  String source;
 
   factory BloodPressureEntity.fromJson(Map<String, dynamic> json) =>
       BloodPressureEntity(
-        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
-        systolic: json[strParamSystolic],
-        diastolic: json[strParamDiastolic],
-        source: json[strsourcetype],
+        // id: json["id"],
+        startDateTime: DateTime.parse(json[param.strsyncStartDate]),
+        endDateTime: DateTime.parse(json[param.strsyncEndDate]),
+        systolic: json[param.strParamSystolic],
+        diastolic: json[param.strParamDiastolic],
       );
 
   Map<String, dynamic> toJson() => {
-        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
-        strParamSystolic: systolic,
-        strParamDiastolic: diastolic,
-        strsourcetype: source,
+        // "id": id,
+        param.strsyncStartDate: startDateTime.toIso8601String(),
+        param.strsyncEndDate : endDateTime.toIso8601String(),
+        param.strParamSystolic: systolic,
+        param.strParamDiastolic: diastolic,
       };
 }

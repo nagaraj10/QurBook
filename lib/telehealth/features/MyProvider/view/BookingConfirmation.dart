@@ -982,14 +982,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
                   commonWidgets.getBookMarkedIcon(widget.docs[widget.i], () {
-                    providerViewModel
+                    /*providerViewModel
                         .bookMarkDoctor(!(widget.docs[widget.i].isDefault),
                             widget.docs[widget.i])
                         .then((status) {
                       if (status) {
                         setState(() {});
                       }
-                    });
+                    });*/
                   }),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],

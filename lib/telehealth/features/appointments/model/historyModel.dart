@@ -1,5 +1,5 @@
-import 'package:myfhb/telehealth/features/appointments/model/healthRecord.dart';
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 
 class History {
   History(

@@ -12,10 +12,12 @@ import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavig
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigation.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigationMain.dart';
 import 'package:myfhb/telehealth/features/Devices/view/Devices.dart';
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as AppConstants;
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
-import 'package:myfhb/telehealth/features/appointments/model/cancelModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/telehealth/features/telehealth/view/Telehealth.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
@@ -40,6 +42,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
   int _selectedIndex;
   bool _isCancelDialogShouldShown = false;
   String _bookingId;
+  String date;
   GlobalKey _bottomNavigationKey = GlobalKey();
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -134,15 +137,15 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                         _isCancelDialogShouldShown = false;
                         Navigator.of(context).pop(true);
                         CancelAppointmentModel cancelAppointment =
-                            await AppointmentsViewModel()
-                                .fetchCancelAppointment([_bookingId]);
+                            await CancelAppointmentViewModel()
+                                .fetchCancelAppointment([_bookingId],[date]);
 
-                        if (cancelAppointment.status == 200 &&
-                            cancelAppointment.success == true) {
+                        if (
+                            cancelAppointment.isSuccess == true) {
                           toast.getToast(
-                              Constants.YOUR_BOOKING_SUCCESS, Colors.green);
+                              AppConstants.YOUR_BOOKING_SUCCESS, Colors.green);
                         } else {
-                          toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
+                          toast.getToast(AppConstants.BOOKING_CANCEL, Colors.red);
                         }
                       },
                     ),

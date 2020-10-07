@@ -122,8 +122,6 @@ const String qr_placedid = 'place_id=';
 const String qr_lang_ko = 'language=ko';
 const String qr_sessiontoken = 'sessiontoken=';
 
-const String CANCEL_SOURCE = "cancellationSource";
-
 const String qr_LastSync = 'latest-sync';
 const String qr_LastMeasureSync = 'latest-measure-sync';
 const String qr_DeviceInterval = 'device-interval';
@@ -132,18 +130,11 @@ const String qr_User = 'user';
 const String qr_LastSyncGF = '?source=Google Fit';
 const String qr_LastSyncHK = '?source=Apple Health';
 
-const String RESHEDULE_SOURCE = "rescheduleSource";
-const String BOOKING_IDS = "bookingIds";
 const String BOOKING_ID = "bookingId";
 const String BOOKING_ID_CAPS = "bookingID";
 const String META_IDS = "mediaMetaIds";
 const String INCLUDE_MEDIA = "includeMedia";
-const String RESHEDULED_DATE = "rescheduledDate";
-const String SLOTMUNBER = "slotNumber";
-const String PATIENT = "patient";
-const String qr_appoinment_reshedule = "appointments/reschedule";
-const String qr_appointment_cancel = "appointments/cancellation";
-const String qr_appointment_fetch = 'appointments/getPatientDetails?patientId=';
+
 const String qr_media_meta = 'mediameta/';
 const String qr_get_media_master = '/getmediamaster/';
 
@@ -193,3 +184,7 @@ const String qr_pincode_p = 'pincode';
 
 const String qr_delink = 'de-link';
 const String qr_bookmark_healthrecord = 'bookmark-healthrecord';
+const String qr_healthOrgTypeId = '?healthOrganizationTypeId=';
+const String qr_limitSearchText = '&limit=1&searchText=';
+const String qr_sortByDesc = '&sortBy=desc&skip=0';
+const String qr_patient_update_default = 'patient-provider-mapping/';

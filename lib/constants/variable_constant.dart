@@ -162,6 +162,10 @@ const String icon_schedule = 'assets/navicons/schedule.png';
 const String icon_profile = 'assets/navicons/ic_profile_two.png';
 const String icon_more = 'assets/navicons/more.png';
 
+//For Apple Health Settings Info
+const String apple_health_settings_info = 'assets/settings/health.jpg';
+const String strUnderstood = 'Understood';
+
 //for File
 const String file_privacy = 'assets/help_docs/myfhb_privacy_policy.html';
 const String file_img_jpg = 'image/jpg';

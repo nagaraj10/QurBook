@@ -1,4 +1,5 @@
-import 'package:myfhb/constants/fhb_parameters.dart';
+import 'RefrenceValueMeta.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as param;
 
 class BloodGlucose {
   BloodGlucose({
@@ -10,42 +11,58 @@ class BloodGlucose {
   List<BloodGlucoseEntity> entities;
 
   factory BloodGlucose.fromJson(Map<String, dynamic> json) => BloodGlucose(
-        isSuccess: json[is_Success],
+        isSuccess: json[param.is_Success],
         entities: List<BloodGlucoseEntity>.from(
-            json[strentities].map((x) => BloodGlucoseEntity.fromJson(x))),
+            json[param.strentities].map((x) => BloodGlucoseEntity.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        is_Success: isSuccess,
-        strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
+        param.is_Success: isSuccess,
+        param.strentities: List<dynamic>.from(entities.map((x) => x.toJson())),
       };
 }
 
 class BloodGlucoseEntity {
   BloodGlucoseEntity({
-    this.lastsyncdatetime,
+    //this.id,
+    this.startDateTime,
+    this.endDateTime,
     this.bloodGlucoseLevel,
-    this.bgunit,
-    this.source,
+    this.bgUnit,
+    this.mealContext,
+    this.mealType,
   });
 
-  DateTime lastsyncdatetime;
+  //String id;
+  DateTime startDateTime;
+  DateTime endDateTime;
   int bloodGlucoseLevel;
-  String bgunit;
-  String source;
+  RefrenceValueMeta bgUnit;
+  RefrenceValueMeta mealContext;
+  RefrenceValueMeta mealType;
 
   factory BloodGlucoseEntity.fromJson(Map<String, dynamic> json) =>
       BloodGlucoseEntity(
-        lastsyncdatetime: DateTime.parse(json[strlastSyncDateTime]),
-        bloodGlucoseLevel: json[strParamBGLevel],
-        bgunit: json[strParamBGUnit],
-        source: json[strsourcetype],
+        //id: json["id"],
+        startDateTime: DateTime.parse(json[param.strsyncStartDate]),
+        endDateTime: DateTime.parse(json[param.strsyncEndDate]),
+        bloodGlucoseLevel: json[param.strParamBGLevel],
+        bgUnit: RefrenceValueMeta.fromJson(json[param.strParamBGUnit]),
+        mealContext: (json[param.strParamBGMealContext] == null)
+            ? null
+            : RefrenceValueMeta.fromJson(json[param.strParamBGMealContext]),
+        mealType: (json[param.strParamBGMealType] == null)
+            ? null
+            : RefrenceValueMeta.fromJson(json[param.strParamBGMealType]),
       );
 
   Map<String, dynamic> toJson() => {
-        strlastSyncDateTime: lastsyncdatetime.toIso8601String(),
-        strParamBGLevel: bloodGlucoseLevel,
-        strParamBGUnit: bgunit,
-        strsourcetype: source,
+        //"id": id,
+        param.strsyncStartDate: startDateTime.toIso8601String(),
+        param.strsyncEndDate: endDateTime.toIso8601String(),
+        param.strParamBGLevel: bloodGlucoseLevel,
+        param.strParamBGUnit: bgUnit.toJson(),
+        param.strParamBGMealContext : mealContext.toJson(),
+        param.strParamBGMealType : mealType.toJson(),
       };
 }

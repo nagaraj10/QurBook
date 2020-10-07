@@ -340,6 +340,14 @@ const String is_Success = "isSuccess";
 const String strsourcetype = "sourceType";
 
 //Data Params for device readings
+//DataCollections
+const String strBloodPressureCollection = "bloodPressureCollection";
+const String strBloodGlucoseCollection = "bloodGlucoseCollection";
+const String strBodyTemperatureCollection = "bodyTemperatureCollection";
+const String strHearRateCollection = "heartRateCollection";
+const String strOxygenCollection = "oxygenSaturationCollection";
+const String strWeightCollection = "bodyWeightCollection";
+
 //BP
 const String strBPMonitor = "BP Monitor";
 const String strDataTypeBP = "Blood Pressure";
@@ -494,6 +502,7 @@ const String strIsFollowUpFee = "isFollowUpFee";
 const String strAppointmentInfo = "appointmentInfo";
 const String strPlannedFollowupDate = "plannedFollowupDate";
 const String strPaymentInfo = "paymentInfo";
+
 //Add Family User Info
 const String make_a_choice = 'Make a Choice!';
 
@@ -530,7 +539,7 @@ const String warning = 'warning!';
 const String Yes = 'Yes';
 const String No = 'No';
 
-const String id = 'id';
+const String id = 'doctorId';
 const String healthOrganization = 'healthOrganization';
 
 //for the new models
@@ -566,3 +575,7 @@ const String strPaymentGateWayDetail = 'paymentGatewayDetail';
 const String strReferenceId = 'doctorReferenceId';
 const String strhealthRecordCategory = 'healthRecordCategory';
 const String strhealthRecordType = 'healthRecordType';
+const String strDoctorReferenceId = 'doctorReferenceId';
+const String strHealthOrganizationId = 'healthOrganizationId';
+const String strHealthOrganizationReferenceId = 'healthOrganizationReferenceId';
+const String strpatient = 'patient';

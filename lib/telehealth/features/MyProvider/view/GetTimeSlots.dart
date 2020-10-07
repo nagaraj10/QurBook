@@ -13,10 +13,12 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/resheduleModel.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsViewModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleModel.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
 import 'package:path/path.dart';
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as AppointmentConstant;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:provider/provider.dart';
 
 class GetTimeSlots extends StatelessWidget {
   SlotsResultModel dateSlotTimingsObj;
@@ -27,7 +29,6 @@ class GetTimeSlots extends StatelessWidget {
   bool isReshedule;
   FlutterToast toast = new FlutterToast();
   List<String> bookingIds = [];
-  AppointmentsViewModel appointmentsViewModel = AppointmentsViewModel();
 
   GetTimeSlots(
       {this.dateSlotTimingsObj,
@@ -74,8 +75,12 @@ class GetTimeSlots extends StatelessWidget {
                   String selectedSlot = dateSlotTimingsObj
                       .sessions[rowPosition].slots[itemPosition].slotNumber
                       .toString();
-                  resheduleAppoitment(context, [doctorsData], selectedSlot,
-                      selectedDate.toString().substring(0, 10));
+                  resheduleAppoitment(
+                      context,
+                      [doctorsData],
+                      selectedSlot,
+                      selectedDate.toString().substring(0, 10),
+                      doctorsData.doctorSessionId);
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
                     if (doctorsData == null) {
@@ -124,35 +129,37 @@ class GetTimeSlots extends StatelessWidget {
   }
 
   resheduleAppoitment(BuildContext context, List<History> appointments,
-      String slotNumber, String resheduledDate) {
-    resheduleAppointment(context, appointments, slotNumber, resheduledDate)
+      String slotNumber, String resheduledDate, String doctorSessionId) {
+    resheduleAppointment(
+            context, appointments, slotNumber, resheduledDate, doctorSessionId)
         .then((value) {
       Navigator.pop(context);
       if (value == null) {
-        toast.getToast(Constants.SLOT_NOT_AVAILABLE, Colors.red);
-      } else if (value.status == 200 &&
-          value.success == true &&
-          value.message.contains('success')) {
-        toast.getToast(Constants.YOUR_RESHEDULE_SUCCESS, Colors.green);
-      } else if (value.message.contains('not available')) {
-        toast.getToast(Constants.SLOT_NOT_AVAILABLE, Colors.red);
+        toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
+      } else if (value.isSuccess == true &&
+          value.message.contains(AppointmentConstant.resheduled)) {
+        toast.getToast(AppointmentConstant.YOUR_RESHEDULE_SUCCESS, Colors.green);
+      } else if (value.message.contains(AppointmentConstant.NOT_AVAILABLE)) {
+        toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
       } else {
-        toast.getToast(Constants.RESHEDULE_CANCEL, Colors.red);
+        toast.getToast(AppointmentConstant.RESHEDULE_CANCEL, Colors.red);
       }
     });
   }
 
-  Future<Reshedule> resheduleAppointment(
+  Future<ResheduleModel> resheduleAppointment(
       BuildContext context,
       List<History> appointments,
       String slotNumber,
-      String resheduledDate) async {
+      String resheduledDate,
+      String doctorSessionId) async {
     for (int i = 0; i < appointments.length; i++) {
       bookingIds.add(appointments[i].bookingId);
     }
-    Reshedule resheduleAppointment =
-        await appointmentsViewModel.resheduleAppointment(
-            bookingIds, slotNumber.toString(), resheduledDate);
+    ResheduleAppointmentViewModel reshedule= Provider.of<ResheduleAppointmentViewModel>(context, listen: false);
+    ResheduleModel resheduleAppointment =
+        await reshedule.resheduleAppointment(
+            bookingIds, slotNumber.toString(), resheduledDate, doctorSessionId);
     return resheduleAppointment;
   }
 }

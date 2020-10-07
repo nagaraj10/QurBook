@@ -949,7 +949,9 @@ class CommonUtil {
     DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
 
     if (PreferenceUtil.getStringValue(Constants.activateGF) ==
-        variable.strtrue) {
+            variable.strtrue &&
+        PreferenceUtil.getStringValue(Constants.isFirstTym) ==
+            variable.strFalse) {
       _deviceDataHelper.syncGoogleFit();
     } else if (PreferenceUtil.getStringValue(Constants.activateHK) ==
         variable.strtrue) {
