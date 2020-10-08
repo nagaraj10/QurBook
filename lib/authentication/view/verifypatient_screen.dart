@@ -33,7 +33,14 @@ import 'package:myfhb/authentication/model/resend_otp_model.dart'
 import 'package:myfhb/src/ui/Dashboard.dart';
 
 class VerifyPatient extends StatefulWidget {
-  VerifyPatient({this.PhoneNumber, this.from,this.fName,this.lName,this.mName,this.isPrimaryNoSelected,this.relationship});
+  VerifyPatient(
+      {this.PhoneNumber,
+      this.from,
+      this.fName,
+      this.lName,
+      this.mName,
+      this.isPrimaryNoSelected,
+      this.relationship});
   final String PhoneNumber;
   final String from;
   final String fName;
@@ -228,8 +235,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
         VerifyOTPModel params = VerifyOTPModel(
             phoneNumber: widget.PhoneNumber,
             verificationCode: OtpController.text);
-        AddFamilyOTPResponse response = await authViewModel.verifyMyOTP(params.toJson());
-        if(response.isSuccess){
+        AddFamilyOTPResponse response =
+            await authViewModel.verifyMyOTP(params.toJson());
+        if (response.isSuccess) {
           Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                   arguments: AddFamilyUserInfoArguments(
                       fromClass: CommonConstants.add_family,
@@ -238,11 +246,10 @@ class _VerifyPatientState extends State<VerifyPatient> {
                       enteredLastName: widget.lName,
                       relationShip: widget.relationship,
                       isPrimaryNoSelected: widget.isPrimaryNoSelected,
-                      addFamilyUserInfo: response.result != null
-                          ? response.result
-                          : ''))
+                      addFamilyUserInfo:
+                          response.result != null ? response.result : ''))
               .then((value) {});
-        }else{
+        } else {
           //something went wrong.
           Navigator.pop(context);
           toast.getToast(response.message, Colors.red);

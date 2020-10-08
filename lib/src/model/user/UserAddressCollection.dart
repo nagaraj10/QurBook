@@ -16,10 +16,10 @@ class UserAddressCollection3 {
   AddressType addressType;
   City city;
   State state;
+  String addressID;
 
   UserAddressCollection3(
-      {
-      this.id,
+      {this.id,
       this.addressLine1,
       this.addressLine2,
       this.pincode,
@@ -30,7 +30,8 @@ class UserAddressCollection3 {
       this.createdBy,
       this.addressType,
       this.city,
-      this.state});
+      this.state,
+      this.addressID});
 
   UserAddressCollection3.fromJson(Map<String, dynamic> json) {
     id = json['id'];
