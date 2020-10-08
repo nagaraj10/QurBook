@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
-
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
@@ -317,11 +316,11 @@ class _MyFHBState extends State<MyFHB> {
         debugShowCheckedModeBanner: false,
         navigatorKey: Get.key,
         builder: (BuildContext context, Widget widget) {
-         ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
-           return buildError(context, errorDetails);
-         };
-         return widget;
-       },
+          ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+            return buildError(context, errorDetails);
+          };
+          return widget;
+        },
       ),
     );
   }
@@ -450,7 +449,7 @@ class _MyFHBState extends State<MyFHB> {
               'Wifi Name: $wifiName\n'
               'Wifi BSSID: $wifiBSSID\n'
               'Wifi IP: $wifiIP\n';
-         // toast.getToast(wifi_connected, Colors.green);
+          // toast.getToast(wifi_connected, Colors.green);
         });
         break;
       case ConnectivityResult.mobile:
