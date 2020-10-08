@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/DeviceReadings.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -72,7 +71,7 @@ class RecordInfoCard {
                         metaInfo.hospital != null
                             ? Text(
                                 toBeginningOfSentenceCase(
-                                    metaInfo.hospital.name),
+                                    metaInfo.hospital.healthOrganizationName),
                                 softWrap: false,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(fontSize: 13),
@@ -151,10 +150,10 @@ class RecordInfoCard {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         metaInfo.hospital != null
-                            ? metaInfo.hospital.name != null
+                            ? metaInfo.hospital.healthOrganizationName != null
                                 ? Text(
-                                    toBeginningOfSentenceCase(
-                                        metaInfo.hospital.name),
+                                    toBeginningOfSentenceCase(metaInfo
+                                        .hospital.healthOrganizationName),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 14),
@@ -224,27 +223,30 @@ class RecordInfoCard {
             Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                /*  CircleAvatar(
+                CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.grey[200],
-                  backgroundImage: metaInfo.laboratory != null
+                  backgroundImage:
+                      /*metaInfo.laboratory != null
                       ? metaInfo.laboratory.logoThumbnail != null
                           ? NetworkImage(Constants.BASE_URL +
                               metaInfo.laboratory.logoThumbnail)
                           : null
-                      : null,
-                ),*/
+                      : null
+                      :*/
+                      null,
+                ),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        /*metaInfo.laboratory != null
-                            ? metaInfo.laboratory.name != null
+                        metaInfo.laboratory != null
+                            ? metaInfo.laboratory.healthOrganizationName != null
                                 ? Text(
-                                    toBeginningOfSentenceCase(
-                                        metaInfo.laboratory.name),
+                                    toBeginningOfSentenceCase(metaInfo
+                                        .laboratory.healthOrganizationName),
                                     style: TextStyle(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 14),
@@ -256,7 +258,7 @@ class RecordInfoCard {
                                   )
                             : SizedBox(
                                 height: 0,
-                              ),*/
+                              ),
                         metaInfo.doctor != null
                             ? Text(
                                 toBeginningOfSentenceCase(metaInfo.doctor.name),
@@ -325,11 +327,11 @@ class RecordInfoCard {
             SizedBox(
               height: 10,
             ),
-            /* metaInfo.deviceReadings != null
+            metaInfo.deviceReadings != null
                 ? getDeviceReadings(metaInfo.deviceReadings)
                 : Container(
                     height: 0,
-                  ),*/
+                  ),
             Text(
               metaInfo.memoText,
               style: TextStyle(fontSize: 13),

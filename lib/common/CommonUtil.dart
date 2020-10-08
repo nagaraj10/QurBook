@@ -39,13 +39,10 @@ import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/CategoryInfo.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Health/DeviceReadings.dart';
-import 'package:myfhb/src/model/Health/Laboratory.dart';
 
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
-import 'package:myfhb/src/model/Health/MetaInfo.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
@@ -95,11 +92,11 @@ class CommonUtil {
       if (mediaMetaInfo.metadata.healthRecordType.description
           .contains(categoryDescription)) {
         if (categoryDescription == CommonConstants.categoryDescriptionDevice) {
-          /* if (mediaMetaInfo.metaInfo.deviceReadings != null &&
-              mediaMetaInfo.metaInfo.deviceReadings.length > 0 &&
-              mediaMetaInfo.metaInfo.fileName != null) {
+          if (mediaMetaInfo.metadata.deviceReadings != null &&
+              mediaMetaInfo.metadata.deviceReadings.length > 0 &&
+              mediaMetaInfo.metadata.fileName != null) {
             mediaMetaInfoObj.add(mediaMetaInfo);
-          }*/
+          }
         } else {
           mediaMetaInfoObj.add(mediaMetaInfo);
         }
@@ -242,7 +239,7 @@ class CommonUtil {
 
     List<dynamic> imageList = new List();
     if (data.healthRecordCollection.isNotEmpty) {
-      List<MediaMasterIds> mediMasterId =
+      List<HealthRecordCollection> mediMasterId =
           new CommonUtil().getMetaMasterIdList(data);
       int k = 0;
       for (int i = 0; i < mediMasterId.length; i++) {
@@ -317,13 +314,13 @@ class CommonUtil {
         });
   }
 
-  List<MediaMasterIds> getMetaMasterIdList(HealthResult data) {
+  List<HealthRecordCollection> getMetaMasterIdList(HealthResult data) {
     List<HealthRecordCollection> mediaMasterIdsList = new List();
     if (data.healthRecordCollection.length > 0) {
       for (HealthRecordCollection mediaMasterIds
           in data.healthRecordCollection) {
-        if (mediaMasterIds.fileType == "image/jpg" ||
-            mediaMasterIds.fileType == "image/png")
+        if (mediaMasterIds.fileType == ".jpg" ||
+            mediaMasterIds.fileType == ".png")
           mediaMasterIdsList.add(mediaMasterIds);
       }
     }
@@ -626,7 +623,7 @@ class CommonUtil {
       } else {
         doctor = null;
       }
-
+      /*
       Hospital hospital;
 
       if (dataObj.metaInfo.hospital != null) {
@@ -656,7 +653,7 @@ class CommonUtil {
 
       if (dataObj.metaInfo.laboratory != null) {
         laboratory = new Laboratory(
-          zipcode: dataObj.metaInfo.laboratory.zipcode,
+          pincode: dataObj.metaInfo.laboratory.zipcode,
           website: dataObj.metaInfo.laboratory.website,
           name: dataObj.metaInfo.laboratory.name,
           longitude: dataObj.metaInfo.laboratory.longitude,
@@ -677,7 +674,7 @@ class CommonUtil {
 
       List<DeviceReadings> deviceReadings = new List();
 
-      if (dataObj.metaInfo.deviceReadings != null &&
+     if (dataObj.metaInfo.deviceReadings != null &&
           dataObj.metaInfo.deviceReadings.length > 0) {
         for (DeviceReadings deviceReadingsObj
             in dataObj.metaInfo.deviceReadings) {
@@ -719,7 +716,7 @@ class CommonUtil {
           isDraft: dataObj.isDraft,
           mediaMasterIds: mediaMasterIdsList);
 
-      mediaMetaInfoList.add(mediaMetaInfo);
+      mediaMetaInfoList.add(mediaMetaInfo);*/
     }
 
     //completeData = new HealthRecordList(mediaMetaInfo: mediaMetaInfoList);
@@ -749,14 +746,15 @@ class CommonUtil {
     return categoryDataList;
   }
 
-  String getMediaMasterIDForAudioFileType(
+  HealthRecordCollection getMediaMasterIDForAudioFileType(
       List<HealthRecordCollection> mediaMasterIdsList) {
-    String mediaMasterId = '';
+    HealthRecordCollection mediaMasterId;
 
     for (HealthRecordCollection mediaMasterIdsObj in mediaMasterIdsList) {
       if (mediaMasterIdsObj.fileType == Constants.audioFileType ||
+          mediaMasterIdsObj.fileType == Constants.audioFileAACType ||
           mediaMasterIdsObj.fileType == Constants.audioFileTypeAppStream) {
-        mediaMasterId = mediaMasterIdsObj.id;
+        mediaMasterId = mediaMasterIdsObj;
       }
     }
 

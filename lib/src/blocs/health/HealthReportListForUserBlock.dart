@@ -276,4 +276,18 @@ class HealthReportListForUserBlock implements BaseBloc {
     }
     return healthRecordSuccess;
   }
+
+  Future<HealthRecordSuccess> updateHealthRecords(String jsonData,
+      List<String> imagePaths, String audioPath, String metaId) async {
+    HealthRecordSuccess healthRecordSuccess;
+    healthRecordSink.add(ApiResponse.loading(variable.strSubmitting));
+    try {
+      healthRecordSuccess = await _healthReportListForUserRepository
+          .updateHealthRecords(jsonData, imagePaths, audioPath, metaId);
+      // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
+    } catch (e) {
+      healthRecordSink.add(ApiResponse.error(e.toString()));
+    }
+    return healthRecordSuccess;
+  }
 }

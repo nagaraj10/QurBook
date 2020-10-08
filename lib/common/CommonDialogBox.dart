@@ -73,6 +73,8 @@ class CommonDialogBox {
   bool modeOfSave;
   MediaResult selectedMediaData;
 
+  String metaId;
+
   List<MediaResult> mediaDataAry = PreferenceUtil.getMediaType();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
@@ -289,9 +291,9 @@ class CommonDialogBox {
 
         doctorsData = mediaMetaInfo.metadata.doctor;
 
-        /* labData = mediaMetaInfo.metadata.laboratory != null
+        labData = mediaMetaInfo.metadata.laboratory != null
             ? mediaMetaInfo.metadata.laboratory
-            : null;*/
+            : null;
         hospitalData = mediaMetaInfo.metadata.hospital != null
             ? mediaMetaInfo.metadata.hospital
             : null;
@@ -1527,13 +1529,14 @@ class CommonDialogBox {
         } else if (results.containsKey(Constants.keyHospital)) {
           hospitalData = json.decode(results[Constants.keyHospital]);
 
-          hospitalName.text = hospitalData[parameters.strName];
-          hospital.text = hospitalData[parameters.strName];
+          hospitalName.text =
+              hospitalData[parameters.strHealthOrganizationName];
+          hospital.text = hospitalData[parameters.strHealthOrganizationName];
         } else if (results.containsKey(Constants.keyLab)) {
           labData = json.decode(results[Constants.keyLab]);
 
-          labName.text = labData[parameters.strName];
-          lab.text = labData[parameters.strName];
+          labName.text = labData[parameters.strHealthOrganizationName];
+          lab.text = labData[parameters.strHealthOrganizationName];
         }
         onTextFinished();
       }
@@ -1724,27 +1727,59 @@ class CommonDialogBox {
 
       postMainData[parameters.strmetaInfo] = postMediaData;
       if (modeOfSave) {
-        postMainData[parameters.strIsActive] = true;
+        postMainData[parameters.strIsActive] = false;
       }
 
       var params = json.encode(postMediaData);
       print(params);
 
-      _healthReportListForUserBlock
-          .createHealtRecords(params.toString(), imagePath, audioPathMain)
-          .then((value) {
-        if (value.isSuccess) {
-          _healthReportListForUserBlock.getHelthReportLists().then((value) {
-            PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
-            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+      if (modeOfSave) {
+        _healthReportListForUserBlock
+            .updateHealthRecords(
+                params.toString(), imagePath, audioPathMain, metaInfoId)
+            .then((value) {
+          if (value.isSuccess) {
+            _healthReportListForUserBlock.getHelthReportLists().then((value) {
+              PreferenceUtil.saveCompleteData(
+                  Constants.KEY_COMPLETE_DATA, value);
 
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          });
-        } else {
-          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
-        }
-      });
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+            });
+          } else {
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          }
+        });
+      } else {
+        _healthReportListForUserBlock
+            .createHealtRecords(params.toString(), imagePath, audioPathMain)
+            .then((value) {
+          if (value.isSuccess) {
+            _healthReportListForUserBlock.getHelthReportLists().then((value) {
+              PreferenceUtil.saveCompleteData(
+                  Constants.KEY_COMPLETE_DATA, value);
+              if (categoryName == Constants.STR_VOICERECORDS) {
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
+
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              } else {
+                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    .pop();
+
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              }
+            });
+          } else {
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+          }
+        });
+      }
       /*if (imagePath != null) {
         if (modeOfSave) {
           _healthReportListForUserBlock

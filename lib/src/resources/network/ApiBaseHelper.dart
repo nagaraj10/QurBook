@@ -29,7 +29,6 @@ import 'dart:async';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 
-
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
   final String _baseUrlDeviceReading = CommonUtil.BASEURL_DEVICE_READINGS;
@@ -80,8 +79,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> deleteHealthRecord(
-      String url) async {
+  Future<dynamic> deleteHealthRecord(String url) async {
     var responseJson;
     try {
       final response = await http.delete(_baseUrl + url,
@@ -929,7 +927,6 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-
   Future<dynamic> getByRecordDataType(String url, String jsonBody) async {
     var header = await headerRequest.getRequestHeader();
     var responseJson;
@@ -1099,31 +1096,68 @@ class ApiBaseHelper {
     dio.options.headers["authorization"] = authToken;
     FormData formData;
 
-    /*List<MultipartFile> multiPartFiles = new List();
     if (imagePaths != null && imagePaths.length > 0) {
-      for (String filePath in imagePaths) {
-        String fileNoun = new File(filePath).path.split('/').last;
-        var multiPartObj = await MultipartFile.fromFile(new File(filePath).path,
-            filename: fileNoun);
+      formData = new FormData.fromMap({
+        'metadata': payload,
+        'userId': userId,
+        'isBookmarked': true,
+      });
 
-        multiPartFiles.add(multiPartObj);
+      for (var image in imagePaths) {
+        File fileName = new File(image);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("fileName",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
       }
+
       if (audioPath != null && audioPath != '') {
-        String fileNoun = new File(audioPath).path.split('/').last;
-
-        var multiPartObj = await MultipartFile.fromFile(
-            new File(audioPath).path,
-            filename: fileNoun);
-
-        multiPartFiles.add(multiPartObj);
+        File fileName = new File(audioPath);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("fileName",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
       }
-    }*/
+    } else {
+      formData = new FormData.fromMap(
+          {'metadata': payload, 'userId': userId, 'isBookmarked ': true});
+    }
+    var response;
+    try {
+      response = await dio.post(_baseUrl + url, data: formData);
+
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+        return response;
+      } else {
+        return response;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+      print(e);
+      return response;
+    }
+  }
+
+  Future<dynamic> updateHealthRecords(String url, String payload,
+      List<String> imagePaths, String audioPath, String metaId) async {
+    String authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    Dio dio = new Dio();
+    dio.options.headers['content-type'] = 'multipart/form-data';
+    dio.options.headers["authorization"] = authToken;
+    FormData formData;
 
     if (imagePaths != null && imagePaths.length > 0) {
       formData = new FormData.fromMap({
         'metadata': payload,
         'userId': userId,
         'isBookmarked': true,
+        'id': metaId,
       });
 
       for (var image in imagePaths) {
@@ -1144,12 +1178,16 @@ class ApiBaseHelper {
         ]);
       }*/
     } else {
-      formData = new FormData.fromMap(
-          {'metadata': payload, 'userId': userId, 'isBookmarked ': true});
+      formData = new FormData.fromMap({
+        'metadata': payload,
+        'userId': userId,
+        'isBookmarked ': false,
+        'id': metaId,
+      });
     }
     var response;
     try {
-      response = await dio.post(_baseUrl + url, data: formData);
+      response = await dio.put(_baseUrl + url, data: formData);
 
       if (response.statusCode == 200) {
         print(response.data.toString());

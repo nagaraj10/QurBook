@@ -184,4 +184,25 @@ class HealthReportListForUserRepository {
         query.qr_health_record, jsonString, imagePaths, audioPath);
     return HealthRecordSuccess.fromJson(response.data);
   }
+
+  Future<HealthRecordSuccess> updateHealthRecords(String jsonString,
+      List<String> imagePaths, String audioPath, String metaId) async {
+    String id;
+
+    try {
+      String familyId =
+          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+      if (familyId.length > 0) {
+        id = familyId;
+      } else {
+        id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      }
+    } catch (e) {
+      id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    }
+
+    var response = await _helper.updateHealthRecords(
+        query.qr_health_record, jsonString, imagePaths, audioPath, metaId);
+    return HealthRecordSuccess.fromJson(response.data);
+  }
 }

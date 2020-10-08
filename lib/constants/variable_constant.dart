@@ -564,6 +564,7 @@ const String strNoDoctordata = 'No Doctor List Available';
 const String strNoAppointments = 'No Appoinments Available';
 
 const String strNoDataAvailable = 'Unable To load';
+const String strHealthOrganizationName = 'healthOrganizationName';
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

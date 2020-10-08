@@ -579,3 +579,5 @@ const String strDoctorReferenceId = 'doctorReferenceId';
 const String strHealthOrganizationId = 'healthOrganizationId';
 const String strHealthOrganizationReferenceId = 'healthOrganizationReferenceId';
 const String strpatient = 'patient';
+
+const String strHealthOrganizationName = 'healthOrganizationName';

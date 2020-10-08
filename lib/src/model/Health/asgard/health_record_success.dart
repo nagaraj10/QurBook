@@ -182,7 +182,7 @@ class HealthRecordCategory {
   bool isDisplay;
   bool isActive;
   String createdOn;
-  Null lastModifiedOn;
+  String lastModifiedOn;
 
   HealthRecordCategory(
       {this.id,
@@ -228,7 +228,7 @@ class HealthRecordType {
   bool isAiTranscription;
   bool isActive;
   String createdOn;
-  Null lastModifiedOn;
+  String lastModifiedOn;
 
   HealthRecordType(
       {this.id,
@@ -269,16 +269,16 @@ class HealthRecordType {
 }
 
 class Doctor {
-  Null doctorId;
-  Null userId;
+  String doctorId;
+  String userId;
   String name;
   String firstName;
   String lastName;
-  Null specialization;
+  String specialization;
   String doctorReferenceId;
   String addressLine1;
   String addressLine2;
-  Null profilePicThumbnailUrl;
+  String profilePicThumbnailUrl;
   bool isTelehealthEnabled;
   bool isMciVerified;
 
@@ -333,14 +333,14 @@ class Hospital {
   String id;
   String name;
   String addressLine1;
-  Null addressLine2;
-  Null city;
-  Null state;
-  Null pincode;
+  String addressLine2;
+  String city;
+  String state;
+  String pincode;
   bool isReferenced;
   bool isActive;
   String createdOn;
-  Null lastModifiedOn;
+  String lastModifiedOn;
   HealthOrganizationType healthOrganizationType;
   CreatedBy createdBy;
 
@@ -411,7 +411,7 @@ class HealthOrganizationType {
   bool isActive;
   String createdBy;
   String createdOn;
-  Null lastModifiedOn;
+  String lastModifiedOn;
 
   HealthOrganizationType(
       {this.id,
@@ -456,29 +456,29 @@ class CreatedBy {
   String name;
   String userName;
   String firstName;
-  Null middleName;
+  String middleName;
   String lastName;
-  Null gender;
-  Null dateOfBirth;
-  Null bloodGroup;
-  Null countryCode;
-  Null profilePicUrl;
-  Null profilePicThumbnailUrl;
-  Null isTempUser;
-  Null isVirtualUser;
-  Null isMigrated;
-  Null isClaimed;
+  String gender;
+  String dateOfBirth;
+  String bloodGroup;
+  String countryCode;
+  String profilePicUrl;
+  String profilePicThumbnailUrl;
+  bool isTempUser;
+  bool isVirtualUser;
+  bool isMigrated;
+  bool isClaimed;
   bool isIeUser;
-  Null isEmailVerified;
+  bool isEmailVerified;
   bool isCpUser;
-  Null communicationPreferences;
-  Null medicalPreferences;
+  String communicationPreferences;
+  String medicalPreferences;
   bool isSignedIn;
-  Null isActive;
-  Null createdBy;
+  bool isActive;
+  String createdBy;
   String createdOn;
-  Null lastModifiedBy;
-  Null lastModifiedOn;
+  String lastModifiedBy;
+  String lastModifiedOn;
 
   CreatedBy(
       {this.id,

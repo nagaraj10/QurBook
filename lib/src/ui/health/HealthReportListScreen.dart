@@ -196,8 +196,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                               : false,
                           child: Text(
                             mediaMetaInfoObj.metadata.hospital != null
-                                ? toBeginningOfSentenceCase(
-                                    mediaMetaInfoObj.metadata.hospital.name)
+                                ? toBeginningOfSentenceCase(mediaMetaInfoObj
+                                    .metadata.hospital.healthOrganizationName)
                                 : '',
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,

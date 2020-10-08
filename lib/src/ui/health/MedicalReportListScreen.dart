@@ -152,7 +152,8 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
           child: Row(
             children: <Widget>[
               ClipOval(
-                  child:/* data.metadata.hospital != null
+                  child:
+                      /* data.metadata.hospital != null
                       ? data.metadata.hospital.l != null
                           ? Image.network(
                               Constants.BASE_URL +
@@ -160,26 +161,27 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                               height: 50,
                               width: 50,
                             )
-                          :*/ Container(
-                              padding: EdgeInsets.all(10),
-                              child: Image.network(
-                                Constants.BASE_URL +
-                                    data.metadata.healthRecordCategory.logo,
-                                height: 30,
-                                width: 30,
-                                color: Color(
-                                  CommonUtil().getMyPrimaryColor(),
-                                ),
-                              ),
-                              color: const Color(
-                                fhbColors.bgColorContainer,
-                              ),
-                            )
-                      /*: Container(
+                          :*/
+                      Container(
+                padding: EdgeInsets.all(10),
+                child: Image.network(
+                  Constants.BASE_URL + data.metadata.healthRecordCategory.logo,
+                  height: 30,
+                  width: 30,
+                  color: Color(
+                    CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+                color: const Color(
+                  fhbColors.bgColorContainer,
+                ),
+              )
+                  /*: Container(
                           height: 50,
                           width: 50,
                           color: Colors.grey[200],
-                        )*/),
+                        )*/
+                  ),
               SizedBox(width: 20),
               Expanded(
                 flex: 6,
@@ -189,9 +191,10 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                   children: <Widget>[
                     data.metadata.hospital != null
                         ? Text(
-                            data.metadata.hospital.name != null
-                                ? toBeginningOfSentenceCase(
-                                    data.metadata.hospital.name)
+                            data.metadata.hospital.healthOrganizationName !=
+                                    null
+                                ? toBeginningOfSentenceCase(data
+                                    .metadata.hospital.healthOrganizationName)
                                 : '',
                             style: TextStyle(fontWeight: FontWeight.w500),
                           )

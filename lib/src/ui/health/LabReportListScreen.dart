@@ -151,46 +151,38 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
         ),
         child: Row(
           children: <Widget>[
-            /* mediaMetaInfo.metaInfo.laboratory != null
-                ? ClipOval(
-                    child: (mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
-                                null &&
-                            mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
-                                'null' &&
-                            mediaMetaInfo.metaInfo.laboratory.logoThumbnail !=
-                                '')
-                        ? Image.network(
-                            Constants.BASE_URL +
-                                mediaMetaInfo.metaInfo.laboratory.logoThumbnail,
-                            width: 50,
-                            height: 50,
-                          )
-                        : mediaMetaInfo.metadata.healthRecordCategory.logo !=
-                                null
-                            ? Container(
-                                width: 50,
-                                height: 50,
-                                padding: EdgeInsets.all(10),
-                                child: Image.network(
-                                  Constants.BASE_URL +
-                                      mediaMetaInfo
-                                          .metadata.healthRecordCategory.logo,
-                                  color: Color(
-                                    CommonUtil().getMyPrimaryColor(),
-                                  ),
-                                ),
-                                color: const Color(
-                                  fhbColors.bgColorContainer,
-                                ),
-                              )
-                            : Container(
-                                width: 50,
-                                height: 50,
-                              ))
-                : Container(
-                    width: 50,
-                    height: 50,
-                  ),*/
+            ClipOval(
+                child:
+                    /* data.metadata.hospital != null
+                      ? data.metadata.hospital.l != null
+                          ? Image.network(
+                              Constants.BASE_URL +
+                                  data.metadata.hospital.logoThumbnail,
+                              height: 50,
+                              width: 50,
+                            )
+                          :*/
+                    Container(
+              padding: EdgeInsets.all(10),
+              child: Image.network(
+                Constants.BASE_URL +
+                    mediaMetaInfo.metadata.healthRecordCategory.logo,
+                height: 30,
+                width: 30,
+                color: Color(
+                  CommonUtil().getMyPrimaryColor(),
+                ),
+              ),
+              color: const Color(
+                fhbColors.bgColorContainer,
+              ),
+            )
+                /*: Container(
+                          height: 50,
+                          width: 50,
+                          color: Colors.grey[200],
+                        )*/
+                ),
             SizedBox(width: 20),
             Expanded(
               flex: 6,
@@ -198,15 +190,15 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  /*Text(
-                    mediaMetaInfo.metaInfo.laboratory.name != null
-                        ? toBeginningOfSentenceCase(
-                            mediaMetaInfo.metaInfo.laboratory.name)
+                  Text(
+                    mediaMetaInfo.metadata.laboratory != null
+                        ? toBeginningOfSentenceCase(mediaMetaInfo
+                            .metadata.laboratory.healthOrganizationName)
                         : '',
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontWeight: FontWeight.w500),
-                  ),*/
+                  ),
                   Text(
                     mediaMetaInfo.metadata.doctor != null
                         ? toBeginningOfSentenceCase(
