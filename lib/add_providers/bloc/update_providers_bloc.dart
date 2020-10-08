@@ -121,7 +121,7 @@ class UpdateProvidersBloc implements BaseBloc {
     UpdateProvidersId updateProvidersId;
     try {
       updateProvidersId = await updateProvidersRepository
-          .updateHospitalsIdWithUserDetails(providerId, isPreferred);
+          .updateHospitalsIdWithUserDetails(providerId, isPreferred,providerReferenceId);
       hospitalsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       hospitalsSink.add(ApiResponse.error(e.toString()));
@@ -137,7 +137,7 @@ class UpdateProvidersBloc implements BaseBloc {
     UpdateProvidersId updateProvidersId;
     try {
       updateProvidersId = await updateProvidersRepository
-          .updateLabsIdWithUserDetails(providerId, isPreferred);
+          .updateLabsIdWithUserDetails(providerId, isPreferred,providerReferenceId);
       labsSink.add(ApiResponse.completed(updateProvidersId));
     } catch (e) {
       labsSink.add(ApiResponse.error(e.toString()));

@@ -13,7 +13,7 @@ class FetchHealthKitData {
       bool ret = await Health.requestAuthorization();
       return ret;
     } catch (e) {
-      throw "Authorization failed with error $e";
+      throw "HealthKit activation failed with error $e";
     }
   }
 
@@ -53,7 +53,7 @@ class FetchHealthKitData {
           return params;
         }
       } catch (exception) {
-        throw "Unable to fetch weight from Hk $exception";
+        throw "Unable to fetch weight from HealthKit $exception";
       }
     }
   }
@@ -94,7 +94,7 @@ class FetchHealthKitData {
           return params;
         }
       } catch (exception) {
-        print(exception.toString());
+        throw "Unable to fetch Heart rate from HealthKit $exception";
       }
     }
   }
@@ -142,7 +142,7 @@ class FetchHealthKitData {
           return params;
         }
       } catch (e) {
-        print(e.toString());
+        throw "Unable to fetch Blood pressure from HealthKit $e";
       }
     }
   }
@@ -185,7 +185,9 @@ class FetchHealthKitData {
           String params = json.encode(healthRecord);
           return params;
         }
-      } catch (exception) {}
+      } catch (exception) {
+        throw "Unable to fetch Blood Glucose from HealthKit $exception";
+      }
     }
   }
 
@@ -227,7 +229,9 @@ class FetchHealthKitData {
           String params = json.encode(healthRecord);
           return params;
         }
-      } catch (exception) {}
+      } catch (exception) {
+        throw "Unable to fetch Oxygen data from HealthKit $exception";
+      }
     }
   }
 
@@ -272,7 +276,9 @@ class FetchHealthKitData {
           String params = json.encode(healthRecord);
           print(params);
         }
-      } catch (exception) {}
+      } catch (exception) {
+        throw "Unable to fetch Body Temperature from HealthKit $exception";
+      }
     }
   }
 }

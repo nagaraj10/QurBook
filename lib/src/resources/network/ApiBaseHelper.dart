@@ -18,17 +18,18 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/error_map.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
 
 import 'AppException.dart';
+import 'package:http_parser/http_parser.dart';
 
 import 'dart:async';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
-
 
 class ApiBaseHelper {
   final String _baseUrl = Constants.BASE_URL;
@@ -81,12 +82,10 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> deleteHealthRecord(
-      String url, String healthRecordData) async {
+  Future<dynamic> deleteHealthRecord(String url) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
-          body: healthRecordData,
+      final response = await http.delete(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthContent());
       responseJson = _returnResponse(response);
     } on SocketException {
@@ -206,10 +205,11 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> getHospitalListFromSearchNew(String url) async {
-    String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    //String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
     try {
+      print(CommonConstants.NEW_BASE_URL + url);
       final response = await http.get(CommonConstants.NEW_BASE_URL + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
 
@@ -223,6 +223,7 @@ class ApiBaseHelper {
   Future<dynamic> getMedicalPreferencesList(String url) async {
     var responseJson;
     try {
+      print(_baseUrl + url);
       final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
       responseJson = _returnResponse(response);
@@ -843,6 +844,7 @@ class ApiBaseHelper {
   Future<dynamic> getTelehealthDoctorsList(String url) async {
     var responseJson;
     try {
+      print(_baseUrl + url);
       final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAccept());
       responseJson = _returnResponse(response);
@@ -927,7 +929,6 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
-
 
   Future<dynamic> getByRecordDataType(String url, String jsonBody) async {
     var header = await headerRequest.getRequestHeader();
@@ -1099,6 +1100,120 @@ class ApiBaseHelper {
     } else {
       return AddressTypeResult.fromJson(
           errorMap.createErrorJsonString(response));
+  Future<dynamic> createMediaData(String url, String payload,
+      List<String> imagePaths, String audioPath) async {
+    String authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    Dio dio = new Dio();
+    dio.options.headers['content-type'] = 'multipart/form-data';
+    dio.options.headers["authorization"] = authToken;
+    FormData formData;
+
+    if (imagePaths != null && imagePaths.length > 0) {
+      formData = new FormData.fromMap({
+        'metadata': payload,
+        'userId': userId,
+        'isBookmarked': true,
+      });
+
+      for (var image in imagePaths) {
+        File fileName = new File(image);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("fileName",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }
+
+      if (audioPath != null && audioPath != '') {
+        File fileName = new File(audioPath);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("fileName",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }
+    } else {
+      formData = new FormData.fromMap(
+          {'metadata': payload, 'userId': userId, 'isBookmarked ': true});
+    }
+    var response;
+    try {
+      response = await dio.post(_baseUrl + url, data: formData);
+
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+        return response;
+      } else {
+        return response;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+      print(e);
+      return response;
+    }
+  }
+
+  Future<dynamic> updateHealthRecords(String url, String payload,
+      List<String> imagePaths, String audioPath, String metaId) async {
+    String authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    Dio dio = new Dio();
+    dio.options.headers['content-type'] = 'multipart/form-data';
+    dio.options.headers["authorization"] = authToken;
+    FormData formData;
+
+    if (imagePaths != null && imagePaths.length > 0) {
+      formData = new FormData.fromMap({
+        'metadata': payload,
+        'userId': userId,
+        'isBookmarked': true,
+        'id': metaId,
+      });
+
+      for (var image in imagePaths) {
+        File fileName = new File(image);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("fileName",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }
+
+      /*if (audioPath != null && audioPath != '') {
+        File fileName = new File(audioPath);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("fileName",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }*/
+    } else {
+      formData = new FormData.fromMap({
+        'metadata': payload,
+        'userId': userId,
+        'isBookmarked ': false,
+        'id': metaId,
+      });
+    }
+    var response;
+    try {
+      response = await dio.put(_baseUrl + url, data: formData);
+
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+        return response;
+      } else {
+        return response;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+      print(e);
+      return response;
     }
   }
 }

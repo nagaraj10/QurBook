@@ -27,9 +27,11 @@ class BookmarkRecordBloc with Validators implements BaseBloc {
 
   Future<BookmarkResponse> bookMarcRecord(
       List<String> recordId, bool bookMarkFlag) async {
-    BookmarkRequest bookmarkRequest = new BookmarkRequest();
-    bookmarkRequest.mediaMetaIds = recordId;
-    bookmarkRequest.isBookmarked = bookMarkFlag;
+    Map<String, dynamic> bookmarkRequest = new Map();
+
+    //BookmarkRequest bookmarkRequest = new BookmarkRequest();
+    bookmarkRequest['healthRecordMetaIds'] = recordId;
+    bookmarkRequest['isBookmarked'] = bookMarkFlag;
 
     var jsonString = convert.jsonEncode(bookmarkRequest);
     bookmarkSink.add(ApiResponse.loading(variable.strBookmarkRecord));
@@ -39,7 +41,6 @@ class BookmarkRecordBloc with Validators implements BaseBloc {
           await _bookmarkRepository.bookmarkRecordForIds(jsonString);
     } catch (e) {
       bookmarkSink.add(ApiResponse.error(e.toString()));
-      
     }
     return bookmarkResponse;
   }

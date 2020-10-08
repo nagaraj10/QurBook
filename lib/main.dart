@@ -185,7 +185,7 @@ class _MyFHBState extends State<MyFHB> {
     ///un comment this while on production mode for enabling security.
     //showSecurityWall();
 
-    initConnectivity();
+    //initConnectivity();
     _connectivitySubscription =
         _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
@@ -450,13 +450,13 @@ class _MyFHBState extends State<MyFHB> {
               'Wifi Name: $wifiName\n'
               'Wifi BSSID: $wifiBSSID\n'
               'Wifi IP: $wifiIP\n';
-          toast.getToast(wifi_connected, Colors.green);
+         // toast.getToast(wifi_connected, Colors.green);
         });
         break;
       case ConnectivityResult.mobile:
         setState(() {
           _internetconnection = true;
-          toast.getToast(data_connected, Colors.green);
+          //toast.getToast(data_connected, Colors.green);
         });
         break;
       case ConnectivityResult.none:

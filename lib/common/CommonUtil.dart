@@ -39,14 +39,10 @@ import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/CategoryInfo.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
-import 'package:myfhb/src/model/Health/DeviceReadings.dart';
-import 'package:myfhb/src/model/Health/Laboratory.dart';
 
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
-import 'package:myfhb/src/model/Health/MetaInfo.dart';
-import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
@@ -96,11 +92,11 @@ class CommonUtil {
       if (mediaMetaInfo.metadata.healthRecordType.description
           .contains(categoryDescription)) {
         if (categoryDescription == CommonConstants.categoryDescriptionDevice) {
-          /* if (mediaMetaInfo.metaInfo.deviceReadings != null &&
-              mediaMetaInfo.metaInfo.deviceReadings.length > 0 &&
-              mediaMetaInfo.metaInfo.fileName != null) {
+          if (mediaMetaInfo.metadata.deviceReadings != null &&
+              mediaMetaInfo.metadata.deviceReadings.length > 0 &&
+              mediaMetaInfo.metadata.fileName != null) {
             mediaMetaInfoObj.add(mediaMetaInfo);
-          }*/
+          }
         } else {
           mediaMetaInfoObj.add(mediaMetaInfo);
         }
@@ -243,7 +239,7 @@ class CommonUtil {
 
     List<dynamic> imageList = new List();
     if (data.healthRecordCollection.isNotEmpty) {
-      List<MediaMasterIds> mediMasterId =
+      List<HealthRecordCollection> mediMasterId =
           new CommonUtil().getMetaMasterIdList(data);
       int k = 0;
       for (int i = 0; i < mediMasterId.length; i++) {
@@ -318,13 +314,13 @@ class CommonUtil {
         });
   }
 
-  List<MediaMasterIds> getMetaMasterIdList(HealthResult data) {
+  List<HealthRecordCollection> getMetaMasterIdList(HealthResult data) {
     List<HealthRecordCollection> mediaMasterIdsList = new List();
     if (data.healthRecordCollection.length > 0) {
       for (HealthRecordCollection mediaMasterIds
           in data.healthRecordCollection) {
-        if (mediaMasterIds.fileType == "image/jpg" ||
-            mediaMasterIds.fileType == "image/png")
+        if (mediaMasterIds.fileType == ".jpg" ||
+            mediaMasterIds.fileType == ".png")
           mediaMasterIdsList.add(mediaMasterIds);
       }
     }
@@ -397,8 +393,12 @@ class CommonUtil {
     loginBloc.logout().then((signOutResponse) {
       // moveToLoginPage(signOutResponse);
       CommonUtil()
-          .sendDeviceToken(PreferenceUtil.getStringValue(Constants.KEY_USERID),
-          profileResult.userContactCollection3[0].email, profileResult.userContactCollection3[0].phoneNumber, token, false)
+          .sendDeviceToken(
+              PreferenceUtil.getStringValue(Constants.KEY_USERID),
+              profileResult.userContactCollection3[0].email,
+              profileResult.userContactCollection3[0].phoneNumber,
+              token,
+              false)
           .then((value) {
         moveToLoginPage(signOutResponse);
       });
@@ -413,25 +413,27 @@ class CommonUtil {
     LinkedData linkedData =
         new LinkedData(roleName: variable.Self, nickName: variable.Self);
 
-     String fullName =  myProfileResult.firstName +
-            ' ' +
-        myProfileResult.lastName;
+    String fullName =
+        myProfileResult.firstName + ' ' + myProfileResult.lastName;
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         name: fullName ?? '',
-        email: myProfileResult.userContactCollection3.length>0?myProfileResult.userContactCollection3[0].email:'',
+        email: myProfileResult.userContactCollection3.length > 0
+            ? myProfileResult.userContactCollection3[0].email
+            : '',
         dateOfBirth: myProfileResult.dateOfBirth,
         gender: myProfileResult.gender,
         bloodGroup: myProfileResult.bloodGroup,
         isVirtualUser: myProfileResult.isVirtualUser,
-        phoneNumber: myProfileResult.userContactCollection3.length>0?myProfileResult.userContactCollection3[0].phoneNumber:'',
+        phoneNumber: myProfileResult.userContactCollection3.length > 0
+            ? myProfileResult.userContactCollection3[0].phoneNumber
+            : '',
         //createdOn: myProfileResult.createdOn,
         /*profilePicThumbnail: myProfileResult.profilePicThumbnailUrl,*/
         isEmailVerified: myProfileResult.isEmailVerified,
         isTempUser: myProfileResult.isTempUser,
-        profilePicThumbnailURL:
-        myProfileResult.profilePicThumbnailUrl);
+        profilePicThumbnailURL: myProfileResult.profilePicThumbnailUrl);
 
     return new Sharedbyme(profileData: profileData, linkedData: linkedData);
   }
@@ -609,35 +611,38 @@ class CommonUtil {
       Doctor doctor;
       if (dataObj.metaInfo.doctor != null) {
         doctor = new Doctor(
-            id: dataObj.metaInfo.doctor.id,
-            city: dataObj.metaInfo.doctor.city,
-            description: dataObj.metaInfo.doctor.description,
-            email: dataObj.metaInfo.doctor.email,
-            isUserDefined: dataObj.metaInfo.doctor.isUserDefined,
-            name: dataObj.metaInfo.doctor.name,
-            specialization: dataObj.metaInfo.doctor.specialization,
-            state: dataObj.metaInfo.doctor.state);
+          doctorId: dataObj.metaInfo.doctor.id,
+          //city: dataObj.metaInfo.doctor.city,
+          //description: dataObj.metaInfo.doctor.description,
+          //email: dataObj.metaInfo.doctor.email,
+          //isUserDefined: dataObj.metaInfo.doctor.isUserDefined,
+          name: dataObj.metaInfo.doctor.name,
+          specialization: dataObj.metaInfo.doctor.specialization,
+          //state: dataObj.metaInfo.doctor.state
+        );
       } else {
         doctor = null;
       }
-
+      /*
       Hospital hospital;
 
       if (dataObj.metaInfo.hospital != null) {
         hospital = new Hospital(
           addressLine1: dataObj.metaInfo.hospital.addressLine1,
           addressLine2: dataObj.metaInfo.hospital.addressLine2,
-          branch: dataObj.metaInfo.hospital.branch,
-          city: dataObj.metaInfo.hospital.city,
+          /*  branch: dataObj.metaInfo.hospital.branch,
           description: dataObj.metaInfo.hospital.description,
           email: dataObj.metaInfo.hospital.email,
-          id: dataObj.metaInfo.hospital.id,
           isUserDefined: dataObj.metaInfo.hospital.isUserDefined,
           latitude: dataObj.metaInfo.hospital.latitude,
           logoThumbnail: dataObj.metaInfo.hospital.logoThumbnail,
           longitude: dataObj.metaInfo.hospital.longitude,
+          website: dataObj.metaInfo.hospital.website,*/
+
+          city: dataObj.metaInfo.hospital.city,
+          id: dataObj.metaInfo.hospital.id,
+
           name: dataObj.metaInfo.hospital.name,
-          website: dataObj.metaInfo.hospital.website,
           //zipcode: dataObj.metaInfo.hospital.zipcode,
         );
       } else {
@@ -648,7 +653,7 @@ class CommonUtil {
 
       if (dataObj.metaInfo.laboratory != null) {
         laboratory = new Laboratory(
-          zipcode: dataObj.metaInfo.laboratory.zipcode,
+          pincode: dataObj.metaInfo.laboratory.zipcode,
           website: dataObj.metaInfo.laboratory.website,
           name: dataObj.metaInfo.laboratory.name,
           longitude: dataObj.metaInfo.laboratory.longitude,
@@ -669,7 +674,7 @@ class CommonUtil {
 
       List<DeviceReadings> deviceReadings = new List();
 
-      if (dataObj.metaInfo.deviceReadings != null &&
+     if (dataObj.metaInfo.deviceReadings != null &&
           dataObj.metaInfo.deviceReadings.length > 0) {
         for (DeviceReadings deviceReadingsObj
             in dataObj.metaInfo.deviceReadings) {
@@ -711,7 +716,7 @@ class CommonUtil {
           isDraft: dataObj.isDraft,
           mediaMasterIds: mediaMasterIdsList);
 
-      mediaMetaInfoList.add(mediaMetaInfo);
+      mediaMetaInfoList.add(mediaMetaInfo);*/
     }
 
     //completeData = new HealthRecordList(mediaMetaInfo: mediaMetaInfoList);
@@ -741,14 +746,15 @@ class CommonUtil {
     return categoryDataList;
   }
 
-  String getMediaMasterIDForAudioFileType(
+  HealthRecordCollection getMediaMasterIDForAudioFileType(
       List<HealthRecordCollection> mediaMasterIdsList) {
-    String mediaMasterId = '';
+    HealthRecordCollection mediaMasterId;
 
     for (HealthRecordCollection mediaMasterIdsObj in mediaMasterIdsList) {
       if (mediaMasterIdsObj.fileType == Constants.audioFileType ||
+          mediaMasterIdsObj.fileType == Constants.audioFileAACType ||
           mediaMasterIdsObj.fileType == Constants.audioFileTypeAppStream) {
-        mediaMasterId = mediaMasterIdsObj.id;
+        mediaMasterId = mediaMasterIdsObj;
       }
     }
 
@@ -941,7 +947,9 @@ class CommonUtil {
     DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
 
     if (PreferenceUtil.getStringValue(Constants.activateGF) ==
-        variable.strtrue) {
+            variable.strtrue &&
+        PreferenceUtil.getStringValue(Constants.isFirstTym) ==
+            variable.strFalse) {
       _deviceDataHelper.syncGoogleFit();
     } else if (PreferenceUtil.getStringValue(Constants.activateHK) ==
         variable.strtrue) {
@@ -958,7 +966,8 @@ class CommonUtil {
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
       if (profileData != null &&
-          profileData.isSuccess && profileData.result!=null) {
+          profileData.isSuccess &&
+          profileData.result != null) {
         PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
             .then((value) {
           try {

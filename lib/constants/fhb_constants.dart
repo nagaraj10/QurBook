@@ -263,7 +263,6 @@ const String mobileNumber = '9176117878';
 const String STR_NOTES = 'Notes';
 const String STR_ONLY_ONE = 'Can attach only one record';
 
-
 //ICON for Device Reading widgets
 
 const String Devices_BP = 'assets/devices/bp_m.png';
@@ -272,7 +271,7 @@ const String Devices_OxY = 'assets/devices/pulse_oxim.png';
 const String Devices_THM = 'assets/devices/fever.png';
 const String Devices_WS = 'assets/devices/weight.png';
 
-const String audioFileAACType = 'audio/aac';
+const String audioFileAACType = '.aac';
 const String audioFileTypeAppStream = 'application/octet-stream';
 
 const String SHAREECORD = 'sharerecord/';
@@ -285,6 +284,8 @@ const String asgurduserID = '49cdc4be-afd9-419e-b3f9-1bd35207c74f';
 const String activateGF = "activateGF"; // activate googleFit
 const String activateHK = "activateHK"; // activate appleHealth
 const String isFirstTym = "FirsTym";
+const String isHealthFirstTime =
+    "HealthFirstTime"; // Activating HealthKit For First Time
 const String bpMon = "bpMon";
 const String glMon = "GLMon";
 const String oxyMon = "OxyMon";

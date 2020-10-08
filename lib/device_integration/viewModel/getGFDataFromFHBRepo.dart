@@ -18,8 +18,8 @@ class GetGFDataFromFHBRepo {
   Future<dynamic> getBPData() async {
     body.clear();
     var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month - 1,
-        currentdate.day, currentdate.hour, currentdate.minute);
+    var startT = new DateTime(currentdate.year, currentdate.month,
+        currentdate.day-20, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
@@ -36,7 +36,7 @@ class GetGFDataFromFHBRepo {
     body.clear();
     var currentdate = DateTime.now();
     var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day - 10, currentdate.hour, currentdate.minute);
+        currentdate.day - 20, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
@@ -53,7 +53,7 @@ class GetGFDataFromFHBRepo {
     body.clear();
     var currentdate = DateTime.now();
     var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day - 2, currentdate.hour, currentdate.minute);
+        currentdate.day - 20, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
@@ -70,7 +70,7 @@ class GetGFDataFromFHBRepo {
     body.clear();
     var currentdate = DateTime.now();
     var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day - 10, currentdate.hour, currentdate.minute);
+        currentdate.day - 20, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
@@ -87,7 +87,7 @@ class GetGFDataFromFHBRepo {
     body.clear();
     var currentdate = DateTime.now();
     var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day - 10, currentdate.hour, currentdate.minute);
+        currentdate.day - 20, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
@@ -104,7 +104,7 @@ class GetGFDataFromFHBRepo {
     body.clear();
     var currentdate = DateTime.now();
     var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day - 10, currentdate.hour, currentdate.minute);
+        currentdate.day - 20, currentdate.hour, currentdate.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();

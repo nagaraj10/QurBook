@@ -122,8 +122,6 @@ const String qr_placedid = 'place_id=';
 const String qr_lang_ko = 'language=ko';
 const String qr_sessiontoken = 'sessiontoken=';
 
-
-
 const String qr_LastSync = 'latest-sync';
 const String qr_LastMeasureSync = 'latest-measure-sync';
 const String qr_DeviceInterval = 'device-interval';
@@ -131,7 +129,6 @@ const String qr_DeviceInfo = 'device-health-record';
 const String qr_User = 'user';
 const String qr_LastSyncGF = '?source=Google Fit';
 const String qr_LastSyncHK = '?source=Apple Health';
-
 
 const String BOOKING_ID = "bookingId";
 const String BOOKING_ID_CAPS = "bookingID";
@@ -186,3 +183,8 @@ const String qr_AddressLine2_p = 'addressLine2';
 const String qr_pincode_p = 'pincode';
 
 const String qr_delink = 'de-link';
+const String qr_bookmark_healthrecord = 'bookmark-healthrecord';
+const String qr_healthOrgTypeId = '?healthOrganizationTypeId=';
+const String qr_limitSearchText = '&limit=1&searchText=';
+const String qr_sortByDesc = '&sortBy=desc&skip=0';
+const String qr_patient_update_default = 'patient-provider-mapping/';

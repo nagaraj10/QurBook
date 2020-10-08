@@ -216,7 +216,8 @@ class _VerifyPatientState extends State<VerifyPatient> {
           verificationCode: OtpController.text,
           userName: widget.PhoneNumber,
           source: strSource,
-          userId: await PreferenceUtil.getStringValue(strKeyConfirmUserToken),
+          userId:
+              await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         );
         Map<String, dynamic> map = logInModel.toJson();
         OtpModel.PatientSignupOtp response =

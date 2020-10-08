@@ -83,10 +83,9 @@ class WebserviceCall {
 
   String getQueryBookmarkRecord() {
     String query = '';
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     query =
-        "${variable.qr_mediameta}${userID}${variable.qr_slash}${variable.qr_updatebookmark}";
+        "${variable.qr_health_record}${variable.qr_slash}${variable.qr_bookmark_healthrecord}";
     return query;
   }
 

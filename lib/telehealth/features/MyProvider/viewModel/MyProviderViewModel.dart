@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
@@ -27,13 +29,22 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<bool> bookMarkDoctor(bool condition, DoctorIds doctorIds) async {
+  Future<bool> bookMarkDoctor(bool condition, Doctors doctorIds) async {
     bool condition;
 
     DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
         await _providersListRepository.bookMarkDoctor(condition, doctorIds);
 
-    return doctorBookMarkedSucessModel.success;
+    return doctorBookMarkedSucessModel.isSuccess;
+  }
+
+  Future<bool> bookMarkHealthOrg(bool condition, Hospitals hospitals) async {
+    bool condition;
+
+    DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
+    await _providersListRepository.bookMarkHealthOrganizaton(condition, hospitals);
+
+    return doctorBookMarkedSucessModel.isSuccess;
   }
 
   List<DoctorIds> getFilterDoctorList(String doctorName) {

@@ -190,7 +190,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                           onTap: () {})
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
-                  commonWidgets.getBookMarkedIcon(docs[i], () {
+                  /*commonWidgets.getBookMarkedIcon(docs[i], () {
                     providerViewModel
                         .bookMarkDoctor(!(docs[i].isDefault), docs[i])
                         .then((status) {
@@ -199,7 +199,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                         setState(() {});
                       }
                     });
-                  }),
+                  }),*/
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               ),

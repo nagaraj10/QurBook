@@ -6,6 +6,8 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
@@ -32,7 +34,7 @@ class ProvidersListRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     final response = await _helper.getTelehealthDoctorsList(
-        query.qr_Userprofile +
+        query.qr_User +
             userID +
             query.qr_slash +
             query.qr_sections +
@@ -41,10 +43,12 @@ class ProvidersListRepository {
   }
 
   Future<DoctorBookMarkedSucessModel> bookMarkDoctor(
-      bool condition, DoctorIds doctorIds) async {
+      bool condition, Doctors doctorIds) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var bookMark = {};
-    bookMark[parameters.strdoctorPatientMappingId] =
-        doctorIds.doctorPatientMappingId;
+    bookMark[parameters.strpatient] = userID;
+    bookMark[parameters.strdoctor] = doctorIds.id;
+    bookMark[parameters.healthOrganization] = null;
     if (doctorIds.isDefault) {
       bookMark[parameters.strisDefault] = false;
     } else {
@@ -53,10 +57,31 @@ class ProvidersListRepository {
 
     var jsonString = convert.jsonEncode(bookMark);
     final response = await _helper.bookMarkDoctor(
-        query.qr_doctorpatientmapping + query.qr_updateDefaultProvider,
+        query.qr_patient_update_default + doctorIds.providerPatientMappingId,
         jsonString);
     return DoctorBookMarkedSucessModel.fromJson(response);
   }
+
+  Future<DoctorBookMarkedSucessModel> bookMarkHealthOrganizaton(
+      bool condition, Hospitals hospitals) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var bookMark = {};
+    bookMark[parameters.strpatient] = userID;
+    bookMark[parameters.strdoctor] = hospitals.id;
+    bookMark[parameters.healthOrganization] = null;
+    if (hospitals.isDefault) {
+      bookMark[parameters.strisDefault] = false;
+    } else {
+      bookMark[parameters.strisDefault] = true;
+    }
+
+    var jsonString = convert.jsonEncode(bookMark);
+    final response = await _helper.bookMarkDoctor(
+        query.qr_patient_update_default + hospitals.providerPatientMappingId,
+        jsonString);
+    return DoctorBookMarkedSucessModel.fromJson(response);
+  }
+
 
   Future<AssociateRecordsResponse> associateRecords(
       String doctorId, String userId, List<String> healthRecords) async {

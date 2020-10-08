@@ -356,7 +356,7 @@ class TakePictureScreenForDevicesState
                                             // Find the temp directory using the `path_provider` plugin.
                                             (await getTemporaryDirectory())
                                                 .path,
-                                            'Prescription_${DateTime.now()}.jpg',
+                                            'Prescription_${DateTime.now().minute}.jpg',
                                           );
 
                                           // Attempt to take a picture and log where it's been saved.
@@ -441,7 +441,7 @@ class TakePictureScreenForDevicesState
                                             // Find the temp directory using the `path_provider` plugin.
                                             (await getTemporaryDirectory())
                                                 .path,
-                                            'Prescription_${DateTime.now()}.jpg',
+                                            'Prescription_${DateTime.now().minute}.jpg',
                                           );
 
                                           // Attempt to take a picture and log where it's been saved.

@@ -195,8 +195,10 @@ class _IDDocsListState extends State<IDDocsList> {
                           style: TextStyle(color: Colors.grey),
                         )),
                     Text(
-                      new FHBUtils().getFormattedDateString(
-                          mediaMetaInfoObj.metadata.dateOfVisit),
+                      mediaMetaInfoObj.metadata.dateOfVisit
+                      /*new FHBUtils().getFormattedDateString(
+                          mediaMetaInfoObj.metadata.dateOfVisit)*/
+                      ,
                       style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[400],

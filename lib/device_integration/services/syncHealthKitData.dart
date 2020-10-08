@@ -1,11 +1,10 @@
-import 'package:flutter/rendering.dart';
-import 'package:http/http.dart';
-import 'package:myfhb/database/services/database_helper.dart';
 import 'package:myfhb/Device_Integration/services/fetchHealthKitData.dart';
 import 'package:myfhb/src/resources/repository/deviceHealthRecords/DeviceHealthRecordRepository.dart';
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/device_integration/model/myFHBResponseModel.dart';
 import 'dart:convert' show json;
+import 'package:myfhb/device_integration/model/LastSyncResponse.dart';
+
 
 class SyncHealthKitData {
   FetchHealthKitData _hkHelper;
@@ -87,6 +86,7 @@ class SyncHealthKitData {
         response = await postHealthKitData(heartRateParams);
       }
     } catch (e) {
+      throw e;
     }
 
     // todo
@@ -98,6 +98,7 @@ class SyncHealthKitData {
       var response = await _deviceHealthRecord.postDeviceData(params);
       return response;
     } catch (e) {
+      throw e;
     }
   }
 
@@ -108,11 +109,10 @@ class SyncHealthKitData {
       var lastsyncDetails =
           await _deviceHealthRecord.getLastsynctime(query.qr_LastSyncHK);
       String jsonstr = json.encode(lastsyncDetails);
-      LastSync lastSync = lastSyncFromJson(jsonstr);
+      LatestSync lastSync = latestSyncFromJson(jsonstr);
 
       if (!lastSync.isSuccess) return null;
-      return lastSync.result[0].lastSyncDateTime;
-    } catch (e) {
-    }
+      return lastSync.result.lastSyncDateTime;
+    } catch (e) {}
   }
 }

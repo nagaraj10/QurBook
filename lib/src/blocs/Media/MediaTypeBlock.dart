@@ -52,11 +52,11 @@ class MediaTypeBlock implements BaseBloc {
     }
   }
 
-  getMediTypesList() async {
+  Future<MediaDataList> getMediTypesList() async {
+    MediaDataList mediaTypesResponse;
     mediaTypeSinks.add(ApiResponse.loading(variable.strgetMediaTypes));
     try {
-      MediaDataList mediaTypesResponse =
-          await _mediaTypeRepository.getMediaTypes();
+      mediaTypesResponse = await _mediaTypeRepository.getMediaTypes();
 
       PreferenceUtil.init();
       PreferenceUtil.saveMediaType(
@@ -65,5 +65,7 @@ class MediaTypeBlock implements BaseBloc {
     } catch (e) {
       mediaTypeSinks.add(ApiResponse.error(e.toString()));
     }
+
+    return mediaTypesResponse;
   }
 }

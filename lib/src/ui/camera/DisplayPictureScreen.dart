@@ -617,14 +617,16 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           });
         } else if (results.containsKey(Constants.keyHospital)) {
           hospitalData = json.decode(results[Constants.keyHospital]);
-
-          hospitalName.text = hospitalData[parameters.strName];
+          setState(() {
+            hospitalName.text =
+                hospitalData[parameters.strHealthOrganizationName];
+          });
         } else if (results.containsKey(Constants.keyLab)) {
           labData = json.decode(results[Constants.keyLab]);
-
-          labName.text = labData[parameters.strName];
+          setState(() {
+            labName.text = labData[parameters.strHealthOrganizationName];
+          });
         }
-        setState(() {});
       }
     });
   }
@@ -828,7 +830,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     postMainData[parameters.struserId] = userID;
 
     postMediaData[parameters.strcategoryInfo] = categoryDataObj.toJson();
-    List<MediaResult> metaDataFromSharedPrefernce = PreferenceUtil.getMediaType();
+    List<MediaResult> metaDataFromSharedPrefernce =
+        PreferenceUtil.getMediaType();
 
     if (categoryName != Constants.STR_DEVICES) {
       mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(

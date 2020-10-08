@@ -82,12 +82,13 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   bool firsTym = true;
   bool ispdfPresent = false;
 
-  String audioMediaId;
+  HealthRecordCollection audioMediaId;
 
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  String authToken;
 
   var pdfFile;
-  List<MediaMasterIds> mediMasterId = new List();
+  List<HealthRecordCollection> mediMasterId = new List();
 
   @override
   void initState() {
@@ -121,7 +122,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     if (mediMasterId.length > 0) {
       length = mediMasterId.length;
       index = 1;
-      _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
+      setAuthToken();
     }
   }
 
@@ -164,9 +165,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             flex: 7,
                             child: Padding(
                                 padding: EdgeInsets.all(10),
-                                child: (imagesPathMain.length > 0 &&
-                                        imagesPathMain != null)
-                                    ? getCarousalImage(imagesPathMain)
+                                child: (mediMasterId.length > 0 &&
+                                        mediMasterId != null)
+                                    ? getCarousalImage(mediMasterId)
                                     : (widget.data.metadata.healthRecordType
                                                     .name ==
                                                 Constants.STR_VOICE_NOTES ||
@@ -334,8 +335,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                         .saveImage(
                                             audioPath, widget.data.id, '')
                                         .then((postImageResponse) {
-                                      audioMediaId = postImageResponse
-                                          .response.data.mediaMasterId;
+                                      /*audioMediaId = postImageResponse
+                                          .response.data.mediaMasterId;*/
 
                                       _healthReportListForUserBlock
                                           .getHelthReportLists()
@@ -489,10 +490,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
   }
 
-  deleteRecord(String id) {
-    List<String> mediaIds = [];
-    mediaIds.add(id);
-    _deleteRecordBloc.deleteRecord(mediaIds).then((deleteRecordResponse) {
+  deleteRecord(String metaId) {
+    _deleteRecordBloc.deleteRecord(metaId).then((deleteRecordResponse) {
       if (deleteRecordResponse.success) {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
@@ -503,9 +502,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     });
   }
 
-  deleteMediRecord(String id) {
+  deleteMediRecord(HealthRecordCollection healthRecordCollection) {
     List<String> mediaIds = [];
-    mediaIds.add(id);
+    mediaIds.add(healthRecordCollection.id);
     _deleteRecordBloc
         .deleteRecordOnMediaMasterID(mediaIds)
         .then((deleteRecordResponse) {
@@ -598,8 +597,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
     if (widget.data.metadata.doctor != null)
       doctorsData = widget.data.metadata.doctor.toJson();
-    /* if (widget.data.metadata.laboratory != null)
-      labData = widget.data.metadata.laboratory.toJson();*/
+    if (widget.data.metadata.laboratory != null)
+      labData = widget.data.metadata.laboratory.toJson();
     if (widget.data.metadata.hospital != null)
       hospitalData = widget.data.metadata.hospital.toJson();
     createdDateMethod();
@@ -620,7 +619,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               context,
               new TextEditingController(
                   text: hospitalData != null
-                      ? hospitalData[variable.strName]
+                      ? hospitalData[variable.strHealthOrganizationName]
                       : ''),
               new TextEditingController(
                   text:
@@ -676,7 +675,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           new CommonDialogBox().getDialogBoxForLabReport(
               context,
               new TextEditingController(
-                  text: labData != null ? labData[variable.strName] : ''),
+                  text: labData != null
+                      ? labData[variable.strHealthOrganizationName]
+                      : ''),
               new TextEditingController(
                   text:
                       doctorsData != null ? doctorsData[variable.strName] : ''),
@@ -1058,7 +1059,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     createdDate = dateFormatter.format(parsedDate);
   }
 
-  Widget getCarousalImage(List<ImageDocumentResponse> imagesPath) {
+  Widget getCarousalImage(List<HealthRecordCollection> imagesPath) {
     if (imagesPath != null && imagesPath.length > 0) {
       index = _current + 1;
       _current = 0;
@@ -1093,9 +1094,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               return Container(
                                   height: double.infinity,
                                   child: Image.network(
-                                    imgUrl.response.data.fileContent,
+                                    imgUrl.healthRecordUrl,
                                     height: 200,
                                     width: 200,
+                                    headers: {
+                                      HttpHeaders.authorizationHeader: authToken
+                                    },
                                   ));
                               /*Container(
                                 height: double.infinity,
@@ -1169,7 +1173,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     }
 
-    _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
+    //_healthReportListForUserBlock.getDocumentImageList(mediMasterId);
 
     return StreamBuilder<ApiResponse<List<dynamic>>>(
       stream: _healthReportListForUserBlock.imageListStream,
@@ -1218,7 +1222,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     }
 
-    _healthReportListForUserBlock.getDocumentImageList(mediMasterId);
+    //_healthReportListForUserBlock.getDocumentImageList(mediMasterId);
 
     return StreamBuilder<ApiResponse<List<ImageDocumentResponse>>>(
       stream: _healthReportListForUserBlock.imageListStream,
@@ -1247,7 +1251,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               } else {*/
               imagesPathMain.addAll(snapshot.data.data);
               /* }*/
-              return getCarousalImage(snapshot.data.data);
+              // return getCarousalImage(snapshot.data.data);
               break;
           }
         } else {
@@ -1278,23 +1282,25 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     }
   }
 
-  String checkIfMp3IsPresent(HealthResult data) {
-    String mediaMetaId = "";
+  HealthRecordCollection checkIfMp3IsPresent(HealthResult data) {
+    HealthRecordCollection mediaMetaId;
 
     mediaMetaId = new CommonUtil()
         .getMediaMasterIDForAudioFileType(data.healthRecordCollection);
     return mediaMetaId;
   }
 
-  Widget getWidgetForPlayingAudioFromServer(String audioMediaId) {
+  Widget getWidgetForPlayingAudioFromServer(
+      HealthRecordCollection audioMediaId) {
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     } else {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     }
-    _healthReportListForUserBlock.getDocumentImage(audioMediaId).then((res) {
-      return downloadMedia(res.response.data.fileContent, context, '.mp3');
+
+    _healthReportListForUserBlock.getDocumentImage('').then((res) {
+      return downloadMedia(audioMediaId.healthRecordUrl, context, '.mp3');
     });
   }
 
@@ -1362,5 +1368,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         return pdfFileName = pdfFileName.replaceAll('.pdf', '');
       }
     }
+  }
+
+  void setAuthToken() async {
+    authToken = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
   }
 }

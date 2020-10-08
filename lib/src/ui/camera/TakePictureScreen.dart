@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -61,6 +62,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   bool isFlash = false;
   bool _hasFlashlight = false;
+  String deviceName;
 
   @override
   void initState() {
@@ -254,7 +256,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       // Store the picture in the temp directory.
                                       // Find the temp directory using the `path_provider` plugin.
                                       (await getTemporaryDirectory()).path,
-                                      'Prescription_${DateTime.now()}.jpg',
+                                      setFileName() +
+                                          '${DateTime.now().second}.jpg'.trim(),
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.
@@ -396,7 +399,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       // Store the picture in the temp directory.
                                       // Find the temp directory using the `path_provider` plugin.
                                       (await getTemporaryDirectory()).path,
-                                      'Prescription_${DateTime.now()}.jpg',
+                                      setFileName() +
+                                          '${DateTime.now().second}.jpg'.trim(),
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.
@@ -544,6 +548,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     }
   }
 
+  String setFileName() {
+    if (categoryName == CommonConstants.strDevice) {
+      return categoryName;
+    } else {
+      return categoryName;
+    }
+  }
+
   getWidgetForTitle(BuildContext context) {
     return InkWell(
       child: Text(categoryName),
@@ -555,6 +567,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   void initializeData() {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+    deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
+        ? Constants.IS_CATEGORYNAME_DEVICES
+        : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
+
     categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
     if (categoryName == Constants.STR_DEVICES) {
       PreferenceUtil.saveString(Constants.stop_detecting, variable.strNO);

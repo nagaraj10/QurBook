@@ -29,11 +29,12 @@ class UpdateProvidersRepository {
   // 1
   // Doctors
   Future<UpdateProvidersId> updateDoctorsIdWithUserDetailsNew(
-      String providerId, bool isPreferred, String provideRefernceId) async {
+      String providerId, bool isPreferred, String provideReferenceId) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    Map<String, String> doctorDic = new Map();
-    doctorDic[parameters.id] = providerId;
-    doctorDic[parameters.strReferenceId] = provideRefernceId;
+    Map<String, dynamic> doctorDic = new Map();
+    doctorDic[parameters.doctorId] = providerId;
+    doctorDic[parameters.strDoctorReferenceId] = provideReferenceId;
+    doctorDic[parameters.strisDefault] = isPreferred;
 
     var jsonData = {};
     jsonData[parameters.strdoctor] = [doctorDic];
@@ -51,14 +52,21 @@ class UpdateProvidersRepository {
   // 2
   // Hospitals
   Future<UpdateProvidersId> updateHospitalsIdWithUserDetails(
-      String providerId, bool isPreferred) async {
+      String providerId, bool isPreferred,String provideReferenceId) async {
     String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    Map<String, String> healthOrganizationDic = new Map();
-    healthOrganizationDic[parameters.id] = providerId;
+    Map<String, dynamic> hospitalDic = new Map();
+    hospitalDic[parameters.doctorId] = null;
+    hospitalDic[parameters.strDoctorReferenceId] = null;
+    hospitalDic[parameters.strisDefault] = false;
+
+    Map<String, dynamic> healthOrganizationDic = new Map();
+    healthOrganizationDic[parameters.strHealthOrganizationId] = providerId;
+    healthOrganizationDic[parameters.strHealthOrganizationReferenceId] = provideReferenceId;
+    healthOrganizationDic[parameters.strisDefault] = isPreferred;
 
     var jsonData = {};
-    jsonData[parameters.strdoctor] = [];
+    jsonData[parameters.strdoctor] = [hospitalDic];
     jsonData[parameters.healthOrganization] = [healthOrganizationDic];
 
     var jsonString = convert.jsonEncode(jsonData);
@@ -72,14 +80,21 @@ class UpdateProvidersRepository {
   // 3
   // Labs
   Future<UpdateProvidersId> updateLabsIdWithUserDetails(
-      String providerId, bool isPreferred) async {
+      String providerId, bool isPreferred,String provideReferenceId) async {
     String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    Map<String, String> healthOrganizationDic = new Map();
-    healthOrganizationDic[parameters.id] = providerId;
+    Map<String, dynamic> hospitalDic = new Map();
+    hospitalDic[parameters.doctorId] = null;
+    hospitalDic[parameters.strDoctorReferenceId] = null;
+    hospitalDic[parameters.strisDefault] = false;
+
+    Map<String, dynamic> healthOrganizationDic = new Map();
+    healthOrganizationDic[parameters.strHealthOrganizationId] = providerId;
+    healthOrganizationDic[parameters.strHealthOrganizationReferenceId] = provideReferenceId;
+    healthOrganizationDic[parameters.strisDefault] = isPreferred;
 
     var jsonData = {};
-    jsonData[parameters.strdoctor] = [];
+    jsonData[parameters.strdoctor] = [hospitalDic];
     jsonData[parameters.healthOrganization] = [healthOrganizationDic];
 
     var jsonString = convert.jsonEncode(jsonData);

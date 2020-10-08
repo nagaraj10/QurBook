@@ -22,9 +22,11 @@ class GoogleSignInHelper {
 
   Future<bool> handleSignIn() async {
     try {
+      GoogleSignInAccount user = await _googleSignIn.signIn();
+      m_currentUser = user;
       if (m_currentUser == null) {
-        GoogleSignInAccount user = await _googleSignIn.signIn();
-        m_currentUser = user;
+        return false;
+      } else {
         return true;
       }
     } catch (error) {
@@ -43,7 +45,7 @@ class GoogleSignInHelper {
     try {
       if (m_currentUser != null) {
         ret = await _googleSignIn.requestScopes(Scopes);
-        if(!ret){
+        if (!ret) {
           await _googleSignIn.disconnect();
         }
       }
@@ -57,7 +59,7 @@ class GoogleSignInHelper {
     try {
       bool signedIn = await _googleSignIn.isSignedIn();
       if (signedIn) {
-       await  _googleSignIn.disconnect();
+        await _googleSignIn.disconnect();
       }
       return true;
     } catch (e) {
@@ -68,6 +70,9 @@ class GoogleSignInHelper {
   Future<dynamic> getDataAggregate(String jsonBody) async {
     var responseJson;
     try {
+      if (m_currentUser == null) {
+        throw "Failed to login GoogleFit account. Please activate and do sync again";
+      }
       final response = await http.post(_url,
           body: jsonBody, headers: await m_currentUser.authHeaders);
       if (response.statusCode != 200) {

@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:path/path.dart';
 import 'package:provider/provider.dart';
-import 'dart:convert';
-import 'package:myfhb/common/CommonUtil.dart';
 
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/device_integration/view/screens/getDevice_Values.dart';
-import 'package:myfhb/device_integration/viewModel/Device_model.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
-import 'package:myfhb/device_integration/model/DeviceValue.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+
+import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/device_integration/view/screens/Device_Value.dart';
+
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
+
+import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
+
 
 class ShowDevicesNew extends StatefulWidget {
   @override
@@ -26,9 +22,8 @@ class ShowDevicesNew extends StatefulWidget {
 class _ShowDevicesNewState extends State<ShowDevicesNew> {
   DevicesViewModel devicesViewModel;
 
-  DevResult chartData;
-  DevResult devicesList;
-  DevResult deviceValues;
+ 
+  LastMeasureSyncValues deviceValues;
   List<DeviceData> finalList;
 
   String date;
@@ -82,7 +77,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
-    return FutureBuilder<DevResult>(
+    return FutureBuilder<LastMeasureSyncValues>(
         future: devicesViewModel.fetchDeviceDetails(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -133,8 +128,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       case parameters.strDataTypeBP:
         {
           if (deviceValues.bloodPressure.entities.isNotEmpty) {
-            dateTimeStamp =
-                deviceValues.bloodPressure.entities[0].lastsyncdatetime;
+            dateTimeStamp = deviceValues.bloodPressure.entities[0].startDateTime;
+                //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
             date =
                 "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
             time =
@@ -155,7 +150,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         {
           if (deviceValues.bloodGlucose.entities.isNotEmpty) {
             dateTimeStamp =
-                deviceValues.bloodGlucose.entities[0].lastsyncdatetime;
+                deviceValues.bloodGlucose.entities[0].startDateTime;
             date =
                 "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
             time =
@@ -174,7 +169,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         {
           if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
             dateTimeStamp =
-                deviceValues.oxygenSaturation.entities[0].lastsyncdatetime;
+                deviceValues.oxygenSaturation.entities[0].startDateTime;
             date =
                 "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
             time =
@@ -193,7 +188,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         {
           if (deviceValues.bodyTemperature.entities.isNotEmpty) {
             dateTimeStamp =
-                deviceValues.bodyTemperature.entities[0].lastsyncdatetime;
+                deviceValues.bodyTemperature.entities[0].startDateTime;
             date =
                 "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
             time =
@@ -211,7 +206,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         {
           if (deviceValues.bodyWeight.entities.isNotEmpty) {
             dateTimeStamp =
-                deviceValues.bodyWeight.entities[0].lastsyncdatetime;
+                deviceValues.bodyWeight.entities[0].startDateTime;
             date =
                 "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
             time =

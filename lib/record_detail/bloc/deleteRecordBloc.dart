@@ -9,7 +9,6 @@ import 'dart:convert' as convert;
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
-
 class DeleteRecordBloc with Validators implements BaseBloc {
   DeleteRecordRepository _deleteRecordRepository;
   StreamController _deleteRecordController;
@@ -29,16 +28,12 @@ class DeleteRecordBloc with Validators implements BaseBloc {
     _deleteRecordController?.close();
   }
 
-  Future<DeleteRecordResponse> deleteRecord(List<String> recordId) async {
-    DeleteRecord deleteRecord = new DeleteRecord();
-    deleteRecord.mediaMetaIds = recordId;
-
-    var jsonString = convert.jsonEncode(deleteRecord);
+  Future<DeleteRecordResponse> deleteRecord(String metaId) async {
     delteRecordSink.add(ApiResponse.loading(variable.strDeletingRecords));
     DeleteRecordResponse deleteRecordResponse;
     try {
       deleteRecordResponse =
-          await _deleteRecordRepository.deleteRecordForIds(jsonString);
+          await _deleteRecordRepository.deleteRecordForIds(metaId);
     } catch (e) {
       delteRecordSink.add(ApiResponse.error(e.toString()));
     }

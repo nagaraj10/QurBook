@@ -9,7 +9,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
-import 'package:myfhb/device_integration/view/screens/Widget_View.dart';
+import 'package:myfhb/device_integration/view/screens/Device_Widget.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
@@ -20,11 +20,8 @@ import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
-import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
-import 'package:myfhb/device_integration/view/screens/getDevice_Values.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:provider/provider.dart';
-import 'package:myfhb/device_integration/view/screens/Widget_View.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
