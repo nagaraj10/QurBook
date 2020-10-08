@@ -59,6 +59,7 @@ class AuthViewModel extends ChangeNotifier {
         PatientConfirmPasswordModel.fromJson(resetResponse);
     return reset;
   }
+
   Future<ChangePasswordModel> changePassword(
       Map<String, dynamic> params) async {
     var changeResponse = await _authService.changePasswordservice(params);
@@ -66,10 +67,9 @@ class AuthViewModel extends ChangeNotifier {
     return change;
   }
 
-  Future<AddFamilyOTPResponse> verifyMyOTP(Map<String, dynamic> params) async{
-    var otpResponse = await _authService.verifyOtpService(params);
+  Future<AddFamilyOTPResponse> verifyMyOTP(Map<String, dynamic> params) async {
+    var otpResponse = await _authService.verifyUserOtpService(params);
     AddFamilyOTPResponse response = AddFamilyOTPResponse.fromJson(otpResponse);
     return response;
   }
-
 }

@@ -47,7 +47,8 @@ class AuthService {
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
         String responseString = responseResult[strResult];
-        await PreferenceUtil.saveString(strKeyVerifyOtpToken, responseString);
+        await PreferenceUtil.saveString(
+            Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
       } else {
         return createErrorJsonString(response);
@@ -189,7 +190,7 @@ class AuthService {
     }
   }
 
-   Future<dynamic> verifyOTPservice(Map<String, dynamic> params) async {
+  Future<dynamic> verifyOTPservice(Map<String, dynamic> params) async {
     try {
       final response = await http.post(
         Constants.BASE_URL + strKeyVerifyFamilyMemberEP,
@@ -229,5 +230,26 @@ class AuthService {
     errorJson[strIsSuccess] = false;
 
     return errorJson;
+  }
+
+  Future<dynamic> verifyUserOtpService(Map<String, dynamic> params) async {
+    try {
+      final response = await http.post(
+        Constants.BASE_URL + strUserOtpVerifyEndpoint,
+        headers: await headerRequest.getRequestHeadersAuthContents(),
+        body: jsonEncode(params),
+      );
+      if (response.statusCode == 200) {
+        var responseResult = jsonDecode(response.body);
+        String responseString = responseResult[strResult];
+        await PreferenceUtil.saveString(
+            Constants.KEY_AUTHTOKEN, responseString);
+        return responseResult;
+      } else {
+        return createErrorJsonString(response);
+      }
+    } on SocketException {
+      return spocketException();
+    }
   }
 }

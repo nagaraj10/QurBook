@@ -24,7 +24,7 @@ const String strcreatedOn = 'createdOn';
 const String strid = 'id';
 const String strverificationCode = 'verificationCode';
 const String strFromSignUp = 'AfterSignup';
-const String strFromVerifyFamilyMember= 'VerifyFamilyMember';
+const String strFromVerifyFamilyMember = 'VerifyFamilyMember';
 
 //Strings used in VerifyPatient
 const String strSource = "myFHBMobile";
@@ -91,7 +91,8 @@ const String myFHB_logo = 'assets/launcher/myfhb.png';
 const String strSignUpEndpoint = 'register-user';
 const String strSignEndpoint = 'login';
 const String strUserVerifyEndpoint = 'confirm-user';
-const String strOtpVerifyEndpoint = 'user-relationship/verify-otp';
+const String strOtpVerifyEndpoint = 'auth/verify-otp';
+const String strUserOtpVerifyEndpoint = 'user-relationship/verify-otp';
 const String strResult = "result";
 const String strmessage = "message";
 const String strIsSuccess = 'isSuccess';
