@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
+import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dart';
 import 'package:myfhb/add_family_user_info/models/update_self_profile_model.dart';
 import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_info.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
@@ -70,7 +71,6 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       gender,
       bloodGroup,
       dateOfBirth,
-      relationship,
       firstName,
       middleName,
       lastName,
@@ -79,6 +79,9 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       cityId,
       stateId,
       zipcode;
+      
+      bool isUpdate;
+      UpdateRelationshipModel relationship;
 
   MyProfileModel myProfileModel;
 
@@ -207,11 +210,13 @@ class AddFamilyUserInfoBloc extends BaseBloc {
           lastName,
           cityId,
           stateId,
+          isUpdate,
           addressLine1,
           addressLine2,
           zipcode,
           fromFamily,
-          myProfileModel);
+          myProfileModel,
+          relationship);
       //userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));

@@ -1,6 +1,6 @@
+import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/src/model/user/AddressTypeModel.dart';
-import 'package:myfhb/src/model/user/City.dart';
-import 'package:myfhb/src/model/user/State.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 
 class FamilyMembers {
   bool isSuccess;
@@ -80,7 +80,7 @@ class SharedByUsers {
   bool isActive;
   String createdOn;
   String lastModifiedOn;
-  Relationship relationship;
+  RelationsShipModel relationship;
   Child child;
 
   SharedByUsers(
@@ -101,7 +101,7 @@ class SharedByUsers {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     relationship = json['relationship'] != null
-        ? new Relationship.fromJson(json['relationship'])
+        ? new RelationsShipModel.fromJson(json['relationship'])
         : null;
     child = json['child'] != null ? new Child.fromJson(json['child']) : null;
   }
@@ -124,7 +124,7 @@ class SharedByUsers {
   }
 }
 
-class Relationship {
+/* class Relationship {
   String id;
   String code;
   String name;
@@ -171,7 +171,7 @@ class Relationship {
     data['lastModifiedOn'] = this.lastModifiedOn;
     return data;
   }
-}
+} */
 
 class Child {
   String id;
@@ -326,7 +326,7 @@ class Child {
   }
 }
 
-class UserAddressCollection3 {
+/* class UserAddressCollection3 {
   //String id;
   String addressLine1;
   String addressLine2;
@@ -386,7 +386,7 @@ class UserAddressCollection3 {
     data['state'] = this.state;
     return data;
   }
-}
+} */
 
 
 class UserContactCollection3 {
@@ -561,7 +561,7 @@ class SharedToUsers {
   bool isActive;
   String createdOn;
   String lastModifiedOn;
-  Relationship relationship;
+  RelationsShipModel relationship;
   Parent parent;
 
   SharedToUsers(
@@ -582,7 +582,7 @@ class SharedToUsers {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     relationship = json['relationship'] != null
-        ? new Relationship.fromJson(json['relationship'])
+        ? new RelationsShipModel.fromJson(json['relationship'])
         : null;
     parent =
         json['parent'] != null ? new Parent.fromJson(json['parent']) : null;

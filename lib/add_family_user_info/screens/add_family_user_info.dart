@@ -12,6 +12,9 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/models/CityListModel.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:myfhb/add_family_user_info/models/address_result.dart';
+import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dart';
+import 'package:myfhb/add_family_user_info/widget/address_type_widget.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -31,6 +34,7 @@ import 'package:myfhb/src/model/user/AddressTypeModel.dart';
 import 'package:myfhb/src/model/user/City.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 //import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/model/user/city_list_model.dart';
 import 'package:myfhb/src/model/user/state_list_model.dart';
@@ -79,8 +83,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
   bool isCalled = false;
-  List<RelationsShipCollection> relationShipResponseList;
-  RelationsShipCollection selectedRelationShip;
+  List<RelationsShipModel> relationShipResponseList;
+  RelationsShipModel selectedRelationShip;
+
+  String currentselectedBloodGroup;
+  String currentselectedBloodGroupRange;
 
   DateTime dateTime = DateTime.now();
   MyProfileModel myProfile;
@@ -130,12 +137,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   CityResult cityVal = new CityResult();
   stateObj.State stateVal = new stateObj.State();
 
+  AddressResult _addressResult = new AddressResult();
+  String addressTypeId;
+
   @override
   void initState() {
     super.initState();
 
     PaintingBinding.instance.imageCache.clear();
-
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     try {
       /* if (PreferenceUtil.getFamilyRelationship(Constants.KEY_FAMILYREL) !=
@@ -149,20 +158,25 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           getSelectedRelation();
         });
       } else { */
-        addFamilyUserInfoBloc.getCustomRoles().then((value) {
-          setState(() {
-            if (value.result[0] != null) {
-              if (value.result[0].referenceValueCollection.isNotEmpty) {
-                relationShipResponseList =
-                    value.result[0].referenceValueCollection;
+      //getAllCustomRoles();
+      relationShipResponseList = widget.arguments?.defaultrelationShips;
+      if (widget?.arguments?.sharedbyme?.relationship?.name != null) {
+        selectedRelationShip = widget.arguments.sharedbyme.relationship;
+      }
+      // addFamilyUserInfoBloc.getCustomRoles().then((value) {
+      //   setState(() {
+      //     if (value.result[0] != null) {
+      //       if (value.result[0].referenceValueCollection.isNotEmpty) {
+      //         relationShipResponseList =
+      //             value.result[0].referenceValueCollection;
 
-               /*  PreferenceUtil.saveRelationshipArray(
-                    Constants.KEY_FAMILYREL, relationShipResponseList); */
-                getSelectedRelation();
-              }
-            }
-          });
-        });
+      //         /*  PreferenceUtil.saveRelationshipArray(
+      //               Constants.KEY_FAMILYREL, relationShipResponseList); */
+      //         getSelectedRelation();
+      //       }
+      //     }
+      //   });
+      // });
       //}
     } catch (e) {}
 
@@ -183,7 +197,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     if (widget.arguments.fromClass == CommonConstants.my_family) {
       addFamilyUserInfoBloc.userId = widget
           .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
-
       if (widget.arguments.sharedbyme.child.isVirtualUser != null) {
         try {
           MyProfileModel myProf =
@@ -239,15 +252,32 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (commonUtil
           .checkIfStringisNull(widget.arguments.sharedbyme.child.bloodGroup)) {
         selectedBloodGroup = widget.arguments.sharedbyme.child.bloodGroup;
-
+        currentselectedBloodGroup =
+            widget.arguments.sharedbyme.child.bloodGroup.split(' ')[0];
+        currentselectedBloodGroupRange =
+            widget.arguments.sharedbyme.child.bloodGroup.split(' ')[1];
         renameBloodGroup(selectedBloodGroup);
       } else {
         selectedBloodGroup = null;
         selectedBloodRange = null;
+        currentselectedBloodGroup = null;
+        currentselectedBloodGroupRange = null;
       }
 
       if (widget.arguments.sharedbyme.child.gender != null) {
         selectedGender = widget.arguments.sharedbyme.child.gender;
+      }
+
+      if (widget
+          ?.arguments?.sharedbyme?.child?.userAddressCollection3.isNotEmpty) {
+        UserAddressCollection3 currentAddress =
+            widget.arguments.sharedbyme.child.userAddressCollection3[0];
+        cntrlr_addr_one.text = currentAddress.addressLine1;
+        cntrlr_addr_two.text = currentAddress.addressLine2;
+        cntrlr_addr_city.text = currentAddress.city?.name;
+        cntrlr_addr_state.text = currentAddress.state?.name;
+        cntrlr_addr_zip.text = currentAddress.pincode;
+        _addressResult = AddressResult(id: currentAddress.addressType.id,code: currentAddress.addressType.code,name: currentAddress.addressType.name);
       }
 
       if (widget.arguments.sharedbyme.child.dateOfBirth != null) {
@@ -311,11 +341,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (commonUtil
           .checkIfStringisNull(widget.arguments.myProfileResult.bloodGroup)) {
         selectedBloodGroup = widget.arguments.myProfileResult.bloodGroup;
-
+        currentselectedBloodGroup =
+            widget.arguments.myProfileResult.bloodGroup.split(' ')[0];
+        currentselectedBloodGroupRange =
+            widget.arguments.myProfileResult.bloodGroup.split(' ')[1];
         renameBloodGroup(selectedBloodGroup);
       } else {
         selectedBloodGroup = null;
         selectedBloodRange = null;
+        currentselectedBloodGroupRange = null;
+        currentselectedBloodGroup = null;
       }
 
       if (widget.arguments.myProfileResult.gender != null) {
@@ -343,7 +378,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         });
       }
     } else {
-      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;  
+      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
       addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
         myProfile = value;
 
@@ -367,14 +402,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
           selectedBloodGroup = value.result.bloodGroup;
-
+          currentselectedBloodGroup = value.result.bloodGroup.split(' ')[0];
+          currentselectedBloodGroupRange =
+              value.result.bloodGroup.split(' ')[1];
           renameBloodGroup(selectedBloodGroup);
         } else {
           selectedBloodGroup = null;
           selectedBloodRange = null;
+          currentselectedBloodGroup = null;
+          currentselectedBloodGroupRange = null;
         }
-        selectedGender =
-            value.result.gender == null ? null : value.result.gender;
+        selectedGender = value.result.gender == null
+            ? null
+            : toBeginningOfSentenceCase(value.result.gender.toLowerCase());
 
         dateofBirthStr = value.result.dateOfBirth != null
             ? new FHBUtils()
@@ -501,6 +541,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               fit: BoxFit.cover,
               width: 60,
               height: 60,
+              headers: {
+                HttpHeaders.authorizationHeader:
+                    PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+              },
             );
           } else {
             return Center(
@@ -664,31 +708,43 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     _showFirstNameTextField(),
                     _showMiddleNameTextField(),
                     _showLastNameTextField(),
+                    //_showRelationShipTextField(),
                     widget.arguments.fromClass == CommonConstants.my_family
-                        ? relationShipResponseList != null
+                        ? relationShipResponseList.isNotEmpty
                             ? Row(
                                 mainAxisSize: MainAxisSize.max,
                                 children: <Widget>[
-                                  getRelationshipDetails(
-                                      relationShipResponseList)
+                                  Expanded(
+                                    child: getRelationshipDetails(
+                                        relationShipResponseList),
+                                  )
                                 ],
                               )
-                            : getAllCustomRoles()
+                            : _showRelationShipTextField()
                         : widget.arguments.fromClass ==
                                 CommonConstants.user_update
                             ? new Container()
                             : _showRelationShipTextField(),
                     _showEmailAddTextField(),
                     Row(
-                      children: <Widget>[getGenderDetails()],
+                      children: <Widget>[Expanded(child: getGenderDetails())],
                     ),
                     Row(
                       children: <Widget>[
-                        getBloodGroupDetails(),
-                        getBloodRangeDetails()
+                        Expanded(child: getBloodGroupDetails()),
+                        Expanded(child: getBloodRangeDetails())
                       ],
                     ),
                     _showDateOfBirthTextField(),
+                    AddressTypeWidget(
+                      addressResult: _addressResult,
+                      onSelected: (addressResult) {
+                        setState(() {
+                          _addressResult = addressResult;
+                          addressTypeId = addressResult.id;
+                        });
+                      },
+                    ),
                     _userAddressInfo(),
                     _showSaveButton()
                   ])
@@ -780,6 +836,22 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
+          onTap: () {
+            /*  widget.arguments.fromClass == CommonConstants.my_family
+                        ? relationShipResponseList != null
+                            ? Row(
+                                mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  getRelationshipDetails(
+                                      relationShipResponseList)
+                                ],
+                              )
+                            : getAllCustomRoles()
+                        : widget.arguments.fromClass ==
+                                CommonConstants.user_update
+                            ? new Container()
+                            : _showRelationShipTextField(), */
+          },
           cursorColor: Theme.of(context).primaryColor,
           controller: relationShipController,
           maxLines: 1,
@@ -1197,7 +1269,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         child: addButtonWithGesture);
   }
 
-  Widget getAllCustomRoles() {
+  /* Widget getAllCustomRoles() {
     Widget familyWidget;
 
     return StreamBuilder<ApiResponse<RelationShipResponseList>>(
@@ -1217,9 +1289,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
             case Status.COMPLETED:
               isCalled = true;
-
-              relationShipResponseList =
+              // relationShipResponseList =
+              //     snapshot.data.data.result[0].referenceValueCollection;
+              setState(() {
+                relationShipResponseList =
                   snapshot.data.data.result[0].referenceValueCollection;
+              });
 
               // if (widget.arguments.fromClass == CommonConstants.my_family) {
               //   for (var i = 0;
@@ -1235,8 +1310,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               //   }
               // }
 
-              familyWidget = getRelationshipDetails(
-                  snapshot.data.data.result[0].referenceValueCollection);
+              //familyWidget = getRelationshipDetails(relationShipResponseList);
               break;
           }
         } else {
@@ -1249,41 +1323,96 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         return familyWidget;
       },
     );
-  }
+  } */
 
-  Widget getRelationshipDetails(List<RelationsShipCollection> data) {
-    return StatefulBuilder(builder: (context, setState) {
+  Widget getRelationshipDetails(List<RelationsShipModel> data) {
+    RelationsShipModel currentSelectedUserRole = data[0];
+    for (RelationsShipModel model in data) {
+      if (model.id == selectedRelationShip.id) {
+        currentSelectedUserRole = model;
+      }
+    }
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      child: DropdownButton<RelationsShipModel>(
+        hint: Text(CommonConstants.relationship),
+        isExpanded: true,
+        value: currentSelectedUserRole,
+        items: data.map((RelationsShipModel val) {
+          return DropdownMenuItem<RelationsShipModel>(
+            child: Text(val.name),
+            value: val,
+          );
+        }).toList(),
+        onChanged: (RelationsShipModel newSelectedValue) {
+          setState(() {
+            selectedRelationShip = newSelectedValue;
+          });
+        },
+      ),
+    );
+
+    /* return StatefulBuilder(builder: (context, setState) {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: Container(
               width: MediaQuery.of(context).size.width - 40,
-              child: DropdownButton(
+              child: DropdownButton<RelationsShipModel>(
                 isExpanded: true,
                 hint: Text(CommonConstants.relationship),
-                value:
-                    selectedRelationShip != null ? selectedRelationShip : null,
-                items: data.map((relationShipDetail) {
-                  return DropdownMenuItem(
+
+                value: selectedRelationShip != null ? selectedRelationShip : null,
+                /* items: data.map((relationShipDetail) {
+                  return DropdownMenuItem<RelationsShipModel>(
                     child: new Text(relationShipDetail.name,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0,
                             color: ColorUtils.blackcolor)),
                     value:
-                        relationShipDetail != null ? relationShipDetail : null,
+                        relationShipDetail != null ? relationShipDetail : 'helloo',
                   );
-                }).toList(),
+                }).toList(), */
+                items: [
+                  //DropdownMenuItem(child: Text(data[0].name),value: data[0],)
+                ],
                 onChanged: (newValue) {
                   setState(() {
                     selectedRelationShip = newValue;
                   });
                 },
               )));
-    });
+    }); */
   }
 
   Widget getBloodGroupDetails() {
-    return StatefulBuilder(builder: (context, setState) {
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2 - 40,
+        child: DropdownButton<String>(
+          hint: Text(CommonConstants.blood_groupWithStar),
+          value: currentselectedBloodGroup,
+          items: variable.bloodGroupArray.map((eachBloodGroup) {
+            return DropdownMenuItem<String>(
+              child: new Text(eachBloodGroup,
+                  style: new TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0,
+                      color: ColorUtils.blackcolor)),
+              value: eachBloodGroup,
+            );
+          }).toList(),
+          onChanged: (String newSelectedValue) {
+            setState(() {
+              currentselectedBloodGroup = newSelectedValue;
+            });
+          },
+        ),
+      ),
+    );
+
+    /* return StatefulBuilder(builder: (context, setState) {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: Container(
@@ -1308,11 +1437,38 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   });
                 },
               )));
-    });
+    }); */
   }
 
   Widget getBloodRangeDetails() {
-    return StatefulBuilder(builder: (context, setState) {
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      child: Container(
+        width: MediaQuery.of(context).size.width / 2 - 40,
+        child: DropdownButton<String>(
+          hint: Text(CommonConstants.blood_rangeWithStar),
+          isExpanded: true,
+          value: currentselectedBloodGroupRange,
+          items: variable.bloodRangeArray.map((eachBloodGroup) {
+            return DropdownMenuItem<String>(
+              child: new Text(eachBloodGroup,
+                  style: new TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0,
+                      color: ColorUtils.blackcolor)),
+              value: eachBloodGroup,
+            );
+          }).toList(),
+          onChanged: (String newSelectedValue) {
+            setState(() {
+              currentselectedBloodGroupRange = newSelectedValue;
+            });
+          },
+        ),
+      ),
+    );
+
+    /* return StatefulBuilder(builder: (context, setState) {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: Container(
@@ -1337,11 +1493,42 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   });
                 },
               )));
-    });
+    }); */
   }
 
   Widget getGenderDetails() {
-    return StatefulBuilder(builder: (context, setState) {
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      child: Container(
+        width: MediaQuery.of(context).size.width - 40,
+        child: DropdownButton<String>(
+          isExpanded: true,
+          hint: Text(CommonConstants.genderWithStar),
+          value: selectedGender != null
+              ? selectedGender.toLowerCase() != null
+                  ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
+                  : selectedGender
+              : null,
+          items: variable.genderArray.map((eachGender) {
+            return DropdownMenuItem(
+              child: new Text(eachGender,
+                  style: new TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.0,
+                      color: ColorUtils.blackcolor)),
+              value: eachGender,
+            );
+          }).toList(),
+          onChanged: (String newSelectedValue) {
+            setState(() {
+              selectedGender = newSelectedValue;
+            });
+          },
+        ),
+      ),
+    );
+
+    /* return StatefulBuilder(builder: (context, setState) {
       return Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: Container(
@@ -1371,7 +1558,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   });
                 },
               )));
-    });
+    }); */
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -1446,9 +1633,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               cntrlr_addr_two.text;
           profileResult.userAddressCollection3[0].isPrimary= true;    
           profileResult.userAddressCollection3[0].isActive= true;    
-          profileResult.userAddressCollection3[0].createdOn= ''; //FIXME this must be actual value
-          profileResult.userAddressCollection3[0].lastModifiedOn= ''; //FIXME this must be actual value
-          profileResult.userAddressCollection3[0].createdBy= ''; //FIXME this must be actual value
+          profileResult.userAddressCollection3[0].createdOn= ''; 
+          profileResult.userAddressCollection3[0].lastModifiedOn= ''; 
+          profileResult.userAddressCollection3[0].createdBy= '';
 
           profileResult.userAddressCollection3[0].state = stateVal;
           profileResult.userAddressCollection3[0].city = new City(
@@ -1462,8 +1649,140 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           addFamilyUserInfoBloc.myProfileModel = myProf; */
 
           FamilyListBloc _familyListBloc = new FamilyListBloc();
-
+          //NOTE this would be called when family member profile update
           if (widget.arguments.fromClass == CommonConstants.my_family) {
+            addFamilyUserInfoBloc.userId = widget.arguments.id;
+            addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
+            addFamilyUserInfoBloc.relationship = UpdateRelationshipModel(
+                id: widget.arguments.sharedbyme.id,
+                relationship: selectedRelationShip);
+
+            MyProfileModel myProf = new MyProfileModel();
+
+            MyProfileResult profileResult = new MyProfileResult();
+            profileResult.firstName = firstNameController.text;
+            profileResult.middleName = middleNameController.text;
+            profileResult.lastName = lastNameController.text;
+            profileResult.dateOfBirth = dateOfBirthController.text;
+            profileResult.id = widget.arguments.id;
+            profileResult.isIeUser = false;
+            profileResult.isCpUser = false;
+            profileResult.isSignedIn = false;
+            profileResult.isActive = true;
+            profileResult.gender = selectedGender;
+            // profileResult.createdBy=null;
+            // profileResult.createdOn=null;
+            profileResult.lastModifiedBy = null;
+            profileResult.lastModifiedOn = null;
+
+            if (currentselectedBloodGroup != null &&
+                currentselectedBloodGroupRange != null) {
+              profileResult.bloodGroup = currentselectedBloodGroup +
+                  ' ' +
+                  currentselectedBloodGroupRange;
+            }
+            UserAddressCollection3 userAddressCollection3 =
+                new UserAddressCollection3();
+            addFamilyUserInfoBloc.isUpdate = true;
+            if (widget.arguments?.sharedbyme?.child?.userAddressCollection3
+                .isNotEmpty) {
+              userAddressCollection3.id = widget
+                  ?.arguments?.sharedbyme?.child?.userAddressCollection3[0].id;
+              userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
+              userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
+              userAddressCollection3.pincode = cntrlr_addr_zip.text;
+              userAddressCollection3.city = new City(
+                  id: widget?.arguments?.sharedbyme?.child
+                      ?.userAddressCollection3[0].city?.id,
+                  isActive: widget?.arguments?.sharedbyme?.child
+                      ?.userAddressCollection3[0].city?.isActive,
+                  name: widget?.arguments?.sharedbyme?.child
+                      ?.userAddressCollection3[0].city?.name,
+                  createdOn: widget?.arguments?.sharedbyme?.child
+                      ?.userAddressCollection3[0].city?.createdOn,
+                  lastModifiedOn: widget?.arguments?.sharedbyme?.child
+                      ?.userAddressCollection3[0].city?.lastModifiedOn);
+              userAddressCollection3.state = widget?.arguments?.sharedbyme
+                  ?.child?.userAddressCollection3[0].state;
+            }
+
+            userAddressCollection3.isPrimary = true;
+            userAddressCollection3.isActive = true;
+            userAddressCollection3.createdOn =
+                DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+            userAddressCollection3.lastModifiedOn = null;
+            userAddressCollection3.createdBy = widget.arguments.id;
+            userAddressCollection3.addressType = AddressType(
+              id: _addressResult.id,
+              code: _addressResult.code,
+              name: _addressResult.name,
+              description: _addressResult.name,
+              sortOrder: null,
+              isActive: true,
+              createdBy: PreferenceUtil.getStringValue(Constants.KEY_USERID),
+              createdOn:
+                  DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+              lastModifiedOn: null,
+            );
+
+            List<UserAddressCollection3> userAddressCollection3List =
+                new List();
+            userAddressCollection3List.add(userAddressCollection3);
+            profileResult.userAddressCollection3 = userAddressCollection3List;
+
+            myProf.result = profileResult;
+            addFamilyUserInfoBloc.myProfileModel = myProf;
+
+            if (doValidation()) {
+              if (addFamilyUserInfoBloc.profileBanner != null) {
+                PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+                    addFamilyUserInfoBloc.profileBanner.path);
+              }
+              CommonUtil.showLoadingDialog(
+                  dialogContext, _keyLoader, variable.Please_Wait); //
+
+              addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
+                if (value != null && value.isSuccess) {
+                  _familyListBloc.getFamilyMembersListNew().then((value) {
+                    PreferenceUtil.saveFamilyData(
+                            Constants.KEY_FAMILYMEMBER, value.result)
+                        .then((value) {
+                      //saveProfileImage();
+                      MySliverAppBar.imageURI = null;
+                      fetchedProfileData = null;
+                      imageURI = null;
+                      Navigator.pop(dialogContext);
+                      Navigator.pop(dialogContext);
+                      Navigator.pop(dialogContext, true);
+                      //Get.offAllNamed(router.rt_UserAccounts);
+                      // Navigator.of(context).popUntil(
+                      //     ModalRoute.withName(router.rt_UserAccounts));
+                      // Navigator.popUntil(dialogContext, (Route<dynamic> route) {
+                      //   bool shouldPop = false;
+                      //   if (route.settings.name == router.rt_UserAccounts) {
+                      //     shouldPop = true;
+                      //   }
+                      //   return shouldPop;
+                      // });
+
+                      //Navigator.of(context).popUntil();
+                    });
+                  });
+                } else {
+                  Navigator.pop(dialogContext);
+                  Alert.displayAlertPlain(context,
+                      title: variable.Error, content: value.message);
+                }
+              });
+            } else {
+              Navigator.pop(dialogContext);
+              Alert.displayAlertPlain(context,
+                  title: variable.Error,
+                  content: CommonConstants.all_fields_mandatory);
+            }
+          }
+
+          /* if (widget.arguments.fromClass == CommonConstants.my_family) {
             addFamilyUserInfoBloc.relationship = selectedRelationShip.name;
             addFamilyUserInfoBloc.userId = widget.arguments.sharedbyme.child.id;
             addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
@@ -1525,8 +1844,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   title: variable.strError,
                   content: CommonConstants.all_fields_mandatory);
             }
-          } else if (widget.arguments.fromClass ==
-              CommonConstants.user_update) {
+          } */
+          else if (widget.arguments.fromClass == CommonConstants.user_update) {
             if (_formkey.currentState.validate()) {
               if (doValidation()) {
                 CommonUtil.showLoadingDialog(
@@ -1561,7 +1880,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else {
             addFamilyUserInfoBloc.userId = widget.arguments.id;
             addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
-            addFamilyUserInfoBloc.relationship = relationShipController.text;
+            addFamilyUserInfoBloc.relationship = null;
 
             MyProfileModel myProf = new MyProfileModel();
 
@@ -1575,17 +1894,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             profileResult.isCpUser = false;
             profileResult.isSignedIn = false;
             profileResult.isActive = true;
+            profileResult.gender = selectedGender;
             // profileResult.createdBy=null;
             // profileResult.createdOn=null;
             profileResult.lastModifiedBy = null;
             profileResult.lastModifiedOn = null;
 
-            if (selectedBloodGroup != null && selectedBloodRange != null) {
-              profileResult.bloodGroup =
-                  selectedBloodGroup + ' ' + selectedBloodRange;
+            if (currentselectedBloodGroup != null &&
+                currentselectedBloodGroupRange != null) {
+              profileResult.bloodGroup = currentselectedBloodGroup +
+                  ' ' +
+                  currentselectedBloodGroupRange;
             }
             UserAddressCollection3 userAddressCollection3 =
                 new UserAddressCollection3();
+            addFamilyUserInfoBloc.isUpdate = false;
             //userAddressCollection3.id = null;
             userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
             userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
@@ -1605,14 +1928,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             userAddressCollection3.lastModifiedOn = null;
             userAddressCollection3.createdBy = widget.arguments.id;
             userAddressCollection3.addressType = AddressType(
-              // TODO this would be com from drop down
-              id: '02b0eeab-f7ec-48d1-8ba3-a6cf9acbc46c',
-              code: 'WRKADD',
-              name: 'Work or Office Address',
-              description: 'Work or Office Address',
-              sortOrder: 2,
+              id: _addressResult.id,
+              code: _addressResult.code,
+              name: _addressResult.name,
+              description: _addressResult.name,
+              sortOrder: null,
               isActive: true,
-              createdBy: widget.arguments.id,
+              createdBy: PreferenceUtil.getStringValue(Constants.KEY_USERID),
               createdOn:
                   DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
               lastModifiedOn: null,
@@ -1714,13 +2036,26 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       isValid = true;
     }
 
-    if (selectedBloodGroup != null) {
+    /* if (selectedBloodGroup != null) {
       if (selectedBloodRange == null) {
         isValid = false;
         strErrorMsg = variable.selectRHType;
       } else {
         addFamilyUserInfoBloc.bloodGroup =
             selectedBloodGroup + '_' + selectedBloodRange;
+      }
+    } else {
+      isValid = false;
+      strErrorMsg = variable.selectBloodGroup;
+    } */
+
+    if (currentselectedBloodGroup != null) {
+      if (currentselectedBloodGroupRange == null) {
+        isValid = false;
+        strErrorMsg = variable.selectRHType;
+      } else {
+        addFamilyUserInfoBloc.bloodGroup =
+            currentselectedBloodGroup + '_' + currentselectedBloodGroupRange;
       }
     } else {
       isValid = false;

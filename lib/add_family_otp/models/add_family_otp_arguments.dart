@@ -6,7 +6,7 @@ class AddFamilyOTPArguments {
   String enteredLastName;
   String enteredMobNumber;
   String selectedCountryCode;
-  RelationsShipCollection relationShip;
+  RelationsShipModel relationShip;
   bool isPrimaryNoSelected;
 
   AddFamilyOTPArguments(

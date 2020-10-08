@@ -275,6 +275,17 @@ class CommonConstants {
   String get poPulseUNIT => countryMetrics.poPulseUnit;
   String get tempUNIT => countryMetrics.tempUnit;
   String get weightUNIT => countryMetrics.weightUnit;
+
+  static const String strId = 'id';
+  static const String strName = 'name';
+  static const String strCode = 'code';
+  static const String strSuccess = 'isSuccess';
+  static const String strResult = 'result';
+  static const String strCodePhone = 'PHNTYP';
+
+  static const String strReferenceValue = 'reference-value';
+  static const String strDataCodes = 'data-codes';
+  static const String strSlash = '/';
 }
 
 class ImageUrlUtils {

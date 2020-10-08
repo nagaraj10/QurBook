@@ -1,11 +1,15 @@
 // ignore: file_names
 import 'dart:convert' as convert;
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_country_picker/country.dart';
 import 'package:flutter_country_picker/flutter_country_picker.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_arguments.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -61,7 +65,7 @@ class _MyFamilyState extends State<MyFamily> {
 
   // Option 2
   String selectedBloodGroup;
-  RelationsShipCollection selectedRelationShip;
+  RelationsShipModel selectedRelationShip;
 
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
@@ -272,7 +276,10 @@ class _MyFamilyState extends State<MyFamily> {
                 currentPage: position - 1),
           ).then((value) {
             if (value) {
+              rebuildFamilyBlock();
               setState(() {});
+              FlutterToast toast = new FlutterToast();
+              toast.getToast('list updated', Colors.green);
             }
 
             /*  _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
@@ -324,6 +331,11 @@ class _MyFamilyState extends State<MyFamily> {
                             fit: BoxFit.cover,
                             width: 60,
                             height: 60,
+                            headers: {
+                              HttpHeaders.authorizationHeader:
+                                  PreferenceUtil.getStringValue(
+                                      Constants.KEY_AUTHTOKEN)
+                            },
                           )
                     : Container(
                         width: 60,
@@ -331,9 +343,7 @@ class _MyFamilyState extends State<MyFamily> {
                         color: Color(fhbColors.bgColorContainer),
                         child: Center(
                           child: Text(
-                            fulName != null
-                                ? fulName[0].toUpperCase()
-                                : '',
+                            fulName != null ? fulName[0].toUpperCase() : '',
                             style: TextStyle(
                                 fontSize: 22,
                                 color: Color(CommonUtil().getMyPrimaryColor())),
@@ -450,10 +460,12 @@ class _MyFamilyState extends State<MyFamily> {
                               ? myProfile.result != null
                                   ? /* myProfile.result.countryCode +
                                       "-" + */
-                                      myProfile.result.userContactCollection3[0]
-                                          .phoneNumber
+                                  myProfile.result.userContactCollection3[0]
+                                      .phoneNumber
                                   : data.child.isVirtualUser != null
-                                      ? (PreferenceUtil.getProfileData(Constants.KEY_PROFILE).result != null
+                                      ? (PreferenceUtil.getProfileData(Constants.KEY_PROFILE)
+                                                      .result !=
+                                                  null
                                               ? PreferenceUtil.getProfileData(
                                                       Constants.KEY_PROFILE)
                                                   .result
@@ -617,7 +629,7 @@ class _MyFamilyState extends State<MyFamily> {
     selectedRelationShip = null;
     rebuildFamilyBlock();
 
-    List<RelationsShipCollection> data =
+    List<RelationsShipModel> data =
         PreferenceUtil.getFamilyRelationship(Constants.keyFamily);
 
     return showDialog<void>(
@@ -808,7 +820,7 @@ class _MyFamilyState extends State<MyFamily> {
     );
   }
 
-  Widget getRelationshipDetails(List<RelationsShipCollection> data) {
+  Widget getRelationshipDetails(List<RelationsShipModel> data) {
     return StatefulBuilder(builder: (context, setState) {
       return Expanded(
           flex: 8,
@@ -1064,19 +1076,19 @@ class _MyFamilyState extends State<MyFamily> {
           // signInData[variable.strLastName] = lastNameController.text;
           // signInData[variable.strRelation] = selectedRelationShip.id;
 
-          var addFamilyMemberRequest = {};
-          addFamilyMemberRequest['isVirtualUser'] = true;
-          addFamilyMemberRequest['firstName'] = firstNameController.text;
-          addFamilyMemberRequest['lastName'] = lastNameController.text;
-          addFamilyMemberRequest['dateOfBirth'] = null;
-          addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
-          addFamilyMemberRequest['phoneNumber'] = mobileNoController.text;
-          addFamilyMemberRequest['email'] = '';
-          addFamilyMemberRequest['isPrimary'] = true;
-
-          var jsonString = convert.jsonEncode(addFamilyMemberRequest);
-
           if (isPrimaryNoSelected) {
+            var addFamilyMemberRequest = {};
+            addFamilyMemberRequest['isVirtualUser'] = true;
+            addFamilyMemberRequest['firstName'] = firstNameController.text;
+            addFamilyMemberRequest['lastName'] = lastNameController.text;
+            addFamilyMemberRequest['dateOfBirth'] = null;
+            addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
+            addFamilyMemberRequest['phoneNumber'] = mobileNoController.text;
+            addFamilyMemberRequest['email'] = '';
+            addFamilyMemberRequest['isPrimary'] = true;
+
+            var jsonString = convert.jsonEncode(addFamilyMemberRequest);
+
             _familyListBloc
                 .postUserLinkingForPrimaryNo(jsonString)
                 .then((addFamilyOTPResponse) {
@@ -1084,44 +1096,40 @@ class _MyFamilyState extends State<MyFamily> {
                 if (addFamilyOTPResponse.result != null) {
                   _familyListBloc.getFamilyMembersInfo().then((value) {
                     if (value.isSuccess) {
-
                       Navigator.of(_keyLoader.currentContext,
-                                rootNavigator: true)
-                            .pop();
+                              rootNavigator: true)
+                          .pop();
 
-                        Navigator.pop(context);
-                        Navigator.pushNamed(
-                          context,
-                          router.rt_AddFamilyUserInfo,
-                          arguments: AddFamilyUserInfoArguments(
-                              fromClass: CommonConstants.add_family,
-                              enteredFirstName: firstNameController.text,
-                              enteredMiddleName: middleNameController.text,
-                              enteredLastName: lastNameController.text,
-                              relationShip: selectedRelationShip,
-                              isPrimaryNoSelected: isPrimaryNoSelected,
-                              id: addFamilyOTPResponse.result.childInfo.id,
-                              addFamilyUserInfo:
-                                  addFamilyOTPResponse.result != null
-                                      ? addFamilyOTPResponse.result
-                                      : ''),
-                        ).then((value) {
-                          mobileNoController.text = '';
-                          nameController.text = '';
-                          isPrimaryNoSelected = false;
-                          selectedRelationShip = null;
-                          rebuildFamilyBlock();
-                          /* _familyListBloc
+                      Navigator.pop(context);
+                      Navigator.pushNamed(
+                        context,
+                        router.rt_AddFamilyUserInfo,
+                        arguments: AddFamilyUserInfoArguments(
+                            fromClass: CommonConstants.add_family,
+                            enteredFirstName: firstNameController.text,
+                            enteredMiddleName: middleNameController.text,
+                            enteredLastName: lastNameController.text,
+                            relationShip: selectedRelationShip,
+                            isPrimaryNoSelected: isPrimaryNoSelected,
+                            id: addFamilyOTPResponse.result.childInfo.id,
+                            addFamilyUserInfo:
+                                addFamilyOTPResponse.result != null
+                                    ? addFamilyOTPResponse.result
+                                    : ''),
+                      ).then((value) {
+                        mobileNoController.text = '';
+                        nameController.text = '';
+                        isPrimaryNoSelected = false;
+                        selectedRelationShip = null;
+                        rebuildFamilyBlock();
+                        /* _familyListBloc
                               .getFamilyMembersListNew()
                               .then((familyMembersList) {
                             PreferenceUtil.saveFamilyData(
                                 Constants.KEY_FAMILYMEMBER,
                                 familyMembersList.result);
                           }); */
-                        });
-
-
-
+                      });
 
                       /* PreferenceUtil.saveFamilyDataNew(
                               Constants.KEY_FAMILYMEMBERNEW, value.result)
@@ -1187,11 +1195,71 @@ class _MyFamilyState extends State<MyFamily> {
               }
             });
           } else {
+            var mobileNo = '+91${mobileNoController.text}';
+            var addFamilyMemberRequest = {};
+            addFamilyMemberRequest['isVirtualUser'] = false;
+            addFamilyMemberRequest['firstName'] = firstNameController.text;
+            addFamilyMemberRequest['lastName'] = lastNameController.text;
+            addFamilyMemberRequest['dateOfBirth'] = null;
+            addFamilyMemberRequest['relationship'] = selectedRelationShip.id;
+            addFamilyMemberRequest['phoneNumber'] =
+                mobileNo; //TODO this has be dynamic country code.
+            addFamilyMemberRequest['email'] = '';
+            addFamilyMemberRequest['isPrimary'] = true;
+
+            var jsonString = convert.jsonEncode(addFamilyMemberRequest);
+
             _familyListBloc.postUserLinking(jsonString).then((userLinking) {
-              if (userLinking.success && userLinking.status == 200) {
+              if (userLinking.success) {
                 _familyListBloc.getFamilyMembersListNew().then((value) {
-                  if (value.status == 200 && value.success) {
-                    PreferenceUtil.saveFamilyData(
+                  if (value.isSuccess) {
+                    // Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                    //     .pop();
+
+                    Navigator.pop(_keyLoader.currentContext);
+                    Navigator.pop(context);
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VerifyPatient(
+                          PhoneNumber: mobileNo,
+                          from: strFromVerifyFamilyMember,
+                          fName: firstNameController.text,
+                          mName: middleNameController.text,
+                          lName: lastNameController.text,
+                          relationship: selectedRelationShip,
+                          isPrimaryNoSelected: isPrimaryNoSelected,
+                        ),
+                      ),
+                    ).then((value) {
+                      mobileNoController.text = '';
+                      nameController.text = '';
+                      isPrimaryNoSelected = false;
+                      selectedRelationShip = null;
+                      rebuildFamilyBlock();
+                    });
+
+                    /* Navigator.pushNamed(
+                      context,
+                      router.rt_AddFamilyOtp,
+                      arguments: AddFamilyOTPArguments(
+                          enteredMobNumber: mobileNoController.text,
+                          enteredFirstName: firstNameController.text,
+                          enteredMiddleName: middleNameController.text,
+                          enteredLastName: lastNameController.text,
+                          selectedCountryCode: _selected.dialingCode,
+                          relationShip: selectedRelationShip,
+                          isPrimaryNoSelected: isPrimaryNoSelected),
+                    ).then((value) {
+                      mobileNoController.text = '';
+                      nameController.text = '';
+                      isPrimaryNoSelected = false;
+                      selectedRelationShip = null;
+                      rebuildFamilyBlock();
+                    }); */
+
+                    /*  PreferenceUtil.saveFamilyData(
                             Constants.KEY_FAMILYMEMBER, value.result)
                         .then((value) {
                       Navigator.of(_keyLoader.currentContext,
@@ -1225,7 +1293,7 @@ class _MyFamilyState extends State<MyFamily> {
                               familyMembersList.result);
                         });
                       });
-                    });
+                    }); */
                   } else {
                     Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                         .pop();

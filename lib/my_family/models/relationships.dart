@@ -1,4 +1,4 @@
-class RelationsShipCollection {
+class RelationsShipModel {
   String id;
   String code;
   String name;
@@ -9,7 +9,7 @@ class RelationsShipCollection {
   String createdOn;
   String lastModifiedOn;
 
-  RelationsShipCollection(
+  RelationsShipModel(
       {this.id,
       this.code,
       this.name,
@@ -20,7 +20,7 @@ class RelationsShipCollection {
       this.createdOn,
       this.lastModifiedOn});
 
-  RelationsShipCollection.fromJson(Map<String, dynamic> json) {
+  RelationsShipModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     code = json['code'];
     name = json['name'];

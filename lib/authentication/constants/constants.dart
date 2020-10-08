@@ -24,6 +24,7 @@ const String strcreatedOn = 'createdOn';
 const String strid = 'id';
 const String strverificationCode = 'verificationCode';
 const String strFromSignUp = 'AfterSignup';
+const String strFromVerifyFamilyMember= 'VerifyFamilyMember';
 
 //Strings used in VerifyPatient
 const String strSource = "myFHBMobile";
@@ -90,7 +91,7 @@ const String myFHB_logo = 'assets/launcher/myfhb.png';
 const String strSignUpEndpoint = 'register-user';
 const String strSignEndpoint = 'login';
 const String strUserVerifyEndpoint = 'confirm-user';
-const String strOtpVerifyEndpoint = 'verify-otp';
+const String strOtpVerifyEndpoint = 'user-relationship/verify-otp';
 const String strResult = "result";
 const String strmessage = "message";
 const String strIsSuccess = 'isSuccess';
@@ -117,6 +118,7 @@ const String strKeyConfirmUserService = 'confirm_userservice';
 const String strKeyVerifyOtpService = 'verify_otpservice';
 const String strKeyForgotPassword = 'forgot-password';
 const String strKeyConfirmForgotPassword = 'confirm-forgot-password';
+const String strKeyVerifyFamilyMemberEP = 'user-relationship/verify-otp';
 final Pattern patternPhone = r'^(?:[+0]9)?[0-9]{11}$';
 final Pattern patternOtp = r'(^[0-9]{6}$)';
 final Pattern patternChar = r'^[a-z]+$';

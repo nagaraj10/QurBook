@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:myfhb/add_family_user_info/models/CityListModel.dart';
+import 'package:myfhb/add_family_user_info/models/address_type_list.dart';
 import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
+import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dart';
 import 'package:myfhb/add_family_user_info/models/update_self_profile_model.dart';
 import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_info.dart';
 import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as query;
@@ -119,11 +123,13 @@ class AddFamilyUserInfoRepository {
       String lastName,
       String cityId,
       String stateId,
+      bool isUpdate,
       String addressLine1,
       String addressLine2,
       String zipcode,
       bool fromFamily,
-      MyProfileModel myProfileModel) async {
+      MyProfileModel myProfileModel,
+      UpdateRelationshipModel relationship) async {
     String query = '';
 
     var response;
@@ -167,10 +173,12 @@ class AddFamilyUserInfoRepository {
               lastName,
               cityId,
               stateId,
+              isUpdate,
               addressLine1,
               addressLine2,
               zipcode,
-              myProfileModel));
+              myProfileModel,
+              relationship));
     }
 
     return UpdateSelfProfileModel.fromJson(response);
@@ -272,4 +280,15 @@ class AddFamilyUserInfoRepository {
     var response = await _helper.getValueBasedOnSearch(stateName, apibody);
     return StateModel.fromJson(response);
   }
+
+  Future<AddressTypeResult> getAddressTypeResult(String codeType) async {
+    String responseQuery = CommonConstants.strReferenceValue +
+        CommonConstants.strSlash +
+        CommonConstants.strDataCodes;
+    AddressTypeResult response = await _helper.fetchAddressType(responseQuery);
+
+    return response;
+  }
+
+
 }

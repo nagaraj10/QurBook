@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -19,6 +20,7 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:http/http.dart' as http;
 
 class MyFamilyDetailScreen extends StatefulWidget {
   MyFamilyDetailArguments arguments;
@@ -73,15 +75,18 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   FocusNode dateOfBirthFocus = FocusNode();
 
   RelationShipResponseList relationShipResponseList;
-  RelationsShipCollection selectedRelationShip;
+  RelationsShipModel selectedRelationShip;
 
   DateTime dateTime = DateTime.now();
-  MyProfileModel myProfile;
+  // MyProfileModel myProfile;
   bool isCalled = false;
 
   List<int> fetchedProfileData;
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository;
+
+  MyProfileModel myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
 
   String selectedBloodGroup;
   String selectedBloodRange;
@@ -91,7 +96,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   @override
   void initState() {
     super.initState();
-
+    addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+    getAllCustomRoles();
     setState(() {
       _currentPage = widget.arguments.currentPage;
     });
@@ -132,9 +138,17 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   onPressed: () {
                     Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                             arguments: AddFamilyUserInfoArguments(
+                                //TODO we need to pass the logged in user id
+                                id: widget.arguments
+                                    .profilesSharedByMe[_currentPage].child.id,
                                 sharedbyme: widget
                                     .arguments.profilesSharedByMe[_currentPage],
-                                fromClass: CommonConstants.my_family))
+                                fromClass: CommonConstants.my_family,
+                                defaultrelationShips:
+                                    relationShipResponseList?.result?.isNotEmpty
+                                        ? relationShipResponseList
+                                            ?.result[0].referenceValueCollection
+                                        : List<RelationsShipModel>()))
                         .then((value) {});
                   })
             ]),
@@ -215,8 +229,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       lastNameController.text = '';
     }
 
-    if (sharedbyme?.child?.isVirtualUser == null) {
+    if (sharedbyme?.child?.isVirtualUser != null) {
       try {
+        if (sharedbyme.child.isVirtualUser) {
           MyProfileModel myProf =
               PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
           if (myProf.result.userContactCollection3 != null) {
@@ -227,10 +242,19 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   myProf.result.userContactCollection3[0].email;
             }
           }
-        } catch (e) {
-          mobileNoController.text = '';
-          emailController.text = '';
+        }else{
+          // this is non primary user
+          if(sharedbyme?.child?.userContactCollection3.isNotEmpty){
+             mobileNoController.text =
+                  sharedbyme?.child?.userContactCollection3[0].phoneNumber;
+              emailController.text =
+                  sharedbyme?.child?.userContactCollection3[0].email;
+          }
         }
+      } catch (e) {
+        mobileNoController.text = '';
+        emailController.text = '';
+      }
 
       /* if (sharedbyme.child.isVirtualUser == true) {
         try {
@@ -314,6 +338,11 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                         fit: BoxFit.cover,
                                         width: 100,
                                         height: 100,
+                                        headers: {
+                                          HttpHeaders.authorizationHeader:
+                                              PreferenceUtil.getStringValue(
+                                                  Constants.KEY_AUTHTOKEN)
+                                        },
                                       )
                                     : Container(
                                         width: 100,
@@ -941,41 +970,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return viewHospitalButtonWithGesture;
   }
 
-  Widget getAllCustomRoles() {
-    Widget familyWidget;
-
-    return StreamBuilder<ApiResponse<RelationShipResponseList>>(
-      stream: addFamilyUserInfoBloc.relationShipStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<RelationShipResponseList>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              break;
-
-            case Status.ERROR:
-              familyWidget = Center(
-                  child: Text(Constants.STR_ERROR_LOADING_DATA,
-                      style: TextStyle(color: Colors.red)));
-              break;
-
-            case Status.COMPLETED:
-              isCalled = true;
-
-              relationShipResponseList = snapshot.data.data;
-
-              familyWidget = getRelationshipDetails(snapshot.data.data);
-              break;
-          }
-        } else {
-          familyWidget = Container(
-            width: 100,
-            height: 100,
-          );
-        }
-        return familyWidget;
-      },
-    );
+  Future<void> getAllCustomRoles() async {
+    addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
+    relationShipResponseList =
+        await addFamilyUserInfoRepository.getCustomRoles();
   }
 
   Widget getRelationshipDetails(RelationShipResponseList data) {

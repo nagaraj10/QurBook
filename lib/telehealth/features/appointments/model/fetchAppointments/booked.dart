@@ -1,5 +1,5 @@
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/userAddressCollection3.dart';
 
 class Booked {
   Booked({

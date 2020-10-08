@@ -12,7 +12,7 @@ class Result {
   String createdBy;
   String createdOn;
   String lastModifiedOn;
-  List<RelationsShipCollection> referenceValueCollection;
+  List<RelationsShipModel> referenceValueCollection;
 
   Result(
       {this.id,
@@ -35,9 +35,9 @@ class Result {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['referenceValueCollection'] != null) {
-      referenceValueCollection = new List<RelationsShipCollection>();
+      referenceValueCollection = new List<RelationsShipModel>();
       json['referenceValueCollection'].forEach((v) {
-        referenceValueCollection.add(new RelationsShipCollection.fromJson(v));
+        referenceValueCollection.add(new RelationsShipModel.fromJson(v));
       });
     }
   }

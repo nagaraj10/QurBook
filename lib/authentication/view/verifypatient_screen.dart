@@ -2,18 +2,23 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
+import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/model/patientverify_model.dart';
 import 'package:myfhb/authentication/model/resend_otp_model.dart';
+import 'package:myfhb/authentication/model/verifyotp_model.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/authentication/view/verify_arguments.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/patientverify_model.dart'
     as OtpModel;
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart';
@@ -22,14 +27,21 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'dart:convert';
 import 'dart:io';
+import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/authentication/model/resend_otp_model.dart'
     as ResendModel;
 import 'package:myfhb/src/ui/Dashboard.dart';
 
 class VerifyPatient extends StatefulWidget {
-  VerifyPatient({this.PhoneNumber, this.from});
+  VerifyPatient({this.PhoneNumber, this.from,this.fName,this.lName,this.mName,this.isPrimaryNoSelected,this.relationship});
   final String PhoneNumber;
   final String from;
+  final String fName;
+  final String mName;
+  final String lName;
+  final RelationsShipModel relationship;
+  final bool isPrimaryNoSelected;
+
   @override
   _VerifyPatientState createState() => _VerifyPatientState();
 }
@@ -211,6 +223,29 @@ class _VerifyPatientState extends State<VerifyPatient> {
             await authViewModel.verifyPatient(map);
         print(response.toString());
         _checkResponse(response);
+      } else if (widget.from == strFromVerifyFamilyMember) {
+        VerifyOTPModel params = VerifyOTPModel(
+            phoneNumber: widget.PhoneNumber,
+            verificationCode: OtpController.text);
+        AddFamilyOTPResponse response = await authViewModel.verifyMyOTP(params.toJson());
+        if(response.isSuccess){
+          Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
+                  arguments: AddFamilyUserInfoArguments(
+                      fromClass: CommonConstants.add_family,
+                      enteredFirstName: widget.fName,
+                      enteredMiddleName: widget.mName,
+                      enteredLastName: widget.lName,
+                      relationShip: widget.relationship,
+                      isPrimaryNoSelected: widget.isPrimaryNoSelected,
+                      addFamilyUserInfo: response.result != null
+                          ? response.result
+                          : ''))
+              .then((value) {});
+        }else{
+          //something went wrong.
+          Navigator.pop(context);
+          toast.getToast(response.message, Colors.red);
+        }
       } else {
         PatientSignupOtp logInModel = new PatientSignupOtp(
           verificationCode: OtpController.text,

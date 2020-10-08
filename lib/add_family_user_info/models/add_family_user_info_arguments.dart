@@ -8,7 +8,8 @@ class AddFamilyUserInfoArguments {
   String enteredFirstName;
   String enteredMiddleName;
   String enteredLastName;
-  RelationsShipCollection relationShip;
+  RelationsShipModel relationShip;
+  List<RelationsShipModel> defaultrelationShips;
   String id;
   bool isPrimaryNoSelected;
   SharedByUsers sharedbyme;
@@ -21,6 +22,7 @@ class AddFamilyUserInfoArguments {
       this.enteredMiddleName,
       this.enteredLastName,
       this.relationShip,
+      this.defaultrelationShips,
       this.id,
       this.isPrimaryNoSelected,
       this.sharedbyme,

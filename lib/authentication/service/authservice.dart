@@ -6,10 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:myfhb/authentication/model/error_response_model.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class AuthService {
   String _auth_base_url = 'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/api/auth/';
+  HeaderRequest headerRequest = new HeaderRequest();
   Future<dynamic> patientsignupservice(Map<String, dynamic> params) async {
     try {
       final response = await http.post(
@@ -142,12 +144,13 @@ class AuthService {
   Future<dynamic> verifyOtpService(Map<String, dynamic> params) async {
     try {
       final response = await http.post(
-        _auth_base_url + strOtpVerifyEndpoint,
-        headers: <String, String>{
+        Constants.BASE_URL + strOtpVerifyEndpoint,
+        /* headers: <String, String>{
           c_content_type_key: c_content_type_val,
           c_auth_key:
               '$strBearer ${await PreferenceUtil.getStringValue(strKeyVerifyOtpToken)}',
-        },
+        }, */
+        headers: await headerRequest.getRequestHeadersAuthContents(),
         body: jsonEncode(params),
       );
       if (response.statusCode == 200) {
@@ -172,6 +175,28 @@ class AuthService {
           c_content_type_key: c_content_type_val,
           c_auth_key:
               '$strBearer ${await PreferenceUtil.getStringValue(strKeyVerifyOtpService)}',
+        },
+        body: jsonEncode(params),
+      );
+      if (response.statusCode == 200) {
+        var responseResult = jsonDecode(response.body);
+        return responseResult;
+      } else {
+        return createErrorJsonString(response);
+      }
+    } on SocketException {
+      return spocketException();
+    }
+  }
+
+   Future<dynamic> verifyOTPservice(Map<String, dynamic> params) async {
+    try {
+      final response = await http.post(
+        Constants.BASE_URL + strKeyVerifyFamilyMemberEP,
+        headers: <String, String>{
+          c_content_type_key: c_content_type_val,
+          c_auth_key:
+              '$strBearer ${PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)}',
         },
         body: jsonEncode(params),
       );

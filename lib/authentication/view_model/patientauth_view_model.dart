@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/authentication/model/change_password_model.dart';
 import 'package:myfhb/authentication/model/confirm_password_model.dart';
 import 'package:myfhb/authentication/model/forgot_password_model.dart';
@@ -64,4 +65,11 @@ class AuthViewModel extends ChangeNotifier {
     ChangePasswordModel change = ChangePasswordModel.fromJson(changeResponse);
     return change;
   }
+
+  Future<AddFamilyOTPResponse> verifyMyOTP(Map<String, dynamic> params) async{
+    var otpResponse = await _authService.verifyOtpService(params);
+    AddFamilyOTPResponse response = AddFamilyOTPResponse.fromJson(otpResponse);
+    return response;
+  }
+
 }

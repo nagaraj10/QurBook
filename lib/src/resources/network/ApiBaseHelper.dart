@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:myfhb/add_family_user_info/models/address_type_list.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -16,6 +17,7 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
+import 'package:myfhb/src/model/error_map.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
@@ -35,6 +37,7 @@ class ApiBaseHelper {
   String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
   HeaderRequest headerRequest = new HeaderRequest();
+  ErrorMap errorMap = new ErrorMap();
 
   Future<dynamic> signIn(String url, String jsonData) async {
     var responseJson;
@@ -1082,5 +1085,20 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<AddressTypeResult> fetchAddressType(String responseQuery) async{
+    final response = await http.post(_baseUrl + responseQuery,
+        headers: await headerRequest.getRequestHeadersAuthContent(), body: '["ADDTYP"]');
+
+    
+    print(response.body);
+
+    if (response.statusCode == 200) {
+      return AddressTypeResult.fromJson(jsonDecode(response.body));
+    } else {
+      return AddressTypeResult.fromJson(
+          errorMap.createErrorJsonString(response));
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -208,10 +209,12 @@ class WebserviceCall {
       String lastName,
       String cityId,
       String stateId,
+      bool isUpdate,
       String addressLine1,
       String addressLine2,
       String zipcode,
-      MyProfileModel myProfileModel) {
+      MyProfileModel myProfileModel,
+      UpdateRelationshipModel relationship){
     var input = {};
     input[variable.qr_gender_p] = gender;
     input[variable.qr_bloodgroup_p] = bloodGroup;
@@ -225,8 +228,20 @@ class WebserviceCall {
 
     MyProfileResult profileResult = myProfileModel.result;
 
-    var queryProfile = profileResult.toJson();
-    var profilequery = json.encode(queryProfile);
+    Map<String,dynamic> queryProfile = profileResult.toJson();
+    if(isUpdate){
+      // NOTE if user try to update the role this would change
+      var relationshipCollection = {'userRelationshipCollection':[relationship.toJson()]};
+      queryProfile.addAll(relationshipCollection);
+    }
+    //TODO here only check user add/update flow for removing the id from useraddresscollection
+    Map<String,dynamic> copyOfQueryProfile = queryProfile;
+    Map<String,dynamic> addressObj = copyOfQueryProfile['userAddressCollection3'][0];
+    if(!isUpdate){
+      addressObj.removeWhere((key, value) => key=='id');
+    }
+    print('final objects $copyOfQueryProfile id has been removed');
+    var profilequery = json.encode(copyOfQueryProfile);
     profilequery = profilequery.replaceAll('\n', '');
 
     return profilequery.toString();

@@ -298,19 +298,19 @@ class PreferenceUtil {
   }
 
   static Future<bool> saveRelationshipArray(
-      String familyRelation, List<RelationsShipCollection> relationShipAry) async {
+      String familyRelation, List<RelationsShipModel> relationShipAry) async {
     var instance = await _prefs;
 
     return instance.setString(familyRelation, json.encode(relationShipAry));
   }
 
-  static List<RelationsShipCollection> getFamilyRelationship(String keyFamilyRelation) {
-    List<RelationsShipCollection> categoryData = new List();
+  static List<RelationsShipModel> getFamilyRelationship(String keyFamilyRelation) {
+    List<RelationsShipModel> categoryData = new List();
 
     try {
       if (_prefsInstance == null) {}
       json.decode(_prefsInstance.getString(keyFamilyRelation)).forEach((map) {
-        categoryData.add(new RelationsShipCollection.fromJson(map));
+        categoryData.add(new RelationsShipModel.fromJson(map));
       });
 
       return categoryData;
