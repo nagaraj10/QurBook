@@ -1088,11 +1088,11 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<AddressTypeResult> fetchAddressType(String responseQuery) async{
+  Future<AddressTypeResult> fetchAddressType(String responseQuery) async {
     final response = await http.post(_baseUrl + responseQuery,
-        headers: await headerRequest.getRequestHeadersAuthContent(), body: '["ADDTYP"]');
+        headers: await headerRequest.getRequestHeadersAuthContent(),
+        body: '["ADDTYP"]');
 
-    
     print(response.body);
 
     if (response.statusCode == 200) {
@@ -1100,6 +1100,9 @@ class ApiBaseHelper {
     } else {
       return AddressTypeResult.fromJson(
           errorMap.createErrorJsonString(response));
+    }
+  }
+
   Future<dynamic> createMediaData(String url, String payload,
       List<String> imagePaths, String audioPath) async {
     String authToken =
