@@ -4,9 +4,10 @@ import 'package:myfhb/add_family_user_info/viewmodel/doctor_personal_viewmodel.d
 
 class AddressTypeWidget extends StatefulWidget {
   AddressResult addressResult;
-  Function(AddressResult) onSelected;
+  List<AddressResult> addressList;
+  Function(AddressResult, List<AddressResult>) onSelected;
 
-  AddressTypeWidget({this.addressResult, this.onSelected});
+  AddressTypeWidget({this.addressResult, this.onSelected, this.addressList});
   @override
   AddressTypeWidgetState createState() => AddressTypeWidgetState();
 }
@@ -21,13 +22,30 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
   void initState() {
     super.initState();
     doctorPersonalViewModel = new DoctorPersonalViewModel();
+    if (widget.addressList.isNotEmpty) {
+      addressResultList = widget.addressList;
+    }
     this.getAddressTypes();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return (widget.addressList != null && widget.addressList.length > 0)
+        ? getDropDownAddress()
+        : checkIfAddressLength();
+  }
+
   Widget getDropDownAddress() {
+    AddressResult itemSelected = addressResultList[0];
+    for (AddressResult res in addressResultList) {
+      if (res.id == widget.addressResult.id) {
+        itemSelected = res;
+      }
+    }
     return Padding(
       padding: EdgeInsets.only(left: 10, right: 10, top: 4, bottom: 4),
       child: DropdownButton(
+        value: itemSelected,
         isExpanded: true,
         items: addressResultList.map((item) {
           return new DropdownMenuItem(
@@ -39,20 +57,13 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
           setState(() {
             widget.addressResult = newVal;
           });
-          widget.onSelected(widget.addressResult);
+          widget.onSelected(widget.addressResult, widget.addressList);
         },
-        value: widget.addressResult != null
+        /* value: widget.addressResult != null
             ? widget.addressResult
-            : addressResultList[0],
+            : addressResultList[0], */
       ),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return (addressResultList != null && addressResultList.length > 0)
-        ? getDropDownAddress()
-        : checkIfAddressLength();
   }
 
   Widget checkIfAddressLength() {
@@ -79,10 +90,13 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
   Future<List<AddressResult>> getAddressTypes() async {
     var response = await doctorPersonalViewModel.getAddressTypeList();
     addressResultList = response;
+
     if (widget.addressResult != null) {
-      widget.onSelected(addressResultList[0]);
+      widget.onSelected(widget.addressResult, addressResultList);
+    } else {
+      widget.onSelected(addressResultList[0], addressResultList);
     }
 
-    return response;
+    return addressResultList;
   }
 }
