@@ -210,7 +210,8 @@ class _MyFamilyState extends State<MyFamily> {
                   itemBuilder: (c, i) => getCardWidgetForUser(
                       data.sharedByUsers[i == 0 ? 0 : i - 1],
                       i,
-                      data.sharedByUsers),
+                      data.sharedByUsers,
+                      userCollection: data),
                   itemCount: data.sharedByUsers.length + 1,
                 ),
               )
@@ -251,7 +252,7 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   Widget getCardWidgetForUser(SharedByUsers data, int position,
-      List<SharedByUsers> profilesSharedByMeAry) {
+      List<SharedByUsers> profilesSharedByMeAry,{FamilyMemberResult userCollection}) {
     /* String familyMemberName = '';
     if (data?.child != null) {
       familyMemberName = '${data.child.firstName} ${data.child.lastName}';
@@ -455,7 +456,17 @@ class _MyFamilyState extends State<MyFamily> {
                     ),
                     SizedBox(height: 10.0),
                     Text(
-                      position == 0
+                      position == 0 //this is checking self
+                        ? myProfile?.result?.userContactCollection3.isNotEmpty
+                          ? myProfile?.result?.userContactCollection3[0].phoneNumber
+                          :''
+                        : data?.child?.isVirtualUser!=null 
+                            ? data?.child?.isVirtualUser
+                              ? userCollection?.virtualUserParent?.phoneNumber
+                              : data?.child?.userContactCollection3.isNotEmpty ? data?.child?.userContactCollection3[0].phoneNumber:''
+                          :'',
+
+                      /* position == 0
                           ? myProfile != null
                               ? myProfile.result != null
                                   ? /* myProfile.result.countryCode +
@@ -490,7 +501,7 @@ class _MyFamilyState extends State<MyFamily> {
                                                   : '')
                                       : ''
                               : ''
-                          : '',
+                          : '', */
                       style: TextStyle(
                           fontWeight: FontWeight.w400,
                           color: ColorUtils.greycolor1),
