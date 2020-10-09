@@ -10,7 +10,7 @@ import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class AuthService {
-  String _auth_base_url = 'https://dwtg3mk9sjz8epmqfo.vsolgmi.com/api/auth/';
+  String _auth_base_url = CommonUtil.BASE_URL_FROM_RES + '/auth/';
   HeaderRequest headerRequest = new HeaderRequest();
   Future<dynamic> patientsignupservice(Map<String, dynamic> params) async {
     try {

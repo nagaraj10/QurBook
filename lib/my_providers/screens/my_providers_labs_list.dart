@@ -137,7 +137,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList>{
                                         .then((status) {
                                       if (status) {
                                         print('onClick');
-                                        providersBloc.labs.clear();
+                                        widget.providersBloc.labs.clear();
                                         setState(() {});
                                       }
                                     });

@@ -561,6 +561,7 @@ const entityCode = "28858877-4710-4dd3-899f-0efe0e9255db";
 const roleCode = "285bbe41-3030-4b0e-b914-00e404a77032";
 const redirecturl = 'http://localhost:4200/callback?code=';
 const String strNoDoctordata = 'No Doctor List Available';
+const String strNoHospitaldata = 'No Hospital List Available';
 const String strNoAppointments = 'No Appoinments Available';
 
 const String strNoDataAvailable = 'Unable To load';

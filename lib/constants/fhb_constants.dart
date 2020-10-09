@@ -303,3 +303,4 @@ const String failed_get_conn = "Failed to get connectivity.";
 const String failed_get_connectivity = "Failed to get internet connectivity.";
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
+const String CONSULTING = 'CONSULTING';

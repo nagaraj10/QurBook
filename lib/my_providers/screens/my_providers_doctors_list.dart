@@ -20,9 +20,10 @@ class MyProvidersDoctorsList extends StatefulWidget {
   final List<Doctors> doctorsModel;
   final ProvidersBloc providersBloc;
   final MyProviderState myProviderState;
+  Function refresh;
 
   MyProvidersDoctorsList(
-      {this.doctorsModel, this.providersBloc, this.myProviderState});
+      {this.doctorsModel, this.providersBloc, this.myProviderState,this.refresh});
 
   @override
   _MyProvidersDoctorsList createState() => _MyProvidersDoctorsList();
@@ -31,7 +32,6 @@ class MyProvidersDoctorsList extends StatefulWidget {
 
 class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
   List<Doctors> doctorsModel;
-  ProvidersBloc providersBloc;
   MyProviderState myProviderState;
   MyProviderViewModel providerViewModel;
 
@@ -158,8 +158,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
                                         .then((status) {
                                       if (status) {
                                         print('onClick');
-                                        providersBloc.doctors.clear();
-                                        setState(() {});
+                                        widget.refresh();
                                       }
                                     });
                                   },

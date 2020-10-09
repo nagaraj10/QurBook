@@ -458,6 +458,14 @@ class ApiBaseHelper {
         }
         break;
 
+      case 404:
+        var responseJson = convert.jsonDecode(response.body.toString());
+
+        return responseJson;
+
+        break;
+
+
       case 500:
         var responseJson = convert.jsonDecode(response.body.toString());
 
@@ -858,7 +866,9 @@ class ApiBaseHelper {
   Future<dynamic> bookMarkDoctor(String url, String jsonBody) async {
     var responseJson;
     try {
-      final response = await http.post(_baseUrl + url,
+      print(_baseUrl + url);
+      print(jsonBody);
+      final response = await http.put(_baseUrl + url,
           headers: await headerRequest.getRequestHeader(), body: jsonBody);
 
       responseJson = _returnResponse(response);
@@ -1226,5 +1236,19 @@ class ApiBaseHelper {
       print(e);
       return response;
     }
+  }
+
+  Future<dynamic> getHealthOrgApi(String url) async {
+    var responseJson;
+    try {
+      print(_baseUrl + url);
+      final response = await http.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersAuthAccept());
+      responseJson = _returnResponse(response);
+      print(responseJson);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
   }
 }

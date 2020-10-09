@@ -12,6 +12,7 @@ import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
@@ -55,6 +56,8 @@ class ProvidersListRepository {
       bookMark[parameters.strisDefault] = true;
     }
 
+    print(doctorIds.providerPatientMappingId);
+
     var jsonString = convert.jsonEncode(bookMark);
     final response = await _helper.bookMarkDoctor(
         query.qr_patient_update_default + doctorIds.providerPatientMappingId,
@@ -67,8 +70,8 @@ class ProvidersListRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var bookMark = {};
     bookMark[parameters.strpatient] = userID;
-    bookMark[parameters.strdoctor] = hospitals.id;
-    bookMark[parameters.healthOrganization] = null;
+    bookMark[parameters.strdoctor] = null;
+    bookMark[parameters.healthOrganization] = hospitals.id;
     if (hospitals.isDefault) {
       bookMark[parameters.strisDefault] = false;
     } else {
@@ -97,4 +100,13 @@ class ProvidersListRepository {
     final response = await _helper.associateRecords(qr_sharerecord, jsonString);
     return AssociateRecordsResponse.fromJson(response);
   }
+
+  Future<HealthOrganizationModel> getHealthOrganizationFromDoctor(String doctorId) async {
+
+    print(doctorId);
+    final response = await _helper.getHealthOrgApi(
+        query.qr_provider_mapping + qr_doctor + doctorId);
+    return HealthOrganizationModel.fromJson(response);
+  }
+
 }

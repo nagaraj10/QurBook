@@ -10,6 +10,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -20,6 +21,7 @@ import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
@@ -28,6 +30,7 @@ import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
@@ -40,7 +43,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 class BookingConfirmation extends StatefulWidget {
   final followUpFee;
   bool isNewAppointment;
-  final List<DoctorIds> docs;
+  final List<Doctors> docs;
   final int i;
   final DateTime selectedDate;
   final List<SlotSessionsModel> sessionData;
@@ -48,18 +51,21 @@ class BookingConfirmation extends StatefulWidget {
   final int itemPosition;
   final bool isFollowUp;
   History doctorsData;
+  final List<HealthOrganizationResult> healthOrganizationResult;
+  final int doctorListPos;
 
-  BookingConfirmation(
-      {this.docs,
-      this.i,
-      this.selectedDate,
-      this.sessionData,
-      this.rowPosition,
-      this.followUpFee,
-      this.itemPosition,
-      this.isNewAppointment,
-      this.isFollowUp,
-      this.doctorsData});
+  BookingConfirmation({this.docs,
+    this.i,
+    this.selectedDate,
+    this.sessionData,
+    this.rowPosition,
+    this.followUpFee,
+    this.itemPosition,
+    this.isNewAppointment,
+    this.isFollowUp,
+    this.doctorsData,
+    this.healthOrganizationResult,
+    this.doctorListPos});
 
   @override
   BookingConfirmationState createState() => BookingConfirmationState();
@@ -96,7 +102,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       doctorSessionId = '',
       scheduleDate = '',
       fees = '';
-  String apiStartTime = '', apiEndTime = '';
+  String apiStartTime = '',
+      apiEndTime = '';
   ProfileData selectedUser;
   var selectedId = '';
   ProgressDialog pr;
@@ -136,8 +143,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       familyMembersModel = familyMembersList;
 
       for (int i = 0;
-          i < familyMembersModel.result.sharedByUsers.length;
-          i++) {
+      i < familyMembersModel.result.sharedByUsers.length;
+      i++) {
         sharedbyme.add(familyMembersModel.result.sharedByUsers[i]);
       }
     });
@@ -159,8 +166,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     scheduleDate =
         commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
 
-    doctorId = widget.docs[widget.i].id;
-    try {
+    doctorId = widget.docs[widget.doctorListPos].id;
+    /*try {
       fees = widget.isNewAppointment
           ? widget.followUpFee == null
               ? widget.docs[widget.i].fees.consulting.fee
@@ -168,7 +175,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           : widget.docs[widget.i].fees.consulting.fee;
     } catch (e) {
       fees = '';
-    }
+    }*/
   }
 
   Widget getDropdown() {
@@ -183,13 +190,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 backgroundColor: Colors.white,
                 body: Center(
                     child: SizedBox(
-                  child: CircularProgressIndicator(
-                    backgroundColor:
+                      child: CircularProgressIndicator(
+                        backgroundColor:
                         Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
-                  width: 30,
-                  height: 30,
-                )),
+                      ),
+                      width: 30,
+                      height: 30,
+                    )),
               );
               break;
 
@@ -201,7 +208,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               break;
 
             case Status.COMPLETED:
-              //_healthReportListForUserBlock = null;
+            //_healthReportListForUserBlock = null;
               print(snapshot.data.toString());
               if (snapshot.data.data.response.data != null) {
                 familyData = snapshot.data.data.response.data;
@@ -260,7 +267,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
     );
     LinkedData linkedData =
-        new LinkedData(roleName: variable.Self, nickName: variable.Self);
+    new LinkedData(roleName: variable.Self, nickName: variable.Self);
 
     if (sharedByMeList == null) {
       sharedByMeList = new List();
@@ -296,16 +303,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             ],
           ),
           items: _familyNames
-              .map((ProfileData user) => DropdownMenuItem(
-                    child: Row(
-                      children: <Widget>[
-                        SizedBoxWidget(width: 20),
-                        Text(user.name == null ? 'Self' : user.name,
-                            style: TextStyle(fontSize: 12)),
-                      ],
-                    ),
-                    value: user,
-                  ))
+              .map((ProfileData user) =>
+              DropdownMenuItem(
+                child: Row(
+                  children: <Widget>[
+                    SizedBoxWidget(width: 20),
+                    Text(user.name == null ? 'Self' : user.name,
+                        style: TextStyle(fontSize: 12)),
+                  ],
+                ),
+                value: user,
+              ))
               .toList(),
           onChanged: (ProfileData user) {
             setState(() {
@@ -377,8 +385,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                     TextWidget(
                       text: widget.selectedDate != null
                           ? commonUtil
-                              .dateConversionToDayMonthYear(widget.selectedDate)
-                              .toString()
+                          .dateConversionToDayMonthYear(widget.selectedDate)
+                          .toString()
                           : '',
                       fontsize: 12,
                     ),
@@ -529,9 +537,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                     ),
                                     notesIdCount > 0
                                         ? BadgesBlue(
-                                            badgeValue: notesIdCount.toString(),
-                                            backColor: Color(
-                                                commonUtil.getMyPrimaryColor()))
+                                        badgeValue: notesIdCount.toString(),
+                                        backColor: Color(
+                                            commonUtil.getMyPrimaryColor()))
                                         : SizedBox(),
                                   ],
                                 ),
@@ -571,9 +579,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                     ),
                                     voiceIdCount > 0
                                         ? BadgesBlue(
-                                            badgeValue: voiceIdCount.toString(),
-                                            backColor: Color(
-                                                commonUtil.getMyPrimaryColor()))
+                                        badgeValue: voiceIdCount.toString(),
+                                        backColor: Color(
+                                            commonUtil.getMyPrimaryColor()))
                                         : SizedBox(),
                                   ],
                                 ),
@@ -613,10 +621,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                     ),
                                     recordIdCount > 0
                                         ? BadgesBlue(
-                                            badgeValue:
-                                                recordIdCount.toString(),
-                                            backColor: Color(
-                                                commonUtil.getMyPrimaryColor()))
+                                        badgeValue:
+                                        recordIdCount.toString(),
+                                        backColor: Color(
+                                            commonUtil.getMyPrimaryColor()))
                                         : SizedBox(),
                                   ],
                                 ),
@@ -646,7 +654,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             Container(
               child: Center(
                 child: TextWidget(
-                    text: fees != null ? 'Pay INR ' + fees : 'Pay INR 0.00',
+                    text: 'Pay INR ' +
+                        getFees(widget.healthOrganizationResult[widget.i]),
                     fontsize: 22.0,
                     fontWeight: FontWeight.w500,
                     colors: Colors.blue[800]),
@@ -733,7 +742,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                               ),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
                                   SizedBoxWithChild(
                                     width: 90,
@@ -741,7 +750,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(12.0),
+                                          BorderRadius.circular(12.0),
                                           side: BorderSide(color: Colors.grey)),
                                       color: Colors.transparent,
                                       textColor: Colors.grey,
@@ -759,7 +768,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                     child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(12.0),
+                                          BorderRadius.circular(12.0),
                                           side: BorderSide(
                                               color: Colors.blue[800])),
                                       color: Colors.transparent,
@@ -775,12 +784,12 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                             scheduleDate,
                                             slotNumber,
                                             (healthRecords != null &&
-                                                    healthRecords.length > 0)
+                                                healthRecords.length > 0)
                                                 ? true
                                                 : false,
                                             widget.isFollowUp,
                                             (healthRecords != null &&
-                                                    healthRecords.length > 0)
+                                                healthRecords.length > 0)
                                                 ? healthRecords
                                                 : [],
                                             doc: widget.isFollowUp
@@ -805,8 +814,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         });
   }
 
-  Future<CreateAppointmentModel> bookAppointmentCall(
-      String createdBy,
+  Future<CreateAppointmentModel> bookAppointmentCall(String createdBy,
       String bookedFor,
       String doctorSessionId,
       String scheduleDate,
@@ -816,22 +824,21 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       List<String> healthRecords,
       {History doc}) async {
     CreateAppointmentModel bookAppointmentModel =
-        await createAppointMentViewModel.putBookAppointment(
-            createdBy,
-            bookedFor,
-            doctorSessionId,
-            scheduleDate,
-            slotNumber,
-            isMedicalShared,
-            isFollowUp,
-            healthRecords,
-            doc: doc);
+    await createAppointMentViewModel.putBookAppointment(
+        createdBy,
+        bookedFor,
+        doctorSessionId,
+        scheduleDate,
+        slotNumber,
+        isMedicalShared,
+        isFollowUp,
+        healthRecords,
+        doc: doc);
 
     return bookAppointmentModel;
   }
 
-  bookAppointment(
-      String createdBy,
+  bookAppointment(String createdBy,
       String bookedFor,
       String doctorSessionId,
       String scheduleDate,
@@ -845,18 +852,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
 
     try {
-      associateRecords(doctorId, createdBy, recordIds).then((value) {
-        if (value != null && value.success) {
+      //associateRecords(doctorId, createdBy, recordIds).then((value) {
+        //if (value != null && value.success) {
           bookAppointmentCall(
-                  createdBy,
-                  bookedFor,
-                  doctorSessionId,
-                  scheduleDate,
-                  slotNumber,
-                  isMedicalShared,
-                  isFollowUp,
-                  healthRecords,
-                  doc: doc)
+              createdBy,
+              bookedFor,
+              doctorSessionId,
+              scheduleDate,
+              slotNumber,
+              isMedicalShared,
+              isFollowUp,
+              healthRecords,
+              doc: doc)
               .then((value) {
             if (value != null) {
               if (value.isSuccess != null &&
@@ -864,9 +871,25 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   value.result != null) {
                 if (value.isSuccess == true &&
                     value.message == appointmentCreatedMessage) {
-                  if (value.result.paymentInfo.payload.paymentGatewayDetail.responseInfo.result.paymentRequest.longurl != null) {
+                  if (value
+                      .result
+                      .paymentInfo
+                      .payload
+                      .paymentGatewayDetail
+                      .responseInfo
+                      .result
+                      .paymentRequest
+                      .longurl != null) {
                     goToPaymentPage(
-                        value.result.paymentInfo.payload.paymentGatewayDetail.responseInfo.result.paymentRequest.longurl,
+                        value
+                            .result
+                            .paymentInfo
+                            .payload
+                            .paymentGatewayDetail
+                            .responseInfo
+                            .result
+                            .paymentRequest
+                            .longurl,
                         value.result.paymentInfo.payload.payment.id);
                   } else {
                     pr.hide();
@@ -887,12 +910,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               toast.getToast(noUrl, Colors.red);
             }
           });
-        } else {
+        /*} else {
           pr.hide();
           toast.getToast(value.message != null ? value.message : someWentWrong,
               Colors.red);
-        }
-      });
+        }*/
+      //}
+      //);
     } catch (e) {
       pr.hide();
       toast.getToast(someWentWrong, Colors.red);
@@ -903,9 +927,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => PaymentPage(
-                redirectUrl: longurl,
-                paymentId: paymentId)));
+            builder: (context) =>
+                PaymentPage(
+                    redirectUrl: longurl,
+                    paymentId: paymentId)));
   }
 
   Widget getTitle(String title) {
@@ -937,14 +962,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             Container(
               alignment: Alignment.center,
               child: commonWidgets.getClipOvalImageNew(
-                  widget.docs[widget.i].profilePicThumbnailURL,
+                  widget.docs[widget.doctorListPos].user.profilePicThumbnailUrl,
                   fhbStyles.cardClipImage),
             ),
             new Positioned(
               bottom: 0.0,
               right: 2.0,
-              child: commonWidgets.getDoctorStatusWidget(
-                  widget.docs[widget.i], widget.i),
+              child: commonWidgets.getDoctorStatusWidgetNew(
+                  widget.docs[widget.doctorListPos], widget.i),
             )
           ],
         ),
@@ -959,63 +984,51 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 children: [
                   Expanded(
                       child: Row(
-                    children: [
-                      commonWidgets
-                          .getTextForDoctors('${widget.docs[widget.i].name}'),
-                      commonWidgets.getSizeBoxWidth(10.0),
-                      commonWidgets.getIcon(
-                          width: fhbStyles.imageWidth,
-                          height: fhbStyles.imageHeight,
-                          icon: Icons.info,
-                          onTap: () {
-                            commonWidgets.showDoctorDetailView(
-                                widget.docs[widget.i], context);
-                          }),
-                    ],
-                  )),
-                  widget.docs[widget.i].isActive
+                        children: [
+                          commonWidgets
+                              .getTextForDoctors(
+                              '${widget.docs[widget.doctorListPos].user.name}'),
+                          commonWidgets.getSizeBoxWidth(10.0),
+                          commonWidgets.getIcon(
+                              width: fhbStyles.imageWidth,
+                              height: fhbStyles.imageHeight,
+                              icon: Icons.info,
+                              onTap: () {
+                                commonWidgets.showDoctorDetailViewNew(
+                                    widget.docs[widget.doctorListPos], context);
+                              }),
+                        ],
+                      )),
+                  widget.docs[widget.doctorListPos].isActive
                       ? commonWidgets.getIcon(
-                          width: fhbStyles.imageWidth,
-                          height: fhbStyles.imageHeight,
-                          icon: Icons.check_circle,
-                          onTap: () {})
+                      width: fhbStyles.imageWidth,
+                      height: fhbStyles.imageHeight,
+                      icon: Icons.check_circle,
+                      onTap: () {})
                       : SizedBox(),
-                  commonWidgets.getSizeBoxWidth(15.0),
+                  /*commonWidgets.getSizeBoxWidth(15.0),
                   commonWidgets.getBookMarkedIcon(widget.docs[widget.i], () {
-                    /*providerViewModel
+                    */ /*providerViewModel
                         .bookMarkDoctor(!(widget.docs[widget.i].isDefault),
                             widget.docs[widget.i])
                         .then((status) {
                       if (status) {
                         setState(() {});
                       }
-                    });*/
+                    });*/ /*
                   }),
-                  commonWidgets.getSizeBoxWidth(10.0),
+                  commonWidgets.getSizeBoxWidth(10.0),*/
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
               Row(children: [
                 Expanded(
-                    child: widget.docs[widget.i].professionalDetails != null
-                        ? widget.docs[widget.i].professionalDetails[0]
-                                    .specialty !=
-                                null
-                            ? widget.docs[widget.i].professionalDetails[0]
-                                        .specialty.name !=
-                                    null
-                                ? commonWidgets.getDoctoSpecialist(
-                                    '${widget.docs[widget.i].professionalDetails[0].specialty.name}')
-                                : SizedBox()
-                            : SizedBox()
-                        : SizedBox()),
-                /*
-                Expanded(
-                    child: widget.docs[widget.i].specialization != null
+                    child: widget.docs[widget.doctorListPos].specialization != null
                         ? commonWidgets.getDoctoSpecialist(
-                            '${widget.docs[widget.i].specialization}')
-                        : SizedBox()),*/
-                widget.docs[widget.i].fees != null
+                        '${widget.docs[widget.doctorListPos].specialization}')
+                        : SizedBox()),
+
+                /*widget.docs[widget.i].fees != null
                     ? widget.docs[widget.i].fees.consulting != null
                         ? (widget.docs[widget.i].fees.consulting != null &&
                                 widget.docs[widget.i].fees.consulting != '')
@@ -1024,20 +1037,27 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             : SizedBox()
                         : SizedBox()
                     : SizedBox(),
-                commonWidgets.getSizeBoxWidth(10.0),
+                commonWidgets.getSizeBoxWidth(10.0),*/
               ]),
               commonWidgets.getSizedBox(5.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                      child: commonWidgets
-                          .getDoctorsAddress('${widget.docs[widget.i].city}')),
-                  widget.docs[widget.i].isMCIVerified
+                      child: Text(
+                       ''+commonWidgets.getCityConfirmPage(widget.docs[widget.doctorListPos]),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w200,
+                            color: Colors.grey[600],
+                            fontSize: fhbStyles.fnt_city),
+                      )),
+                  widget.docs[widget.doctorListPos].isMciVerified
                       ? commonWidgets.getMCVerified(
-                          widget.docs[widget.i].isMCIVerified, 'Verified')
+                      widget.docs[widget.doctorListPos].isMciVerified, 'Verified')
                       : commonWidgets.getMCVerified(
-                          widget.docs[widget.i].isMCIVerified, 'Not Verified'),
+                      widget.docs[widget.doctorListPos].isMciVerified, 'Not Verified'),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               )
@@ -1114,14 +1134,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     await Navigator.of(context)
         .push(MaterialPageRoute(
-      builder: (context) => MyRecords(
-        categoryPosition: position,
-        allowSelect: allowSelect,
-        isAudioSelect: isAudioSelect,
-        isNotesSelect: isNotesSelect,
-        selectedMedias: mediaIds,
-        isFromChat: false,
-      ),
+      builder: (context) =>
+          MyRecords(
+            categoryPosition: position,
+            allowSelect: allowSelect,
+            isAudioSelect: isAudioSelect,
+            isNotesSelect: isNotesSelect,
+            selectedMedias: mediaIds,
+            isFromChat: false,
+          ),
     ))
         .then((results) {
       if (results.containsKey('metaId')) {
@@ -1147,11 +1168,32 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
   }
 
-  Future<AssociateRecordsResponse> associateRecords(
-      String doctorId, String userId, List<String> healthRecords) async {
+  Future<AssociateRecordsResponse> associateRecords(String doctorId,
+      String userId, List<String> healthRecords) async {
     AssociateRecordsResponse associateResponseList = await providerViewModel
         .associateRecords(doctorId, userId, healthRecords);
 
     return associateResponseList;
+  }
+
+  String getFees(HealthOrganizationResult result) {
+    String fees;
+    if (result.doctorFeeCollection.isNotEmpty) {
+      if (result.doctorFeeCollection.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
+          String feesCode = result.doctorFeeCollection[i].feeType.code;
+          if (feesCode == CONSULTING) {
+            fees = result.doctorFeeCollection[i].fee;
+          } else {
+            fees = '';
+          }
+        }
+      } else {
+        fees = '';
+      }
+    } else {
+      fees = '';
+    }
+    return fees;
   }
 }
