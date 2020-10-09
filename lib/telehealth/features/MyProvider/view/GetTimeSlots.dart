@@ -5,7 +5,9 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
@@ -16,19 +18,22 @@ import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
 import 'package:path/path.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as AppointmentConstant;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
+    as AppointmentConstant;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:provider/provider.dart';
 
 class GetTimeSlots extends StatelessWidget {
   SlotsResultModel dateSlotTimingsObj;
-  final List<DoctorIds> docs;
+  final List<Doctors> docs;
   final int j;
   History doctorsData;
   final DateTime selectedDate;
   bool isReshedule;
   FlutterToast toast = new FlutterToast();
   List<String> bookingIds = [];
+  final List<HealthOrganizationResult> healthOrganizationResult;
+  final int doctorListPos;
 
   GetTimeSlots(
       {this.dateSlotTimingsObj,
@@ -36,7 +41,9 @@ class GetTimeSlots extends StatelessWidget {
       this.j,
       this.selectedDate,
       this.isReshedule,
-      this.doctorsData});
+      this.doctorsData,
+      this.healthOrganizationResult,
+      this.doctorListPos});
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +131,8 @@ class GetTimeSlots extends StatelessWidget {
             itemPosition: itemPos,
             isFollowUp: isFollowUp,
             doctorsData: doctorsData,
+            healthOrganizationResult: healthOrganizationResult,
+            doctorListPos: doctorListPos,
           ),
         ));
   }
@@ -138,7 +147,8 @@ class GetTimeSlots extends StatelessWidget {
         toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
       } else if (value.isSuccess == true &&
           value.message.contains(AppointmentConstant.resheduled)) {
-        toast.getToast(AppointmentConstant.YOUR_RESHEDULE_SUCCESS, Colors.green);
+        toast.getToast(
+            AppointmentConstant.YOUR_RESHEDULE_SUCCESS, Colors.green);
       } else if (value.message.contains(AppointmentConstant.NOT_AVAILABLE)) {
         toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
       } else {
@@ -156,10 +166,10 @@ class GetTimeSlots extends StatelessWidget {
     for (int i = 0; i < appointments.length; i++) {
       bookingIds.add(appointments[i].bookingId);
     }
-    ResheduleAppointmentViewModel reshedule= Provider.of<ResheduleAppointmentViewModel>(context, listen: false);
-    ResheduleModel resheduleAppointment =
-        await reshedule.resheduleAppointment(
-            bookingIds, slotNumber.toString(), resheduledDate, doctorSessionId);
+    ResheduleAppointmentViewModel reshedule =
+        Provider.of<ResheduleAppointmentViewModel>(context, listen: false);
+    ResheduleModel resheduleAppointment = await reshedule.resheduleAppointment(
+        bookingIds, slotNumber.toString(), resheduledDate, doctorSessionId);
     return resheduleAppointment;
   }
 }

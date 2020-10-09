@@ -7,6 +7,7 @@ import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Languages.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/ProfilePic.dart';
@@ -69,6 +70,44 @@ class CommonWidgets {
           color: Colors.grey[600],
           fontSize: fhbStyles.fnt_city),
     );
+  }
+
+  String getCity(HealthOrganizationResult result) {
+    String city;
+
+    if(result.healthOrganization.healthOrganizationAddressCollection.isNotEmpty){
+      if(result.healthOrganization.healthOrganizationAddressCollection.length>0){
+        if(result.healthOrganization.healthOrganizationAddressCollection[0].city!=null){
+          city = result.healthOrganization.healthOrganizationAddressCollection[0].city.name;
+        }else{
+          city = '';
+        }
+      }else{
+        city = '';
+      }
+    }else{
+      city = '';
+    }
+    return city;
+  }
+
+  String getCityConfirmPage(Doctors doctors) {
+    String city;
+
+    if(doctors.user.userAddressCollection3.isNotEmpty){
+      if(doctors.user.userAddressCollection3.length>0){
+        if(doctors.user.userAddressCollection3[0].city!=null){
+          city = doctors.user.userAddressCollection3[0].city.name;
+        }else{
+          city = '';
+        }
+      }else{
+        city = '';
+      }
+    }else{
+      city = '';
+    }
+    return city;
   }
 
   Widget getHospitalDetails(String address) {
@@ -471,7 +510,7 @@ class CommonWidgets {
                                     ? getDoctoSpecialist(
                                     '${docs.specialization}')
                                     : SizedBox(),
-                                //getDoctorsAddress('${docs.city}'),
+                              getDoctorsAddress(docs.user.userAddressCollection3[0].city!=null?docs.user.userAddressCollection3[0].city.name:''),
                                 /*(docs.languages != null &&
                                     docs.languages.length > 0)
                                     ? getTextForDoctors('Can Speak')
@@ -486,7 +525,8 @@ class CommonWidgets {
                         ],
                       ),
                       getSizedBox(20),
-                      getTextForDoctors('About'),
+                      getTextForDoctors((docs.doctorProfessionalDetailCollection.isNotEmpty ?? docs.doctorProfessionalDetailCollection.length>0??docs.doctorProfessionalDetailCollection[0].aboutMe!=null)?
+                      docs.doctorProfessionalDetailCollection[0].aboutMe : ''),
                       /*getHospitalDetails(docs.professionalDetails != null
                           ? docs.professionalDetails[0].aboutMe
                           : ''),*/

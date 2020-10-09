@@ -106,6 +106,10 @@ class MyProviderState extends State<MyProvider>
                 data: myProvidersResponseList.result,
                 tabController: _tabController,
                 myProviderState: this,
+                refresh: () {
+                  print('refresh');
+                  setState(() {});
+                },
               )
             : Center(
                 child: SizedBox(

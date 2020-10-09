@@ -136,7 +136,7 @@ class MyProvidersHospitalsList extends StatefulWidget {
                                           .then((status) {
                                         if (status) {
                                           print('onClick');
-                                          providersBloc.hospitals.clear();
+                                          widget.providersBloc.hospitals.clear();
                                           setState(() {});
                                         }
                                       });
