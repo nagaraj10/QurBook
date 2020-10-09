@@ -316,12 +316,12 @@ class _MyFHBState extends State<MyFHB> {
         routes: routes,
         debugShowCheckedModeBanner: false,
         navigatorKey: Get.key,
-        builder: (BuildContext context, Widget widget) {
-         ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
-           return buildError(context, errorDetails);
-         };
-         return widget;
-       },
+        /*builder: (BuildContext context, Widget widget) {
+          ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
+            return buildError(context, errorDetails);
+          };
+          return widget;
+        },*/
       ),
     );
   }
@@ -450,7 +450,7 @@ class _MyFHBState extends State<MyFHB> {
               'Wifi Name: $wifiName\n'
               'Wifi BSSID: $wifiBSSID\n'
               'Wifi IP: $wifiIP\n';
-         // toast.getToast(wifi_connected, Colors.green);
+          // toast.getToast(wifi_connected, Colors.green);
         });
         break;
       case ConnectivityResult.mobile:

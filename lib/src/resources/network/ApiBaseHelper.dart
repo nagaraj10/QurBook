@@ -1118,7 +1118,7 @@ class ApiBaseHelper {
       formData = new FormData.fromMap({
         'metadata': payload,
         'userId': userId,
-        'isBookmarked': true,
+        'isBookmarked': false,
       });
 
       for (var image in imagePaths) {
@@ -1187,14 +1187,14 @@ class ApiBaseHelper {
         ]);
       }
 
-      /*if (audioPath != null && audioPath != '') {
+      if (audioPath != null && audioPath != '') {
         File fileName = new File(audioPath);
         String fileNoun = fileName.path.split('/').last;
         formData.files.addAll([
           MapEntry("fileName",
               await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
         ]);
-      }*/
+      }
     } else {
       formData = new FormData.fromMap({
         'metadata': payload,
@@ -1202,6 +1202,14 @@ class ApiBaseHelper {
         'isBookmarked ': false,
         'id': metaId,
       });
+      if (audioPath != null && audioPath != '') {
+        File fileName = new File(audioPath);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("fileName",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }
     }
     var response;
     try {

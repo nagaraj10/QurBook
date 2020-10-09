@@ -165,6 +165,7 @@ const String qr_category = 'category';
 const String qr_health_record_type = 'health-record-type';
 const String qr_health_record = 'health-records';
 const String qr_filter = 'filter';
+const String qr_delete_file = 'delete-file';
 
 //for update profile new
 

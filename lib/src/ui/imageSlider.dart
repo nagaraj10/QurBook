@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
@@ -11,7 +12,7 @@ import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 
 
 class ImageSlider extends StatefulWidget {
-  final List<ImageDocumentResponse> imageList;
+  final List<HealthRecordCollection> imageList;
 
   ImageSlider({this.imageList});
 
@@ -58,17 +59,18 @@ class _ImageSliderState extends State<ImageSlider> {
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 
-  showPhotoView(List<ImageDocumentResponse> imageList) {
+  showPhotoView(List<HealthRecordCollection> imageList) {
     return Container(
         child: PhotoViewGallery.builder(
       scrollPhysics: const BouncingScrollPhysics(),
       builder: (BuildContext context, int index) {
         return PhotoViewGalleryPageOptions(
-            imageProvider: NetworkImage(
-                imageList[index].response.data.fileContent),
+               imageProvider: NetworkImage(
+                imageList[index].healthRecordUrl),
             initialScale: PhotoViewComputedScale.contained * 1.0,
             minScale: PhotoViewComputedScale.contained * 1.0,
             maxScale: PhotoViewComputedScale.contained * 2.0
+
             );
       },
       itemCount: imageList.length,

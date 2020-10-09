@@ -43,6 +43,7 @@ import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MediaTypeInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
@@ -341,13 +342,13 @@ class CommonUtil {
     return mediaMasterId;
   }
 
-  String getMediaMasterIDForPdfTypeStr(
+  HealthRecordCollection getMediaMasterIDForPdfTypeStr(
       List<HealthRecordCollection> mediaMasterIdsList) {
-    String mediaMasterId;
+    HealthRecordCollection mediaMasterId;
 
     for (HealthRecordCollection mediaMasterIdsObj in mediaMasterIdsList) {
-      if (mediaMasterIdsObj.fileType == 'application/pdf') {
-        mediaMasterId = mediaMasterIdsObj.id;
+      if (mediaMasterIdsObj.fileType == '.pdf') {
+        mediaMasterId = mediaMasterIdsObj;
       }
     }
 
@@ -439,7 +440,7 @@ class CommonUtil {
   }
 
   Future<void> getMedicalPreference({Function callBackToRefresh}) async {
-    MyProfileBloc _myProfileBloc = new MyProfileBloc();
+    /* MyProfileBloc _myProfileBloc = new MyProfileBloc();
     try {
       _myProfileBloc
           .getCompleteProfileData(Constants.KEY_USERID)
@@ -514,10 +515,10 @@ class CommonUtil {
               Constants.KEY_PREFERRED_HOSPITAL, null);
 
           PreferenceUtil.savePreferedLab(Constants.KEY_PREFERRED_LAB, null);
-          callBackToRefresh();
         }
       });
-    } catch (e) {}
+    } catch (e) {}*/
+    callBackToRefresh();
   }
 
   int getThemeColor() {
@@ -1208,11 +1209,7 @@ class CommonUtil {
           return new SizedBox(
             width: 50.0,
             height: 50.0,
-            child: Shimmer.fromColors(
-                baseColor: Colors.grey[200],
-                highlightColor: Colors.grey[550],
-                child:
-                    Container(width: 50, height: 50, color: Colors.grey[200])),
+            child: Container(width: 50, height: 50, color: Colors.grey[200]),
           );
         }
 

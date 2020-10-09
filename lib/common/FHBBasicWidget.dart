@@ -1,8 +1,10 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/AudioWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/database/model/UnitsMesurement.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
@@ -21,6 +23,7 @@ class FHBBasicWidget {
   FHBBasicWidget();
 
   DateTime dateTime = DateTime.now();
+  String authToken;
 
   Widget getSaveButton(Function onSavedPressed) {
     return RaisedGradientButton(
@@ -171,18 +174,28 @@ class FHBBasicWidget {
   }
 
   Widget getProfilePicWidgeUsingUrl(String profilePicThumbnailUrl) {
-    return profilePicThumbnailUrl != null
-        ? Image.network(
-            profilePicThumbnailUrl,
-            height: 50,
-            width: 50,
-            fit: BoxFit.cover,
-          )
-        : Container(
-            color: Color(fhbColors.bgColorContainer),
-            height: 50,
-            width: 50,
-          );
+    setAuthToken().then((authToken) {
+      if (authToken != '') {
+        return Image.network(
+          profilePicThumbnailUrl,
+          height: 50,
+          width: 50,
+          fit: BoxFit.cover,
+          headers: {HttpHeaders.authorizationHeader: authToken},
+        );
+      } else {
+        return Container(
+          color: Color(fhbColors.bgColorContainer),
+          height: 50,
+          width: 50,
+        );
+      }
+    });
+  }
+
+  Future<String> setAuthToken() async {
+    authToken = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    return authToken;
   }
 
   Widget getDefaultProfileImage() {

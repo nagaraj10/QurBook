@@ -23,6 +23,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/record_detail/bloc/deleteRecordBloc.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
@@ -32,6 +33,7 @@ import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
@@ -42,6 +44,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
 export 'package:myfhb/my_family/models/relationship_response_list.dart';
+import 'package:http/http.dart' as http;
 
 typedef void OnError(Exception exception);
 
@@ -95,6 +98,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     super.initState();
     PreferenceUtil.init();
     _listenForPermissionStatus();
+    setAuthToken();
     _deleteRecordBloc = DeleteRecordBloc();
     _bookmarkRecordBloc = BookmarkRecordBloc();
     _isRecordBookmarked = widget.data.isBookmarked;
@@ -109,10 +113,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       showAudioWidgetIfVoiceNotesAvailable(widget.data);
     }
 
-    String getMediaMasterIDForPdfTypeStr = new CommonUtil()
+    HealthRecordCollection getMediaMasterIDForPdfTypeStr = new CommonUtil()
         .getMediaMasterIDForPdfTypeStr(widget.data.healthRecordCollection);
-    if (getMediaMasterIDForPdfTypeStr != null &&
-        getMediaMasterIDForPdfTypeStr.length > 0) {
+    if (getMediaMasterIDForPdfTypeStr != null) {
       ispdfPresent = true;
       getPdfFileData(getMediaMasterIDForPdfTypeStr);
     } else {
@@ -122,7 +125,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     if (mediMasterId.length > 0) {
       length = mediMasterId.length;
       index = 1;
-      setAuthToken();
     }
   }
 
@@ -183,12 +185,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               children: <Widget>[
                                 IconButton(
                                   onPressed: () {
-                                    if (imagesPathMain.length > 0)
+                                    if (mediMasterId.length > 0)
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => ImageSlider(
-                                                    imageList: imagesPathMain,
+                                                    imageList: mediMasterId,
                                                   )));
                                   },
                                   icon: Icon(
@@ -236,31 +238,24 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                               ),
                               onPressed: () {
                                 //getAllFamilyMembers();
-                                if (PreferenceUtil.getFamilyData(
-                                        Constants.KEY_FAMILYMEMBER) !=
-                                    null) {
-                                  getDialogBoxWithFamilyMember(
-                                      PreferenceUtil.getFamilyData(
-                                          Constants.KEY_FAMILYMEMBER));
-                                } else {
-                                  CommonUtil.showLoadingDialog(
-                                      contxt, _keyLoader, variable.Please_Wait);
 
-                                  if (_familyListBloc != null) {
-                                    _familyListBloc = null;
-                                    _familyListBloc = new FamilyListBloc();
-                                  }
-                                  _familyListBloc
-                                      .getFamilyMembersList()
-                                      .then((familyMembersList) {
-                                    Navigator.of(_keyLoader.currentContext,
-                                            rootNavigator: true)
-                                        .pop();
+                                CommonUtil.showLoadingDialog(
+                                    contxt, _keyLoader, variable.Please_Wait);
 
-                                    getDialogBoxWithFamilyMember(
-                                        familyMembersList.response.data);
-                                  });
+                                if (_familyListBloc != null) {
+                                  _familyListBloc = null;
+                                  _familyListBloc = new FamilyListBloc();
                                 }
+                                _familyListBloc
+                                    .getFamilyMembersInfo()
+                                    .then((familyMembersList) {
+                                  Navigator.of(_keyLoader.currentContext,
+                                          rootNavigator: true)
+                                      .pop();
+
+                                  getDialogBoxWithFamilyMember(
+                                      familyMembersList.result);
+                                });
                               }),
                           IconButton(
                               icon: ImageIcon(
@@ -276,7 +271,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 color: Colors.black,
                               ),
                               onPressed: () async {
-                                saveImageToGallery(imagesPathMain, contxt);
+                                saveImageToGallery(mediMasterId, contxt);
 
                                 /*requestPermission(_storagePermission)
                                     .then((status) {
@@ -313,70 +308,71 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             widget.data.metadata.hasVoiceNotes
                         ? isAudioDownload
                             ? getAudioIconWithFile()
-                            : Shimmer.fromColors(
+                            : showAudioWidgetIfVoiceNotesAvailable(widget.data)
+                        /*Shimmer.fromColors(
                                 baseColor: Colors.grey[300],
                                 highlightColor: Colors.grey[200],
-                                child: showProgressIndicator(widget.data))
-                        : InkWell(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(
-                                builder: (context) => AudioRecordScreen(
-                                  fromVoice: false,
-                                ),
-                              ))
-                                  .then((results) {
-                                if (results != null) {
-                                  if (results
-                                      .containsKey(Constants.keyAudioFile)) {
-                                    containsAudio = true;
-                                    audioPath = results[Constants.keyAudioFile];
-                                    _healthReportListForUserBlock
-                                        .saveImage(
-                                            audioPath, widget.data.id, '')
-                                        .then((postImageResponse) {
-                                      /*audioMediaId = postImageResponse
-                                          .response.data.mediaMasterId;*/
-
-                                      _healthReportListForUserBlock
-                                          .getHelthReportLists()
-                                          .then((value) {
-                                        PreferenceUtil.saveCompleteData(
-                                            Constants.KEY_COMPLETE_DATA, value);
-                                        setState(() {});
-                                      });
-                                      //setState(() {});
-                                    });
-                                  }
-                                }
-                              });
-                            },
-                            child: Container(
-                              height: 60,
-                              color: Colors.white70,
-                              padding: EdgeInsets.all(10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Icon(
-                                    Icons.mic,
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor()),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Text(variable.strAddVoiceNote,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Color(new CommonUtil()
-                                            .getMyPrimaryColor()),
-                                      ))
-                                ],
-                              ),
-                            ),
-                          ),
+                                child: showProgressIndicator(widget.data))*/
+                        : getAudioWidget(),
                   )
           ],
         ));
+  }
+
+  Widget getAudioWidget() {
+    return InkWell(
+      onTap: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(
+          builder: (context) => AudioRecordScreen(
+            fromVoice: false,
+          ),
+        ))
+            .then((results) {
+          if (results != null) {
+            if (results.containsKey(Constants.keyAudioFile)) {
+              containsAudio = true;
+              audioPath = results[Constants.keyAudioFile];
+              _healthReportListForUserBlock
+                  .updateFiles(audioPath, widget.data)
+                  .then((postImageResponse) {
+                /*audioMediaId = postImageResponse
+                                          .response.data.mediaMasterId;*/
+
+                _healthReportListForUserBlock
+                    .getHelthReportLists()
+                    .then((value) {
+                  PreferenceUtil.saveCompleteData(
+                      Constants.KEY_COMPLETE_DATA, value);
+                  setState(() {});
+                });
+                //setState(() {});
+              });
+            }
+          }
+        });
+      },
+      child: Container(
+        height: 60,
+        color: Colors.white70,
+        padding: EdgeInsets.all(10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Icon(
+              Icons.mic,
+              color: Color(new CommonUtil().getMyPrimaryColor()),
+            ),
+            SizedBox(width: 10),
+            Text(variable.strAddVoiceNote,
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                ))
+          ],
+        ),
+      ),
+    );
   }
 
   void _listenForPermissionStatus() async {
@@ -384,7 +380,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     //setState(() => permissionStatus = status);
   }
 
-  void saveImageToGallery(List imagesPathMain, BuildContext contxt) async {
+  void saveImageToGallery(
+      List<HealthRecordCollection> imagesPathMain, BuildContext contxt) async {
     //check the storage permission for both android and ios!
     //request gallery permission
     String albumName = 'myfhb';
@@ -506,13 +503,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     List<String> mediaIds = [];
     mediaIds.add(healthRecordCollection.id);
     _deleteRecordBloc
-        .deleteRecordOnMediaMasterID(mediaIds)
+        .deleteRecordOnMediaMasterID(healthRecordCollection.id)
         .then((deleteRecordResponse) {
       if (deleteRecordResponse.success) {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
-          widget.data.metadata.hasVoiceNotes = false;
-          setState(() {});
+          Navigator.of(context).pop();
         });
       }
     });
@@ -553,7 +549,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         new AudioWidget(audioPath, (containsAudioClone, audioPathClone) {
           containsAudio = containsAudioClone;
           audioPath = audioPathClone;
-          deleteMediRecord(audioMediaId);
+          new FHBBasicWidget().showDialogWithTwoButtons(context, () {
+            deleteMediRecord(audioMediaId);
+          }, 'Confirmation', 'Are you sure you want to delete');
         }),
       ],
     ));
@@ -565,7 +563,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     setState(() {});
   }
 
-  Future<Widget> getDialogBoxWithFamilyMember(FamilyData familyData) {
+  Future<Widget> getDialogBoxWithFamilyMember(FamilyMemberResult familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, _keyLoader, (context, userId, userName) {
       _healthReportListForUserBlock
@@ -1278,7 +1276,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   showAudioWidgetIfVoiceNotesAvailable(HealthResult data) {
     if (data.metadata.hasVoiceNotes) {
       audioMediaId = checkIfMp3IsPresent(data);
-      getWidgetForPlayingAudioFromServer(audioMediaId);
+      if (audioMediaId != null) {
+        getWidgetForPlayingAudioFromServer(audioMediaId);
+      } else {
+        return getAudioWidget();
+      }
     }
   }
 
@@ -1292,16 +1294,24 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Widget getWidgetForPlayingAudioFromServer(
       HealthRecordCollection audioMediaId) {
-    if (_healthReportListForUserBlock != null) {
-      _healthReportListForUserBlock = null;
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    } else {
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    }
+    return getValuesFromSharedPrefernce();
+  }
 
-    _healthReportListForUserBlock.getDocumentImage('').then((res) {
-      return downloadMedia(audioMediaId.healthRecordUrl, context, '.mp3');
-    });
+  Widget getValuesFromSharedPrefernce() {
+    return new FutureBuilder<bool>(
+      future: downloadFile(audioMediaId, '.mp3'),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          new CircularProgressIndicator(
+            backgroundColor: Colors.blue,
+          );
+        } else if (snapshot.hasError) {
+          return new Text('Error: ${snapshot.error}');
+        } else {
+          return getAudioIconWithFile();
+        }
+      },
+    );
   }
 
   downloadMedia(String url, BuildContext context, String fileType) async {
@@ -1330,6 +1340,34 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     });
   }
 
+  Future<bool> downloadFile(
+      HealthRecordCollection audioMediaId, String fileType) async {
+    FHBUtils.createFolderInAppDocDir(variable.stAudioPath)
+        .then((filePath) async {
+      File file =
+          new File('$filePath${widget.data.metadata.fileName}' + fileType);
+      var request = await http.get(
+        audioMediaId.healthRecordUrl,
+        headers: {HttpHeaders.authorizationHeader: authToken},
+      );
+      var bytes = await request.bodyBytes; //close();
+      await file.writeAsBytes(bytes);
+
+      setState(() {
+        if (fileType == '.mp3') {
+          //await path.writeAsBytes(bytes);
+
+          containsAudio = true;
+          audioPath = file.path;
+          isAudioDownload = true;
+        } else {
+          pdfFile = file.path;
+        }
+      });
+    });
+    return isAudioDownload;
+  }
+
   Future<Uint8List> _loadFileBytes(String url, {OnError onError}) async {
     Uint8List bytes;
     try {
@@ -1344,17 +1382,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     showAudioWidgetIfVoiceNotesAvailable(data);
   }
 
-  void getPdfFileData(String pdfFileMediaId) {
-    print(pdfFileMediaId + 'PDFFFFFFF');
+  void getPdfFileData(HealthRecordCollection pdfFileMediaId) {
+    print(pdfFileMediaId.healthRecordUrl + 'PDFFFFFFF');
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     } else {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     }
-    _healthReportListForUserBlock.getDocumentImage(pdfFileMediaId).then((res) {
-      return downloadMedia(res.response.data.fileContent, context, '.pdf');
-    });
+    downloadFile(pdfFileMediaId, '.pdf');
   }
 
   getFileNameForPdf(String pdfFileName) {

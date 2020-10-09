@@ -19,7 +19,11 @@ class DeleteRecordRepository {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.deleteHealthRecord(
-      query.qr_mediameta + userID + query.qr_slash + query.qr_deletemaster,
+      query.qr_health_record +
+          query.qr_slash +
+          query.qr_delete_file +
+          query.qr_slash +
+          json,
     );
     return DeleteRecordResponse.fromJson(response);
   }

@@ -104,15 +104,16 @@ class HealthReportListForUserRepository {
   }
 
   Future<MetaDataMovedResponse> moveDataToOtherUser(
-      String familyID, String metaID) async {
+      String familyID, String metaId) async {
     var signInData = {};
-    signInData[parameters.strmediaMetaId] = metaID;
-    signInData[parameters.strdestinationId] = familyID;
-    var jsonString = convert.jsonEncode(signInData);
+    signInData[parameters.strHealthRecordMetaId] = metaId;
+    signInData[parameters.strDestinationUserId] = familyID;
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    signInData[parameters.strSourceUserId] = userID;
+    var jsonString = convert.jsonEncode(signInData);
 
     var response = await _helper.moveMetaDataToOtherUser(
-        query.qr_mediameta + userID + query.qr_move, jsonString);
+        query.qr_health_record + query.qr_move, jsonString);
     return MetaDataMovedResponse.fromJson(response);
   }
 
@@ -203,6 +204,28 @@ class HealthReportListForUserRepository {
 
     var response = await _helper.updateHealthRecords(
         query.qr_health_record, jsonString, imagePaths, audioPath, metaId);
+    return HealthRecordSuccess.fromJson(response.data);
+  }
+
+  Future<HealthRecordSuccess> updateFileInRecords(
+      String audioPath, HealthResult healthResult) async {
+    String id;
+
+    try {
+      String familyId =
+          PreferenceUtil.getStringValue(Constants.KEY_FAMILYMEMBERID);
+      if (familyId.length > 0) {
+        id = familyId;
+      } else {
+        id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      }
+    } catch (e) {
+      id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    }
+    var jsonString = healthResult.metadata.toJson();
+
+    var response = await _helper.updateHealthRecords(query.qr_health_record,
+        convert.jsonEncode(jsonString), null, audioPath, healthResult.id);
     return HealthRecordSuccess.fromJson(response.data);
   }
 }
