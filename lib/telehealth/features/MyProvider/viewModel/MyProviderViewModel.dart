@@ -6,6 +6,8 @@ import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordRespon
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
@@ -15,6 +17,7 @@ class MyProviderViewModel extends ChangeNotifier {
   List<DateSlotTimings> dateSlotTimings = new List();
   List<TelehealthProviderModel> teleHealthProviderModel = new List();
   AssociateRecordsResponse associateRecordResponse = AssociateRecordsResponse();
+  List<HealthOrganizationResult> healthOrganizationResult = List();
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
@@ -42,7 +45,8 @@ class MyProviderViewModel extends ChangeNotifier {
     bool condition;
 
     DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
-    await _providersListRepository.bookMarkHealthOrganizaton(condition, hospitals);
+        await _providersListRepository.bookMarkHealthOrganizaton(
+            condition, hospitals);
 
     return doctorBookMarkedSucessModel.isSuccess;
   }
@@ -76,6 +80,16 @@ class MyProviderViewModel extends ChangeNotifier {
               doctorId, userId, healthRecords);
       associateRecordResponse = bookAppointmentModel;
       return associateRecordResponse;
+    } catch (e) {}
+  }
+
+  Future<List<HealthOrganizationResult>> getHealthOrgFromDoctor(String doctorId) async {
+    try {
+      HealthOrganizationModel healthOrganizationModel =
+          await _providersListRepository.getHealthOrganizationFromDoctor(doctorId);
+
+      healthOrganizationResult = healthOrganizationModel.result;
+      return healthOrganizationResult;
     } catch (e) {}
   }
 }

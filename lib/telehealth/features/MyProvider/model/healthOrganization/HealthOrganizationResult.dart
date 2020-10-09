@@ -129,6 +129,9 @@ class HealthOrganizationAddressCollection {
   bool isActive;
   String createdOn;
   String lastModifiedOn;
+  AddressTypeNew addressType;
+  CityNew city;
+  StateNew state;
 
   HealthOrganizationAddressCollection(
       {this.id,
@@ -138,7 +141,10 @@ class HealthOrganizationAddressCollection {
         this.isPrimary,
         this.isActive,
         this.createdOn,
-        this.lastModifiedOn});
+        this.lastModifiedOn,
+        this.addressType,
+        this.city,
+        this.state});
 
   HealthOrganizationAddressCollection.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -149,6 +155,11 @@ class HealthOrganizationAddressCollection {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
+    addressType = json['addressType'] != null
+        ? new AddressTypeNew.fromJson(json['addressType'])
+        : null;
+    city = json['city'] != null ? new CityNew.fromJson(json['city']) : null;
+    state = json['state'] != null ? new StateNew.fromJson(json['state']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -161,9 +172,134 @@ class HealthOrganizationAddressCollection {
     data['isActive'] = this.isActive;
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
+    if (this.addressType != null) {
+      data['addressType'] = this.addressType.toJson();
+    }
+    if (this.city != null) {
+      data['city'] = this.city.toJson();
+    }
+    if (this.state != null) {
+      data['state'] = this.state.toJson();
+    }
     return data;
   }
 }
+
+class AddressTypeNew {
+  String id;
+  String code;
+  String name;
+  String description;
+  int sortOrder;
+  bool isActive;
+  String createdBy;
+  String createdOn;
+  String lastModifiedOn;
+
+  AddressTypeNew(
+      {this.id,
+        this.code,
+        this.name,
+        this.description,
+        this.sortOrder,
+        this.isActive,
+        this.createdBy,
+        this.createdOn,
+        this.lastModifiedOn});
+
+  AddressTypeNew.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    code = json['code'];
+    name = json['name'];
+    description = json['description'];
+    sortOrder = json['sortOrder'];
+    isActive = json['isActive'];
+    createdBy = json['createdBy'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['code'] = this.code;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['sortOrder'] = this.sortOrder;
+    data['isActive'] = this.isActive;
+    data['createdBy'] = this.createdBy;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    return data;
+  }
+}
+
+class CityNew {
+  String id;
+  String name;
+  bool isActive;
+  String createdOn;
+  String lastModifiedOn;
+
+  CityNew(
+      {this.id, this.name, this.isActive, this.createdOn, this.lastModifiedOn});
+
+  CityNew.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    isActive = json['isActive'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['isActive'] = this.isActive;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    return data;
+  }
+}
+
+class StateNew {
+  String id;
+  String name;
+  String countryCode;
+  bool isActive;
+  String createdOn;
+  String lastModifiedOn;
+
+  StateNew(
+      {this.id,
+        this.name,
+        this.countryCode,
+        this.isActive,
+        this.createdOn,
+        this.lastModifiedOn});
+
+  StateNew.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    countryCode = json['countryCode'];
+    isActive = json['isActive'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['countryCode'] = this.countryCode;
+    data['isActive'] = this.isActive;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    return data;
+  }
+}
+
 
 class HealthOrganizationContactCollection {
   String id;
@@ -212,6 +348,8 @@ class DoctorFeeCollection {
   bool isActive;
   String createdOn;
   String lastModifiedOn;
+  FeeType feeType;
+  FeeType followupType;
 
   DoctorFeeCollection(
       {this.id,
@@ -222,7 +360,9 @@ class DoctorFeeCollection {
         this.effectiveToDate,
         this.isActive,
         this.createdOn,
-        this.lastModifiedOn});
+        this.lastModifiedOn,
+        this.feeType,
+        this.followupType});
 
   DoctorFeeCollection.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -236,6 +376,11 @@ class DoctorFeeCollection {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
+    feeType =
+    json['feeType'] != null ? new FeeType.fromJson(json['feeType']) : null;
+    followupType = json['followupType'] != null
+        ? new FeeType.fromJson(json['followupType'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -251,6 +396,12 @@ class DoctorFeeCollection {
     data['isActive'] = this.isActive;
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
+    if (this.feeType != null) {
+      data['feeType'] = this.feeType.toJson();
+    }
+    if (this.followupType != null) {
+      data['followupType'] = this.followupType.toJson();
+    }
     return data;
   }
 }
@@ -267,6 +418,55 @@ class FollowupIn {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['days'] = this.days;
+    return data;
+  }
+}
+
+class FeeType {
+  String id;
+  String code;
+  String name;
+  String description;
+  int sortOrder;
+  bool isActive;
+  String createdBy;
+  String createdOn;
+  String lastModifiedOn;
+
+  FeeType(
+      {this.id,
+        this.code,
+        this.name,
+        this.description,
+        this.sortOrder,
+        this.isActive,
+        this.createdBy,
+        this.createdOn,
+        this.lastModifiedOn});
+
+  FeeType.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    code = json['code'];
+    name = json['name'];
+    description = json['description'];
+    sortOrder = json['sortOrder'];
+    isActive = json['isActive'];
+    createdBy = json['createdBy'];
+    createdOn = json['createdOn'];
+    lastModifiedOn = json['lastModifiedOn'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['code'] = this.code;
+    data['name'] = this.name;
+    data['description'] = this.description;
+    data['sortOrder'] = this.sortOrder;
+    data['isActive'] = this.isActive;
+    data['createdBy'] = this.createdBy;
+    data['createdOn'] = this.createdOn;
+    data['lastModifiedOn'] = this.lastModifiedOn;
     return data;
   }
 }

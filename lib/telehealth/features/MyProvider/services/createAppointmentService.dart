@@ -44,7 +44,7 @@ class CreateAppointmentService {
     }
     var jsonString = convert.jsonEncode(slotInput);
     print(jsonString);
-    final response = await _helper.bookAppointment(qr_bookAppmnt, jsonString);
+    final response = await _helper.bookAppointment(qr_bookAppointment, jsonString);
     print(response);
     return CreateAppointmentModel.fromJson(response);
   }
