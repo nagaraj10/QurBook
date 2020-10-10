@@ -648,7 +648,7 @@ class _MyProvidersState extends State<MyProviders> {
                                   }),
                             ],
                           )),
-                      docs[i].isActive
+                      docs[i].isTelehealthEnabled
                           ? commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
@@ -697,7 +697,15 @@ class _MyProvidersState extends State<MyProviders> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: commonWidgets.getDoctorsAddress(docs[i].user.userAddressCollection3[0].city!=null?docs[i].user.userAddressCollection3[0].city.name:'')),
+                        child: Text(
+                          ''+commonWidgets.getCityDoctorsModel(docs[i]),
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
+                          style: TextStyle(
+                              fontWeight: FontWeight.w200,
+                              color: Colors.grey[600],
+                              fontSize: fhbStyles.fnt_city),
+                        )),
                       docs[i].isMciVerified
                           ? commonWidgets.getMCVerified(
                           docs[i].isMciVerified, 'Verified')

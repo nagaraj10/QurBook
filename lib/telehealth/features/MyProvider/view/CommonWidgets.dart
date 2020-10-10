@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
@@ -91,7 +92,7 @@ class CommonWidgets {
     return city;
   }
 
-  String getCityConfirmPage(Doctors doctors) {
+  String getCityDoctorsModel(Doctors doctors) {
     String city;
 
     if(doctors.user.userAddressCollection3.isNotEmpty){
@@ -109,6 +110,7 @@ class CommonWidgets {
     }
     return city;
   }
+
 
   Widget getHospitalDetails(String address) {
     return Container(
@@ -541,6 +543,22 @@ class CommonWidgets {
             ),
           );
         });
+  }
+
+  String getMoneyWithForamt(String amount){
+
+    if(amount!=null && amount!=''){
+      var amountDouble = double.parse(amount);
+
+      FlutterMoneyFormatter fmf = FlutterMoneyFormatter(amount: amountDouble);
+
+      MoneyFormatterOutput fo = fmf.output;
+
+      return fo.withoutFractionDigits.toString();
+    }else{
+      return amount='0';
+    }
+
   }
 
 }
