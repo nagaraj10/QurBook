@@ -10,10 +10,11 @@ class SlotsAvailabilityService{
   ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<AvailableTimeSlotsModel> getTelehealthSlotsList(
-      String date, String doctorId) async {
+      String date, String doctorId,String healthOrgId) async {
     var slotInput = {};
     slotInput[qr_slotDate] = date;
     slotInput[qr_doctorid] = doctorId;
+    slotInput[qr_health_org_id] = healthOrgId;
 
     var jsonString = convert.jsonEncode(slotInput);
     print(jsonString);

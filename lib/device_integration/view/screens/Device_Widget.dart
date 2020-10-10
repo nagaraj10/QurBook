@@ -13,7 +13,6 @@ import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
 
-
 class ShowDevicesNew extends StatefulWidget {
   @override
   _ShowDevicesNewState createState() => _ShowDevicesNewState();
@@ -22,7 +21,6 @@ class ShowDevicesNew extends StatefulWidget {
 class _ShowDevicesNewState extends State<ShowDevicesNew> {
   DevicesViewModel devicesViewModel;
 
- 
   LastMeasureSyncValues deviceValues;
   List<DeviceData> finalList;
 
@@ -128,8 +126,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       case parameters.strDataTypeBP:
         {
           if (deviceValues.bloodPressure.entities.isNotEmpty) {
-            dateTimeStamp = deviceValues.bloodPressure.entities[0].startDateTime;
-                //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
+            dateTimeStamp =
+                deviceValues.bloodPressure.entities[0].startDateTime;
+            //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
             date =
                 "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
             time =
@@ -149,8 +148,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       case parameters.strGlusoceLevel:
         {
           if (deviceValues.bloodGlucose.entities.isNotEmpty) {
-            dateTimeStamp =
-                deviceValues.bloodGlucose.entities[0].startDateTime;
+            dateTimeStamp = deviceValues.bloodGlucose.entities[0].startDateTime;
             date =
                 "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
             time =
@@ -205,8 +203,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       case parameters.strWeight:
         {
           if (deviceValues.bodyWeight.entities.isNotEmpty) {
-            dateTimeStamp =
-                deviceValues.bodyWeight.entities[0].startDateTime;
+            dateTimeStamp = deviceValues.bodyWeight.entities[0].startDateTime;
             date =
                 "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
             time =
@@ -262,12 +259,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              date,
+                              date != null ? date : '',
                               style:
                                   TextStyle(fontSize: 13, color: Colors.white),
                             ),
                             Text(
-                              time,
+                              time != null ? time : '',
                               style: TextStyle(
                                   fontSize: 11, color: Colors.white70),
                             )

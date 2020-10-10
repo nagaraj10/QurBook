@@ -27,6 +27,8 @@ import '../../SearchWidget/view/SearchWidget.dart';
 import 'DoctorSessionTimeSlot.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
+import 'healthOrganization/HealthOrganization.dart';
+
 class MyProviders extends StatefulWidget {
   @override
   _MyProvidersState createState() => _MyProvidersState();
@@ -155,7 +157,7 @@ class _MyProvidersState extends State<MyProviders> {
     );
   }
 
-  Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
+ /* Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return ExpandableNotifier(
       child: Container(
         padding: EdgeInsets.all(2.0),
@@ -181,7 +183,7 @@ class _MyProvidersState extends State<MyProviders> {
         ),
       ),
     );
-  }
+  }*/
 
   Widget collapseListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
@@ -204,12 +206,12 @@ class _MyProvidersState extends State<MyProviders> {
           children: [
             getDoctorsWidget(i, docs),
             commonWidgets.getSizedBox(20.0),
-            DoctorSessionTimeSlot(
+            /*DoctorSessionTimeSlot(
                 date: _selectedValue.toString(),
                 doctorId: docs[i].id,
                 docs: docs,
                 isReshedule: false,
-                i: i),
+                i: i),*/
           ],
         ),
       ),
@@ -391,7 +393,7 @@ class _MyProvidersState extends State<MyProviders> {
         : Text('');
   }
 
-  Widget getDoctorProviderList() {
+ /* Widget getDoctorProviderList() {
     return new FutureBuilder<List<DoctorIds>>(
       future: providerViewModel.fetchProviderDoctors(),
       builder: (BuildContext context, snapshot) {
@@ -411,7 +413,7 @@ class _MyProvidersState extends State<MyProviders> {
         }
       },
     );
-  }
+  }*/
 
   Widget getDoctorProviderListNew() {
     return new FutureBuilder<MyProvidersResponse>(
@@ -435,7 +437,7 @@ class _MyProvidersState extends State<MyProviders> {
     );
   }
 
-  Widget providerListWidget(List<DoctorIds> doctorList) {
+/*  Widget providerListWidget(List<DoctorIds> doctorList) {
     return (doctorList != null && doctorList.length > 0)
         ? new ListView.builder(
       itemBuilder: (BuildContext ctx, int i) =>
@@ -449,7 +451,7 @@ class _MyProvidersState extends State<MyProviders> {
         child: Text(variable.strNoDoctordata),
       ),
     );
-  }
+  }*/
 
   Widget myProviderList(MyProvidersResponse myProvidersResponse) {
         return (myProvidersResponse != null && myProvidersResponse.isSuccess)?ListView.separated(
@@ -581,132 +583,147 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   Widget providerDoctorItemWidget(int i, List<Doctors> docs) {
-    return Container(
-      padding: EdgeInsets.all(12.0),
-      margin: EdgeInsets.only(left: 15, right: 15, top: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFFe3e2e2),
-            blurRadius: 16, // has the effect of softening the shadow
-            spreadRadius: 5.0, // has the effect of extending the shadow
-            offset: Offset(
-              0.0, // horizontal, move right 10
-              0.0, // vertical, move down 10
-            ),
-          )
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          new Stack(
-            overflow: Overflow.visible,
-            children: <Widget>[
-              Container(
-                alignment: Alignment.center,
-                child: commonWidgets.getClipOvalImageNew(
-                    docs[i].user.profilePicThumbnailUrl, fhbStyles.cardClipImage),
+    return InkWell(
+      onTap: (){
+        navigateToHelathOrganizationList(context, docs,i);
+      },
+      child: Container(
+        padding: EdgeInsets.all(12.0),
+        margin: EdgeInsets.only(left: 15, right: 15, top: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFFe3e2e2),
+              blurRadius: 16, // has the effect of softening the shadow
+              spreadRadius: 5.0, // has the effect of extending the shadow
+              offset: Offset(
+                0.0, // horizontal, move right 10
+                0.0, // vertical, move down 10
               ),
-              new Positioned(
-                bottom: 0.0,
-                right: 2.0,
-                child: commonWidgets.getDoctorStatusWidgetNew(docs[i], i),
-              )
-            ],
-          ),
-          commonWidgets.getSizeBoxWidth(10.0),
-          Expanded(
-            flex: 4,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+            )
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            new Stack(
+              overflow: Overflow.visible,
               children: <Widget>[
-                Row(
-                  children: [
-                    Expanded(
-                        child: Row(
-                          children: [
-                            commonWidgets.getTextForDoctors('${docs[i].user.name}'),
-                            commonWidgets.getSizeBoxWidth(10.0),
-                            commonWidgets.getIcon(
-                                width: fhbStyles.imageWidth,
-                                height: fhbStyles.imageHeight,
-                                icon: Icons.info,
-                                onTap: () {
-                                  print('on Info pressed');
-                                  commonWidgets.showDoctorDetailViewNew(
-                                      docs[i], context);
-                                }),
-                          ],
-                        )),
-                    docs[i].isActive
-                        ? commonWidgets.getIcon(
-                        width: fhbStyles.imageWidth,
-                        height: fhbStyles.imageHeight,
-                        icon: Icons.check_circle,
-                        onTap: () {
-                          print('on check  pressed');
-                        })
-                        : SizedBox(),
-                    commonWidgets.getSizeBoxWidth(15.0),
-                    commonWidgets.getBookMarkedIconNew(docs[i], () {
-                    providerViewModel
-                        .bookMarkDoctor(!(docs[i].isActive), docs[i])
-                        .then((status) {
-                      if (status) {
-                        print('onClick');
-                        providerViewModel.doctorIdsList.clear();
-                        setState(() {});
-                      }
-                    });
-                  }),
-                    commonWidgets.getSizeBoxWidth(10.0),
-                  ],
+                Container(
+                  alignment: Alignment.center,
+                  child: commonWidgets.getClipOvalImageNew(
+                      docs[i].user.profilePicThumbnailUrl, fhbStyles.cardClipImage),
                 ),
-                commonWidgets.getSizedBox(5.0),
-
-                Row(
-                    children: [
-                  Expanded(
-                      child:docs[i].specialization != null
-                          ? commonWidgets.getDoctoSpecialist(
-                          '${docs[i].specialization}')
-                          : SizedBox()),
-                  /*docs[i].fees != null
-                    ? docs[i].fees.consulting != null
-                    ? (docs[i].fees.consulting != null &&
-                    docs[i].fees.consulting != '')
-                    ? commonWidgets.getDoctoSpecialist(
-                    'INR ${docs[i].fees.consulting.fee}')
-                    : SizedBox()
-                    : SizedBox()
-                    : SizedBox(),*/
-                  commonWidgets.getSizeBoxWidth(10.0),
-                ]),
-                commonWidgets.getSizedBox(5.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child:
-                      commonWidgets.getDoctorsAddress('Dubai')),
-                    docs[i].isMciVerified
-                        ? commonWidgets.getMCVerified(
-                        docs[i].isMciVerified, 'Verified')
-                        : commonWidgets.getMCVerified(
-                        docs[i].isMciVerified, 'Not Verified'),
-                    commonWidgets.getSizeBoxWidth(10.0),
-                  ],
+                new Positioned(
+                  bottom: 0.0,
+                  right: 2.0,
+                  child: commonWidgets.getDoctorStatusWidgetNew(docs[i], i),
                 )
               ],
             ),
+            commonWidgets.getSizeBoxWidth(10.0),
+            Expanded(
+              flex: 4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Row(
+                    children: [
+                      Expanded(
+                          child: Row(
+                            children: [
+                              commonWidgets.getTextForDoctors('${docs[i].user.name}'),
+                              commonWidgets.getSizeBoxWidth(10.0),
+                              commonWidgets.getIcon(
+                                  width: fhbStyles.imageWidth,
+                                  height: fhbStyles.imageHeight,
+                                  icon: Icons.info,
+                                  onTap: () {
+                                    print('on Info pressed');
+                                    commonWidgets.showDoctorDetailViewNew(
+                                        docs[i], context);
+                                  }),
+                            ],
+                          )),
+                      docs[i].isActive
+                          ? commonWidgets.getIcon(
+                          width: fhbStyles.imageWidth,
+                          height: fhbStyles.imageHeight,
+                          icon: Icons.check_circle,
+                          onTap: () {
+                            print('on check  pressed');
+                          })
+                          : SizedBox(),
+                      /*commonWidgets.getSizeBoxWidth(15.0),
+                      commonWidgets.getBookMarkedIconNew(docs[i], () {
+                      providerViewModel
+                          .bookMarkDoctor(!(docs[i].isActive), docs[i])
+                          .then((status) {
+                        if (status) {
+                          print('onClick');
+                          providerViewModel.doctorIdsList.clear();
+                          setState(() {});
+                        }
+                      });
+                    }),
+                      commonWidgets.getSizeBoxWidth(10.0),*/
+                    ],
+                  ),
+                  commonWidgets.getSizedBox(5.0),
+
+                  Row(
+                      children: [
+                    Expanded(
+                        child:docs[i].specialization != null
+                            ? commonWidgets.getDoctoSpecialist(
+                            '${docs[i].specialization}')
+                            : SizedBox()),
+                    /*docs[i].fees != null
+                      ? docs[i].fees.consulting != null
+                      ? (docs[i].fees.consulting != null &&
+                      docs[i].fees.consulting != '')
+                      ? commonWidgets.getDoctoSpecialist(
+                      'INR ${docs[i].fees.consulting.fee}')
+                      : SizedBox()
+                      : SizedBox()
+                      : SizedBox(),*/
+                    commonWidgets.getSizeBoxWidth(10.0),
+                  ]),
+                  commonWidgets.getSizedBox(5.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: commonWidgets.getDoctorsAddress(docs[i].user.userAddressCollection3[0].city!=null?docs[i].user.userAddressCollection3[0].city.name:'')),
+                      docs[i].isMciVerified
+                          ? commonWidgets.getMCVerified(
+                          docs[i].isMciVerified, 'Verified')
+                          : commonWidgets.getMCVerified(
+                          docs[i].isMciVerified, 'Not Verified'),
+                      commonWidgets.getSizeBoxWidth(10.0),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
+        ),
+    );
+  }
+
+  navigateToHelathOrganizationList(BuildContext context,List<Doctors> docs,int i) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HealthOrganization(
+            doctors: docs,
+            index: i,
           ),
-        ],
-      ),
-      );
+        ));
   }
 
 }

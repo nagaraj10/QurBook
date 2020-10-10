@@ -93,8 +93,8 @@ const String qr_verifymail = 'verifyMail';
 const String qr_slotDate = 'date';
 const String qr_doctorid = 'doctorId';
 const String qr_getSlots = 'doctor/checkavailability';
-const String qr_bookAppmnt = 'appointments';
-const String qr_update_payment = 'appointments/update-payment-status/';
+const String qr_bookAppointment = 'appointment';
+const String qr_update_payment = 'payment/update-payment-status/';
 
 const String qr_created_by = 'createdBy';
 const String qr_booked_for = 'bookedFor';
@@ -165,6 +165,7 @@ const String qr_category = 'category';
 const String qr_health_record_type = 'health-record-type';
 const String qr_health_record = 'health-records';
 const String qr_filter = 'filter';
+const String qr_delete_file = 'delete-file';
 
 //for update profile new
 
@@ -184,7 +185,9 @@ const String qr_pincode_p = 'pincode';
 
 const String qr_delink = 'de-link';
 const String qr_bookmark_healthrecord = 'bookmark-healthrecord';
-const String qr_healthOrgTypeId = '?healthOrganizationTypeId=';
+const String qr_healthOrgType = '?healthOrganizationType=';
 const String qr_limitSearchText = '&limit=1&searchText=';
 const String qr_sortByDesc = '&sortBy=desc&skip=0';
 const String qr_patient_update_default = 'patient-provider-mapping/';
+const String qr_provider_mapping = 'provider-mapping/';
+const String qr_health_org_id = 'healthOrganizationId';

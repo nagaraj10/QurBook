@@ -188,12 +188,12 @@ class HealthReportListForUserBlock implements BaseBloc {
   }
 
   Future<MetaDataMovedResponse> switchDataToOtherUser(
-      String familyMemberID, String detailID) async {
+      String familyMemberID, String metaId) async {
     MetaDataMovedResponse metaDataMovedResponse;
     moveMetaDataSInk.add(ApiResponse.loading(variable.strMoveData));
     try {
       metaDataMovedResponse = await _healthReportListForUserRepository
-          .moveDataToOtherUser(familyMemberID, detailID);
+          .moveDataToOtherUser(familyMemberID, metaId);
       moveMetaDataSInk.add(ApiResponse.completed(metaDataMovedResponse));
     } catch (e) {
       metadataListSink.add(ApiResponse.error(e.toString()));
@@ -284,6 +284,20 @@ class HealthReportListForUserBlock implements BaseBloc {
     try {
       healthRecordSuccess = await _healthReportListForUserRepository
           .updateHealthRecords(jsonData, imagePaths, audioPath, metaId);
+      // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
+    } catch (e) {
+      healthRecordSink.add(ApiResponse.error(e.toString()));
+    }
+    return healthRecordSuccess;
+  }
+
+  Future<HealthRecordSuccess> updateFiles(
+      String audioPath, HealthResult healthResult) async {
+    HealthRecordSuccess healthRecordSuccess;
+    healthRecordSink.add(ApiResponse.loading(variable.strSubmitting));
+    try {
+      healthRecordSuccess = await _healthReportListForUserRepository
+          .updateFileInRecords(audioPath, healthResult);
       // healthRecordSink.add(ApiResponse.completed(healthRecordSuccess));
     } catch (e) {
       healthRecordSink.add(ApiResponse.error(e.toString()));

@@ -8,21 +8,23 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/models/FamilyData.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
 import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 
 class FamilyListView {
-  FamilyData familyData;
+  FamilyMemberResult familyData;
 
   FamilyListView(this.familyData);
 
   Future<Widget> getDialogBoxWithFamilyMember(
-      FamilyData data,
+      FamilyMemberResult data,
       BuildContext context,
       GlobalKey<State> _keyLoader,
       Function(BuildContext context, String searchParam, String name)
@@ -38,8 +40,8 @@ class FamilyListView {
                 child: Column(
                   children: <Widget>[
                     data != null
-                        ? setupAlertDialoadContainer(data.sharedbyme, context,
-                            onTextFieldtap, _keyLoader)
+                        ? setupAlertDialoadContainer(data.sharedByUsers,
+                            context, onTextFieldtap, _keyLoader)
                         : setupAlertDialoadContainer(
                             null, context, onTextFieldtap, _keyLoader),
                   ],
@@ -49,7 +51,7 @@ class FamilyListView {
   }
 
   Widget setupAlertDialoadContainer(
-      List<Sharedbyme> sharedByMeList,
+      List<SharedByUsers> sharedByMeList,
       BuildContext context,
       Function(BuildContext context, String searchParam, String name)
           onTextFieldtap,
@@ -63,18 +65,25 @@ class FamilyListView {
     LinkedData linkedData =
         new LinkedData(roleName: variable.Self, nickName: variable.Self);
 
-    if (sharedByMeList == null) {
+    sharedByMeList.insert(
+        0,
+        new SharedByUsers(
+            id: myProfile.result.id,
+            nickName: 'Self',
+            relationship: RelationsShipModel(name: 'Self')));
+
+    /* if (sharedByMeList == null) {
       sharedByMeList = new List();
       sharedByMeList.add(
-          new Sharedbyme(profileData: profileData, linkedData: linkedData));
+          new SharedByUsers(profileData: profileData, linkedData: linkedData));
     } else {
       if (!sharedByMeList.contains(
           new Sharedbyme(profileData: profileData, linkedData: linkedData))) {
         sharedByMeList.insert(0,
             new Sharedbyme(profileData: profileData, linkedData: linkedData));
       }
-    }
-    List<Sharedbyme> sharedByMe = removeDuplicates(sharedByMeList);
+    }*/
+    List<SharedByUsers> sharedByMe = removeDuplicates(sharedByMeList);
 
     if (sharedByMe.length > 0) {
       return Container(
@@ -128,81 +137,77 @@ class FamilyListView {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               ClipOval(
-                                  child: sharedByMe[index]
-                                              .linkedData
-                                              .nickName ==
+                                  child: sharedByMe[index].nickName ==
                                           variable.Self
-                                      ? myProfile.result.profilePicThumbnailUrl !=
+                                      ? /*myProfile.result
+                                                  .profilePicThumbnailUrl !=
                                               null
                                           ? new FHBBasicWidget()
                                               .getProfilePicWidgeUsingUrl(
-                                                  myProfile.result.profilePicThumbnailUrl)
-                                          : Container(
-                                              height: 50,
-                                              width: 50,
-                                              child: Center(
-                                                  child: Text(
-                                                      myProfile.result!=
+                                                  myProfile.result
+                                                      .profilePicThumbnailUrl)
+                                          : */
+                                      Container(
+                                          height: 50,
+                                          width: 50,
+                                          child: Center(
+                                              child: Text(
+                                                  myProfile.result != null
+                                                      ? myProfile.result
+                                                                  .firstName !=
                                                               null
-                                                          ? myProfile.result.firstName
+                                                          ? myProfile.result
+                                                              .firstName[0]
                                                               .toUpperCase()
-                                                          : '',
-                                                      style: TextStyle(
-                                                          color: Color(CommonUtil()
-                                                              .getMyPrimaryColor()),
-                                                          fontSize: 22))),
-                                              color: const Color(
-                                                  fhbColors.bgColorContainer),
-                                            )
-                                      : sharedByMe[index]
-                                                  .profileData
-                                                  .profilePicThumbnail !=
+                                                          : 'S'
+                                                      : '',
+                                                  style: TextStyle(
+                                                      color: Color(CommonUtil()
+                                                          .getMyPrimaryColor()),
+                                                      fontSize: 22))),
+                                          color: const Color(
+                                              fhbColors.bgColorContainer),
+                                        )
+                                      : /*sharedByMe[index]
+                                                  .child
+                                                  .profilePicThumbnailUrl !=
                                               null
-                                          ? Image.memory(
-                                              Uint8List.fromList(
-                                                  sharedByMe[index]
-                                                      .profileData
-                                                      .profilePicThumbnail
-                                                      .data),
+                                          ? Image.network(
+                                              sharedByMe[index]
+                                                  .child
+                                                  .profilePicThumbnailUrl,
                                               height: 50,
                                               width: 50,
                                               fit: BoxFit.cover,
                                             )
-                                          : Container(
-                                              height: 50,
-                                              width: 50,
-                                              child: Center(
-                                                child: Text(
-                                                  /*sharedByMe[index]
-                                                              .profileData
-                                                              .qualifiedFullName
-                                                              .firstName !=
-                                                          null
-                                                      ? sharedByMe[index]
-                                                          .profileData
-                                                          .qualifiedFullName
-                                                          .firstName[0]
-                                                          .toUpperCase()
-                                                      : */'',
-                                                  style: TextStyle(
-                                                      color: Color(CommonUtil()
-                                                          .getMyPrimaryColor()),
-                                                      fontSize: 22),
-                                                ),
-                                              ),
-                                              color: const Color(
-                                                  fhbColors.bgColorContainer),
-                                            )),
+                                          :*/
+                                      Container(
+                                          height: 50,
+                                          width: 50,
+                                          child: Center(
+                                            child: Text(
+                                              sharedByMe[index].nickName != null
+                                                  ? sharedByMe[index]
+                                                      .nickName[0]
+                                                      .toUpperCase()
+                                                  : '',
+                                              style: TextStyle(
+                                                  color: Color(CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                                  fontSize: 22),
+                                            ),
+                                          ),
+                                          color: const Color(
+                                              fhbColors.bgColorContainer),
+                                        )),
                               SizedBox(width: 20),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    sharedByMe[index].linkedData.nickName !=
-                                            null
+                                    sharedByMe[index].nickName != null
                                         ? toBeginningOfSentenceCase(
                                             sharedByMe[index]
-                                                .linkedData
                                                 .nickName
                                                 .toLowerCase())
                                         : '',
@@ -213,15 +218,13 @@ class FamilyListView {
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
-                                    sharedByMe[index].linkedData != null
-                                        ? sharedByMe[index]
-                                                    .linkedData
-                                                    .roleName !=
+                                    sharedByMe[index].relationship != null
+                                        ? sharedByMe[index].relationship.name !=
                                                 null
                                             ? toBeginningOfSentenceCase(
                                                 sharedByMe[index]
-                                                    .linkedData
-                                                    .roleName
+                                                    .relationship
+                                                    .name
                                                     .toLowerCase())
                                             : ''
                                         : '',
@@ -235,10 +238,13 @@ class FamilyListView {
                           ),
                         ),
                         onTap: () {
-                          onTextFieldtap(
-                              context,
-                              sharedByMe[index].profileData.userId,
-                              sharedByMe[index].linkedData.nickName);
+                          if (index == 0) {
+                            onTextFieldtap(context, sharedByMe[index].id,
+                                sharedByMe[index].nickName);
+                          } else {
+                            onTextFieldtap(context, sharedByMe[index].child.id,
+                                sharedByMe[index].nickName);
+                          }
                         },
                       ),
                     );
@@ -252,10 +258,10 @@ class FamilyListView {
     }
   }
 
-  List<Sharedbyme> removeDuplicates(List<Sharedbyme> SharedbymeList) {
-    List<Sharedbyme> sharedByMeClone = new List();
+  List<SharedByUsers> removeDuplicates(List<SharedByUsers> SharedbymeList) {
+    List<SharedByUsers> sharedByMeClone = new List();
 
-    for (Sharedbyme sharedbymeObj in SharedbymeList) {
+    for (SharedByUsers sharedbymeObj in SharedbymeList) {
       if (!sharedByMeClone.contains(sharedbymeObj)) {
         sharedByMeClone.add(sharedbymeObj);
       }

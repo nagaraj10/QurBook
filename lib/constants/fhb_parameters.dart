@@ -295,7 +295,7 @@ const String PAYMENT_STATUS = 'payment_status';
 const String CREDIT = 'Credit';
 const String PAYMENT_ID = 'payment_id';
 const String PAYMENT_REQ_ID = 'payment_request_id';
-const String CHECK_URL = 'http://www.example.com/redirect';
+const String CHECK_URL = 'https://www.example.com/';
 const String TITLE_BAR = 'Payment';
 const String PAYSUC = 'PAYSUC';
 const String PAYMENT_SUCCESS_PNG = 'assets/payment/success_tick.png';
@@ -581,3 +581,6 @@ const String strHealthOrganizationReferenceId = 'healthOrganizationReferenceId';
 const String strpatient = 'patient';
 
 const String strHealthOrganizationName = 'healthOrganizationName';
+const String strHealthRecordMetaId = 'healthRecordMetaId';
+const String strDestinationUserId = 'destinationUserId';
+const String strSourceUserId = 'sourceUserId';

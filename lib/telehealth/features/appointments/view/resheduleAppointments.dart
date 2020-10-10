@@ -257,13 +257,13 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
           children: [
             getDoctorsWidget(i, docs),
             commonWidgets.getSizedBox(20.0),
-            DoctorSessionTimeSlot(
+           /* DoctorSessionTimeSlot(
                 isReshedule: widget.isReshedule,
                 date: _selectedValue.toString(),
                 doctorId: docs[i].id,
                 docs: docs,
 //                doctorsData: widget.doc,
-                i: i),
+                i: i),*/
           ],
         ),
       ),

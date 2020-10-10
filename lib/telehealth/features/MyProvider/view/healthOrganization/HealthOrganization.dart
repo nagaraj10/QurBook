@@ -1,55 +1,52 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/SwitchProfile.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
-import 'package:myfhb/my_providers/models/MyProviderResponseData.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
-import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/DoctorSessionTimeSlot.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
-import 'package:myfhb/telehealth/features/SearchWidget/view/SearchWidget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class HealthOrganization extends StatefulWidget {
+  final List<Doctors> doctors;
+  final int index;
+
   @override
   _HealthOrganizationState createState() => _HealthOrganizationState();
+
+  HealthOrganization({this.doctors,this.index}) {}
 }
 
 class _HealthOrganizationState extends State<HealthOrganization> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   MyProviderViewModel providerViewModel;
-  DatePickerController _controller = DatePickerController();
   DateTime _selectedValue = DateTime.now();
   int selectedPosition = 0;
   bool firstTym = false;
   String doctorsName;
   CommonWidgets commonWidgets = new CommonWidgets();
-  bool isSearch = false;
-
-  List<DoctorIds> doctorData = new List();
 
   List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
-  new List<AvailableTimeSlotsModel>();
+      new List<AvailableTimeSlotsModel>();
   List<SlotSessionsModel> sessionTimeModel = new List<SlotSessionsModel>();
   List<Slots> slotsModel = new List<Slots>();
   ProvidersBloc _providersBloc;
   MyProvidersResponse myProvidersResponseList;
+  String placeHolder = null;
 
   @override
   void initState() {
@@ -61,17 +58,17 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            flexibleSpace: GradientAppBar(),
-            leading: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Icon(
-                Icons.arrow_back_ios, // add custom icons also
-              ),
+      appBar: AppBar(
+          flexibleSpace: GradientAppBar(),
+          leading: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Icon(
+              Icons.arrow_back_ios, // add custom icons also
             ),
-            // you can put Icon as well, it accepts any widget.
-            title:
-            getTitle() /* Column(
+          ),
+          // you can put Icon as well, it accepts any widget.
+          title:
+              getTitle() /* Column(
             children: [
               Text("My Providers"),
             ],
@@ -82,36 +79,36 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                 .buildActions(context, _keyLoader, callBackToRefresh),
             Icon(Icons.more_vert),
           ],*/
-        ),
-        body: Container(
-            child: Column(
-              children: [
-                SearchWidget(
-                  onChanged: (doctorsName) {
-                    if (doctorsName != '' && doctorsName.length > 3) {
-                      isSearch = true;
-                      onSearched(doctorsName);
-                    } else {
-                      setState(() {
-                        isSearch = false;
-                      });
-                    }
-                  },
-                ),
-                Expanded(
-                   child: (providerViewModel.doctorIdsList != null &&
-                      providerViewModel.doctorIdsList.length > 0)
-                  ? providerListWidget(providerViewModel.doctorIdsList)
-                  : getDoctorProviderList(),
-                  /*:Container(
+          ),
+      body: Container(
+          child: Column(
+        children: [
+          /* SearchWidget(
+              onChanged: (doctorsName) {
+                if (doctorsName != '' && doctorsName.length > 3) {
+                  isSearch = true;
+                  onSearched(doctorsName);
+                } else {
+                  setState(() {
+                    isSearch = false;
+                  });
+                }
+              },
+            ),*/
+          Expanded(
+            child: (providerViewModel.healthOrganizationResult != null &&
+                    providerViewModel.healthOrganizationResult.length > 0)
+                ? providerListWidget(providerViewModel.healthOrganizationResult)
+                : getHospitalProviderList(widget.doctors[widget.index].id),
+            /*:Container(
                     child: Center(
                       child: Text(variable.strNoDoctordata),
                     ),
                   ),*/
-                )
-              ],
-            )),
-        floatingActionButton: FloatingActionButton(
+          )
+        ],
+      )),
+      /*floatingActionButton: FloatingActionButton(
           onPressed: () {
             //PageNavigator.goTo(context, '/add_appointments');
 
@@ -128,7 +125,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
             Icons.add,
             color: Color(new CommonUtil().getMyPrimaryColor()),
           ),
-        ));
+        )*/
+    );
   }
 
   Widget getTitle() {
@@ -136,7 +134,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       children: [
         Expanded(
           child: Text(
-            "My Providers",
+            "Health-Org",
             style: TextStyle(
               fontWeight: FontWeight.w500,
             ),
@@ -150,11 +148,12 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     );
   }
 
-  Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
+  Widget hospitalListItem(
+      BuildContext ctx, int i, List<HealthOrganizationResult> docs) {
     return ExpandableNotifier(
       child: Container(
         padding: EdgeInsets.all(2.0),
-        margin: EdgeInsets.only(left: 20, right: 20, top: 8),
+        margin: EdgeInsets.only(left: 12, right: 12, top: 12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -178,33 +177,36 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     );
   }
 
-  Widget collapseListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
+  Widget collapseListItem(
+      BuildContext ctx, int i, List<HealthOrganizationResult> docs) {
     return Container(
       padding: EdgeInsets.all(10.0),
       child: ExpandableButton(
-        child: getDoctorsWidget(i, docs),
+        child: getHospitalWidget(i, docs),
       ),
     );
   }
 
-  Widget expandedListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
+  Widget expandedListItem(
+      BuildContext ctx, int i, List<HealthOrganizationResult> docs) {
     return Container(
       padding: EdgeInsets.all(10.0),
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       child: ExpandableButton(
         child: Column(
           children: [
-            getDoctorsWidget(i, docs),
+            getHospitalWidget(i, docs),
             commonWidgets.getSizedBox(20.0),
             DoctorSessionTimeSlot(
                 date: _selectedValue.toString(),
-                doctorId: docs[i].id,
-                docs: docs,
+                doctorId: widget.doctors[widget.index].id,
+                docs: widget.doctors,
                 isReshedule: false,
-                i: i),
+                i: i,
+                healthOrganizationId: docs[i].healthOrganization.id,
+                healthOrganizationResult: docs,
+                doctorListPos: widget.index,
+            ),
           ],
         ),
       ),
@@ -215,135 +217,75 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     (context as Element).markNeedsBuild();
   }
 
-  Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
+  Widget getHospitalWidget(
+      int i, List<HealthOrganizationResult> eachHospitalModel) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        new Stack(
-          overflow: Overflow.visible,
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              child: commonWidgets.getClipOvalImageNew(
-                  docs[i].profilePicThumbnailURL, fhbStyles.cardClipImage),
-            ),
-            new Positioned(
-              bottom: 0.0,
-              right: 2.0,
-              child: commonWidgets.getDoctorStatusWidget(docs[i], i),
-            )
-          ],
+        placeHolder != null
+            ? ClipOval(
+                child: Image.network(
+                placeHolder,
+                height: 50,
+                width: 50,
+                fit: BoxFit.cover,
+              ))
+            : CircleAvatar(
+                backgroundColor: Colors.greenAccent,
+                child: Icon(Icons.local_hospital)),
+        SizedBox(
+          width: 20,
         ),
-        commonWidgets.getSizeBoxWidth(10.0),
         Expanded(
-          flex: 4,
+          flex: 6,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Row(
-                children: [
-                  Expanded(
-                      child: Row(
-                        children: [
-                          commonWidgets.getTextForDoctors('${docs[i].name}'),
-                          commonWidgets.getSizeBoxWidth(10.0),
-                          commonWidgets.getIcon(
-                              width: fhbStyles.imageWidth,
-                              height: fhbStyles.imageHeight,
-                              icon: Icons.info,
-                              onTap: () {
-                                print('on Info pressed');
-                                commonWidgets.showDoctorDetailView(
-                                    docs[i], context);
-                              }),
-                        ],
-                      )),
-                  docs[i].isActive
-                      ? commonWidgets.getIcon(
-                      width: fhbStyles.imageWidth,
-                      height: fhbStyles.imageHeight,
-                      icon: Icons.check_circle,
-                      onTap: () {
-                        print('on check  pressed');
-                      })
-                      : SizedBox(),
-                  commonWidgets.getSizeBoxWidth(15.0),
-                  commonWidgets.getBookMarkedIcon(docs[i], () {
-                    /*providerViewModel
-                        .bookMarkDoctor(!(docs[i].isDefault), docs[i])
-                        .then((status) {
-                      if (status) {
-                        print('onClick');
-                        providerViewModel.doctorIdsList.clear();
-                        setState(() {});
-                      }
-                    });*/
-                  }),
-                  commonWidgets.getSizeBoxWidth(10.0),
-                ],
-              ),
-              commonWidgets.getSizedBox(5.0),
-
-              /*
-              Row(children: [
-                Expanded(
-                    child: docs[i].professionalDetails != null
-                        ? docs[i].professionalDetails[0].specialty != null
-                            ? docs[i].professionalDetails[0].specialty.name !=
-                                    null
-                                ? commonWidgets.getDoctoSpecialist(
-                                    '${docs[i].professionalDetails[0].specialty.name}')
-                                : SizedBox()
-                            : SizedBox()
-                        : SizedBox()),
-                commonWidgets.get(
-                  text: docs[i].fees != null
-                      ? 'INR ${docs[i].fees.consulting.fee}'
-                      : 'INR 0.00',
+              SizedBox(height: 5),
+              AutoSizeText(
+                eachHospitalModel[i].healthOrganization.name != null
+                    ? toBeginningOfSentenceCase(
+                        eachHospitalModel[i].healthOrganization.name)
+                    : '',
+                maxLines: 1,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w500,
                 ),
-              ]), */
-
-              Row(children: [
-                Expanded(
-                    child: docs[i].professionalDetails != null
-                        ? docs[i].professionalDetails[0].specialty != null
-                        ? docs[i].professionalDetails[0].specialty.name !=
-                        null
-                        ? commonWidgets.getDoctoSpecialist(
-                        '${docs[i].professionalDetails[0].specialty.name}')
-                        : SizedBox()
-                        : SizedBox()
-                        : SizedBox()),
-                docs[i].fees != null
-                    ? docs[i].fees.consulting != null
-                    ? (docs[i].fees.consulting != null &&
-                    docs[i].fees.consulting != '')
-                    ? commonWidgets.getDoctoSpecialist(
-                    'INR ${docs[i].fees.consulting.fee}')
-                    : SizedBox()
-                    : SizedBox()
-                    : SizedBox(),
-                commonWidgets.getSizeBoxWidth(10.0),
-              ]),
-              commonWidgets.getSizedBox(5.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child:
-                      commonWidgets.getDoctorsAddress('${docs[i].city}')),
-                  docs[i].isMCIVerified
-                      ? commonWidgets.getMCVerified(
-                      docs[i].isMCIVerified, 'Verified')
-                      : commonWidgets.getMCVerified(
-                      docs[i].isMCIVerified, 'Not Verified'),
-                  commonWidgets.getSizeBoxWidth(10.0),
-                ],
-              )
+                textAlign: TextAlign.start,
+              ),
+              SizedBox(height: 5),
+               AutoSizeText(
+                 ''+commonWidgets.getCity(eachHospitalModel[i]),
+                 maxLines: 1,
+                 style: TextStyle(
+                     fontSize: 13.0,
+                     fontWeight: FontWeight.w400,
+                     color: ColorUtils.lightgraycolor),
+               ),
+              SizedBox(height: 5),
             ],
           ),
         ),
+        Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            child: Center(
+                              child: TextWidget(
+                                  text:'INR '+getFees(eachHospitalModel[i]),
+                                  fontsize: 12.0,
+                                  fontWeight: FontWeight.w400,
+                                  colors: Colors.blue[800]),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
       ],
     );
   }
@@ -355,29 +297,31 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     }
   }
 
-  onSearched(String doctorName) {
-    doctorData.clear();
-    if (doctorName != null) {
-      for (DoctorIds fiterData
-      in providerViewModel.getFilterDoctorList(doctorName)) {
-        doctorData.add(fiterData);
+  String getFees(HealthOrganizationResult result) {
+
+    String fees;
+    if(result.doctorFeeCollection.isNotEmpty){
+      if(result.doctorFeeCollection.length>0){
+        for(int i = 0;i<result.doctorFeeCollection.length;i++){
+          String feesCode = result.doctorFeeCollection[i].feeType.code;
+          if(feesCode==CONSULTING){
+             fees = result.doctorFeeCollection[i].fee;
+          }else{
+            fees = '';
+          }
+        }
+      }else{
+        fees = '';
       }
+    }else{
+      fees = '';
     }
-
-    setState(() {});
+    return fees;
   }
 
-  Widget getFees(DoctorIds doctorId) {
-    return doctorId.fees != null
-        ? commonWidgets.getHospitalDetails(doctorId.fees.consulting != null
-        ? variable.strRs + ' ' + doctorId.fees.consulting.fee
-        : '')
-        : Text('');
-  }
-
-  Widget getDoctorProviderList() {
-    return new FutureBuilder<List<DoctorIds>>(
-      future: providerViewModel.fetchProviderDoctors(),
+  Widget getHospitalProviderList(String doctorId) {
+    return new FutureBuilder<List<HealthOrganizationResult>>(
+      future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
@@ -397,20 +341,17 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     );
   }
 
-  Widget providerListWidget(List<DoctorIds> doctorList) {
-    return (doctorList != null && doctorList.length > 0)
+  Widget providerListWidget(List<HealthOrganizationResult> hospitalList) {
+    return (hospitalList != null && hospitalList.length > 0)
         ? new ListView.builder(
-      itemBuilder: (BuildContext ctx, int i) =>
-          doctorsListItem(ctx, i, isSearch ? doctorData : doctorList),
-      itemCount: isSearch
-          ? doctorData.length
-          : providerViewModel.doctorIdsList.length,
-    )
+            itemBuilder: (BuildContext ctx, int i) =>
+                hospitalListItem(ctx, i, hospitalList),
+            itemCount: hospitalList.length,
+          )
         : Container(
-      child: Center(
-        child: Text(variable.strNoDoctordata),
-      ),
-    );
+            child: Center(
+              child: Text(variable.strNoHospitaldata),
+            ),
+          );
   }
-
 }

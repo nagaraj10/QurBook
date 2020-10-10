@@ -15,12 +15,13 @@ class MyProvidersTabBar extends StatefulWidget {
   TabController tabController;
   ProvidersBloc providersBloc;
   MyProviderState myProviderState;
+  Function refresh;
 
   MyProvidersTabBar(
       {this.data,
       this.tabController,
       this.providersBloc,
-      this.myProviderState});
+      this.myProviderState,this.refresh});
 
   @override
   State<StatefulWidget> createState() {
@@ -116,7 +117,10 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                 child: MyProvidersDoctorsList(
                     doctorsModel: doctorsModel,
                     providersBloc: widget.providersBloc,
-                    myProviderState: widget.myProviderState))
+                    myProviderState: widget.myProviderState,refresh: (){
+                      widget.refresh;
+
+                }))
             : Container(
                 child: Center(
                   child: Padding(

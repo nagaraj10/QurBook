@@ -25,6 +25,7 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyData.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/screens/FamilyListView.dart';
 import 'package:myfhb/my_providers/models/DoctorModel.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
@@ -1164,7 +1165,7 @@ class AddProvidersState extends State<AddProviders> {
     Navigator.pop(context);
   }
 
-  Future<Widget> getDialogBoxWithFamilyMemberScrap(FamilyData familyData) {
+  Future<Widget> getDialogBoxWithFamilyMemberScrap(FamilyMemberResult familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, _keyLoader, (context, userId, userName) {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {

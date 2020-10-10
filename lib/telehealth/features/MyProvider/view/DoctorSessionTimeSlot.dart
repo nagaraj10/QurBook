@@ -8,7 +8,9 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 
@@ -28,10 +30,13 @@ import 'package:myfhb/styles/styles.dart' as fhbStyles;
 class DoctorSessionTimeSlot extends StatefulWidget {
   final String doctorId;
   final String date;
-  final List<DoctorIds> docs;
+  final List<Doctors> docs;
   final int i;
   History doctorsData;
   bool isReshedule;
+  final String healthOrganizationId;
+  final List<HealthOrganizationResult> healthOrganizationResult;
+  final int doctorListPos;
 
   DoctorSessionTimeSlot(
       {this.doctorId,
@@ -39,7 +44,10 @@ class DoctorSessionTimeSlot extends StatefulWidget {
       this.docs,
       this.i,
       this.isReshedule,
-      this.doctorsData});
+      this.doctorsData,
+      this.healthOrganizationId,
+      this.healthOrganizationResult,
+      this.doctorListPos});
 
   @override
   State<StatefulWidget> createState() {
@@ -48,7 +56,8 @@ class DoctorSessionTimeSlot extends StatefulWidget {
 }
 
 class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
-  SlotsAvailabilityViewModel slotsAvailabilityViewModel = new SlotsAvailabilityViewModel();
+  SlotsAvailabilityViewModel slotsAvailabilityViewModel =
+      new SlotsAvailabilityViewModel();
   CommonWidgets commonWidgets = new CommonWidgets();
   DateTime _selectedValue = DateTime.now();
   DatePickerController _controller = DatePickerController();
@@ -90,10 +99,11 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   }
 
   Widget getTimeSlots() {
-
     return new FutureBuilder<SlotsResultModel>(
       future: slotsAvailabilityViewModel.fetchTimeSlots(
-          _selectedValue.toString(), widget.doctorId),
+          _selectedValue.toString(),
+          widget.doctorId,
+          widget.healthOrganizationId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -125,6 +135,8 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                       selectedDate: _selectedValue,
                       isReshedule: widget.isReshedule,
                       doctorsData: widget.doctorsData,
+                      healthOrganizationResult: widget.healthOrganizationResult,
+                      doctorListPos: widget.doctorListPos,
                     ),
                   )
                 : Column(
