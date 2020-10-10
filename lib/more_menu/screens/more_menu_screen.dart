@@ -53,11 +53,14 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
 
   getProfileImage() async {
     myProfile = await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    String profileImageFile =
-        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
-    if (profileImageFile != null) {
-      profileImage = File(profileImageFile);
-    }
+
+    setState(() {
+      String profileImageFile =
+          PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+      if (profileImageFile != null) {
+        profileImage = File(profileImageFile);
+      }
+    });
   }
 
   @override
@@ -110,7 +113,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     Text(
-                      '${myProfile.result.countryCode} ${myProfile.result.userContactCollection3[0].phoneNumber}',
+                      '${myProfile.result.countryCode ?? ''} ${myProfile.result.userContactCollection3[0].phoneNumber}',
                       style: TextStyle(fontSize: 12),
                     ),
                     Text(
