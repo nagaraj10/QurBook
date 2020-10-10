@@ -252,7 +252,8 @@ class _MyFamilyState extends State<MyFamily> {
   }
 
   Widget getCardWidgetForUser(SharedByUsers data, int position,
-      List<SharedByUsers> profilesSharedByMeAry,{FamilyMemberResult userCollection}) {
+      List<SharedByUsers> profilesSharedByMeAry,
+      {FamilyMemberResult userCollection}) {
     /* String familyMemberName = '';
     if (data?.child != null) {
       familyMemberName = '${data.child.firstName} ${data.child.lastName}';
@@ -457,14 +458,20 @@ class _MyFamilyState extends State<MyFamily> {
                     SizedBox(height: 10.0),
                     Text(
                       position == 0 //this is checking self
-                        ? myProfile?.result?.userContactCollection3.isNotEmpty
-                          ? myProfile?.result?.userContactCollection3[0].phoneNumber
-                          :''
-                        : data?.child?.isVirtualUser!=null 
-                            ? data?.child?.isVirtualUser
-                              ? userCollection?.virtualUserParent?.phoneNumber
-                              : data?.child?.userContactCollection3.isNotEmpty ? data?.child?.userContactCollection3[0].phoneNumber:''
-                          :'',
+                          ? myProfile?.result?.userContactCollection3.isNotEmpty
+                              ? myProfile?.result?.userContactCollection3[0]
+                                  .phoneNumber
+                              : ''
+                          : data?.child?.isVirtualUser != null
+                              ? data?.child?.isVirtualUser
+                                  ? userCollection
+                                      ?.virtualUserParent?.phoneNumber
+                                  : data?.child?.userContactCollection3
+                                          .isNotEmpty
+                                      ? data?.child?.userContactCollection3[0]
+                                          .phoneNumber
+                                      : ''
+                              : '',
 
                       /* position == 0
                           ? myProfile != null
@@ -556,8 +563,14 @@ class _MyFamilyState extends State<MyFamily> {
                                       .postUserDeLinking(jsonString.toString())
                                       .then((userLinking) {
                                     if (userLinking.isSuccess) {
-                                      // Reload
+                                      Navigator.of(_keyLoader.currentContext,
+                                              rootNavigator: true)
+                                          .pop();
                                       Navigator.pop(dialogContext);
+                                      rebuildFamilyBlock();
+                                      setState(() {});
+                                      // Reload
+                                      /* Navigator.pop(dialogContext);
                                       _familyListBloc
                                           .getFamilyMembersListNew()
                                           .then((value) {
@@ -584,7 +597,7 @@ class _MyFamilyState extends State<MyFamily> {
                                                   rootNavigator: true)
                                               .pop();
                                         }
-                                      });
+                                      }); */
                                     } else {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
@@ -1222,7 +1235,31 @@ class _MyFamilyState extends State<MyFamily> {
 
             _familyListBloc.postUserLinking(jsonString).then((userLinking) {
               if (userLinking.success) {
-                _familyListBloc.getFamilyMembersListNew().then((value) {
+                Navigator.pop(_keyLoader.currentContext);
+                Navigator.pop(context);
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => VerifyPatient(
+                      PhoneNumber: mobileNo,
+                      from: strFromVerifyFamilyMember,
+                      fName: firstNameController.text,
+                      mName: middleNameController.text,
+                      lName: lastNameController.text,
+                      relationship: selectedRelationShip,
+                      isPrimaryNoSelected: isPrimaryNoSelected,
+                    ),
+                  ),
+                ).then((value) {
+                  mobileNoController.text = '';
+                  nameController.text = '';
+                  isPrimaryNoSelected = false;
+                  selectedRelationShip = null;
+                  rebuildFamilyBlock();
+                });
+
+                /* _familyListBloc.getFamilyMembersListNew().then((value) {
                   if (value.isSuccess) {
                     // Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     //     .pop();
@@ -1309,7 +1346,7 @@ class _MyFamilyState extends State<MyFamily> {
                     Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                         .pop();
                   }
-                });
+                }); */
               } else {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();

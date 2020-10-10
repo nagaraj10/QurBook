@@ -8,6 +8,7 @@ import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_in
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
+import 'package:myfhb/src/model/user/City.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/State.dart';
 import 'package:myfhb/src/model/user/city_list_model.dart';
@@ -239,7 +240,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     return verifyEmailResponse;
   }
 
-  Future<List<CityResult>> getCityDataList(
+  Future<List<City>> getCityDataList(
       String cityname, String apibody) async {
     CityModel cityListModel;
 

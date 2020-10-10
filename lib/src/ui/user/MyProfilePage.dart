@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -21,8 +23,10 @@ class MyProfilePage extends StatefulWidget {
 
 class _MyProfilePageState extends State<MyProfilePage> {
   //MyProfileBloc _myProfileBloc;
-
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  FlutterToast toast = new FlutterToast();
   var mobile = TextEditingController();
   var name = TextEditingController();
   var email = TextEditingController();
@@ -53,7 +57,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return Scaffold(key: scaffold_state, body: getProfileDetailClone());
   }
 
-  Widget getProfileDetailClone() {
+  /* Widget getProfileDetailClone() {
     Widget profileWidget;
     MyProfileModel myProfile;
     try {
@@ -64,6 +68,35 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
 
     return profileWidget;
+  } */
+
+  Widget getProfileDetailClone() {
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    return FutureBuilder<MyProfileModel>(
+      future: addFamilyUserInfoRepository.getMyProfileInfoNew(userid),
+      builder: (BuildContext context, AsyncSnapshot<MyProfileModel> snapshot) {
+        if(snapshot.connectionState==ConnectionState.done){
+          //* its done with fetching the data from remote
+          if(snapshot.hasData && snapshot.data != null){
+            return getProfileWidget(snapshot.data.result);
+          }else{
+            //todo proper error msg to users
+            toast.getToast('something went wrong!', Colors.red);
+            return getProfileWidget(null);
+          }
+        }else if(snapshot.connectionState == ConnectionState.waiting){
+          //* its fetching the data from remote
+          return Container(
+            child: Center(
+              child: Text('Hey Please Hangon!\nprofile is loading.',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500),textAlign: TextAlign.center,),
+            ),
+          );
+        }else{
+          toast.getToast('${snapshot.error.toString()}', Colors.red);
+          return getProfileWidget(null);
+        }
+      },
+    );
   }
 
   void renameBloodGroup(String selectedBloodGroupClone) {
@@ -121,7 +154,10 @@ class _MyProfilePageState extends State<MyProfilePage> {
         gender.text = toBeginningOfSentenceCase(data.gender.toLowerCase());
       }
       if (data.bloodGroup != null) {
-        renameBloodGroup(data.bloodGroup);
+        print('current blood group ${data?.bloodGroup}');
+        bloodGroupController.text = data?.bloodGroup.split(' ')[0];
+        bloodRangeController.text = data?.bloodGroup.split(' ')[1];
+        //renameBloodGroup(data.bloodGroup);
       }
       if (data.dateOfBirth != null) {
         dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth);
@@ -143,8 +179,8 @@ class _MyProfilePageState extends State<MyProfilePage> {
           cntrlr_addr_one.text = data.userAddressCollection3[0].addressLine1;
           cntrlr_addr_two.text = data.userAddressCollection3[0].addressLine2;
           cntrlr_addr_zip.text = data.userAddressCollection3[0].pincode;
-          cntrlr_addr_city.text = data.userAddressCollection3[0].city.name;
-          cntrlr_addr_state.text = data.userAddressCollection3[0].state.name;
+          cntrlr_addr_city.text = data.userAddressCollection3[0].city?.name;
+          cntrlr_addr_state.text = data.userAddressCollection3[0].state?.name;
         }
       }
     }

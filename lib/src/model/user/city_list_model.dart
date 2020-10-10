@@ -1,17 +1,18 @@
+import 'package:myfhb/src/model/user/City.dart';
 import 'package:myfhb/src/model/user/State.dart';
 
 class CityModel {
   bool isSuccess;
-  List<CityResult> result;
+  List<City> result;
 
   CityModel({this.isSuccess, this.result});
 
   CityModel.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
     if (json['result'] != null) {
-      result = new List<CityResult>();
+      result = new List<City>();
       json['result'].forEach((v) {
-        result.add(new CityResult.fromJson(v));
+        result.add(new City.fromJson(v));
       });
     }
   }

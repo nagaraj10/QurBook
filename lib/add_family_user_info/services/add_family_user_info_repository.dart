@@ -39,6 +39,14 @@ class AddFamilyUserInfoRepository {
     return MyProfileModel.fromJson(response);
   }
 
+  Future<MyProfileModel> getMyProfileInfoNew(String userID) async {
+    final response = await _helper.getProfileInfo(query.qr_user +
+        userID +
+        query.qr_sections +
+        query.qr_generalInfo);
+    return MyProfileModel.fromJson(response);
+  }
+
   Future<UpdateAddFamilyInfo> updateUserProfileInfo(
       String userID,
       String name,

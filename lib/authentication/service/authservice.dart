@@ -241,9 +241,9 @@ class AuthService {
       );
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
-        String responseString = responseResult[strResult];
-        await PreferenceUtil.saveString(
-            Constants.KEY_AUTHTOKEN, responseString);
+        //String responseString = responseResult[strResult];
+        // await PreferenceUtil.saveString(
+        //     Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
       } else {
         return createErrorJsonString(response);

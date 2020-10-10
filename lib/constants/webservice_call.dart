@@ -238,6 +238,8 @@ class WebserviceCall {
     Map<String,dynamic> addressObj = copyOfQueryProfile['userAddressCollection3'][0];
     if(!isUpdate && addressObj['id']==null){
       addressObj.removeWhere((key, value) => key=='id');
+    }else if(addressObj['id']==null){
+      addressObj.removeWhere((key, value) => key=='id');
     }
     print('final objects $copyOfQueryProfile id has been removed');
     var profilequery = json.encode(copyOfQueryProfile);

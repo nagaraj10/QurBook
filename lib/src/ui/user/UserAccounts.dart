@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -34,14 +35,24 @@ class _UserAccountsState extends State<UserAccounts>
   int selectedTab = 0;
   bool _isEditable = false;
   File imageURIProfile, profileImage;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
+
+  MyProfileModel myProfile;
 
   @override
   void initState() {
     super.initState();
     PreferenceUtil.init();
+    //fetchUserProfileInfo();
     _sliverTabController = TabController(
         vsync: this, length: 3, initialIndex: widget.arguments.selectedIndex);
     _sliverTabController.addListener(_handleSelected);
+  }
+
+  fetchUserProfileInfo() async {
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
   }
 
   void _handleSelected() {
@@ -57,9 +68,11 @@ class _UserAccountsState extends State<UserAccounts>
 
   @override
   Widget build(BuildContext context) {
-    MyProfileModel myProfile;
+    //MyProfileModel myProfile;
+    fetchUserProfileInfo();
     try {
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      // var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      // myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
 
       Sharedbyme sharedbyme = new CommonUtil().getProfileDetails();
 
@@ -113,7 +126,7 @@ class _UserAccountsState extends State<UserAccounts>
                               Navigator.pushNamed(
                                       context, router.rt_AddFamilyUserInfo,
                                       arguments: AddFamilyUserInfoArguments(
-                                          myProfileResult: myProfile.result,
+                                          myProfileResult: myProfile?.result,
                                           fromClass:
                                               CommonConstants.user_update))
                                   .then((value) {

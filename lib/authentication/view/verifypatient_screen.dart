@@ -235,9 +235,11 @@ class _VerifyPatientState extends State<VerifyPatient> {
         VerifyOTPModel params = VerifyOTPModel(
             phoneNumber: widget.PhoneNumber,
             verificationCode: OtpController.text);
-        AddFamilyOTPResponse response =
+        var response =
             await authViewModel.verifyMyOTP(params.toJson());
-        if (response.isSuccess) {
+        if (response['isSuccess']) { //? this might be change
+          toast.getToast('user Added successfully', Colors.green);
+          Navigator.pop(context);
           Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                   arguments: AddFamilyUserInfoArguments(
                       fromClass: CommonConstants.add_family,
@@ -247,8 +249,10 @@ class _VerifyPatientState extends State<VerifyPatient> {
                       relationShip: widget.relationship,
                       isPrimaryNoSelected: widget.isPrimaryNoSelected,
                       addFamilyUserInfo:
-                          response.result != null ? response.result : ''))
-              .then((value) {});
+                          response.result != null ? response.result : null))
+              .then((value) {
+                Navigator.pop(context);
+              });
         } else {
           //something went wrong.
           Navigator.pop(context);
