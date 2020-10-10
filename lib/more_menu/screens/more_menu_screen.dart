@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:launch_review/launch_review.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -27,8 +28,7 @@ class MoreMenuScreen extends StatefulWidget {
 }
 
 class _MoreMenuScreenState extends State<MoreMenuScreen> {
-  MyProfileModel myProfile =
-      PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+  MyProfileModel myProfile;
   File profileImage;
 
   String selectedMaya =
@@ -51,7 +51,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
     getProfileImage();
   }
 
-  getProfileImage() {
+  getProfileImage() async {
+    myProfile = await PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     String profileImageFile =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
     if (profileImageFile != null) {
@@ -92,19 +93,19 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   child: profileImage != null
                       ? Image.file(profileImage,
                           width: 50, height: 50, fit: BoxFit.cover)
-                      : FHBBasicWidget().getProfilePicWidgeUsingUrl(myProfile.result.profilePicThumbnailUrl),
+                      : FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                          myProfile.result.profilePicThumbnailUrl),
                 ),
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      myProfile.result !=
-                              null
-                          ? toBeginningOfSentenceCase(myProfile.result.firstName??
-                                  '') +
+                      myProfile.result != null
+                          ? toBeginningOfSentenceCase(
+                                  myProfile.result.firstName ?? '') +
                               ' ' +
-                              toBeginningOfSentenceCase(myProfile.result.lastName ??
-                                  '')
+                              toBeginningOfSentenceCase(
+                                  myProfile.result.lastName ?? '')
                           : '',
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
@@ -353,7 +354,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   void moveToLoginPage(SignOutResponse signOutResponse) {
     PreferenceUtil.clearAllData().then((value) {
       // PageNavigator.goToPermanent(context,router.rt_SignIn);
-      PageNavigator.goToPermanent(context, router.rt_WebCognito);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => PatientSignInScreen()),
+          (route) => false);
     });
   }
 }

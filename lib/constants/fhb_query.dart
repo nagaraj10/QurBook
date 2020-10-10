@@ -140,7 +140,9 @@ const String qr_get_media_master = '/getmediamaster/';
 
 const String qr_userid = 'userId';
 const String qr_mediaMetaId = 'mediaMetaId';
-const String qr_sharerecord = 'sharerecord';
+const String qr_sharerecord = 'share-record';
+const String qr_shareToType = '?shareToType=';
+const String qr_Doctor = 'doctor';
 
 const String qr_myconnection = 'myconnection/';
 
@@ -191,3 +193,7 @@ const String qr_sortByDesc = '&sortBy=desc&skip=0';
 const String qr_patient_update_default = 'patient-provider-mapping/';
 const String qr_provider_mapping = 'provider-mapping/';
 const String qr_health_org_id = 'healthOrganizationId';
+
+const String qr_shareFromUser = 'shareFromUser';
+const String qr_shareToProvider = 'shareToProvider';
+const String qr_metadata = 'metadata';

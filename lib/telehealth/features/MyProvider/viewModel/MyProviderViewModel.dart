@@ -6,6 +6,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordRespon
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
@@ -16,7 +17,7 @@ class MyProviderViewModel extends ChangeNotifier {
   List<DoctorIds> doctorIdsList = new List();
   List<DateSlotTimings> dateSlotTimings = new List();
   List<TelehealthProviderModel> teleHealthProviderModel = new List();
-  AssociateRecordsResponse associateRecordResponse = AssociateRecordsResponse();
+  AssociateSuccessResponse associateRecordResponse = AssociateSuccessResponse();
   List<HealthOrganizationResult> healthOrganizationResult = List();
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
@@ -72,10 +73,10 @@ class MyProviderViewModel extends ChangeNotifier {
     return filterDoctorData;
   }
 
-  Future<AssociateRecordsResponse> associateRecords(
+  Future<AssociateSuccessResponse> associateRecords(
       String doctorId, String userId, List<String> healthRecords) async {
     try {
-      AssociateRecordsResponse bookAppointmentModel =
+      AssociateSuccessResponse bookAppointmentModel =
           await _providersListRepository.associateRecords(
               doctorId, userId, healthRecords);
       associateRecordResponse = bookAppointmentModel;
@@ -83,10 +84,12 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<HealthOrganizationResult>> getHealthOrgFromDoctor(String doctorId) async {
+  Future<List<HealthOrganizationResult>> getHealthOrgFromDoctor(
+      String doctorId) async {
     try {
       HealthOrganizationModel healthOrganizationModel =
-          await _providersListRepository.getHealthOrganizationFromDoctor(doctorId);
+          await _providersListRepository
+              .getHealthOrganizationFromDoctor(doctorId);
 
       healthOrganizationResult = healthOrganizationModel.result;
       return healthOrganizationResult;

@@ -7,7 +7,9 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as Constants;
+import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
+    as Constants;
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -17,9 +19,9 @@ import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 
 class AppointmentsCommonWidget {
-  List<CategoryData> filteredCategoryData = new List();
-  List<CategoryData> categoryDataList = new List();
-  CategoryData categoryDataObjClone = new CategoryData();
+  List<CategoryResult> filteredCategoryData = new List();
+  List<CategoryResult> categoryDataList = new List();
+  CategoryResult categoryDataObjClone = new CategoryResult();
 
   Widget docName(BuildContext context, doc) {
     return Row(
@@ -332,11 +334,11 @@ class AppointmentsCommonWidget {
         ));
   }
 
-  Future<List<CategoryData>> getCategoryList() async {
+  Future<List<CategoryResult>> getCategoryList() async {
     CategoryListBlock _categoryListBlock = new CategoryListBlock();
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
-      final value = await _categoryListBlock.getCategoryList();
-      categoryDataList = value.response.data;
+      final value = await _categoryListBlock.getCategoryLists();
+      categoryDataList = value.result;
       filteredCategoryData =
           new CommonUtil().fliterCategories(categoryDataList);
       filteredCategoryData.add(categoryDataObjClone);
@@ -374,7 +376,7 @@ class AppointmentsCommonWidget {
 
   Future<int> pickPosition(String categoryName) async {
     int position = 0;
-    List<CategoryData> categoryDataList = await getCategoryList();
+    List<CategoryResult> categoryDataList = await getCategoryList();
     for (int i = 0; i < categoryDataList.length; i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         position = i;
@@ -409,14 +411,14 @@ class AppointmentsCommonWidget {
         child: ClipOval(
           child: Container(
             child: //Container(color: Color(fhbColors.bgColorContainer)),
-            doc?.doctor?.user?.profilePicThumbnailUrl == null
-                ? Container(color: Color(fhbColors.bgColorContainer))
-                : Image.network(
-              doc.doctor.user.profilePicThumbnailUrl,
-              fit: BoxFit.cover,
-              height: 40,
-              width: 40,
-            ),
+                doc?.doctor?.user?.profilePicThumbnailUrl == null
+                    ? Container(color: Color(fhbColors.bgColorContainer))
+                    : Image.network(
+                        doc.doctor.user.profilePicThumbnailUrl,
+                        fit: BoxFit.cover,
+                        height: 40,
+                        width: 40,
+                      ),
             color: Color(fhbColors.bgColorContainer),
             height: 50,
             width: 50,

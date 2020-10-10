@@ -75,7 +75,7 @@ class CommonUtil {
   static String BASE_URL_FROM_RES = "";
   static String BASEURL_DEVICE_READINGS = '';
 
-  CategoryData categoryDataObjClone = new CategoryData();
+  CategoryResult categoryDataObjClone = new CategoryResult();
 
   static Future<dynamic> getResourceLoader() async {
     final Future<Secret> secret =
@@ -1120,10 +1120,10 @@ class CommonUtil {
     return updatedDate;
   }
 
-  List<CategoryData> fliterCategories(List<CategoryData> data) {
-    List<CategoryData> filteredCategoryData = new List();
+  List<CategoryResult> fliterCategories(List<CategoryResult> data) {
+    List<CategoryResult> filteredCategoryData = new List();
 
-    for (CategoryData dataObj in data) {
+    for (CategoryResult dataObj in data) {
       if (/*dataObj.isDisplay &&*/
           dataObj.categoryName != Constants.STR_FEEDBACK &&
               dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
@@ -1133,7 +1133,7 @@ class CommonUtil {
     }
 
     int i = 0;
-    for (CategoryData categoryDataObj in filteredCategoryData) {
+    for (CategoryResult categoryDataObj in filteredCategoryData) {
       if (categoryDataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
         categoryDataObjClone = categoryDataObj;
