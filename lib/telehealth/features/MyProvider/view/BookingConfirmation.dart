@@ -654,7 +654,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               child: Center(
                 child: TextWidget(
                     text: 'Pay INR ' +
-                        getFees(widget.healthOrganizationResult[widget.i]),
+                        commonWidgets.getMoneyWithForamt(
+                            getFees(widget.healthOrganizationResult[widget.i])),
                     fontsize: 22.0,
                     fontWeight: FontWeight.w500,
                     colors: Colors.blue[800]),
@@ -1030,7 +1031,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   Expanded(
                       child: Text(
                     '' +
-                        commonWidgets.getCityConfirmPage(
+                        commonWidgets.getCityDoctorsModel(
                             widget.docs[widget.doctorListPos]),
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,

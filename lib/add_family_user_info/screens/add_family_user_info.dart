@@ -134,7 +134,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   String city = '';
   String state = '';
 
-  CityResult cityVal = new CityResult();
+  //CityResult cityVal = new CityResult();
+  City cityVal = new City();
   stateObj.State stateVal = new stateObj.State();
 
   AddressResult _addressResult = new AddressResult();
@@ -200,15 +201,23 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
       if (widget.arguments.sharedbyme.child.isVirtualUser != null) {
         try {
-          MyProfileModel myProf =
-              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-          if (myProf.result.userContactCollection3 != null) {
-            if (myProf.result.userContactCollection3.length > 0) {
-              mobileNoController.text =
-                  myProf.result.userContactCollection3[0].phoneNumber;
-              emailController.text =
-                  myProf.result.userContactCollection3[0].email;
+          if (widget.arguments.sharedbyme.child.isVirtualUser) {
+            MyProfileModel myProf =
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+            if (myProf.result.userContactCollection3 != null) {
+              if (myProf.result.userContactCollection3.length > 0) {
+                mobileNoController.text =
+                    myProf.result.userContactCollection3[0].phoneNumber;
+                emailController.text =
+                    myProf.result.userContactCollection3[0].email;
+              }
             }
+          } else {
+            //! this must be loook
+            //  mobileNoController.text =
+            //         myProf.result.userContactCollection3[0].phoneNumber;
+            //     emailController.text =
+            //         myProf.result.userContactCollection3[0].email;
           }
         } catch (e) {
           mobileNoController.text = '';
@@ -282,7 +291,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             id: currentAddress.addressType.id,
             code: currentAddress.addressType.code,
             name: currentAddress.addressType.name);
+
+        cityVal = currentAddress.city;
+        stateVal = currentAddress.state;
       }
+      // else { //?this should be uncomment for testing
+      //   _addressResult = AddressResult(
+      //       id: '22f814a7-5b72-41aa-b5f7-7d2cd38d5da4',
+      //       code: 'RESADD',
+      //       name: 'Resident Address');
+      // }
 
       if (widget.arguments.sharedbyme.child.dateOfBirth != null) {
         dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
@@ -292,45 +310,50 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       updateProfile = true;
-      addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult
-          .id; //widget.arguments.addFamilyUserInfo.id;
+      addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
 
       if (widget.arguments.fromClass == CommonConstants.user_update) {
         // MyProfileModel myProf =
         //     PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
         if (widget.arguments.myProfileResult.userContactCollection3 != null) {
-          if (widget.arguments.myProfileResult.userContactCollection3.length > 0) {
-            mobileNoController.text =
-                widget.arguments.myProfileResult.userContactCollection3[0].phoneNumber;
-            emailController.text =
-                widget.arguments.myProfileResult.userContactCollection3[0].email;
+          if (widget.arguments.myProfileResult.userContactCollection3.length >
+              0) {
+            mobileNoController.text = widget.arguments.myProfileResult
+                .userContactCollection3[0].phoneNumber;
+            emailController.text = widget
+                .arguments.myProfileResult.userContactCollection3[0].email;
           }
         }
 
-
-        dateOfBirthController.text =
-            new FHBUtils().getFormattedDateOnlyNew(widget.arguments.myProfileResult.dateOfBirth);
+        dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
+            widget.arguments.myProfileResult.dateOfBirth);
 
         if (widget.arguments.myProfileResult.userAddressCollection3 != null &&
-            widget.arguments.myProfileResult.userAddressCollection3.length > 0) {
-          cntrlr_addr_one.text =
-              widget.arguments.myProfileResult.userAddressCollection3[0].addressLine1;
-          cntrlr_addr_two.text =
-              widget.arguments.myProfileResult.userAddressCollection3[0].addressLine2;
-          cntrlr_addr_city.text =
-              widget.arguments.myProfileResult.userAddressCollection3[0].city.name;
-          cntrlr_addr_state.text =
-              widget.arguments.myProfileResult.userAddressCollection3[0].state.name;
-          cntrlr_addr_zip.text =
-              widget.arguments.myProfileResult.userAddressCollection3[0].pincode;
+            widget.arguments.myProfileResult.userAddressCollection3.length >
+                0) {
+          cntrlr_addr_one.text = widget
+              .arguments.myProfileResult.userAddressCollection3[0].addressLine1;
+          cntrlr_addr_two.text = widget
+              .arguments.myProfileResult.userAddressCollection3[0].addressLine2;
+          cntrlr_addr_city.text = widget
+              .arguments.myProfileResult.userAddressCollection3[0].city?.name;
+          cntrlr_addr_state.text = widget
+              .arguments.myProfileResult.userAddressCollection3[0].state?.name;
+          cntrlr_addr_zip.text = widget
+              .arguments.myProfileResult.userAddressCollection3[0].pincode;
 
-          //cityVal=widget.arguments.myProfileResult.userAddressCollection3[0].city;
-          stateVal = widget.arguments.myProfileResult.userAddressCollection3[0].state;
+          cityVal =
+              widget.arguments.myProfileResult.userAddressCollection3[0].city;
+          stateVal =
+              widget.arguments.myProfileResult.userAddressCollection3[0].state;
 
-           _addressResult = AddressResult(
-            id: widget.arguments.myProfileResult.userAddressCollection3[0].addressType.id,
-            code: widget.arguments.myProfileResult.userAddressCollection3[0].addressType.code,
-            name: widget.arguments.myProfileResult.userAddressCollection3[0].addressType.name);
+          _addressResult = AddressResult(
+              id: widget.arguments.myProfileResult.userAddressCollection3[0]
+                  .addressType.id,
+              code: widget.arguments.myProfileResult.userAddressCollection3[0]
+                  .addressType.code,
+              name: widget.arguments.myProfileResult.userAddressCollection3[0]
+                  .addressType.name);
         }
       }
       if (widget.arguments.myProfileResult.firstName != null) {
@@ -1126,7 +1149,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 labelText: CommonConstants.addr_line_2,
               ),
             ),
-            TypeAheadFormField<CityResult>(
+            TypeAheadFormField<City>(
               textFieldConfiguration: TextFieldConfiguration(
                   controller: cntrlr_addr_city,
                   decoration: InputDecoration(
@@ -1159,7 +1182,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               onSuggestionSelected: (suggestion) {
                 cntrlr_addr_city.text = suggestion.name;
                 cityVal = suggestion;
-                stateVal = suggestion.state;
+                //stateVal = suggestion.state;
               },
               validator: (value) {
                 if (value.isEmpty) {
@@ -1707,19 +1730,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
               userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
               userAddressCollection3.pincode = cntrlr_addr_zip.text;
-              userAddressCollection3.city = new City(
-                  id: widget?.arguments?.sharedbyme?.child
-                      ?.userAddressCollection3[0].city?.id,
-                  isActive: widget?.arguments?.sharedbyme?.child
-                      ?.userAddressCollection3[0].city?.isActive,
-                  name: widget?.arguments?.sharedbyme?.child
-                      ?.userAddressCollection3[0].city?.name,
-                  createdOn: widget?.arguments?.sharedbyme?.child
-                      ?.userAddressCollection3[0].city?.createdOn,
-                  lastModifiedOn: widget?.arguments?.sharedbyme?.child
-                      ?.userAddressCollection3[0].city?.lastModifiedOn);
-              userAddressCollection3.state = widget?.arguments?.sharedbyme
-                  ?.child?.userAddressCollection3[0].state;
+              userAddressCollection3.city = cityVal;
+              userAddressCollection3.state = stateVal;
             }
 
             userAddressCollection3.isPrimary = true;
@@ -1883,7 +1895,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             profileResult.isSignedIn = false;
             profileResult.isActive = true;
             profileResult.gender = selectedGender;
-            profileResult.profilePicThumbnailUrl=null;
+            profileResult.profilePicThumbnailUrl = null;
             // profileResult.createdBy=null;
             // profileResult.createdOn=null;
             profileResult.lastModifiedBy = null;
@@ -1898,18 +1910,27 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             UserAddressCollection3 userAddressCollection3 =
                 new UserAddressCollection3();
             addFamilyUserInfoBloc.isUpdate = false;
-            if (widget.arguments?.myProfileResult?.userAddressCollection3.isNotEmpty) {
-              userAddressCollection3.id = widget.arguments?.myProfileResult?.userAddressCollection3[0].id;
+            if (widget.arguments?.myProfileResult?.userAddressCollection3
+                .isNotEmpty) {
+              userAddressCollection3.id = widget
+                  .arguments?.myProfileResult?.userAddressCollection3[0].id;
               userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
               userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
               userAddressCollection3.pincode = cntrlr_addr_zip.text;
-              userAddressCollection3.city = new City(
+              /* userAddressCollection3.city = new City(
                   id: widget.arguments?.myProfileResult?.userAddressCollection3[0].city?.id,
                   isActive: widget.arguments?.myProfileResult?.userAddressCollection3[0].city?.isActive,
                   name: widget.arguments?.myProfileResult?.userAddressCollection3[0].city?.name,
                   createdOn: widget.arguments?.myProfileResult?.userAddressCollection3[0].city?.createdOn,
-                  lastModifiedOn: widget.arguments?.myProfileResult?.userAddressCollection3[0].city?.lastModifiedOn);
-              userAddressCollection3.state = widget.arguments?.myProfileResult?.userAddressCollection3[0].state;
+                  lastModifiedOn: widget.arguments?.myProfileResult?.userAddressCollection3[0].city?.lastModifiedOn); */
+              userAddressCollection3.city = cityVal;
+              userAddressCollection3.state = stateVal;
+            } else {
+              userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
+              userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
+              userAddressCollection3.pincode = cntrlr_addr_zip.text;
+              userAddressCollection3.city = cityVal;
+              userAddressCollection3.state = stateVal;
             }
 
             userAddressCollection3.isPrimary = true;
@@ -1917,7 +1938,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             userAddressCollection3.createdOn =
                 DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
             userAddressCollection3.lastModifiedOn = null;
-            userAddressCollection3.createdBy = widget.arguments.myProfileResult.id;
+            userAddressCollection3.createdBy =
+                widget.arguments.myProfileResult.id;
             userAddressCollection3.addressType = AddressType(
               id: _addressResult.id,
               code: _addressResult.code,
@@ -1950,13 +1972,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
                 if (value != null && value.isSuccess) {
                   _familyListBloc.getFamilyMembersListNew().then((value) {
-
                     MySliverAppBar.imageURI = null;
-                      fetchedProfileData = null;
-                      imageURI = null;
-                      Navigator.pop(dialogContext);
-                      Navigator.pop(dialogContext,true);
-
+                    fetchedProfileData = null;
+                    imageURI = null;
+                    Navigator.pop(dialogContext);
+                    Navigator.pop(dialogContext, true);
 
                     /* PreferenceUtil.saveFamilyData(
                             Constants.KEY_FAMILYMEMBER, value.result)
@@ -1994,12 +2014,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   title: variable.Error,
                   content: CommonConstants.all_fields_mandatory);
             }
-
-
-
-
-
-
 
             /* if (_formkey.currentState.validate()) {
               if (doValidation()) {
@@ -2068,12 +2082,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
             userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
             userAddressCollection3.pincode = cntrlr_addr_zip.text;
-            userAddressCollection3.city = new City(
-                id: cityVal.id,
-                isActive: cityVal.isActive,
-                name: cityVal.name,
-                createdOn: cityVal.createdOn,
-                lastModifiedOn: cityVal.lastModifiedOn);
+            userAddressCollection3.city = cityVal;
             userAddressCollection3.state = stateVal;
 
             userAddressCollection3.isPrimary = true;
@@ -2382,11 +2391,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
   }
 
-  Future<List<CityResult>> getCitybasedOnSearch(
+  Future<List<City>> getCitybasedOnSearch(
     String cityname,
     String apibody,
   ) {
-    Future<List<CityResult>> citylist;
+    Future<List<City>> citylist;
     citylist = addFamilyUserInfoBloc.getCityDataList(cityname, apibody);
     return citylist;
   }
