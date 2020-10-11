@@ -1016,6 +1016,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (dateOfBirthController.text.length == 0) {
       isValid = false;
       strErrorMsg = variable.selectDOB;
+    } else if (_addressResult == null && _addressResult.id == null) {
+      isValid = false;
+      strErrorMsg = 'Select Address type';
     } else {
       isValid = true;
     }
@@ -1080,7 +1083,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 .addressType.name);
       } else {
         try {
-          _addressResult = _addressList[0];
+          print('inside try');
+          _addressResult = new AddressResult(
+            id: "22f814a7-5b72-41aa-b5f7-7d2cd38d5da4",
+            code: "RESADD",
+            name: "Resident Address",
+          );
+          print('after try');
         } catch (e) {}
       }
 
@@ -1197,7 +1206,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           stateVal = currentAddress.state;
         } else {
           try {
-            _addressResult = _addressList[0];
+            _addressResult = new AddressResult(
+              id: "22f814a7-5b72-41aa-b5f7-7d2cd38d5da4",
+              code: "RESADD",
+              name: "Resident Address",
+            );
           } catch (e) {}
         }
 
@@ -1228,8 +1241,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         lastNameController.text = widget.arguments.enteredLastName;
 
         relationShipController.text = widget.arguments.relationShip.name;
-        _addressResult = _addressList[0];
-
+        try {
+          _addressResult = new AddressResult(
+            id: "22f814a7-5b72-41aa-b5f7-7d2cd38d5da4",
+            code: "RESADD",
+            name: "Resident Address",
+          );
+        } catch (e) {}
         if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
           currentselectedBloodGroup = value.result.bloodGroup.split(' ')[0];
           currentselectedBloodGroupRange =
@@ -1333,6 +1351,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       lastModifiedOn: null,
     );
 
+    print(userAddressCollection3.addressType.id);
     List<UserAddressCollection3> userAddressCollection3List = new List();
     userAddressCollection3List.add(userAddressCollection3);
     profileResult.userAddressCollection3 = userAddressCollection3List;
