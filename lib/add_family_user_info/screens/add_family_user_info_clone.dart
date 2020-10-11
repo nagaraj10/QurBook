@@ -826,10 +826,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 }
               });
             } else {
-              Navigator.pop(dialogContext);
+              // Navigator.pop(dialogContext);
               Alert.displayAlertPlain(context,
-                  title: variable.Error,
-                  content: CommonConstants.all_fields_mandatory);
+                  title: variable.Error, content: strErrorMsg);
             }
           } else if (widget.arguments.fromClass ==
               CommonConstants.user_update) {
@@ -861,10 +860,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 }
               });
             } else {
-              Navigator.pop(dialogContext);
+              //Navigator.pop(dialogContext);
               Alert.displayAlertPlain(context,
-                  title: variable.Error,
-                  content: CommonConstants.all_fields_mandatory);
+                  title: variable.Error, content: strErrorMsg);
             }
           } else {
             addFamilyUserInfoBloc.userId =
@@ -966,7 +964,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 }
               });
             } else {
-              Navigator.pop(dialogContext);
+              //Navigator.pop(dialogContext);
               Alert.displayAlertPlain(context,
                   title: variable.Error,
                   content: CommonConstants.all_fields_mandatory);
@@ -1016,14 +1014,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else if (dateOfBirthController.text.length == 0) {
       isValid = false;
       strErrorMsg = variable.selectDOB;
-    } else if (_addressResult == null && _addressResult.id == null) {
+    } else if (_addressResult == null || _addressResult.id == null) {
       isValid = false;
       strErrorMsg = 'Select Address type';
-    } else {
-      isValid = true;
-    }
-
-    if (currentselectedBloodGroup != null) {
+    } else if (currentselectedBloodGroup == null) {
       if (currentselectedBloodGroupRange == null) {
         isValid = false;
         strErrorMsg = variable.selectRHType;
@@ -1031,9 +1025,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         addFamilyUserInfoBloc.bloodGroup =
             currentselectedBloodGroup + '_' + currentselectedBloodGroupRange;
       }
-    } else {
       isValid = false;
       strErrorMsg = variable.selectBloodGroup;
+    } else {
+      isValid = true;
     }
 
     return isValid;
