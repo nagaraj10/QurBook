@@ -315,12 +315,12 @@ class _MyFHBState extends State<MyFHB> {
         routes: routes,
         debugShowCheckedModeBanner: false,
         navigatorKey: Get.key,
-        builder: (BuildContext context, Widget widget) {
+        /* builder: (BuildContext context, Widget widget) {
           ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
             return buildError(context, errorDetails);
           };
           return widget;
-        },
+        },*/
       ),
     );
   }

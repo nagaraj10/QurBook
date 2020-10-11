@@ -113,11 +113,15 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                       style: TextStyle(fontWeight: FontWeight.w500),
                     ),
                     Text(
-                      '${myProfile.result.countryCode ?? ''} ${myProfile.result.userContactCollection3[0].phoneNumber}',
+                      '${(myProfile.result.userContactCollection3 != null && myProfile.result.userContactCollection3.length > 0) ? myProfile.result?.userContactCollection3[0]?.phoneNumber ?? '' : ''}',
                       style: TextStyle(fontSize: 12),
                     ),
                     Text(
-                      myProfile.result.userContactCollection3[0].email,
+                      (myProfile.result.userContactCollection3 != null &&
+                              myProfile.result.userContactCollection3.length >
+                                  0)
+                          ? myProfile.result.userContactCollection3[0].email
+                          : '',
                       style: TextStyle(fontSize: 11),
                     )
                   ],

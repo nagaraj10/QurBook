@@ -17,6 +17,7 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
+import 'package:myfhb/src/model/common_response.dart';
 import 'package:myfhb/src/model/error_map.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
@@ -464,7 +465,6 @@ class ApiBaseHelper {
         return responseJson;
 
         break;
-
 
       case 500:
         var responseJson = convert.jsonDecode(response.body.toString());
@@ -1087,6 +1087,7 @@ class ApiBaseHelper {
 
   Future<dynamic> updateSelfProfileNew(String url, String jsonBody) async {
     var responseJson;
+    print(jsonBody);
     try {
       final response = await http.put(_baseUrl + url,
           body: jsonBody,
@@ -1250,5 +1251,50 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<CommonResponse> getUserProfilePic(String url) async {
+    CommonResponse responseJson;
+    try {
+      final response = await http.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeader());
+//responseJson = _returnResponse(response);
+      responseJson = CommonResponse.fromJson(json.decode(response.body));
+      print(responseJson.toJson());
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> uploadUserProfilePicToServer(String url, File image) async {
+    String authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+//String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String filename = image.path.split('/').last;
+    String fileType = filename.split('.')[1];
+    Dio dio = new Dio();
+    dio.options.headers['content-type'] = 'multipart/form-data';
+    dio.options.headers["authorization"] = authToken;
+    dio.options.headers["accept"] = 'application/json';
+    FormData formData = FormData.fromMap({
+      "profilePicture": await MultipartFile.fromFile(image.path,
+          filename: filename, contentType: MediaType('image', '${fileType}')),
+    });
+    var response;
+    try {
+      response = await dio.put(_baseUrl + url, data: formData);
+
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+        return response;
+      } else {
+        return response;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+      print(e);
+      return response;
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/add_family_user_info/screens/add_family_user_info_clone.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
@@ -26,7 +27,6 @@ import 'package:provider/provider.dart';
 
 import '../add_address/screens/add_address_screen.dart';
 import '../add_family_otp/screens/add_family_otp_screen.dart';
-import '../add_family_user_info/screens/add_family_user_info.dart';
 import '../add_providers/screens/add_providers_screen.dart';
 import '../confirm_location/screens/confirm_location_screen.dart';
 import '../feedback/Feedbacks.dart';

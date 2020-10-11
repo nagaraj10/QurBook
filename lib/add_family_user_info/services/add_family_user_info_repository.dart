@@ -14,6 +14,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/constants/webservice_call.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
+import 'package:myfhb/src/model/common_response.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/city_list_model.dart';
 import 'package:myfhb/src/model/user/state_list_model.dart';
@@ -40,10 +41,8 @@ class AddFamilyUserInfoRepository {
   }
 
   Future<MyProfileModel> getMyProfileInfoNew(String userID) async {
-    final response = await _helper.getProfileInfo(query.qr_user +
-        userID +
-        query.qr_sections +
-        query.qr_generalInfo);
+    final response = await _helper.getProfileInfo(
+        query.qr_user + userID + query.qr_sections + query.qr_generalInfo);
     return MyProfileModel.fromJson(response);
   }
 
@@ -298,5 +297,19 @@ class AddFamilyUserInfoRepository {
     return response;
   }
 
+  Future<CommonResponse> getUserProfilePic(String userId) async {
+    String responseQuery =
+        '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
+    final response = await _helper.getUserProfilePic(responseQuery);
 
+    return response;
+  }
+
+  Future<CommonResponse> updateUserProfilePic(String userId, File image) async {
+    String responseQuery =
+        '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
+    final response =
+        await _helper.uploadUserProfilePicToServer(responseQuery, image);
+    return CommonResponse.fromJson(response);
+  }
 }
