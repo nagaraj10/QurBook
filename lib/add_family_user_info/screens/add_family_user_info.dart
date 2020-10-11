@@ -690,103 +690,92 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           )),
       key: scaffold_state,
       body: SingleChildScrollView(
-        child: Stack(
-            fit: StackFit.loose,
-            alignment: Alignment.topCenter,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Expanded(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Stack(
-                        alignment: Alignment.bottomLeft,
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                EdgeInsets.only(bottom: circleRadius / 2.0),
-                            child: Container(
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                              height: 160.0,
-                              child: Stack(
-                                  fit: StackFit.expand,
-                                  overflow: Overflow.visible,
-                                  children: [
-                                    Container(
-                                      color: Colors.black.withOpacity(0.2),
-                                    )
-                                  ]),
-                            ),
+              Stack(
+                alignment: Alignment.bottomLeft,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(bottom: circleRadius / 2.0),
+                    child: Container(
+                      color: Color(new CommonUtil().getMyPrimaryColor()),
+                      height: 160.0,
+                      child: Stack(
+                          fit: StackFit.expand,
+                          overflow: Overflow.visible,
+                          children: [
+                            Container(
+                              color: Colors.black.withOpacity(0.2),
+                            )
+                          ]),
+                    ),
+                  ),
+                  Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: Container(
+                        width: circleRadius,
+                        height: circleRadius,
+                        decoration: ShapeDecoration(
+                            shape: CircleBorder(),
+                            color: Color(new CommonUtil().getMyPrimaryColor())),
+                        child: Padding(
+                          padding: EdgeInsets.all(circleBorderWidth),
+                          child: InkWell(
+                            child: ClipOval(child: showProfileImage()),
+                            onTap: () {
+                              saveMediaDialog(context);
+                            },
                           ),
-                          Padding(
-                              padding: EdgeInsets.only(left: 10),
-                              child: Container(
-                                width: circleRadius,
-                                height: circleRadius,
-                                decoration: ShapeDecoration(
-                                    shape: CircleBorder(),
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor())),
-                                child: Padding(
-                                  padding: EdgeInsets.all(circleBorderWidth),
-                                  child: InkWell(
-                                    child: ClipOval(child: showProfileImage()),
-                                    onTap: () {
-                                      saveMediaDialog(context);
-                                    },
-                                  ),
-                                ),
-                              )),
-                        ],
-                      ),
-                      _showMobileNoTextField(),
-                      _showFirstNameTextField(),
-                      _showMiddleNameTextField(),
-                      _showLastNameTextField(),
-                      //_showRelationShipTextField(),
-                      widget.arguments.fromClass == CommonConstants.my_family
-                          ? relationShipResponseList.isNotEmpty
-                              ? Row(
-                                  mainAxisSize: MainAxisSize.max,
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: getRelationshipDetails(
-                                          relationShipResponseList),
-                                    )
-                                  ],
-                                )
-                              : _showRelationShipTextField()
-                          : widget.arguments.fromClass ==
-                                  CommonConstants.user_update
-                              ? new Container()
-                              : _showRelationShipTextField(),
-                      _showEmailAddTextField(),
-                      Row(
-                        children: <Widget>[Expanded(child: getGenderDetails())],
-                      ),
-                      Row(
-                        children: <Widget>[
-                          Expanded(child: getBloodGroupDetails()),
-                          Expanded(child: getBloodRangeDetails())
-                        ],
-                      ),
-                      _showDateOfBirthTextField(),
-                      AddressTypeWidget(
-                        addressResult: _addressResult,
-                        addressList: _addressList,
-                        onSelected: (addressResult, addressList) {
-                          setState(() {
-                            _addressResult = addressResult;
-                            addressTypeId = addressResult.id;
-                            _addressList = addressList;
-                          });
-                        },
-                      ),
-                      _userAddressInfo(),
-                      _showSaveButton()
-                    ]),
-              )
+                        ),
+                      )),
+                ],
+              ),
+              _showMobileNoTextField(),
+              _showFirstNameTextField(),
+              _showMiddleNameTextField(),
+              _showLastNameTextField(),
+              //_showRelationShipTextField(),
+              widget.arguments.fromClass == CommonConstants.my_family
+                  ? relationShipResponseList.isNotEmpty
+                      ? Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: <Widget>[
+                            Expanded(
+                              child: getRelationshipDetails(
+                                  relationShipResponseList),
+                            )
+                          ],
+                        )
+                      : _showRelationShipTextField()
+                  : widget.arguments.fromClass == CommonConstants.user_update
+                      ? new Container()
+                      : _showRelationShipTextField(),
+              _showEmailAddTextField(),
+              Row(
+                children: <Widget>[Expanded(child: getGenderDetails())],
+              ),
+              Row(
+                children: <Widget>[
+                  Expanded(child: getBloodGroupDetails()),
+                  Expanded(child: getBloodRangeDetails())
+                ],
+              ),
+              _showDateOfBirthTextField(),
+              AddressTypeWidget(
+                addressResult: _addressResult,
+                addressList: _addressList,
+                onSelected: (addressResult, addressList) {
+                  setState(() {
+                    _addressResult = addressResult;
+                    addressTypeId = addressResult.id;
+                    _addressList = addressList;
+                  });
+                },
+              ),
+              _userAddressInfo(),
+              _showSaveButton()
             ]),
       ),
     );
