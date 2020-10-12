@@ -106,20 +106,23 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersList();
 
-    mediMasterId = new CommonUtil().getMetaMasterIdList(widget.data);
-
     if (checkIfMp3IsPresent(widget.data) != '') {
       widget.data.metadata.hasVoiceNotes = true;
       showAudioWidgetIfVoiceNotesAvailable(widget.data);
     }
 
-    HealthRecordCollection getMediaMasterIDForPdfTypeStr = new CommonUtil()
-        .getMediaMasterIDForPdfTypeStr(widget.data.healthRecordCollection);
-    if (getMediaMasterIDForPdfTypeStr != null) {
-      ispdfPresent = true;
-      getPdfFileData(getMediaMasterIDForPdfTypeStr);
-    } else {
-      ispdfPresent = false;
+    if (widget.data.healthRecordCollection != null &&
+        widget.data.healthRecordCollection.length > 0) {
+      mediMasterId = new CommonUtil().getMetaMasterIdList(widget.data);
+
+      HealthRecordCollection getMediaMasterIDForPdfTypeStr = new CommonUtil()
+          .getMediaMasterIDForPdfTypeStr(widget.data.healthRecordCollection);
+      if (getMediaMasterIDForPdfTypeStr != null) {
+        ispdfPresent = true;
+        getPdfFileData(getMediaMasterIDForPdfTypeStr);
+      } else {
+        ispdfPresent = false;
+      }
     }
 
     if (mediMasterId.length > 0) {
@@ -1238,8 +1241,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   HealthRecordCollection checkIfMp3IsPresent(HealthResult data) {
     HealthRecordCollection mediaMetaId;
 
-    mediaMetaId = new CommonUtil()
-        .getMediaMasterIDForAudioFileType(data.healthRecordCollection);
+    if (data.healthRecordCollection != null &&
+        data.healthRecordCollection.length > 0) {
+      mediaMetaId = new CommonUtil()
+          .getMediaMasterIDForAudioFileType(data.healthRecordCollection);
+    }
     return mediaMetaId;
   }
 

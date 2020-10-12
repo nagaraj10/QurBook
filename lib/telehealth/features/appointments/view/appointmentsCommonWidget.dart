@@ -387,7 +387,7 @@ class AppointmentsCommonWidget {
       }
     }
     if (categoryName == Constants.STR_PRESCRIPTION) {
-      return position;
+      return 0;
     } else {
       return position;
     }

@@ -1079,7 +1079,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   List<CategoryResult> getCategoryList() {
-    filteredCategoryData.clear();
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         categoryDataList = value.result;
