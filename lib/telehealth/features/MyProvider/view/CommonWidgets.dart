@@ -5,6 +5,7 @@ import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/Hospitals.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
@@ -113,6 +114,28 @@ class CommonWidgets {
     } else {
       city = '';
     }
+    return city;
+  }
+
+  String getCityHospital(Hospitals hospital) {
+    String city;
+
+    if(hospital!=null){
+      if (hospital.healthOrganizationAddressCollection.isNotEmpty) {
+        if (hospital.healthOrganizationAddressCollection.length > 0) {
+          if (hospital.healthOrganizationAddressCollection[0].city != null) {
+            city = hospital.healthOrganizationAddressCollection[0].city.name;
+          } else {
+            city = '';
+          }
+        } else {
+          city = '';
+        }
+      } else {
+        city = '';
+      }
+    }
+
     return city;
   }
 
