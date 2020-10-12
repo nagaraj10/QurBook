@@ -135,7 +135,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   addHealthRecords() {
-    //healthRecords.addAll(recordIds);
+    healthRecords.addAll(recordIds);
     healthRecords.addAll(notesId);
     healthRecords.addAll(voiceIds);
   }
@@ -166,7 +166,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     scheduleDate =
         commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
 
-    doctorId = widget.docs[widget.doctorListPos].id;
+    doctorId = widget.docs[widget.doctorListPos].user.id;
     /*try {
       fees = widget.isNewAppointment
           ? widget.followUpFee == null
@@ -854,60 +854,79 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
 
     try {
-      associateRecords(doctorId, createdBy, recordIds).then((value) {
-        if (value != null && value.isSuccess) {
-          bookAppointmentCall(
-                  createdBy,
-                  bookedFor,
-                  doctorSessionId,
-                  scheduleDate,
-                  slotNumber,
-                  isMedicalShared,
-                  isFollowUp,
-                  healthRecords,
-                  doc: doc)
-              .then((value) {
-            if (value != null) {
-              if (value.isSuccess != null &&
-                  value.message != null &&
-                  value.result != null) {
-                if (value.isSuccess == true &&
-                    value.message == appointmentCreatedMessage) {
-                  if (value.result.paymentInfo.payload.paymentGatewayDetail
-                          .responseInfo.result.paymentRequest.longurl !=
-                      null) {
-                    goToPaymentPage(
-                        value.result.paymentInfo.payload.paymentGatewayDetail
-                            .responseInfo.result.paymentRequest.longurl,
-                        value.result.paymentInfo.payload.payment.id);
-                  } else {
-                    pr.hide();
-                    toast.getToast(noUrl, Colors.red);
-                  }
-                } else {
-                  pr.hide();
-                  toast.getToast(
-                      value.message != null ? value.message : someWentWrong,
-                      Colors.red);
-                }
-              } else {
-                pr.hide();
-                toast.getToast(someWentWrong, Colors.red);
-              }
-            } else {
-              pr.hide();
-              toast.getToast(noUrl, Colors.red);
-            }
-          });
-        } else {
-          pr.hide();
-          toast.getToast(someWentWrong, Colors.red);
-        }
-      });
+      if (healthRecords.length > 0) {
+        associateRecords(doctorId, createdBy, healthRecords).then((value) {
+          if (value != null && value.isSuccess) {
+            bookAppointmentOnly(
+                createdBy,
+                bookedFor,
+                doctorSessionId,
+                scheduleDate,
+                slotNumber,
+                isMedicalShared,
+                isFollowUp,
+                healthRecords);
+          } else {
+            pr.hide();
+            toast.getToast(errAssociateRecords, Colors.red);
+          }
+        });
+      } else {
+        bookAppointmentOnly(createdBy, bookedFor, doctorSessionId, scheduleDate,
+            slotNumber, isMedicalShared, isFollowUp, healthRecords);
+      }
     } catch (e) {
       pr.hide();
       toast.getToast(someWentWrong, Colors.red);
     }
+  }
+
+  bookAppointmentOnly(
+      String createdBy,
+      String bookedFor,
+      String doctorSessionId,
+      String scheduleDate,
+      String slotNumber,
+      bool isMedicalShared,
+      bool isFollowUp,
+      List<String> healthRecords,
+      {History doc}) {
+    bookAppointmentCall(createdBy, bookedFor, doctorSessionId, scheduleDate,
+            slotNumber, isMedicalShared, isFollowUp, healthRecords,
+            doc: doc)
+        .then((value) {
+      if (value != null) {
+        if (value.isSuccess != null &&
+            value.message != null &&
+            value.result != null) {
+          if (value.isSuccess == true &&
+              value.message == appointmentCreatedMessage) {
+            if (value.result.paymentInfo.payload.paymentGatewayDetail
+                    .responseInfo.result.paymentRequest.longurl !=
+                null) {
+              goToPaymentPage(
+                  value.result.paymentInfo.payload.paymentGatewayDetail
+                      .responseInfo.result.paymentRequest.longurl,
+                  value.result.paymentInfo.payload.payment.id);
+            } else {
+              pr.hide();
+              toast.getToast(noUrl, Colors.red);
+            }
+          } else {
+            pr.hide();
+            toast.getToast(
+                value.message != null ? value.message : someWentWrong,
+                Colors.red);
+          }
+        } else {
+          pr.hide();
+          toast.getToast(someWentWrong, Colors.red);
+        }
+      } else {
+        pr.hide();
+        toast.getToast(noUrl, Colors.red);
+      }
+    });
   }
 
   goToPaymentPage(String longurl, String paymentId) {

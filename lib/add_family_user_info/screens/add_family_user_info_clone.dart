@@ -796,179 +796,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 relationship: selectedRelationShip);
 
             setValues();
-            if (doValidation()) {
-              if (addFamilyUserInfoBloc.profileBanner != null) {
-                PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                    addFamilyUserInfoBloc.profileBanner.path);
-              }
-              CommonUtil.showLoadingDialog(
-                  dialogContext, _keyLoader, variable.Please_Wait); //
-
-              addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
-                if (value != null && value.isSuccess) {
-                  _familyListBloc.getFamilyMembersListNew().then((value) {
-                    PreferenceUtil.saveFamilyData(
-                            Constants.KEY_FAMILYMEMBER, value.result)
-                        .then((value) {
-                      //saveProfileImage();
-                      /* MySliverAppBar.imageURI = null;
-                      fetchedProfileData = null;*/
-                      imageURI = null;
-                      Navigator.pop(dialogContext);
-                      Navigator.pop(dialogContext);
-                      Navigator.pop(dialogContext, true);
-                    });
-                  });
-                } else {
-                  Navigator.pop(dialogContext);
-                  Alert.displayAlertPlain(context,
-                      title: variable.Error, content: value.message);
-                }
-              });
-            } else {
-              // Navigator.pop(dialogContext);
-              Alert.displayAlertPlain(context,
-                  title: variable.Error, content: strErrorMsg);
-            }
           } else if (widget.arguments.fromClass ==
               CommonConstants.user_update) {
             addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
 
             setValues();
-
-            if (doValidation()) {
-              if (addFamilyUserInfoBloc.profileBanner != null) {
-                PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                    addFamilyUserInfoBloc.profileBanner.path);
-              }
-              CommonUtil.showLoadingDialog(
-                  dialogContext, _keyLoader, variable.Please_Wait); //
-
-              addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
-                if (value != null && value.isSuccess) {
-                  _familyListBloc.getFamilyMembersListNew().then((value) {
-                    /*MySliverAppBar.imageURI = null;
-                    fetchedProfileData = null;*/
-                    imageURI = null;
-                    Navigator.pop(dialogContext);
-                    Navigator.pop(dialogContext, true);
-                  });
-                } else {
-                  Navigator.pop(dialogContext);
-                  Alert.displayAlertPlain(context,
-                      title: variable.Error, content: value.message);
-                }
-              });
-            } else {
-              //Navigator.pop(dialogContext);
-              Alert.displayAlertPlain(context,
-                  title: variable.Error, content: strErrorMsg);
-            }
           } else {
             addFamilyUserInfoBloc.userId =
                 widget.arguments.addFamilyUserInfo.childInfo.id;
 
-            /*addFamilyUserInfoBloc.userId = widget.arguments.id;
-            addFamilyUserInfoBloc.phoneNo = mobileNoController.text;
-            addFamilyUserInfoBloc.relationship = null;
-
-            MyProfileModel myProf = new MyProfileModel();
-
-            MyProfileResult profileResult = new MyProfileResult();
-            profileResult.firstName = firstNameController.text;
-            profileResult.middleName = middleNameController.text;
-            profileResult.lastName = lastNameController.text;
-            profileResult.dateOfBirth = dateOfBirthController.text;
-            profileResult.id = widget.arguments.id;
-            profileResult.isIeUser = false;
-            profileResult.isCpUser = false;
-            profileResult.isSignedIn = false;
-            profileResult.isActive = true;
-            profileResult.gender = selectedGender;
-            // profileResult.createdBy=null;
-            // profileResult.createdOn=null;
-            profileResult.lastModifiedBy = null;
-            profileResult.lastModifiedOn = null;
-
-            if (currentselectedBloodGroup != null &&
-                currentselectedBloodGroupRange != null) {
-              profileResult.bloodGroup = currentselectedBloodGroup +
-                  ' ' +
-                  currentselectedBloodGroupRange;
-            }
-            UserAddressCollection3 userAddressCollection3 =
-                new UserAddressCollection3();
-            addFamilyUserInfoBloc.isUpdate = false;
-            //userAddressCollection3.id = null;
-            userAddressCollection3.addressLine1 = cntrlr_addr_one.text;
-            userAddressCollection3.addressLine2 = cntrlr_addr_two.text;
-            userAddressCollection3.pincode = cntrlr_addr_zip.text;
-            userAddressCollection3.city = cityVal;
-            userAddressCollection3.state = stateVal;
-
-            userAddressCollection3.isPrimary = true;
-            userAddressCollection3.isActive = true;
-            userAddressCollection3.createdOn =
-                DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
-            userAddressCollection3.lastModifiedOn = null;
-            userAddressCollection3.createdBy = widget.arguments.id;
-            userAddressCollection3.addressType = AddressType(
-              id: _addressResult.id,
-              code: _addressResult.code,
-              name: _addressResult.name,
-              description: _addressResult.name,
-              sortOrder: null,
-              isActive: true,
-              createdBy: PreferenceUtil.getStringValue(Constants.KEY_USERID),
-              createdOn:
-                  DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
-              lastModifiedOn: null,
-            );
-
-            List<UserAddressCollection3> userAddressCollection3List =
-                new List();
-            userAddressCollection3List.add(userAddressCollection3);
-            profileResult.userAddressCollection3 = userAddressCollection3List;
-
-            myProf.result = profileResult;
-            addFamilyUserInfoBloc.myProfileModel = myProf;
-*/
             setValues();
-            if (doValidation()) {
-              if (addFamilyUserInfoBloc.profileBanner != null) {
-                PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
-                    addFamilyUserInfoBloc.profileBanner.path);
-              }
-              print('*********************');
-              CommonUtil.showLoadingDialog(
-                  dialogContext, _keyLoader, variable.Please_Wait); //
-
-              addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
-                if (value != null && value.isSuccess) {
-                  _familyListBloc.getFamilyMembersListNew().then((value) {
-                    PreferenceUtil.saveFamilyData(
-                            Constants.KEY_FAMILYMEMBER, value.result)
-                        .then((value) {
-                      //saveProfileImage();
-                      /*  MySliverAppBar.imageURI = null;
-                      fetchedProfileData = null;*/
-                      imageURI = null;
-                      Navigator.pop(dialogContext);
-                      Navigator.pop(dialogContext);
-                    });
-                  });
-                } else {
-                  Navigator.pop(dialogContext);
-                  Alert.displayAlertPlain(context,
-                      title: variable.Error, content: value.message);
-                }
-              });
-            } else {
-              //Navigator.pop(dialogContext);
-              Alert.displayAlertPlain(context,
-                  title: variable.Error,
-                  content: CommonConstants.all_fields_mandatory);
-            }
           }
         } else {
           //address validation not valid.
@@ -1274,7 +1111,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     profileResult.firstName = firstNameController.text.trim();
     profileResult.middleName = middleNameController.text.trim();
     profileResult.lastName = lastNameController.text.trim();
-    profileResult.dateOfBirth = dateOfBirthController.text.trim();
+    profileResult.dateOfBirth = dateofBirthStr;
     profileResult.isIeUser = false;
     profileResult.isCpUser = false;
     profileResult.isSignedIn = false;
@@ -1346,13 +1183,113 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       lastModifiedOn: null,
     );
 
-    print(userAddressCollection3.addressType.id);
     List<UserAddressCollection3> userAddressCollection3List = new List();
     userAddressCollection3List.add(userAddressCollection3);
     profileResult.userAddressCollection3 = userAddressCollection3List;
 
     myProf.result = profileResult;
     addFamilyUserInfoBloc.myProfileModel = myProf;
+    FamilyListBloc _familyListBloc = new FamilyListBloc();
+    if (widget.arguments.fromClass == CommonConstants.my_family) {
+      if (doValidation()) {
+        if (addFamilyUserInfoBloc.profileBanner != null) {
+          PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+              addFamilyUserInfoBloc.profileBanner.path);
+        }
+        CommonUtil.showLoadingDialog(
+            dialogContext, _keyLoader, variable.Please_Wait); //
+
+        addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
+          if (value != null && value.isSuccess) {
+            _familyListBloc.getFamilyMembersListNew().then((value) {
+              PreferenceUtil.saveFamilyData(
+                      Constants.KEY_FAMILYMEMBER, value.result)
+                  .then((value) {
+                //saveProfileImage();
+                /* MySliverAppBar.imageURI = null;
+                      fetchedProfileData = null;*/
+                imageURI = null;
+                Navigator.pop(dialogContext);
+                Navigator.pop(dialogContext);
+                Navigator.pop(dialogContext, true);
+              });
+            });
+          } else {
+            Navigator.pop(dialogContext);
+            Alert.displayAlertPlain(context,
+                title: variable.Error, content: value.message);
+          }
+        });
+      } else {
+        // Navigator.pop(dialogContext);
+        Alert.displayAlertPlain(context,
+            title: variable.Error, content: strErrorMsg);
+      }
+    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
+      if (doValidation()) {
+        if (addFamilyUserInfoBloc.profileBanner != null) {
+          PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+              addFamilyUserInfoBloc.profileBanner.path);
+        }
+        CommonUtil.showLoadingDialog(
+            dialogContext, _keyLoader, variable.Please_Wait); //
+
+        addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
+          if (value != null && value.isSuccess) {
+            _familyListBloc.getFamilyMembersListNew().then((value) {
+              /*MySliverAppBar.imageURI = null;
+                    fetchedProfileData = null;*/
+              imageURI = null;
+              Navigator.pop(dialogContext);
+              Navigator.pop(dialogContext, true);
+            });
+          } else {
+            Navigator.pop(dialogContext);
+            Alert.displayAlertPlain(context,
+                title: variable.Error, content: value.message);
+          }
+        });
+      } else {
+        //Navigator.pop(dialogContext);
+        Alert.displayAlertPlain(context,
+            title: variable.Error, content: strErrorMsg);
+      }
+    } else {
+      if (doValidation()) {
+        if (addFamilyUserInfoBloc.profileBanner != null) {
+          PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
+              addFamilyUserInfoBloc.profileBanner.path);
+        }
+        print('*********************');
+        CommonUtil.showLoadingDialog(
+            dialogContext, _keyLoader, variable.Please_Wait); //
+
+        addFamilyUserInfoBloc.updateSelfProfile(false).then((value) {
+          if (value != null && value.isSuccess) {
+            _familyListBloc.getFamilyMembersListNew().then((value) {
+              PreferenceUtil.saveFamilyData(
+                      Constants.KEY_FAMILYMEMBER, value.result)
+                  .then((value) {
+                //saveProfileImage();
+                /*  MySliverAppBar.imageURI = null;
+                      fetchedProfileData = null;*/
+                imageURI = null;
+                Navigator.pop(dialogContext);
+                Navigator.pop(dialogContext);
+              });
+            });
+          } else {
+            Navigator.pop(dialogContext);
+            Alert.displayAlertPlain(context,
+                title: variable.Error, content: value.message);
+          }
+        });
+      } else {
+        //Navigator.pop(dialogContext);
+        Alert.displayAlertPlain(context,
+            title: variable.Error, content: strErrorMsg);
+      }
+    }
   }
 
   Future<CommonResponse> getMyProfilePicFromRemote(String userId) async {
