@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
@@ -122,8 +123,8 @@ class _UserAccountsState extends State<UserAccounts>
                             } else {
                               _isEditable = true;
                               //sliverBarHeight = 50;
-
-                              Navigator.pushNamed(
+                              if(myProfile?.result!=null){
+                                Navigator.pushNamed(
                                       context, router.rt_AddFamilyUserInfo,
                                       arguments: AddFamilyUserInfoArguments(
                                           myProfileResult: myProfile?.result,
@@ -134,6 +135,9 @@ class _UserAccountsState extends State<UserAccounts>
                                   _isEditable = false;
                                 });
                               });
+                              }else{
+                                FlutterToast().getToast('Unable to Fetch User Profile data',Colors.red);
+                              }
                             }
                             sliverBarHeight = 220;
                           });
