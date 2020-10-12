@@ -90,37 +90,42 @@ class CommonUtil {
     List<HealthResult> bookMarkedData = new List();
     List<HealthResult> unBookMarkedData = new List();
     for (HealthResult mediaMetaInfo in completeData.result) {
-      if (mediaMetaInfo.metadata.healthRecordType.description
-          .contains(categoryDescription)) {
-        if (categoryDescription == CommonConstants.categoryDescriptionDevice) {
-          if (mediaMetaInfo.metadata.deviceReadings != null &&
-              mediaMetaInfo.metadata.deviceReadings.length > 0 &&
-              mediaMetaInfo.metadata.fileName != null) {
+      try {
+        if (mediaMetaInfo.metadata.healthRecordType.description
+            .contains(categoryDescription)) {
+          if (categoryDescription ==
+              CommonConstants.categoryDescriptionDevice) {
+            if (mediaMetaInfo.metadata.deviceReadings != null &&
+                mediaMetaInfo.metadata.deviceReadings.length > 0 &&
+                mediaMetaInfo.metadata.fileName != null) {
+              mediaMetaInfoObj.add(mediaMetaInfo);
+            }
+          } else {
             mediaMetaInfoObj.add(mediaMetaInfo);
           }
+        }
+      } catch (e) {}
+    }
+
+    if (mediaMetaInfoObj.length > 0) {
+      mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
+        return mediaMetaInfoObjCopy.metadata.healthRecordCategory.createdOn
+            .compareTo(
+                mediaMetaInfoObjClone.metadata.healthRecordCategory.createdOn);
+      });
+
+      //NOTE show the bookmarked data as first
+      for (HealthResult mmi in mediaMetaInfoObj) {
+        if (mmi.isBookmarked == true) {
+          bookMarkedData.add(mmi);
         } else {
-          mediaMetaInfoObj.add(mediaMetaInfo);
+          unBookMarkedData.add(mmi);
         }
       }
+      mediaMetaInfoObj.clear();
+      mediaMetaInfoObj.addAll(bookMarkedData.reversed);
+      mediaMetaInfoObj.addAll(unBookMarkedData.reversed);
     }
-
-    mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
-      return mediaMetaInfoObjCopy.metadata.healthRecordCategory.createdOn
-          .compareTo(
-              mediaMetaInfoObjClone.metadata.healthRecordCategory.createdOn);
-    });
-
-    //NOTE show the bookmarked data as first
-    for (HealthResult mmi in mediaMetaInfoObj) {
-      if (mmi.isBookmarked == true) {
-        bookMarkedData.add(mmi);
-      } else {
-        unBookMarkedData.add(mmi);
-      }
-    }
-    mediaMetaInfoObj.clear();
-    mediaMetaInfoObj.addAll(bookMarkedData.reversed);
-    mediaMetaInfoObj.addAll(unBookMarkedData.reversed);
 
     return mediaMetaInfoObj;
   }
@@ -317,14 +322,17 @@ class CommonUtil {
 
   List<HealthRecordCollection> getMetaMasterIdList(HealthResult data) {
     List<HealthRecordCollection> mediaMasterIdsList = new List();
-    if (data.healthRecordCollection.length > 0) {
-      for (HealthRecordCollection mediaMasterIds
-          in data.healthRecordCollection) {
-        if (mediaMasterIds.fileType == ".jpg" ||
-            mediaMasterIds.fileType == ".png")
-          mediaMasterIdsList.add(mediaMasterIds);
+    try {
+      if (data.healthRecordCollection != null &&
+          data.healthRecordCollection.length > 0) {
+        for (HealthRecordCollection mediaMasterIds
+            in data.healthRecordCollection) {
+          if (mediaMasterIds.fileType == ".jpg" ||
+              mediaMasterIds.fileType == ".png")
+            mediaMasterIdsList.add(mediaMasterIds);
+        }
       }
-    }
+    } catch (e) {}
 
     return mediaMasterIdsList.length > 0 ? mediaMasterIdsList : new List();
   }

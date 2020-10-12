@@ -14,6 +14,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleModel.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
@@ -27,7 +28,7 @@ class GetTimeSlots extends StatelessWidget {
   SlotsResultModel dateSlotTimingsObj;
   final List<Doctors> docs;
   final int j;
-  History doctorsData;
+  Past doctorsData;
   final DateTime selectedDate;
   bool isReshedule;
   FlutterToast toast = new FlutterToast();
@@ -82,6 +83,7 @@ class GetTimeSlots extends StatelessWidget {
                   String selectedSlot = dateSlotTimingsObj
                       .sessions[rowPosition].slots[itemPosition].slotNumber
                       .toString();
+                  print('resheduling appointment');
                   resheduleAppoitment(
                       context,
                       [doctorsData],
@@ -97,7 +99,7 @@ class GetTimeSlots extends StatelessWidget {
                     } else {
                       print('new Appointmnt from history');
                       navigateToConfirmBook(context, rowPosition, itemPosition,
-                          doctorsData.followupFee, true, true);
+                          doctorsData.doctorFollowUpFee, true, true);
                     }
                   } else {
                     toast.getToast(selectSlotsMsg, Colors.red);
@@ -137,7 +139,7 @@ class GetTimeSlots extends StatelessWidget {
         ));
   }
 
-  resheduleAppoitment(BuildContext context, List<History> appointments,
+  resheduleAppoitment(BuildContext context, List<Past> appointments,
       String slotNumber, String resheduledDate, String doctorSessionId) {
     resheduleAppointment(
             context, appointments, slotNumber, resheduledDate, doctorSessionId)
@@ -145,8 +147,7 @@ class GetTimeSlots extends StatelessWidget {
       Navigator.pop(context);
       if (value == null) {
         toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
-      } else if (value.isSuccess == true &&
-          value.message.contains(AppointmentConstant.resheduled)) {
+      } else if (value.isSuccess == true) {
         toast.getToast(
             AppointmentConstant.YOUR_RESHEDULE_SUCCESS, Colors.green);
       } else if (value.message.contains(AppointmentConstant.NOT_AVAILABLE)) {
@@ -159,7 +160,7 @@ class GetTimeSlots extends StatelessWidget {
 
   Future<ResheduleModel> resheduleAppointment(
       BuildContext context,
-      List<History> appointments,
+      List<Past> appointments,
       String slotNumber,
       String resheduledDate,
       String doctorSessionId) async {

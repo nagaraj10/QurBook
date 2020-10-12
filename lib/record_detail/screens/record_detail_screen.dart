@@ -1163,55 +1163,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 
-  Widget getDocumentImageWidgetCloneOld() {
-    if (_healthReportListForUserBlock != null) {
-      _healthReportListForUserBlock = null;
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    } else {
-      _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    }
-
-    //_healthReportListForUserBlock.getDocumentImageList(mediMasterId);
-
-    return StreamBuilder<ApiResponse<List<dynamic>>>(
-      stream: _healthReportListForUserBlock.imageListStream,
-      builder: (context, AsyncSnapshot<ApiResponse<List<dynamic>>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return Center(
-                  child: SizedBox(
-                child: CircularProgressIndicator(),
-                width: 30,
-                height: 30,
-              ));
-              break;
-
-            case Status.ERROR:
-              return Center(
-                  child: Text(Constants.STR_ERROR_LOADING_IMAGE,
-                      style: TextStyle(color: Colors.red)));
-              break;
-
-            case Status.COMPLETED:
-              /* if (ispdfPresent) {
-                pdfFile = snapshot.data.data;
-              } else {*/
-              //imagesPathMain.addAll(snapshot.data.data);
-              /* }*/
-              return Container(); //getCarousalImage(snapshot.data.data);
-              break;
-          }
-        } else {
-          return Container(
-            width: 100,
-            height: 100,
-          );
-        }
-      },
-    );
-  }
-
   Widget getDocumentImageWidgetClone() {
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;

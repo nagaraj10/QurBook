@@ -21,7 +21,8 @@ class MyProvidersTabBar extends StatefulWidget {
       {this.data,
       this.tabController,
       this.providersBloc,
-      this.myProviderState,this.refresh});
+      this.myProviderState,
+      this.refresh});
 
   @override
   State<StatefulWidget> createState() {
@@ -115,12 +116,12 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
             ? Container(
                 color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersDoctorsList(
-                    doctorsModel: doctorsModel,
-                    providersBloc: widget.providersBloc,
-                    myProviderState: widget.myProviderState,
-                  refresh: (){
-                      print('tab refresh');
-                      widget.refresh;
+                  doctorsModel: doctorsModel,
+                  providersBloc: widget.providersBloc,
+                  myProviderState: widget.myProviderState,
+                  refresh: () {
+                    print('tab refresh');
+                    widget.refresh();
                   },
                 ))
             : Container(
@@ -139,9 +140,13 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
             ? Container(
                 color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersHospitalsList(
-                    hospitalsModel: hospitalsModel,
-                    providersBloc: widget.providersBloc,
-                    myProviderState: widget.myProviderState))
+                  hospitalsModel: hospitalsModel,
+                  providersBloc: widget.providersBloc,
+                  myProviderState: widget.myProviderState,
+                  isRefresh: () {
+                    widget.refresh();
+                  },
+                ))
             : Container(
                 child: Center(
                   child: Padding(
@@ -158,9 +163,13 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
             ? Container(
                 color: Color(fhbColors.bgColorContainer),
                 child: MyProvidersLabsList(
-                    labsModel: labsModel,
-                    providersBloc: widget.providersBloc,
-                    myProviderState: widget.myProviderState))
+                  labsModel: labsModel,
+                  providersBloc: widget.providersBloc,
+                  myProviderState: widget.myProviderState,
+                  isRefresh: () {
+                    widget.refresh();
+                  },
+                ))
             : Container(
                 child: Center(
                   child: Padding(

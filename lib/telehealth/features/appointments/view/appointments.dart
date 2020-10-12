@@ -218,7 +218,6 @@ class _AppointmentsState extends State<Appointments> {
                   child: Center(
                     child: Text(variable.strNoAppointments),
                   ),
-
                 );
         } else {
           return Center(

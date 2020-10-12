@@ -9,6 +9,8 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 
 import 'my_provider.dart';
@@ -18,9 +20,10 @@ class MyProvidersLabsList extends StatefulWidget {
   final List<Hospitals> labsModel;
   final ProvidersBloc providersBloc;
   final MyProviderState myProviderState;
+  Function isRefresh;
 
   MyProvidersLabsList(
-      {this.labsModel, this.providersBloc, this.myProviderState});
+      {this.labsModel, this.providersBloc, this.myProviderState,this.isRefresh});
 
   @override
   _MyProvidersLabsList createState() => _MyProvidersLabsList();
@@ -32,6 +35,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList>{
   ProvidersBloc providersBloc;
   MyProviderState myProviderState;
   MyProviderViewModel providerViewModel;
+  CommonWidgets commonWidgets = new CommonWidgets();
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +54,11 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList>{
                       searchKeyWord: CommonConstants.labs,
                       labsModel: eachLabModel,
                       fromClass: router.rt_myprovider,
-                      hasData: true))
+                      hasData: true,
+                    isRefresh: (){
+                        widget.isRefresh();
+                    }
+                  ))
                   .then((value) {
 //                providersBloc.getMedicalPreferencesList();
                 myProviderState.refreshPage();
@@ -72,19 +80,35 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList>{
                 ),
                 child: Row(
                   children: <Widget>[
-                    // ClipOval(
-                    //     child: eachHospitalModel.logo != null
-                    //         ? Image.network(
-                    //             Constants.BASE_URL + eachHospitalModel.logo,
-                    //             height: 50,
-                    //             width: 50,
-                    //             fit: BoxFit.cover,
-                    //           )
-                    //         : Container(
-                    //             width: 50,
-                    //             height: 50,
-                    //             padding: EdgeInsets.all(12),
-                    //             color: Color(fhbColors.bgColorContainer))),
+                    CircleAvatar(
+                      radius: 15,
+                      child: ClipOval(
+                          child: eachLabModel != null
+                              ? /*myProfile.result.profilePicThumbnailUrl != null
+                              ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                                  myProfile.result.profilePicThumbnailUrl)
+                              :*/
+                          Container(
+                              height: 50,
+                              width: 50,
+                              color: Color(fhbColors.bgColorContainer),
+                              child: Center(
+                                child: Text(
+                                  eachLabModel.name != null
+                                      ?
+                                  eachLabModel.name[0].toUpperCase()
+                                      : '',
+                                  style: TextStyle(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor())),
+                                ),
+                              ))
+                              : Container(
+                            height: 50,
+                            width: 50,
+                            color: Color(fhbColors.bgColorContainer),
+                          )),
+                    ),
                     SizedBox(
                       width: 20,
                     ),
@@ -107,18 +131,15 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList>{
                             textAlign: TextAlign.start,
                           ),
                           SizedBox(height: 5),
-                          // AutoSizeText(
-                          //   eachHospitalModel.addressLine1 != null
-                          //       ? eachHospitalModel.addressLine1
-                          //       : '' + eachHospitalModel.addressLine2 != null
-                          //           ? eachHospitalModel.addressLine2
-                          //           : '',
-                          //   maxLines: 1,
-                          //   style: TextStyle(
-                          //       fontSize: 13.0,
-                          //       fontWeight: FontWeight.w400,
-                          //       color: ColorUtils.lightgraycolor),
-                          // ),
+                           AutoSizeText(
+                             '' +
+                                 commonWidgets.getCityHospital(eachLabModel),
+                             maxLines: 1,
+                             style: TextStyle(
+                                 fontSize: 13.0,
+                                 fontWeight: FontWeight.w400,
+                                 color: ColorUtils.lightgraycolor),
+                           ),
                           SizedBox(height: 5),
                         ],
                       ),
@@ -133,12 +154,11 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList>{
                               InkWell(
                                   onTap: (){
                                     providerViewModel
-                                        .bookMarkHealthOrg(!(eachLabModel.isActive), eachLabModel)
+                                        .bookMarkHealthOrg(eachLabModel,false,'ListItem')
                                         .then((status) {
                                       if (status) {
                                         print('onClick');
-                                        widget.providersBloc.labs.clear();
-                                        setState(() {});
+                                        widget.isRefresh();
                                       }
                                     });
                                   },
