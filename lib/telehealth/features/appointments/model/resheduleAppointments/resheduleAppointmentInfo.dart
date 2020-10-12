@@ -1,11 +1,12 @@
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
+    as parameters;
 import 'package:myfhb/telehealth/features/appointments/model/createdBy.dart';
 
 class ResheduleAppointmentInfo {
   bool isFollowUp;
   String slotNumber;
   bool isHealthRecordShared;
-  dynamic sharedHealthRecordMetadata;
+  Null sharedHealthRecordMetadata;
   CreatedBy doctorSession;
   bool isActive;
   CreatedBy lastModifiedBy;
@@ -17,11 +18,11 @@ class ResheduleAppointmentInfo {
   String plannedEndDateTime;
   CreatedBy status;
   String doctorSessionId;
-  dynamic actualStartDateTime;
-  dynamic actualEndDateTime;
-  dynamic plannedFollowupDate;
-  dynamic isFollowup;
-  dynamic lastModifiedOn;
+  Null actualStartDateTime;
+  Null actualEndDateTime;
+  Null plannedFollowupDate;
+  Null isFollowup;
+  Null lastModifiedOn;
   String id;
   bool isRefunded;
   bool isFollowupFee;
@@ -29,107 +30,106 @@ class ResheduleAppointmentInfo {
 
   ResheduleAppointmentInfo(
       {this.isFollowUp,
-        this.slotNumber,
-        this.isHealthRecordShared,
-        this.sharedHealthRecordMetadata,
-        this.doctorSession,
-        this.isActive,
-        this.lastModifiedBy,
-        this.bookedFor,
-        this.createdBy,
-        this.bookedBy,
-        this.bookingId,
-        this.plannedStartDateTime,
-        this.plannedEndDateTime,
-        this.status,
-        this.doctorSessionId,
-        this.actualStartDateTime,
-        this.actualEndDateTime,
-        this.plannedFollowupDate,
-        this.isFollowup,
-        this.lastModifiedOn,
-        this.id,
-        this.isRefunded,
-        this.isFollowupFee,
-        this.createdOn});
+      this.slotNumber,
+      this.isHealthRecordShared,
+      this.sharedHealthRecordMetadata,
+      this.doctorSession,
+      this.isActive,
+      this.lastModifiedBy,
+      this.bookedFor,
+      this.createdBy,
+      this.bookedBy,
+      this.bookingId,
+      this.plannedStartDateTime,
+      this.plannedEndDateTime,
+      this.status,
+      this.doctorSessionId,
+      this.actualStartDateTime,
+      this.actualEndDateTime,
+      this.plannedFollowupDate,
+      this.isFollowup,
+      this.lastModifiedOn,
+      this.id,
+      this.isRefunded,
+      this.isFollowupFee,
+      this.createdOn});
 
   ResheduleAppointmentInfo.fromJson(Map<String, dynamic> json) {
-    isFollowUp = json[parameters.strIsFollowUp];
-    slotNumber = json[parameters.strSlotNumber];
-    isHealthRecordShared = json[parameters.strIsHealthRecordShared];
-    sharedHealthRecordMetadata = json[parameters.strSharedHealthRecordMetadata];
-    doctorSession = json[parameters.strDoctorSessionId] != null
-        ? new CreatedBy.fromJson(json[parameters.strDoctorSessionId])
+    isFollowUp = json['isFollowUp'];
+    slotNumber = json['slotNumber'];
+    isHealthRecordShared = json['isHealthRecordShared'];
+    sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'];
+    doctorSession = json['doctorSession'] != null
+        ? new CreatedBy.fromJson(json['doctorSession'])
         : null;
-    isActive = json[parameters.strIsActive];
-    lastModifiedBy = json[parameters.strlastModifiedBy] != null
-        ? new CreatedBy.fromJson(json[parameters.strlastModifiedBy])
+    isActive = json['isActive'];
+    lastModifiedBy = json['lastModifiedBy'] != null
+        ? new CreatedBy.fromJson(json['lastModifiedBy'])
         : null;
-    bookedFor = json[parameters.strBookedFor] != null
-        ? new CreatedBy.fromJson(json[parameters.strBookedFor])
+    bookedFor = json['bookedFor'] != null
+        ? new CreatedBy.fromJson(json['bookedFor'])
         : null;
-    createdBy = json[parameters.strCreatedBy] != null
-        ? new CreatedBy.fromJson(json[parameters.strCreatedBy])
+    createdBy = json['createdBy'] != null
+        ? new CreatedBy.fromJson(json['createdBy'])
         : null;
-    bookedBy = json[parameters.strBookedBy] != null
-        ? new CreatedBy.fromJson(json[parameters.strBookedBy])
+    bookedBy = json['bookedBy'] != null
+        ? new CreatedBy.fromJson(json['bookedBy'])
         : null;
-    bookingId = json[parameters.strBookingId];
-    plannedStartDateTime = json[parameters.strPlannedStartDateTime];
-    plannedEndDateTime = json[parameters.strPlannedEndDateTime];
-    status = json[parameters.strStatus] != null
-        ? new CreatedBy.fromJson(json[parameters.strStatus])
-        : null;
-    doctorSessionId = json[parameters.strDoctorSessionId];
-    actualStartDateTime = json[parameters.strActualStartDateTime];
-    actualEndDateTime = json[parameters.strActualEndDateTime];
-    plannedFollowupDate = json[parameters.strPlannedFollowupDate];
-    isFollowup = json[parameters.strIsFollowup];
-    lastModifiedOn = json[parameters.strLastModifiedOn];
-    id = json[parameters.strId];
-    isRefunded = json[parameters.strIsRefunded];
-    isFollowupFee = json[parameters.strIsFollowUpFee];
-    createdOn = json[parameters.strCreatedOn];
+    bookingId = json['bookingId'];
+    plannedStartDateTime = json['plannedStartDateTime'];
+    plannedEndDateTime = json['plannedEndDateTime'];
+    status =
+        json['status'] != null ? new CreatedBy.fromJson(json['status']) : null;
+    doctorSessionId = json['doctorSessionId'];
+    actualStartDateTime = json['actualStartDateTime'];
+    actualEndDateTime = json['actualEndDateTime'];
+    plannedFollowupDate = json['plannedFollowupDate'];
+    isFollowup = json['isFollowup'];
+    lastModifiedOn = json['lastModifiedOn'];
+    id = json['id'];
+    isRefunded = json['isRefunded'];
+    isFollowupFee = json['isFollowupFee'];
+    createdOn = json['createdOn'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strIsFollowUp] = this.isFollowUp;
-    data[parameters.strSlotNumber] = this.slotNumber;
-    data[parameters.strIsHealthRecordShared] = this.isHealthRecordShared;
-    data[parameters.strSharedHealthRecordMetadata] = this.sharedHealthRecordMetadata;
+    data['isFollowUp'] = this.isFollowUp;
+    data['slotNumber'] = this.slotNumber;
+    data['isHealthRecordShared'] = this.isHealthRecordShared;
+    data['sharedHealthRecordMetadata'] = this.sharedHealthRecordMetadata;
     if (this.doctorSession != null) {
-      data[parameters.strDoctorSessionId] = this.doctorSession.toJson();
+      data['doctorSession'] = this.doctorSession.toJson();
     }
-    data[parameters.strIsActive] = this.isActive;
+    data['isActive'] = this.isActive;
     if (this.lastModifiedBy != null) {
-      data[parameters.strlastModifiedBy] = this.lastModifiedBy.toJson();
+      data['lastModifiedBy'] = this.lastModifiedBy.toJson();
     }
     if (this.bookedFor != null) {
-      data[parameters.strBookedFor] = this.bookedFor.toJson();
+      data['bookedFor'] = this.bookedFor.toJson();
     }
     if (this.createdBy != null) {
-      data[parameters.strCreatedBy] = this.createdBy.toJson();
+      data['createdBy'] = this.createdBy.toJson();
     }
     if (this.bookedBy != null) {
-      data[parameters.strBookedBy] = this.bookedBy.toJson();
+      data['bookedBy'] = this.bookedBy.toJson();
     }
-    data[parameters.strBookingId] = this.bookingId;
-    data[parameters.strPlannedStartDateTime] = this.plannedStartDateTime;
-    data[parameters.strPlannedEndDateTime] = this.plannedEndDateTime;
+    data['bookingId'] = this.bookingId;
+    data['plannedStartDateTime'] = this.plannedStartDateTime;
+    data['plannedEndDateTime'] = this.plannedEndDateTime;
     if (this.status != null) {
-      data[parameters.strStatus] = this.status.toJson();
+      data['status'] = this.status.toJson();
     }
-    data[parameters.strDoctorSessionId] = this.doctorSessionId;
-    data[parameters.strActualStartDateTime] = this.actualStartDateTime;
-    data[parameters.strPlannedEndDateTime] = this.actualEndDateTime;
-    data[parameters.strPlannedFollowupDate] = this.plannedFollowupDate;
-    data[parameters.strIsFollowup] = this.isFollowup;
-    data[parameters.strLastModifiedOn] = this.lastModifiedOn;
-    data[parameters.strId] = this.id;
-    data[parameters.strIsRefunded] = this.isRefunded;
-    data[parameters.strIsFollowUpFee] = this.isFollowupFee;
-    data[parameters.strCreatedOn] = this.createdOn;
+    data['doctorSessionId'] = this.doctorSessionId;
+    data['actualStartDateTime'] = this.actualStartDateTime;
+    data['actualEndDateTime'] = this.actualEndDateTime;
+    data['plannedFollowupDate'] = this.plannedFollowupDate;
+    data['isFollowup'] = this.isFollowup;
+    data['lastModifiedOn'] = this.lastModifiedOn;
+    data['id'] = this.id;
+    data['isRefunded'] = this.isRefunded;
+    data['isFollowupFee'] = this.isFollowupFee;
+    data['createdOn'] = this.createdOn;
     return data;
   }
 }

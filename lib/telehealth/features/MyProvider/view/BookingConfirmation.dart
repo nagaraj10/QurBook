@@ -39,6 +39,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:progress_dialog/progress_dialog.dart';
@@ -53,7 +54,7 @@ class BookingConfirmation extends StatefulWidget {
   final int rowPosition;
   final int itemPosition;
   final bool isFollowUp;
-  History doctorsData;
+  Past doctorsData;
   final List<HealthOrganizationResult> healthOrganizationResult;
   final int doctorListPos;
 
@@ -849,7 +850,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       bool isMedicalShared,
       bool isFollowUp,
       List<String> healthRecords,
-      {History doc}) {
+      {Past doc}) {
     setState(() {
       pr.show();
     });

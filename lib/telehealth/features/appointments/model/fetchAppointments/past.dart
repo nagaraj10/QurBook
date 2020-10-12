@@ -1,5 +1,6 @@
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/booked.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/status.dart';
@@ -28,6 +29,7 @@ class Past {
     this.prescriptionCollection,
     this.healthRecord,
     this.doctorFollowUpFee,
+    this.healthOrganization,
     this.doctor,
   });
 
@@ -54,6 +56,7 @@ class Past {
   HealthRecord healthRecord;
   String doctorFollowUpFee;
   Doctor doctor;
+  City healthOrganization;
 
   Past.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
@@ -94,6 +97,9 @@ class Past {
     doctor = json[parameters.strdoctor] == null
         ? null
         : Doctor.fromJson(json[parameters.strdoctor]);
+    healthOrganization = json[parameters.strHealthOrganization] != null
+        ? new City.fromJson(json[parameters.strHealthOrganization])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -123,6 +129,7 @@ class Past {
     data[parameters.strDoctorFollowUpFee] =
         doctorFollowUpFee == null ? null : doctorFollowUpFee;
     data[parameters.strdoctor] = doctor.toJson();
+    data[parameters.strHealthOrganization] = this.healthOrganization.toJson();
     return data;
   }
 }

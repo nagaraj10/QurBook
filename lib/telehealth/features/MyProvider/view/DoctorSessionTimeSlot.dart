@@ -18,6 +18,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/GetTimeSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/SlotsAvailabilityViewModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
@@ -32,7 +33,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   final String date;
   final List<Doctors> docs;
   final int i;
-  History doctorsData;
+  Past doctorsData;
   bool isReshedule;
   final String healthOrganizationId;
   final List<HealthOrganizationResult> healthOrganizationResult;
