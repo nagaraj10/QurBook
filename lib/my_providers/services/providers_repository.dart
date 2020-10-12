@@ -22,6 +22,7 @@ class ProvidersListRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
   //String userID = CommonConstants.NEW_USER_ID;
 
   Future<MyProvidersResponse> getMedicalPreferencesList() async {
@@ -44,20 +45,25 @@ class ProvidersListRepository {
   }
 
   Future<DoctorBookMarkedSucessModel> bookMarkDoctor(
-      bool condition, Doctors doctorIds) async {
+      Doctors doctorIds, bool isPreferred, String isFrom) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var bookMark = {};
     bookMark[parameters.strpatient] = userID;
     bookMark[parameters.strdoctor] = doctorIds.id;
     bookMark[parameters.healthOrganization] = null;
-    if (doctorIds.isDefault) {
-      bookMark[parameters.strisDefault] = false;
-    } else {
-      bookMark[parameters.strisDefault] = true;
+    if(isFrom=='ListItem'){
+      if (doctorIds.isDefault) {
+        bookMark[parameters.strisDefault] = false;
+      } else {
+        bookMark[parameters.strisDefault] = true;
+      }
+    }else{
+      if (isPreferred) {
+        bookMark[parameters.strisDefault] = true;
+      } else {
+        bookMark[parameters.strisDefault] = false;
+      }
     }
-
-    print(doctorIds.providerPatientMappingId);
-
     var jsonString = convert.jsonEncode(bookMark);
     final response = await _helper.bookMarkDoctor(
         query.qr_patient_update_default + doctorIds.providerPatientMappingId,
@@ -66,16 +72,24 @@ class ProvidersListRepository {
   }
 
   Future<DoctorBookMarkedSucessModel> bookMarkHealthOrganizaton(
-      bool condition, Hospitals hospitals) async {
+      Hospitals hospitals, bool isPreferred, String isFrom) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var bookMark = {};
     bookMark[parameters.strpatient] = userID;
     bookMark[parameters.strdoctor] = null;
     bookMark[parameters.healthOrganization] = hospitals.id;
-    if (hospitals.isDefault) {
-      bookMark[parameters.strisDefault] = false;
-    } else {
-      bookMark[parameters.strisDefault] = true;
+    if(isFrom=='ListItem'){
+      if (hospitals.isDefault) {
+        bookMark[parameters.strisDefault] = false;
+      } else {
+        bookMark[parameters.strisDefault] = true;
+      }
+    }else{
+      if (isPreferred) {
+        bookMark[parameters.strisDefault] = true;
+      } else {
+        bookMark[parameters.strisDefault] = false;
+      }
     }
 
     var jsonString = convert.jsonEncode(bookMark);

@@ -21,6 +21,7 @@ class AddProvidersArguments {
   PlaceDetail placeDetail;
   Place place;
   String confirmAddressDescription;
+  Function isRefresh;
 
   AddProvidersArguments({
     this.data,
@@ -36,5 +37,6 @@ class AddProvidersArguments {
     this.placeDetail,
     this.place,
     this.confirmAddressDescription,
+    this.isRefresh
   });
 }

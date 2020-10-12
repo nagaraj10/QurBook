@@ -107,8 +107,7 @@ class MyProviderState extends State<MyProvider>
                 tabController: _tabController,
                 myProviderState: this,
                 refresh: () {
-                  print('refresh');
-                  setState(() {});
+                  refreshPage();
                 },
               )
             : Center(

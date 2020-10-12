@@ -9,6 +9,8 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 
 import 'my_provider.dart';
@@ -18,9 +20,11 @@ class MyProvidersHospitalsList extends StatefulWidget {
   final List<Hospitals> hospitalsModel;
   final ProvidersBloc providersBloc;
   final MyProviderState myProviderState;
+  Function isRefresh;
+
 
   MyProvidersHospitalsList(
-      {this.hospitalsModel, this.providersBloc, this.myProviderState});
+      {this.hospitalsModel, this.providersBloc, this.myProviderState,this.isRefresh});
 
   @override
   _MyProvidersDoctorsList createState() => _MyProvidersDoctorsList();
@@ -31,6 +35,7 @@ class MyProvidersHospitalsList extends StatefulWidget {
     ProvidersBloc providersBloc;
     MyProviderState myProviderState;
     MyProviderViewModel providerViewModel;
+    CommonWidgets commonWidgets = new CommonWidgets();
 
     @override
     Widget build(BuildContext context) {
@@ -49,7 +54,12 @@ class MyProvidersHospitalsList extends StatefulWidget {
                         searchKeyWord: CommonConstants.hospitals,
                         hospitalsModel: eachHospitalModel,
                         fromClass: router.rt_myprovider,
-                        hasData: true))
+                        hasData: true,
+                        isRefresh: (){
+                          widget.isRefresh();
+                        }
+
+                    ))
                     .then((value) {
                   myProviderState.refreshPage();
                 });
@@ -70,19 +80,35 @@ class MyProvidersHospitalsList extends StatefulWidget {
                   ),
                   child: Row(
                     children: <Widget>[
-                      // ClipOval(
-                      //     child: eachHospitalModel.logo != null
-                      //         ? Image.network(
-                      //             Constants.BASE_URL + eachHospitalModel.logo,
-                      //             height: 50,
-                      //             width: 50,
-                      //             fit: BoxFit.cover,
-                      //           )
-                      //         : Container(
-                      //             width: 50,
-                      //             height: 50,
-                      //             padding: EdgeInsets.all(12),
-                      //             color: Color(fhbColors.bgColorContainer))),
+                      CircleAvatar(
+                        radius: 15,
+                        child: ClipOval(
+                            child: eachHospitalModel != null
+                                ? /*myProfile.result.profilePicThumbnailUrl != null
+                              ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                                  myProfile.result.profilePicThumbnailUrl)
+                              :*/
+                            Container(
+                                height: 50,
+                                width: 50,
+                                color: Color(fhbColors.bgColorContainer),
+                                child: Center(
+                                  child: Text(
+                                    eachHospitalModel.name != null
+                                        ?
+                                    eachHospitalModel.name[0].toUpperCase()
+                                        : '',
+                                    style: TextStyle(
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor())),
+                                  ),
+                                ))
+                                : Container(
+                              height: 50,
+                              width: 50,
+                              color: Color(fhbColors.bgColorContainer),
+                            )),
+                      ),
                       SizedBox(
                         width: 20,
                       ),
@@ -106,18 +132,15 @@ class MyProvidersHospitalsList extends StatefulWidget {
                               textAlign: TextAlign.start,
                             ),
                             SizedBox(height: 5),
-                            // AutoSizeText(
-                            //   eachHospitalModel.addressLine1 != null
-                            //       ? eachHospitalModel.addressLine1
-                            //       : '' + eachHospitalModel.addressLine2 != null
-                            //           ? eachHospitalModel.addressLine2
-                            //           : '',
-                            //   maxLines: 1,
-                            //   style: TextStyle(
-                            //       fontSize: 13.0,
-                            //       fontWeight: FontWeight.w400,
-                            //       color: ColorUtils.lightgraycolor),
-                            // ),
+                             AutoSizeText(
+                               '' +
+                                   commonWidgets.getCityHospital(eachHospitalModel),
+                               maxLines: 1,
+                               style: TextStyle(
+                                   fontSize: 13.0,
+                                   fontWeight: FontWeight.w400,
+                                   color: ColorUtils.lightgraycolor),
+                             ),
                             SizedBox(height: 5),
                           ],
                         ),
@@ -132,12 +155,11 @@ class MyProvidersHospitalsList extends StatefulWidget {
                                 InkWell(
                                     onTap: (){
                                       providerViewModel
-                                          .bookMarkHealthOrg(!(eachHospitalModel.isActive), eachHospitalModel)
+                                          .bookMarkHealthOrg(eachHospitalModel,false,'ListItem')
                                           .then((status) {
                                         if (status) {
                                           print('onClick');
-                                          widget.providersBloc.hospitals.clear();
-                                          setState(() {});
+                                          widget.isRefresh();
                                         }
                                       });
                                     },

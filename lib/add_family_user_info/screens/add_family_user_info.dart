@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
@@ -14,6 +15,7 @@ import 'package:myfhb/add_family_user_info/models/CityListModel.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/models/address_result.dart';
 import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/add_family_user_info/widget/address_type_widget.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -30,6 +32,7 @@ import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
+import 'package:myfhb/src/model/common_response.dart';
 import 'package:myfhb/src/model/user/AddressTypeModel.dart';
 import 'package:myfhb/src/model/user/City.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
@@ -82,6 +85,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   FocusNode dateOfBirthFocus = FocusNode();
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
+  AddFamilyUserInfoRepository _addFamilyUserInfoRepository =
+      new AddFamilyUserInfoRepository();
   bool isCalled = false;
   List<RelationsShipModel> relationShipResponseList;
   RelationsShipModel selectedRelationShip;
@@ -133,6 +138,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   String city = '';
   String state = '';
+  String currentUserID;
+  static int count = 0;
+  var currentSelectedProfilePic;
 
   //CityResult cityVal = new CityResult();
   City cityVal = new City();
@@ -145,7 +153,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   @override
   void initState() {
     super.initState();
-
+    String auth_token = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    String user_id = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     PaintingBinding.instance.imageCache.clear();
     addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
     try {
@@ -543,7 +552,193 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     });
   }
 
-  Widget showProfileImage() {
+  // Future<CommonResponse> getMyProfilePicFromRemote(String userId) async {
+  //   CommonResponse response =
+  //       await _addFamilyUserInfoRepository.getUserProfilePic(userId);
+  //   return response;
+  // }
+
+  Future<void> setMyProfilePic(String userId, File image) async {
+    CommonResponse response =
+        await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
+    if (response.isSuccess) {
+      FlutterToast().getToast('${response.message}', Colors.green);
+    } else {
+      FlutterToast().getToast('${response.message}', Colors.red);
+    }
+  }
+
+  Widget showProfileImageNew() {
+    if (widget.arguments.fromClass == CommonConstants.my_family) {
+      currentUserID = widget.arguments.sharedbyme.child.id;
+      return FutureBuilder<CommonResponse>(
+        future: _addFamilyUserInfoRepository
+            .getUserProfilePic(widget.arguments.sharedbyme.child.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot?.data?.isSuccess && snapshot?.data?.result != null) {
+              return Image.network(
+                snapshot.data.result,
+                fit: BoxFit.cover,
+                width: 60,
+                height: 60,
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                },
+              );
+            } else {
+              return Center(
+                child: Text(
+                  widget.arguments.sharedbyme.child.firstName != null
+                      ? widget.arguments.sharedbyme.child.firstName[0]
+                          .toUpperCase()
+                      : '',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 60.0,
+                    fontWeight: FontWeight.w200,
+                  ),
+                ),
+              );
+            }
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.blue,
+              ),
+            );
+          } else {
+            return Center(
+              child: Text(
+                widget.arguments.sharedbyme.child.firstName != null
+                    ? widget.arguments.sharedbyme.child.firstName[0]
+                        .toUpperCase()
+                    : '',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 60.0,
+                  fontWeight: FontWeight.w200,
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
+      currentUserID = widget.arguments.myProfileResult.id;
+      return FutureBuilder<CommonResponse>(
+        future: _addFamilyUserInfoRepository
+            .getUserProfilePic(widget.arguments.myProfileResult.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot?.data?.isSuccess && snapshot?.data?.result != null) {
+              return Image.network(
+                snapshot.data.result,
+                fit: BoxFit.cover,
+                width: 60,
+                height: 60,
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                },
+              );
+            } else {
+              return Center(
+                child: Text(
+                  widget.arguments.myProfileResult.firstName != null
+                      ? widget.arguments.myProfileResult.firstName[0]
+                          .toUpperCase()
+                      : '',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 60.0,
+                    fontWeight: FontWeight.w200,
+                  ),
+                ),
+              );
+            }
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.blue,
+              ),
+            );
+          } else {
+            return Center(
+              child: Text(
+                widget.arguments.myProfileResult.firstName != null
+                    ? widget.arguments.myProfileResult.firstName[0]
+                        .toUpperCase()
+                    : '',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 60.0,
+                  fontWeight: FontWeight.w200,
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } else {
+      currentUserID = widget.arguments.addFamilyUserInfo.id;
+      return FutureBuilder<CommonResponse>(
+        future: _addFamilyUserInfoRepository
+            .getUserProfilePic(widget.arguments.addFamilyUserInfo.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot?.data?.isSuccess && snapshot?.data?.result != null) {
+              return Image.network(
+                snapshot.data.result,
+                fit: BoxFit.cover,
+                width: 60,
+                height: 60,
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                },
+              );
+            } else {
+              return Center(
+                child: Text(
+                  widget.arguments.enteredFirstName != null
+                      ? widget.arguments.enteredFirstName[0].toUpperCase()
+                      : '',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 60.0,
+                    fontWeight: FontWeight.w200,
+                  ),
+                ),
+              );
+            }
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                backgroundColor: Colors.blue,
+              ),
+            );
+          } else {
+            return Center(
+              child: Text(
+                widget.arguments.enteredFirstName != null
+                    ? widget.arguments.enteredFirstName[0].toUpperCase()
+                    : '',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 60.0,
+                  fontWeight: FontWeight.w200,
+                ),
+              ),
+            );
+          }
+        },
+      );
+    }
+  }
+
+  /* Widget showProfileImage() {
     if (widget.arguments.fromClass == CommonConstants.add_family) {
       return imageURI != null
           ? Container(
@@ -604,7 +799,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 : BoxDecoration(color: Colors.white));
       }
     }
-  }
+  } */
 
   Widget getProfilePicWidget(ProfilePicThumbnail profilePicThumbnail) {
     return profilePicThumbnail != null
@@ -622,7 +817,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   saveMediaDialog(BuildContext cont) {
-    return showDialog<void>(
+    String userId = currentUserID;
+    return showDialog(
       context: cont,
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
@@ -635,16 +831,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   children: <Widget>[
                     GestureDetector(
                       child: Text(variable.Gallery),
-                      onTap: () {
-                        Navigator.pop(context);
-
-                        var image =
-                            ImagePicker.pickImage(source: ImageSource.gallery);
-                        image.then((value) {
-                          imageURI = value;
-
-                          (cont as Element).markNeedsBuild();
-                        });
+                      onTap: () async {
+                        var image = await ImagePicker.pickImage(
+                            source: ImageSource.gallery);
+                        if (image != null) {
+                          imageURI = image as File;
+                          Navigator.pop(context);
+                        }
                       },
                     ),
                     Padding(
@@ -652,16 +845,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     ),
                     GestureDetector(
                       child: Text(variable.Camera),
-                      onTap: () {
+                      onTap: () async {
                         Navigator.pop(context);
 
-                        var image =
-                            ImagePicker.pickImage(source: ImageSource.camera);
-                        image.then((value) {
-                          imageURI = value;
-
-                          (cont as Element).markNeedsBuild();
-                        });
+                        var image = await ImagePicker.pickImage(
+                            source: ImageSource.camera);
+                        if (image != null) {
+                          imageURI = image as File;
+                          setMyProfilePic(userId, imageURI);
+                        }
                       },
                     ),
                   ],
@@ -669,114 +861,150 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               ));
         });
       },
-    );
+    ).then((value) {
+      setState(() {});
+      setMyProfilePic(userId, imageURI);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    count = count + 1;
+    print('build is called $count times');
     dialogContext = context;
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-            ),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )),
-      key: scaffold_state,
-      body: SingleChildScrollView(
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Stack(
-                alignment: Alignment.bottomLeft,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(bottom: circleRadius / 2.0),
-                    child: Container(
-                      color: Color(new CommonUtil().getMyPrimaryColor()),
-                      height: 160.0,
-                      child: Stack(
-                          fit: StackFit.expand,
-                          overflow: Overflow.visible,
-                          children: [
-                            Container(
-                              color: Colors.black.withOpacity(0.2),
-                            )
-                          ]),
-                    ),
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(left: 10),
-                      child: Container(
-                        width: circleRadius,
-                        height: circleRadius,
-                        decoration: ShapeDecoration(
-                            shape: CircleBorder(),
-                            color: Color(new CommonUtil().getMyPrimaryColor())),
-                        child: Padding(
-                          padding: EdgeInsets.all(circleBorderWidth),
-                          child: InkWell(
-                            child: ClipOval(child: showProfileImage()),
-                            onTap: () {
-                              saveMediaDialog(context);
-                            },
-                          ),
-                        ),
-                      )),
-                ],
+    return WillPopScope(
+      onWillPop: ()async {
+        Navigator.of(context).pop();
+        Navigator.of(context).pop();
+        return Future.value(true);
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
               ),
-              _showMobileNoTextField(),
-              _showFirstNameTextField(),
-              _showMiddleNameTextField(),
-              _showLastNameTextField(),
-              //_showRelationShipTextField(),
-              widget.arguments.fromClass == CommonConstants.my_family
-                  ? relationShipResponseList.isNotEmpty
-                      ? Row(
-                          mainAxisSize: MainAxisSize.max,
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+            )),
+        key: scaffold_state,
+        body: SingleChildScrollView(
+          child: Stack(
+              fit: StackFit.loose,
+              alignment: Alignment.topCenter,
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Stack(
+                          alignment: Alignment.bottomLeft,
                           children: <Widget>[
-                            Expanded(
-                              child: getRelationshipDetails(
-                                  relationShipResponseList),
-                            )
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(bottom: circleRadius / 2.0),
+                              child: Container(
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                height: 160.0,
+                                child: Stack(
+                                    fit: StackFit.expand,
+                                    overflow: Overflow.visible,
+                                    children: [
+                                      Container(
+                                        color: Colors.black.withOpacity(0.2),
+                                      )
+                                    ]),
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(left: 10),
+                              child: Container(
+                                width: circleRadius,
+                                height: circleRadius,
+                                decoration: ShapeDecoration(
+                                    shape: CircleBorder(),
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor())),
+                                child: Padding(
+                                  padding: EdgeInsets.all(circleBorderWidth),
+                                  child: InkWell(
+                                    child: ClipOval(
+                                        child:
+                                            (imageURI != null && imageURI != '')
+                                                ? Image.file(
+                                                    imageURI,
+                                                    fit: BoxFit.cover,
+                                                    width: 60,
+                                                    height: 60,
+                                                  )
+                                                : showProfileImageNew()),
+                                    onTap: () {
+                                      saveMediaDialog(context);
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
-                        )
-                      : _showRelationShipTextField()
-                  : widget.arguments.fromClass == CommonConstants.user_update
-                      ? new Container()
-                      : _showRelationShipTextField(),
-              _showEmailAddTextField(),
-              Row(
-                children: <Widget>[Expanded(child: getGenderDetails())],
-              ),
-              Row(
-                children: <Widget>[
-                  Expanded(child: getBloodGroupDetails()),
-                  Expanded(child: getBloodRangeDetails())
-                ],
-              ),
-              _showDateOfBirthTextField(),
-              AddressTypeWidget(
-                addressResult: _addressResult,
-                addressList: _addressList,
-                onSelected: (addressResult, addressList) {
-                  setState(() {
-                    _addressResult = addressResult;
-                    addressTypeId = addressResult.id;
-                    _addressList = addressList;
-                  });
-                },
-              ),
-              _userAddressInfo(),
-              _showSaveButton()
-            ]),
+                        ),
+                        _showMobileNoTextField(),
+                        _showFirstNameTextField(),
+                        _showMiddleNameTextField(),
+                        _showLastNameTextField(),
+                        //_showRelationShipTextField(),
+                        widget.arguments.fromClass == CommonConstants.my_family
+                            ? relationShipResponseList.isNotEmpty
+                                ? Row(
+                                    mainAxisSize: MainAxisSize.max,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: getRelationshipDetails(
+                                            relationShipResponseList),
+                                      )
+                                    ],
+                                  )
+                                : _showRelationShipTextField()
+                            : widget.arguments.fromClass ==
+                                    CommonConstants.user_update
+                                ? new Container()
+                                : _showRelationShipTextField(),
+                        _showEmailAddTextField(),
+                        Row(
+                          children: <Widget>[
+                            Expanded(child: getGenderDetails())
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(child: getBloodGroupDetails()),
+                            Expanded(child: getBloodRangeDetails())
+                          ],
+                        ),
+                        _showDateOfBirthTextField(),
+                        AddressTypeWidget(
+                          addressResult: _addressResult,
+                          addressList: _addressList,
+                          onSelected: (addressResult, addressList) {
+                            setState(() {
+                              _addressResult = addressResult;
+                              addressTypeId = addressResult.id;
+                              _addressList = addressList;
+                            });
+                          },
+                        ),
+                        _userAddressInfo(),
+                        _showSaveButton()
+                      ]),
+                )
+              ]),
+        ),
       ),
     );
   }
@@ -1414,13 +1642,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget getBloodGroupDetails() {
+    String bgGroup = variable.bloodGroupArray[0];
+    for (String bg in variable.bloodGroupArray) {
+      if (bg == currentselectedBloodGroup) {
+        bgGroup = currentselectedBloodGroup;
+      }
+    }
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
       child: Container(
         width: MediaQuery.of(context).size.width / 2 - 40,
         child: DropdownButton<String>(
           hint: Text(CommonConstants.blood_groupWithStar),
-          value: currentselectedBloodGroup,
+          value: bgGroup,
           items: variable.bloodGroupArray.map((eachBloodGroup) {
             return DropdownMenuItem<String>(
               child: new Text(eachBloodGroup,
@@ -1469,6 +1703,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget getBloodRangeDetails() {
+    String bgGroupRange = variable.bloodRangeArray[0];
+    for (String bg in variable.bloodRangeArray) {
+      if (bg == currentselectedBloodGroupRange) {
+        bgGroupRange = currentselectedBloodGroupRange;
+      }
+    }
     return Padding(
       padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
       child: Container(
@@ -1476,7 +1716,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         child: DropdownButton<String>(
           hint: Text(CommonConstants.blood_rangeWithStar),
           isExpanded: true,
-          value: currentselectedBloodGroupRange,
+          value: bgGroupRange,
           items: variable.bloodRangeArray.map((eachBloodGroup) {
             return DropdownMenuItem<String>(
               child: new Text(eachBloodGroup,
@@ -1729,6 +1969,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
             userAddressCollection3.lastModifiedOn = null;
             userAddressCollection3.createdBy = widget.arguments.id;
+
+            if (_addressResult == null) {
+              //? check is addressType is null
+              _addressResult = _addressList[0];
+            }
             userAddressCollection3.addressType = AddressType(
               id: _addressResult.id,
               code: _addressResult.code,
@@ -1771,6 +2016,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       Navigator.pop(dialogContext);
                       Navigator.pop(dialogContext);
                       Navigator.pop(dialogContext, true);
+                      //Navigator.pop(dialogContext, true);
                       //Get.offAllNamed(router.rt_UserAccounts);
                       // Navigator.of(context).popUntil(
                       //     ModalRoute.withName(router.rt_UserAccounts));
@@ -2120,19 +2366,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                       fetchedProfileData = null;
                       imageURI = null;
                       Navigator.pop(dialogContext);
-                      Navigator.pop(dialogContext);
-                      //Get.offAllNamed(router.rt_UserAccounts);
-                      // Navigator.of(context).popUntil(
-                      //     ModalRoute.withName(router.rt_UserAccounts));
-                      // Navigator.popUntil(dialogContext, (Route<dynamic> route) {
-                      //   bool shouldPop = false;
-                      //   if (route.settings.name == router.rt_UserAccounts) {
-                      //     shouldPop = true;
-                      //   }
-                      //   return shouldPop;
-                      // });
-
-                      //Navigator.of(context).popUntil();
+                      Navigator.pop(dialogContext, true);
                     });
                   });
                 } else {
