@@ -25,6 +25,7 @@ import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
@@ -84,9 +85,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   FamilyMembers familyMembersModel = new FamilyMembers();
   List<SharedByUsers> sharedbyme = new List();
   FlutterToast toast = new FlutterToast();
-  FamilyData familyData = new FamilyData();
+  FamilyMembers familyData = new FamilyMembers();
 
-  final List<ProfileData> _familyNames = new List();
+  List<SharedByUsers> _familyNames = new List();
 
   List<String> recordIds = new List();
   List<String> notesId = new List();
@@ -106,7 +107,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       scheduleDate = '',
       fees = '';
   String apiStartTime = '', apiEndTime = '';
-  ProfileData selectedUser;
+  SharedByUsers selectedUser;
   var selectedId = '';
   ProgressDialog pr;
 
@@ -135,7 +136,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   addHealthRecords() {
-    healthRecords.addAll(recordIds);
+    //healthRecords.addAll(recordIds);
     healthRecords.addAll(notesId);
     healthRecords.addAll(voiceIds);
   }
@@ -179,10 +180,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   Widget getDropdown() {
-    return StreamBuilder<ApiResponse<FamilyMembersList>>(
-      stream: _familyListBloc.familyMemberListStream,
-      builder:
-          (context, AsyncSnapshot<ApiResponse<FamilyMembersList>> snapshot) {
+    return StreamBuilder<ApiResponse<FamilyMembers>>(
+      stream: _familyListBloc.familyMemberListNewStream,
+      builder: (context, AsyncSnapshot<ApiResponse<FamilyMembers>> snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
@@ -210,14 +210,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             case Status.COMPLETED:
               //_healthReportListForUserBlock = null;
               print(snapshot.data.toString());
-              if (snapshot.data.data.response.data != null) {
-                familyData = snapshot.data.data.response.data;
+              if (snapshot.data.data.result != null) {
+                familyData = snapshot.data.data;
 
                 // PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
                 //     snapshot.data.data.response.data);
               }
-              return dropDownButton(snapshot.data.data.response.data != null
-                  ? snapshot.data.data.response.data.sharedbyme
+              return dropDownButton(snapshot.data.data.result != null
+                  ? snapshot.data.data.result.sharedByUsers
                   : null);
               break;
           }
@@ -260,26 +260,27 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     );
   }*/
 
-  Widget dropDownButton(List<Sharedbyme> sharedByMeList) {
-    ProfileData profileData = new ProfileData(
-      id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
-      name: variable.Self,
-      userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
-    );
-    LinkedData linkedData =
-        new LinkedData(roleName: variable.Self, nickName: variable.Self);
+  Widget dropDownButton(List<SharedByUsers> sharedByMeList) {
+    MyProfileModel myProfile;
+    String fulName = '';
+    try {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      fulName = myProfile.result != null
+          ? myProfile.result.firstName + ' ' + myProfile.result.lastName
+          : '';
+    } catch (e) {}
 
     if (sharedByMeList == null) {
       sharedByMeList = new List();
-      sharedByMeList.add(
-          new Sharedbyme(profileData: profileData, linkedData: linkedData));
+      sharedByMeList
+          .add(new SharedByUsers(id: myProfile.result.id, nickName: 'Self'));
     } else {
       sharedByMeList.insert(
-          0, new Sharedbyme(profileData: profileData, linkedData: linkedData));
+          0, new SharedByUsers(id: myProfile.result.id, nickName: 'Self'));
     }
     if (_familyNames.length == 0) {
       for (int i = 0; i < sharedByMeList.length; i++) {
-        _familyNames.add(sharedByMeList[i].profileData);
+        _familyNames.add(sharedByMeList[i]);
       }
     }
 
@@ -292,7 +293,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           border: Border.all(
               color: Colors.grey, style: BorderStyle.solid, width: 0.80),
         ),
-        child: DropdownButton<ProfileData>(
+        child: DropdownButton<SharedByUsers>(
           value: selectedUser,
           underline: SizedBox(),
           isExpanded: true,
@@ -303,18 +304,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             ],
           ),
           items: _familyNames
-              .map((ProfileData user) => DropdownMenuItem(
+              .map((SharedByUsers user) => DropdownMenuItem(
                     child: Row(
                       children: <Widget>[
                         SizedBoxWidget(width: 20),
-                        Text(user.name == null ? 'Self' : user.name,
+                        Text(user.nickName == null ? 'Self' : user.nickName,
                             style: TextStyle(fontSize: 12)),
                       ],
                     ),
                     value: user,
                   ))
               .toList(),
-          onChanged: (ProfileData user) {
+          onChanged: (SharedByUsers user) {
             setState(() {
               selectedUser = user;
               selectedId = user.id;
@@ -854,8 +855,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
 
     try {
-      if (healthRecords.length > 0) {
-        associateRecords(doctorId, createdBy, healthRecords).then((value) {
+      if (recordIds.length > 0) {
+        associateRecords(doctorId, createdBy, recordIds).then((value) {
           if (value != null && value.isSuccess) {
             bookAppointmentOnly(
                 createdBy,
