@@ -82,16 +82,19 @@ class FHBUtils {
   }
 
   String getFormattedDateString(String strDate) {
-    String formattedDate;
-    if (CURRENT_DATE_CODE == 'MDY') {
-      formattedDate = DateFormat('MMM dd yyyy, hh:mm aa')
-          .format(DateTime.parse(strDate).toLocal());
-    } else if (CURRENT_DATE_CODE == 'YMD') {
-      formattedDate = DateFormat('yyyy MMM dd, hh:mm aa')
-          .format(DateTime.parse(strDate).toLocal());
-    } else {
-      formattedDate = DateFormat('dd MMM yyyy, hh:mm aa')
-          .format(DateTime.parse(strDate).toLocal());
+    String formattedDate = '';
+
+    if (strDate != null && strDate != '') {
+      if (CURRENT_DATE_CODE == 'MDY') {
+        formattedDate = DateFormat('MMM dd yyyy, hh:mm aa')
+            .format(DateTime.parse(strDate).toLocal());
+      } else if (CURRENT_DATE_CODE == 'YMD') {
+        formattedDate = DateFormat('yyyy MMM dd, hh:mm aa')
+            .format(DateTime.parse(strDate).toLocal());
+      } else {
+        formattedDate = DateFormat('dd MMM yyyy, hh:mm aa')
+            .format(DateTime.parse(strDate).toLocal());
+      }
     }
     return formattedDate;
   }
