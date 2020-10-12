@@ -22,7 +22,7 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
   void initState() {
     super.initState();
     doctorPersonalViewModel = new DoctorPersonalViewModel();
-    if (widget.addressList.isNotEmpty) {
+    if (widget.addressList != null && widget.addressList.length > 0) {
       addressResultList = widget.addressList;
     }
     this.getAddressTypes();

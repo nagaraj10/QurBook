@@ -117,10 +117,12 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                 child: MyProvidersDoctorsList(
                     doctorsModel: doctorsModel,
                     providersBloc: widget.providersBloc,
-                    myProviderState: widget.myProviderState,refresh: (){
+                    myProviderState: widget.myProviderState,
+                  refresh: (){
+                      print('tab refresh');
                       widget.refresh;
-
-                }))
+                  },
+                ))
             : Container(
                 child: Center(
                   child: Padding(

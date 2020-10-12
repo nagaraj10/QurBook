@@ -310,8 +310,4 @@ class AddFamilyUserInfoRepository {
     CommonResponse response = CommonResponse.fromJson(res);
     return response;
   }
-
-  
-
-
 }

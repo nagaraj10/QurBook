@@ -12,7 +12,6 @@ class City {
   City(
       {this.id,
       this.name,
-      this.stateId,
       this.isActive,
       this.createdOn,
       this.lastModifiedOn,
@@ -21,7 +20,7 @@ class City {
   City.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
     name = json[parameters.strName];
-    stateId = json[parameters.strstateId];
+    //stateId = jso[parameters.strstateId];
     isActive = json[parameters.strIsActive];
     createdOn = json[parameters.strCreatedOn];
     lastModifiedOn = json[parameters.strLastModifiedOn];
@@ -32,7 +31,7 @@ class City {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data[parameters.strId] = this.id;
     data[parameters.strName] = this.name;
-    data[parameters.strstateId] = this.stateId;
+    //data[parameters.strstateId] = this.stateId;
     data[parameters.strIsActive] = this.isActive;
     data[parameters.strCreatedOn] = this.createdOn;
     data[parameters.strLastModifiedOn] = this.lastModifiedOn;

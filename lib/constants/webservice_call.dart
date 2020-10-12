@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_query.dart' as variable;
+import 'package:myfhb/src/model/user/AddressTypeModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 
@@ -213,7 +215,7 @@ class WebserviceCall {
       String addressLine2,
       String zipcode,
       MyProfileModel myProfileModel,
-      UpdateRelationshipModel relationship){
+      UpdateRelationshipModel relationship) {
     var input = {};
     input[variable.qr_gender_p] = gender;
     input[variable.qr_bloodgroup_p] = bloodGroup;
@@ -227,19 +229,34 @@ class WebserviceCall {
 
     MyProfileResult profileResult = myProfileModel.result;
 
-    Map<String,dynamic> queryProfile = profileResult.toJson();
-    if(isUpdate){
+    Map<String, dynamic> queryProfile = profileResult.toJson();
+    if (isUpdate) {
       // NOTE if user try to update the role this would change
-      var relationshipCollection = {'userRelationshipCollection':[relationship.toJson()]};
+      var relationshipCollection = {
+        'userRelationshipCollection': [relationship.toJson()]
+      };
       queryProfile.addAll(relationshipCollection);
     }
+    profileResult.userAddressCollection3[0].addressType = AddressType(
+      id: '22f814a7-5b72-41aa-b5f7-7d2cd38d5da4',
+      code: 'RESADD',
+      name: 'Resident Address',
+      description: 'Resident Address',
+      sortOrder: null,
+      isActive: true,
+      createdBy: userID,
+      createdOn: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
+      lastModifiedOn: null,
+    );
+
     //TODO here only check user add/update flow for removing the id from useraddresscollection
-    Map<String,dynamic> copyOfQueryProfile = queryProfile;
-    Map<String,dynamic> addressObj = copyOfQueryProfile['userAddressCollection3'][0];
-    if(!isUpdate && addressObj['id']==null){
-      addressObj.removeWhere((key, value) => key=='id');
-    }else if(addressObj['id']==null){
-      addressObj.removeWhere((key, value) => key=='id');
+    Map<String, dynamic> copyOfQueryProfile = queryProfile;
+    Map<String, dynamic> addressObj =
+        copyOfQueryProfile['userAddressCollection3'][0];
+    if (!isUpdate && addressObj['id'] == null) {
+      addressObj.removeWhere((key, value) => key == 'id');
+    } else if (addressObj['id'] == null) {
+      addressObj.removeWhere((key, value) => key == 'id');
     }
     print('final objects $copyOfQueryProfile id has been removed');
     var profilequery = json.encode(copyOfQueryProfile);

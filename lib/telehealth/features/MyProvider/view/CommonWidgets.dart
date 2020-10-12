@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
@@ -75,36 +76,41 @@ class CommonWidgets {
   String getCity(HealthOrganizationResult result) {
     String city;
 
-    if(result.healthOrganization.healthOrganizationAddressCollection.isNotEmpty){
-      if(result.healthOrganization.healthOrganizationAddressCollection.length>0){
-        if(result.healthOrganization.healthOrganizationAddressCollection[0].city!=null){
-          city = result.healthOrganization.healthOrganizationAddressCollection[0].city.name;
-        }else{
+    if (result
+        .healthOrganization.healthOrganizationAddressCollection.isNotEmpty) {
+      if (result.healthOrganization.healthOrganizationAddressCollection.length >
+          0) {
+        if (result.healthOrganization.healthOrganizationAddressCollection[0]
+                .city !=
+            null) {
+          city = result.healthOrganization
+              .healthOrganizationAddressCollection[0].city.name;
+        } else {
           city = '';
         }
-      }else{
+      } else {
         city = '';
       }
-    }else{
+    } else {
       city = '';
     }
     return city;
   }
 
-  String getCityConfirmPage(Doctors doctors) {
+  String getCityDoctorsModel(Doctors doctors) {
     String city;
 
-    if(doctors.user.userAddressCollection3.isNotEmpty){
-      if(doctors.user.userAddressCollection3.length>0){
-        if(doctors.user.userAddressCollection3[0].city!=null){
+    if (doctors.user.userAddressCollection3.isNotEmpty) {
+      if (doctors.user.userAddressCollection3.length > 0) {
+        if (doctors.user.userAddressCollection3[0].city != null) {
           city = doctors.user.userAddressCollection3[0].city.name;
-        }else{
+        } else {
           city = '';
         }
-      }else{
+      } else {
         city = '';
       }
-    }else{
+    } else {
       city = '';
     }
     return city;
@@ -152,7 +158,6 @@ class CommonWidgets {
               ));
   }
 
-
   Widget getBookMarkedIconNew(Doctors docs, Function onClick) {
     return GestureDetector(
         onTap: () {
@@ -160,15 +165,15 @@ class CommonWidgets {
         },
         child: docs.isActive
             ? ImageIcon(
-          AssetImage('assets/icons/record_fav_active.png'),
-          color: Color(new CommonUtil().getMyPrimaryColor()),
-          size: fhbStyles.imageWidth,
-        )
+                AssetImage('assets/icons/record_fav_active.png'),
+                color: Color(new CommonUtil().getMyPrimaryColor()),
+                size: fhbStyles.imageWidth,
+              )
             : ImageIcon(
-          AssetImage('assets/icons/record_fav.png'),
-          color: Colors.black,
-          size: fhbStyles.imageWidth,
-        ));
+                AssetImage('assets/icons/record_fav.png'),
+                color: Colors.black,
+                size: fhbStyles.imageWidth,
+              ));
   }
 
   Widget getGridView() {
@@ -408,8 +413,8 @@ class CommonWidgets {
         decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: getDoctorStatus('${docs.isActive}', position)
-          //color: getDoctorStatus('5'),
-        ),
+            //color: getDoctorStatus('5'),
+            ),
       ),
     );
   }
@@ -466,7 +471,7 @@ class CommonWidgets {
         builder: (BuildContext context) {
           return AlertDialog(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             content: Container(
               width: MediaQuery.of(context).size.width - 20,
               child: Stack(
@@ -508,9 +513,14 @@ class CommonWidgets {
                                 getTextForDoctors('${docs.user.name}'),
                                 docs.specialization != null
                                     ? getDoctoSpecialist(
-                                    '${docs.specialization}')
+                                        '${docs.specialization}')
                                     : SizedBox(),
-                              getDoctorsAddress(docs.user.userAddressCollection3[0].city!=null?docs.user.userAddressCollection3[0].city.name:''),
+                                getDoctorsAddress(
+                                    docs.user.userAddressCollection3[0].city !=
+                                            null
+                                        ? docs.user.userAddressCollection3[0]
+                                            .city.name
+                                        : ''),
                                 /*(docs.languages != null &&
                                     docs.languages.length > 0)
                                     ? getTextForDoctors('Can Speak')
@@ -525,8 +535,15 @@ class CommonWidgets {
                         ],
                       ),
                       getSizedBox(20),
-                      getTextForDoctors((docs.doctorProfessionalDetailCollection.isNotEmpty ?? docs.doctorProfessionalDetailCollection.length>0??docs.doctorProfessionalDetailCollection[0].aboutMe!=null)?
-                      docs.doctorProfessionalDetailCollection[0].aboutMe : ''),
+                      getTextForDoctors((docs.doctorProfessionalDetailCollection
+                                  .isNotEmpty ??
+                              docs.doctorProfessionalDetailCollection.length >
+                                  0 ??
+                              docs.doctorProfessionalDetailCollection[0]
+                                      .aboutMe !=
+                                  null)
+                          ? docs.doctorProfessionalDetailCollection[0].aboutMe
+                          : ''),
                       /*getHospitalDetails(docs.professionalDetails != null
                           ? docs.professionalDetails[0].aboutMe
                           : ''),*/
@@ -543,4 +560,17 @@ class CommonWidgets {
         });
   }
 
+  String getMoneyWithForamt(String amount) {
+    if (amount != null && amount != '') {
+      var amountDouble = double.parse(amount);
+
+      FlutterMoneyFormatter fmf = FlutterMoneyFormatter(amount: amountDouble);
+
+      MoneyFormatterOutput fo = fmf.output;
+
+      return fo.withoutFractionDigits.toString();
+    } else {
+      return amount = '0';
+    }
+  }
 }

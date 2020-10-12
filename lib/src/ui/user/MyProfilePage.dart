@@ -75,23 +75,31 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return FutureBuilder<MyProfileModel>(
       future: addFamilyUserInfoRepository.getMyProfileInfoNew(userid),
       builder: (BuildContext context, AsyncSnapshot<MyProfileModel> snapshot) {
-        if(snapshot.connectionState==ConnectionState.done){
+        if (snapshot.connectionState == ConnectionState.done) {
           //* its done with fetching the data from remote
-          if(snapshot.hasData && snapshot.data != null){
+          if (snapshot.hasData && snapshot.data != null) {
             return getProfileWidget(snapshot.data.result);
-          }else{
+          } else {
             //todo proper error msg to users
             toast.getToast('something went wrong!', Colors.red);
             return getProfileWidget(null);
           }
-        }else if(snapshot.connectionState == ConnectionState.waiting){
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
           //* its fetching the data from remote
           return Container(
             child: Center(
-              child: Text('Hey Please Hangon!\nprofile is loading.',style: TextStyle(fontSize: 14,fontWeight: FontWeight.w500),textAlign: TextAlign.center,),
-            ),
+                child: Column(
+              children: [
+                CircularProgressIndicator(),
+                Text(
+                  'Hey Please Hangon!\nprofile is loading.',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                )
+              ],
+            )),
           );
-        }else{
+        } else {
           toast.getToast('${snapshot.error.toString()}', Colors.red);
           return getProfileWidget(null);
         }

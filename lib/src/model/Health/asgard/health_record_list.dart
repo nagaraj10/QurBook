@@ -39,7 +39,7 @@ class HealthResult {
   String isCompleted;
   String doctorId;
   List<HealthRecordCollection> healthRecordCollection;
-  bool isSelected;
+  bool isSelected = false;
 
   HealthResult(
       {this.id,

@@ -12,6 +12,7 @@ import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
@@ -34,12 +35,11 @@ class ProvidersListRepository {
   Future<TelehealthProviderModel> getTelehealthDoctorsList() async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    final response = await _helper.getTelehealthDoctorsList(
-        query.qr_User +
-            userID +
-            query.qr_slash +
-            query.qr_sections +
-            query.qr_medicalPreferences);
+    final response = await _helper.getTelehealthDoctorsList(query.qr_User +
+        userID +
+        query.qr_slash +
+        query.qr_sections +
+        query.qr_medicalPreferences);
     return TelehealthProviderModel.fromJson(response);
   }
 
@@ -85,28 +85,27 @@ class ProvidersListRepository {
     return DoctorBookMarkedSucessModel.fromJson(response);
   }
 
-
-  Future<AssociateRecordsResponse> associateRecords(
+  Future<AssociateSuccessResponse> associateRecords(
       String doctorId, String userId, List<String> healthRecords) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var associateRecord = {};
     //var parentAppoint = {};
-    associateRecord[qr_doctorid] = doctorId;
-    associateRecord[qr_userid] = userID;
-    associateRecord[qr_mediaMetaId] = healthRecords;
+    associateRecord[qr_shareToProvider] = doctorId;
+    associateRecord[qr_shareFromUser] = userID;
+    associateRecord[qr_metadata] = healthRecords;
     var jsonString = convert.jsonEncode(associateRecord);
     print(jsonString + '******************');
-    final response = await _helper.associateRecords(qr_sharerecord, jsonString);
-    return AssociateRecordsResponse.fromJson(response);
+    String queryForUrl = qr_sharerecord + qr_shareToType + qr_Doctor;
+    final response = await _helper.associateRecords(queryForUrl, jsonString);
+    return AssociateSuccessResponse.fromJson(response);
   }
 
-  Future<HealthOrganizationModel> getHealthOrganizationFromDoctor(String doctorId) async {
-
+  Future<HealthOrganizationModel> getHealthOrganizationFromDoctor(
+      String doctorId) async {
     print(doctorId);
-    final response = await _helper.getHealthOrgApi(
-        query.qr_provider_mapping + qr_doctor + doctorId);
+    final response = await _helper
+        .getHealthOrgApi(query.qr_provider_mapping + qr_doctor + doctorId);
     return HealthOrganizationModel.fromJson(response);
   }
-
 }

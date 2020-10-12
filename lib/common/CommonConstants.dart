@@ -241,6 +241,10 @@ class CommonConstants {
   static CountryMetrics countryMetrics;
   static UnitsMesurements unitsMeasurements;
 
+  static const String strQueryString = '?';
+  static const String strGetProfilePic = 'sections=profilePicture';
+  static const String strUserQuery = 'user/';
+
   factory CommonConstants() => _instance;
 
   Future<CountryMetrics> getCountryMetrics() async {

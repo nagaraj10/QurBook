@@ -134,15 +134,16 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       children: [
         Expanded(
           child: Text(
-            "Health-Org",
+            HealthOrg,
             style: TextStyle(
               fontWeight: FontWeight.w500,
+              fontSize: 16,
             ),
           ),
         ),
-        Icon(Icons.notifications),
+        /*Icon(Icons.notifications),
         new SwitchProfile()
-            .buildActions(context, _keyLoader, callBackToRefresh),
+            .buildActions(context, _keyLoader, callBackToRefresh),*/
         // Icon(Icons.more_vert),
       ],
     );
@@ -277,7 +278,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                           Container(
                             child: Center(
                               child: TextWidget(
-                                  text:'INR '+getFees(eachHospitalModel[i]),
+                                  text:'INR '+commonWidgets.getMoneyWithForamt(getFees(eachHospitalModel[i])),
                                   fontsize: 12.0,
                                   fontWeight: FontWeight.w400,
                                   colors: Colors.blue[800]),

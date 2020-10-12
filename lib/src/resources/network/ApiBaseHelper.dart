@@ -467,7 +467,6 @@ class ApiBaseHelper {
 
         break;
 
-
       case 500:
         var responseJson = convert.jsonDecode(response.body.toString());
 
@@ -1089,6 +1088,7 @@ class ApiBaseHelper {
 
   Future<dynamic> updateSelfProfileNew(String url, String jsonBody) async {
     var responseJson;
+    print(jsonBody);
     try {
       final response = await http.put(_baseUrl + url,
           body: jsonBody,

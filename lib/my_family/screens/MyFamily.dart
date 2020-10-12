@@ -345,7 +345,9 @@ class _MyFamilyState extends State<MyFamily> {
                         color: Color(fhbColors.bgColorContainer),
                         child: Center(
                           child: Text(
-                            fulName != null ? fulName[0].toUpperCase() : '',
+                            data.child != null
+                                ? data.child.firstName[0].toUpperCase()
+                                : '',
                             style: TextStyle(
                                 fontSize: 22,
                                 color: Color(CommonUtil().getMyPrimaryColor())),
