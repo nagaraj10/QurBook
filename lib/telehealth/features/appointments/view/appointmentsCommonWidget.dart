@@ -83,9 +83,13 @@ class AppointmentsCommonWidget {
     List<String> voiceIds = new List();
 
     String notesCount =
-        doc.healthRecord.notes == null ? 0.toString() : 1.toString();
+        doc.healthRecord.notes == null || doc.healthRecord.notes == ''
+            ? 0.toString()
+            : 1.toString();
     String voiceNotesCount =
-        doc.healthRecord.voice == null ? 0.toString() : 1.toString();
+        doc.healthRecord.voice == null || doc.healthRecord.voice == ''
+            ? 0.toString()
+            : 1.toString();
     int healthRecord = doc.healthRecord.prescription == null
         ? 0
         : doc.healthRecord.prescription.length;

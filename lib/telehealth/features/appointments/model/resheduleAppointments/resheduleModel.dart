@@ -9,19 +9,17 @@ class ResheduleModel {
   ResheduleModel({this.isSuccess, this.message, this.result});
 
   ResheduleModel.fromJson(Map<String, dynamic> json) {
-    isSuccess = json[parameters.strIsSuccess];
-    message = json[parameters.strMessage];
-    result = json[parameters.dataResult] != null
-        ? new ResheduleResult.fromJson(json[parameters.dataResult])
-        : null;
+    isSuccess = json['isSuccess'];
+    message = json['message'];
+    result = json['result'] != null ? new ResheduleResult.fromJson(json['result']) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strIsSuccess] = this.isSuccess;
-    data[parameters.strMessage] = this.message;
+    data['isSuccess'] = this.isSuccess;
+    data['message'] = this.message;
     if (this.result != null) {
-      data[parameters.dataResult] = this.result.toJson();
+      data['result'] = this.result.toJson();
     }
     return data;
   }

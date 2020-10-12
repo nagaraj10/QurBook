@@ -141,4 +141,5 @@ const String strRefund_amount='refund_amount';
 const String strTotal_amount='total_amount';
 const String strTransaction_id='transaction_id';
 const String strCreator_name='creator_name';
+const String strHealthOrganization='healthOrganization';
 const String strCreated_at='created_at';

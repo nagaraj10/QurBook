@@ -8,13 +8,17 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/my_providers/bloc/providers_block.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/healthOrganization/HealthOrganization.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/DoctorTimeSlotWidget.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
+    as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
@@ -128,16 +132,16 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               onPressed: () {
                                 goToChatIntegration(widget.doc);
                               }),
-                          SizedBoxWidget(
-                            height: (widget.hour == Constants.STATIC_HOUR ||
-                                    widget.minute == Constants.STATIC_HOUR)
-                                ? 0
-                                : 15,
-                          ),
+//                          SizedBoxWidget(
+//                            height: (widget.hour == Constants.STATIC_HOUR ||
+//                                widget.minute == Constants.STATIC_HOUR)
+//                                ? 0
+//                                : 15,
+//                          ),
                           SizedBoxWidget(
                             height: widget.doc?.doctor?.specialization == null
-                                ? 30
-                                : 40,
+                                ? 10
+                                : 20,
                           ),
                           commonWidget.count(widget.doc.slotNumber),
                           TextWidget(
@@ -206,7 +210,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         doctorId, doctorName, doctorPic, context);
   }
 
-  void navigateToProviderScreen(doc, isReshedule) {
+  void navigateToProviderScreen(Past doc, isReshedule) async {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -311,7 +315,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     cancelAppointment(appointments).then((value) {
       if (value == null) {
         toast.getToast(Constants.BOOKING_CANCEL, Colors.red);
-      } else if ( value.isSuccess == true) {
+      } else if (value.isSuccess == true) {
         widget.onChanged(Constants.callBack);
         toast.getToast(Constants.YOUR_BOOKING_SUCCESS, Colors.green);
       } else {
@@ -326,18 +330,19 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
       bookingIds.add(appointments[i].bookingId);
       dates.add(appointments[i].plannedStartDateTime);
     }
-    CancelAppointmentModel cancelAppointment =
-        await cancelAppointmentViewModel.fetchCancelAppointment(bookingIds, dates);
+    CancelAppointmentModel cancelAppointment = await cancelAppointmentViewModel
+        .fetchCancelAppointment(bookingIds, dates);
 
     return cancelAppointment;
   }
 
   void moveToBilsPage(HealthRecord healthRecord) async {
     List<String> paymentID = new List();
-    if (healthRecord!=null && healthRecord.bills != null &&
+    if (healthRecord != null &&
+        healthRecord.bills != null &&
         healthRecord.bills.length > 0) {
       for (int i = 0; i < healthRecord.bills.length; i++) {
-          paymentID.add(healthRecord.bills[i]);
+        paymentID.add(healthRecord.bills[i]);
       }
     }
     int position = await new AppointmentsCommonWidget()

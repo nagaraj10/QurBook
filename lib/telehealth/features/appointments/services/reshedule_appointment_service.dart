@@ -47,6 +47,7 @@ class ResheduleAppointmentsService {
               headers: await headerRequest.getRequestHeadersAuthContent(),
               //await headerRequest.getRequestHeadersTimeSlot(),
               body: jsonBody);
+//      print(response.body);
       responseJson = _returnResponse(response);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
