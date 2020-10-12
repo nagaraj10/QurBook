@@ -286,6 +286,9 @@ class CommonConstants {
   static const String strReferenceValue = 'reference-value';
   static const String strDataCodes = 'data-codes';
   static const String strSlash = '/';
+  static const String strQueryString = '?';
+  static const String strGetProfilePic= 'sections=profilePicture';
+  static const String strUserQuery= 'user/';
 }
 
 class ImageUrlUtils {

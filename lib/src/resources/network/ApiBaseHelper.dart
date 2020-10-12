@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/add_family_user_info/models/address_type_list.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -17,6 +18,7 @@ import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
+import 'package:myfhb/src/model/common_response.dart';
 import 'package:myfhb/src/model/error_map.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
@@ -639,8 +641,8 @@ class ApiBaseHelper {
 
       Dio dio = new Dio();
 
-      dio.options.headers[variable.straccept] = variable.strAcceptVal;
-      //dio.options.headers[variable.strContentType] = variable.strcntVal;
+      //dio.options.headers[variable.straccept] = variable.strAcceptVal;
+      dio.options.headers[variable.strContentType] = variable.strcntVal;
       dio.options.headers[variable.strauthorization] = authToken;
       String fileNoun = file.path.split('/').last;
 
@@ -1250,5 +1252,49 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
     return responseJson;
+  }
+
+  Future<dynamic> getUserProfilePic(String url) async{
+     CommonResponse responseJson;
+    try {
+      final response = await http.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeader());
+      //responseJson = _returnResponse(response);
+      responseJson = CommonResponse.fromJson(json.decode(response.body));
+      print(responseJson.toJson());
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
+  Future<dynamic> uploadUserProfilePicToServer(String url, File image) async {
+    String authToken =
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    //String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    String filename = image.path.split('/').last;
+    String fileType = filename.split('.')[1];
+    Dio dio = new Dio();
+    dio.options.headers['content-type'] = 'multipart/form-data';
+    dio.options.headers["authorization"] = authToken;
+    dio.options.headers["accept"] = 'application/json';
+    FormData formData= FormData.fromMap({
+      "profilePicture":await MultipartFile.fromFile(image.path,filename: filename,contentType:MediaType('image','${fileType}')),
+    });    
+    var response;
+    try {
+      response = await dio.put(_baseUrl + url, data: formData);
+
+      if (response.statusCode == 200) {
+        print(response.data.toString());
+        return response?.data;
+      } else {
+        return response?.data;
+      }
+    } on DioError catch (e) {
+      print(e.toString());
+      print(e);
+      return response?.data;
+    }
   }
 }

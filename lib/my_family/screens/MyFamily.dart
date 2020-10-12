@@ -312,7 +312,7 @@ class _MyFamilyState extends State<MyFamily> {
           child: Row(
             children: <Widget>[
               ClipOval(
-                child: position == 0
+                child: position != 0
                     ? data?.child?.profilePicThumbnailUrl == null
                         ? Container(
                             width: 60,
@@ -566,7 +566,6 @@ class _MyFamilyState extends State<MyFamily> {
                                       Navigator.of(_keyLoader.currentContext,
                                               rootNavigator: true)
                                           .pop();
-                                      Navigator.pop(dialogContext);
                                       rebuildFamilyBlock();
                                       setState(() {});
                                       // Reload
