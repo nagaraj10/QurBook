@@ -16,25 +16,25 @@ import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewMod
 import 'my_provider.dart';
 
 class MyProvidersDoctorsList extends StatefulWidget {
-
   final List<Doctors> doctorsModel;
   final ProvidersBloc providersBloc;
   final MyProviderState myProviderState;
   Function refresh;
 
   MyProvidersDoctorsList(
-      {this.doctorsModel, this.providersBloc, this.myProviderState,this.refresh});
+      {this.doctorsModel,
+      this.providersBloc,
+      this.myProviderState,
+      this.refresh});
 
   @override
   _MyProvidersDoctorsList createState() => _MyProvidersDoctorsList();
-
 }
 
-class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
+class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   List<Doctors> doctorsModel;
   MyProviderState myProviderState;
   MyProviderViewModel providerViewModel;
-
 
   @override
   void initState() {
@@ -47,7 +47,6 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
     return buildPlayersList();
   }
 
-
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
@@ -59,8 +58,10 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
                       searchKeyWord: CommonConstants.doctors,
                       doctorsModel: eachDoctorModel,
                       fromClass: router.rt_myprovider,
-                      hasData: true))
-                  .then((value) {
+                      hasData: true,
+                      isRefresh: () {
+                        widget.refresh();
+                      })).then((value) {
 //                providersBloc.getMedicalPreferencesList();
                 myProviderState.refreshPage();
               });
@@ -84,23 +85,23 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
                     ClipOval(
                         child: eachDoctorModel.user != null
                             ? eachDoctorModel.user.profilePicThumbnailUrl !=
-                            null
-                            ? Image.network(
-                          eachDoctorModel.user.profilePicThumbnailUrl,
-                          height: 50,
-                          width: 50,
-                          fit: BoxFit.cover,
-                        )
+                                    null
+                                ? Image.network(
+                                    eachDoctorModel.user.profilePicThumbnailUrl,
+                                    height: 50,
+                                    width: 50,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(
+                                    width: 50,
+                                    height: 50,
+                                    padding: EdgeInsets.all(12),
+                                    color: Color(fhbColors.bgColorContainer))
                             : Container(
-                            width: 50,
-                            height: 50,
-                            padding: EdgeInsets.all(12),
-                            color: Color(fhbColors.bgColorContainer))
-                            : Container(
-                            width: 50,
-                            height: 50,
-                            padding: EdgeInsets.all(12),
-                            color: Color(fhbColors.bgColorContainer))),
+                                width: 50,
+                                height: 50,
+                                padding: EdgeInsets.all(12),
+                                color: Color(fhbColors.bgColorContainer))),
                     SizedBox(
                       width: 20,
                     ),
@@ -114,9 +115,9 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
                           AutoSizeText(
                             eachDoctorModel.user != null
                                 ? eachDoctorModel.user.name != null
-                                ? toBeginningOfSentenceCase(
-                                eachDoctorModel.user.name)
-                                : ''
+                                    ? toBeginningOfSentenceCase(
+                                        eachDoctorModel.user.name)
+                                    : ''
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
@@ -128,17 +129,17 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
                           SizedBox(height: 5),
                           eachDoctorModel.specialization != null
                               ? AutoSizeText(
-                            eachDoctorModel.specialization != null
-                                ? toBeginningOfSentenceCase(
-                                eachDoctorModel.specialization)
-                                : '',
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w400,
-                                color: ColorUtils.lightgraycolor),
-                            textAlign: TextAlign.start,
-                          )
+                                  eachDoctorModel.specialization != null
+                                      ? toBeginningOfSentenceCase(
+                                          eachDoctorModel.specialization)
+                                      : '',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorUtils.lightgraycolor),
+                                  textAlign: TextAlign.start,
+                                )
                               : SizedBox(height: 0, width: 0),
                           SizedBox(height: 5),
                         ],
@@ -152,9 +153,9 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               InkWell(
-                                  onTap: (){
+                                  onTap: () {
                                     providerViewModel
-                                        .bookMarkDoctor(!(eachDoctorModel.isActive), eachDoctorModel)
+                                        .bookMarkDoctor(eachDoctorModel,false,'ListItem')
                                         .then((status) {
                                       if (status) {
                                         print('onClick');
@@ -164,16 +165,16 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
                                   },
                                   child: eachDoctorModel.isDefault == true
                                       ? ImageIcon(
-                                    AssetImage(
-                                        variable.icon_record_fav_active),
-                                    color: Color(new CommonUtil()
-                                        .getMyPrimaryColor()),
-                                    size: 20,
-                                  )
+                                          AssetImage(
+                                              variable.icon_record_fav_active),
+                                          color: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
+                                          size: 20,
+                                        )
                                       : Container(
-                                    height: 0,
-                                    width: 0,
-                                  )),
+                                          height: 0,
+                                          width: 0,
+                                        )),
                             ],
                           ),
                         )),
@@ -189,5 +190,4 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList>{
       itemCount: widget.doctorsModel.length,
     );
   }
-
 }

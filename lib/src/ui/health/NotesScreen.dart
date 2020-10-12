@@ -38,7 +38,10 @@ class NotesScreenList extends StatefulWidget {
       this.categoryDescription,
       this.mediaSelected,
       this.allowSelect,
-      this.mediaMeta,this.isNotesSelect,this.isAudioSelect,this.showDetails);
+      this.mediaMeta,
+      this.isNotesSelect,
+      this.isAudioSelect,
+      this.showDetails);
 
   @override
   _NotesScreenListState createState() => _NotesScreenListState();
@@ -114,18 +117,17 @@ class _NotesScreenListState extends State<NotesScreenList> {
           }
         },
         onTap: () {
-            if (widget.isNotesSelect && widget.showDetails==false) {
-              bool condition;
-              if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
-                condition = false;
-              } else {
-                condition = true;
-              }
-              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+          if (widget.isNotesSelect && widget.showDetails == false) {
+            bool condition;
+            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
-              // setState(() {});
-              widget.mediaSelected(mediaMetaInfoObj.id, condition);
-            
+            // setState(() {});
+            widget.mediaSelected(mediaMetaInfoObj.id, condition);
           } else {
             Navigator.push(
               context,
@@ -145,13 +147,11 @@ class _NotesScreenListState extends State<NotesScreenList> {
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
-                        color: const Color(fhbColors.cardShadowColor),
-                        blurRadius:
-                            16, // has the effect of softening the shadow
-                        spreadRadius:
-                            0, // has the effect of extending the shadow
-                        // has the effect of extending the shadow
-                      )
+                  color: const Color(fhbColors.cardShadowColor),
+                  blurRadius: 16, // has the effect of softening the shadow
+                  spreadRadius: 0, // has the effect of extending the shadow
+                  // has the effect of extending the shadow
+                )
               ],
             ),
             child: Row(
@@ -159,15 +159,20 @@ class _NotesScreenListState extends State<NotesScreenList> {
                 CircleAvatar(
                   radius: 25,
                   backgroundColor: const Color(fhbColors.bgColorContainer),
-                  child: Image.network(
-                   /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                  child: mediaMetaInfoObj.metadata.healthRecordCategory.logo !=
+                          null
+                      ? Image.network(
+                          /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                        : */Constants.BASE_URL +
-                            mediaMetaInfoObj.metadata.healthRecordCategory.logo,
-                    height: 25,
-                    width: 25,
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
+                        : */
+                          Constants.BASE_URL +
+                              mediaMetaInfoObj
+                                  .metadata.healthRecordCategory.logo,
+                          height: 25,
+                          width: 25,
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                        )
+                      : SizedBox(),
                 ),
                 SizedBox(
                   width: 20,
@@ -188,8 +193,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
                         softWrap: false,
                       ),
                       Text(
-                        new FHBUtils()
-                            .getFormattedDateString(mediaMetaInfoObj.metadata.healthRecordType.createdOn),
+                        new FHBUtils().getFormattedDateString(mediaMetaInfoObj
+                            .metadata.healthRecordType.createdOn),
                         style: TextStyle(color: Colors.grey[400], fontSize: 12),
                       )
                     ],
@@ -218,15 +223,19 @@ class _NotesScreenListState extends State<NotesScreenList> {
                             new CommonUtil()
                                 .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
-
                       (mediaMetaInfoObj.metadata.hasVoiceNotes != null &&
-                          mediaMetaInfoObj.metadata.hasVoiceNotes)
+                              mediaMetaInfoObj.metadata.hasVoiceNotes)
                           ? Icon(
-                        Icons.mic,
-                        color: Colors.black54,
-                      )
-                          : Container(),widget.mediaMeta.contains(mediaMetaInfoObj.id)
-                          ? Icon(Icons.done,color: Color(new CommonUtil().getMyPrimaryColor()),)
+                              Icons.mic,
+                              color: Colors.black54,
+                            )
+                          : Container(),
+                      widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                          ? Icon(
+                              Icons.done,
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                            )
                           : SizedBox(),
                     ],
                   ),
@@ -259,11 +268,11 @@ class _NotesScreenListState extends State<NotesScreenList> {
     );
   }
 
- Widget getNotes() {
+  Widget getNotes() {
     return StreamBuilder<ApiResponse<HealthRecordList>>(
       stream: _healthReportListForUserBlock.healthReportStreams,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
+      builder:
+          (context, AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
@@ -291,8 +300,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
             case Status.COMPLETED:
               //_healthReportListForUserBlock = null;
 
-              return getWidgetToDisplayOtherDocsList(
-                  snapshot.data.data);
+              return getWidgetToDisplayOtherDocsList(snapshot.data.data);
               break;
           }
         } else {

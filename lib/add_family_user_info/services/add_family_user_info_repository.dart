@@ -298,18 +298,16 @@ class AddFamilyUserInfoRepository {
   }
 
   Future<CommonResponse> getUserProfilePic(String userId) async {
-    String responseQuery =
-        '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
-    final response = await _helper.getUserProfilePic(responseQuery);
+    String responseQuery = '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
+    CommonResponse response = await _helper.getUserProfilePic(responseQuery);
 
     return response;
   }
 
-  Future<CommonResponse> updateUserProfilePic(String userId, File image) async {
-    String responseQuery =
-        '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
-    final response =
-        await _helper.uploadUserProfilePicToServer(responseQuery, image);
-    return CommonResponse.fromJson(response);
+  Future<CommonResponse> updateUserProfilePic(String userId,File image) async {
+    String responseQuery = '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}section=profilePicture';
+    var res = await _helper.uploadUserProfilePicToServer(responseQuery, image);
+    CommonResponse response = CommonResponse.fromJson(res);
+    return response;
   }
 }

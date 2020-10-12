@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -46,7 +47,6 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   List<Slots> slotsModel = new List<Slots>();
   ProvidersBloc _providersBloc;
   MyProvidersResponse myProvidersResponseList;
-  String placeHolder = null;
 
   @override
   void initState() {
@@ -222,17 +222,41 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       int i, List<HealthOrganizationResult> eachHospitalModel) {
     return Row(
       children: <Widget>[
-        placeHolder != null
-            ? ClipOval(
-                child: Image.network(
-                placeHolder,
+        CircleAvatar(
+          radius: 15,
+          child: ClipOval(
+              child: eachHospitalModel != null
+                  ? eachHospitalModel[i] != null
+                  ? /*myProfile.result.profilePicThumbnailUrl != null
+                              ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                                  myProfile.result.profilePicThumbnailUrl)
+                              :*/
+              Container(
+                  height: 50,
+                  width: 50,
+                  color: Color(fhbColors.bgColorContainer),
+                  child: Center(
+                    child: Text(
+                      eachHospitalModel[i].healthOrganization != null
+                          ? eachHospitalModel[i].healthOrganization.name!=null?
+                      eachHospitalModel[i].healthOrganization.name[0].toUpperCase()
+                          : '':'',
+                      style: TextStyle(
+                          color: Color(
+                              CommonUtil().getMyPrimaryColor())),
+                    ),
+                  ))
+                  : Container(
                 height: 50,
                 width: 50,
-                fit: BoxFit.cover,
-              ))
-            : CircleAvatar(
-                backgroundColor: Colors.greenAccent,
-                child: Icon(Icons.local_hospital)),
+                color: Color(fhbColors.bgColorContainer),
+              )
+                  : Container(
+                height: 50,
+                width: 50,
+                color: Color(fhbColors.bgColorContainer),
+              )),
+        ),
         SizedBox(
           width: 20,
         ),
@@ -279,7 +303,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                             child: Center(
                               child: TextWidget(
                                   text:'INR '+commonWidgets.getMoneyWithForamt(getFees(eachHospitalModel[i])),
-                                  fontsize: 12.0,
+                                  fontsize: 14.0,
                                   fontWeight: FontWeight.w400,
                                   colors: Colors.blue[800]),
                             ),

@@ -33,21 +33,19 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<bool> bookMarkDoctor(bool condition, Doctors doctorIds) async {
-    bool condition;
+  Future<bool> bookMarkDoctor(Doctors doctorIds,bool isPreferred,String isFrom) async {
 
     DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
-        await _providersListRepository.bookMarkDoctor(condition, doctorIds);
+        await _providersListRepository.bookMarkDoctor(doctorIds,isPreferred,isFrom);
 
     return doctorBookMarkedSucessModel.isSuccess;
   }
 
-  Future<bool> bookMarkHealthOrg(bool condition, Hospitals hospitals) async {
+  Future<bool> bookMarkHealthOrg(Hospitals hospitals,bool isPreferred,String isFrom) async {
     bool condition;
 
     DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
-        await _providersListRepository.bookMarkHealthOrganizaton(
-            condition, hospitals);
+        await _providersListRepository.bookMarkHealthOrganizaton(hospitals,isPreferred,isFrom);
 
     return doctorBookMarkedSucessModel.isSuccess;
   }
