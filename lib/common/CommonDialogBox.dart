@@ -1765,6 +1765,10 @@ class CommonDialogBox {
 
                 Navigator.of(context).pop();
                 Navigator.of(context).pop();
+              } else if (categoryName == Constants.STR_NOTES) {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                onRefresh(true);
               } else {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
