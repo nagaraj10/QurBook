@@ -238,7 +238,7 @@ class CommonConstants {
   static UnitsMesurements unitsMeasurements;
 
   static const String strQueryString = '?';
-  static const String strGetProfilePic = 'sections=profilePicture';
+  static const String strGetProfilePic = 'section=profilePicture';
   static const String strUserQuery = 'user/';
 
   factory CommonConstants() => _instance;

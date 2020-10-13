@@ -7,12 +7,14 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:myfhb/add_family_user_info/models/address_type_list.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -24,7 +26,7 @@ import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
 import 'package:myfhb/src/resources/network/AppException.dart';
 import 'package:myfhb/src/ui/authentication/SignInScreen.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
-import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
+import 'package:myfhb/telehealth/features/chat/model/GetRecordIdsFilter.dart';
 
 import 'AppException.dart';
 import 'package:http_parser/http_parser.dart';
@@ -182,6 +184,7 @@ class ApiBaseHelper {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
     var responseJson;
+    print(url);
     try {
       final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersForSearch());
@@ -1015,21 +1018,21 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<GetMetaFileURLModel> getMetaIdURL(
+  Future<GetRecordIdsFilter> getMetaIdURL(
       List<String> recordIds, String patientId) async {
     var inputBody = {};
-    inputBody[META_IDS] = recordIds;
-    inputBody[INCLUDE_MEDIA] = true;
+    inputBody[strUserId] = patientId;
+    inputBody[HEALTH_RECORDIDS] = recordIds;
     var jsonString = convert.jsonEncode(inputBody);
-    final response = await getApiForGetMetaURL(jsonString, patientId);
-    return GetMetaFileURLModel.fromJson(response);
+    final response = await getApiForGetMetaURL(jsonString);
+    return GetRecordIdsFilter.fromJson(response);
   }
 
-  Future<dynamic> getApiForGetMetaURL(String jsonBody, String patientId) async {
+  Future<dynamic> getApiForGetMetaURL(String jsonBody) async {
     var responseJson;
     try {
       final response = await http.post(
-          _baseUrl + qr_media_meta + patientId + qr_get_media_master,
+          _baseUrl + qr_health_record + qr_slash + qr_filter,
           headers: await headerRequest.getRequestHeader(),
           body: jsonBody);
       responseJson = _returnResponse(response);

@@ -1,6 +1,6 @@
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/services/createAppointmentService.dart';
-import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 
 class CreateAppointMentViewModel {
   CreateAppointmentService createAppointmentService =
@@ -16,7 +16,7 @@ class CreateAppointMentViewModel {
       bool isMedicalShared,
       bool isFollowUp,
       List<String> healthRecords,
-      {History doc}) async {
+      {Past doc}) async {
     try {
       CreateAppointmentModel bookAppointmentModel =
           await createAppointmentService.bookAppointment(

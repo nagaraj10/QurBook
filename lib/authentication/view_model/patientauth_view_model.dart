@@ -67,9 +67,9 @@ class AuthViewModel extends ChangeNotifier {
     return change;
   }
 
-  Future<dynamic> verifyMyOTP(Map<String, dynamic> params) async {
+  Future<AddFamilyOTPResponse> verifyMyOTP(Map<String, dynamic> params) async {
     var otpResponse = await _authService.verifyUserOtpService(params);
-    //AddFamilyOTPResponse response = AddFamilyOTPResponse.fromJson(otpResponse);
-    return otpResponse;
+    AddFamilyOTPResponse response = AddFamilyOTPResponse.fromJson(otpResponse);
+    return response;
   }
 }

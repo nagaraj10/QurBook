@@ -137,6 +137,9 @@ class _UserAccountsState extends State<UserAccounts>
                               });
                               }else{
                                 FlutterToast().getToast('Unable to Fetch User Profile data',Colors.red);
+                                 setState(() {
+                                  _isEditable = false;
+                                });
                               }
                             }
                             sliverBarHeight = 220;

@@ -305,3 +305,4 @@ const String failed_get_connectivity = "Failed to get internet connectivity.";
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
 const String HealthOrg = 'Health Organization';
+const String HEALTH_RECORDIDS = 'healthRecordIds';

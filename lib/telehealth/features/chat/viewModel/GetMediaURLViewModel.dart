@@ -1,16 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
-import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
+import 'package:myfhb/telehealth/features/chat/model/GetRecordIdsFilter.dart';
 
 class GetMediaFileViewModel extends ChangeNotifier {
   ApiBaseHelper _helper = ApiBaseHelper();
-  GetMetaFileURLModel getMetaFileURLModel = new GetMetaFileURLModel();
+  GetRecordIdsFilter getMetaFileURLModel = new GetRecordIdsFilter();
 
 
-  Future<GetMetaFileURLModel> getMediaMetaURL(
+  Future<GetRecordIdsFilter> getMediaMetaURL(
       List<String> recordIds,String patientId) async {
     try {
-      GetMetaFileURLModel getMetaFileURLModel =
+      GetRecordIdsFilter getMetaFileURLModel =
       await _helper.getMetaIdURL(recordIds,patientId);
       getMetaFileURLModel = getMetaFileURLModel;
       return getMetaFileURLModel;
