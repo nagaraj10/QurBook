@@ -8,6 +8,7 @@ import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
@@ -26,6 +27,7 @@ class BillsList extends StatefulWidget {
   final bool isNotesSelect;
   final bool isAudioSelect;
   final bool showDetails;
+  final bool allowAttach;
 
   BillsList(
       this.completeData,
@@ -38,7 +40,8 @@ class BillsList extends StatefulWidget {
       this.mediaMeta,
       this.isNotesSelect,
       this.isAudioSelect,
-      this.showDetails);
+      this.showDetails,
+      this.allowAttach);
 
   @override
   _BillsListState createState() => new _BillsListState();
@@ -46,6 +49,7 @@ class BillsList extends StatefulWidget {
 
 class _BillsListState extends State<BillsList> {
   HealthReportListForUserBlock _healthReportListForUserBlock;
+  List<HealthRecordCollection> mediMasterId = new List();
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -114,6 +118,7 @@ class _BillsListState extends State<BillsList> {
       },
       onTap: () {
         if (widget.allowSelect && widget.showDetails == false) {
+         if(widget.allowAttach){
           bool condition;
           if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
             condition = false;
@@ -121,9 +126,24 @@ class _BillsListState extends State<BillsList> {
             condition = true;
           }
           mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+          if (mediaMetaInfoObj != null &&
+              mediaMetaInfoObj.healthRecordCollection.length > 0) {
+            mediMasterId = new CommonUtil().getMetaMasterIdList(mediaMetaInfoObj);
+            widget.mediaSelected(mediMasterId[0].id, condition);
+          }
+        }else{
+           bool condition;
+           if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+             condition = false;
+           } else {
+             condition = true;
+           }
+           mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
-          widget.mediaSelected(mediaMetaInfoObj.id, condition);
-        } else {
+           widget.mediaSelected(mediaMetaInfoObj.id, condition);
+         }
+        }
+        else {
           Navigator.push(
             context,
             MaterialPageRoute(
