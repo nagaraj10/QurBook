@@ -365,7 +365,7 @@ class RecordInfoCard {
             ],
           ),
           Text(
-            metaInfo.fileName,
+            metaInfo.fileName != null ? metaInfo.fileName : '',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           metaInfo.memoText != null

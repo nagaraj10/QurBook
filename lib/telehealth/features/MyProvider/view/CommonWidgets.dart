@@ -62,6 +62,23 @@ class CommonWidgets {
     );
   }
 
+  Widget getDoctoSpecialistOnly(Doctors eachDoctorModel) {
+    return Text(
+      (eachDoctorModel.doctorProfessionalDetailCollection != null &&
+              eachDoctorModel.doctorProfessionalDetailCollection.length > 0)
+          ? eachDoctorModel.doctorProfessionalDetailCollection[0].specialty !=
+                  null
+              ? toBeginningOfSentenceCase(eachDoctorModel
+                  .doctorProfessionalDetailCollection[0].specialty.name)
+              : ''
+          : '',
+      style: TextStyle(
+          color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_doc_specialist),
+      softWrap: false,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
   Widget getDoctorsAddress(String address) {
     return Text(
       address != null ? toBeginningOfSentenceCase(address) : '',
@@ -120,7 +137,7 @@ class CommonWidgets {
   String getCityHospital(Hospitals hospital) {
     String city;
 
-    if(hospital!=null){
+    if (hospital != null) {
       if (hospital.healthOrganizationAddressCollection.isNotEmpty) {
         if (hospital.healthOrganizationAddressCollection.length > 0) {
           if (hospital.healthOrganizationAddressCollection[0].city != null) {
@@ -316,8 +333,16 @@ class CommonWidgets {
                               children: <Widget>[
                                 getTextForDoctors('${docs.name}'),
                                 docs.specialization != null
-                                    ? getDoctoSpecialist(
-                                        '${docs.specialization}')
+                                    ? getDoctoSpecialist((docs
+                                                    .professionalDetails !=
+                                                null &&
+                                            docs.professionalDetails.length > 0)
+                                        ? docs.professionalDetails[0]
+                                                    .specialty !=
+                                                null
+                                            ? '${docs.professionalDetails[0].specialty.name}'
+                                            : ''
+                                        : '')
                                     : SizedBox(),
                                 getDoctorsAddress('${docs.city}'),
                                 (docs.languages != null &&

@@ -904,11 +904,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           if (value.isSuccess == true &&
               value.message == appointmentCreatedMessage) {
             if (value.result.paymentInfo.payload.paymentGatewayDetail
-                    .responseInfo.result.paymentRequest.longurl !=
+                    .responseInfo.longurl !=
                 null) {
               goToPaymentPage(
                   value.result.paymentInfo.payload.paymentGatewayDetail
-                      .responseInfo.result.paymentRequest.longurl,
+                      .responseInfo.longurl,
                   value.result.paymentInfo.payload.payment.id);
             } else {
               pr.hide();
@@ -1028,11 +1028,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               commonWidgets.getSizedBox(5.0),
               Row(children: [
                 Expanded(
-                    child: widget.docs[widget.doctorListPos].specialization !=
-                            null
-                        ? commonWidgets.getDoctoSpecialist(
-                            '${widget.docs[widget.doctorListPos].specialization}')
-                        : SizedBox()),
+                    child:
+                        widget.docs[widget.doctorListPos].specialization != null
+                            ? commonWidgets.getDoctoSpecialistOnly(
+                                widget.docs[widget.doctorListPos])
+                            : SizedBox()),
 
                 /*widget.docs[widget.i].fees != null
                     ? widget.docs[widget.i].fees.consulting != null
@@ -1188,7 +1188,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   String getFees(HealthOrganizationResult result) {
     String fees;
-    if (result.doctorFeeCollection.isNotEmpty) {
+    if (result.doctorFeeCollection != null) {
       if (result.doctorFeeCollection.length > 0) {
         for (int i = 0; i < result.doctorFeeCollection.length; i++) {
           String feesCode = result.doctorFeeCollection[i].feeType.code;

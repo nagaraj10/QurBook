@@ -29,7 +29,7 @@ class HealthOrganization extends StatefulWidget {
   @override
   _HealthOrganizationState createState() => _HealthOrganizationState();
 
-  HealthOrganization({this.doctors,this.index}) {}
+  HealthOrganization({this.doctors, this.index}) {}
 }
 
 class _HealthOrganizationState extends State<HealthOrganization> {
@@ -60,7 +60,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     return Scaffold(
       appBar: PreferredSize(
           preferredSize:
-          Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
+              Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
           child: getDoctorBar(widget.doctors, widget.index)),
       body: Container(
           child: Column(
@@ -111,57 +111,63 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     );
   }
 
-  Widget getDoctorBar(List<Doctors> doctors,int index) {
+  Widget getDoctorBar(List<Doctors> doctors, int index) {
     return AppBar(
-      automaticallyImplyLeading: false,
-    flexibleSpace: SafeArea(
-      child: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: <Color>[
+        automaticallyImplyLeading: false,
+        flexibleSpace: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: <Color>[
                   Color(new CommonUtil().getMyPrimaryColor()),
                   Color(new CommonUtil().getMyGredientColor())
                 ],
-                stops: [
+                    stops: [
                   0.3,
                   1.0
                 ])),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 10),
-                  child: GestureDetector(
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: GestureDetector(
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                        ),
+                        onTap: () {
+                          //Add code for tapping back
+                          Navigator.pop(context);
+                        },
+                      ),
                     ),
-                    onTap: () {
-                      //Add code for tapping back
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                CircleAvatar(
-                  backgroundImage: NetworkImage(doctors[index].user.profilePicThumbnailUrl!=null?doctors[index].user.profilePicThumbnailUrl:''),
-                  radius: 20,
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                Container(
-                    child: Expanded(
+                    SizedBox(
+                      width: 5,
+                    ),
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          doctors[index].user.profilePicThumbnailUrl != null
+                              ? doctors[index].user.profilePicThumbnailUrl
+                              : ''),
+                      radius: 20,
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Container(
+                        child: Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(doctors[index].user.name!=null?doctors[index].user.name:'',
+                          Text(
+                              doctors[index].user.name != null
+                                  ? doctors[index].user.name
+                                  : '',
                               textAlign: TextAlign.left,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
@@ -170,7 +176,27 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                                   fontSize: 16,
                                   color: Colors.white)),
                           Text(
-                            doctors[index].specialization!=null?doctors[index].specialization:'',
+                            (doctors[index].doctorProfessionalDetailCollection !=
+                                        null &&
+                                    doctors[index]
+                                            .doctorProfessionalDetailCollection
+                                            .length >
+                                        0)
+                                ? doctors[index]
+                                            .doctorProfessionalDetailCollection[
+                                                0]
+                                            .specialty !=
+                                        null
+                                    ? doctors[index]
+                                                .doctorProfessionalDetailCollection[
+                                                    0]
+                                                .specialty
+                                                .name !=
+                                            null
+                                        ? '${doctors[index].doctorProfessionalDetailCollection[0].specialty.name}'
+                                        : ''
+                                    : ''
+                                : '',
                             style: TextStyle(
                                 fontFamily: 'Poppins',
                                 fontSize: 12,
@@ -180,7 +206,9 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                             height: 5,
                           ),
                           Text(
-                            ''+commonWidgets.getCityDoctorsModel(doctors[index]),
+                            '' +
+                                commonWidgets
+                                    .getCityDoctorsModel(doctors[index]),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
                             style: TextStyle(
@@ -191,13 +219,12 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                         ],
                       ),
                     ))
+                  ],
+                ),
               ],
             ),
-          ],
-        ),
-      ),
-    )
-    );
+          ),
+        ));
   }
 
   Widget hospitalListItem(
@@ -250,14 +277,14 @@ class _HealthOrganizationState extends State<HealthOrganization> {
             getHospitalWidget(i, docs),
             commonWidgets.getSizedBox(20.0),
             DoctorSessionTimeSlot(
-                date: _selectedValue.toString(),
-                doctorId: widget.doctors[widget.index].id,
-                docs: widget.doctors,
-                isReshedule: false,
-                i: i,
-                healthOrganizationId: docs[i].healthOrganization.id,
-                healthOrganizationResult: docs,
-                doctorListPos: widget.index,
+              date: _selectedValue.toString(),
+              doctorId: widget.doctors[widget.index].id,
+              docs: widget.doctors,
+              isReshedule: false,
+              i: i,
+              healthOrganizationId: docs[i].healthOrganization.id,
+              healthOrganizationResult: docs,
+              doctorListPos: widget.index,
             ),
           ],
         ),
@@ -278,35 +305,42 @@ class _HealthOrganizationState extends State<HealthOrganization> {
           child: ClipOval(
               child: eachHospitalModel != null
                   ? eachHospitalModel[i] != null
-                  ? /*myProfile.result.profilePicThumbnailUrl != null
+                      ? /*myProfile.result.profilePicThumbnailUrl != null
                               ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
                                   myProfile.result.profilePicThumbnailUrl)
                               :*/
-              Container(
-                  height: 50,
-                  width: 50,
-                  color: Color(fhbColors.bgColorContainer),
-                  child: Center(
-                    child: Text(
-                      eachHospitalModel[i].healthOrganization != null
-                          ? eachHospitalModel[i].healthOrganization.name!=null?
-                      eachHospitalModel[i].healthOrganization.name[0].toUpperCase()
-                          : '':'',
-                      style: TextStyle(
-                          color: Color(
-                              CommonUtil().getMyPrimaryColor())),
-                    ),
-                  ))
+                      Container(
+                          height: 50,
+                          width: 50,
+                          color: Color(fhbColors.bgColorContainer),
+                          child: Center(
+                            child: Text(
+                              eachHospitalModel[i].healthOrganization != null
+                                  ? eachHospitalModel[i]
+                                              .healthOrganization
+                                              .name !=
+                                          null
+                                      ? eachHospitalModel[i]
+                                          .healthOrganization
+                                          .name[0]
+                                          .toUpperCase()
+                                      : ''
+                                  : '',
+                              style: TextStyle(
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor())),
+                            ),
+                          ))
+                      : Container(
+                          height: 50,
+                          width: 50,
+                          color: Color(fhbColors.bgColorContainer),
+                        )
                   : Container(
-                height: 50,
-                width: 50,
-                color: Color(fhbColors.bgColorContainer),
-              )
-                  : Container(
-                height: 50,
-                width: 50,
-                color: Color(fhbColors.bgColorContainer),
-              )),
+                      height: 50,
+                      width: 50,
+                      color: Color(fhbColors.bgColorContainer),
+                    )),
         ),
         SizedBox(
           width: 20,
@@ -331,37 +365,39 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                 textAlign: TextAlign.start,
               ),
               SizedBox(height: 5),
-               AutoSizeText(
-                 ''+commonWidgets.getCity(eachHospitalModel[i]),
-                 maxLines: 1,
-                 style: TextStyle(
-                     fontSize: 13.0,
-                     fontWeight: FontWeight.w400,
-                     color: ColorUtils.lightgraycolor),
-               ),
+              AutoSizeText(
+                '' + commonWidgets.getCity(eachHospitalModel[i]),
+                maxLines: 1,
+                style: TextStyle(
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.lightgraycolor),
+              ),
               SizedBox(height: 5),
             ],
           ),
         ),
         Expanded(
-                    flex: 3,
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(
-                            child: Center(
-                              child: TextWidget(
-                                  text:'INR '+commonWidgets.getMoneyWithForamt(getFees(eachHospitalModel[i])),
-                                  fontsize: 14.0,
-                                  fontWeight: FontWeight.w400,
-                                  colors: Colors.blue[800]),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
+            flex: 3,
+            child: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    child: Center(
+                      child: TextWidget(
+                          text: 'INR ' +
+                              commonWidgets.getMoneyWithForamt(
+                                  getFees(eachHospitalModel[i])),
+                          fontsize: 14.0,
+                          fontWeight: FontWeight.w400,
+                          colors: Colors.blue[800]),
+                    ),
+                  ),
+                ],
+              ),
+            )),
       ],
     );
   }
@@ -374,20 +410,19 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   }
 
   String getFees(HealthOrganizationResult result) {
-
     String fees;
-    if(result.doctorFeeCollection.isNotEmpty){
-      if(result.doctorFeeCollection.length>0){
-        for(int i = 0;i<result.doctorFeeCollection.length;i++){
+    if (result.doctorFeeCollection.isNotEmpty) {
+      if (result.doctorFeeCollection.length > 0) {
+        for (int i = 0; i < result.doctorFeeCollection.length; i++) {
           String feesCode = result.doctorFeeCollection[i].feeType.code;
-          if(feesCode==CONSULTING){
-             fees = result.doctorFeeCollection[i].fee;
+          if (feesCode == CONSULTING) {
+            fees = result.doctorFeeCollection[i].fee;
           }
         }
-      }else{
+      } else {
         fees = '';
       }
-    }else{
+    } else {
       fees = '';
     }
     return fees;

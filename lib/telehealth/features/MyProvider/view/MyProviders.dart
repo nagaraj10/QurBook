@@ -289,29 +289,10 @@ class _MyProvidersState extends State<MyProviders> {
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
-
-              /*
               Row(children: [
                 Expanded(
-                    child: docs[i].professionalDetails != null
-                        ? docs[i].professionalDetails[0].specialty != null
-                            ? docs[i].professionalDetails[0].specialty.name !=
-                                    null
-                                ? commonWidgets.getDoctoSpecialist(
-                                    '${docs[i].professionalDetails[0].specialty.name}')
-                                : SizedBox()
-                            : SizedBox()
-                        : SizedBox()),
-                commonWidgets.get(
-                  text: docs[i].fees != null
-                      ? 'INR ${docs[i].fees.consulting.fee}'
-                      : 'INR 0.00',
-                ),
-              ]), */
-
-              Row(children: [
-                Expanded(
-                    child: docs[i].professionalDetails != null
+                    child: (docs[i].professionalDetails != null &&
+                            docs[i].professionalDetails.length > 0)
                         ? docs[i].professionalDetails[0].specialty != null
                             ? docs[i].professionalDetails[0].specialty.name !=
                                     null
@@ -543,11 +524,24 @@ class _MyProvidersState extends State<MyProviders> {
                         textAlign: TextAlign.start,
                       ),
                       SizedBox(height: 5),
-                      eachDoctorModel.specialization != null
+                      eachDoctorModel.doctorProfessionalDetailCollection != null
                           ? AutoSizeText(
-                              eachDoctorModel.specialization != null
-                                  ? toBeginningOfSentenceCase(
-                                      eachDoctorModel.specialization)
+                              (eachDoctorModel.doctorProfessionalDetailCollection !=
+                                          null &&
+                                      eachDoctorModel
+                                              .doctorProfessionalDetailCollection
+                                              .length >
+                                          0)
+                                  ? eachDoctorModel
+                                              .doctorProfessionalDetailCollection[
+                                                  0]
+                                              .specialty !=
+                                          null
+                                      ? toBeginningOfSentenceCase(eachDoctorModel
+                                          .doctorProfessionalDetailCollection[0]
+                                          .specialty
+                                          .name)
+                                      : ''
                                   : '',
                               maxLines: 1,
                               style: TextStyle(
@@ -683,9 +677,26 @@ class _MyProvidersState extends State<MyProviders> {
                   commonWidgets.getSizedBox(5.0),
                   Row(children: [
                     Expanded(
-                        child: docs[i].specialization != null
-                            ? commonWidgets
-                                .getDoctoSpecialist('${docs[i].specialization}')
+                        child: (docs[i].doctorProfessionalDetailCollection !=
+                                    null &&
+                                docs[i]
+                                        .doctorProfessionalDetailCollection
+                                        .length >
+                                    0)
+                            ? docs[i]
+                                        .doctorProfessionalDetailCollection[0]
+                                        .specialty !=
+                                    null
+                                ? docs[i]
+                                            .doctorProfessionalDetailCollection[
+                                                0]
+                                            .specialty
+                                            .name !=
+                                        null
+                                    ? commonWidgets.getDoctoSpecialist(
+                                        '${docs[i].doctorProfessionalDetailCollection[0].specialty.name}')
+                                    : SizedBox()
+                                : SizedBox()
                             : SizedBox()),
                     /*docs[i].fees != null
                       ? docs[i].fees.consulting != null
