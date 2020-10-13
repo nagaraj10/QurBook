@@ -298,7 +298,7 @@ class AddFamilyUserInfoRepository {
   }
 
   Future<CommonResponse> getUserProfilePic(String userId) async {
-    String responseQuery = '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}${CommonConstants.strGetProfilePic}';
+    String responseQuery = '${CommonConstants.strUserQuery}$userId${CommonConstants.strQueryString}section=profilePicture';
     CommonResponse response = await _helper.getUserProfilePic(responseQuery);
 
     return response;

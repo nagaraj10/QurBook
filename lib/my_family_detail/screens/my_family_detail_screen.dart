@@ -74,6 +74,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   var dateOfBirthController = TextEditingController();
   FocusNode dateOfBirthFocus = FocusNode();
 
+  var cntrlr_addr_one = TextEditingController(text: '');
+  var cntrlr_addr_two = TextEditingController(text: '');
+  var cntrlr_addr_city = TextEditingController(text: '');
+  var cntrlr_addr_state = TextEditingController(text: '');
+  var cntrlr_addr_zip = TextEditingController(text: '');
+  final _formkey = GlobalKey<FormState>();
+
   RelationShipResponseList relationShipResponseList;
   RelationsShipModel selectedRelationShip;
 
@@ -216,6 +223,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipController = TextEditingController(text: '');
     relationShipFocus = FocusNode();
 
+
+  cntrlr_addr_one = TextEditingController(text: '');
+  cntrlr_addr_two = TextEditingController(text: '');
+  cntrlr_addr_city = TextEditingController(text: '');
+  cntrlr_addr_state = TextEditingController(text: '');
+  cntrlr_addr_zip = TextEditingController(text: '');
+
     if (sharedbyme.child != null) {
       if (sharedbyme.child.firstName != null &&
           sharedbyme.child.lastName != null) {
@@ -242,13 +256,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   myProf.result.userContactCollection3[0].email;
             }
           }
-        }else{
+        } else {
           // this is non primary user
-          if(sharedbyme?.child?.userContactCollection3.isNotEmpty){
-             mobileNoController.text =
-                  sharedbyme?.child?.userContactCollection3[0].phoneNumber;
-              emailController.text =
-                  sharedbyme?.child?.userContactCollection3[0].email;
+          if (sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+            mobileNoController.text =
+                sharedbyme?.child?.userContactCollection3[0].phoneNumber;
+            emailController.text =
+                sharedbyme?.child?.userContactCollection3[0].email;
           }
         }
       } catch (e) {
@@ -301,6 +315,15 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     if (sharedbyme.child.dateOfBirth != null) {
       dateOfBirthController.text =
           new FHBUtils().getFormattedDateOnlyNew(sharedbyme.child.dateOfBirth);
+    }
+
+    if(sharedbyme?.child?.userAddressCollection3.length>0){
+      
+    cntrlr_addr_one.text = sharedbyme?.child?.userAddressCollection3[0].addressLine1;
+    cntrlr_addr_two.text = sharedbyme?.child?.userAddressCollection3[0].addressLine2;
+    cntrlr_addr_city.text = sharedbyme?.child?.userAddressCollection3[0].city.name;
+    cntrlr_addr_state.text = sharedbyme?.child?.userAddressCollection3[0].state.name;
+    cntrlr_addr_zip.text = sharedbyme?.child?.userAddressCollection3[0].pincode;
     }
 
     String profilebanner =
@@ -381,6 +404,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             ],
           ),
           _showDateOfBirthTextField(),
+          _userAddressInfo(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -1113,4 +1137,73 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   void dateOfBirthTapped() {
     _selectDate(context);
   }
+
+  Widget _userAddressInfo() {
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      child: Form(
+        key: _formkey,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: cntrlr_addr_one,
+              enabled: false,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_line_1.substring(0,CommonConstants.addr_line_1.length-1),
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'Address line1 can\'t be empty'
+                    : null;
+              },
+            ),
+            TextFormField(
+              controller: cntrlr_addr_two,
+              enabled: false,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_line_2.substring(0,CommonConstants.addr_line_2.length-1),
+              ),
+            ),
+            TextFormField(
+              controller: cntrlr_addr_city,
+              enabled: false,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_city.substring(0,CommonConstants.addr_city.length-1),
+              ),
+            ),
+            TextFormField(
+              controller: cntrlr_addr_state,
+              enabled: false,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_state.substring(0,CommonConstants.addr_state.length-1),
+              ),
+            ),
+            TextFormField(
+              controller: cntrlr_addr_zip,
+              enabled: false,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_zip.substring(0,CommonConstants.addr_zip.length-1),
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'Zip can\'t be empty'
+                    : null;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 }

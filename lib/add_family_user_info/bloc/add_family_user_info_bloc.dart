@@ -136,7 +136,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     MyProfileModel myProfile;
 
     try {
-      myProfile = await addFamilyUserInfoRepository.getMyProfileInfo(userId);
+      myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
     } catch (e) {
       myProfileSink.add(ApiResponse.error(e.toString()));
     }
