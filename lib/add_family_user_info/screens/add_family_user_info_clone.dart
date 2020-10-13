@@ -295,10 +295,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           isExpanded: true,
           hint: Text(CommonConstants.genderWithStar),
           value: selectedGender != null
-              ? selectedGender.toLowerCase() != null
-                  ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
-                  : selectedGender
-              : null,
+              ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
+              : selectedGender,
           items: variable.genderArray.map((eachGender) {
             return DropdownMenuItem(
               child: new Text(eachGender,
@@ -932,7 +930,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         stateVal =
             widget.arguments.myProfileResult.userAddressCollection3[0].state;
 
-        _addressResult = AddressResult(
+        _addressResult = new AddressResult(
             id: widget.arguments.myProfileResult.userAddressCollection3[0]
                 .addressType.id,
             code: widget.arguments.myProfileResult.userAddressCollection3[0]
@@ -942,11 +940,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else {
         try {
           print('inside try');
-          _addressResult = new AddressResult(
-            id: "22f814a7-5b72-41aa-b5f7-7d2cd38d5da4",
-            code: "RESADD",
-            name: "Resident Address",
-          );
+          _addressResult = _addressList[0];
           print('after try');
         } catch (e) {}
       }
@@ -1072,11 +1066,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           stateVal = currentAddress.state;
         } else {
           try {
-            _addressResult = new AddressResult(
-              id: "22f814a7-5b72-41aa-b5f7-7d2cd38d5da4",
-              code: "RESADD",
-              name: "Resident Address",
-            );
+            _addressResult = _addressList[0];
           } catch (e) {}
         }
 
@@ -1128,11 +1118,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         relationShipController.text = value?.result?.userRoleCollection3[0].role.name;
         try {
-          _addressResult = new AddressResult(
-            id: "22f814a7-5b72-41aa-b5f7-7d2cd38d5da4",
-            code: "RESADD",
-            name: "Resident Address",
-          );
+          _addressResult = _addressList[0];
         } catch (e) {}
         if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
           currentselectedBloodGroup = value.result.bloodGroup.split(' ')[0];

@@ -49,7 +49,7 @@ class _MyProvidersState extends State<MyProviders> {
   List<Doctors> doctors = new List();
 
   List<AvailableTimeSlotsModel> doctorTimeSlotsModel =
-  new List<AvailableTimeSlotsModel>();
+      new List<AvailableTimeSlotsModel>();
   List<SlotSessionsModel> sessionTimeModel = new List<SlotSessionsModel>();
   List<Slots> slotsModel = new List<Slots>();
   ProvidersBloc _providersBloc;
@@ -75,7 +75,7 @@ class _MyProvidersState extends State<MyProviders> {
             ),
             // you can put Icon as well, it accepts any widget.
             title:
-            getTitle() /* Column(
+                getTitle() /* Column(
             children: [
               Text("My Providers"),
             ],
@@ -86,38 +86,39 @@ class _MyProvidersState extends State<MyProviders> {
                 .buildActions(context, _keyLoader, callBackToRefresh),
             Icon(Icons.more_vert),
           ],*/
-        ),
+            ),
         body: Container(
             child: Column(
-              children: [
-                SearchWidget(
-                  onChanged: (doctorsName) {
-                    if (doctorsName != '' && doctorsName.length > 3) {
-                      isSearch = true;
-                      onSearchedNew(doctorsName);
-                    } else {
-                      setState(() {
-                        isSearch = false;
-                      });
-                    }
-                  },
-                ),
-                Expanded(
-                  /* child: (providerViewModel.doctorIdsList != null &&
+          children: [
+            SearchWidget(
+              onChanged: (doctorsName) {
+                if (doctorsName != '' && doctorsName.length > 3) {
+                  isSearch = true;
+                  onSearchedNew(doctorsName);
+                } else {
+                  setState(() {
+                    isSearch = false;
+                  });
+                }
+              },
+            ),
+            Expanded(
+              /* child: (providerViewModel.doctorIdsList != null &&
                       providerViewModel.doctorIdsList.length > 0)
                   ? providerListWidget(providerViewModel.doctorIdsList)
                   : getDoctorProviderList(),*/
-                  child: myProvidersResponseList != null??myProvidersResponseList.isSuccess
-                      ? myProviderList(myProvidersResponseList)
-                      : getDoctorProviderListNew(),
-                  /*:Container(
+              child: myProvidersResponseList != null ??
+                      myProvidersResponseList.isSuccess
+                  ? myProviderList(myProvidersResponseList)
+                  : getDoctorProviderListNew(),
+              /*:Container(
                     child: Center(
                       child: Text(variable.strNoDoctordata),
                     ),
                   ),*/
-                )
-              ],
-            )),
+            )
+          ],
+        )),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             //PageNavigator.goTo(context, '/add_appointments');
@@ -157,7 +158,7 @@ class _MyProvidersState extends State<MyProviders> {
     );
   }
 
- /* Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
+  /* Widget doctorsListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return ExpandableNotifier(
       child: Container(
         padding: EdgeInsets.all(2.0),
@@ -197,10 +198,7 @@ class _MyProvidersState extends State<MyProviders> {
   Widget expandedListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
       padding: EdgeInsets.all(10.0),
-      width: MediaQuery
-          .of(context)
-          .size
-          .width,
+      width: MediaQuery.of(context).size.width,
       child: ExpandableButton(
         child: Column(
           children: [
@@ -252,28 +250,28 @@ class _MyProvidersState extends State<MyProviders> {
                 children: [
                   Expanded(
                       child: Row(
-                        children: [
-                          commonWidgets.getTextForDoctors('${docs[i].name}'),
-                          commonWidgets.getSizeBoxWidth(10.0),
-                          commonWidgets.getIcon(
-                              width: fhbStyles.imageWidth,
-                              height: fhbStyles.imageHeight,
-                              icon: Icons.info,
-                              onTap: () {
-                                print('on Info pressed');
-                                commonWidgets.showDoctorDetailView(
-                                    docs[i], context);
-                              }),
-                        ],
-                      )),
+                    children: [
+                      commonWidgets.getTextForDoctors('${docs[i].name}'),
+                      commonWidgets.getSizeBoxWidth(10.0),
+                      commonWidgets.getIcon(
+                          width: fhbStyles.imageWidth,
+                          height: fhbStyles.imageHeight,
+                          icon: Icons.info,
+                          onTap: () {
+                            print('on Info pressed');
+                            commonWidgets.showDoctorDetailView(
+                                docs[i], context);
+                          }),
+                    ],
+                  )),
                   docs[i].isActive
                       ? commonWidgets.getIcon(
-                      width: fhbStyles.imageWidth,
-                      height: fhbStyles.imageHeight,
-                      icon: Icons.check_circle,
-                      onTap: () {
-                        print('on check  pressed');
-                      })
+                          width: fhbStyles.imageWidth,
+                          height: fhbStyles.imageHeight,
+                          icon: Icons.check_circle,
+                          onTap: () {
+                            print('on check  pressed');
+                          })
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
                   commonWidgets.getBookMarkedIcon(docs[i], () {
@@ -315,21 +313,21 @@ class _MyProvidersState extends State<MyProviders> {
                 Expanded(
                     child: docs[i].professionalDetails != null
                         ? docs[i].professionalDetails[0].specialty != null
-                        ? docs[i].professionalDetails[0].specialty.name !=
-                        null
-                        ? commonWidgets.getDoctoSpecialist(
-                        '${docs[i].professionalDetails[0].specialty.name}')
-                        : SizedBox()
-                        : SizedBox()
+                            ? docs[i].professionalDetails[0].specialty.name !=
+                                    null
+                                ? commonWidgets.getDoctoSpecialist(
+                                    '${docs[i].professionalDetails[0].specialty.name}')
+                                : SizedBox()
+                            : SizedBox()
                         : SizedBox()),
                 docs[i].fees != null
                     ? docs[i].fees.consulting != null
-                    ? (docs[i].fees.consulting != null &&
-                    docs[i].fees.consulting != '')
-                    ? commonWidgets.getDoctoSpecialist(
-                    'INR ${docs[i].fees.consulting.fee}')
-                    : SizedBox()
-                    : SizedBox()
+                        ? (docs[i].fees.consulting != null &&
+                                docs[i].fees.consulting != '')
+                            ? commonWidgets.getDoctoSpecialist(
+                                'INR ${docs[i].fees.consulting.fee}')
+                            : SizedBox()
+                        : SizedBox()
                     : SizedBox(),
                 commonWidgets.getSizeBoxWidth(10.0),
               ]),
@@ -339,12 +337,12 @@ class _MyProvidersState extends State<MyProviders> {
                 children: [
                   Expanded(
                       child:
-                      commonWidgets.getDoctorsAddress('${docs[i].city}')),
+                          commonWidgets.getDoctorsAddress('${docs[i].city}')),
                   docs[i].isMCIVerified
                       ? commonWidgets.getMCVerified(
-                      docs[i].isMCIVerified, 'Verified')
+                          docs[i].isMCIVerified, 'Verified')
                       : commonWidgets.getMCVerified(
-                      docs[i].isMCIVerified, 'Not Verified'),
+                          docs[i].isMCIVerified, 'Not Verified'),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               )
@@ -366,7 +364,7 @@ class _MyProvidersState extends State<MyProviders> {
     doctorData.clear();
     if (doctorName != null) {
       for (DoctorIds fiterData
-      in providerViewModel.getFilterDoctorList(doctorName)) {
+          in providerViewModel.getFilterDoctorList(doctorName)) {
         doctorData.add(fiterData);
       }
     }
@@ -381,19 +379,19 @@ class _MyProvidersState extends State<MyProviders> {
       in _providersBloc.getFilterDoctorListNew(doctorName)) {
         doctors.add(fiterData);*/
       doctors = await _providersBloc.getFilterDoctorListNew(doctorName);
-      }
+    }
     setState(() {});
   }
 
   Widget getFees(DoctorIds doctorId) {
     return doctorId.fees != null
         ? commonWidgets.getHospitalDetails(doctorId.fees.consulting != null
-        ? variable.strRs + ' ' + doctorId.fees.consulting.fee
-        : '')
+            ? variable.strRs + ' ' + doctorId.fees.consulting.fee
+            : '')
         : Text('');
   }
 
- /* Widget getDoctorProviderList() {
+  /* Widget getDoctorProviderList() {
     return new FutureBuilder<List<DoctorIds>>(
       future: providerViewModel.fetchProviderDoctors(),
       builder: (BuildContext context, snapshot) {
@@ -431,7 +429,13 @@ class _MyProvidersState extends State<MyProviders> {
           final items = snapshot.data ??
               <MyProvidersResponseData>[]; // handle the case that data is null
 
-          return myProviderList(snapshot.data);
+          return (snapshot.data.result.doctors != null &&
+                  snapshot.data.result.doctors.length > 0)
+              ? myProviderList(snapshot.data)
+              : Container(
+                  child: Center(
+                  child: Text(variable.strNoDoctordata),
+                ));
         }
       },
     );
@@ -454,23 +458,26 @@ class _MyProvidersState extends State<MyProviders> {
   }*/
 
   Widget myProviderList(MyProvidersResponse myProvidersResponse) {
-        return (myProvidersResponse != null && myProvidersResponse.isSuccess)?ListView.separated(
-      itemBuilder: (BuildContext context, index)=>
-          providerDoctorItemWidget(index,isSearch ? doctors : myProvidersResponse.result.doctors),
-      separatorBuilder: (BuildContext context, index) {
-        return Divider(
-          height: 0,
-          color: Colors.transparent,
-        );
-      },
-      itemCount:isSearch
-          ? doctors.length
-          :myProvidersResponse.result.doctors.length,
-    ): Container(
-      child: Center(
-        child: Text(variable.strNoDoctordata),
-      ),
-    );
+    return (myProvidersResponse != null && myProvidersResponse.isSuccess)
+        ? ListView.separated(
+            itemBuilder: (BuildContext context, index) =>
+                providerDoctorItemWidget(index,
+                    isSearch ? doctors : myProvidersResponse.result.doctors),
+            separatorBuilder: (BuildContext context, index) {
+              return Divider(
+                height: 0,
+                color: Colors.transparent,
+              );
+            },
+            itemCount: isSearch
+                ? doctors.length
+                : myProvidersResponse.result.doctors.length,
+          )
+        : Container(
+            child: Center(
+              child: Text(variable.strNoDoctordata),
+            ),
+          );
   }
 
   Widget providerListItem(Doctors eachDoctorModel) {
@@ -494,24 +501,23 @@ class _MyProvidersState extends State<MyProviders> {
               children: <Widget>[
                 ClipOval(
                     child: eachDoctorModel.user != null
-                        ? eachDoctorModel.user.profilePicThumbnailUrl !=
-                        null
-                        ? Image.network(
-                      eachDoctorModel.user.profilePicThumbnailUrl,
-                      height: 50,
-                      width: 50,
-                      fit: BoxFit.cover,
-                    )
+                        ? eachDoctorModel.user.profilePicThumbnailUrl != null
+                            ? Image.network(
+                                eachDoctorModel.user.profilePicThumbnailUrl,
+                                height: 50,
+                                width: 50,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                width: 50,
+                                height: 50,
+                                padding: EdgeInsets.all(12),
+                                color: Color(fhbColors.bgColorContainer))
                         : Container(
-                        width: 50,
-                        height: 50,
-                        padding: EdgeInsets.all(12),
-                        color: Color(fhbColors.bgColorContainer))
-                        : Container(
-                        width: 50,
-                        height: 50,
-                        padding: EdgeInsets.all(12),
-                        color: Color(fhbColors.bgColorContainer))),
+                            width: 50,
+                            height: 50,
+                            padding: EdgeInsets.all(12),
+                            color: Color(fhbColors.bgColorContainer))),
                 SizedBox(
                   width: 20,
                 ),
@@ -525,9 +531,9 @@ class _MyProvidersState extends State<MyProviders> {
                       AutoSizeText(
                         eachDoctorModel.user != null
                             ? eachDoctorModel.user.name != null
-                            ? toBeginningOfSentenceCase(
-                            eachDoctorModel.user.name)
-                            : ''
+                                ? toBeginningOfSentenceCase(
+                                    eachDoctorModel.user.name)
+                                : ''
                             : '',
                         maxLines: 1,
                         style: TextStyle(
@@ -539,17 +545,17 @@ class _MyProvidersState extends State<MyProviders> {
                       SizedBox(height: 5),
                       eachDoctorModel.specialization != null
                           ? AutoSizeText(
-                        eachDoctorModel.specialization != null
-                            ? toBeginningOfSentenceCase(
-                            eachDoctorModel.specialization)
-                            : '',
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontSize: 13.0,
-                            fontWeight: FontWeight.w400,
-                            color: ColorUtils.lightgraycolor),
-                        textAlign: TextAlign.start,
-                      )
+                              eachDoctorModel.specialization != null
+                                  ? toBeginningOfSentenceCase(
+                                      eachDoctorModel.specialization)
+                                  : '',
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.w400,
+                                  color: ColorUtils.lightgraycolor),
+                              textAlign: TextAlign.start,
+                            )
                           : SizedBox(height: 0, width: 0),
                       SizedBox(height: 5),
                     ],
@@ -565,16 +571,16 @@ class _MyProvidersState extends State<MyProviders> {
                           InkWell(
                               child: eachDoctorModel.isActive == true
                                   ? ImageIcon(
-                                AssetImage(
-                                    variable.icon_record_fav_active),
-                                color: Color(new CommonUtil()
-                                    .getMyPrimaryColor()),
-                                size: 20,
-                              )
+                                      AssetImage(
+                                          variable.icon_record_fav_active),
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      size: 20,
+                                    )
                                   : Container(
-                                height: 0,
-                                width: 0,
-                              )),
+                                      height: 0,
+                                      width: 0,
+                                    )),
                         ],
                       ),
                     )),
@@ -584,8 +590,8 @@ class _MyProvidersState extends State<MyProviders> {
 
   Widget providerDoctorItemWidget(int i, List<Doctors> docs) {
     return InkWell(
-      onTap: (){
-        navigateToHelathOrganizationList(context, docs,i);
+      onTap: () {
+        navigateToHelathOrganizationList(context, docs, i);
       },
       child: Container(
         padding: EdgeInsets.all(12.0),
@@ -614,7 +620,8 @@ class _MyProvidersState extends State<MyProviders> {
                 Container(
                   alignment: Alignment.center,
                   child: commonWidgets.getClipOvalImageNew(
-                      docs[i].user.profilePicThumbnailUrl, fhbStyles.cardClipImage),
+                      docs[i].user.profilePicThumbnailUrl,
+                      fhbStyles.cardClipImage),
                 ),
                 new Positioned(
                   bottom: 0.0,
@@ -634,28 +641,29 @@ class _MyProvidersState extends State<MyProviders> {
                     children: [
                       Expanded(
                           child: Row(
-                            children: [
-                              commonWidgets.getTextForDoctors('${docs[i].user.name}'),
-                              commonWidgets.getSizeBoxWidth(10.0),
-                              commonWidgets.getIcon(
-                                  width: fhbStyles.imageWidth,
-                                  height: fhbStyles.imageHeight,
-                                  icon: Icons.info,
-                                  onTap: () {
-                                    print('on Info pressed');
-                                    commonWidgets.showDoctorDetailViewNew(
-                                        docs[i], context);
-                                  }),
-                            ],
-                          )),
+                        children: [
+                          commonWidgets
+                              .getTextForDoctors('${docs[i].user.name}'),
+                          commonWidgets.getSizeBoxWidth(10.0),
+                          commonWidgets.getIcon(
+                              width: fhbStyles.imageWidth,
+                              height: fhbStyles.imageHeight,
+                              icon: Icons.info,
+                              onTap: () {
+                                print('on Info pressed');
+                                commonWidgets.showDoctorDetailViewNew(
+                                    docs[i], context);
+                              }),
+                        ],
+                      )),
                       docs[i].isTelehealthEnabled
                           ? commonWidgets.getIcon(
-                          width: fhbStyles.imageWidth,
-                          height: fhbStyles.imageHeight,
-                          icon: Icons.check_circle,
-                          onTap: () {
-                            print('on check  pressed');
-                          })
+                              width: fhbStyles.imageWidth,
+                              height: fhbStyles.imageHeight,
+                              icon: Icons.check_circle,
+                              onTap: () {
+                                print('on check  pressed');
+                              })
                           : SizedBox(),
                       /*commonWidgets.getSizeBoxWidth(15.0),
                       commonWidgets.getBookMarkedIconNew(docs[i], () {
@@ -673,13 +681,11 @@ class _MyProvidersState extends State<MyProviders> {
                     ],
                   ),
                   commonWidgets.getSizedBox(5.0),
-
-                  Row(
-                      children: [
+                  Row(children: [
                     Expanded(
-                        child:docs[i].specialization != null
-                            ? commonWidgets.getDoctoSpecialist(
-                            '${docs[i].specialization}')
+                        child: docs[i].specialization != null
+                            ? commonWidgets
+                                .getDoctoSpecialist('${docs[i].specialization}')
                             : SizedBox()),
                     /*docs[i].fees != null
                       ? docs[i].fees.consulting != null
@@ -697,20 +703,20 @@ class _MyProvidersState extends State<MyProviders> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Text(
-                          ''+commonWidgets.getCityDoctorsModel(docs[i]),
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: false,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w200,
-                              color: Colors.grey[600],
-                              fontSize: fhbStyles.fnt_city),
-                        )),
+                          child: Text(
+                        '' + commonWidgets.getCityDoctorsModel(docs[i]),
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: TextStyle(
+                            fontWeight: FontWeight.w200,
+                            color: Colors.grey[600],
+                            fontSize: fhbStyles.fnt_city),
+                      )),
                       docs[i].isMciVerified
                           ? commonWidgets.getMCVerified(
-                          docs[i].isMciVerified, 'Verified')
+                              docs[i].isMciVerified, 'Verified')
                           : commonWidgets.getMCVerified(
-                          docs[i].isMciVerified, 'Not Verified'),
+                              docs[i].isMciVerified, 'Not Verified'),
                       commonWidgets.getSizeBoxWidth(10.0),
                     ],
                   )
@@ -719,11 +725,12 @@ class _MyProvidersState extends State<MyProviders> {
             ),
           ],
         ),
-        ),
+      ),
     );
   }
 
-  navigateToHelathOrganizationList(BuildContext context,List<Doctors> docs,int i) {
+  navigateToHelathOrganizationList(
+      BuildContext context, List<Doctors> docs, int i) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -733,5 +740,4 @@ class _MyProvidersState extends State<MyProviders> {
           ),
         ));
   }
-
 }

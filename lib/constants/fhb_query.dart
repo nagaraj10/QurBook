@@ -6,7 +6,7 @@ const String qr_add = 'add=';
 const String qr_negation = '|';
 const String qr_default = '|setDefault=';
 const String qr_Userprofile = 'userProfiles/';
-const String qr_sections = '?section=';
+const String qr_sections = '?sections=';
 const String qr_mediameta = 'mediameta/';
 const String qr_updatebookmark = 'updatebookmark/';
 const String qr_users = 'users/';

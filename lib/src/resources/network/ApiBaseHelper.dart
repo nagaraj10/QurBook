@@ -211,8 +211,8 @@ class ApiBaseHelper {
 
     var responseJson;
     try {
-      print(CommonConstants.NEW_BASE_URL + url);
-      final response = await http.get(CommonConstants.NEW_BASE_URL + url,
+      print(_baseUrl + url);
+      final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
 
       responseJson = _returnResponse(response);
@@ -1254,8 +1254,8 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> getUserProfilePic(String url) async{
-     CommonResponse responseJson;
+  Future<dynamic> getUserProfilePic(String url) async {
+    CommonResponse responseJson;
     try {
       final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeader());
@@ -1278,9 +1278,10 @@ class ApiBaseHelper {
     dio.options.headers['content-type'] = 'multipart/form-data';
     dio.options.headers["authorization"] = authToken;
     dio.options.headers["accept"] = 'application/json';
-    FormData formData= FormData.fromMap({
-      "profilePicture":await MultipartFile.fromFile(image.path,filename: filename,contentType:MediaType('image','${fileType}')),
-    });    
+    FormData formData = FormData.fromMap({
+      "profilePicture": await MultipartFile.fromFile(image.path,
+          filename: filename, contentType: MediaType('image', '${fileType}')),
+    });
     var response;
     try {
       response = await dio.put(_baseUrl + url, data: formData);

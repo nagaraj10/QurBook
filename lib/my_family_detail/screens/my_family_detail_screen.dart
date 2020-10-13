@@ -17,6 +17,7 @@ import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -419,6 +420,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             ],
           ),
           SizedBox(height: 20),
+
 //          Row(
 //            mainAxisAlignment: MainAxisAlignment.center,
 //            children: _buildPageIndicator(),
@@ -866,7 +868,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showDateOfBirthTextField() {
     return GestureDetector(
-      onTap: dateOfBirthTapped,
+      onTap: null,
       child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: TextField(
