@@ -95,6 +95,9 @@ dependencies:
   image_downloader: ^0.20.0
   simple_pdf_viewer: ^0.2.2
   flutter_typeahead: ^1.8.8
+  flutter_money_formatter:
+    git:
+      url: git://github.com/anisalibegic/flutter_money_formatter.git
 
 
 

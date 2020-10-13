@@ -17,7 +17,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
-import 'package:myfhb/telehealth/features/chat/model/GetMetaFileURLModel.dart';
+import 'package:myfhb/telehealth/features/chat/model/GetRecordIdsFilter.dart';
 import 'package:myfhb/telehealth/features/chat/view/PdfViewURL.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
@@ -322,10 +322,13 @@ class ChatScreenState extends State<ChatScreen> {
 
   getMediaURL(List<String> recordIds) {
     getMediaFileURL(recordIds).then((value) {
-      if (value.status == 200 && value.success == true) {
-        for (int i = 0; i < value.response.data.mediaMasterInfo.length; i++) {
-          String fileType = value.response.data.mediaMasterInfo[i].fileType;
-          String fileURL = value.response.data.mediaMasterInfo[i].fileContent;
+      if (value.isSuccess == true) {
+        for (int i = 0;
+            i < value.result[0].healthRecordCollection.length;
+            i++) {
+          String fileType = value.result[0].healthRecordCollection[i].fileType;
+          String fileURL =
+              value.result[0].healthRecordCollection[i].healthRecordUrl;
           if ((fileType == '.jpg') || (fileType == '.png')) {
             onSendMessage(fileURL, 1);
           } else if ((fileType == '.pdf')) {
@@ -340,8 +343,8 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Future<GetMetaFileURLModel> getMediaFileURL(List<String> recordIds) async {
-    GetMetaFileURLModel getMetaFileURLModel =
+  Future<GetRecordIdsFilter> getMediaFileURL(List<String> recordIds) async {
+    GetRecordIdsFilter getMetaFileURLModel =
         await getMediaFileViewModel.getMediaMetaURL(recordIds, patientId);
 
     return getMetaFileURLModel;
@@ -349,11 +352,10 @@ class ChatScreenState extends State<ChatScreen> {
 
   getPatientDetails() async {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    MyProfileModel myProfile =
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.result != null
-        ? myProfile.result.firstName +
-            ' ' +
-            myProfile.result.lastName
+        ? myProfile.result.firstName + ' ' + myProfile.result.lastName
         : '';
     patientPicUrl = getProfileURL();
 
@@ -361,9 +363,9 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   String getProfileURL() {
-    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    String patientPicURL =
-        myProfile.result.profilePicThumbnailUrl;
+    MyProfileModel myProfile =
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    String patientPicURL = myProfile.result.profilePicThumbnailUrl;
 
     return patientPicURL;
   }
@@ -1269,10 +1271,9 @@ class ChatScreenState extends State<ChatScreen> {
         var metaIds = results['metaId'];
         print(metaIds.toString());
 
-        if (allowSelect) {
-          recordIds = results['metaId'].cast<String>();
-          getMediaURL(recordIds);
-        }
+        recordIds = results['metaId'].cast<String>();
+        getMediaURL(recordIds);
+
         //print(recordIdCount);
         setState(() {});
         print(metaIds.toString());

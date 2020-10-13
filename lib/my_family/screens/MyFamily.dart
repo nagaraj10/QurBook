@@ -72,13 +72,16 @@ class _MyFamilyState extends State<MyFamily> {
 
   var dialogContext;
 
+  String parentProfilePic;
+
   @override
   void initState() {
     super.initState();
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
     _familyListBloc.getCustomRoles();
-
+    parentProfilePic =
+        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
     PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
   }
 
@@ -341,19 +344,28 @@ class _MyFamilyState extends State<MyFamily> {
                                       Constants.KEY_AUTHTOKEN)
                             },
                           )
-                    : Container(
-                        width: 60,
-                        height: 60,
-                        color: Color(fhbColors.bgColorContainer),
-                        child: Center(
-                          child: Text(
-                            fulName != null ? fulName[0].toUpperCase() : '',
-                            style: TextStyle(
-                                fontSize: 22,
-                                color: Color(CommonUtil().getMyPrimaryColor())),
+                    //!add condition for login user data
+                    : (parentProfilePic != null && parentProfilePic != '')
+                        ? Image.file(
+                            File(parentProfilePic),
+                            fit: BoxFit.cover,
+                            width: 60,
+                            height: 60,
+                          )
+                        : Container(
+                            width: 60,
+                            height: 60,
+                            color: Color(fhbColors.bgColorContainer),
+                            child: Center(
+                              child: Text(
+                                fulName != null ? fulName[0].toUpperCase() : '',
+                                style: TextStyle(
+                                    fontSize: 22,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
 
                 /* ? myProfile != null
                         ? myProfile.result != null
@@ -1351,6 +1363,7 @@ class _MyFamilyState extends State<MyFamily> {
               } else {
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
+                Navigator.pop(_keyLoader.currentContext);
 
                 Alert.displayAlertPlain(context,
                     title: variable.Error, content: userLinking.message);

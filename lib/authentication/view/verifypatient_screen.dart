@@ -76,10 +76,12 @@ class _VerifyPatientState extends State<VerifyPatient> {
   var token1;
   String token2;
   FlutterToast toast = new FlutterToast();
+  var from;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    from = widget.from;
     authViewModel = new AuthViewModel();
   }
 
@@ -121,7 +123,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                         onTap: () {
                           _resendOtpDetails();
                         },
-                        child: widget.from == strFromSignUp
+                        child:from == strFromSignUp //*this has to be change with strFromSignUp
                             ? Container(
                                 padding: EdgeInsets.symmetric(vertical: 5),
                                 alignment: Alignment.bottomRight,
@@ -218,7 +220,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
     if (_OtpKey.currentState.validate()) {
       _OtpKey.currentState.save();
 
-      if (widget.from == strFromSignUp) {
+      if (from == strFromSignUp) {
         PatientSignupOtp logInModel = new PatientSignupOtp(
           verificationCode: OtpController.text,
           userName: widget.PhoneNumber,
@@ -231,15 +233,16 @@ class _VerifyPatientState extends State<VerifyPatient> {
             await authViewModel.verifyPatient(map);
         print(response.toString());
         _checkResponse(response);
-      } else if (widget.from == strFromVerifyFamilyMember) {
+      } else if (from == strFromVerifyFamilyMember) {
         VerifyOTPModel params = VerifyOTPModel(
             phoneNumber: widget.PhoneNumber,
             verificationCode: OtpController.text);
-        var response =
+        AddFamilyOTPResponse response =
             await authViewModel.verifyMyOTP(params.toJson());
-        if (response['isSuccess']) { //? this might be change
+        if (response.isSuccess) {
+          //? this might be change
           toast.getToast('user Added successfully', Colors.green);
-          Navigator.pop(context);
+          //Navigator.pop(context);
           Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                   arguments: AddFamilyUserInfoArguments(
                       fromClass: CommonConstants.add_family,
@@ -251,12 +254,25 @@ class _VerifyPatientState extends State<VerifyPatient> {
                       addFamilyUserInfo:
                           response.result != null ? response.result : null))
               .then((value) {
-                Navigator.pop(context);
-              });
+            Navigator.pop(context);
+          });
         } else {
           //something went wrong.
-          Navigator.pop(context);
+          //Navigator.pop(context);
           toast.getToast(response.message, Colors.red);
+          Navigator.pop(context);
+          // setState(() {
+          //   from = strFromSignUp;
+          // });
+          // Navigator.push(
+          //   context,
+          //   MaterialPageRoute(
+          //     builder: (context) => VerifyPatient(
+          //       PhoneNumber: widget.PhoneNumber,
+          //       from: strFromSignUp,
+          //     ),
+          //   ),
+          // ).then((value) => Navigator.pop(context));
         }
       } else {
         PatientSignupOtp logInModel = new PatientSignupOtp(

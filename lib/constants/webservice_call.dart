@@ -237,7 +237,14 @@ class WebserviceCall {
       };
       queryProfile.addAll(relationshipCollection);
     }
-    /* profileResult.userAddressCollection3[0].addressType = AddressType(
+    //?this has to be uncomment
+    // if(relationship!=null){
+    //   var relationshipCollection = {
+    //     'userRelationshipCollection': [relationship.toJson()]
+    //   };
+    //   queryProfile.addAll(relationshipCollection);
+    // }
+    profileResult.userAddressCollection3[0].addressType = AddressType(
       id: '22f814a7-5b72-41aa-b5f7-7d2cd38d5da4',
       code: 'RESADD',
       name: 'Resident Address',
@@ -248,7 +255,7 @@ class WebserviceCall {
       createdOn: DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now()),
       lastModifiedOn: null,
     );
-*/
+    
     //TODO here only check user add/update flow for removing the id from useraddresscollection
     Map<String, dynamic> copyOfQueryProfile = queryProfile;
     Map<String, dynamic> addressObj =

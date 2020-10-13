@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -57,6 +59,7 @@ class MyRecords extends StatefulWidget {
   List<String> selectedMedias;
   bool isFromChat;
   bool showDetails;
+  List<String> selectedRecordIds;
 
   MyRecords(
       {this.categoryPosition,
@@ -65,7 +68,8 @@ class MyRecords extends StatefulWidget {
       this.isNotesSelect,
       this.selectedMedias,
       this.isFromChat,
-      this.showDetails});
+      this.showDetails,
+      this.selectedRecordIds});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -338,6 +342,7 @@ class _MyRecordsState extends State<MyRecords> {
       selectedMedia: widget.selectedMedias,
       isFromChat: widget.isFromChat ?? false,
       showDetails: widget.showDetails ?? false,
+      selectedRecordsId: widget.selectedRecordIds,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -561,6 +566,8 @@ class CustomTabView extends StatefulWidget {
   bool isFromChat;
   bool showDetails;
   _MyRecordsState recordsState;
+  HealthResult healthResult;
+  List<String> selectedRecordsId = new List();
 
   CustomTabView(
       {@required this.itemCount,
@@ -582,7 +589,9 @@ class CustomTabView extends StatefulWidget {
       this.allowSelectVoice,
       this.isFromChat,
       this.showDetails,
-      this.recordsState});
+      this.recordsState,
+      this.healthResult,
+      this.selectedRecordsId});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -735,6 +744,10 @@ class _CustomTabsState extends State<CustomTabView>
       widget.selectedMedia = new List();
     }
 
+    if (widget.selectedRecordsId == null) {
+      widget.selectedRecordsId = new List();
+    }
+
     return Stack(alignment: Alignment.bottomRight, children: <Widget>[
       getAllTabsToDisplayInBody(data),
       Container(
@@ -802,8 +815,13 @@ class _CustomTabsState extends State<CustomTabView>
             ? !widget.showDetails
                 ? OutlineButton(
                     onPressed: () {
-                      Navigator.of(context)
-                          .pop({'metaId': widget.selectedMedia});
+                      if (widget.isFromChat) {
+                        Navigator.of(context)
+                            .pop({'metaId': widget.selectedRecordsId});
+                      } else {
+                        Navigator.of(context)
+                            .pop({'metaId': widget.selectedMedia});
+                      }
                     },
                     child:
                         widget.isFromChat ? Text('Attach') : Text('Associate'),
@@ -1050,16 +1068,25 @@ class _CustomTabsState extends State<CustomTabView>
 
   void addMediaRemoveMaster(String metaId, bool condition) {
     if (widget.allowSelect) {
+     if (widget.isFromChat) {
       if (condition) {
-        if (!(widget.selectedMedia.contains(metaId))) {
-          widget.selectedMedia.add(metaId);
-          print(metaId + ' Added ************');
-        }
+        widget.selectedRecordsId.add(metaId);
       } else {
-        widget.selectedMedia.remove(metaId);
-        print(metaId + ' removed **************');
+        widget.selectedRecordsId.remove(metaId);
       }
-    } else if (widget.allowSelectNotes || widget.allowSelectVoice) {
+    }else{
+       if (condition) {
+         if (!(widget.selectedMedia.contains(metaId))) {
+           widget.selectedMedia.add(metaId);
+           print(metaId + ' Added ************');
+         }
+       } else {
+         widget.selectedMedia.remove(metaId);
+         print(metaId + ' removed **************');
+       }
+     }
+
+    }  else if (widget.allowSelectNotes || widget.allowSelectVoice) {
       if (condition) {
         if (widget.selectedMedia.length > 0) {
           new FHBBasicWidget()
@@ -1154,7 +1181,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails));
+            widget.showDetails,
+            widget.isFromChat));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionIDDocs) {
         tabWidgetList.add(new IDDocsList(

@@ -73,6 +73,8 @@ class HeaderRequest {
 
     requestHeaders['Authorization'] =
         PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        var token = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        print(token);
 
     return requestHeaders;
   }

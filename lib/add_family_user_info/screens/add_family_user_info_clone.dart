@@ -6,6 +6,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
 import 'package:myfhb/add_family_user_info/models/address_result.dart';
@@ -84,6 +85,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   String currentselectedBloodGroup;
   String currentselectedBloodGroupRange;
+  var currentAddressID;
 
   DateTime dateTime = DateTime.now();
   String dateofBirthStr;
@@ -249,7 +251,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     genderFocus,
                     CommonConstants.email_address_optional,
                     CommonConstants.email_address_optional,
-                    widget.arguments.fromClass == CommonConstants.user_update
+                    (widget.arguments.fromClass ==
+                                CommonConstants.user_update ||
+                            widget.arguments.fromClass ==
+                                CommonConstants.add_family)
                         ? true
                         : false),
                 Row(
@@ -683,7 +688,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           cursorColor: Theme.of(context).primaryColor,
           controller: relationShipController,
           maxLines: 1,
-          enabled: widget.arguments.fromClass == CommonConstants.my_family
+          enabled: (widget.arguments.fromClass == CommonConstants.my_family ||
+                  widget.arguments.fromClass == CommonConstants.add_family)
               ? true
               : false,
           keyboardType: TextInputType.text,
@@ -993,10 +999,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             }
           } else {
             //! this must be loook
-            //  mobileNoController.text =
-            //         myProf.result.userContactCollection3[0].phoneNumber;
-            //     emailController.text =
-            //         myProf.result.userContactCollection3[0].email;
+            if (widget?.arguments?.sharedbyme?.child?.userContactCollection3
+                    .length >
+                0) {
+              mobileNoController.text = widget.arguments.sharedbyme.child
+                  .userContactCollection3[0].phoneNumber;
+              emailController.text = widget
+                  .arguments.sharedbyme.child.userContactCollection3[0].email;
+            } else {
+              mobileNoController.text = '';
+              emailController.text = '';
+            }
           }
         } catch (e) {
           mobileNoController.text = '';
@@ -1066,7 +1079,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
     } else {
       //* primary user adding section
-      addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
+      addFamilyUserInfoBloc.userId =
+          widget.arguments.addFamilyUserInfo?.childInfo?.id;
       addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
         if (widget.arguments.isPrimaryNoSelected) {
           MyProfileModel myProf =
@@ -1079,12 +1093,30 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               value.result.userContactCollection3[0].phoneNumber;
           emailController.text = value.result.userContactCollection3[0].email;
         }
+        //*user already user exist set the address data if available
+        if (value?.result?.userAddressCollection3.length > 0) {
+          UserAddressCollection3 currentAddress =
+              value?.result?.userAddressCollection3[0];
+          cntrlr_addr_one.text = currentAddress.addressLine1;
+          cntrlr_addr_two.text = currentAddress.addressLine2;
+          cntrlr_addr_city.text = currentAddress.city?.name;
+          cntrlr_addr_state.text = currentAddress.state?.name;
+          cntrlr_addr_zip.text = currentAddress.pincode;
+          _addressResult = AddressResult(
+              id: currentAddress.addressType.id,
+              code: currentAddress.addressType.code,
+              name: currentAddress.addressType.name);
 
-        firstNameController.text = widget.arguments.enteredFirstName;
-        middleNameController.text = widget.arguments.enteredMiddleName;
-        lastNameController.text = widget.arguments.enteredLastName;
+          cityVal = currentAddress.city;
+          stateVal = currentAddress.state;
+          currentAddressID = currentAddress.id;
+        }
 
-        relationShipController.text = widget.arguments.relationShip.name;
+        firstNameController.text = value?.result?.firstName;
+        middleNameController.text = value?.result?.middleName;
+        lastNameController.text = value?.result?.lastName;
+
+        relationShipController.text = value?.result?.userRoleCollection3[0].role.name;
         try {
           _addressResult = _addressList[0];
         } catch (e) {}
@@ -1176,6 +1208,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else {
       userAddressCollection3.createdBy =
           await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+      if (currentAddressID != null) {
+        //? adding address id if exists
+        userAddressCollection3.id = currentAddressID;
+      }
     }
 
     userAddressCollection3.addressType = AddressType(
@@ -1304,188 +1341,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     }
   }
 
-  // Future<CommonResponse> getMyProfilePicFromRemote(String userId) async {
-  //   CommonResponse response =
-  //       await _addFamilyUserInfoRepository.getUserProfilePic(userId);
-  //   return response;
-  // }
-
-  // Future<void> setMyProfilePic(String userId, File image) async {
-  //   CommonResponse response =
-  //       await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
-  //   if (response.isSuccess) {
-  //     print('profile has been not updated');
-  //     setState(() {});
-  //   } else {
-  //     print('profile has been not updated');
-  //   }
-  // }
-
-  // Widget showProfileImageNew() {
-  //   if (widget.arguments.fromClass == CommonConstants.my_family) {
-  //     currentUserID = widget.arguments.sharedbyme.id;
-  //     return FutureBuilder<CommonResponse>(
-  //       future: getMyProfilePicFromRemote(widget.arguments.sharedbyme.id),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.done &&
-  //             snapshot.data?.result != null) {
-  //           return Image.network(
-  //             snapshot.data.result,
-  //             fit: BoxFit.cover,
-  //             width: 60,
-  //             height: 60,
-  //             headers: {
-  //               HttpHeaders.authorizationHeader:
-  //                   PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
-  //             },
-  //           );
-  //         } else {
-  //           return Center(
-  //             child: Text(
-  //               widget.arguments.sharedbyme.child.firstName != null
-  //                   ? widget.arguments.sharedbyme.child.firstName[0]
-  //                       .toUpperCase()
-  //                   : '',
-  //               style: TextStyle(
-  //                 color: Colors.white,
-  //                 fontSize: 60.0,
-  //                 fontWeight: FontWeight.w200,
-  //               ),
-  //             ),
-  //           );
-  //         }
-  //       },
-  //     );
-  //   } else if (widget.arguments.fromClass == CommonConstants.user_update) {
-  //     currentUserID = widget.arguments.myProfileResult.id;
-  //     return FutureBuilder<CommonResponse>(
-  //       future: getMyProfilePicFromRemote(widget.arguments.myProfileResult.id),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.done &&
-  //             snapshot.data?.result != null) {
-  //           return Image.network(
-  //             snapshot.data.result,
-  //             fit: BoxFit.cover,
-  //             width: 60,
-  //             height: 60,
-  //             headers: {
-  //               HttpHeaders.authorizationHeader:
-  //                   PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
-  //             },
-  //           );
-  //         } else {
-  //           return Center(
-  //             child: Text(
-  //               widget.arguments.myProfileResult.firstName != null
-  //                   ? widget.arguments.myProfileResult.firstName[0]
-  //                       .toUpperCase()
-  //                   : '',
-  //               style: TextStyle(
-  //                 color: Colors.white,
-  //                 fontSize: 60.0,
-  //                 fontWeight: FontWeight.w200,
-  //               ),
-  //             ),
-  //           );
-  //         }
-  //       },
-  //     );
-  //   } else {
-  //     currentUserID = widget.arguments.addFamilyUserInfo.id;
-  //     return FutureBuilder<CommonResponse>(
-  //       future:
-  //           getMyProfilePicFromRemote(widget.arguments.addFamilyUserInfo.id),
-  //       builder: (context, snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.done &&
-  //             snapshot.data?.result != null) {
-  //           return Image.network(
-  //             snapshot.data.result,
-  //             fit: BoxFit.cover,
-  //             width: 60,
-  //             height: 60,
-  //             headers: {
-  //               HttpHeaders.authorizationHeader:
-  //                   PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
-  //             },
-  //           );
-  //         } else {
-  //           return Center(
-  //             child: Text(
-  //               widget.arguments.enteredFirstName != null
-  //                   ? widget.arguments.enteredFirstName[0].toUpperCase()
-  //                   : '',
-  //               style: TextStyle(
-  //                 color: Colors.white,
-  //                 fontSize: 60.0,
-  //                 fontWeight: FontWeight.w200,
-  //               ),
-  //             ),
-  //           );
-  //         }
-  //       },
-  //     );
-  //   }
-  // }
-
-  // saveMediaDialog(BuildContext cont) {
-  //   String userId = currentUserID;
-
-  //   return showDialog<void>(
-  //     context: cont,
-  //     builder: (BuildContext context) {
-  //       return StatefulBuilder(builder: (context, setState) {
-  //         return AlertDialog(
-  //             title: Text(variable.makeAChoice),
-  //             shape: RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.circular(1)),
-  //             content: SingleChildScrollView(
-  //               child: ListBody(
-  //                 children: <Widget>[
-  //                   GestureDetector(
-  //                     child: Text(variable.Gallery),
-  //                     onTap: () {
-  //                       Navigator.pop(context);
-
-  //                       var image =
-  //                           ImagePicker.pickImage(source: ImageSource.gallery);
-
-  //                       image.then((value) {
-  //                         imageURI = value;
-
-  //                         setMyProfilePic(userId, imageURI);
-
-  //                         (cont as Element).markNeedsBuild();
-  //                       });
-  //                     },
-  //                   ),
-  //                   Padding(
-  //                     padding: EdgeInsets.all(8.0),
-  //                   ),
-  //                   GestureDetector(
-  //                     child: Text(variable.Camera),
-  //                     onTap: () {
-  //                       Navigator.pop(context);
-
-  //                       var image =
-  //                           ImagePicker.pickImage(source: ImageSource.camera);
-
-  //                       image.then((value) {
-  //                         imageURI = value;
-
-  //                         setMyProfilePic(userId, imageURI);
-
-  //                         (cont as Element).markNeedsBuild();
-  //                       });
-  //                     },
-  //                   ),
-  //                 ],
-  //               ),
-  //             ));
-  //       });
-  //     },
-  //   );
-  // }
-
   Future<void> setMyProfilePic(String userId, File image) async {
     CommonResponse response =
         await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
@@ -1504,17 +1359,34 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .getUserProfilePic(widget.arguments.sharedbyme.child.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot?.data?.isSuccess && snapshot?.data?.result != null) {
-              return Image.network(
-                snapshot.data.result,
-                fit: BoxFit.cover,
-                width: 60,
-                height: 60,
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
-                },
-              );
+            if (snapshot?.data?.isSuccess != null &&
+                snapshot?.data?.result != null) {
+              if (snapshot.data.isSuccess) {
+                return Image.network(
+                  snapshot.data.result,
+                  fit: BoxFit.cover,
+                  width: 60,
+                  height: 60,
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                  },
+                );
+              } else {
+                return Center(
+                  child: Text(
+                    widget.arguments.sharedbyme.child.firstName != null
+                        ? widget.arguments.sharedbyme.child.firstName[0]
+                            .toUpperCase()
+                        : '',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 60.0,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                );
+              }
             } else {
               return Center(
                 child: Text(
@@ -1560,17 +1432,34 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             .getUserProfilePic(widget.arguments.myProfileResult.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot?.data?.isSuccess && snapshot?.data?.result != null) {
-              return Image.network(
-                snapshot.data.result,
-                fit: BoxFit.cover,
-                width: 60,
-                height: 60,
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
-                },
-              );
+            if (snapshot?.data?.isSuccess != null &&
+                snapshot?.data?.result != null) {
+              if (snapshot.data.isSuccess) {
+                return Image.network(
+                  snapshot.data.result,
+                  fit: BoxFit.cover,
+                  width: 60,
+                  height: 60,
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                  },
+                );
+              } else {
+                return Center(
+                  child: Text(
+                    widget.arguments.myProfileResult.firstName != null
+                        ? widget.arguments.myProfileResult.firstName[0]
+                            .toUpperCase()
+                        : '',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 60.0,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                );
+              }
             } else {
               return Center(
                 child: Text(
@@ -1610,23 +1499,39 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         },
       );
     } else {
-      currentUserID = widget.arguments.addFamilyUserInfo.id;
+      currentUserID = widget.arguments?.addFamilyUserInfo?.childInfo?.id;
       return FutureBuilder<CommonResponse>(
-        future: _addFamilyUserInfoRepository
-            .getUserProfilePic(widget.arguments.addFamilyUserInfo.id),
+        future: _addFamilyUserInfoRepository.getUserProfilePic(
+            widget.arguments?.addFamilyUserInfo?.childInfo?.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot?.data?.isSuccess && snapshot?.data?.result != null) {
-              return Image.network(
-                snapshot.data.result,
-                fit: BoxFit.cover,
-                width: 60,
-                height: 60,
-                headers: {
-                  HttpHeaders.authorizationHeader:
-                      PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
-                },
-              );
+            if (snapshot?.data?.isSuccess != null &&
+                snapshot?.data?.result != null) {
+              if (snapshot.data.isSuccess) {
+                return Image.network(
+                  snapshot.data.result,
+                  fit: BoxFit.cover,
+                  width: 60,
+                  height: 60,
+                  headers: {
+                    HttpHeaders.authorizationHeader:
+                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                  },
+                );
+              } else {
+                return Center(
+                  child: Text(
+                    widget.arguments.enteredFirstName != null
+                        ? widget.arguments.enteredFirstName[0].toUpperCase()
+                        : '',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 60.0,
+                      fontWeight: FontWeight.w200,
+                    ),
+                  ),
+                );
+              }
             } else {
               return Center(
                 child: Text(
@@ -1686,6 +1591,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             source: ImageSource.gallery);
                         if (image != null) {
                           imageURI = image as File;
+                          if (widget.arguments.fromClass == CommonConstants.user_update){
+                            await PreferenceUtil.saveString(Constants.KEY_PROFILE_IMAGE, imageURI.path);
+                          }
                           Navigator.pop(context);
                         }
                       },
@@ -1702,7 +1610,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             source: ImageSource.camera);
                         if (image != null) {
                           imageURI = image as File;
-                          setMyProfilePic(userId, imageURI);
+                          Navigator.pop(context);
+                          if (widget.arguments.fromClass == CommonConstants.user_update){
+                            await PreferenceUtil.saveString(Constants.KEY_PROFILE_IMAGE, imageURI.path);
+                          }
                         }
                       },
                     ),
