@@ -2,7 +2,7 @@ import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_query.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'dart:convert' as convert;
 
 class CreateAppointmentService {
@@ -17,7 +17,7 @@ class CreateAppointmentService {
       bool isMedicalShared,
       bool isFollowUp,
       List<String> healthRecords,
-      {History doc}) async {
+      {Past doc}) async {
     var slotInput = {};
     slotInput[qr_created_by] = createdBy;
     slotInput[qr_booked_for] = bookedFor;
@@ -38,7 +38,7 @@ class CreateAppointmentService {
       slotInput[qr_parent_appointment] = {};
     }*/
     if (isFollowUp) {
-      slotInput[qr_parent_appointment] = doc.appointmentId;
+      slotInput[qr_parent_appointment] = doc.id;
     } else {
       slotInput[qr_parent_appointment] = '';
     }

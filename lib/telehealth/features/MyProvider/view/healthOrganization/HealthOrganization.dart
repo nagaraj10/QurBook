@@ -58,28 +58,10 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          flexibleSpace: GradientAppBar(),
-          leading: GestureDetector(
-            onTap: () => Navigator.pop(context),
-            child: Icon(
-              Icons.arrow_back_ios, // add custom icons also
-            ),
-          ),
-          // you can put Icon as well, it accepts any widget.
-          title:
-              getTitle() /* Column(
-            children: [
-              Text("My Providers"),
-            ],
-          ),
-          actions: [
-            Icon(Icons.notifications),
-            new SwitchProfile()
-                .buildActions(context, _keyLoader, callBackToRefresh),
-            Icon(Icons.more_vert),
-          ],*/
-          ),
+      appBar: PreferredSize(
+          preferredSize:
+          Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
+          child: getDoctorBar(widget.doctors, widget.index)),
       body: Container(
           child: Column(
         children: [
@@ -129,23 +111,92 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     );
   }
 
-  Widget getTitle() {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            HealthOrg,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 16,
+  Widget getDoctorBar(List<Doctors> doctors,int index) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+    flexibleSpace: SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: <Color>[
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor())
+                ],
+                stops: [
+                  0.3,
+                  1.0
+                ])),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 10),
+                  child: GestureDetector(
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    ),
+                    onTap: () {
+                      //Add code for tapping back
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(doctors[index].user.profilePicThumbnailUrl!=null?doctors[index].user.profilePicThumbnailUrl:''),
+                  radius: 20,
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                Container(
+                    child: Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(doctors[index].user.name!=null?doctors[index].user.name:'',
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontFamily: 'Poppins',
+                                  fontSize: 16,
+                                  color: Colors.white)),
+                          Text(
+                            doctors[index].specialization!=null?doctors[index].specialization:'',
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 12,
+                                color: Colors.white),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Text(
+                            ''+commonWidgets.getCityDoctorsModel(doctors[index]),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontFamily: 'Poppins',
+                                fontSize: 8,
+                                color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ))
+              ],
             ),
-          ),
+          ],
         ),
-        /*Icon(Icons.notifications),
-        new SwitchProfile()
-            .buildActions(context, _keyLoader, callBackToRefresh),*/
-        // Icon(Icons.more_vert),
-      ],
+      ),
+    )
     );
   }
 
@@ -331,8 +382,6 @@ class _HealthOrganizationState extends State<HealthOrganization> {
           String feesCode = result.doctorFeeCollection[i].feeType.code;
           if(feesCode==CONSULTING){
              fees = result.doctorFeeCollection[i].fee;
-          }else{
-            fees = '';
           }
         }
       }else{

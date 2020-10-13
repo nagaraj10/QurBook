@@ -825,7 +825,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       bool isMedicalShared,
       bool isFollowUp,
       List<String> healthRecords,
-      {History doc}) async {
+      {Past doc}) async {
     CreateAppointmentModel bookAppointmentModel =
         await createAppointMentViewModel.putBookAppointment(
             createdBy,
@@ -892,7 +892,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       bool isMedicalShared,
       bool isFollowUp,
       List<String> healthRecords,
-      {History doc}) {
+      {Past doc}) {
     bookAppointmentCall(createdBy, bookedFor, doctorSessionId, scheduleDate,
             slotNumber, isMedicalShared, isFollowUp, healthRecords,
             doc: doc)
