@@ -290,10 +290,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           isExpanded: true,
           hint: Text(CommonConstants.genderWithStar),
           value: selectedGender != null
-              ? selectedGender.toLowerCase() != null
-                  ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
-                  : selectedGender
-              : null,
+              ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
+              : selectedGender,
           items: variable.genderArray.map((eachGender) {
             return DropdownMenuItem(
               child: new Text(eachGender,
@@ -889,9 +887,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return isValid;
   }
 
-  void setValuesInEditText() async { //* set the user data from input
+  void setValuesInEditText() async {
+    //* set the user data from input
     _addressList = await doctorPersonalViewModel.getAddressTypeList();
-    if (widget.arguments.fromClass == CommonConstants.user_update) { //* user profile update sections
+    if (widget.arguments.fromClass == CommonConstants.user_update) {
+      //* user profile update sections
       addFamilyUserInfoBloc.userId = widget.arguments.myProfileResult.id;
       if (widget.arguments.myProfileResult.userContactCollection3 != null) {
         if (widget.arguments.myProfileResult.userContactCollection3.length >
@@ -924,7 +924,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         stateVal =
             widget.arguments.myProfileResult.userAddressCollection3[0].state;
 
-        _addressResult = AddressResult(
+        _addressResult = new AddressResult(
             id: widget.arguments.myProfileResult.userAddressCollection3[0]
                 .addressType.id,
             code: widget.arguments.myProfileResult.userAddressCollection3[0]
@@ -934,11 +934,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       } else {
         try {
           print('inside try');
-          _addressResult = new AddressResult(
-            id: "22f814a7-5b72-41aa-b5f7-7d2cd38d5da4",
-            code: "RESADD",
-            name: "Resident Address",
-          );
+          _addressResult = _addressList[0];
           print('after try');
         } catch (e) {}
       }
@@ -971,7 +967,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (widget.arguments.myProfileResult.gender != null) {
         selectedGender = widget.arguments.myProfileResult.gender;
       }
-    } else if (widget.arguments.fromClass == CommonConstants.my_family) { //* my-family member details update sections
+    } else if (widget.arguments.fromClass == CommonConstants.my_family) {
+      //* my-family member details update sections
       addFamilyUserInfoBloc.userId = widget
           .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
 
@@ -1056,11 +1053,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           stateVal = currentAddress.state;
         } else {
           try {
-            _addressResult = new AddressResult(
-              id: "22f814a7-5b72-41aa-b5f7-7d2cd38d5da4",
-              code: "RESADD",
-              name: "Resident Address",
-            );
+            _addressResult = _addressList[0];
           } catch (e) {}
         }
 
@@ -1071,7 +1064,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               widget.arguments.sharedbyme.child.dateOfBirth);
         }
       }
-    } else {  //* primary user adding section
+    } else {
+      //* primary user adding section
       addFamilyUserInfoBloc.userId = widget.arguments.addFamilyUserInfo.id;
       addFamilyUserInfoBloc.getMyProfileInfo().then((value) {
         if (widget.arguments.isPrimaryNoSelected) {
@@ -1092,11 +1086,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
         relationShipController.text = widget.arguments.relationShip.name;
         try {
-          _addressResult = new AddressResult(
-            id: "22f814a7-5b72-41aa-b5f7-7d2cd38d5da4",
-            code: "RESADD",
-            name: "Resident Address",
-          );
+          _addressResult = _addressList[0];
         } catch (e) {}
         if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
           currentselectedBloodGroup = value.result.bloodGroup.split(' ')[0];
@@ -1138,7 +1128,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     profileResult.gender = selectedGender;
     profileResult.lastModifiedBy = null;
     profileResult.lastModifiedOn = null;
-    profileResult.profilePicThumbnailUrl='';
+    profileResult.profilePicThumbnailUrl = '';
 
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
@@ -1209,7 +1199,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     myProf.result = profileResult;
     addFamilyUserInfoBloc.myProfileModel = myProf;
     FamilyListBloc _familyListBloc = new FamilyListBloc();
-    if (widget.arguments.fromClass == CommonConstants.my_family) { //*update the myfamily member details
+    if (widget.arguments.fromClass == CommonConstants.my_family) {
+      //*update the myfamily member details
       if (doValidation()) {
         if (addFamilyUserInfoBloc.profileBanner != null) {
           PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
@@ -1244,7 +1235,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         Alert.displayAlertPlain(context,
             title: variable.Error, content: strErrorMsg);
       }
-    } else if (widget.arguments.fromClass == CommonConstants.user_update) { //*update the user details
+    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
+      //*update the user details
       if (doValidation()) {
         if (addFamilyUserInfoBloc.profileBanner != null) {
           PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,
@@ -1273,7 +1265,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         Alert.displayAlertPlain(context,
             title: variable.Error, content: strErrorMsg);
       }
-    } else {  //*other update
+    } else {
+      //*other update
       if (doValidation()) {
         if (addFamilyUserInfoBloc.profileBanner != null) {
           PreferenceUtil.saveString(Constants.KEY_PROFILE_BANNER,

@@ -86,18 +86,19 @@ class _MyProfilePageState extends State<MyProfilePage> {
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           //* its fetching the data from remote
-          return Container(
-            child: Center(
-                child: Column(
+          return Center(
+            child: Column(
               children: [
-                CircularProgressIndicator(),
+                CircularProgressIndicator(
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                ),
                 Text(
                   'Hey Please Hangon!\nprofile is loading.',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                 )
               ],
-            )),
+            ),
           );
         } else {
           toast.getToast('${snapshot.error.toString()}', Colors.red);

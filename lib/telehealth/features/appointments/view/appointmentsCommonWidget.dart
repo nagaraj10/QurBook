@@ -22,6 +22,7 @@ class AppointmentsCommonWidget {
   List<CategoryResult> filteredCategoryData = new List();
   List<CategoryResult> categoryDataList = new List();
   CategoryResult categoryDataObjClone = new CategoryResult();
+  CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
   Widget docName(BuildContext context, doc) {
     return Row(
@@ -338,37 +339,39 @@ class AppointmentsCommonWidget {
         ));
   }
 
-  Future<List<CategoryResult>> getCategoryList() async {
-    CategoryListBlock _categoryListBlock = new CategoryListBlock();
+  List<CategoryResult> getCategoryList() {
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
-      final value = await _categoryListBlock.getCategoryLists();
-      categoryDataList = value.result;
-      filteredCategoryData =
-          new CommonUtil().fliterCategories(categoryDataList);
-      filteredCategoryData.add(categoryDataObjClone);
+      _categoryListBlock.getCategoryLists().then((value) {
+        categoryDataList = value.result;
+
+        filteredCategoryData =
+            new CommonUtil().fliterCategories(categoryDataList);
+
+        filteredCategoryData.add(categoryDataObjClone);
+      });
       return filteredCategoryData;
     } else {
       return filteredCategoryData;
     }
   }
 
-  getCategoryPosition(String categoryName) async {
-    int categoryPosition;
+  getCategoryPosition(String categoryName) {
+    int categoryPosition = 0;
     switch (categoryName) {
       case Constants.STR_NOTES:
-        categoryPosition = await pickPosition(categoryName);
+        categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
       case Constants.STR_PRESCRIPTION:
-        categoryPosition = await pickPosition(categoryName);
+        categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
       case Constants.STR_VOICERECORDS:
-        categoryPosition = await pickPosition(categoryName);
+        categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
       case Constants.STR_BILLS:
-        categoryPosition = await pickPosition(categoryName);
+        categoryPosition = pickPosition(categoryName);
         return categoryPosition;
         break;
       default:
@@ -378,19 +381,19 @@ class AppointmentsCommonWidget {
     }
   }
 
-  Future<int> pickPosition(String categoryName) async {
+  int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult> categoryDataList = await getCategoryList();
+    List<CategoryResult> categoryDataList = getCategoryList();
     for (int i = 0; i < categoryDataList.length; i++) {
       if (categoryName == categoryDataList[i].categoryName) {
+        print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;
       }
     }
     if (categoryName == Constants.STR_PRESCRIPTION) {
-      return 0;
-    } else {
-      return position;
+      position = 0;
     }
+    return position;
   }
 
   Widget docPhotoView(Past doc) {

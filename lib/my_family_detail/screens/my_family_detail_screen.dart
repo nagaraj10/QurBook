@@ -17,6 +17,7 @@ import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
@@ -216,6 +217,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipController = TextEditingController(text: '');
     relationShipFocus = FocusNode();
 
+    var cntrlr_addr_one = TextEditingController(text: '');
+    var cntrlr_addr_two = TextEditingController(text: '');
+    var cntrlr_addr_city = TextEditingController(text: '');
+    var cntrlr_addr_state = TextEditingController(text: '');
+    var cntrlr_addr_zip = TextEditingController(text: '');
+
     if (sharedbyme.child != null) {
       if (sharedbyme.child.firstName != null &&
           sharedbyme.child.lastName != null) {
@@ -242,13 +249,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                   myProf.result.userContactCollection3[0].email;
             }
           }
-        }else{
+        } else {
           // this is non primary user
-          if(sharedbyme?.child?.userContactCollection3.isNotEmpty){
-             mobileNoController.text =
-                  sharedbyme?.child?.userContactCollection3[0].phoneNumber;
-              emailController.text =
-                  sharedbyme?.child?.userContactCollection3[0].email;
+          if (sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+            mobileNoController.text =
+                sharedbyme?.child?.userContactCollection3[0].phoneNumber;
+            emailController.text =
+                sharedbyme?.child?.userContactCollection3[0].email;
           }
         }
       } catch (e) {
@@ -301,6 +308,16 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     if (sharedbyme.child.dateOfBirth != null) {
       dateOfBirthController.text =
           new FHBUtils().getFormattedDateOnlyNew(sharedbyme.child.dateOfBirth);
+    }
+
+    if (sharedbyme?.child?.userAddressCollection3.isNotEmpty) {
+      UserAddressCollection3 currentAddress =
+          sharedbyme.child.userAddressCollection3[0];
+      cntrlr_addr_one.text = currentAddress.addressLine1;
+      cntrlr_addr_two.text = currentAddress.addressLine2;
+      cntrlr_addr_city.text = currentAddress.city?.name;
+      cntrlr_addr_state.text = currentAddress.state?.name;
+      cntrlr_addr_zip.text = currentAddress.pincode;
     }
 
     String profilebanner =
@@ -381,6 +398,81 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             ],
           ),
           _showDateOfBirthTextField(),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+            child: TextField(
+              controller: cntrlr_addr_one,
+              enabled: false,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_line_1,
+              ),
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+            child: TextField(
+              controller: cntrlr_addr_two,
+              enabled: false,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_line_2,
+              ),
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+            child: TextField(
+              controller: cntrlr_addr_city,
+              enabled: false,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_city,
+              ),
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+            child: TextField(
+              controller: cntrlr_addr_state,
+              enabled: false,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_state,
+              ),
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+            child: TextField(
+              controller: cntrlr_addr_zip,
+              enabled: false,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_zip,
+              ),
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -395,6 +487,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             ],
           ),
           SizedBox(height: 20),
+
 //          Row(
 //            mainAxisAlignment: MainAxisAlignment.center,
 //            children: _buildPageIndicator(),
@@ -842,7 +935,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   Widget _showDateOfBirthTextField() {
     return GestureDetector(
-      onTap: dateOfBirthTapped,
+      onTap: null,
       child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: TextField(
