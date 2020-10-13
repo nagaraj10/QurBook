@@ -185,7 +185,7 @@ class CommonUtil {
     for (MediaResult mediaData in mediaDataList) {
       if (categoryName == Constants.STR_IDDOCS) {
         if (mediaData.healthRecordCategory.id == mediaId &&
-            mediaData.description == selectedMediaData.description) {
+            mediaData.id == selectedMediaData.id) {
           mediaDataObj = mediaData;
           (mediaDataObj.name + ' for ' + mediaDataObj.toString());
 

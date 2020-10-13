@@ -206,8 +206,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                       style: TextStyle(color: Colors.grey),
                     ),
                     Text(
-                      new FHBUtils().getFormattedDateString(
-                          data.metadata.healthRecordType.createdOn),
+                      new FHBUtils().getFormattedDateString(data.createdOn),
                       style: TextStyle(
                           color: Colors.grey[400],
                           fontWeight: FontWeight.w200,

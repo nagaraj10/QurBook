@@ -607,7 +607,7 @@ class CommonDialogBox {
       var mediaDataClone = mediaData.name.split(' ');
       if (mediaDataClone.length > 0) {
         if (idType != '' && idType != null) {
-          if (idType == mediaDataClone[0]) {
+          if (idType == mediaData.id) {
             selectedID = idType;
             selectedMediaData = mediaData;
 

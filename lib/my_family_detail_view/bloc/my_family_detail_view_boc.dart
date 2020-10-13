@@ -5,6 +5,7 @@ import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_reposit
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/router_variable.dart' as router;
@@ -13,7 +14,7 @@ class MyFamilyDetailViewBloc implements BaseBloc {
   StreamController _healthReportListController;
   StreamController _categoryController;
   StreamController _categoryControllers;
-
+  StreamController _healthListControlllers;
 
   // 1
 
@@ -30,7 +31,6 @@ class MyFamilyDetailViewBloc implements BaseBloc {
   Stream<ApiResponse<CategoryResponseList>> get categoryListStream =>
       _categoryController.stream;
 
-
   //3
 
   StreamSink<ApiResponse<CategoryDataList>> get categoryListSinks =>
@@ -39,17 +39,21 @@ class MyFamilyDetailViewBloc implements BaseBloc {
   Stream<ApiResponse<CategoryDataList>> get categoryListStreams =>
       _categoryControllers.stream;
 
+  StreamSink<ApiResponse<HealthRecordList>> get healthReportListSinks =>
+      _healthListControlllers.sink;
+  Stream<ApiResponse<HealthRecordList>> get healthReportStreams =>
+      _healthListControlllers.stream;
+
   MyFamilyDetailViewRepository _healthReportListForUserRepository;
 
   String userId;
 
   @override
   void dispose() {
-
     _healthReportListController?.close();
     _categoryController?.close();
     _categoryControllers?.close();
-
+    _healthListControlllers?.close();
   }
 
   MyFamilyDetailViewBloc() {
@@ -59,7 +63,9 @@ class MyFamilyDetailViewBloc implements BaseBloc {
         StreamController<ApiResponse<UserHealthResponseList>>();
 
     _categoryController = StreamController<ApiResponse<CategoryResponseList>>();
-    _categoryController = StreamController<ApiResponse<CategoryDataList>>();
+    _categoryControllers = StreamController<ApiResponse<CategoryDataList>>();
+
+    _healthListControlllers = StreamController<ApiResponse<HealthRecordList>>();
   }
 
   getHelthReportList() async {
@@ -71,6 +77,20 @@ class MyFamilyDetailViewBloc implements BaseBloc {
     } catch (e) {
       healthReportListSink.add(ApiResponse.error(e.toString()));
     }
+  }
+
+  Future<HealthRecordList> getHelthReportLists(String userId) async {
+    HealthRecordList userHealthResponseList;
+    healthReportListSinks
+        .add(ApiResponse.loading(variable.strGettingHealthRecords));
+    try {
+      userHealthResponseList =
+          await _healthReportListForUserRepository.getHealthReportLists(userId);
+      healthReportListSinks.add(ApiResponse.completed(userHealthResponseList));
+    } catch (e) {
+      healthReportListSinks.add(ApiResponse.error(e.toString()));
+    }
+    return userHealthResponseList;
   }
 
   Future<CategoryResponseList> getCategoryList() async {
@@ -89,15 +109,16 @@ class MyFamilyDetailViewBloc implements BaseBloc {
   }
 
   Future<CategoryDataList> getCategoryLists() async {
-    categoryListSink.add(ApiResponse.loading(variable.strFetchCategory));
+    categoryListSinks.add(ApiResponse.loading(variable.strFetchCategory));
 
     CategoryDataList categoryResponseList;
 
     try {
       categoryResponseList =
-      await _healthReportListForUserRepository.getCategoryLists();
+          await _healthReportListForUserRepository.getCategoryLists();
+      categoryListSinks.add(ApiResponse.completed(categoryResponseList));
     } catch (e) {
-      categoryListSink.add(ApiResponse.error(e.toString()));
+      categoryListSinks.add(ApiResponse.error(e.toString()));
     }
 
     return categoryResponseList;

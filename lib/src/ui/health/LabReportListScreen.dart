@@ -210,8 +210,8 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                         color: Colors.grey, fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    new FHBUtils().getFormattedDateString(
-                        mediaMetaInfo.metadata.healthRecordType.createdOn),
+                    new FHBUtils()
+                        .getFormattedDateString(mediaMetaInfo.createdOn),
                     style: TextStyle(
                         color: Colors.grey[400],
                         fontWeight: FontWeight.w200,

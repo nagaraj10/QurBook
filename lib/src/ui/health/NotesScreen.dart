@@ -194,7 +194,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                       ),
                       Text(
                         new FHBUtils().getFormattedDateString(mediaMetaInfoObj
-                            .metadata.healthRecordType.createdOn),
+                            .createdOn),
                         style: TextStyle(color: Colors.grey[400], fontSize: 12),
                       )
                     ],

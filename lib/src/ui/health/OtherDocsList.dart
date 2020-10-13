@@ -185,14 +185,12 @@ class _OtherDocsState extends State<OtherDocsList> {
                       softWrap: false,
                     ),
                     Text(
-                      ''
-                      /*mediaMetaInfoObj.metadata.healthRecordType.createdOn != ''
+                      mediaMetaInfoObj.createdOn != ''
                           ? new FHBUtils().getFormattedDateString(
+                              mediaMetaInfoObj.createdOn)
+                          : new FHBUtils().getFormattedDateString(
                               mediaMetaInfoObj
-                                  .metadata.healthRecordType.createdOn)
-                          : mediaMetaInfoObj
-                              .metadata.healthRecordType.createdOn*/
-                      ,
+                                  .metadata.healthRecordType.createdOn),
                       style: TextStyle(color: Colors.grey[400], fontSize: 12),
                     )
                   ],

@@ -40,6 +40,7 @@ class HealthResult {
   String doctorId;
   List<HealthRecordCollection> healthRecordCollection;
   bool isSelected = false;
+  String createdOn;
 
   HealthResult(
       {this.id,
@@ -54,7 +55,8 @@ class HealthResult {
       this.isCompleted,
       this.doctorId,
       this.healthRecordCollection,
-      this.isSelected});
+      this.isSelected,
+      this.createdOn});
 
   HealthResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -76,6 +78,7 @@ class HealthResult {
         healthRecordCollection.add(new HealthRecordCollection.fromJson(v));
       });
     }
+    createdOn = json['createdOn'];
   }
 
   Map<String, dynamic> toJson() {
@@ -97,6 +100,7 @@ class HealthResult {
       data['healthRecordCollection'] =
           this.healthRecordCollection.map((v) => v.toJson()).toList();
     }
+    data['createdOn'] = this.createdOn;
     return data;
   }
 }

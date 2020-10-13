@@ -1116,7 +1116,7 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> createMediaData(String url, String payload,
-      List<String> imagePaths, String audioPath) async {
+      List<String> imagePaths, String audioPath, String id) async {
     String authToken =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     String userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -1129,7 +1129,7 @@ class ApiBaseHelper {
     if (imagePaths != null && imagePaths.length > 0) {
       formData = new FormData.fromMap({
         'metadata': payload,
-        'userId': userId,
+        'userId': id,
         'isBookmarked': false,
       });
 
@@ -1152,7 +1152,7 @@ class ApiBaseHelper {
       }
     } else {
       formData = new FormData.fromMap(
-          {'metadata': payload, 'userId': userId, 'isBookmarked ': true});
+          {'metadata': payload, 'userId': id, 'isBookmarked ': false});
     }
     var response;
     try {

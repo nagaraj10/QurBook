@@ -182,9 +182,9 @@ class _BillsListState extends State<BillsList> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   Text(
-                    mediaMetaInfoObj.metadata.dateOfVisit != ''
-                        ? new FHBUtils().getFormattedDateString(
-                            mediaMetaInfoObj.metadata.dateOfVisit)
+                    mediaMetaInfoObj.createdOn != ''
+                        ? new FHBUtils()
+                            .getFormattedDateString(mediaMetaInfoObj.createdOn)
                         : '',
                     style: TextStyle(color: Colors.grey[400], fontSize: 12),
                   )

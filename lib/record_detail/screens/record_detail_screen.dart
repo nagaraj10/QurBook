@@ -782,7 +782,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: fileName),
               new TextEditingController(text: date),
               // widget.data.metaInfo.idType
-              '');
+              widget.data.healthRecordTypeId);
           break;
 
         case Constants.STR_OTHERS:

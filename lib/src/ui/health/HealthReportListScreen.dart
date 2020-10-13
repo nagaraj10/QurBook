@@ -206,9 +206,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                 fontWeight: FontWeight.w500),
                           )),
                       Text(
-                        /*new FHBUtils().getFormattedDateString(
-                            mediaMetaInfoObj.metadata.dateOfVisit)*/
-                        mediaMetaInfoObj.metadata.dateOfVisit,
+                        new FHBUtils()
+                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w200,

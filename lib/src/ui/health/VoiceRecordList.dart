@@ -185,7 +185,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                       ),
                       Text(
                         new FHBUtils()
-                            .getFormattedDateString(mediaMetaInfoObj.metadata.healthRecordType.createdOn),
+                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(color: Colors.grey[400], fontSize: 12),
                       )
                     ],

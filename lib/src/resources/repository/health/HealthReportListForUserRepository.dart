@@ -182,7 +182,7 @@ class HealthReportListForUserRepository {
     }
 
     var response = await _helper.createMediaData(
-        query.qr_health_record, jsonString, imagePaths, audioPath);
+        query.qr_health_record, jsonString, imagePaths, audioPath, id);
     return HealthRecordSuccess.fromJson(response.data);
   }
 
