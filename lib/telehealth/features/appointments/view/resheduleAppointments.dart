@@ -179,7 +179,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               date: _selectedValue.toString(),
               doctorId: widget.doc.doctor.id,
               docs: [doctors],
-              isReshedule: true,
+              isReshedule: widget.isReshedule,
               i: i,doctorsData: widget.doc,
               healthOrganizationId: widget.doc.healthOrganization.id,
               healthOrganizationResult: docs,
