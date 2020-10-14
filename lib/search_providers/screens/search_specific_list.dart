@@ -429,7 +429,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       data[i].firstName,
                       data[i].addressLine1,
                       data[i].doctorId,
-                      '',
+                      data[i].profilePicThumbnailUrl,
                       data[i],
                       HospitalsListResult(),
                       LabListResult()),
@@ -647,7 +647,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       return Container();
     } else {
       return Image.network(
-        Constants.BASE_URL + logo,
+        logo,
       );
     }
   }

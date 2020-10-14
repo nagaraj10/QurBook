@@ -56,18 +56,18 @@ class ResponseInfo {
   String buyerName;
   String amount;
   String purpose;
-  Null expiresAt;
+  String expiresAt;
   String status;
   bool sendSms;
   bool sendEmail;
   String smsStatus;
   String emailStatus;
-  Null shorturl;
+  String shorturl;
   String longurl;
   String redirectUrl;
   String webhook;
   bool allowRepeatedPayments;
-  Null customerId;
+  String customerId;
   String createdAt;
   String modifiedAt;
 
