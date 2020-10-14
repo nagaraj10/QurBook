@@ -137,7 +137,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   addHealthRecords() {
-    //healthRecords.addAll(recordIds);
+    healthRecords.addAll(recordIds);
     healthRecords.addAll(notesId);
     healthRecords.addAll(voiceIds);
   }

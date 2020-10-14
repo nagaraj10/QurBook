@@ -177,7 +177,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
   Widget getHealthReportToDisplayInBody() {
     myFamilyDetailViewBloc = new MyFamilyDetailViewBloc();
-    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.id;
+    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.child.id;
     //getCategories();
     myFamilyDetailViewBloc.getHelthReportLists(myFamilyDetailViewBloc.userId);
 
