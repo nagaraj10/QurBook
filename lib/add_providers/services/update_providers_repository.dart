@@ -29,8 +29,8 @@ class UpdateProvidersRepository {
   // 1
   // Doctors
   Future<UpdateProvidersId> updateDoctorsIdWithUserDetailsNew(
-      String providerId, bool isPreferred, String provideReferenceId) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String providerId, bool isPreferred, String provideReferenceId,String userId) async {
+    //String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     Map<String, dynamic> doctorDic = new Map();
     doctorDic[parameters.doctorId] = providerId;
     doctorDic[parameters.strDoctorReferenceId] = provideReferenceId;
@@ -44,7 +44,7 @@ class UpdateProvidersRepository {
     print(jsonString);
 
     final response = await _helper.updateTeleHealthProvidersNew(
-        webserviceCall.getUrlToUpdateDoctorNew(userID), jsonString);
+        webserviceCall.getUrlToUpdateDoctorNew(userId), jsonString);
 
     return UpdateProvidersId.fromJson(response);
   }
@@ -52,8 +52,8 @@ class UpdateProvidersRepository {
   // 2
   // Hospitals
   Future<UpdateProvidersId> updateHospitalsIdWithUserDetails(
-      String providerId, bool isPreferred,String provideReferenceId) async {
-    String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String providerId, bool isPreferred,String provideReferenceId,String userId) async {
+   // String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     Map<String, dynamic> hospitalDic = new Map();
     hospitalDic[parameters.doctorId] = null;
@@ -73,15 +73,15 @@ class UpdateProvidersRepository {
     print(jsonString);
 
     final response = await _helper.updateTeleHealthProvidersNew(
-        webserviceCall.getUrlToUpdateDoctorNew(userID), jsonString);
+        webserviceCall.getUrlToUpdateDoctorNew(userId), jsonString);
     return UpdateProvidersId.fromJson(response);
   }
 
   // 3
   // Labs
   Future<UpdateProvidersId> updateLabsIdWithUserDetails(
-      String providerId, bool isPreferred,String provideReferenceId) async {
-    String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      String providerId, bool isPreferred,String provideReferenceId,String userId) async {
+   // String userID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     Map<String, dynamic> hospitalDic = new Map();
     hospitalDic[parameters.doctorId] = null;
@@ -101,7 +101,7 @@ class UpdateProvidersRepository {
     print(jsonString);
 
     final response = await _helper.updateTeleHealthProvidersNew(
-        webserviceCall.getUrlToUpdateDoctorNew(userID), jsonString);
+        webserviceCall.getUrlToUpdateDoctorNew(userId), jsonString);
     return UpdateProvidersId.fromJson(response);
   }
 }

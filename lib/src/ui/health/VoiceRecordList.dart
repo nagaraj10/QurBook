@@ -103,6 +103,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
   }
 
   getCardWidgetForVoiceRecords(HealthResult mediaMetaInfoObj, int i) {
+    print(mediaMetaInfoObj.metadata.hasVoiceNotes.toString() + '********');
     return InkWell(
         onLongPress: () {
           if (widget.isAudioSelect) {
@@ -157,10 +158,11 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                     radius: 25,
                     backgroundColor: const Color(fhbColors.bgColorContainer),
                     child: Image.network(
-                     /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                      /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                           ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                          : */Constants.BASE_URL +
-                              mediaMetaInfoObj.metadata.healthRecordCategory.logo,
+                          : */
+                      Constants.BASE_URL +
+                          mediaMetaInfoObj.metadata.healthRecordCategory.logo,
                       height: 25,
                       width: 25,
                       color: Color(new CommonUtil().getMyPrimaryColor()),

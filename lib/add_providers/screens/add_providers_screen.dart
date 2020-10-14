@@ -129,6 +129,8 @@ class AddProvidersState extends State<AddProviders> {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   MyProviderViewModel providerViewModel;
 
+  String USERID;
+
   @override
   void initState() {
     super.initState();
@@ -359,7 +361,8 @@ class AddProvidersState extends State<AddProviders> {
     googleMapControll = controller;
   }
 
-  buildUI() {
+  buildUI() async {
+    USERID = await PreferenceUtil.getStringValue(Constants.KEY_USERID);
     if (widget.arguments.fromClass != router.rt_myprovider) {
       if (widget.arguments.hasData) {
         if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
@@ -913,6 +916,8 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   void _addBtnTapped() {
+    providerViewModel.userID = USERID;
+    updateProvidersBloc.userId = USERID;
     if (widget.arguments.hasData ||
         widget.arguments.fromClass == router.rt_myprovider) {
       if (widget.arguments.fromClass == router.rt_myprovider) {
@@ -1223,13 +1228,18 @@ class AddProvidersState extends State<AddProviders> {
       FamilyMemberResult familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, _keyLoader, (context, userId, userName) {
-      PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
+      USERID = userId;
+      setState(() {
+        selectedFamilyMemberName = userName;
+      });
+      Navigator.pop(context);
+      /* PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
         //getUserProfileData();
         Navigator.pop(context);
         CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
         getUserProfileWithId();
-      });
+      });*/
     });
   }
 

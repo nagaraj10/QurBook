@@ -767,6 +767,7 @@ class CommonUtil {
       }
     }
 
+    print('mediaMasterId' + mediaMasterId.healthRecordUrl);
     return mediaMasterId;
   }
 

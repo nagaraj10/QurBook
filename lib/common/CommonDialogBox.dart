@@ -1629,6 +1629,9 @@ class CommonDialogBox {
             (audioPathMain != '' && audioPathMain != null) ? true : false;
 
         postMediaData[parameters.strdateOfVisit] = dateOfVisit.text;
+      } else {
+        postMediaData[parameters.strhasVoiceNotes] =
+            (audioPathMain != '' && audioPathMain != null) ? true : false;
       }
 
       postMediaData[parameters.strisDraft] = false;

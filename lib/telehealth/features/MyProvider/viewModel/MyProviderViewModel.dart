@@ -22,6 +22,7 @@ class MyProviderViewModel extends ChangeNotifier {
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
+  String userID;
   Future<List<DoctorIds>> fetchProviderDoctors() async {
     try {
       TelehealthProviderModel myProvidersResponseList =
@@ -33,19 +34,22 @@ class MyProviderViewModel extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<bool> bookMarkDoctor(Doctors doctorIds,bool isPreferred,String isFrom) async {
-
+  Future<bool> bookMarkDoctor(
+      Doctors doctorIds, bool isPreferred, String isFrom) async {
     DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
-        await _providersListRepository.bookMarkDoctor(doctorIds,isPreferred,isFrom);
+        await _providersListRepository.bookMarkDoctor(
+            doctorIds, isPreferred, isFrom, userID);
 
     return doctorBookMarkedSucessModel.isSuccess;
   }
 
-  Future<bool> bookMarkHealthOrg(Hospitals hospitals,bool isPreferred,String isFrom) async {
+  Future<bool> bookMarkHealthOrg(
+      Hospitals hospitals, bool isPreferred, String isFrom) async {
     bool condition;
 
     DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
-        await _providersListRepository.bookMarkHealthOrganizaton(hospitals,isPreferred,isFrom);
+        await _providersListRepository.bookMarkHealthOrganizaton(
+            hospitals, isPreferred, isFrom);
 
     return doctorBookMarkedSucessModel.isSuccess;
   }

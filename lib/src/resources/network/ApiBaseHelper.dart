@@ -1156,6 +1156,15 @@ class ApiBaseHelper {
     } else {
       formData = new FormData.fromMap(
           {'metadata': payload, 'userId': id, 'isBookmarked ': false});
+
+      if (audioPath != null && audioPath != '') {
+        File fileName = new File(audioPath);
+        String fileNoun = fileName.path.split('/').last;
+        formData.files.addAll([
+          MapEntry("fileName",
+              await MultipartFile.fromFile(fileName.path, filename: fileNoun)),
+        ]);
+      }
     }
     var response;
     try {

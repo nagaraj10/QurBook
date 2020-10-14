@@ -472,16 +472,24 @@ class _MyFamilyState extends State<MyFamily> {
                     SizedBox(height: 10.0),
                     Text(
                       position == 0 //this is checking self
-                          ? myProfile?.result?.userContactCollection3.isNotEmpty
+                          ? (myProfile?.result?.userContactCollection3 !=
+                                      null &&
+                                  myProfile?.result?.userContactCollection3
+                                          .length >
+                                      0)
                               ? myProfile?.result?.userContactCollection3[0]
                                   .phoneNumber
                               : ''
                           : data?.child?.isVirtualUser != null
                               ? data?.child?.isVirtualUser
                                   ? userCollection
-                                      ?.virtualUserParent?.phoneNumber
-                                  : data?.child?.userContactCollection3
-                                          .isNotEmpty
+                                          ?.virtualUserParent?.phoneNumber ??
+                                      ''
+                                  : (data?.child?.userContactCollection3 !=
+                                              null &&
+                                          data?.child?.userContactCollection3
+                                                  .length >
+                                              0)
                                       ? data?.child?.userContactCollection3[0]
                                           .phoneNumber
                                       : ''

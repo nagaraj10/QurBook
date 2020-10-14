@@ -71,7 +71,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   } */
 
   Widget getProfileDetailClone() {
-    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
     return FutureBuilder<MyProfileModel>(
       future: addFamilyUserInfoRepository.getMyProfileInfoNew(userid),
       builder: (BuildContext context, AsyncSnapshot<MyProfileModel> snapshot) {
