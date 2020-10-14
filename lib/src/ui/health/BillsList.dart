@@ -135,7 +135,7 @@ class _BillsListState extends State<BillsList> {
             if (mediaMetaInfoObj != null &&
                 mediaMetaInfoObj.healthRecordCollection.length > 0) {
               mediMasterId =
-                  new CommonUtil().getMetaMasterIdList(mediaMetaInfoObj);
+                  new CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
               if (mediMasterId.length > 0) {
                 widget.healthRecordSelected(
                     mediaMetaInfoObj.id, mediMasterId, condition);

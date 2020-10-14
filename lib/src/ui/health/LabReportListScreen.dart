@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -9,6 +10,7 @@ import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
@@ -22,11 +24,14 @@ class LabReportListScreen extends StatefulWidget {
 
   final Function(String, String) getDataForParticularLabel;
   final Function(String, bool) mediaSelected;
+  final Function(String, List<HealthRecordCollection>, bool)
+  healthRecordSelected;
   final bool allowSelect;
   List<String> mediaMeta;
   final bool isNotesSelect;
   final bool isAudioSelect;
   final bool showDetails;
+  final bool allowAttach;
 
   LabReportListScreen(
       this.completeData,
@@ -39,7 +44,8 @@ class LabReportListScreen extends StatefulWidget {
       this.mediaMeta,
       this.isNotesSelect,
       this.isAudioSelect,
-      this.showDetails);
+      this.showDetails,this.allowAttach,
+  this.healthRecordSelected);
 
   @override
   _LabReportListScreenState createState() => _LabReportListScreenState();
@@ -50,6 +56,10 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
+
+  List<HealthRecordCollection> mediMasterId = new List();
+
+  FlutterToast toast = new FlutterToast();
 
   @override
   void initState() {
@@ -113,16 +123,37 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
       },
       onTap: () {
         if (widget.allowSelect && widget.showDetails == false) {
-          bool condition;
-          if (widget.mediaMeta.contains(mediaMetaInfo.id)) {
-            condition = false;
+          if (widget.allowAttach) {
+            bool condition;
+            if (widget.mediaMeta.contains(mediaMetaInfo.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            mediaMetaInfo.isSelected = !mediaMetaInfo.isSelected;
+            if (mediaMetaInfo != null &&
+                mediaMetaInfo.healthRecordCollection.length > 0) {
+              mediMasterId =
+                  new CommonUtil().getMetaMasterIdListNew(mediaMetaInfo);
+              if (mediMasterId.length > 0) {
+                widget.healthRecordSelected(
+                    mediaMetaInfo.id, mediMasterId, condition);
+              } else {
+                toast.getToast('No Image Attached ', Colors.red);
+              }
+            }
           } else {
-            condition = true;
-          }
-          mediaMetaInfo.isSelected = !mediaMetaInfo.isSelected;
+            bool condition;
+            if (widget.mediaMeta.contains(mediaMetaInfo.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            mediaMetaInfo.isSelected = !mediaMetaInfo.isSelected;
 
-          // setState(() {});
-          widget.mediaSelected(mediaMetaInfo.id, condition);
+            // setState(() {});
+            widget.mediaSelected(mediaMetaInfo.id, condition);
+          }
         } else {
           Navigator.push(
             context,

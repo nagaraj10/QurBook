@@ -1146,7 +1146,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails));
+            widget.showDetails, widget.isFromChat,
+            addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionDevice) {
         tabWidgetList.add(new DeviceListScreen(
@@ -1160,7 +1161,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails));
+            widget.showDetails, widget.isFromChat,
+            addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionLabReport) {
         tabWidgetList.add(new LabReportListScreen(
@@ -1174,7 +1176,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails));
+            widget.showDetails, widget.isFromChat,
+            addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionMedicalReport) {
         tabWidgetList.add(new MedicalReportListScreen(
@@ -1188,7 +1191,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails));
+            widget.showDetails, widget.isFromChat,
+            addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionBills) {
         tabWidgetList.add(new BillsList(
@@ -1218,7 +1222,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails));
+            widget.showDetails, widget.isFromChat,
+            addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
         tabWidgetList.add(new OtherDocsList(
@@ -1233,7 +1238,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails));
+            widget.showDetails, widget.isFromChat,
+            addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionVoiceRecord) {
         tabWidgetList.add(new VoiceRecordList(
@@ -1263,7 +1269,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails));
+            widget.showDetails, widget.isFromChat,
+            addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionNotes) {
         tabWidgetList.add(new NotesScreenList(
