@@ -873,7 +873,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     print('build is called $count times');
     dialogContext = context;
     return WillPopScope(
-      onWillPop: ()async {
+      onWillPop: () async {
         Navigator.of(context).pop();
         Navigator.of(context).pop();
         return Future.value(true);
@@ -1525,7 +1525,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         child: addButtonWithGesture);
   }
 
-  /* Widget getAllCustomRoles() {
+  Widget getAllCustomRoles() {
     Widget familyWidget;
 
     return StreamBuilder<ApiResponse<RelationShipResponseList>>(
@@ -1549,7 +1549,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               //     snapshot.data.data.result[0].referenceValueCollection;
               setState(() {
                 relationShipResponseList =
-                  snapshot.data.data.result[0].referenceValueCollection;
+                    snapshot.data.data.result[0].referenceValueCollection;
               });
 
               // if (widget.arguments.fromClass == CommonConstants.my_family) {
@@ -1579,7 +1579,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         return familyWidget;
       },
     );
-  } */
+  }
 
   Widget getRelationshipDetails(List<RelationsShipModel> data) {
     RelationsShipModel currentSelectedUserRole = data[0];

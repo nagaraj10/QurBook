@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -22,6 +23,8 @@ class SwitchProfile {
   BuildContext context;
   GlobalKey<State> keyLoader = new GlobalKey<State>();
   Function callBackToRefresh;
+
+  FlutterToast toast = new FlutterToast();
 
   Widget buildActions(BuildContext _context, GlobalKey<State> _keyLoader,
       Function _callBackToRefresh,
@@ -153,17 +156,17 @@ class SwitchProfile {
     new FHBUtils().check().then((intenet) {
       if (intenet != null && intenet) {
         _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
-          if (familyMembersList != null) {
+          if (familyMembersList != null &&
+              familyMembersList.result != null &&
+              familyMembersList.result.sharedByUsers.length > 0) {
             //  Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
             getDialogBoxWithFamilyMemberScrap(familyMembersList.result);
           } else {
-            new FHBBasicWidget()
-                .showInSnackBar(Constants.NO_DATA_FAMIY, scaffold_state);
+            toast.getToast(Constants.NO_DATA_FAMIY_CLONE, Colors.black54);
           }
         });
       } else {
-        new FHBBasicWidget()
-            .showInSnackBar(Constants.STR_NO_CONNECTIVITY, scaffold_state);
+        toast.getToast(Constants.STR_NO_CONNECTIVITY, Colors.black54);
       }
     });
   }

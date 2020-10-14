@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_address/models/AddAddressArguments.dart';
@@ -122,6 +123,8 @@ class AddProvidersState extends State<AddProviders> {
   DoctorsListBlock _doctorsListBlock;
   HospitalListBlock _hospitalListBlock;
   LabsListBlock _labsListBlock;
+
+  FlutterToast toast = new FlutterToast();
 
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   MyProviderViewModel providerViewModel;
@@ -280,8 +283,15 @@ class AddProvidersState extends State<AddProviders> {
                             Navigator.of(_keyLoader.currentContext,
                                     rootNavigator: true)
                                 .pop();
-                            getDialogBoxWithFamilyMemberScrap(
-                                familyMembersList.response.data);
+                            if (familyMembersList != null &&
+                                familyMembersList.result != null &&
+                                familyMembersList.result.length > 0) {
+                              getDialogBoxWithFamilyMemberScrap(
+                                  familyMembersList.result);
+                            } else {
+                              toast.getToast(Constants.NO_DATA_FAMIY_CLONE,
+                                  Colors.black54);
+                            }
                           });
                         }
                       },
@@ -584,8 +594,14 @@ class AddProvidersState extends State<AddProviders> {
               // Hide Loading
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
-              getDialogBoxWithFamilyMemberScrap(
-                  familyMembersList.response.data);
+
+              if (familyMembersList != null &&
+                  familyMembersList.result != null &&
+                  familyMembersList.result.sharedByUsers.length > 0) {
+                getDialogBoxWithFamilyMemberScrap(familyMembersList.result);
+              } else {
+                toast.getToast(Constants.NO_DATA_FAMIY_CLONE, Colors.black54);
+              }
             });
           }
         },
@@ -916,7 +932,7 @@ class AddProvidersState extends State<AddProviders> {
             updateProvidersBloc.providerReferenceId =
                 widget.arguments.data.doctorReferenceId;*/
             providerViewModel
-                .bookMarkDoctor(widget.arguments.doctorsModel,isPreferred,'')
+                .bookMarkDoctor(widget.arguments.doctorsModel, isPreferred, '')
                 .then((status) {
               if (status) {
                 navigateToRefresh();
@@ -937,7 +953,8 @@ class AddProvidersState extends State<AddProviders> {
                widget.arguments.hospitalData.healthOrganizationReferenceId;*/
 
             providerViewModel
-                .bookMarkHealthOrg(widget.arguments.hospitalsModel,isPreferred,'')
+                .bookMarkHealthOrg(
+                    widget.arguments.hospitalsModel, isPreferred, '')
                 .then((status) {
               if (status) {
                 navigateToRefresh();
@@ -950,7 +967,7 @@ class AddProvidersState extends State<AddProviders> {
             /*updateProvidersBloc.providerId = widget.arguments.labsModel.id;*/
 
             providerViewModel
-                .bookMarkHealthOrg(widget.arguments.labsModel,isPreferred,'')
+                .bookMarkHealthOrg(widget.arguments.labsModel, isPreferred, '')
                 .then((status) {
               if (status) {
                 navigateToRefresh();

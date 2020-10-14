@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -50,6 +51,8 @@ class BillsList extends StatefulWidget {
 class _BillsListState extends State<BillsList> {
   HealthReportListForUserBlock _healthReportListForUserBlock;
   List<HealthRecordCollection> mediMasterId = new List();
+
+  FlutterToast toast = new FlutterToast();
 
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -118,32 +121,37 @@ class _BillsListState extends State<BillsList> {
       },
       onTap: () {
         if (widget.allowSelect && widget.showDetails == false) {
-         if(widget.allowAttach){
-          bool condition;
-          if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
-            condition = false;
+          if (widget.allowAttach) {
+            bool condition;
+            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+            if (mediaMetaInfoObj != null &&
+                mediaMetaInfoObj.healthRecordCollection.length > 0) {
+              mediMasterId =
+                  new CommonUtil().getMetaMasterIdList(mediaMetaInfoObj);
+              if (mediMasterId.length > 0) {
+                widget.mediaSelected(
+                    mediMasterId[0].healthRecordUrl, condition);
+              } else {
+                toast.getToast('No Image Attached ', Colors.red);
+              }
+            }
           } else {
-            condition = true;
-          }
-          mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
-          if (mediaMetaInfoObj != null &&
-              mediaMetaInfoObj.healthRecordCollection.length > 0) {
-            mediMasterId = new CommonUtil().getMetaMasterIdList(mediaMetaInfoObj);
-            widget.mediaSelected(mediMasterId[0].id, condition);
-          }
-        }else{
-           bool condition;
-           if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
-             condition = false;
-           } else {
-             condition = true;
-           }
-           mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+            bool condition;
+            if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
-           widget.mediaSelected(mediaMetaInfoObj.id, condition);
-         }
-        }
-        else {
+            widget.mediaSelected(mediaMetaInfoObj.id, condition);
+          }
+        } else {
           Navigator.push(
             context,
             MaterialPageRoute(

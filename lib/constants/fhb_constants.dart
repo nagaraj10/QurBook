@@ -149,6 +149,8 @@ const String NO_DATA_LAB =
     'Hey, You may need Labs contact coordinates !! \n Add it now.';
 const String NO_DATA_FAMIY = 'Looks like you haven'
     't added your family members. \n Add them right away.';
+const String NO_DATA_FAMIY_CLONE = 'Looks like you haven'
+    't added your family members.';
 const String NO_DATA_SCHEDULES =
     'Never miss any schedule. \n Add it to your calendar and get notified.';
 const String NO_DATA_PRESCRIPTION =

@@ -20,6 +20,7 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/src/model/common_response.dart';
 import 'package:myfhb/src/model/user/AddressTypeModel.dart';
@@ -27,6 +28,7 @@ import 'package:myfhb/src/model/user/City.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
+import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/alert.dart';
@@ -80,6 +82,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
   List<RelationsShipModel> relationShipResponseList;
   RelationsShipModel selectedRelationShip;
+  bool isCalled = false;
 
   String selectedGender;
 
@@ -670,20 +673,18 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
           onTap: () {
-            /*  widget.arguments.fromClass == CommonConstants.my_family
-                        ? relationShipResponseList != null
-                            ? Row(
-                                mainAxisSize: MainAxisSize.max,
-                                children: <Widget>[
-                                  getRelationshipDetails(
-                                      relationShipResponseList)
-                                ],
-                              )
-                            : getAllCustomRoles()
-                        : widget.arguments.fromClass ==
-                                CommonConstants.user_update
-                            ? new Container()
-                            : _showRelationShipTextField(), */
+            widget.arguments.fromClass == CommonConstants.my_family
+                ? relationShipResponseList != null
+                    ? Row(
+                        mainAxisSize: MainAxisSize.max,
+                        children: <Widget>[
+                          getRelationshipDetails(relationShipResponseList)
+                        ],
+                      )
+                    : getAllCustomRoles()
+                : widget.arguments.fromClass == CommonConstants.user_update
+                    ? new Container()
+                    : _showRelationShipTextField();
           },
           cursorColor: Theme.of(context).primaryColor,
           controller: relationShipController,
@@ -1116,7 +1117,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         middleNameController.text = value?.result?.middleName;
         lastNameController.text = value?.result?.lastName;
 
-        relationShipController.text = value?.result?.userRoleCollection3[0].role.name;
+        relationShipController.text =
+            value?.result?.userRoleCollection3[0].role.name;
         try {
           _addressResult = _addressList[0];
         } catch (e) {}
@@ -1591,8 +1593,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             source: ImageSource.gallery);
                         if (image != null) {
                           imageURI = image as File;
-                          if (widget.arguments.fromClass == CommonConstants.user_update){
-                            await PreferenceUtil.saveString(Constants.KEY_PROFILE_IMAGE, imageURI.path);
+                          if (widget.arguments.fromClass ==
+                              CommonConstants.user_update) {
+                            await PreferenceUtil.saveString(
+                                Constants.KEY_PROFILE_IMAGE, imageURI.path);
                           }
                           Navigator.pop(context);
                         }
@@ -1611,8 +1615,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         if (image != null) {
                           imageURI = image as File;
                           Navigator.pop(context);
-                          if (widget.arguments.fromClass == CommonConstants.user_update){
-                            await PreferenceUtil.saveString(Constants.KEY_PROFILE_IMAGE, imageURI.path);
+                          if (widget.arguments.fromClass ==
+                              CommonConstants.user_update) {
+                            await PreferenceUtil.saveString(
+                                Constants.KEY_PROFILE_IMAGE, imageURI.path);
                           }
                         }
                       },
@@ -1626,5 +1632,47 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       setState(() {});
       setMyProfilePic(userId, imageURI);
     });
+  }
+
+  Widget getAllCustomRoles() {
+    Widget familyWidget;
+
+    return StreamBuilder<ApiResponse<RelationShipResponseList>>(
+      stream: addFamilyUserInfoBloc.relationShipStream,
+      builder: (context,
+          AsyncSnapshot<ApiResponse<RelationShipResponseList>> snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              break;
+
+            case Status.ERROR:
+              familyWidget = Center(
+                  child: Text(Constants.STR_ERROR_LOADING_DATA,
+                      style: TextStyle(color: Colors.red)));
+              break;
+
+            case Status.COMPLETED:
+              isCalled = true;
+              // relationShipResponseList =
+              //     snapshot.data.data.result[0].referenceValueCollection;
+              setState(() {
+                relationShipResponseList =
+                    snapshot.data.data.result[0].referenceValueCollection;
+              });
+              familyWidget = getRelationshipDetails(relationShipResponseList);
+
+              break;
+          }
+        } else {
+          familyWidget = Container(
+            width: 100,
+            height: 100,
+          );
+        }
+
+        return familyWidget;
+      },
+    );
   }
 }
