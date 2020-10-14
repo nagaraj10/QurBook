@@ -141,6 +141,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           } else {
             date = 'Record not available';
             devicevalue1 = '';
+            devicevalue2 = '';
           }
           return getDeviceData(
               context, date, time, devicevalue1, devicevalue2, deviceData);
