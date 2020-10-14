@@ -202,9 +202,6 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                                 fontSize: 12,
                                 color: Colors.white),
                           ),
-                          SizedBox(
-                            height: 5,
-                          ),
                           Text(
                             '' +
                                 commonWidgets
@@ -213,7 +210,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                             maxLines: 1,
                             style: TextStyle(
                                 fontFamily: 'Poppins',
-                                fontSize: 8,
+                                fontSize: 12,
                                 color: Colors.white),
                           ),
                         ],
@@ -261,7 +258,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
     return Container(
       padding: EdgeInsets.all(10.0),
       child: ExpandableButton(
-        child: getHospitalWidget(i, docs),
+        child: getHospitalWidget(i, docs,widget.doctors[widget.index],widget.index),
       ),
     );
   }
@@ -274,7 +271,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       child: ExpandableButton(
         child: Column(
           children: [
-            getHospitalWidget(i, docs),
+            getHospitalWidget(i, docs,widget.doctors[widget.index],widget.index),
             commonWidgets.getSizedBox(20.0),
             DoctorSessionTimeSlot(
               date: _selectedValue.toString(),
@@ -297,7 +294,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   }
 
   Widget getHospitalWidget(
-      int i, List<HealthOrganizationResult> eachHospitalModel) {
+      int i, List<HealthOrganizationResult> eachHospitalModel,Doctors doctors, int index) {
     return Row(
       children: <Widget>[
         CircleAvatar(
@@ -366,7 +363,25 @@ class _HealthOrganizationState extends State<HealthOrganization> {
               ),
               SizedBox(height: 5),
               AutoSizeText(
-                '' + commonWidgets.getCity(eachHospitalModel[i]),
+                (doctors.doctorProfessionalDetailCollection != null &&
+                    doctors.doctorProfessionalDetailCollection.length > 0)
+                    ? doctors.doctorProfessionalDetailCollection[0].specialty != null
+                    ? doctors.doctorProfessionalDetailCollection[0].specialty.name !=
+                    null
+                    ? doctors.doctorProfessionalDetailCollection[0].specialty.name
+                    : ''
+                    : ''
+                    : '',
+                maxLines: 1,
+                style: TextStyle(
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.lightgraycolor),
+              ),
+              SizedBox(height: 5),
+              AutoSizeText(
+                '' + commonWidgets.getCity(eachHospitalModel[i])==''
+                    ?commonWidgets.getCityDoctorsModel(widget.doctors[widget.index]):'',
                 maxLines: 1,
                 style: TextStyle(
                     fontSize: 13.0,

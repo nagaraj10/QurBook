@@ -1194,8 +1194,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           String feesCode = result.doctorFeeCollection[i].feeType.code;
           if (feesCode == CONSULTING) {
             fees = result.doctorFeeCollection[i].fee;
-          } else {
-            fees = '';
           }
         }
       } else {

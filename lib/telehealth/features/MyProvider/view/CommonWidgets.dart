@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
@@ -6,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
@@ -525,7 +527,7 @@ class CommonWidgets {
               child: Stack(
                 overflow: Overflow.visible,
                 children: <Widget>[
-                  Positioned(
+                  /*Positioned(
                     top: -1.0,
                     child: IconButton(
                       icon: Icon(
@@ -537,7 +539,7 @@ class CommonWidgets {
                         Navigator.of(context).pop();
                       },
                     ),
-                  ),
+                  ),*/
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -559,10 +561,22 @@ class CommonWidgets {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 getTextForDoctors('${docs.user.name}'),
-                                docs.specialization != null
-                                    ? getDoctoSpecialist(
-                                        '${docs.specialization}')
-                                    : SizedBox(),
+                                AutoSizeText(
+                                  (docs.doctorProfessionalDetailCollection != null &&
+                                      docs.doctorProfessionalDetailCollection.length > 0)
+                                      ? docs.doctorProfessionalDetailCollection[0].specialty != null
+                                      ? docs.doctorProfessionalDetailCollection[0].specialty.name !=
+                                      null
+                                      ? docs.doctorProfessionalDetailCollection[0].specialty.name
+                                      : ''
+                                      : ''
+                                      : '',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorUtils.lightgraycolor),
+                                ),
                                 getDoctorsAddress(
                                     docs.user.userAddressCollection3[0].city !=
                                             null
@@ -582,7 +596,8 @@ class CommonWidgets {
                           ),
                         ],
                       ),
-                      getSizedBox(20),
+                      getSizedBox(15),
+                      getTextForDoctors('About: '),
                       getTextForDoctors((docs.doctorProfessionalDetailCollection
                                   .isNotEmpty ??
                               docs.doctorProfessionalDetailCollection.length >
@@ -592,13 +607,6 @@ class CommonWidgets {
                                   null)
                           ? docs.doctorProfessionalDetailCollection[0].aboutMe
                           : ''),
-                      /*getHospitalDetails(docs.professionalDetails != null
-                          ? docs.professionalDetails[0].aboutMe
-                          : ''),*/
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [],
-                      )
                     ],
                   ),
                 ],
