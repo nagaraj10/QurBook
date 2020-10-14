@@ -25,6 +25,7 @@ import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
@@ -59,7 +60,7 @@ class MyRecords extends StatefulWidget {
   List<String> selectedMedias;
   bool isFromChat;
   bool showDetails;
-  List<String> selectedRecordIds;
+  List<HealthRecordCollection> selectedRecordIds;
 
   MyRecords(
       {this.categoryPosition,
@@ -567,7 +568,7 @@ class CustomTabView extends StatefulWidget {
   bool showDetails;
   _MyRecordsState recordsState;
   HealthResult healthResult;
-  List<String> selectedRecordsId = new List();
+  List<HealthRecordCollection> selectedRecordsId = new List();
 
   CustomTabView(
       {@required this.itemCount,
@@ -1066,27 +1067,47 @@ class _CustomTabsState extends State<CustomTabView>
     categoryID = categoryId;
   }
 
-  void addMediaRemoveMaster(String metaId, bool condition) {
-    if (widget.allowSelect) {
-     if (widget.isFromChat) {
+  void addHealthRecords(String metaId,
+      List<HealthRecordCollection> healthRecords, bool condition) {
+    if (widget.isFromChat) {
       if (condition) {
-        widget.selectedRecordsId.add(metaId);
+        if (!(widget.selectedRecordsId.contains(metaId))) {
+          print(metaId + ' Added ************');
+        }
       } else {
         widget.selectedRecordsId.remove(metaId);
+        print(metaId + ' removed **************');
       }
-    }else{
-       if (condition) {
-         if (!(widget.selectedMedia.contains(metaId))) {
-           widget.selectedMedia.add(metaId);
-           print(metaId + ' Added ************');
-         }
-       } else {
-         widget.selectedMedia.remove(metaId);
-         print(metaId + ' removed **************');
-       }
-     }
+      if (condition) {
+        if (!(widget.selectedMedia.contains(metaId))) {
+          widget.selectedMedia.add(metaId);
+          widget.selectedRecordsId.addAll(healthRecords);
 
-    }  else if (widget.allowSelectNotes || widget.allowSelectVoice) {
+          print(metaId + ' Added ************');
+        }
+      } else {
+        widget.selectedMedia.remove(metaId);
+        widget.selectedRecordsId.remove(healthRecords);
+
+        print(metaId + ' removed **************');
+      }
+    }
+    print(widget.selectedMedia);
+    callBackToRefresh();
+  }
+
+  void addMediaRemoveMaster(String metaId, bool condition) {
+    if (widget.allowSelect) {
+      if (condition) {
+        if (!(widget.selectedMedia.contains(metaId))) {
+          widget.selectedMedia.add(metaId);
+          print(metaId + ' Added ************');
+        }
+      } else {
+        widget.selectedMedia.remove(metaId);
+        print(metaId + ' removed **************');
+      }
+    } else if (widget.allowSelectNotes || widget.allowSelectVoice) {
       if (condition) {
         if (widget.selectedMedia.length > 0) {
           new FHBBasicWidget()
@@ -1182,7 +1203,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelectNotes,
             widget.allowSelectVoice,
             widget.showDetails,
-            widget.isFromChat));
+            widget.isFromChat,
+            addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionIDDocs) {
         tabWidgetList.add(new IDDocsList(

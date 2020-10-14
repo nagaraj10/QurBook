@@ -302,6 +302,7 @@ class ChatScreenState extends State<ChatScreen> {
   var chatEnterMessageController = TextEditingController();
   final ScrollController listScrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
+  var healthRecordList;
   List<String> recordIds = new List();
   GetMediaFileViewModel getMediaFileViewModel = GetMediaFileViewModel();
   FlutterToast toast = new FlutterToast();
@@ -1268,15 +1269,21 @@ class ChatScreenState extends State<ChatScreen> {
     ))
         .then((results) {
       if (results.containsKey('metaId')) {
-        var metaIds = results['metaId'];
-        print(metaIds.toString());
+        //healthRecordList = results['metaId'];
 
-        recordIds = results['metaId'].cast<String>();
-        getMediaURL(recordIds);
+        healthRecordList =
+            new List<HealthRecordCollection>.from(results['metaId']);
+
+        //healthRecordList = results['metaId'].cast<HealthRecordCollection>();
+        List<String> attachedRecordIds = new List();
+        for (HealthRecordCollection healthRecordCollection
+            in healthRecordList) {
+          attachedRecordIds.add(healthRecordCollection.healthRecordUrl);
+        }
+        getMediaURL(attachedRecordIds);
 
         //print(recordIdCount);
         setState(() {});
-        print(metaIds.toString());
       }
     });
   }

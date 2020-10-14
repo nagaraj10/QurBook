@@ -23,6 +23,8 @@ class BillsList extends StatefulWidget {
 
   final Function(String, String) getDataForParticularLabel;
   final Function(String, bool) mediaSelected;
+  final Function(String, List<HealthRecordCollection>, bool)
+      healthRecordSelected;
   final bool allowSelect;
   final List<String> mediaMeta;
   final bool isNotesSelect;
@@ -42,7 +44,8 @@ class BillsList extends StatefulWidget {
       this.isNotesSelect,
       this.isAudioSelect,
       this.showDetails,
-      this.allowAttach);
+      this.allowAttach,
+      this.healthRecordSelected);
 
   @override
   _BillsListState createState() => new _BillsListState();
@@ -134,8 +137,8 @@ class _BillsListState extends State<BillsList> {
               mediMasterId =
                   new CommonUtil().getMetaMasterIdList(mediaMetaInfoObj);
               if (mediMasterId.length > 0) {
-                widget.mediaSelected(
-                    mediMasterId[0].healthRecordUrl, condition);
+                widget.healthRecordSelected(
+                    mediaMetaInfoObj.id, mediMasterId, condition);
               } else {
                 toast.getToast('No Image Attached ', Colors.red);
               }
