@@ -1274,7 +1274,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         Alert.displayAlertPlain(context,
             title: variable.Error, content: strErrorMsg);
       }
-    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
+    }
+    else if (widget.arguments.fromClass == CommonConstants.user_update) {
       //*update the user details
       if (doValidation()) {
         if (addFamilyUserInfoBloc.profileBanner != null) {
@@ -1289,6 +1290,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             _familyListBloc.getFamilyMembersListNew().then((value) {
               /*MySliverAppBar.imageURI = null;
                     fetchedProfileData = null;*/
+              if(userAddressCollection3List!=null){
+                if(userAddressCollection3List.length>0){
+                  String address1 = userAddressCollection3List[0].addressLine1!=null?userAddressCollection3List[0].addressLine1:'';
+                  String city = userAddressCollection3List[0].city.name!=null?userAddressCollection3List[0].city.name:'';
+                  String state = userAddressCollection3List[0].state.name!=null?userAddressCollection3List[0].state.name:'';
+                  String pincode = userAddressCollection3List[0].pincode!=null?userAddressCollection3List[0].pincode:'';
+
+                  PreferenceUtil.saveString(Constants.ADDRESS1, address1);
+                  PreferenceUtil.saveString(Constants.CITY, city);
+                  PreferenceUtil.saveString(Constants.STATE, state);
+                  PreferenceUtil.saveString(Constants.PINCODE, pincode);
+
+                }
+              }
+
               imageURI = null;
               Navigator.pop(dialogContext);
               Navigator.pop(dialogContext, true);

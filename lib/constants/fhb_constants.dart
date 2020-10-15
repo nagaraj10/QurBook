@@ -308,3 +308,7 @@ const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
+const String ADDRESS1 = 'address1';
+const String CITY = 'city';
+const String STATE = 'state';
+const String PINCODE = 'pincode';
