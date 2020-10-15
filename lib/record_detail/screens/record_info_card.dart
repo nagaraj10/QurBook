@@ -41,7 +41,7 @@ class RecordInfoCard {
                     child: metaInfo.doctor != null
                         ? new CommonUtil().getDoctorProfileImageWidget(metaInfo
                             .doctor
-                            .doctorId) //getDoctorProfileImageWidget(metaInfo)
+                            .profilePicThumbnailUrl) //getDoctorProfileImageWidget(metaInfo)
                         : Container(
                             width: 50,
                             height: 50,

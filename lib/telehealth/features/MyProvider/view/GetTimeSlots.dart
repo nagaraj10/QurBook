@@ -4,6 +4,7 @@ import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
@@ -83,7 +84,6 @@ class GetTimeSlots extends StatelessWidget {
                   String selectedSlot = dateSlotTimingsObj
                       .sessions[rowPosition].slots[itemPosition].slotNumber
                       .toString();
-                  print('resheduling appointment');
                   resheduleAppoitment(
                       context,
                       [doctorsData],
@@ -92,15 +92,18 @@ class GetTimeSlots extends StatelessWidget {
                       doctorsData.doctorSessionId);
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
-                    if (doctorsData == null) {
-                      print('normal Appointmnt');
-                      navigateToConfirmBook(context, rowPosition, itemPosition,
-                          null, false, false);
-                    } else {
-                      print('new Appointmnt from history');
-                      navigateToConfirmBook(context, rowPosition, itemPosition,
-                          doctorsData.doctorFollowUpFee, true, true);
+                    if(patientAddressCheck()){
+                      if (doctorsData == null) {
+                        navigateToConfirmBook(context, rowPosition, itemPosition,
+                            null, false, false);
+                      } else {
+                        navigateToConfirmBook(context, rowPosition, itemPosition,
+                            doctorsData.doctorFollowUpFee, true, true);
+                      }
+                    }else{
+                      toast.getToast(noAddress, Colors.red);
                     }
+
                   } else {
                     toast.getToast(selectSlotsMsg, Colors.red);
                   }
@@ -172,5 +175,21 @@ class GetTimeSlots extends StatelessWidget {
     ResheduleModel resheduleAppointment = await reshedule.resheduleAppointment(
         bookingIds, slotNumber.toString(), resheduledDate, doctorSessionId);
     return resheduleAppointment;
+  }
+
+  bool patientAddressCheck(){
+    bool condition;
+
+    String address1 = PreferenceUtil.getStringValue(Constants.ADDRESS1);
+    String city = PreferenceUtil.getStringValue(Constants.CITY);
+    String state = PreferenceUtil.getStringValue(Constants.STATE);
+    String pincode = PreferenceUtil.getStringValue(Constants.PINCODE);
+
+    if(address1!='' && city !='' && state !='' && pincode !=''){
+      condition =true;
+    }else{
+      condition=false;
+    }
+    return condition;
   }
 }

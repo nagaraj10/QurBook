@@ -233,7 +233,10 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                         : Text(''),
                     Text(
                       data.metadata.doctor != null
-                          ? toBeginningOfSentenceCase(data.metadata.doctor.name)
+                          ? toBeginningOfSentenceCase(
+                              data.metadata.doctor.name != null
+                                  ? data.metadata.doctor.name
+                                  : '')
                           : '',
                       style: TextStyle(color: Colors.grey),
                     ),

@@ -153,7 +153,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     ],
                   ),
                   onPressed: () {
-                    saveMediaDialog(context, categoryName, deviceName);
+                    saveMediaDialog(context, categoryName,
+                        deviceName[0].toUpperCase() + deviceName.substring(1));
                   },
                 ),
               )
@@ -404,7 +405,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   _skipBtnTapped(String device) {
     _scaffoldKey.currentState.hideCurrentSnackBar();
-    displayDevicesList(deviceName, null);
+    displayDevicesList(device[0].toUpperCase() + device.substring(1), null);
     skipTapped = true;
   }
 

@@ -195,9 +195,13 @@ class TakePictureScreenForDevicesState
                                                   ? deviceNames(_recognitions[0]
                                                       [Constants
                                                           .keyDetectedClass])
-                                                  : deviceName
-                                              : deviceName
-                                          : deviceName,
+                                                  : deviceName[0]
+                                                          .toUpperCase() +
+                                                      deviceName.substring(1)
+                                              : deviceName[0].toUpperCase() +
+                                                  deviceName.substring(1)
+                                          : deviceName[0].toUpperCase() +
+                                              deviceName.substring(1),
                                       maxFontSize: 14,
                                       minFontSize: 10,
                                       textAlign: TextAlign.center,
