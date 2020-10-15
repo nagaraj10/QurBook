@@ -111,9 +111,8 @@ class AppointmentsCommonWidget {
       if (doc.healthRecord.prescription != null &&
           doc.healthRecord.prescription.length > 0) {
         for (int i = 0; i < doc.healthRecord.prescription.length; i++) {
-          if (!recordIds
-              .contains(doc.healthRecord.prescription[i].mediaMetaId)) {
-            recordIds.add(doc.healthRecord.prescription[i].mediaMetaId);
+          if (!recordIds.contains(doc.healthRecord.prescription[i])) {
+            recordIds.add(doc.healthRecord.prescription[i]);
           }
         }
       }
