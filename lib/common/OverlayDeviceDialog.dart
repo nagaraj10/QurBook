@@ -132,7 +132,8 @@ class OverlayDeviceDialog extends ModalRoute<void> {
                 padding: const EdgeInsets.all(8),
                 child: Center(
                   child: Text(
-                    mediaDataForDevice[i].deviceName,
+                    mediaDataForDevice[i].deviceName[0].toUpperCase() +
+                        mediaDataForDevice[i].deviceName.substring(1),
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -141,11 +142,13 @@ class OverlayDeviceDialog extends ModalRoute<void> {
           ],
         ),
         onTap: () {
-          callBackPage(mediaDataForDevice[i].deviceName, context);
+          callBackPage(
+              mediaDataForDevice[i].deviceName[0].toUpperCase() +
+                  mediaDataForDevice[i].deviceName.substring(1),
+              context);
         },
       ));
     }
-    
 
     return deviceWidgetList;
   }

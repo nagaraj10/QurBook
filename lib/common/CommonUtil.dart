@@ -1200,31 +1200,23 @@ class CommonUtil {
     }
   }
 
-  getDoctorProfileImageWidget(String doctorId) {
-    HealthReportListForUserBlock _healthReportListForUserBlock =
-        new HealthReportListForUserBlock();
-    return FutureBuilder(
-      future: _healthReportListForUserBlock.getProfilePic(doctorId),
-      builder:
-          (BuildContext context, AsyncSnapshot<DoctorImageResponse> snapshot) {
-        if (snapshot.hasData) {
-          return Image.network(
-            snapshot.data.response,
-            height: 50,
-            width: 50,
-            fit: BoxFit.cover,
-          );
-        } else {
-          return new SizedBox(
-            width: 50.0,
-            height: 50.0,
-            child: Container(width: 50, height: 50, color: Colors.grey[200]),
-          );
-        }
+  getDoctorProfileImageWidget(String doctorUrl) {
+    if (doctorUrl != null && doctorUrl != '') {
+      return Image.network(
+        doctorUrl,
+        height: 50,
+        width: 50,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return new SizedBox(
+        width: 50.0,
+        height: 50.0,
+        child: Container(width: 50, height: 50, color: Colors.grey[200]),
+      );
+    }
 
-        ///load until snapshot.hasData resolves to true
-      },
-    );
+    ///load until snapshot.hasData resolves to true
   }
 
   Future<DeviceInfoSucess> sendDeviceToken(String userId, String email,

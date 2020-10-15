@@ -167,7 +167,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                 ClipOval(
                     child: mediaMetaInfoObj.metadata.doctor != null
                         ? CommonUtil().getDoctorProfileImageWidget(
-                            mediaMetaInfoObj.metadata.doctor.doctorId)
+                            mediaMetaInfoObj
+                                .metadata.doctor.profilePicThumbnailUrl)
                         : Container(
                             width: 50,
                             height: 50,

@@ -1271,8 +1271,7 @@ class ChatScreenState extends State<ChatScreen> {
       if (results.containsKey('metaId')) {
         //healthRecordList = results['metaId'];
 
-        healthRecordList =
-            new List<HealthRecordCollection>.from(results['metaId']);
+        healthRecordList = results['metaId'] as List;
 
         //healthRecordList = results['metaId'].cast<HealthRecordCollection>();
         List<String> attachedRecordIds = new List();
