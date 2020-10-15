@@ -1,5 +1,6 @@
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
+import 'package:myfhb/src/model/user/userrelationshipcollection.dart';
 
 import 'AddressTypeModel.dart';
 
@@ -33,6 +34,7 @@ class MyProfileResult {
   List<UserAddressCollection3> userAddressCollection3;
   List<UserContactCollection3> userContactCollection3;
   List<UserRoleCollection3> userRoleCollection3;
+  List<UserRelationshipCollection> userRelationshipCollection;
 
   MyProfileResult(
       {this.id,
@@ -63,7 +65,8 @@ class MyProfileResult {
         this.lastModifiedOn,
         this.userAddressCollection3,
         this.userContactCollection3,
-        this.userRoleCollection3});
+        this.userRoleCollection3,
+        this.userRelationshipCollection});
 
   MyProfileResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -110,6 +113,12 @@ class MyProfileResult {
         userRoleCollection3.add(new UserRoleCollection3.fromJson(v));
       });
     }
+    if (json['userRelationshipCollection'] != null) {
+      userRelationshipCollection = new List<UserRelationshipCollection>();
+      json['userRelationshipCollection'].forEach((v) {
+        userRelationshipCollection.add(new UserRelationshipCollection.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -151,6 +160,10 @@ class MyProfileResult {
     if (this.userRoleCollection3 != null) {
       data['userRoleCollection3'] =
           this.userRoleCollection3.map((v) => v.toJson()).toList();
+    }
+    if (this.userRelationshipCollection != null) {
+      data['userRelationshipCollection'] =
+          this.userRelationshipCollection.map((v) => v.toJson()).toList();
     }
     return data;
   }

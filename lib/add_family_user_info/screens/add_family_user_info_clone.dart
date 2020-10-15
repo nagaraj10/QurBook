@@ -28,6 +28,7 @@ import 'package:myfhb/src/model/user/City.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
+import 'package:myfhb/src/model/user/userrelationshipcollection.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
@@ -1092,7 +1093,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         } else {
           mobileNoController.text =
               value.result.userContactCollection3[0].phoneNumber;
-          emailController.text = value.result.userContactCollection3[0].email;
+              if(value?.result?.userContactCollection3[0].email!=null && value?.result?.userContactCollection3[0].email!=''){
+                emailController.text = value.result.userContactCollection3[0].email;
+              }
         }
         //*user already user exist set the address data if available
         if (value?.result?.userAddressCollection3.length > 0) {
@@ -1116,9 +1119,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         firstNameController.text = value?.result?.firstName;
         middleNameController.text = value?.result?.middleName;
         lastNameController.text = value?.result?.lastName;
-
-        relationShipController.text =
-            value?.result?.userRoleCollection3[0].role.name;
+        //? check relatioship id against logged in user 
+        if(value?.result?.userRelationshipCollection.length>0){
+          for(UserRelationshipCollection cRelationship in value?.result?.userRelationshipCollection){
+            if(cRelationship?.parent?.id==PreferenceUtil.getStringValue(Constants.KEY_USERID)){
+              relationShipController.text = cRelationship?.relationship?.name;
+            }
+          }
+        }
         try {
           _addressResult = _addressList[0];
         } catch (e) {}
