@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/PDFViewer.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
@@ -21,7 +22,6 @@ import 'package:myfhb/telehealth/features/chat/model/GetRecordIdsFilter.dart';
 import 'package:myfhb/telehealth/features/chat/view/PdfViewURL.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
-import 'package:myfhb/telehealth/features/chat/viewModel/GetMediaURLViewModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -304,7 +304,6 @@ class ChatScreenState extends State<ChatScreen> {
   final FocusNode focusNode = FocusNode();
   var healthRecordList;
   List<String> recordIds = new List();
-  GetMediaFileViewModel getMediaFileViewModel = GetMediaFileViewModel();
   FlutterToast toast = new FlutterToast();
 
   @override
@@ -319,36 +318,6 @@ class ChatScreenState extends State<ChatScreen> {
     imageUrl = '';
 
     getPatientDetails();
-  }
-
-  getMediaURL(List<String> recordIds) {
-    getMediaFileURL(recordIds).then((value) {
-      if (value.isSuccess == true) {
-        for (int i = 0;
-            i < value.result[0].healthRecordCollection.length;
-            i++) {
-          String fileType = value.result[0].healthRecordCollection[i].fileType;
-          String fileURL =
-              value.result[0].healthRecordCollection[i].healthRecordUrl;
-          if ((fileType == '.jpg') || (fileType == '.png')) {
-            onSendMessage(fileURL, 1);
-          } else if ((fileType == '.pdf')) {
-            onSendMessage(fileURL, 2);
-          } else {
-            toast.getToast('Attached file is not a valid format', Colors.red);
-          }
-        }
-      } else {
-        toast.getToast('Unable to get file', Colors.red);
-      }
-    });
-  }
-
-  Future<GetRecordIdsFilter> getMediaFileURL(List<String> recordIds) async {
-    GetRecordIdsFilter getMetaFileURLModel =
-        await getMediaFileViewModel.getMediaMetaURL(recordIds, patientId);
-
-    return getMetaFileURLModel;
   }
 
   getPatientDetails() async {
@@ -1269,21 +1238,25 @@ class ChatScreenState extends State<ChatScreen> {
     ))
         .then((results) {
       if (results.containsKey('metaId')) {
-        //healthRecordList = results['metaId'];
-
         healthRecordList = results['metaId'] as List;
-
-        //healthRecordList = results['metaId'].cast<HealthRecordCollection>();
-        List<String> attachedRecordIds = new List();
-        for (HealthRecordCollection healthRecordCollection
-            in healthRecordList) {
-          attachedRecordIds.add(healthRecordCollection.healthRecordUrl);
+        if (healthRecordList != null) {
+          getMediaURL(healthRecordList);
         }
-        getMediaURL(attachedRecordIds);
-
-        //print(recordIdCount);
         setState(() {});
       }
     });
+  }
+
+  getMediaURL(List<HealthRecordCollection> healthRecordCollection) {
+    for (int i = 0; i < healthRecordCollection.length; i++) {
+      String fileType = healthRecordCollection[i].fileType;
+      String fileURL =
+          healthRecordCollection[i].healthRecordUrl;
+      if ((fileType == '.jpg') || (fileType == '.png')) {
+        onSendMessage(fileURL, 1);
+      } else if ((fileType == '.pdf')) {
+        onSendMessage(fileURL, 2);
+      }
+    }
   }
 }

@@ -767,7 +767,6 @@ class CommonUtil {
       }
     }
 
-    print('mediaMasterId' + mediaMasterId.healthRecordUrl);
     return mediaMasterId;
   }
 
@@ -1309,5 +1308,22 @@ class CommonUtil {
       }
     }
     Get.snackbar('status', variable.strFilesDownloaded);
+  }
+
+  List<HealthRecordCollection> getMetaMasterIdListNew(HealthResult data) {
+    List<HealthRecordCollection> mediaMasterIdsList = new List();
+    try {
+      if (data.healthRecordCollection != null &&
+          data.healthRecordCollection.length > 0) {
+        for (HealthRecordCollection mediaMasterIds
+        in data.healthRecordCollection) {
+          if (mediaMasterIds.fileType == ".jpg" ||
+              mediaMasterIds.fileType == ".png" || mediaMasterIds.fileType == ".pdf")
+            mediaMasterIdsList.add(mediaMasterIds);
+        }
+      }
+    } catch (e) {}
+
+    return mediaMasterIdsList.length > 0 ? mediaMasterIdsList : new List();
   }
 }

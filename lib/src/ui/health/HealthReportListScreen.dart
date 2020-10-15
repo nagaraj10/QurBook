@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
@@ -13,6 +14,7 @@ import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
@@ -27,10 +29,13 @@ class HealthReportListScreen extends StatefulWidget {
 
   final Function(String, String) getDataForParticularLabel;
   final Function(String, bool) mediaSelected;
+  final Function(String, List<HealthRecordCollection>, bool)
+  healthRecordSelected;
   final bool allowSelect;
   final bool isNotesSelect;
   final bool isAudioSelect;
   final bool showDetails;
+  final bool allowAttach;
 
   List<String> mediaMeta;
   HealthReportListScreen(
@@ -44,7 +49,8 @@ class HealthReportListScreen extends StatefulWidget {
       this.mediaMeta,
       this.isNotesSelect,
       this.isAudioSelect,
-      this.showDetails);
+      this.showDetails,this.allowAttach,
+  this.healthRecordSelected);
 
   @override
   _HealthReportListScreenState createState() => _HealthReportListScreenState();
@@ -56,6 +62,9 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
+  List<HealthRecordCollection> mediMasterId = new List();
+
+  FlutterToast toast = new FlutterToast();
 
   bool _enabled = true;
   @override
@@ -128,15 +137,38 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
           },
           onTap: () {
             if (widget.allowSelect && widget.showDetails == false) {
-              bool condition;
-              if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
-                condition = false;
-              } else {
-                condition = true;
-              }
-              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
-              widget.mediaSelected(mediaMetaInfoObj.id, condition);
+              if (widget.allowAttach) {
+                bool condition;
+                if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+                  condition = false;
+                } else {
+                  condition = true;
+                }
+                mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+                if (mediaMetaInfoObj != null &&
+                    mediaMetaInfoObj.healthRecordCollection.length > 0) {
+                  mediMasterId =
+                      new CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
+                  if (mediMasterId.length > 0) {
+                    widget.healthRecordSelected(
+                        mediaMetaInfoObj.id, mediMasterId, condition);
+                  } else {
+                    toast.getToast('No Image Attached ', Colors.red);
+                  }
+                }
+              } else {
+                bool condition;
+                if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+                  condition = false;
+                } else {
+                  condition = true;
+                }
+                mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+                widget.mediaSelected(mediaMetaInfoObj.id, condition);
+              }
+
             } else {
               Navigator.push(
                 context,
