@@ -115,7 +115,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                 onChanged: widget.onChanged,
                               ),
                               SizedBoxWidget(height: 15.0),
-                              commonWidget.docIcons(widget.doc, context)
+                              commonWidget.docIcons(widget.doc, context, () {
+                                setState(() {});
+                              })
                             ],
                           ),
                         ],

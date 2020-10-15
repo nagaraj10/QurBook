@@ -1146,7 +1146,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails, widget.isFromChat,
+            widget.showDetails,
+            widget.isFromChat,
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionDevice) {
@@ -1161,7 +1162,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails, widget.isFromChat,
+            widget.showDetails,
+            widget.isFromChat,
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionLabReport) {
@@ -1176,7 +1178,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails, widget.isFromChat,
+            widget.showDetails,
+            widget.isFromChat,
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionMedicalReport) {
@@ -1191,7 +1194,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails, widget.isFromChat,
+            widget.showDetails,
+            widget.isFromChat,
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionBills) {
@@ -1222,7 +1226,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails, widget.isFromChat,
+            widget.showDetails,
+            widget.isFromChat,
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
@@ -1238,7 +1243,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails, widget.isFromChat,
+            widget.showDetails,
+            widget.isFromChat,
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionVoiceRecord) {
@@ -1269,7 +1275,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.selectedMedia,
             widget.allowSelectNotes,
             widget.allowSelectVoice,
-            widget.showDetails, widget.isFromChat,
+            widget.showDetails,
+            widget.isFromChat,
             addHealthRecords));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionNotes) {

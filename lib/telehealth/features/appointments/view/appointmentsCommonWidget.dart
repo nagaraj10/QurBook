@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
@@ -17,6 +20,7 @@ import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class AppointmentsCommonWidget {
   List<CategoryResult> filteredCategoryData = new List();
@@ -78,10 +82,12 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Widget docIcons(Past doc, BuildContext context) {
+  Widget docIcons(Past doc, BuildContext context, Function refresh) {
     List<String> recordIds = new List();
     List<String> notesId = new List();
     List<String> voiceIds = new List();
+
+    FlutterToast toast = new FlutterToast();
 
     String notesCount =
         doc.healthRecord.notes == null || doc.healthRecord.notes == ''
@@ -168,7 +174,8 @@ class AppointmentsCommonWidget {
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records, () async {
           if (rxCount != null) {
-            await Navigator.of(context).push(MaterialPageRoute(
+            await Navigator.of(context)
+                .push(MaterialPageRoute(
               builder: (context) => MyRecords(
                 categoryPosition:
                     getCategoryPosition(Constants.STR_PRESCRIPTION),
@@ -177,13 +184,41 @@ class AppointmentsCommonWidget {
                 isNotesSelect: false,
                 selectedMedias: recordIds,
                 isFromChat: false,
-                showDetails: true,
+                showDetails: false,
               ),
-            ));
+            ))
+                .then((results) {
+              if (results.containsKey('metaId')) {
+                var metaIds = results['metaId'];
+                print(metaIds.toString());
+
+                recordIds = results['metaId'].cast<String>();
+
+                associateRecords(doc.doctor.user.id, doc.bookedBy.id, recordIds)
+                    .then((value) {
+                  if (value != null && value.isSuccess) {
+                    toast.getToast('Sucess', Colors.green);
+                    refresh();
+                  } else {
+                    //pr.hide();
+                    toast.getToast(parameters.errAssociateRecords, Colors.red);
+                  }
+                });
+              }
+            });
           }
         }, rxCount),
       ],
     );
+  }
+
+  Future<AssociateSuccessResponse> associateRecords(
+      String doctorId, String userId, List<String> healthRecords) async {
+    MyProviderViewModel providerViewModel = new MyProviderViewModel();
+    AssociateSuccessResponse associateResponseList = await providerViewModel
+        .associateRecords(doctorId, userId, healthRecords);
+
+    return associateResponseList;
   }
 
   Widget iconWithText(

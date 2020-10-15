@@ -220,7 +220,7 @@ class _AppointmentsState extends State<Appointments> {
                   ),
                 );
         } else {
-          return Center(
+          return new Center(
             child: new CircularProgressIndicator(
               backgroundColor: Colors.grey,
             ),

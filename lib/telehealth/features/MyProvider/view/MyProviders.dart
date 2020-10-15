@@ -410,7 +410,8 @@ class _MyProvidersState extends State<MyProviders> {
           final items = snapshot.data ??
               <MyProvidersResponseData>[]; // handle the case that data is null
 
-          return (snapshot.data.result.doctors != null &&
+          return (snapshot.data.result != null &&
+                  snapshot.data.result.doctors != null &&
                   snapshot.data.result.doctors.length > 0)
               ? myProviderList(snapshot.data)
               : Container(

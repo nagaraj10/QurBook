@@ -401,16 +401,20 @@ class CommonUtil {
     final token = await _firebaseMessaging.getToken();
     loginBloc.logout().then((signOutResponse) {
       // moveToLoginPage(signOutResponse);
-      CommonUtil()
-          .sendDeviceToken(
-              PreferenceUtil.getStringValue(Constants.KEY_USERID),
-              profileResult.userContactCollection3[0].email,
-              profileResult.userContactCollection3[0].phoneNumber,
-              token,
-              false)
-          .then((value) {
+      try {
+        CommonUtil()
+            .sendDeviceToken(
+                PreferenceUtil.getStringValue(Constants.KEY_USERID),
+                profileResult.userContactCollection3[0].email,
+                profileResult.userContactCollection3[0].phoneNumber,
+                token,
+                false)
+            .then((value) {
+          moveToLoginPage(signOutResponse);
+        });
+      } catch (e) {
         moveToLoginPage(signOutResponse);
-      });
+      }
     });
   }
 
@@ -1316,9 +1320,10 @@ class CommonUtil {
       if (data.healthRecordCollection != null &&
           data.healthRecordCollection.length > 0) {
         for (HealthRecordCollection mediaMasterIds
-        in data.healthRecordCollection) {
+            in data.healthRecordCollection) {
           if (mediaMasterIds.fileType == ".jpg" ||
-              mediaMasterIds.fileType == ".png" || mediaMasterIds.fileType == ".pdf")
+              mediaMasterIds.fileType == ".png" ||
+              mediaMasterIds.fileType == ".pdf")
             mediaMasterIdsList.add(mediaMasterIds);
         }
       }
