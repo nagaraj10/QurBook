@@ -656,8 +656,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               child: Center(
                 child: TextWidget(
                     text: 'Pay INR ' +
-                        commonWidgets.getMoneyWithForamt(
-                            getFees(widget.healthOrganizationResult[widget.i])),
+                        commonWidgets.getMoneyWithForamt(widget.isFollowUp
+                            ? widget.followUpFee != null
+                                ? widget.followUpFee
+                                : getFees(
+                                    widget.healthOrganizationResult[widget.i])
+                            : getFees(
+                                widget.healthOrganizationResult[widget.i])),
                     fontsize: 22.0,
                     fontWeight: FontWeight.w500,
                     colors: Colors.blue[800]),
@@ -867,7 +872,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 slotNumber,
                 isMedicalShared,
                 isFollowUp,
-                healthRecords);
+                healthRecords,
+                doc: doc);
           } else {
             pr.hide();
             toast.getToast(errAssociateRecords, Colors.red);
@@ -875,7 +881,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         });
       } else {
         bookAppointmentOnly(createdBy, bookedFor, doctorSessionId, scheduleDate,
-            slotNumber, isMedicalShared, isFollowUp, healthRecords);
+            slotNumber, isMedicalShared, isFollowUp, healthRecords,
+            doc: doc);
       }
     } catch (e) {
       pr.hide();

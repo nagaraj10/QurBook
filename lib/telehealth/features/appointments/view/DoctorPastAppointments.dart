@@ -8,6 +8,7 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWidget.dart';
@@ -31,6 +32,7 @@ class DoctorPastAppointments extends StatefulWidget {
 
 class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
+  CommonWidgets providerCommonWidget=CommonWidgets();
   FlutterToast toast = new FlutterToast();
   List<String> bookingIds = new List();
   AppointmentsListViewModel appointmentsViewModel;
@@ -160,7 +162,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                           ),
                           TextWidget(
                             fontsize: 15,
-                            text: doc.doctorFollowUpFee ?? '',
+                            text: 'INR '+ providerCommonWidget.getMoneyWithForamt(
+                                doc.doctorFollowUpFee) ?? '',
                             fontWeight: FontWeight.w600,
                             overflow: TextOverflow.visible,
                             colors: Color(new CommonUtil().getMyPrimaryColor()),

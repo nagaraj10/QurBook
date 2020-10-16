@@ -5,9 +5,11 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
@@ -72,7 +74,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
           child: Column(
         children: <Widget>[
           Expanded(
-              child: widget.doc.healthOrganization.id != null
+              child: widget.doc.healthOrganization.id != null && doctors != null
                   ? getHospitalProviderList(widget.doc.doctor.id)
                   : Container())
         ],
@@ -158,11 +160,10 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   Widget collapseListItem(
       BuildContext ctx, int i, List<HealthOrganizationResult> docs) {
     return Container(
-      padding: EdgeInsets.all(10.0),
-      child: ExpandableButton(
-        child: getHospitalWidget(i, docs),
-      ),
-    );
+        padding: EdgeInsets.all(10.0),
+        child: ExpandableButton(
+          child: getHospitalWidget(i, docs, doctors, i),
+        ));
   }
 
   Widget expandedListItem(
@@ -173,14 +174,15 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
       child: ExpandableButton(
         child: Column(
           children: [
-            getHospitalWidget(i, docs),
+            getHospitalWidget(i, docs, doctors, i),
             commonWidgets.getSizedBox(20.0),
             DoctorSessionTimeSlot(
               date: _selectedValue.toString(),
               doctorId: widget.doc.doctor.id,
               docs: [doctors],
               isReshedule: widget.isReshedule,
-              i: i,doctorsData: widget.doc,
+              i: i,
+              doctorsData: widget.doc,
               healthOrganizationId: widget.doc.healthOrganization.id,
               healthOrganizationResult: docs,
               doctorListPos: 0,
@@ -196,20 +198,50 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   }
 
   Widget getHospitalWidget(
-      int i, List<HealthOrganizationResult> eachHospitalModel) {
+      int i,
+      List<HealthOrganizationResult> eachHospitalModel,
+      Doctors doctors,
+      int index) {
     return Row(
       children: <Widget>[
-        placeHolder != null
-            ? ClipOval(
-                child: Image.network(
-                placeHolder,
-                height: 50,
-                width: 50,
-                fit: BoxFit.cover,
-              ))
-            : CircleAvatar(
-                backgroundColor: Colors.greenAccent,
-                child: Icon(Icons.local_hospital)),
+        CircleAvatar(
+          radius: 25,
+          child: ClipOval(
+              child: eachHospitalModel != null
+                  ? eachHospitalModel[i] != null
+                      ? Container(
+                          height: 50,
+                          width: 50,
+                          color: Color(fhbColors.bgColorContainer),
+                          child: Center(
+                            child: Text(
+                              eachHospitalModel[i].healthOrganization != null
+                                  ? eachHospitalModel[i]
+                                              .healthOrganization
+                                              .name !=
+                                          null
+                                      ? eachHospitalModel[i]
+                                          .healthOrganization
+                                          .name[0]
+                                          .toUpperCase()
+                                      : ''
+                                  : '',
+                              style: TextStyle(
+                                  color:
+                                      Color(CommonUtil().getMyPrimaryColor())),
+                            ),
+                          ))
+                      : Container(
+                          height: 50,
+                          width: 50,
+                          color: Color(fhbColors.bgColorContainer),
+                        )
+                  : Container(
+                      height: 50,
+                      width: 50,
+                      color: Color(fhbColors.bgColorContainer),
+                    )),
+        ),
         SizedBox(
           width: 20,
         ),
@@ -234,7 +266,29 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               ),
               SizedBox(height: 5),
               AutoSizeText(
-                '' + commonWidgets.getCity(eachHospitalModel[i]),
+                (doctors.doctorProfessionalDetailCollection != null &&
+                        doctors.doctorProfessionalDetailCollection.length > 0)
+                    ? doctors.doctorProfessionalDetailCollection[0].specialty !=
+                            null
+                        ? doctors.doctorProfessionalDetailCollection[0]
+                                    .specialty.name !=
+                                null
+                            ? doctors.doctorProfessionalDetailCollection[0]
+                                .specialty.name
+                            : ''
+                        : ''
+                    : '',
+                maxLines: 1,
+                style: TextStyle(
+                    fontSize: 13.0,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.lightgraycolor),
+              ),
+              SizedBox(height: 5),
+              AutoSizeText(
+                '' + commonWidgets.getCity(eachHospitalModel[i]) == ''
+                    ? getCity(widget.doc)
+                    : '',
                 maxLines: 1,
                 style: TextStyle(
                     fontSize: 13.0,
@@ -257,8 +311,12 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                       child: TextWidget(
                           text: 'INR ' +
                               commonWidgets.getMoneyWithForamt(
-                                  getFees(eachHospitalModel[i])),
-                          fontsize: 12.0,
+                                  widget.isReshedule
+                                      ? 0.toString()
+                                      : widget.doc.doctorFollowUpFee != null
+                                          ? widget.doc.doctorFollowUpFee
+                                          : getFees(eachHospitalModel[i])),
+                          fontsize: 14.0,
                           fontWeight: FontWeight.w400,
                           colors: Colors.blue[800]),
                     ),
@@ -291,6 +349,16 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     return fees;
   }
 
+  getCity(Past doc) {
+    String city = '';
+    if (doc.doctor?.user?.userAddressCollection3[0]?.city != null) {
+      city = doc.doctor?.user?.userAddressCollection3[0]?.city?.name ?? '';
+    } else {
+      city = '';
+    }
+    return city;
+  }
+
   Widget getHospitalProviderList(String doctorId) {
     return new FutureBuilder<List<HealthOrganizationResult>>(
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
@@ -307,11 +375,6 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
           healthOrganizationResult.retainWhere((element) =>
               element.healthOrganization.id ==
               widget.doc.healthOrganization.id);
-//          print(healthOrganizationResult.length);
-//          print(widget.doc.healthOrganization.id);
-          final items = snapshot.data ??
-              <DoctorIds>[]; // handle the case that data is null
-
           return providerListWidget(healthOrganizationResult);
         } else {
           return Container();

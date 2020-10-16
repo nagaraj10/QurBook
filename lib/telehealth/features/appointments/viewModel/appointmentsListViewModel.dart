@@ -7,7 +7,15 @@ import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/p
 import 'package:myfhb/telehealth/features/appointments/model/timeModel.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
 
+
+enum LoadingStatus {
+  completed,
+  searching,
+  empty,
+}
+
 class AppointmentsListViewModel extends ChangeNotifier {
+  LoadingStatus loadingStatus = LoadingStatus.searching;
   AppointmentsModel _appointmentsModel;
   FetchAppointmentsService _fetchAppointmentsService=FetchAppointmentsService();
 
@@ -20,10 +28,16 @@ class AppointmentsListViewModel extends ChangeNotifier {
 
   Future<AppointmentsModel> fetchAppointments() async {
     try {
-      _appointmentsModel = await _fetchAppointmentsService.fetchAppointments();
+      this.loadingStatus = LoadingStatus.searching;
+      AppointmentsModel appointments = await _fetchAppointmentsService.fetchAppointments();
+      _appointmentsModel=appointments;
+      this.loadingStatus = LoadingStatus.completed;
       notifyListeners();
       return _appointmentsModel;
-    } catch (e) {}
+    } catch (e) {
+      this.loadingStatus = LoadingStatus.empty;
+      notifyListeners();
+    }
   }
 
   void clearAppointments() {
