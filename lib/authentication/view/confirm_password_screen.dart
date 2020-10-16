@@ -8,6 +8,7 @@ import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/confirm_password_model.dart'
     as confirmPasswordModel;
+import 'package:myfhb/common/CommonUtil.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   ChangePasswordScreen({this.userName});
@@ -69,6 +70,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               decoration: InputDecoration(
                                 hintText: strCodeHintText,
                                 labelText: strCodeHintText,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                    )),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
@@ -94,6 +100,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               decoration: InputDecoration(
                                 hintText: strNewPasswordHintTxt,
                                 labelText: strNewPasswordHintTxt,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                    )),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
@@ -118,6 +129,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               decoration: InputDecoration(
                                 hintText: strNewPasswordAgainHintText,
                                 labelText: strNewPasswordAgainHintText,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                    )),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
@@ -175,8 +191,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Color(0xff138fcf),
-                  Color(0xff138fcf),
+//                  Color(0xff138fcf),
+//                  Color(0xff138fcf),
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor())
                 ])),
         child: Text(
           strChangeButtonText,

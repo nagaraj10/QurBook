@@ -41,6 +41,7 @@ class VerifyPatient extends StatefulWidget {
       this.mName,
       this.isPrimaryNoSelected,
       this.relationship});
+
   final String PhoneNumber;
   final String from;
   final String fName;
@@ -77,6 +78,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
   String token2;
   FlutterToast toast = new FlutterToast();
   var from;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -123,7 +125,8 @@ class _VerifyPatientState extends State<VerifyPatient> {
                         onTap: () {
                           _resendOtpDetails();
                         },
-                        child:from == strFromSignUp //*this has to be change with strFromSignUp
+                        child: from ==
+                                strFromSignUp //*this has to be change with strFromSignUp
                             ? Container(
                                 padding: EdgeInsets.symmetric(vertical: 5),
                                 alignment: Alignment.bottomRight,
@@ -163,6 +166,11 @@ class _VerifyPatientState extends State<VerifyPatient> {
           controller: controller,
           decoration: InputDecoration(
               labelText: title,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                  )),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(
@@ -204,8 +212,10 @@ class _VerifyPatientState extends State<VerifyPatient> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Color(0xff138fcf),
-                  Color(0xff138fcf),
+//                  Color(0xff138fcf),
+//                  Color(0xff138fcf),
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor())
                 ])),
         child: Text(
           strVerify,
