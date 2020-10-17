@@ -51,23 +51,42 @@ class ProvidersBloc implements BaseBloc {
   List<Doctors> getFilterDoctorListNew(String doctorName) {
     List<Doctors> filterDoctorData = new List();
     for (Doctors doctorData in doctors) {
-      if(doctorData.user.name!=null && doctorData.user.name!=''){
+      if (doctorData.user.name != null && doctorData.user.name != '') {
+        String speciality = doctorData.doctorProfessionalDetailCollection !=
+                null
+            ? doctorData.doctorProfessionalDetailCollection.length > 0
+                ? doctorData.doctorProfessionalDetailCollection[0].specialty !=
+                        null
+                    ? doctorData
+                        .doctorProfessionalDetailCollection[0].specialty.name
+                    : ''
+                : ''
+            : "";
+        String address = doctorData.user != null
+            ? doctorData.user.userAddressCollection3 != null
+                ? doctorData.user.userAddressCollection3.length > 0
+                    ? doctorData.user.userAddressCollection3[0].city != null
+                        ? doctorData.user.userAddressCollection3[0].city.name
+                        : ''
+                    : ''
+                : ''
+            : '';
         if (doctorData.user.name
-            .toLowerCase()
-            .trim()
-            .contains(doctorName.toLowerCase().trim()) /*||
-          doctorData.specialization
-              .toLowerCase()
-              .trim()
-              .contains(doctorName.toLowerCase().trim())*/ /*||
-          doctorData.city
-              .toLowerCase()
-              .trim()
-              .contains(doctorName.toLowerCase().trim())*/) {
+                .toLowerCase()
+                .trim()
+                .contains(doctorName.toLowerCase().trim()) ||
+            (speciality != '' &&
+                speciality
+                    .toLowerCase()
+                    .trim()
+                    .contains(doctorName.toLowerCase().trim())) ||
+            address
+                .toLowerCase()
+                .trim()
+                .contains(doctorName.toLowerCase().trim())) {
           filterDoctorData.add(doctorData);
         }
       }
-
     }
     return filterDoctorData;
   }

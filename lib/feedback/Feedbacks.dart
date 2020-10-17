@@ -12,17 +12,20 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/exception/FetchException.dart';
 import 'package:myfhb/feedback/FeedbacksSucess.dart';
+import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'dart:convert';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Feedbacks extends StatefulWidget {
   Feedbacks();
@@ -266,7 +269,7 @@ class _FeedbacksState extends State<Feedbacks> {
     );
   }
 
-  void onPostDataToServer(BuildContext context, List<String> imagePaths) {
+  void onPostDataToServer(BuildContext context, List<String> imagePaths) async {
     CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
     Map<String, dynamic> postMainData = new Map();
@@ -278,14 +281,20 @@ class _FeedbacksState extends State<Feedbacks> {
         .getIdForDescription(catgoryDataList, Constants.STR_FEEDBACKS);
     categoryDataObj = new CommonUtil()
         .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
-    postMediaData[variable.strcategoryInfo] = categoryDataObj.toJson();
-    List<MediaResult> metaDataFromSharedPrefernce =
-        PreferenceUtil.getMediaType();
+    postMediaData[parameters.strhealthRecordCategory] =
+        categoryDataObj.toJson();
+
+    MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+
+    MediaDataList mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
+
+    List<MediaResult> metaDataFromSharedPrefernce = mediaTypesResponse.result;
 
     mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(
         categoryID, metaDataFromSharedPrefernce, Constants.STR_FEEDBACKS);
 
-    postMediaData[variable.strmediaTypeInfo] = mediaDataObj.toJson();
+    postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
+
     postMediaData[variable.strfeedback] = feedbackController.text;
     postMediaData[variable.strmemoText] = '';
 
@@ -304,23 +313,33 @@ class _FeedbacksState extends State<Feedbacks> {
 
     if (imagePaths != null && imagePaths.length > 0) {
       _healthReportListForUserBlock
-          .submit(params.toString())
-          .then((savedMetaDataResponse) {
-        if (savedMetaDataResponse.success) {
-          postAudioToServer(
-              savedMetaDataResponse.response.data.mediaMetaID, context);
+          .createHealtRecords(params.toString(), imagePaths, audioPathMain)
+          .then((value) {
+        if (value.isSuccess) {
+          _healthReportListForUserBlock.getHelthReportLists().then((value) {
+            PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
+
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+            callFeedBackSuccess(context);
+          });
         }
       });
     } else {
       _healthReportListForUserBlock
-          .submit(params.toString())
+          .createHealtRecords(params.toString(), imagePaths, audioPathMain)
           .then((savedMetaDataResponse) {
-        if (savedMetaDataResponse.success) {
+        if (savedMetaDataResponse.isSuccess) {
           PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
           PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
 
-          saveAudioFile(context, audioPathMain,
-              savedMetaDataResponse.response.data.mediaMetaID);
+          _healthReportListForUserBlock.getHelthReportLists().then((value) {
+            PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
+
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+            callFeedBackSuccess(context);
+          });
         }
       });
     }
@@ -403,8 +422,7 @@ class _FeedbacksState extends State<Feedbacks> {
           .saveImage(audioPathMain, mediaMetaID, '')
           .then((postImageResponse) {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
-          PreferenceUtil.saveCompleteData(
-              Constants.KEY_COMPLETE_DATA, value);
+          PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
 
           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 

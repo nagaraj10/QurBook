@@ -109,9 +109,8 @@ class CommonUtil {
 
     if (mediaMetaInfoObj.length > 0) {
       mediaMetaInfoObj.sort((mediaMetaInfoObjCopy, mediaMetaInfoObjClone) {
-        return mediaMetaInfoObjCopy.metadata.healthRecordCategory.createdOn
-            .compareTo(
-                mediaMetaInfoObjClone.metadata.healthRecordCategory.createdOn);
+        return mediaMetaInfoObjCopy.createdOn
+            .compareTo(mediaMetaInfoObjClone.createdOn);
       });
 
       //NOTE show the bookmarked data as first

@@ -849,18 +849,16 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           .then((value) {
         switch (deviceName) {
           case Constants.STR_GLUCOMETER:
-            String glucoMeterValue = '';
+            //String glucoMeterValue = '';
             String fileName = widget.data.metadata.fileName;
-            List<bool> isSelected;
-            /*String glucoMeterValue =
-                widget.data.healthRecordType.deviceReadings != null
-                    ? widget.data.healthRecordType.deviceReadings[0].value
-                    : '';
+            //List<bool> isSelected;
+            String glucoMeterValue = widget.data.metadata.deviceReadings != null
+                ? widget.data.metadata.deviceReadings[0].value
+                : '';
             List<bool> isSelected =
-                widget.data.healthRecordType.deviceReadings[1].unit ==
-                        variable.strAfter
+                widget.data.metadata.deviceReadings[1].unit == variable.strAfter
                     ? [false, true]
-                    : [true, false];*/
+                    : [true, false];
             new CommonDialogBox().getDialogBoxForGlucometer(
                 context,
                 deviceName,
@@ -887,11 +885,11 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             break;
 
           case Constants.STR_THERMOMETER:
-            String thermometerValue = '';
-            /*String thermometerValue =
-                widget.data.metaInfo.deviceReadings != null
-                    ? widget.data.metaInfo.deviceReadings[0].value
-                    : '';*/
+            //String thermometerValue = '';
+            String thermometerValue =
+                widget.data.metadata.deviceReadings != null
+                    ? widget.data.metadata.deviceReadings[0].value
+                    : '';
             String fileName = widget.data.metadata.fileName;
 
             new CommonDialogBox().getDialogBoxForTemperature(
@@ -918,10 +916,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 new TextEditingController(text: fileName));
             break;
           case Constants.STR_WEIGHING_SCALE:
-            String weightInKgs = '';
-            /*String weightInKgs = widget.data.metaInfo.deviceReadings != null
-                ? widget.data.metaInfo.deviceReadings[0].value
-                : '';*/
+            String weightInKgs = widget.data.metadata.deviceReadings != null
+                ? widget.data.metadata.deviceReadings[0].value
+                : '';
             String fileName = widget.data.metadata.fileName;
 
             new CommonDialogBox().getDialogBoxForWeightingScale(
@@ -949,15 +946,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             break;
 
           case Constants.STR_PULSE_OXIMETER:
-            String oxygenSaturation = '';
-            /*String oxygenSaturation =
-                widget.data.metaInfo.deviceReadings != null
-                    ? widget.data.metaInfo.deviceReadings[0].value
-                    : '';*/
-            String pulse = '';
-            /* String pulse = widget.data.metaInfo.deviceReadings != null
-                ? widget.data.metaInfo.deviceReadings[1].value
-                : '';*/
+            //String oxygenSaturation = '';
+            String oxygenSaturation =
+                widget.data.metadata.deviceReadings != null
+                    ? widget.data.metadata.deviceReadings[0].value
+                    : '';
+            //String pulse = '';
+            String pulse = widget.data.metadata.deviceReadings != null
+                ? widget.data.metadata.deviceReadings[1].value
+                : '';
             String fileName = widget.data.metadata.fileName;
 
             new CommonDialogBox().getDialogBoxForPulseOxidometer(
@@ -985,20 +982,20 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 new TextEditingController(text: fileName));
             break;
           case Constants.STR_BP_MONITOR:
-            String systolicPressure = '';
+            /*String systolicPressure = '';
             String diastolicPressure = '';
-            String pulse = '';
-            /* String systolicPressure =
-                widget.data.metaInfo.deviceReadings != null
-                    ? widget.data.metaInfo.deviceReadings[0].value
+            String pulse = '';*/
+            String systolicPressure =
+                widget.data.metadata.deviceReadings != null
+                    ? widget.data.metadata.deviceReadings[0].value
                     : '';
             String diastolicPressure =
-                widget.data.metaInfo.deviceReadings != null
-                    ? widget.data.metaInfo.deviceReadings[1].value
+                widget.data.metadata.deviceReadings != null
+                    ? widget.data.metadata.deviceReadings[1].value
                     : '';
-            String pulse = widget.data.metaInfo.deviceReadings != null
-                ? widget.data.metaInfo.deviceReadings[2].value
-                : '';*/
+            String pulse = widget.data.metadata.deviceReadings != null
+                ? widget.data.metadata.deviceReadings[2].value
+                : '';
             String fileName = widget.data.metadata.fileName;
 
             new CommonDialogBox().getDialogBoxForBPMonitor(

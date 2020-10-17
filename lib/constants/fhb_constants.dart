@@ -156,7 +156,7 @@ const String NO_DATA_SCHEDULES =
 const String NO_DATA_PRESCRIPTION =
     'Don\'t want to type? \n Take a picture or upload from gallery \nto add prescriptions.';
 const String NO_DATA_DEVICES =
-    'Click \'n\' go (or) tell \"Maya\" \nand it will record for you.';
+    'Click \'n\' go (or) tell \"Sheela\" \nand it will record for you.';
 const String NO_DATA_LAB_REPORT = 'Upload your report or click \'n\' go';
 const String NO_DATA_MEDICAL_REPORT =
     'Sure! Upload your medical reports \n or click \'n\' go';

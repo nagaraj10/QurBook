@@ -632,13 +632,31 @@ class AddProvidersState extends State<AddProviders> {
                     color: Colors.white,
                   ),
                   child: myProfile != null
-                      ? myProfile.result.profilePicThumbnailUrl != null
-                          ? getProfilePicWidget(
-                              myProfile.result.profilePicThumbnailUrl)
+                      ? myProfile.result != null
+                          ? myProfile.result.profilePicThumbnailUrl != null
+                              ? getProfilePicWidget(
+                                  myProfile.result.profilePicThumbnailUrl)
+                              : Center(
+                                  child: Text(
+                                    selectedFamilyMemberName == null
+                                        ? myProfile.result.lastName
+                                            .toUpperCase()
+                                        : selectedFamilyMemberName[0]
+                                            .toUpperCase(),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor())),
+                                  ),
+                                )
                           : Center(
                               child: Text(
                                 selectedFamilyMemberName == null
-                                    ? myProfile.result.lastName.toUpperCase()
+                                    ? myProfile.result != null
+                                        ? myProfile.result.lastName != null
+                                            ? myProfile.result.lastName
+                                            : ''
+                                        : ''
                                     : selectedFamilyMemberName[0].toUpperCase(),
                                 style: TextStyle(
                                     fontSize: 14,
@@ -1232,7 +1250,7 @@ class AddProvidersState extends State<AddProviders> {
       setState(() {
         selectedFamilyMemberName = userName;
       });
-      Navigator.pop(context);
+      //Navigator.pop(context);
       /* PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
         //getUserProfileData();
         Navigator.pop(context);

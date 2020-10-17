@@ -25,7 +25,7 @@ class DeviceListScreen extends StatefulWidget {
   final Function(String, String) getDataForParticularLabel;
   final Function(String, bool) mediaSelected;
   final Function(String, List<HealthRecordCollection>, bool)
-  healthRecordSelected;
+      healthRecordSelected;
   final bool allowSelect;
   List<String> mediaMeta;
   final bool isNotesSelect;
@@ -44,8 +44,9 @@ class DeviceListScreen extends StatefulWidget {
       this.mediaMeta,
       this.isNotesSelect,
       this.isAudioSelect,
-      this.showDetails,this.allowAttach,
-  this.healthRecordSelected);
+      this.showDetails,
+      this.allowAttach,
+      this.healthRecordSelected);
 
   @override
   _DeviceListScreentState createState() => _DeviceListScreentState();
@@ -130,13 +131,10 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                 condition = true;
               }
               data.isSelected = !data.isSelected;
-              if (data != null &&
-                  data.healthRecordCollection.length > 0) {
-                mediMasterId =
-                    new CommonUtil().getMetaMasterIdListNew(data);
+              if (data != null && data.healthRecordCollection.length > 0) {
+                mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
                 if (mediMasterId.length > 0) {
-                  widget.healthRecordSelected(
-                      data.id, mediMasterId, condition);
+                  widget.healthRecordSelected(data.id, mediMasterId, condition);
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
@@ -153,7 +151,6 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
               // setState(() {});
               widget.mediaSelected(data.id, condition);
             }
-
           } else {
             Navigator.push(
               context,
@@ -215,8 +212,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         overflow: TextOverflow.ellipsis,
                       ),
                       Text(
-                        data.metadata.dateOfVisit,
-                        //new FHBUtils().getFormattedDateString(data.metadata.dateOfVisit),
+                        new FHBUtils().getFormattedDateString(data.createdOn),
                         style: TextStyle(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w200,

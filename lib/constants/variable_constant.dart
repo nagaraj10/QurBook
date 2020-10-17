@@ -421,7 +421,7 @@ const String strNext = 'NEXT';
 
 // for Sign Up
 const String strMobileNum = 'Mobile Number';
-const String strEmailOpt = 'Email address (optional)';
+const String strEmailOpt = 'Email address';
 const String strSendOtp = 'Send OTP';
 const String strEmailAddress = 'Email address';
 

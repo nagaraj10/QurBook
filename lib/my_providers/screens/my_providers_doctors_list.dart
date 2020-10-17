@@ -51,6 +51,28 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
         Doctors eachDoctorModel = widget.doctorsModel[index];
+        String specialization =
+            eachDoctorModel.doctorProfessionalDetailCollection != null
+                ? eachDoctorModel.doctorProfessionalDetailCollection.length > 0
+                    ? eachDoctorModel.doctorProfessionalDetailCollection[0]
+                                .specialty !=
+                            null
+                        ? (eachDoctorModel.doctorProfessionalDetailCollection[0]
+                                        .specialty.name !=
+                                    null &&
+                                eachDoctorModel
+                                        .doctorProfessionalDetailCollection[0]
+                                        .specialty
+                                        .name !=
+                                    '')
+                            ? eachDoctorModel
+                                .doctorProfessionalDetailCollection[0]
+                                .specialty
+                                .name
+                            : ''
+                        : ''
+                    : ''
+                : '';
         return InkWell(
             onTap: () {
               Navigator.pushNamed(context, router.rt_AddProvider,
@@ -127,11 +149,11 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                             textAlign: TextAlign.start,
                           ),
                           SizedBox(height: 5),
-                          eachDoctorModel.specialization != null
+                          specialization != null
                               ? AutoSizeText(
-                                  eachDoctorModel.specialization != null
+                                  specialization != null
                                       ? toBeginningOfSentenceCase(
-                                          eachDoctorModel.specialization)
+                                          specialization)
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
@@ -155,7 +177,8 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                               InkWell(
                                   onTap: () {
                                     providerViewModel
-                                        .bookMarkDoctor(eachDoctorModel,false,'ListItem')
+                                        .bookMarkDoctor(
+                                            eachDoctorModel, false, 'ListItem')
                                         .then((status) {
                                       if (status) {
                                         print('onClick');
