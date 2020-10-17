@@ -32,8 +32,8 @@ class AppointmentsCommonWidget {
     return Row(
       children: [
         Container(
-          constraints:
-              BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
+//          constraints:
+//              BoxConstraints(maxWidth: MediaQuery.of(context).size.width / 2.5),
           child: Row(
             children: [
               TextWidget(

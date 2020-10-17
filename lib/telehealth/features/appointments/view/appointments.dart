@@ -124,109 +124,133 @@ class _AppointmentsState extends State<Appointments> {
   }
 
   Widget getDoctorsAppoinmentsList() {
-    return Consumer<AppointmentsListViewModel>(
-      builder: (context, appointmentsViewModel, child) {
-        final AppointmentsModel appointmentsData =
-            appointmentsViewModel.appointments;
-        if (appointmentsData != null) {
-          return ((appointmentsData?.result?.past != null &&
-                      appointmentsData?.result?.past?.length > 0) ||
-                  (appointmentsData?.result?.upcoming != null &&
-                      appointmentsData?.result?.upcoming?.length > 0))
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBoxWidget(
-                      width: 0,
-                      height: 10,
-                    ),
-                    isSearch
-                        ? (upcomingInfo != null && upcomingInfo.length != 0)
-                            ? commonWidget
-                                .title(Constants.Appointments_upcoming)
+    var appointmentData = Provider.of<AppointmentsListViewModel>(context);
+    switch (appointmentData.loadingStatus) {
+      case LoadingStatus.searching:
+        return new Center(
+          child: new CircularProgressIndicator(
+            backgroundColor: Colors.grey,
+          ),
+        );
+      case LoadingStatus.completed:
+        return Consumer<AppointmentsListViewModel>(
+          builder: (context, appointmentsViewModel, child) {
+            final AppointmentsModel appointmentsData =
+                appointmentsViewModel.appointments;
+            if (appointmentsData != null) {
+              return ((appointmentsData?.result?.past != null &&
+                          appointmentsData?.result?.past?.length > 0) ||
+                      (appointmentsData?.result?.upcoming != null &&
+                          appointmentsData?.result?.upcoming?.length > 0))
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBoxWidget(
+                          width: 0,
+                          height: 10,
+                        ),
+                        isSearch
+                            ? (upcomingInfo != null && upcomingInfo.length != 0)
+                                ? commonWidget
+                                    .title(Constants.Appointments_upcoming)
+                                : Container()
+                            : (appointmentsData.result.upcoming != null &&
+                                    appointmentsData.result.upcoming.length !=
+                                        0)
+                                ? commonWidget
+                                    .title(Constants.Appointments_upcoming)
+                                : Container(),
+                        SizedBoxWidget(
+                          width: 0,
+                          height: 10,
+                        ),
+                        ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext ctx, int i) =>
+                              DoctorUpcomingAppointments(
+                                  doc: isSearch
+                                      ? upcomingInfo[i]
+                                      : appointmentsData.result.upcoming[i],
+                                  onChanged: (value) {
+                                    Provider.of<AppointmentsListViewModel>(
+                                        context,
+                                        listen: false)
+                                      ..clearAppointments()
+                                      ..fetchAppointments();
+                                  }),
+                          itemCount: !isSearch
+                              ? appointmentsData.result.upcoming.length
+                              : upcomingInfo.length,
+                        ),
+                        SizedBoxWidget(
+                          width: 0,
+                          height: 10,
+                        ),
+                        isSearch
+                            ? (historyInfo != null && historyInfo.length != 0)
+                                ? commonWidget
+                                    .title(Constants.Appointments_history)
+                                : Container()
+                            : (appointmentsData.result.past != null &&
+                                    appointmentsData.result.past.length != 0)
+                                ? commonWidget
+                                    .title(Constants.Appointments_history)
+                                : Container(),
+                        SizedBoxWidget(
+                          width: 0,
+                          height: 10,
+                        ),
+                        (appointmentsData?.result?.past != null &&
+                                appointmentsData?.result?.past.length > 0)
+                            ? new ListView.builder(
+                                physics: NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemBuilder: (BuildContext ctx, int i) =>
+                                    DoctorPastAppointments(
+                                        doc: isSearch
+                                            ? historyInfo[i]
+                                            : appointmentsData.result.past[i],
+                                        onChanged: (value) {
+                                          Provider.of<
+                                                  AppointmentsListViewModel>(
+                                              context,
+                                              listen: false)
+                                            ..clearAppointments()
+                                            ..fetchAppointments();
+                                        }),
+                                itemCount: isSearch
+                                    ? historyInfo.length
+                                    : appointmentsData.result.past.length,
+                              )
                             : Container()
-                        : (appointmentsData.result.upcoming != null &&
-                                appointmentsData.result.upcoming.length != 0)
-                            ? commonWidget
-                                .title(Constants.Appointments_upcoming)
-                            : Container(),
-                    SizedBoxWidget(
-                      width: 0,
-                      height: 10,
-                    ),
-                    ListView.builder(
-                      physics: NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemBuilder: (BuildContext ctx, int i) =>
-                          DoctorUpcomingAppointments(
-                              doc: isSearch
-                                  ? upcomingInfo[i]
-                                  : appointmentsData.result.upcoming[i],
-                              onChanged: (value) {
-                                Provider.of<AppointmentsListViewModel>(context,
-                                    listen: false)
-                                  ..clearAppointments()
-                                  ..fetchAppointments();
-                              }),
-                      itemCount: !isSearch
-                          ? appointmentsData.result.upcoming.length
-                          : upcomingInfo.length,
-                    ),
-                    SizedBoxWidget(
-                      width: 0,
-                      height: 10,
-                    ),
-                    isSearch
-                        ? (historyInfo != null && historyInfo.length != 0)
-                            ? commonWidget.title(Constants.Appointments_history)
-                            : Container()
-                        : (appointmentsData.result.past != null &&
-                                appointmentsData.result.past.length != 0)
-                            ? commonWidget.title(Constants.Appointments_history)
-                            : Container(),
-                    SizedBoxWidget(
-                      width: 0,
-                      height: 10,
-                    ),
-                    (appointmentsData?.result?.past != null &&
-                            appointmentsData?.result?.past.length > 0)
-                        ? new ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            shrinkWrap: true,
-                            itemBuilder: (BuildContext ctx, int i) =>
-                                DoctorPastAppointments(
-                                    doc: isSearch
-                                        ? historyInfo[i]
-                                        : appointmentsData.result.past[i],
-                                    onChanged: (value) {
-                                      Provider.of<AppointmentsListViewModel>(
-                                          context,
-                                          listen: false)
-                                        ..clearAppointments()
-                                        ..fetchAppointments();
-                                    }),
-                            itemCount: isSearch
-                                ? historyInfo.length
-                                : appointmentsData.result.past.length,
-                          )
-                        : Container()
-                  ],
-                )
-              : Container(
-                  height: MediaQuery.of(context).size.height / 2,
-                  alignment: Alignment.center,
-                  child: Center(
-                    child: Text(variable.strNoAppointments),
-                  ),
-                );
-        } else {
-          return new Center(
-            child: new CircularProgressIndicator(
-              backgroundColor: Colors.grey,
-            ),
-          );
-        }
-      },
-    );
+                      ],
+                    )
+                  : Container(
+                      height: MediaQuery.of(context).size.height / 2,
+                      alignment: Alignment.center,
+                      child: Center(
+                        child: Text(variable.strNoAppointments),
+                      ),
+                    );
+            } else {
+              return new Center(
+                child: new CircularProgressIndicator(
+                  backgroundColor: Colors.grey,
+                ),
+              );
+            }
+          },
+        );
+      case LoadingStatus.empty:
+      default:
+        return Container(
+          height: MediaQuery.of(context).size.height / 2,
+          alignment: Alignment.center,
+          child: Center(
+            child: Text(variable.strNoAppointments),
+          ),
+        );
+    }
   }
 }

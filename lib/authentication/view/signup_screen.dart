@@ -13,6 +13,7 @@ import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/patientsignup_model.dart'
     as signuplModel;
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart';
@@ -35,6 +36,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   var _SignupKey = GlobalKey<FormState>();
   List<UserContactCollection3> userCollection;
   AuthViewModel authViewModel;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -78,6 +80,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               decoration: InputDecoration(
                                 hintText: strFirstNameHint,
                                 labelText: strFirstNameHint,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
@@ -101,6 +109,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               decoration: InputDecoration(
                                 hintText: strLastNameHint,
                                 labelText: strLastNameHint,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
@@ -123,6 +137,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               decoration: InputDecoration(
                                 hintText: strPhoneHint,
                                 labelText: strNumberHint,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
@@ -146,6 +166,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               decoration: InputDecoration(
                                 hintText: strEmailHintText,
                                 labelText: strEmailHint,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
@@ -171,6 +197,12 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               decoration: InputDecoration(
                                 hintText: strPassword,
                                 labelText: strPassword,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
@@ -232,8 +264,10 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Color(0xff138fcf),
-                  Color(0xff138fcf),
+//                  Color(0xff138fcf),
+//                  Color(0xff138fcf),
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor())
                 ])),
         child: Text(
           strSignup,

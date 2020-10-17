@@ -9,6 +9,7 @@ import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/forgot_password_model.dart'
     as forgotPasswordModel;
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -90,6 +91,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           decoration: InputDecoration(
               labelText: title,
               hintText: strPhoneHint,
+              focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(
+                    color: Color(CommonUtil().getMyPrimaryColor()),
+                  )),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10.0),
                 borderSide: BorderSide(
@@ -174,8 +180,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Color(0xff138fcf),
-                  Color(0xff138fcf),
+//                  Color(0xff138fcf),
+//                  Color(0xff138fcf),
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor())
                 ])),
         child: Text(
           strResetButton,
