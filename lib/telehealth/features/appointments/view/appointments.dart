@@ -167,18 +167,25 @@ class _AppointmentsState extends State<Appointments> {
                         ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemBuilder: (BuildContext ctx, int i) =>
-                              DoctorUpcomingAppointments(
-                                  doc: isSearch
-                                      ? upcomingInfo[i]
-                                      : appointmentsData.result.upcoming[i],
-                                  onChanged: (value) {
-                                    Provider.of<AppointmentsListViewModel>(
-                                        context,
-                                        listen: false)
-                                      ..clearAppointments()
-                                      ..fetchAppointments();
-                                  }),
+                          itemBuilder: (BuildContext ctx, int i) {
+                            appointmentsData.result.upcoming.sort((a, b) =>
+                                a.plannedStartDateTime.compareTo(
+                                    b.plannedStartDateTime.toLowerCase()));
+                            upcomingInfo.sort((a, b) =>
+                                a.plannedStartDateTime.compareTo(
+                                    b.plannedStartDateTime.toLowerCase()));
+                            return DoctorUpcomingAppointments(
+                                doc: isSearch
+                                    ? upcomingInfo[i]
+                                    : appointmentsData.result.upcoming[i],
+                                onChanged: (value) {
+                                  Provider.of<AppointmentsListViewModel>(
+                                      context,
+                                      listen: false)
+                                    ..clearAppointments()
+                                    ..fetchAppointments();
+                                });
+                          },
                           itemCount: !isSearch
                               ? appointmentsData.result.upcoming.length
                               : upcomingInfo.length,
@@ -206,8 +213,14 @@ class _AppointmentsState extends State<Appointments> {
                             ? new ListView.builder(
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
-                                itemBuilder: (BuildContext ctx, int i) =>
-                                    DoctorPastAppointments(
+                                itemBuilder: (BuildContext ctx, int i) {
+                                  appointmentsData.result.past.sort((b, a) =>
+                                      a.plannedStartDateTime.compareTo(
+                                          b.plannedStartDateTime.toLowerCase()));
+                                  historyInfo.sort((b, a) =>
+                                      a.plannedStartDateTime.compareTo(
+                                          b.plannedStartDateTime.toLowerCase()));
+                                 return   DoctorPastAppointments(
                                         doc: isSearch
                                             ? historyInfo[i]
                                             : appointmentsData.result.past[i],
@@ -218,7 +231,7 @@ class _AppointmentsState extends State<Appointments> {
                                               listen: false)
                                             ..clearAppointments()
                                             ..fetchAppointments();
-                                        }),
+                                        });},
                                 itemCount: isSearch
                                     ? historyInfo.length
                                     : appointmentsData.result.past.length,
