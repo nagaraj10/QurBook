@@ -303,6 +303,12 @@ const String data_connected = "Mobile data connected";
 const String no_internet_conn = "No internet connection";
 const String failed_get_conn = "Failed to get connectivity.";
 const String failed_get_connectivity = "Failed to get internet connectivity.";
+const String NOT_FILE_IMAGE = "This file is not an image";
+const String EXIT_APP = "Exit app";
+const String EXIT_APP_TO_EXIT = "Are you sure to exit app?";
+const String CANCEL = "CANCEL";
+const String YES = "YES";
+const String CHAT = "Chat";
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
@@ -312,3 +318,41 @@ const String ADDRESS1 = 'address1';
 const String CITY = 'city';
 const String STATE = 'state';
 const String PINCODE = 'pincode';
+const String INR = 'INR ';
+const String LAST_RECEIVED = 'Last Received: ';
+const String DATE_FORMAT = 'dd MMM kk:mm';
+const String NOTHING_SEND = 'Nothing to send';
+
+
+const String STR_MESSAGES = 'messages';
+const String STR_ID_FROM = 'idFrom';
+const String STR_ID_TO = 'idTo';
+const String STR_TIME_STAMP = 'timestamp';
+const String STR_CONTENT = 'content';
+const String STR_TYPE = 'type';
+const String STR_CHAT_LIST = 'chat_list';
+const String STR_USER_LIST = 'user_list';
+const String STR_NICK_NAME = 'nickname';
+const String STR_PHOTO_URL = 'photoUrl';
+const String STR_ID = 'id';
+const String STR_CREATED_AT = 'createdAt';
+const String STR_LAST_MESSAGE = 'lastMessage';
+const String STR_USERS = 'users';
+const String STR_CHATTING_WITH = 'chattingWith';
+const String STR_META_ID = 'metaId';
+const String STR_PUSH_TOKEN = 'pushToken';
+const String STR_MIP_MAP_LAUNCHER = '@mipmap/ic_launcher';
+const String STR_HTTPS = 'https';
+const String STR_FILE = 'File';
+
+
+const String STR_JPG = '.jpg';
+const String STR_PNG = '.png';
+const String STR_PDF = '.pdf';
+
+const String STR_MY_PROVIDERS = 'My Providers';
+const String STR_MY_VERIFIED = 'Verified';
+const String STR_NOT_VERIFIED = 'Not Verified';
+const String STR_SUCCESS = 'success';
+const String STR_FAILED = 'failed';
+const String STR_DONE = 'Done';

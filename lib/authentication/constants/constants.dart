@@ -59,20 +59,20 @@ const String strResetButton = 'Reset my password';
 const String strBackTo = 'Back to ?';
 const String strPhoneNumberr = 'Phone Number';
 const String strOtpShowText =
-    'Enter your Phone number below and we will send a message to reset your password';
+    'Enter your Username below and we will send a message to reset your password';
 
 //Strings used in SignInScreen
 const String strSignInText = 'Sign In';
 const String strForgotTxt = 'Forgot Password ?';
-const String strPassCantEmpty = 'password \ can\'t be empty';
+const String strPassCantEmpty = 'Please enter valid password';
 const String strSignUpTxt = 'SignUp';
-const String strPhoneCantEmpty = 'phone number can\'t be empty';
+const String strPhoneCantEmpty = 'Please enter valid phone number';
 const String strPhoneandPass = 'Sign in with your phone number and password';
-const String strEmailCantEmpty = 'Email \ can\'t be empty';
+const String strEmailCantEmpty = 'Please enter valid email';
 const String strPhoneValidText = 'please enter valid phone number';
-const String strUserNameCantEmpty = 'UserName can\'t be empty';
+const String strUserNameCantEmpty = 'Please enter valid user name';
 const String strUserNameValid = 'Please enter username in lowercase';
-const String strOtpCantEmpty = 'Otp can\'t be empty';
+const String strOtpCantEmpty = 'Please enter valid otp';
 const String strValidOtp = 'Otp should have six characters';
 const String strPasswordMultiChecks =
     'Password should one special character, number, lowercase and uppercase alphabets';

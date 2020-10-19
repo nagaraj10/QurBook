@@ -13,34 +13,24 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/my_family/models/LinkedData.dart';
-import 'package:myfhb/my_family/models/ProfileData.dart';
-import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
-import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
-import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 
@@ -57,6 +47,7 @@ class BookingConfirmation extends StatefulWidget {
   Past doctorsData;
   final List<HealthOrganizationResult> healthOrganizationResult;
   final int doctorListPos;
+  Function(String) closePage;
 
   BookingConfirmation(
       {this.docs,
@@ -70,14 +61,13 @@ class BookingConfirmation extends StatefulWidget {
       this.isFollowUp,
       this.doctorsData,
       this.healthOrganizationResult,
-      this.doctorListPos});
+      this.doctorListPos,this.closePage});
 
   @override
   BookingConfirmationState createState() => BookingConfirmationState();
 }
 
 class BookingConfirmationState extends State<BookingConfirmation> {
-  //final GlobalKey<State> _key = new GlobalKey<State>();
   CommonWidgets commonWidgets = new CommonWidgets();
   CommonUtil commonUtil = new CommonUtil();
   MyProviderViewModel providerViewModel;
@@ -169,15 +159,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         commonUtil.dateConversionToApiFormat(widget.selectedDate).toString();
 
     doctorId = widget.docs[widget.doctorListPos].user.id;
-    /*try {
-      fees = widget.isNewAppointment
-          ? widget.followUpFee == null
-              ? widget.docs[widget.i].fees.consulting.fee
-              : widget.followUpFee
-          : widget.docs[widget.i].fees.consulting.fee;
-    } catch (e) {
-      fees = '';
-    }*/
   }
 
   Widget getDropdown() {
@@ -213,9 +194,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               print(snapshot.data.toString());
               if (snapshot.data.data.result != null) {
                 familyData = snapshot.data.data;
-
-                // PreferenceUtil.saveFamilyData(Constants.KEY_FAMILYMEMBER,
-                //     snapshot.data.data.response.data);
               }
               return dropDownButton(snapshot.data.data.result != null
                   ? snapshot.data.data.result.sharedByUsers
@@ -228,38 +206,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       },
     );
   }
-
-  /*Widget getFamilyMembers() {
-    sharedbyme.clear();
-    return FutureBuilder<FamilyMembersList>(
-      future: getList(),
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Center(
-              child: new Column(
-            children: <Widget>[
-              new SizedBox(
-                child: CircularProgressIndicator(
-                    strokeWidth: 2.0, backgroundColor: Color(0xff138fcf)),
-                height: 20.0,
-                width: 20.0,
-              ),
-            ],
-          ));
-        } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
-        } else {
-          print(snapshot.data.toString());
-          familyData = snapshot.data.response.data;
-          PreferenceUtil.saveFamilyData(
-              Constants.KEY_FAMILYMEMBER, snapshot.data.response.data);
-          return snapshot.data!=null&&snapshot.data.response.data.sharedbyme.length>0?Container(
-            child: dropDownButton(snapshot.data.response.data.sharedbyme),
-          ):getFamilyMembers();
-        }
-      },
-    );
-  }*/
 
   Widget dropDownButton(List<SharedByUsers> sharedByMeList) {
     MyProfileModel myProfile;
@@ -319,7 +265,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           onChanged: (SharedByUsers user) {
             setState(() {
               selectedUser = user;
-              selectedId = user.id;
+              selectedId = user.child.id;
               print(selectedId);
             });
           },
@@ -348,9 +294,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           SizedBoxWidget(
             height: 8.0,
           ),
-          /*familyData!=null
-              ? dropDownButton(
-              familyData.sharedbyme):*/
           getDropdown(),
           SizedBoxWidget(
             height: 10.0,
@@ -939,11 +882,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   goToPaymentPage(String longurl, String paymentId) {
-    Navigator.pushReplacement(
+    Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) =>
-                PaymentPage(redirectUrl: longurl, paymentId: paymentId)));
+                PaymentPage(redirectUrl: longurl, paymentId: paymentId,closePage: (value){
+                  if(value=='success'){
+                    widget.closePage(value);
+                    Navigator.pop(context);
+                  }else{
+                    Navigator.pop(context);
+                  }
+                },)));
   }
 
   Widget getTitle(String title) {
@@ -1018,18 +968,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                           icon: Icons.check_circle,
                           onTap: () {})
                       : SizedBox(),
-                  /*commonWidgets.getSizeBoxWidth(15.0),
-                  commonWidgets.getBookMarkedIcon(widget.docs[widget.i], () {
-                    */ /*providerViewModel
-                        .bookMarkDoctor(!(widget.docs[widget.i].isDefault),
-                            widget.docs[widget.i])
-                        .then((status) {
-                      if (status) {
-                        setState(() {});
-                      }
-                    });*/ /*
-                  }),
-                  commonWidgets.getSizeBoxWidth(10.0),*/
                 ],
               ),
               commonWidgets.getSizedBox(5.0),
@@ -1040,17 +978,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                             ? commonWidgets.getDoctoSpecialistOnly(
                                 widget.docs[widget.doctorListPos])
                             : SizedBox()),
-
-                /*widget.docs[widget.i].fees != null
-                    ? widget.docs[widget.i].fees.consulting != null
-                        ? (widget.docs[widget.i].fees.consulting != null &&
-                                widget.docs[widget.i].fees.consulting != '')
-                            ? commonWidgets.getDoctoSpecialist(
-                                '${widget.docs[widget.i].fees.consulting.fee}')
-                            : SizedBox()
-                        : SizedBox()
-                    : SizedBox(),
-                commonWidgets.getSizeBoxWidth(10.0),*/
               ]),
               commonWidgets.getSizedBox(5.0),
               Row(
@@ -1162,19 +1089,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       ),
     ))
         .then((results) {
-      if (results.containsKey('metaId')) {
-        var metaIds = results['metaId'];
+      if (results.containsKey(STR_META_ID)) {
+        var metaIds = results[STR_META_ID];
         print(metaIds.toString());
 
         if (allowSelect) {
-          recordIds = results['metaId'].cast<String>();
+          recordIds = results[STR_META_ID].cast<String>();
           recordIdCount = recordIds.length;
         } else if (isAudioSelect) {
-          voiceIds = results['metaId'].cast<String>();
+          voiceIds = results[STR_META_ID].cast<String>();
 
           voiceIdCount = voiceIds.length;
         } else if (isNotesSelect) {
-          notesId = results['metaId'].cast<String>();
+          notesId = results[STR_META_ID].cast<String>();
 
           notesIdCount = notesId.length;
         }

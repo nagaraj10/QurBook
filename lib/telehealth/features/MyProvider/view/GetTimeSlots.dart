@@ -1,28 +1,23 @@
 import 'package:flutter/cupertino.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
-import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
-import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
-import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
-import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleModel.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
-import 'package:path/path.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as AppointmentConstant;
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleModel.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
 import 'package:provider/provider.dart';
 
 class GetTimeSlots extends StatelessWidget {
@@ -36,6 +31,7 @@ class GetTimeSlots extends StatelessWidget {
   List<String> bookingIds = [];
   final List<HealthOrganizationResult> healthOrganizationResult;
   final int doctorListPos;
+  Function(String) closePage;
 
   GetTimeSlots(
       {this.dateSlotTimingsObj,
@@ -45,7 +41,8 @@ class GetTimeSlots extends StatelessWidget {
       this.isReshedule,
       this.doctorsData,
       this.healthOrganizationResult,
-      this.doctorListPos});
+      this.doctorListPos,
+      this.closePage});
 
   @override
   Widget build(BuildContext context) {
@@ -92,18 +89,22 @@ class GetTimeSlots extends StatelessWidget {
                       doctorsData.doctorSessionId);
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
-                    if(patientAddressCheck()){
+                    if (patientAddressCheck()) {
                       if (doctorsData == null) {
-                        navigateToConfirmBook(context, rowPosition, itemPosition,
-                            null, false, false);
+                        navigateToConfirmBook(context, rowPosition,
+                            itemPosition, null, false, false);
                       } else {
-                        navigateToConfirmBook(context, rowPosition, itemPosition,
-                            doctorsData.doctorFollowUpFee, true, true);
+                        navigateToConfirmBook(
+                            context,
+                            rowPosition,
+                            itemPosition,
+                            doctorsData.doctorFollowUpFee,
+                            true,
+                            true);
                       }
-                    }else{
+                    } else {
                       toast.getToast(noAddress, Colors.red);
                     }
-
                   } else {
                     toast.getToast(selectSlotsMsg, Colors.red);
                   }
@@ -138,6 +139,9 @@ class GetTimeSlots extends StatelessWidget {
             doctorsData: doctorsData,
             healthOrganizationResult: healthOrganizationResult,
             doctorListPos: doctorListPos,
+            closePage: (value) {
+              closePage(value);
+            },
           ),
         ));
   }
@@ -177,7 +181,7 @@ class GetTimeSlots extends StatelessWidget {
     return resheduleAppointment;
   }
 
-  bool patientAddressCheck(){
+  bool patientAddressCheck() {
     bool condition;
 
     String address1 = PreferenceUtil.getStringValue(Constants.ADDRESS1);
@@ -185,10 +189,10 @@ class GetTimeSlots extends StatelessWidget {
     String state = PreferenceUtil.getStringValue(Constants.STATE);
     String pincode = PreferenceUtil.getStringValue(Constants.PINCODE);
 
-    if(address1!='' && city !='' && state !='' && pincode !=''){
-      condition =true;
-    }else{
-      condition=false;
+    if (address1 != '' && city != '' && state != '' && pincode != '') {
+      condition = true;
+    } else {
+      condition = false;
     }
     return condition;
   }
