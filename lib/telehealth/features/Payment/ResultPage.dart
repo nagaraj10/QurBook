@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -7,7 +8,8 @@ import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.da
 class ResultPage extends StatefulWidget {
   final bool status;
   final String refNo;
-  ResultPage({Key key, @required this.status, this.refNo}) : super(key: key);
+  Function(String) closePage;
+  ResultPage({Key key, @required this.status, this.refNo,this.closePage}) : super(key: key);
   @override
   _ResultPage createState() => _ResultPage();
 }
@@ -68,16 +70,10 @@ class _ResultPage extends State<ResultPage> {
                       textColor: Colors.white,
                       padding: EdgeInsets.all(12.0),
                       onPressed: () {
+                        status?
+                        widget.closePage(STR_SUCCESS):widget.closePage(STR_FAILED);
                         status
-                            ? /*Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => TelehealthProviders(
-                                          arguments: HomeScreenArguments(
-                                              selectedIndex: 0),
-                                        )),
-                                (route) => false)*/
-                        Navigator.pushReplacement(
+                            ? Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                                 builder: (context) => TelehealthProviders(
@@ -87,7 +83,7 @@ class _ResultPage extends State<ResultPage> {
                             : Navigator.pop(context);
                       },
                       child: Text(
-                        "Done".toUpperCase(),
+                        STR_DONE.toUpperCase(),
                         style: TextStyle(
                           fontSize: 14.0,
                         ),

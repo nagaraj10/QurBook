@@ -14,10 +14,11 @@ class _MyProvidersMainState extends State<MyProvidersMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: AppBar(flexibleSpace: GradientAppBar()),
       body: ChangeNotifierProvider(
         create: (context) => MyProviderViewModel(),
-        child: MyProviders(),
+        child: MyProviders(closePage: (value){
+          Navigator.pop(context);
+        },),
       ),
     );
   }
