@@ -33,6 +33,7 @@ import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
+import 'package:myfhb/src/model/Health/PostImageResponse.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
@@ -345,9 +346,12 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                 _healthReportListForUserBlock
                     .getHelthReportLists()
                     .then((value) {
-                  PreferenceUtil.saveCompleteData(
+                  checkTheSpecifiedMetaID(value, null);
+
+                  /*  PreferenceUtil.saveCompleteData(
                       Constants.KEY_COMPLETE_DATA, value);
                   setState(() {});
+                */
                 });
                 //setState(() {});
               });
@@ -512,8 +516,22 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
           PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
           Navigator.of(context).pop();
+          widget.data.metadata.hasVoiceNotes = false;
+
+          setState(() {});
+          /*for (HealthResult healthResult in value.result) {
+            if (widget.data.id == healthResult.id) {
+              widget.data.healthRecordCollection =  healthResult.healthRecordCollection;
+              PreferenceUtil.saveCompleteData(
+                  Constants.KEY_COMPLETE_DATA, value);
+
+              Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text(deleteRecordResponse.message),
+              ));
+            }
+          }*/
         });
-      }
+      } else {}
     });
   }
 
@@ -1038,11 +1056,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           .saveImage(audioPath, mediaMetaID, '')
           .then((postImageResponse) {
         _healthReportListForUserBlock.getHelthReportLists().then((value) {
-          PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
-          setState(() {});
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text(postImageResponse.message),
-          ));
+          checkTheSpecifiedMetaID(value, postImageResponse);
         });
       });
     } else {
@@ -1362,5 +1376,21 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   void setAuthToken() async {
     authToken = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+  }
+
+  void checkTheSpecifiedMetaID(
+      HealthRecordList value, PostImageResponse postImageResponse) {
+    // showAudioWidgetIfVoiceNotesAvailable(value);
+    for (HealthResult healthResult in value.result) {
+      if (widget.data.id == healthResult.id) {
+        // widget.data=healthResult
+        //widget.data.healthRecordCollection = healthResult.healthRecordCollection;
+        PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
+        setState(() {});
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text(postImageResponse.message),
+        ));
+      }
+    }
   }
 }

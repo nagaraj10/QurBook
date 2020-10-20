@@ -90,9 +90,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   List<SharedByUsers> _familyNames = new List();
 
-  List<String> recordIds = new List();
+  /* List<String> recordIds = new List();
   List<String> notesId = new List();
-  List<String> voiceIds = new List();
+  List<String> voiceIds = new List();*/
 
   List<String> healthRecords = new List();
 
@@ -134,12 +134,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     getCategoryList();
     getDataFromWidget();
+    setLengthValue();
   }
 
   addHealthRecords() {
-    healthRecords.addAll(recordIds);
-    healthRecords.addAll(notesId);
-    healthRecords.addAll(voiceIds);
+    healthRecords.addAll(CommonUtil.recordIds);
+    healthRecords.addAll(CommonUtil.notesId);
+    healthRecords.addAll(CommonUtil.voiceIds);
   }
 
   Future<FamilyMembers> getList() async {
@@ -532,7 +533,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                               false,
                                               false,
                                               true,
-                                              notesId);
+                                              CommonUtil.notesId);
                                         },
                                       ),
                                     ),
@@ -574,7 +575,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                               false,
                                               true,
                                               false,
-                                              voiceIds);
+                                              CommonUtil.voiceIds);
                                         },
                                       ),
                                     ),
@@ -616,7 +617,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                               true,
                                               false,
                                               false,
-                                              recordIds);
+                                              CommonUtil.recordIds);
                                         },
                                       ),
                                     ),
@@ -861,8 +862,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     });
 
     try {
-      if (recordIds.length > 0) {
-        associateRecords(doctorId, createdBy, recordIds).then((value) {
+      if (CommonUtil.recordIds.length > 0) {
+        associateRecords(doctorId, createdBy, CommonUtil.recordIds)
+            .then((value) {
           if (value != null && value.isSuccess) {
             bookAppointmentOnly(
                 createdBy,
@@ -939,6 +941,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   goToPaymentPage(String longurl, String paymentId) {
+    CommonUtil.recordIds.clear();
+    CommonUtil.notesId.clear();
+    CommonUtil.voiceIds.clear();
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -1093,7 +1098,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         filteredCategoryData =
             new CommonUtil().fliterCategories(categoryDataList);
 
-        filteredCategoryData.add(categoryDataObjClone);
+        //filteredCategoryData.add(categoryDataObjClone);
       });
       return filteredCategoryData;
     } else {
@@ -1159,6 +1164,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         selectedMedias: mediaIds,
         isFromChat: false,
         showDetails: false,
+          isAssociateOrChat:true
+
       ),
     ))
         .then((results) {
@@ -1167,22 +1174,28 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         print(metaIds.toString());
 
         if (allowSelect) {
-          recordIds = results['metaId'].cast<String>();
-          recordIdCount = recordIds.length;
+          CommonUtil.recordIds = results['metaId'].cast<String>();
+          recordIdCount = CommonUtil.recordIds.length;
         } else if (isAudioSelect) {
-          voiceIds = results['metaId'].cast<String>();
+          CommonUtil.voiceIds = results['metaId'].cast<String>();
 
-          voiceIdCount = voiceIds.length;
+          voiceIdCount = CommonUtil.voiceIds.length;
         } else if (isNotesSelect) {
-          notesId = results['metaId'].cast<String>();
+          CommonUtil.notesId = results['metaId'].cast<String>();
 
-          notesIdCount = notesId.length;
+          notesIdCount = CommonUtil.notesId.length;
         }
         print(recordIdCount);
         setState(() {});
         print(metaIds.toString());
       }
     });
+  }
+
+  setLengthValue() {
+    recordIdCount = CommonUtil.recordIds.length;
+    voiceIdCount = CommonUtil.voiceIds.length;
+    notesIdCount = CommonUtil.notesId.length;
   }
 
   Future<AssociateSuccessResponse> associateRecords(

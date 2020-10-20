@@ -309,7 +309,7 @@ class _FeedbacksState extends State<Feedbacks> {
 
     postMainData[variable.strmetaInfo] = postMediaData;
 
-    var params = json.encode(postMainData);
+    var params = json.encode(postMediaData);
 
     if (imagePaths != null && imagePaths.length > 0) {
       _healthReportListForUserBlock
@@ -323,6 +323,8 @@ class _FeedbacksState extends State<Feedbacks> {
 
             callFeedBackSuccess(context);
           });
+        } else {
+          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         }
       });
     } else {
@@ -340,6 +342,8 @@ class _FeedbacksState extends State<Feedbacks> {
 
             callFeedBackSuccess(context);
           });
+        } else {
+          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         }
       });
     }

@@ -254,6 +254,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
         selectedMedias: paymentID,
         isFromChat: false,
         showDetails: true,
+          isAssociateOrChat:true
+
       ),
     ));
   }

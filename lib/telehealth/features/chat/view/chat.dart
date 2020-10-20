@@ -1234,6 +1234,7 @@ class ChatScreenState extends State<ChatScreen> {
         isNotesSelect: isNotesSelect,
         selectedMedias: mediaIds,
         isFromChat: true,
+          isAssociateOrChat:true
       ),
     ))
         .then((results) {

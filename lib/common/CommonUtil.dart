@@ -77,6 +77,10 @@ class CommonUtil {
 
   CategoryResult categoryDataObjClone = new CategoryResult();
 
+  static List<String> recordIds = new List();
+  static List<String> notesId = new List();
+  static List<String> voiceIds = new List();
+
   static Future<dynamic> getResourceLoader() async {
     final Future<Secret> secret =
         SecretLoader(secretPath: "secrets.json").load();
@@ -1133,13 +1137,14 @@ class CommonUtil {
 
   List<CategoryResult> fliterCategories(List<CategoryResult> data) {
     List<CategoryResult> filteredCategoryData = new List();
-
     for (CategoryResult dataObj in data) {
-      if (/*dataObj.isDisplay &&*/
+      if (dataObj.isDisplay &&
           dataObj.categoryName != Constants.STR_FEEDBACK &&
-              dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
-              dataObj.categoryName != Constants.STR_WEARABLES) {
-        filteredCategoryData.add(dataObj);
+          dataObj.categoryName != Constants.STR_CLAIMSRECORD &&
+          dataObj.categoryName != Constants.STR_WEARABLES) {
+        if (!filteredCategoryData.contains(dataObj)) {
+          filteredCategoryData.add(dataObj);
+        }
       }
     }
 
@@ -1148,22 +1153,29 @@ class CommonUtil {
       if (categoryDataObj.categoryDescription ==
           CommonConstants.categoryDescriptionOthers) {
         categoryDataObjClone = categoryDataObj;
-        filteredCategoryData.removeAt(i);
+        // filteredCategoryData.removeAt(i);
         break;
       }
       i++;
     }
-    filteredCategoryData.add(categoryDataObjClone);
 
     filteredCategoryData.sort((a, b) {
-      if (a.categoryDescription != null) {
-        return a.categoryDescription
-            .toLowerCase()
-            .compareTo(b.categoryDescription.toLowerCase());
-      }
+      return a.categoryDescription
+          .toLowerCase()
+          .compareTo(b.categoryDescription.toLowerCase());
     });
 
     return filteredCategoryData;
+  }
+
+  CategoryResult getCatgeoryLabel(List<CategoryResult> filteredCategoryData) {
+    for (CategoryResult categoryDataObj in filteredCategoryData) {
+      if (categoryDataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionOthers) {
+        categoryDataObjClone = categoryDataObj;
+      }
+    }
+    return categoryDataObjClone;
   }
 
   static Future<void> askPermissionForCameraAndMic() async {

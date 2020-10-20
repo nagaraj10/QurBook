@@ -156,15 +156,15 @@ class AppointmentsCommonWidget {
           if (voiceNotesCount != '') {
             await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => MyRecords(
-                categoryPosition:
-                    getCategoryPosition(Constants.STR_VOICERECORDS),
-                allowSelect: false,
-                isAudioSelect: true,
-                isNotesSelect: true,
-                selectedMedias: voiceIds,
-                isFromChat: false,
-                showDetails: true,
-              ),
+                  categoryPosition:
+                      getCategoryPosition(Constants.STR_VOICERECORDS),
+                  allowSelect: false,
+                  isAudioSelect: true,
+                  isNotesSelect: true,
+                  selectedMedias: voiceIds,
+                  isFromChat: false,
+                  showDetails: true,
+                  isAssociateOrChat: true),
             ));
           }
         }, voiceNotesCount),
@@ -177,34 +177,38 @@ class AppointmentsCommonWidget {
             await Navigator.of(context)
                 .push(MaterialPageRoute(
               builder: (context) => MyRecords(
-                categoryPosition:
-                    getCategoryPosition(Constants.STR_PRESCRIPTION),
-                allowSelect: true,
-                isAudioSelect: false,
-                isNotesSelect: false,
-                selectedMedias: recordIds,
-                isFromChat: false,
-                showDetails: false,
-              ),
+                  categoryPosition:
+                      getCategoryPosition(Constants.STR_PRESCRIPTION),
+                  allowSelect: true,
+                  isAudioSelect: false,
+                  isNotesSelect: false,
+                  selectedMedias: recordIds,
+                  isFromChat: false,
+                  showDetails: false,
+                  isAssociateOrChat: true),
             ))
                 .then((results) {
-              if (results.containsKey('metaId')) {
-                var metaIds = results['metaId'];
-                print(metaIds.toString());
+              try {
+                if (results.containsKey('metaId')) {
+                  var metaIds = results['metaId'];
+                  print(metaIds.toString());
 
-                recordIds = results['metaId'].cast<String>();
+                  recordIds = results['metaId'].cast<String>();
 
-                associateRecords(doc.doctor.user.id, doc.bookedBy.id, recordIds)
-                    .then((value) {
-                  if (value != null && value.isSuccess) {
-                    toast.getToast('Sucess', Colors.green);
-                    refresh();
-                  } else {
-                    //pr.hide();
-                    toast.getToast(parameters.errAssociateRecords, Colors.red);
-                  }
-                });
-              }
+                  associateRecords(
+                          doc.doctor.user.id, doc.bookedBy.id, recordIds)
+                      .then((value) {
+                    if (value != null && value.isSuccess) {
+                      toast.getToast('Sucess', Colors.green);
+                      refresh();
+                    } else {
+                      //pr.hide();
+                      toast.getToast(
+                          parameters.errAssociateRecords, Colors.red);
+                    }
+                  });
+                }
+              } catch (e) {}
             });
           }
         }, rxCount),
@@ -373,7 +377,27 @@ class AppointmentsCommonWidget {
         ));
   }
 
-  List<CategoryResult> getCategoryList() {
+  int getCategoryList(String categoryName) {
+    int position = 0;
+    /* if (filteredCategoryData == null || filteredCategoryData.length == 0) {
+      _categoryListBlock.getCategoryLists().then((value) {
+        categoryDataList = value.result;
+
+        filteredCategoryData =
+            new CommonUtil().fliterCategories(categoryDataList);
+
+        //filteredCategoryData.add(new CommonUtil().getCatgeoryLabel(filteredCategoryData));
+
+        for (int i = 0; i < filteredCategoryData.length; i++) {
+          if (categoryName == filteredCategoryData[i].categoryName) {
+            print(
+                categoryName + ' ****' + filteredCategoryData[i].categoryName);
+            position = i;
+          }
+        }
+        return position;
+      });
+*/
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         categoryDataList = value.result;
@@ -381,12 +405,39 @@ class AppointmentsCommonWidget {
         filteredCategoryData =
             new CommonUtil().fliterCategories(categoryDataList);
 
-        filteredCategoryData.add(categoryDataObjClone);
+        //filteredCategoryData.add(categoryDataObjClone);
+
+        for (int i = 0; i < filteredCategoryData.length; i++) {
+          if (categoryName == filteredCategoryData[i].categoryName) {
+            print(
+                categoryName + ' ****' + filteredCategoryData[i].categoryName);
+            position = i;
+          }
+        }
+        if (categoryName == Constants.STR_PRESCRIPTION) {
+          return position;
+        } else {
+          return position;
+        }
       });
-      return filteredCategoryData;
     } else {
-      return filteredCategoryData;
+      for (int i = 0; i < filteredCategoryData.length; i++) {
+        if (categoryName == filteredCategoryData[i].categoryName) {
+          print(categoryName + ' ****' + filteredCategoryData[i].categoryName);
+          position = i;
+        }
+      }
+      return position;
     }
+    /* } else {
+      for (int i = 0; i < filteredCategoryData.length; i++) {
+        if (categoryName == filteredCategoryData[i].categoryName) {
+          print(categoryName + ' ****' + filteredCategoryData[i].categoryName);
+          position = i;
+        }
+      }
+      return position;
+    }*/
   }
 
   getCategoryPosition(String categoryName) {
@@ -417,17 +468,13 @@ class AppointmentsCommonWidget {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult> categoryDataList = getCategoryList();
-    for (int i = 0; i < categoryDataList.length; i++) {
-      if (categoryName == categoryDataList[i].categoryName) {
-        print(categoryName + ' ****' + categoryDataList[i].categoryName);
-        position = i;
-      }
-    }
-    if (categoryName == Constants.STR_PRESCRIPTION) {
+    position = getCategoryList(categoryName);
+    return position > 0 ? position : 0;
+
+    /* if (categoryName == Constants.STR_PRESCRIPTION) {
       position = 0;
-    }
-    return position;
+    }*/
+    // return position;
   }
 
   Widget docPhotoView(Past doc) {

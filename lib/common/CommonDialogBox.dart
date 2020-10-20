@@ -1758,7 +1758,7 @@ class CommonDialogBox {
         _healthReportListForUserBlock
             .createHealtRecords(params.toString(), imagePath, audioPathMain)
             .then((value) {
-          if (value.isSuccess) {
+          if (value != null && value.isSuccess) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
               PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value);

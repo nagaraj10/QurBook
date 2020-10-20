@@ -61,6 +61,7 @@ class MyRecords extends StatefulWidget {
   bool isFromChat;
   bool showDetails;
   List<HealthRecordCollection> selectedRecordIds;
+  bool isAssociateOrChat;
 
   MyRecords(
       {this.categoryPosition,
@@ -70,7 +71,8 @@ class MyRecords extends StatefulWidget {
       this.selectedMedias,
       this.isFromChat,
       this.showDetails,
-      this.selectedRecordIds});
+      this.selectedRecordIds,
+      this.isAssociateOrChat});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -344,6 +346,7 @@ class _MyRecordsState extends State<MyRecords> {
       isFromChat: widget.isFromChat ?? false,
       showDetails: widget.showDetails ?? false,
       selectedRecordsId: widget.selectedRecordIds,
+      isAssociateOrChat: widget.isAssociateOrChat ?? false,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -569,7 +572,7 @@ class CustomTabView extends StatefulWidget {
   _MyRecordsState recordsState;
   HealthResult healthResult;
   List<HealthRecordCollection> selectedRecordsId = new List();
-
+  bool isAssociateOrChat;
   CustomTabView(
       {@required this.itemCount,
       this.tabBuilder,
@@ -592,7 +595,8 @@ class CustomTabView extends StatefulWidget {
       this.showDetails,
       this.recordsState,
       this.healthResult,
-      this.selectedRecordsId});
+      this.selectedRecordsId,
+      this.isAssociateOrChat});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -740,6 +744,7 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   Widget getAllTabsToDisplayInBodyClone(List<CategoryResult> data) {
+    print(widget.showDetails.toString() + ' ******************');
     rebuildAllBlocks();
     if (widget.selectedMedia == null) {
       widget.selectedMedia = new List();
@@ -811,31 +816,32 @@ class _CustomTabsState extends State<CustomTabView>
         ),
       ),
       Align(
-        alignment: Alignment.bottomCenter,
-        child: (widget.selectedMedia != null && widget.selectedMedia.length > 0)
-            ? !widget.showDetails
-                ? OutlineButton(
-                    onPressed: () {
-                      if (widget.isFromChat) {
-                        Navigator.of(context)
-                            .pop({'metaId': widget.selectedRecordsId});
-                      } else {
-                        Navigator.of(context)
-                            .pop({'metaId': widget.selectedMedia});
-                      }
-                    },
-                    child:
-                        widget.isFromChat ? Text('Attach') : Text('Associate'),
-                    textColor: Color(new CommonUtil().getMyPrimaryColor()),
-                    color: Colors.white,
-                    borderSide: BorderSide(
-                        color: Color(new CommonUtil().getMyPrimaryColor())),
-                    shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30)),
-                  )
-                : SizedBox()
-            : SizedBox(),
-      )
+          alignment: Alignment.bottomCenter,
+          child: widget.isAssociateOrChat
+              /*(widget.selectedMedia != null &&
+                  widget.selectedMedia.length > 0 &&
+                  !widget.showDetails)*/
+              ? OutlineButton(
+                  onPressed: () {
+                    if (widget.isFromChat) {
+                      Navigator.of(context)
+                          .pop({'metaId': widget.selectedRecordsId});
+                    } else {
+                      Navigator.of(context)
+                          .pop({'metaId': widget.selectedMedia});
+                    }
+                  },
+                  child: widget.isFromChat ? Text('Attach') : Text('Associate'),
+                  textColor: Color(new CommonUtil().getMyPrimaryColor()),
+                  color: Colors.white,
+                  borderSide: BorderSide(
+                      color: Color(new CommonUtil().getMyPrimaryColor())),
+                  shape: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30)),
+                )
+              : SizedBox()
+          //: SizedBox(),
+          )
     ]);
   }
 
@@ -1457,4 +1463,6 @@ class _CustomTabsState extends State<CustomTabView>
 //      [PermissionGroup.camera, PermissionGroup.microphone],
 //    );
   }
+
+  CategoryResult getOthersCategory() {}
 }
