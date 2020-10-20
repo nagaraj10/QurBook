@@ -1126,7 +1126,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       if (result.doctorFeeCollection.length > 0) {
         for (int i = 0; i < result.doctorFeeCollection.length; i++) {
           String feesCode = result.doctorFeeCollection[i].feeType.code;
-          if (feesCode == CONSULTING) {
+          bool isActive=result.doctorFeeCollection[i].isActive;
+          if (feesCode == CONSULTING && isActive==true) {
             fees = result.doctorFeeCollection[i].fee;
           }
         }
