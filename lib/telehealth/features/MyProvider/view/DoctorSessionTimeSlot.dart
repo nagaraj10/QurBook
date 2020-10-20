@@ -67,7 +67,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
             controller: _controller,
             width: 40,
             height: 45,
-            initialSelectedDate: DateTime.now(),
+            initialSelectedDate: initialDate(),
             selectionColor: Color(new CommonUtil().getMyPrimaryColor()),
             selectedTextColor: Colors.white,
             dayTextStyle: TextStyle(
@@ -84,6 +84,18 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
         getTimeSlots(),
       ],
     );
+  }
+
+  DateTime initialDate() {
+    if (widget.doctorsData != null) {
+      if (widget.doctorsData.plannedFollowupDate != null) {
+        return DateTime.parse(widget.doctorsData.plannedFollowupDate);
+      } else {
+        return DateTime.now();
+      }
+    } else {
+      return DateTime.now();
+    }
   }
 
   Widget getTimeSlots() {
