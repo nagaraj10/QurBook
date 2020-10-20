@@ -539,7 +539,6 @@ class _MyProvidersState extends State<MyProviders> {
                               height: fhbStyles.imageHeight,
                               icon: Icons.info,
                               onTap: () {
-                                print('on Info pressed');
                                 commonWidgets.showDoctorDetailViewNew(
                                     docs[i], context);
                               }),
