@@ -314,15 +314,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                               : SizedBox(
                                   width: 0,
                                 ),
-                          value2.toString() != ''
-                              ? Text(
-                                  value2.toString(),
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 22),
-                                )
-                              : SizedBox(
-                                  width: 0,
-                                ),
+                          Text(
+                            value2.toString(),
+                            style: TextStyle(color: Colors.white, fontSize: 22),
+                          )
                         ],
                       )
                     ],

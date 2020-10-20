@@ -4,21 +4,20 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/main.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 import '../../../../common/CommonUtil.dart';
 
@@ -35,13 +34,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  final GoogleSignIn googleSignIn = GoogleSignIn();
 
   bool isLoading = false;
-  List<Choice> choices = const <Choice>[
-    const Choice(title: 'Settings', icon: Icons.settings),
-    const Choice(title: 'Log out', icon: Icons.exit_to_app),
-  ];
 
   String patientId = '';
   String patientName = '';
@@ -57,10 +51,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
     patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     print(patientId);
 
-    MyProfileModel myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+    MyProfileModel myProfile =
+        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
     patientName = myProfile.result != null
-        ? myProfile.result.firstName +
-        myProfile.result.firstName
+        ? myProfile.result.firstName + myProfile.result.firstName
         : '';
     return patientId;
   }
@@ -69,7 +63,6 @@ class HomeScreenState extends State<ChatHomeScreen> {
     firebaseMessaging.requestNotificationPermissions();
 
     firebaseMessaging.configure(onMessage: (Map<String, dynamic> message) {
-      print('onMessage: $message');
       Platform.isAndroid
           ? showNotification(message['notification'])
           : showNotification(message['aps']['alert']);
@@ -83,11 +76,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
     });
 
     firebaseMessaging.getToken().then((token) {
-      print('token: $token');
       Firestore.instance
-          .collection('users')
+          .collection(STR_USERS)
           .document(patientId)
-          .updateData({'pushToken': token});
+          .updateData({STR_PUSH_TOKEN: token});
     }).catchError((err) {
       Fluttertoast.showToast(msg: err.message.toString());
     });
@@ -95,27 +87,18 @@ class HomeScreenState extends State<ChatHomeScreen> {
 
   void configLocalNotification() {
     var initializationSettingsAndroid =
-        new AndroidInitializationSettings('@mipmap/ic_launcher');
+        new AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
     var initializationSettingsIOS = new IOSInitializationSettings();
     var initializationSettings = new InitializationSettings(
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  /*void onItemMenuPress(Choice choice) {
-    if (choice.title == 'Log out') {
-      handleSignOut();
-    } else {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => Settings()));
-    }
-  }*/
-
   void showNotification(message) async {
     var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
       Platform.isAndroid
-          ? 'com.example.go_fhb_flutter'
-          : 'com.duytq.flutterchatdemo',
+          ? 'com.ventechsolutions.myFHB'
+          : 'com.ventechsolutions.myFHB',
       'Flutter chat demo',
       'your channel description',
       playSound: true,
@@ -127,17 +110,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
     var platformChannelSpecifics = new NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
 
-    print(message);
-//    print(message['body'].toString());
-//    print(json.encode(message));
-
     await flutterLocalNotificationsPlugin.show(0, message['title'].toString(),
         message['body'].toString(), platformChannelSpecifics,
         payload: json.encode(message));
-
-//    await flutterLocalNotificationsPlugin.show(
-//        0, 'plain title', 'plain body', platformChannelSpecifics,
-//        payload: 'item x');
   }
 
   Future<bool> onBackPress() {
@@ -169,14 +144,14 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       margin: EdgeInsets.only(bottom: 10.0),
                     ),
                     Text(
-                      'Exit app',
+                      EXIT_APP,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18.0,
                           fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      'Are you sure to exit app?',
+                      EXIT_APP_TO_EXIT,
                       style: TextStyle(color: Colors.white70, fontSize: 14.0),
                     ),
                   ],
@@ -196,7 +171,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       margin: EdgeInsets.only(right: 10.0),
                     ),
                     Text(
-                      'CANCEL',
+                      CANCEL,
                       style: TextStyle(
                           color: primaryColor, fontWeight: FontWeight.bold),
                     )
@@ -217,7 +192,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       margin: EdgeInsets.only(right: 10.0),
                     ),
                     Text(
-                      'YES',
+                      YES,
                       style: TextStyle(
                           color: primaryColor, fontWeight: FontWeight.bold),
                     )
@@ -235,24 +210,6 @@ class HomeScreenState extends State<ChatHomeScreen> {
     }
   }
 
-  Future<Null> handleSignOut() async {
-    this.setState(() {
-      isLoading = true;
-    });
-
-    await FirebaseAuth.instance.signOut();
-    await googleSignIn.disconnect();
-    await googleSignIn.signOut();
-
-    this.setState(() {
-      isLoading = false;
-    });
-
-    Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => MyFHB()),
-        (Route<dynamic> route) => false);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -265,36 +222,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
         elevation: 0.0,
         backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         title: Text(
-          'Chat',
+          CHAT,
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: false,
-        /*actions: <Widget>[
-          PopupMenuButton<Choice>(
-            onSelected: onItemMenuPress,
-            itemBuilder: (BuildContext context) {
-              return choices.map((Choice choice) {
-                return PopupMenuItem<Choice>(
-                    value: choice,
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          choice.icon,
-                          color: primaryColor,
-                        ),
-                        Container(
-                          width: 10.0,
-                        ),
-                        Text(
-                          choice.title,
-                          style: TextStyle(color: primaryColor),
-                        ),
-                      ],
-                    ));
-              }).toList();
-            },
-          ),
-        ],*/
       ),
       body: WillPopScope(
         child: checkIfDoctorIdExist(),
@@ -327,9 +258,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
         Container(
           child: StreamBuilder(
             stream: Firestore.instance
-                .collection('chat_list')
+                .collection(STR_CHAT_LIST)
                 .document(patientId)
-                .collection('user_list')
+                .collection(STR_USER_LIST)
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
@@ -359,8 +290,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
   }
 
   Widget buildItem(BuildContext context, DocumentSnapshot document) {
-    String lastMessage = document['lastMessage'];
-    if (document['id'] == patientId) {
+    String lastMessage = document[STR_LAST_MESSAGE];
+    if (document[STR_ID] == patientId) {
       return Container();
     } else {
       return Column(
@@ -372,9 +303,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                   MaterialPageRoute(
                       builder: (context) => Chat(
                             peerId: document.documentID,
-                            peerAvatar: document['photoUrl'],
-                            peerName: document['nickname'],
-                            lastDate: document['createdAt'],
+                            peerAvatar: document[STR_PHOTO_URL],
+                            peerName: document[STR_NICK_NAME],
+                            lastDate: document[STR_CREATED_AT],
                           )));
             },
             child: Container(
@@ -382,10 +313,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
                 children: <Widget>[
                   SizedBox(width: MediaQuery.of(context).size.width * 0.025),
                   Container(
-                    width: MediaQuery.of(context).size.width * 0.15,
-                    height: MediaQuery.of(context).size.width * 0.15,
+                    width: MediaQuery.of(context).size.width * 0.12,
+                    height: MediaQuery.of(context).size.width * 0.12,
                     child: ClipOval(
-                      child: document['photoUrl'] != null
+                      child: document[STR_PHOTO_URL] != null
                           ? CachedNetworkImage(
                               placeholder: (context, url) => Container(
                                 child: CircularProgressIndicator(
@@ -397,7 +328,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                 height: 50.0,
                                 padding: EdgeInsets.all(15.0),
                               ),
-                              imageUrl: document['photoUrl'],
+                              imageUrl: document[STR_PHOTO_URL],
                               width: 50.0,
                               height: 50.0,
                               fit: BoxFit.cover,
@@ -418,26 +349,15 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 4),
                         child: Text(
-                          toBeginningOfSentenceCase(document['nickname']),
+                          toBeginningOfSentenceCase(document[STR_NICK_NAME]),
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                              fontFamily: 'Poppins'),
+                              fontWeight: FontWeight.w400,
+                              fontSize: 15,
+                              fontFamily: variable.font_poppins),
                         ),
                       ),
-                      /*SizedBox(
-                            height: 1,
-                          ),
-                          Text(
-                            '#1232443',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
-                                fontFamily: 'Poppins',
-                                color: Colors.grey[700]),
-                          ),*/
                       SizedBox(
                         height: 1,
                       ),
@@ -446,7 +366,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                             maxWidth: MediaQuery.of(context).size.width * 0.5),
                         padding: const EdgeInsets.only(bottom: 4),
                         child: lastMessage != null
-                            ? lastMessage.contains('https')
+                            ? lastMessage.contains(STR_HTTPS)
                                 ? Row(
                                     children: [
                                       Icon(
@@ -458,12 +378,12 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                         width: 3,
                                       ),
                                       Text(
-                                        'File',
+                                        STR_FILE,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Colors.grey[600],
                                             fontSize: 12,
-                                            fontFamily: 'Poppins'),
+                                            fontFamily: variable.font_poppins),
                                       )
                                     ],
                                   )
@@ -474,7 +394,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                         fontWeight: FontWeight.bold,
                                         color: Colors.grey[600],
                                         fontSize: 12,
-                                        fontFamily: 'Poppins'),
+                                        fontFamily: variable.font_poppins),
                                   )
                             : '',
                       ),
@@ -484,30 +404,19 @@ class HomeScreenState extends State<ChatHomeScreen> {
                       Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Text(
-                          document['createdAt'] != null
-                              ? 'Last Received: ' +
-                                  DateFormat('dd MMM kk:mm').format(
+                          document[STR_CREATED_AT] != null
+                              ? LAST_RECEIVED +
+                                  DateFormat(DATE_FORMAT).format(
                                       DateTime.fromMillisecondsSinceEpoch(
-                                          int.parse(document['createdAt'])))
+                                          int.parse(document[STR_CREATED_AT])))
                               : '',
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
                               color: Colors.grey[600],
                               fontSize: 10,
-                              fontFamily: 'Poppins'),
+                              fontFamily: variable.font_poppins),
                         ),
                       ),
-                      /*Padding(
-                            padding: const EdgeInsets.only(bottom: 15),
-                            child: Text(
-                              'Next appointment date Jul 15,2020',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.grey[800],
-                                  fontSize: 12,
-                                  fontFamily: 'Poppins'),
-                            ),
-                          )*/
                     ],
                   ),
                   SizedBox(
@@ -515,19 +424,6 @@ class HomeScreenState extends State<ChatHomeScreen> {
                   ),
                 ],
               ),
-
-              /*
-                SizedBox(
-                  width: 10,
-                ),
-
-                GestureDetector(
-                  onTap: () {},
-                  child: Icon(
-                    Icons.videocam,
-                    color: Colors.blue[400],
-                  ),
-                ),*/
             ),
           ),
           Container(
@@ -539,91 +435,4 @@ class HomeScreenState extends State<ChatHomeScreen> {
       );
     }
   }
-
-/*Widget buildItem(BuildContext context, DocumentSnapshot document) {
-    if (document['id'] == currentUserId) {
-      return Container();
-    } else {
-      return Container(
-        child: FlatButton(
-          child: Row(
-            children: <Widget>[
-              Material(
-                child: document['photoUrl'] != null
-                    ? CachedNetworkImage(
-                        placeholder: (context, url) => Container(
-                          child: CircularProgressIndicator(
-                            strokeWidth: 1.0,
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(themeColor),
-                          ),
-                          width: 50.0,
-                          height: 50.0,
-                          padding: EdgeInsets.all(15.0),
-                        ),
-                        imageUrl: document['photoUrl'],
-                        width: 50.0,
-                        height: 50.0,
-                        fit: BoxFit.cover,
-                      )
-                    : Icon(
-                        Icons.account_circle,
-                        size: 50.0,
-                        color: greyColor,
-                      ),
-                borderRadius: BorderRadius.all(Radius.circular(25.0)),
-                clipBehavior: Clip.hardEdge,
-              ),
-              Flexible(
-                child: Container(
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        child: Text(
-                          'Nickname: ${document['nickname']}',
-                          style: TextStyle(color: primaryColor),
-                        ),
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
-                      ),
-                      Container(
-                        child: Text(
-                          'About me: ${document['aboutMe'] ?? 'Not available'}',
-                          style: TextStyle(color: primaryColor),
-                        ),
-                        alignment: Alignment.centerLeft,
-                        margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-                      )
-                    ],
-                  ),
-                  margin: EdgeInsets.only(left: 20.0),
-                ),
-              ),
-            ],
-          ),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Chat(
-                          peerId: document.documentID,
-                          peerAvatar: document['photoUrl'],
-                        )));
-          },
-          color: greyColor2,
-          padding: EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 10.0),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        ),
-        margin: EdgeInsets.only(bottom: 10.0, left: 5.0, right: 5.0),
-      );
-    }
-  }*/
-}
-
-class Choice {
-  const Choice({this.title, this.icon});
-
-  final String title;
-  final IconData icon;
 }

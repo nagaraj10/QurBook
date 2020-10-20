@@ -35,6 +35,15 @@ class CommonWidgets {
     );
   }
 
+  Widget getTextAbout(String docName) {
+    return Text(
+      docName != null ? toBeginningOfSentenceCase(docName) : '',
+      style: TextStyle(
+          fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
+      softWrap: true,
+    );
+  }
+
   Widget getMCVerified(bool condition, String value) {
     return Text(
       value != null ? value.toUpperCase() : "''",
@@ -598,7 +607,7 @@ class CommonWidgets {
                       ),
                       getSizedBox(15),
                       getTextForDoctors('About: '),
-                      getTextForDoctors((docs.doctorProfessionalDetailCollection
+                      getTextAbout((docs.doctorProfessionalDetailCollection
                                   .isNotEmpty ??
                               docs.doctorProfessionalDetailCollection.length >
                                   0 ??

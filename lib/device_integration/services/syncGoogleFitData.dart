@@ -118,11 +118,15 @@ class SyncGoogleFitData {
         }
       }
       if (errorString.isNotEmpty) {
-        throw "Failed to sync $errorString ";
+        throw "$errorString";
       }
       return true;
     } catch (e) {
-      throw e;
+      if (errorString.isNotEmpty) {
+        throw "No data sources available for $errorString";
+      } else {
+        throw "Failed to sync GoogleFit Data please try again later";
+      }
     }
   }
 
@@ -150,7 +154,6 @@ class SyncGoogleFitData {
         return null;
       }
       return lastSync.result.lastSyncDateTime;
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 }

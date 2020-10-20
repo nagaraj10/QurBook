@@ -2066,7 +2066,7 @@ class CommonDialogBox {
           validationMsg = CommonConstants.strDiastolicEmpty;
         } else if (pulse.text == '' || pulse.text == null) {
           validationConditon = false;
-          validationMsg = CommonConstants.strPulse;
+          validationMsg = CommonConstants.strPulseEmpty;
         } else {
           validationConditon = true;
         }
