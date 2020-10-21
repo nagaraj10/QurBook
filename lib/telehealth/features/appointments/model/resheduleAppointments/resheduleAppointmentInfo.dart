@@ -6,7 +6,7 @@ class ResheduleAppointmentInfo {
   bool isFollowUp;
   String slotNumber;
   bool isHealthRecordShared;
-  Null sharedHealthRecordMetadata;
+  dynamic sharedHealthRecordMetadata;
   CreatedBy doctorSession;
   bool isActive;
   CreatedBy lastModifiedBy;
@@ -18,11 +18,11 @@ class ResheduleAppointmentInfo {
   String plannedEndDateTime;
   CreatedBy status;
   String doctorSessionId;
-  Null actualStartDateTime;
-  Null actualEndDateTime;
-  Null plannedFollowupDate;
-  Null isFollowup;
-  Null lastModifiedOn;
+  dynamic actualStartDateTime;
+  dynamic actualEndDateTime;
+  dynamic plannedFollowupDate;
+  dynamic isFollowup;
+  dynamic lastModifiedOn;
   String id;
   bool isRefunded;
   bool isFollowupFee;

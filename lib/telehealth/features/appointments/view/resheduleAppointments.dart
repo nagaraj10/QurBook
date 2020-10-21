@@ -330,15 +330,13 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
 
   String getFees(HealthOrganizationResult result) {
     String fees;
-    if (result.doctorFeeCollection.isNotEmpty) {
+    if (result.doctorFeeCollection != null) {
       if (result.doctorFeeCollection.length > 0) {
         for (int i = 0; i < result.doctorFeeCollection.length; i++) {
           String feesCode = result.doctorFeeCollection[i].feeType.code;
-          bool isActive=result.doctorFeeCollection[i].isActive;
-          if (feesCode == CONSULTING && isActive==true) {
+          bool isActive = result.doctorFeeCollection[i].isActive;
+          if (feesCode == CONSULTING && isActive == true) {
             fees = result.doctorFeeCollection[i].fee;
-          } else {
-            fees = '';
           }
         }
       } else {

@@ -32,7 +32,7 @@ class DoctorPastAppointments extends StatefulWidget {
 
 class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   AppointmentsCommonWidget commonWidget = AppointmentsCommonWidget();
-  CommonWidgets providerCommonWidget=CommonWidgets();
+  CommonWidgets providerCommonWidget = CommonWidgets();
   FlutterToast toast = new FlutterToast();
   List<String> bookingIds = new List();
   AppointmentsListViewModel appointmentsViewModel;
@@ -161,13 +161,19 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             colors: Colors.black,
                           ),
                           TextWidget(
-                            fontsize: 15,
-                            text: 'INR '+ providerCommonWidget.getMoneyWithForamt(
-                                doc.doctorFollowUpFee) ?? '',
-                            fontWeight: FontWeight.w600,
-                            overflow: TextOverflow.visible,
-                            colors: Color(new CommonUtil().getMyPrimaryColor()),
-                          ),
+                                  fontsize: 15,
+                                  text: doc.plannedFollowupDate == null
+                                      ? ''
+                                      : 'INR ' +
+                                          providerCommonWidget
+                                              .getMoneyWithForamt(
+                                                  doc.doctorFollowUpFee) ??
+                                      '',
+                                  fontWeight: FontWeight.w600,
+                                  overflow: TextOverflow.visible,
+                                  colors: Color(
+                                      new CommonUtil().getMyPrimaryColor()),
+                                ),
                         ],
                       ),
                     )
@@ -246,17 +252,15 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
 //    print(paymentID.length);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-        categoryPosition: new AppointmentsCommonWidget()
-            .getCategoryPosition(Constants.STR_BILLS),
-        allowSelect: true,
-        isAudioSelect: false,
-        isNotesSelect: false,
-        selectedMedias: paymentID,
-        isFromChat: false,
-        showDetails: true,
-          isAssociateOrChat:true
-
-      ),
+          categoryPosition: new AppointmentsCommonWidget()
+              .getCategoryPosition(Constants.STR_BILLS),
+          allowSelect: true,
+          isAudioSelect: false,
+          isNotesSelect: false,
+          selectedMedias: paymentID,
+          isFromChat: false,
+          showDetails: true,
+          isAssociateOrChat: true),
     ));
   }
 }
