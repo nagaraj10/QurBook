@@ -377,69 +377,6 @@ class AppointmentsCommonWidget {
         ));
   }
 
-  int getCategoryList(String categoryName) {
-    int position = 0;
-    /* if (filteredCategoryData == null || filteredCategoryData.length == 0) {
-      _categoryListBlock.getCategoryLists().then((value) {
-        categoryDataList = value.result;
-
-        filteredCategoryData =
-            new CommonUtil().fliterCategories(categoryDataList);
-
-        //filteredCategoryData.add(new CommonUtil().getCatgeoryLabel(filteredCategoryData));
-
-        for (int i = 0; i < filteredCategoryData.length; i++) {
-          if (categoryName == filteredCategoryData[i].categoryName) {
-            print(
-                categoryName + ' ****' + filteredCategoryData[i].categoryName);
-            position = i;
-          }
-        }
-        return position;
-      });
-*/
-    if (filteredCategoryData == null || filteredCategoryData.length == 0) {
-      _categoryListBlock.getCategoryLists().then((value) {
-        categoryDataList = value.result;
-
-        filteredCategoryData =
-            new CommonUtil().fliterCategories(categoryDataList);
-
-        //filteredCategoryData.add(categoryDataObjClone);
-
-        for (int i = 0; i < filteredCategoryData.length; i++) {
-          if (categoryName == filteredCategoryData[i].categoryName) {
-            print(
-                categoryName + ' ****' + filteredCategoryData[i].categoryName);
-            position = i;
-          }
-        }
-        if (categoryName == Constants.STR_PRESCRIPTION) {
-          return position;
-        } else {
-          return position;
-        }
-      });
-    } else {
-      for (int i = 0; i < filteredCategoryData.length; i++) {
-        if (categoryName == filteredCategoryData[i].categoryName) {
-          print(categoryName + ' ****' + filteredCategoryData[i].categoryName);
-          position = i;
-        }
-      }
-      return position;
-    }
-    /* } else {
-      for (int i = 0; i < filteredCategoryData.length; i++) {
-        if (categoryName == filteredCategoryData[i].categoryName) {
-          print(categoryName + ' ****' + filteredCategoryData[i].categoryName);
-          position = i;
-        }
-      }
-      return position;
-    }*/
-  }
-
   getCategoryPosition(String categoryName) {
     int categoryPosition = 0;
     switch (categoryName) {
@@ -468,13 +405,31 @@ class AppointmentsCommonWidget {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    position = getCategoryList(categoryName);
-    return position > 0 ? position : 0;
+    List<CategoryResult> categoryDataList = getCategoryList();
+    for (int i = 0; i < categoryDataList.length; i++) {
+      if (categoryName == categoryDataList[i].categoryName) {
+        print(categoryName + ' ****' + categoryDataList[i].categoryName);
+        position = i;
+      }
+    }
+    if (categoryName == Constants.STR_PRESCRIPTION) {
+      return position;
+    } else {
+      return position;
+    }
+  }
 
-    /* if (categoryName == Constants.STR_PRESCRIPTION) {
-      position = 0;
-    }*/
-    // return position;
+  List<CategoryResult> getCategoryList() {
+    if (filteredCategoryData == null || filteredCategoryData.length == 0) {
+      _categoryListBlock.getCategoryLists().then((value) {
+        filteredCategoryData = new CommonUtil().fliterCategories(value.result);
+
+        //filteredCategoryData.add(categoryDataObjClone);
+      });
+      return filteredCategoryData;
+    } else {
+      return filteredCategoryData;
+    }
   }
 
   Widget docPhotoView(Past doc) {
