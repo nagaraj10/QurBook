@@ -59,7 +59,7 @@ const String strResetButton = 'Reset my password';
 const String strBackTo = 'Back to ?';
 const String strPhoneNumberr = 'Phone Number';
 const String strOtpShowText =
-    'Enter your Username below and we will send a message to reset your password';
+    'Enter the registered mobile number to change the password';
 
 //Strings used in SignInScreen
 const String strSignInText = 'Sign In';
@@ -103,7 +103,7 @@ const String strResendConfirmCode = 'resend-confirm-code';
 
 //Strings used in ChangePassword
 const String strChangePasswordText =
-    'We have a sent a password reset code to your number. Enter it below to reset your password';
+    'OTP has been sent to the registered mobile number, enter it below to change the password';
 const String strChangeButtonText = 'Change Password';
 const String strCodeHintText = 'Code';
 const String strNewPasswordHintTxt = 'New Password';
