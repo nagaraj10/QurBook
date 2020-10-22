@@ -86,8 +86,32 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             SizedBoxWidget(height: 3.0, width: 0),
                             widget.doc?.doctor?.specialization == null
                                 ? Container()
-                                : commonWidget.docStatus(context,
-                                    widget.doc.doctor.specialization ?? ''),
+                                : Text((widget.doc.doctor.doctorProfessionalDetailCollection !=
+                                            null &&
+                                        widget
+                                                .doc
+                                                .doctor
+                                                .doctorProfessionalDetailCollection
+                                                .length >
+                                            0)
+                                    ? widget.doc.doctor.doctorProfessionalDetailCollection[0].specialty != null
+                                        ? widget
+                                                    .doc
+                                                    .doctor
+                                                    .doctorProfessionalDetailCollection[
+                                                        0]
+                                                    .specialty
+                                                    .name !=
+                                                null
+                                            ? widget
+                                                .doc
+                                                .doctor
+                                                .doctorProfessionalDetailCollection[0]
+                                                .specialty
+                                                .name
+                                            : ''
+                                        : ''
+                                    : ''),
                             widget.doc.doctor.specialization == null
                                 ? Container()
                                 : SizedBox(height: 3.0),
@@ -161,19 +185,17 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             colors: Colors.black,
                           ),
                           TextWidget(
-                                  fontsize: 15,
-                                  text: doc.plannedFollowupDate == null
-                                      ? ''
-                                      : 'INR ' +
-                                          providerCommonWidget
-                                              .getMoneyWithForamt(
-                                                  doc.doctorFollowUpFee) ??
-                                      '',
-                                  fontWeight: FontWeight.w600,
-                                  overflow: TextOverflow.visible,
-                                  colors: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
-                                ),
+                            fontsize: 15,
+                            text: doc.plannedFollowupDate == null
+                                ? ''
+                                : 'INR ' +
+                                        providerCommonWidget.getMoneyWithForamt(
+                                            doc.doctorFollowUpFee) ??
+                                    '',
+                            fontWeight: FontWeight.w600,
+                            overflow: TextOverflow.visible,
+                            colors: Color(new CommonUtil().getMyPrimaryColor()),
+                          ),
                         ],
                       ),
                     )

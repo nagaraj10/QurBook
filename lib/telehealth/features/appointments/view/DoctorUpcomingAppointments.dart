@@ -98,8 +98,32 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                               SizedBoxWidget(height: 3.0, width: 0),
                               widget.doc?.doctor?.specialization == null
                                   ? Container()
-                                  : commonWidget.docStatus(context,
-                                      widget.doc.doctor.specialization ?? ''),
+                                  : Text((widget.doc.doctor.doctorProfessionalDetailCollection !=
+                                              null &&
+                                          widget
+                                                  .doc
+                                                  .doctor
+                                                  .doctorProfessionalDetailCollection
+                                                  .length >
+                                              0)
+                                      ? widget.doc.doctor.doctorProfessionalDetailCollection[0].specialty != null
+                                          ? widget
+                                                      .doc
+                                                      .doctor
+                                                      .doctorProfessionalDetailCollection[
+                                                          0]
+                                                      .specialty
+                                                      .name !=
+                                                  null
+                                              ? widget
+                                                  .doc
+                                                  .doctor
+                                                  .doctorProfessionalDetailCollection[0]
+                                                  .specialty
+                                                  .name
+                                              : ''
+                                          : ''
+                                      : ''),
                               widget.doc.doctor.specialization == null
                                   ? Container()
                                   : SizedBox(height: 3.0),

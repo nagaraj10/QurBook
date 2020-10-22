@@ -74,9 +74,7 @@ class _MyProvidersState extends State<MyProviders> {
               ),
             ),
             // you can put Icon as well, it accepts any widget.
-            title:
-                getTitle()
-            ),
+            title: getTitle()),
         body: Container(
             child: Column(
           children: [
@@ -102,7 +100,6 @@ class _MyProvidersState extends State<MyProviders> {
         )),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-
             Navigator.pushNamed(context, router.rt_SearchProvider,
                 arguments: SearchArguments(
                   searchWord: CommonConstants.doctors,
@@ -163,6 +160,7 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   void callBackToRefresh() {
+    myProvidersResponseList = null;
     (context as Element).markNeedsBuild();
   }
 
@@ -214,12 +212,10 @@ class _MyProvidersState extends State<MyProviders> {
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
                           icon: Icons.check_circle,
-                          onTap: () {
-                          })
+                          onTap: () {})
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
-                  commonWidgets.getBookMarkedIcon(docs[i], () {
-                  }),
+                  commonWidgets.getBookMarkedIcon(docs[i], () {}),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               ),
@@ -620,7 +616,7 @@ class _MyProvidersState extends State<MyProviders> {
           builder: (context) => HealthOrganization(
             doctors: docs,
             index: i,
-            closePage: (value){
+            closePage: (value) {
               widget.closePage(value);
             },
           ),
