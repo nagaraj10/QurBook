@@ -421,7 +421,7 @@ class ChatScreenState extends State<ChatScreen> {
       STR_PHOTO_URL: patientPicUrl != null ? patientPicUrl : '',
       STR_ID: patientId,
       STR_CREATED_AT: DateTime.now().millisecondsSinceEpoch.toString(),
-      STR_CREATED_AT: content
+      STR_LAST_MESSAGE: content
     });
   }
 
