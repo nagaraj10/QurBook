@@ -978,6 +978,31 @@ class CommonUtil {
 
     MyProfileModel myProfileModel = new MyProfileModel();
 
+    _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
+      if (profileData != null &&
+          profileData.isSuccess &&
+          profileData.result != null) {
+        PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
+            .then((value) {
+          try {
+            if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE, profileData);
+            } else {
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE, profileData);
+            }
+          } catch (e) {
+            PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
+          }
+
+          myProfileModel = profileData;
+        });
+      }
+      //return profileData;
+    });
+
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
@@ -989,12 +1014,15 @@ class CommonUtil {
           try {
             if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
                 PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE_MAIN, profileData);
             } else {
               PreferenceUtil.saveProfileData(
-                  Constants.KEY_PROFILE, profileData);
+                  Constants.KEY_PROFILE_MAIN, profileData);
             }
           } catch (e) {
-            PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
+            PreferenceUtil.saveProfileData(
+                Constants.KEY_PROFILE_MAIN, profileData);
           }
 
           myProfileModel = profileData;

@@ -259,7 +259,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                 CommonConstants.user_update ||
                             widget.arguments.fromClass ==
                                 CommonConstants.add_family)
-                        ? true
+                        ? false
                         : false),
                 Row(
                   children: <Widget>[Expanded(child: getGenderDetails())],
@@ -931,18 +931,21 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             widget.arguments.myProfileResult.userAddressCollection3[0].city;
         stateVal =
             widget.arguments.myProfileResult.userAddressCollection3[0].state;
-
-        _addressResult = new AddressResult(
-            id: widget.arguments.myProfileResult.userAddressCollection3[0]
-                .addressType.id,
-            code: widget.arguments.myProfileResult.userAddressCollection3[0]
-                .addressType.code,
-            name: widget.arguments.myProfileResult.userAddressCollection3[0]
-                .addressType.name);
+        setState(() {
+          _addressResult = new AddressResult(
+              id: widget.arguments.myProfileResult.userAddressCollection3[0]
+                  .addressType.id,
+              code: widget.arguments.myProfileResult.userAddressCollection3[0]
+                  .addressType.code,
+              name: widget.arguments.myProfileResult.userAddressCollection3[0]
+                  .addressType.name);
+        });
       } else {
         try {
           print('inside try');
-          _addressResult = _addressList[0];
+          setState(() {
+            _addressResult = _addressList[0];
+          });
           print('after try');
         } catch (e) {}
       }
@@ -1059,16 +1062,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           cntrlr_addr_city.text = currentAddress.city?.name;
           cntrlr_addr_state.text = currentAddress.state?.name;
           cntrlr_addr_zip.text = currentAddress.pincode;
-          _addressResult = AddressResult(
-              id: currentAddress.addressType.id,
-              code: currentAddress.addressType.code,
-              name: currentAddress.addressType.name);
+          setState(() {
+            _addressResult = AddressResult(
+                id: currentAddress.addressType.id,
+                code: currentAddress.addressType.code,
+                name: currentAddress.addressType.name);
+          });
 
           cityVal = currentAddress.city;
           stateVal = currentAddress.state;
         } else {
           try {
-            _addressResult = _addressList[0];
+            setState(() {
+              _addressResult = _addressList[0];
+            });
           } catch (e) {}
         }
 
@@ -1093,9 +1100,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         } else {
           mobileNoController.text =
               value.result.userContactCollection3[0].phoneNumber;
-              if(value?.result?.userContactCollection3[0].email!=null && value?.result?.userContactCollection3[0].email!=''){
-                emailController.text = value.result.userContactCollection3[0].email;
-              }
+          if (value?.result?.userContactCollection3[0].email != null &&
+              value?.result?.userContactCollection3[0].email != '') {
+            emailController.text = value.result.userContactCollection3[0].email;
+          }
         }
         //*user already user exist set the address data if available
         if (value?.result?.userAddressCollection3.length > 0) {
@@ -1106,10 +1114,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           cntrlr_addr_city.text = currentAddress.city?.name;
           cntrlr_addr_state.text = currentAddress.state?.name;
           cntrlr_addr_zip.text = currentAddress.pincode;
-          _addressResult = AddressResult(
-              id: currentAddress.addressType.id,
-              code: currentAddress.addressType.code,
-              name: currentAddress.addressType.name);
+          setState(() {
+            _addressResult = AddressResult(
+                id: currentAddress.addressType.id,
+                code: currentAddress.addressType.code,
+                name: currentAddress.addressType.name);
+          });
 
           cityVal = currentAddress.city;
           stateVal = currentAddress.state;
@@ -1119,16 +1129,20 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         firstNameController.text = value?.result?.firstName;
         middleNameController.text = value?.result?.middleName;
         lastNameController.text = value?.result?.lastName;
-        //? check relatioship id against logged in user 
-        if(value?.result?.userRelationshipCollection.length>0){
-          for(UserRelationshipCollection cRelationship in value?.result?.userRelationshipCollection){
-            if(cRelationship?.parent?.id==PreferenceUtil.getStringValue(Constants.KEY_USERID)){
+        //? check relatioship id against logged in user
+        if (value?.result?.userRelationshipCollection.length > 0) {
+          for (UserRelationshipCollection cRelationship
+              in value?.result?.userRelationshipCollection) {
+            if (cRelationship?.parent?.id ==
+                PreferenceUtil.getStringValue(Constants.KEY_USERID)) {
               relationShipController.text = cRelationship?.relationship?.name;
             }
           }
         }
         try {
-          _addressResult = _addressList[0];
+          setState(() {
+            _addressResult = _addressList[0];
+          });
         } catch (e) {}
         if (commonUtil.checkIfStringisNull(value.result.bloodGroup)) {
           currentselectedBloodGroup = value.result.bloodGroup.split(' ')[0];
@@ -1282,8 +1296,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         Alert.displayAlertPlain(context,
             title: variable.Error, content: strErrorMsg);
       }
-    }
-    else if (widget.arguments.fromClass == CommonConstants.user_update) {
+    } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       //*update the user details
       if (doValidation()) {
         if (addFamilyUserInfoBloc.profileBanner != null) {
@@ -1298,18 +1311,27 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             _familyListBloc.getFamilyMembersListNew().then((value) {
               /*MySliverAppBar.imageURI = null;
                     fetchedProfileData = null;*/
-              if(userAddressCollection3List!=null){
-                if(userAddressCollection3List.length>0){
-                  String address1 = userAddressCollection3List[0].addressLine1!=null?userAddressCollection3List[0].addressLine1:'';
-                  String city = userAddressCollection3List[0].city.name!=null?userAddressCollection3List[0].city.name:'';
-                  String state = userAddressCollection3List[0].state.name!=null?userAddressCollection3List[0].state.name:'';
-                  String pincode = userAddressCollection3List[0].pincode!=null?userAddressCollection3List[0].pincode:'';
+              if (userAddressCollection3List != null) {
+                if (userAddressCollection3List.length > 0) {
+                  String address1 =
+                      userAddressCollection3List[0].addressLine1 != null
+                          ? userAddressCollection3List[0].addressLine1
+                          : '';
+                  String city = userAddressCollection3List[0].city.name != null
+                      ? userAddressCollection3List[0].city.name
+                      : '';
+                  String state =
+                      userAddressCollection3List[0].state.name != null
+                          ? userAddressCollection3List[0].state.name
+                          : '';
+                  String pincode = userAddressCollection3List[0].pincode != null
+                      ? userAddressCollection3List[0].pincode
+                      : '';
 
                   PreferenceUtil.saveString(Constants.ADDRESS1, address1);
                   PreferenceUtil.saveString(Constants.CITY, city);
                   PreferenceUtil.saveString(Constants.STATE, state);
                   PreferenceUtil.saveString(Constants.PINCODE, pincode);
-
                 }
               }
 
@@ -1371,6 +1393,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     CommonResponse response =
         await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
     if (response.isSuccess) {
+      await new CommonUtil().getUserProfileData();
       FlutterToast().getToast('${response.message}', Colors.green);
     } else {
       FlutterToast().getToast('${response.message}', Colors.red);

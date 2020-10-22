@@ -482,10 +482,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       ),
                                     ),
                                     notesIdCount > 0
-                                        ? BadgesBlue(
-                                            badgeValue: notesIdCount.toString(),
-                                            backColor: Color(
-                                                commonUtil.getMyPrimaryColor()))
+                                        ? Positioned(
+                                            top: -5.0,
+                                            right: -5.0,
+                                            child: Icon(
+                                              Icons.check_circle,
+                                              color: Colors.green,
+                                              size: 15,
+                                            ),
+                                          )
                                         : SizedBox(),
                                   ],
                                 ),
@@ -524,10 +529,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                       ),
                                     ),
                                     voiceIdCount > 0
-                                        ? BadgesBlue(
-                                            badgeValue: voiceIdCount.toString(),
-                                            backColor: Color(
-                                                commonUtil.getMyPrimaryColor()))
+                                        ? Positioned(
+                                            top: -5.0,
+                                            right: -5.0,
+                                            child: Icon(
+                                              Icons.check_circle,
+                                              color: Colors.green,
+                                              size: 15,
+                                            ),
+                                          )
                                         : SizedBox(),
                                   ],
                                 ),
@@ -1031,8 +1041,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             new CommonUtil().fliterCategories(categoryDataList);
 
         //filteredCategoryData.add(categoryDataObjClone);
+        return filteredCategoryData;
       });
-      return filteredCategoryData;
     } else {
       return filteredCategoryData;
     }

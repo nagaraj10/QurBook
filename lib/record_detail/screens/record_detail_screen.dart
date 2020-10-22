@@ -448,49 +448,49 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   getCategoryInfo(HealthResult metaInfo) {
     switch (metaInfo.metadata.healthRecordCategory.categoryDescription) {
       case CommonConstants.categoryDescriptionPrescription:
-        return RecordInfoCard().getCardForPrescription(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForPrescription(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionDevice:
-        return RecordInfoCard().getCardForDevices(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard()
+            .getCardForDevices(widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionLabReport:
-        return RecordInfoCard().getCardForLab(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard()
+            .getCardForLab(widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionMedicalReport:
-        return RecordInfoCard().getCardForMedicalRecord(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForMedicalRecord(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionBills:
-        return RecordInfoCard().getCardForBillsAndOthers(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionIDDocs:
-        return RecordInfoCard().getCardForIDDocs(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard()
+            .getCardForIDDocs(widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionOthers:
-        return RecordInfoCard().getCardForBillsAndOthers(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionVoiceRecord:
-        return RecordInfoCard().getCardForBillsAndOthers(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionClaimsRecord:
-        return RecordInfoCard().getCardForBillsAndOthers(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionNotes:
-        return RecordInfoCard().getCardForBillsAndOthers(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metadata, widget.data.createdOn);
         break;
 
       default:
-        return RecordInfoCard().getCardForPrescription(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForPrescription(
+            widget.data.metadata, widget.data.createdOn);
     }
   }
 

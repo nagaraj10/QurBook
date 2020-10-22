@@ -416,8 +416,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
         filteredCategoryData = new CommonUtil().fliterCategories(value.result);
 
         //filteredCategoryData.add(categoryDataObjClone);
+        return filteredCategoryData;
       });
-      return filteredCategoryData;
     } else {
       return filteredCategoryData;
     }

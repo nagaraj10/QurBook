@@ -318,12 +318,12 @@ class RecordInfoCard {
               metaInfo.healthRecordType.name,
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
-            metaInfo.memoText != null
+            /* metaInfo.memoText != null
                 ? Text(
                     toBeginningOfSentenceCase(metaInfo.memoText),
                     style: TextStyle(fontSize: 12),
                   )
-                : Text(''),
+                : Text(''),*/
             SizedBox(
               height: 10,
             ),
@@ -368,9 +368,9 @@ class RecordInfoCard {
             metaInfo.fileName != null ? metaInfo.fileName : '',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
-          metaInfo.memoText != null
+          /*metaInfo.memoText != null
               ? Text(toBeginningOfSentenceCase(metaInfo.memoText))
-              : Text(''),
+              : Text(''),*/
           SizedBox(
             height: 10,
           ),

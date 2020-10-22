@@ -405,30 +405,43 @@ class AppointmentsCommonWidget {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult> categoryDataList = getCategoryList();
-    for (int i = 0; i < categoryDataList.length; i++) {
-      if (categoryName == categoryDataList[i].categoryName) {
-        print(categoryName + ' ****' + categoryDataList[i].categoryName);
-        position = i;
-      }
-    }
-    if (categoryName == Constants.STR_PRESCRIPTION) {
-      return position;
-    } else {
-      return position;
-    }
+    return getCategoryList(categoryName);
   }
 
-  List<CategoryResult> getCategoryList() {
+  int getCategoryList(String categoryName) {
+    int position = 0;
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         filteredCategoryData = new CommonUtil().fliterCategories(value.result);
 
         //filteredCategoryData.add(categoryDataObjClone);
+        for (int i = 0; i < filteredCategoryData.length; i++) {
+          if (categoryName == filteredCategoryData[i].categoryName) {
+            print(
+                categoryName + ' ****' + filteredCategoryData[i].categoryName);
+            position = i;
+          }
+        }
+        if (categoryName == Constants.STR_PRESCRIPTION) {
+          return position;
+        } else {
+          return position;
+        }
+        // return filteredCategoryData;
       });
-      return filteredCategoryData;
     } else {
-      return filteredCategoryData;
+      for (int i = 0; i < filteredCategoryData.length; i++) {
+        if (categoryName == filteredCategoryData[i].categoryName) {
+          print(categoryName + ' ****' + filteredCategoryData[i].categoryName);
+          position = i;
+        }
+      }
+      if (categoryName == Constants.STR_PRESCRIPTION) {
+        return position;
+      } else {
+        return position;
+      }
+      // return filteredCategoryData;
     }
   }
 

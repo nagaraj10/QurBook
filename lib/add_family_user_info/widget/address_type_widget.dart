@@ -36,7 +36,9 @@ class AddressTypeWidgetState extends State<AddressTypeWidget> {
   }
 
   Widget getDropDownAddress() {
-    AddressResult itemSelected = addressResultList[0];
+    AddressResult itemSelected = widget.addressResult.id != null
+        ? widget.addressResult
+        : addressResultList[0];
     for (AddressResult res in addressResultList) {
       if (res.id == widget.addressResult.id) {
         itemSelected = res;

@@ -146,7 +146,7 @@ class CommonConstants {
   static String primary_number = "Same as primary number";
   static String name = "Name";
   static String relationship = "Relationship";
-  static String email_address_optional = "Emai Address (Optional)";
+  static String email_address_optional = "Emai Address";
   static String gender = "Gender";
   static String blood_group = "Blood Group";
   static String blood_range = "+";
