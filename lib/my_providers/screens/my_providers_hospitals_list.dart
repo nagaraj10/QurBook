@@ -81,7 +81,7 @@ class MyProvidersHospitalsList extends StatefulWidget {
                   child: Row(
                     children: <Widget>[
                       CircleAvatar(
-                        radius: 15,
+                        radius: 18,
                         child: ClipOval(
                             child: eachHospitalModel != null
                                 ? /*myProfile.result.profilePicThumbnailUrl != null
@@ -152,29 +152,15 @@ class MyProvidersHospitalsList extends StatefulWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                InkWell(
-                                    onTap: (){
-                                      providerViewModel
-                                          .bookMarkHealthOrg(eachHospitalModel,false,'ListItem')
-                                          .then((status) {
-                                        if (status) {
-                                          print('onClick');
-                                          widget.isRefresh();
-                                        }
-                                      });
-                                    },
-                                    child: eachHospitalModel.isDefault == true
-                                        ? ImageIcon(
-                                      AssetImage(
-                                          variable.icon_record_fav_active),
-                                      color: Color(new CommonUtil()
-                                          .getMyPrimaryColor()),
-                                      size: 20,
-                                    )
-                                        : Container(
-                                      height: 0,
-                                      width: 0,
-                                    )),
+                                commonWidgets.getBookMarkedIconHealth(eachHospitalModel, () {
+                                  providerViewModel
+                                      .bookMarkHealthOrg(eachHospitalModel,false, 'ListItem')
+                                      .then((status) {
+                                    if (status) {
+                                      widget.isRefresh();
+                                    }
+                                  });
+                                }),
                               ],
                             ),
                           )),

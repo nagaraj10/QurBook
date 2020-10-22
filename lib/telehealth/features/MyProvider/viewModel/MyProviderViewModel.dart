@@ -38,7 +38,7 @@ class MyProviderViewModel extends ChangeNotifier {
       Doctors doctorIds, bool isPreferred, String isFrom) async {
     DoctorBookMarkedSucessModel doctorBookMarkedSucessModel =
         await _providersListRepository.bookMarkDoctor(
-            doctorIds, isPreferred, isFrom, userID);
+            doctorIds, isPreferred, isFrom);
 
     return doctorBookMarkedSucessModel.isSuccess;
   }

@@ -1,3 +1,4 @@
+import 'package:myfhb/my_providers/models/DoctorLanguageCollection.dart';
 import 'package:myfhb/my_providers/models/User.dart';
 import 'UserProfessionalCollection.dart';
 
@@ -12,6 +13,7 @@ class Doctors {
   String lastModifiedOn;
   User user;
   List<DoctorProfessionalDetailCollection> doctorProfessionalDetailCollection;
+  List<DoctorLanguageCollection> doctorLanguageCollection;
   bool isDefault;
   String providerPatientMappingId;
 
@@ -26,6 +28,7 @@ class Doctors {
         this.lastModifiedOn,
         this.user,
         this.doctorProfessionalDetailCollection,
+        this.doctorLanguageCollection,
         this.isDefault,
         this.providerPatientMappingId});
 
@@ -45,6 +48,14 @@ class Doctors {
       json['doctorProfessionalDetailCollection'].forEach((v) {
         doctorProfessionalDetailCollection
             .add(new DoctorProfessionalDetailCollection.fromJson(v));
+      });
+    }
+    if (json['doctorLanguageCollection'] != null) {
+      doctorLanguageCollection =
+      new List<DoctorLanguageCollection>();
+      json['doctorLanguageCollection'].forEach((v) {
+        doctorLanguageCollection
+            .add(new DoctorLanguageCollection.fromJson(v));
       });
     }
     isDefault = json['isDefault'];
@@ -67,6 +78,12 @@ class Doctors {
     if (this.doctorProfessionalDetailCollection != null) {
       data['doctorProfessionalDetailCollection'] = this
           .doctorProfessionalDetailCollection
+          .map((v) => v.toJson())
+          .toList();
+    }
+    if (this.doctorLanguageCollection != null) {
+      data['doctorLanguageCollection'] = this
+          .doctorLanguageCollection
           .map((v) => v.toJson())
           .toList();
     }

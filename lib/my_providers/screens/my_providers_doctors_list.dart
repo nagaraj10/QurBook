@@ -11,6 +11,7 @@ import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 
 import 'my_provider.dart';
@@ -35,6 +36,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   List<Doctors> doctorsModel;
   MyProviderState myProviderState;
   MyProviderViewModel providerViewModel;
+  CommonWidgets commonWidgets = new CommonWidgets();
 
   @override
   void initState() {
@@ -174,30 +176,15 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              InkWell(
-                                  onTap: () {
-                                    providerViewModel
-                                        .bookMarkDoctor(
-                                            eachDoctorModel, false, 'ListItem')
-                                        .then((status) {
-                                      if (status) {
-                                        print('onClick');
-                                        widget.refresh();
-                                      }
-                                    });
-                                  },
-                                  child: eachDoctorModel.isDefault == true
-                                      ? ImageIcon(
-                                          AssetImage(
-                                              variable.icon_record_fav_active),
-                                          color: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
-                                          size: 20,
-                                        )
-                                      : Container(
-                                          height: 0,
-                                          width: 0,
-                                        )),
+                              commonWidgets.getBookMarkedIconNew(eachDoctorModel, () {
+                                providerViewModel
+                                    .bookMarkDoctor(eachDoctorModel,false, 'ListItem')
+                                    .then((status) {
+                                  if (status) {
+                                    widget.refresh();
+                                  }
+                                });
+                              }),
                             ],
                           ),
                         )),

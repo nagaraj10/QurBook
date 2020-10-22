@@ -1305,7 +1305,7 @@ class CommonUtil {
       http.Client _client = new http.Client();
       var req = await _client.get(Uri.parse(url));
       var bytes = req.bodyBytes;
-      String dir = (await getTemporaryDirectory()).path;
+      String dir = await FHBUtils.createFolderInAppDocDir('images');
       File file = new File('$dir/${basename(url)}$extension');
       await file.writeAsBytes(bytes);
       return file;
@@ -1338,10 +1338,10 @@ class CommonUtil {
         // File file = new File(
         //     '$dir/${basename(currentImage.response.data.fileContent)}${currentImage.response.data.fileType}');
         // await file.writeAsBytes(bytes);
-        var file_status =
+        /* var file_status =
             await GallerySaver.saveImage(file.path, albumName: 'myfhb');
         print('image file save status $file_status');
-
+*/
         // Scaffold.of(context).showSnackBar(SnackBar(
         //   content: const Text(variable.strFilesDownloaded),
         //   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),

@@ -14,9 +14,9 @@ class DownloadMultipleImages {
       try {
         var filePath = await CommonUtil.downloadFile(
             _currentImage.healthRecordUrl, _currentImage.fileType);
-        var status = GallerySaver.saveImage(filePath.path, albumName: 'myfhb');
+        //var status = GallerySaver.saveImage(filePath.path, albumName: 'myfhb');
       } catch (e) {
-        print('$e exception thrown');
+        //print('$e exception thrown');
       }
     }
     Scaffold.of(contxt).showSnackBar(SnackBar(
