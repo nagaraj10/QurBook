@@ -45,10 +45,10 @@ class ProvidersListRepository {
   }
 
   Future<DoctorBookMarkedSucessModel> bookMarkDoctor(
-      Doctors doctorIds, bool isPreferred, String isFrom,String userId) async {
-    //String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      Doctors doctorIds, bool isPreferred, String isFrom) async {
+    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     var bookMark = {};
-    bookMark[parameters.strpatient] = userId;
+    bookMark[parameters.strpatient] = userID;
     bookMark[parameters.strdoctor] = doctorIds.id;
     bookMark[parameters.healthOrganization] = null;
     if(isFrom=='ListItem'){

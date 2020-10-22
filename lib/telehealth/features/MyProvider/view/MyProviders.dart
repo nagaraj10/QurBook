@@ -544,6 +544,17 @@ class _MyProvidersState extends State<MyProviders> {
                               }),
                         ],
                       )),
+                      commonWidgets.getSizeBoxWidth(10.0),
+                      commonWidgets.getBookMarkedIconNew(docs[i], () {
+                        providerViewModel
+                            .bookMarkDoctor(docs[i],false, 'ListItem')
+                            .then((status) {
+                          if (status) {
+                            setState(() {});
+                          }
+                        });
+                      }),
+                      commonWidgets.getSizeBoxWidth(10.0),
                       docs[i].isTelehealthEnabled
                           ? commonWidgets.getIcon(
                               width: fhbStyles.imageWidth,
