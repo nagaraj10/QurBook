@@ -44,6 +44,7 @@ import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 
 class AddProviders extends StatefulWidget {
@@ -103,6 +104,8 @@ class AddProvidersState extends State<AddProviders> {
 
   LatLng center = LatLng(0, 0);
   LatLng lastMapPosition;
+
+  CommonWidgets commonWidgets = new CommonWidgets();
 
   CameraPosition kGooglePlex = CameraPosition(
     target: LatLng(12.861693, 80.227242),
@@ -438,10 +441,8 @@ class AddProvidersState extends State<AddProviders> {
             : '';
         isPreferred = widget.arguments.doctorsModel.isDefault;
         myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
-        addressLine1 = widget
-            .arguments.doctorsModel.user.userAddressCollection3[0].addressLine1;
-        addressLine2 = widget
-            .arguments.doctorsModel.user.userAddressCollection3[0].addressLine2;
+        addressLine1 = commonWidgets.getAddressLineForDoctors(widget.arguments.doctorsModel,'address1');
+        addressLine2 = commonWidgets.getAddressLineForDoctors(widget.arguments.doctorsModel,'address2');
 
         /* latitude = widget.arguments.data.latitude == null
             ? 0.0
@@ -465,10 +466,8 @@ class AddProvidersState extends State<AddProviders> {
 
         center = LatLng(latitude, longtiude);*/
 
-        addressLine1 = widget.arguments.hospitalsModel
-            .healthOrganizationAddressCollection[0].addressLine1;
-        addressLine2 = widget.arguments.hospitalsModel
-            .healthOrganizationAddressCollection[0].addressLine2;
+        addressLine1 = commonWidgets.getAddressLineForHealthOrg(widget.arguments.hospitalsModel,'address1');
+        addressLine2 = commonWidgets.getAddressLineForHealthOrg(widget.arguments.hospitalsModel,'address2');
       } else {
         doctorController.text = widget.arguments.labsModel.name != null
             ? toBeginningOfSentenceCase(widget.arguments.labsModel.name)
@@ -485,10 +484,8 @@ class AddProvidersState extends State<AddProviders> {
 //
 //        center = LatLng(latitude, longtiude);
 
-        addressLine1 = widget.arguments.labsModel
-            .healthOrganizationAddressCollection[0].addressLine1;
-        addressLine2 = widget.arguments.labsModel
-            .healthOrganizationAddressCollection[0].addressLine2;
+        addressLine1 = commonWidgets.getAddressLineForHealthOrg(widget.arguments.labsModel,'address1');
+        addressLine2 = commonWidgets.getAddressLineForHealthOrg(widget.arguments.labsModel,'address2');
       }
     }
     try {
