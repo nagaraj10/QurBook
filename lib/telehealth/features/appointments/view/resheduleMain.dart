@@ -10,8 +10,9 @@ class ResheduleMain extends StatefulWidget {
   Past doc;
   bool isReshedule;
   String bookId, id;
+  Function(String) closePage;
 
-  ResheduleMain({this.doc, this.isReshedule});
+  ResheduleMain({this.doc, this.isReshedule,this.closePage});
   @override
   _ResheduleMainState createState() => _ResheduleMainState();
 }
@@ -34,6 +35,9 @@ class _ResheduleMainState extends State<ResheduleMain> {
         child: ResheduleAppointments(
           doc: widget.doc,
           isReshedule: widget.isReshedule,
+          closePage: (value){
+            widget.closePage(value);
+          },
         ),
       )
     );

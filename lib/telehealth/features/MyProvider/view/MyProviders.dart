@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -23,6 +24,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slo
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../../SearchWidget/view/SearchWidget.dart';
@@ -127,7 +129,17 @@ class _MyProvidersState extends State<MyProviders> {
             ),
           ),
         ),
-        Icon(Icons.notifications),
+        IconWidget(
+          icon: Icons.notifications,
+          colors: Colors.white,
+          size: 22,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationMain()),
+            );
+          },
+        ),
         new SwitchProfile()
             .buildActions(context, _keyLoader, callBackToRefresh),
         // Icon(Icons.more_vert),
@@ -332,24 +344,24 @@ class _MyProvidersState extends State<MyProviders> {
   Widget myProviderList(MyProvidersResponse myProvidersResponse) {
     return (myProvidersResponse != null && myProvidersResponse.isSuccess)
         ? ListView.separated(
-      itemBuilder: (BuildContext context, index) =>
-          providerDoctorItemWidget(index,
-              isSearch ? doctors : myProvidersResponse.result.doctors),
-      separatorBuilder: (BuildContext context, index) {
-        return Divider(
-          height: 0,
-          color: Colors.transparent,
-        );
-      },
-      itemCount: isSearch
-          ? doctors.length
-          : myProvidersResponse.result.doctors.length,
-    )
+            itemBuilder: (BuildContext context, index) =>
+                providerDoctorItemWidget(index,
+                    isSearch ? doctors : myProvidersResponse.result.doctors),
+            separatorBuilder: (BuildContext context, index) {
+              return Divider(
+                height: 0,
+                color: Colors.transparent,
+              );
+            },
+            itemCount: isSearch
+                ? doctors.length
+                : myProvidersResponse.result.doctors.length,
+          )
         : Container(
-      child: Center(
-        child: Text(variable.strNoDoctordata),
-      ),
-    );
+            child: Center(
+              child: Text(variable.strNoDoctordata),
+            ),
+          );
   }
 
   Widget providerDoctorItemWidget(int i, List<Doctors> docs) {
@@ -422,7 +434,7 @@ class _MyProvidersState extends State<MyProviders> {
                       commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getBookMarkedIconNew(docs[i], () {
                         providerViewModel
-                            .bookMarkDoctor(docs[i],false, 'ListItem')
+                            .bookMarkDoctor(docs[i], false, 'ListItem')
                             .then((status) {
                           if (status) {
                             setState(() {});
@@ -430,9 +442,16 @@ class _MyProvidersState extends State<MyProviders> {
                         });
                       }),
                       commonWidgets.getSizeBoxWidth(15.0),
-                      commonWidgets.getFlagIcon(docs[i],(){
-
-                      })
+                      docs[i].isTelehealthEnabled
+                          ? commonWidgets.getIcon(
+                              width: fhbStyles.imageWidth,
+                              height: fhbStyles.imageHeight,
+                              icon: Icons.check_circle,
+                              onTap: () {
+                                //print('on check  pressed');
+                              })
+                          : SizedBox(),
+                      //commonWidgets.getFlagIcon(docs[i], () {})
                     ],
                   ),
                   commonWidgets.getSizedBox(5.0),
