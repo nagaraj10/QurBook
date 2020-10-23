@@ -30,6 +30,7 @@ class _AppointmentsState extends State<Appointments> {
   bool isSearch = false;
   List<Past> upcomingTimeInfo = List();
   SharedPreferences prefs;
+  Function(String) closePage;
 
   @override
   void initState() {
@@ -234,7 +235,9 @@ class _AppointmentsState extends State<Appointments> {
                                             listen: false)
                                           ..clearAppointments()
                                           ..fetchAppointments();
-                                      });
+                                      },closePage: (value){
+                                       Navigator.pop(context);
+                                  },);
                                 },
                                 itemCount: isSearch
                                     ? historyInfo.length

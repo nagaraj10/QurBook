@@ -29,8 +29,9 @@ import 'package:provider/provider.dart';
 class ResheduleAppointments extends StatefulWidget {
   Past doc;
   bool isReshedule;
+  Function(String) closePage;
 
-  ResheduleAppointments({this.doc, this.isReshedule});
+  ResheduleAppointments({this.doc, this.isReshedule,this.closePage});
 
   @override
   _ResheduleAppointmentsState createState() => _ResheduleAppointmentsState();
@@ -186,6 +187,9 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               healthOrganizationId: widget.doc.healthOrganization.id,
               healthOrganizationResult: docs,
               doctorListPos: 0,
+              closePage: (value){
+                widget.closePage(value);
+              },
             ),
           ],
         ),

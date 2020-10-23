@@ -23,8 +23,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DoctorPastAppointments extends StatefulWidget {
   Past doc;
   ValueChanged<String> onChanged;
+  Function(String) closePage;
 
-  DoctorPastAppointments({this.doc, this.onChanged});
+  DoctorPastAppointments({this.doc, this.onChanged,this.closePage});
 
   @override
   DoctorPastAppointmentState createState() => DoctorPastAppointmentState();
@@ -249,6 +250,9 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
           builder: (context) => ResheduleMain(
                 doc: doc,
                 isReshedule: isReshedule,
+            closePage: (value){
+                  widget.closePage(value);
+            },
               )),
     );
   }
