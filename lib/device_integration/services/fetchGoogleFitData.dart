@@ -99,6 +99,8 @@ class GoogleFitData {
                 getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
+            healthRecord[strsyncEndDate] = timestampString;
+            healthRecord[strlastSyncDateTime] = timestampString;
             rawData[strParamWeight] = point.value[0].fpVal;
             rawData[strParamWeightUnit] = strValueWeightUnit;
             dataSet.add(rawData);
@@ -146,6 +148,8 @@ class GoogleFitData {
                 getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
+            healthRecord[strsyncEndDate] = timestampString;
+            healthRecord[strlastSyncDateTime] = timestampString;
             rawData[strParamSystolic] = point.value[0].fpVal;
             rawData[strParamDiastolic] = point.value[1].fpVal;
             dataSet.add(rawData);
@@ -195,6 +199,8 @@ class GoogleFitData {
                 getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
+            healthRecord[strsyncEndDate] = timestampString;
+            healthRecord[strlastSyncDateTime] = timestampString;
             rawData[strParamBGLevel] = point.value[0].fpVal;
             rawData[strParamBGUnit] = point.value[1].fpVal;
             rawData[strParamBGMealContext] = point.value[2].fpVal;
@@ -246,6 +252,8 @@ class GoogleFitData {
                 getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
+            healthRecord[strsyncEndDate] = timestampString;
+            healthRecord[strlastSyncDateTime] = timestampString;
             rawData[strParamTemp] = point.value[0].fpVal;
             rawData[strParamTempUnit] = point.value[1].fpVal;
             dataSet.add(rawData);
@@ -296,6 +304,8 @@ class GoogleFitData {
                 getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
+            healthRecord[strsyncEndDate] = timestampString;
+            healthRecord[strlastSyncDateTime] = timestampString;
             rawData[strParamSystolic] = point.value[0].fpVal;
             rawData[strParamDiastolic] = point.value[1].fpVal;
             dataSet.add(rawData);
@@ -344,6 +354,8 @@ class GoogleFitData {
                 getFormatedDateFromNano(point.startTimeNanos);
             rawData[strStartTimeStamp] = timestampString;
             rawData[strEndTimeStamp] = timestampString;
+            healthRecord[strsyncEndDate] = timestampString;
+            healthRecord[strlastSyncDateTime] = timestampString;
             rawData[strParamHeartRate] = point.value[0].fpVal;
             dataSet.add(rawData);
           }

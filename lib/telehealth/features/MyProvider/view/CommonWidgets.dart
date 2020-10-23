@@ -219,12 +219,12 @@ class CommonWidgets {
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
                 color: Color(new CommonUtil().getMyPrimaryColor()),
-                size: 17.0,
+                size: 18.0,
               )
             : ImageIcon(
                 AssetImage('assets/icons/record_fav.png'),
                 color: Colors.black,
-                size: 17.0,
+                size: 18.0,
               ));
   }
 
@@ -670,4 +670,106 @@ class CommonWidgets {
       return amount = '0';
     }
   }
+
+  Widget getFlagIcon(Doctors docs, Function onClick) {
+    return GestureDetector(
+        onTap: () {
+          onClick();
+        },
+        child: docs.isTelehealthEnabled
+            ? ImageIcon(
+          AssetImage('assets/providers/bookmarked.png'),
+          color: Color(new CommonUtil().getMyPrimaryColor()),
+          size: 14.0,
+        )
+            : ImageIcon(
+          AssetImage('assets/providers/not_bookmarked.png'),
+          color: Colors.black,
+          size: 14.0,
+        ));
+  }
+
+  String getAddressLineForDoctors(Doctors result,String whichAddress) {
+    String address;
+
+    if(whichAddress=='address1'){
+      if (result
+          .user.userAddressCollection3.isNotEmpty) {
+        if (result.user.userAddressCollection3.length >
+            0) {
+          if (result.user.userAddressCollection3[0].addressLine1 !=
+              null) {
+            address = result.user.userAddressCollection3[0].addressLine1;
+          } else {
+            address = '';
+          }
+        } else {
+          address = '';
+        }
+      } else {
+        address = '';
+      }
+    }else{
+      if (result
+          .user.userAddressCollection3.isNotEmpty) {
+        if (result.user.userAddressCollection3.length >
+            0) {
+          if (result.user.userAddressCollection3[0].addressLine2 !=
+              null) {
+            address = result.user.userAddressCollection3[0].addressLine2;
+          } else {
+            address = '';
+          }
+        } else {
+          address = '';
+        }
+      } else {
+        address = '';
+      }
+    }
+
+    return address;
+  }
+
+  String getAddressLineForHealthOrg(Hospitals result,String whichAddress) {
+    String address;
+
+    if(whichAddress=='address1'){
+      if (result.healthOrganizationAddressCollection.isNotEmpty) {
+        if (result.healthOrganizationAddressCollection.length >
+            0) {
+          if (result.healthOrganizationAddressCollection[0].addressLine1 !=
+              null) {
+            address = result.healthOrganizationAddressCollection[0].addressLine1;
+          } else {
+            address = '';
+          }
+        } else {
+          address = '';
+        }
+      } else {
+        address = '';
+      }
+    }else{
+      if (result.healthOrganizationAddressCollection.isNotEmpty) {
+        if (result.healthOrganizationAddressCollection.length >
+            0) {
+          if (result.healthOrganizationAddressCollection[0].addressLine2 !=
+              null) {
+            address = result.healthOrganizationAddressCollection[0].addressLine2;
+          } else {
+            address = '';
+          }
+        } else {
+          address = '';
+        }
+      } else {
+        address = '';
+      }
+    }
+
+    return address;
+  }
+
+
 }

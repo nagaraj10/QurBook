@@ -545,7 +545,7 @@ const String strLogout = 'Logout';
 const String strLogoutMsg =
     'Stay Healthy.. See you Soon. \nSheela will be waiting to serve you.';
 const String strYes = 'Yes';
-const String strRelaoding = 'Relaoding';
+const String strRelaoding = 'Reloading';
 const String strStartNow = 'Start now';
 const String strAccounts = 'Accounts';
 const String strDevices = 'Devices';
