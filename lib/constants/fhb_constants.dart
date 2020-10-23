@@ -356,3 +356,5 @@ const String STR_NOT_VERIFIED = 'Not Verified';
 const String STR_SUCCESS = 'success';
 const String STR_FAILED = 'failed';
 const String STR_DONE = 'Done';
+
+const String STR_FAMILY_ADD_MSG = 'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';
