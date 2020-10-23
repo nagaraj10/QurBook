@@ -62,7 +62,6 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
         .then((value) => setState(() {
               doctors = value.result.doctors
                   .firstWhere((element) => element.id == widget.doc.doctor.id);
-              print(doctors.id);
             }));
   }
 

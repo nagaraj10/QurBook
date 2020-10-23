@@ -97,12 +97,12 @@ class AppointmentsCommonWidget {
         doc.healthRecord.voice == null || doc.healthRecord.voice == ''
             ? 0.toString()
             : 1.toString();
-    int healthRecord = doc.healthRecord.prescription == null
+    int healthRecord = doc.healthRecord.associatedRecords == null
         ? 0
-        : doc.healthRecord.prescription.length;
-    int otherRecords =
-        doc.healthRecord.others == null ? 0 : doc.healthRecord.others.length;
-    String rxCount = (healthRecord + otherRecords).toString();
+        : doc.healthRecord.associatedRecords.length;
+    //int otherRecords =  doc.healthRecord.others == null ? 0 : doc.healthRecord.others.length;
+    //String rxCount = (healthRecord + otherRecords).toString();
+    String rxCount = healthRecord.toString();
 
     if (int.parse(notesCount) > 0 && doc.healthRecord.notes != null) {
       notesId.add(doc.healthRecord.notes);
@@ -111,14 +111,14 @@ class AppointmentsCommonWidget {
       voiceIds.add(doc.healthRecord.voice);
     }
     if (int.parse(rxCount) > 0) {
-      if (otherRecords > 0) {
+      /* if (otherRecords > 0) {
         recordIds.addAll(doc.healthRecord.others);
-      }
-      if (doc.healthRecord.prescription != null &&
-          doc.healthRecord.prescription.length > 0) {
-        for (int i = 0; i < doc.healthRecord.prescription.length; i++) {
-          if (!recordIds.contains(doc.healthRecord.prescription[i])) {
-            recordIds.add(doc.healthRecord.prescription[i]);
+      }*/
+      if (doc.healthRecord.associatedRecords != null &&
+          doc.healthRecord.associatedRecords.length > 0) {
+        for (int i = 0; i < doc.healthRecord.associatedRecords.length; i++) {
+          if (!recordIds.contains(doc.healthRecord.associatedRecords[i])) {
+            recordIds.add(doc.healthRecord.associatedRecords[i]);
           }
         }
       }
