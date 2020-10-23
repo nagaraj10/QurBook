@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -23,6 +24,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slo
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../../SearchWidget/view/SearchWidget.dart';
@@ -127,7 +129,17 @@ class _MyProvidersState extends State<MyProviders> {
             ),
           ),
         ),
-        Icon(Icons.notifications),
+        IconWidget(
+          icon: Icons.notifications,
+          colors: Colors.white,
+          size: 22,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationMain()),
+            );
+          },
+        ),
         new SwitchProfile()
             .buildActions(context, _keyLoader, callBackToRefresh),
         // Icon(Icons.more_vert),

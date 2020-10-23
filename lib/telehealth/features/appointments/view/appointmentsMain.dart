@@ -4,10 +4,8 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
-import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
-import 'package:myfhb/telehealth/features/appointments/view/DoctorUpcomingAppointments.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointments.dart';
-import 'package:myfhb/telehealth/features/appointments/view/resheduleAppointments.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
@@ -39,7 +37,8 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
             ChangeNotifierProvider<ResheduleAppointmentViewModel>(
               create: (_) => ResheduleAppointmentViewModel(),
             ),
-          ],child: Appointments(),
+          ],
+          child: Appointments(),
         ));
   }
 
@@ -84,7 +83,12 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
           icon: Icons.notifications,
           colors: Colors.white,
           size: 22,
-          onTap: () {},
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationMain()),
+            );
+          },
         ),
         SwitchProfile().buildActions(context, _key, callBackToRefresh),
         // IconWidget(
