@@ -25,9 +25,9 @@ class ProvidersListRepository {
 
   //String userID = CommonConstants.NEW_USER_ID;
 
-  Future<MyProvidersResponse> getMedicalPreferencesList() async {
+  Future<MyProvidersResponse> getMedicalPreferencesList({String userId}) async {
     final response = await _helper.getMedicalPreferencesList(query.qr_user +
-        userID +
+        (userId != null ? userId : userID) +
         query.qr_sections +
         query.qr_medicalPreferences);
     return MyProvidersResponse.fromJson(response);
@@ -51,13 +51,13 @@ class ProvidersListRepository {
     bookMark[parameters.strpatient] = userID;
     bookMark[parameters.strdoctor] = doctorIds.id;
     bookMark[parameters.healthOrganization] = null;
-    if(isFrom=='ListItem'){
+    if (isFrom == 'ListItem') {
       if (doctorIds.isDefault) {
         bookMark[parameters.strisDefault] = false;
       } else {
         bookMark[parameters.strisDefault] = true;
       }
-    }else{
+    } else {
       if (isPreferred) {
         bookMark[parameters.strisDefault] = true;
       } else {
@@ -78,13 +78,13 @@ class ProvidersListRepository {
     bookMark[parameters.strpatient] = userID;
     bookMark[parameters.strdoctor] = null;
     bookMark[parameters.healthOrganization] = hospitals.id;
-    if(isFrom=='ListItem'){
+    if (isFrom == 'ListItem') {
       if (hospitals.isDefault) {
         bookMark[parameters.strisDefault] = false;
       } else {
         bookMark[parameters.strisDefault] = true;
       }
-    }else{
+    } else {
       if (isPreferred) {
         bookMark[parameters.strisDefault] = true;
       } else {

@@ -26,12 +26,14 @@ import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWi
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
+import 'package:myfhb/constants/fhb_constants.dart' as prefKey;
+
 class ResheduleAppointments extends StatefulWidget {
   Past doc;
   bool isReshedule;
   Function(String) closePage;
 
-  ResheduleAppointments({this.doc, this.isReshedule,this.closePage});
+  ResheduleAppointments({this.doc, this.isReshedule, this.closePage});
 
   @override
   _ResheduleAppointmentsState createState() => _ResheduleAppointmentsState();
@@ -58,8 +60,10 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   }
 
   getDoctorsData() async {
+    String userID = PreferenceUtil.getStringValue(prefKey.KEY_USERID_MAIN);
+
     await _providersBloc
-        .getMedicalPreferencesList()
+        .getMedicalPreferencesList(userId: userID)
         .then((value) => setState(() {
               doctors = value.result.doctors
                   .firstWhere((element) => element.id == widget.doc.doctor.id);
@@ -186,7 +190,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               healthOrganizationId: widget.doc.healthOrganization.id,
               healthOrganizationResult: docs,
               doctorListPos: 0,
-              closePage: (value){
+              closePage: (value) {
                 widget.closePage(value);
               },
             ),

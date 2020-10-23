@@ -32,12 +32,12 @@ class ProvidersBloc implements BaseBloc {
     _providersListRepository = ProvidersListRepository();
   }
 
-  Future<MyProvidersResponse> getMedicalPreferencesList() async {
+  Future<MyProvidersResponse> getMedicalPreferencesList({String userId}) async {
     // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
     MyProvidersResponse myProvidersResponseList;
     try {
       myProvidersResponseList =
-          await _providersListRepository.getMedicalPreferencesList();
+          await _providersListRepository.getMedicalPreferencesList(userId: userId);
       doctors = myProvidersResponseList.result.doctors;
       hospitals = myProvidersResponseList.result.hospitals;
       labs = myProvidersResponseList.result.labs;
