@@ -344,24 +344,24 @@ class _MyProvidersState extends State<MyProviders> {
   Widget myProviderList(MyProvidersResponse myProvidersResponse) {
     return (myProvidersResponse != null && myProvidersResponse.isSuccess)
         ? ListView.separated(
-      itemBuilder: (BuildContext context, index) =>
-          providerDoctorItemWidget(index,
-              isSearch ? doctors : myProvidersResponse.result.doctors),
-      separatorBuilder: (BuildContext context, index) {
-        return Divider(
-          height: 0,
-          color: Colors.transparent,
-        );
-      },
-      itemCount: isSearch
-          ? doctors.length
-          : myProvidersResponse.result.doctors.length,
-    )
+            itemBuilder: (BuildContext context, index) =>
+                providerDoctorItemWidget(index,
+                    isSearch ? doctors : myProvidersResponse.result.doctors),
+            separatorBuilder: (BuildContext context, index) {
+              return Divider(
+                height: 0,
+                color: Colors.transparent,
+              );
+            },
+            itemCount: isSearch
+                ? doctors.length
+                : myProvidersResponse.result.doctors.length,
+          )
         : Container(
-      child: Center(
-        child: Text(variable.strNoDoctordata),
-      ),
-    );
+            child: Center(
+              child: Text(variable.strNoDoctordata),
+            ),
+          );
   }
 
   Widget providerDoctorItemWidget(int i, List<Doctors> docs) {
@@ -434,7 +434,7 @@ class _MyProvidersState extends State<MyProviders> {
                       commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getBookMarkedIconNew(docs[i], () {
                         providerViewModel
-                            .bookMarkDoctor(docs[i],false, 'ListItem')
+                            .bookMarkDoctor(docs[i], false, 'ListItem')
                             .then((status) {
                           if (status) {
                             setState(() {});
@@ -442,9 +442,16 @@ class _MyProvidersState extends State<MyProviders> {
                         });
                       }),
                       commonWidgets.getSizeBoxWidth(15.0),
-                      commonWidgets.getFlagIcon(docs[i],(){
-
-                      })
+                      docs[i].isTelehealthEnabled
+                          ? commonWidgets.getIcon(
+                              width: fhbStyles.imageWidth,
+                              height: fhbStyles.imageHeight,
+                              icon: Icons.check_circle,
+                              onTap: () {
+                                //print('on check  pressed');
+                              })
+                          : SizedBox(),
+                      //commonWidgets.getFlagIcon(docs[i], () {})
                     ],
                   ),
                   commonWidgets.getSizedBox(5.0),
