@@ -6,6 +6,7 @@ import 'dart:convert' show json;
 import 'package:myfhb/constants/fhb_query.dart' as query;
 import 'package:myfhb/constants/fhb_parameters.dart' as params;
 
+
 class SyncGoogleFitData {
   GoogleFitData _gfHelper;
   DeviceHealthRecord _deviceHealthRecord;
@@ -118,15 +119,11 @@ class SyncGoogleFitData {
         }
       }
       if (errorString.isNotEmpty) {
-        throw "$errorString";
+        // throw "$errorString";
       }
       return true;
     } catch (e) {
-      if (errorString.isNotEmpty) {
-        throw "No data sources available for $errorString";
-      } else {
-        throw "Failed to sync GoogleFit Data please try again later";
-      }
+      throw "Failed to sync GoogleFit Data please try again later";
     }
   }
 
