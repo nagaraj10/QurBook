@@ -568,6 +568,9 @@ const String strNoAppointments = 'No Appoinments Available';
 const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';
 
+const String EMAIL_REGEXP =
+    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{​​​​​|}​​​​​~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {
   final parts = token.split('.');

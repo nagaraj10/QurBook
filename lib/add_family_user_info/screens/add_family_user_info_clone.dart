@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -259,7 +260,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                 CommonConstants.user_update ||
                             widget.arguments.fromClass ==
                                 CommonConstants.add_family)
-                        ? false
+                        ? true
                         : false),
                 Row(
                   children: <Widget>[Expanded(child: getGenderDetails())],
@@ -430,6 +431,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             border: new UnderlineInputBorder(
                 borderSide: BorderSide(color: ColorUtils.myFamilyGreyColor)),
           ),
+          inputFormatters: (textEditingController == firstNameController ||
+                  textEditingController == lastNameController ||
+                  textEditingController == middleNameController)
+              ? [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"))]
+              : [],
         ));
   }
 
@@ -863,6 +869,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   bool doValidation() {
     bool isValid = false;
 
+    bool emailValid =
+        RegExp(variable.EMAIL_REGEXP).hasMatch(emailController.text);
+
     if (firstNameController.text == '') {
       isValid = false;
       strErrorMsg = variable.enterFirstName;
@@ -888,6 +897,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       }
       isValid = false;
       strErrorMsg = variable.selectBloodGroup;
+    } else if (emailController.text == '' || !emailValid) {
+      isValid = false;
+      strErrorMsg = 'Invalid Email Address';
     } else {
       isValid = true;
     }

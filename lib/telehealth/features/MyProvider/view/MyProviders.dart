@@ -418,8 +418,7 @@ class _MyProvidersState extends State<MyProviders> {
                       Expanded(
                           child: Row(
                         children: [
-                          commonWidgets
-                              .getTextForDoctors('${docs[i].user.name}'),
+                          commonWidgets.setDoctorname(docs[i].user),
                           commonWidgets.getSizeBoxWidth(10.0),
                           commonWidgets.getIcon(
                               width: fhbStyles.imageWidth,
