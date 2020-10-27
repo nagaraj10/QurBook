@@ -20,6 +20,20 @@ class GoogleSignInHelper {
     return signedIn;
   }
 
+  Future<bool> signInSilently() async{
+    try {
+      GoogleSignInAccount user = await _googleSignIn.signInSilently();
+      m_currentUser = user;
+      if (m_currentUser == null) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (error) {
+      return false;
+    }
+  }
+
   Future<bool> handleSignIn() async {
     try {
       GoogleSignInAccount user = await _googleSignIn.signIn();

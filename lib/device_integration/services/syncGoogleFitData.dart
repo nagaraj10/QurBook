@@ -34,7 +34,8 @@ class SyncGoogleFitData {
     String errorString = "";
 
     if (await isGoogleFitSignedIn()) {
-      if (!await activateGoogleFit()) {
+      if(!await _gfHelper.signInSilently()){
+      //if (!await activateGoogleFit()) {
         throw "Failed to login GoogleFit account";
       }
     } else {
