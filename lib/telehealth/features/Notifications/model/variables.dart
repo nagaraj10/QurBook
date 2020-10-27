@@ -11,25 +11,29 @@ class Variables {
 
   Variables(
       {this.lastName,
-        this.bookingId,
-        this.firstName,
-        this.doctorName,
-        this.slotNumber,
-        this.doctorLastname,
-        this.appointmentDate,
-        this.appointmentTime,
-        this.doctorFirstname});
+      this.bookingId,
+      this.firstName,
+      this.doctorName,
+      this.slotNumber,
+      this.doctorLastname,
+      this.appointmentDate,
+      this.appointmentTime,
+      this.doctorFirstname});
 
   Variables.fromJson(Map<String, dynamic> json) {
-    lastName = json['lastName'];
-    bookingId = json['bookingId'];
-    firstName = json['firstName'];
-    doctorName = json['doctorName'];
-    slotNumber = json['slotNumber'];
-    doctorLastname = json['doctorLastname'];
-    appointmentDate = json['appointmentDate'];
-    appointmentTime = json['appointmentTime'];
-    doctorFirstname = json['doctorFirstname'];
+//    lastName = json['lastName'] == null ? null : json['lastName'];
+    bookingId = json['bookingId'] == null ? null : json['bookingId'];
+//    firstName = json['firstName'] == null ? null : json['firstName'];
+//    doctorName = json['doctorName'] == null ? null : json['doctorName'];
+//    slotNumber = json['slotNumber'] == null ? null : json['slotNumber'];
+//    doctorLastname =
+//        json['doctorLastname'] == null ? null : json['doctorLastname'];
+//    appointmentDate =
+//        json['appointmentDate'] == null ? null : json['appointmentDate'];
+//    appointmentTime =
+//        json['appointmentTime'] == null ? null : json['appointmentTime'];
+//    doctorFirstname =
+//        json['doctorFirstname'] == null ? null : json['doctorFirstname'];
   }
 
   Map<String, dynamic> toJson() {

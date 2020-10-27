@@ -111,6 +111,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                     color: Color(0xff138fcf),
                                   ),
                                 ),
+                                errorMaxLines: 2,
                               ),
                               validator: (value) {
                                 return AuthenticationValidator()
@@ -129,6 +130,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               decoration: InputDecoration(
                                 hintText: strNewPasswordAgainHintText,
                                 labelText: strNewPasswordAgainHintText,
+                                errorMaxLines: 2,
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                     borderSide: BorderSide(

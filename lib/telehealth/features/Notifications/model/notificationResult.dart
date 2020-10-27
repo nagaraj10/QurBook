@@ -7,11 +7,11 @@ class NotificationResult {
   MessageDetails messageDetails;
   String transportMedium;
   String responseText;
-  dynamic deliveredDateTime;
+  String deliveredDateTime;
   String createdOn;
-  dynamic recipientUserDetails;
+  var recipientUserDetails;
   RecipientUser recipientUser;
-  dynamic scheduler;
+  var scheduler;
   RecipientUser senderUser;
 
   NotificationResult(

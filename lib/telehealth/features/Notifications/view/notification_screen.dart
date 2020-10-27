@@ -61,8 +61,8 @@ class _NotificationScreen extends State<NotificationScreen> {
     var notificationData = Provider.of<FetchNotificationViewModel>(context);
     switch (notificationData.loadingStatus) {
       case LoadingStatus.searching:
-        return  Center(
-          child:  CircularProgressIndicator(
+        return Center(
+          child: CircularProgressIndicator(
             backgroundColor: Colors.grey,
           ),
         );
@@ -98,61 +98,63 @@ class _NotificationScreen extends State<NotificationScreen> {
   }
 
   Widget notificationView({NotificationModel notification, int index}) {
-    if (notification.result[index].messageDetails.messageContent != null) {
+    if (notification?.result[index]?.messageDetails?.messageContent != null) {
       MessageContent message =
           notification.result[index].messageDetails.messageContent;
-      return Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 5, bottom: 5),
-            child: ListTile(
-              onTap: () {},
-              title: TextWidget(
-                text: message.messageTitle,
-                colors: Colors.black,
-                overflow: TextOverflow.visible,
-                fontWeight: FontWeight.w600,
-                fontsize: 13,
-                softwrap: true,
-              ),
-              subtitle: TextWidget(
-                text: message.messageBody,
-                colors: Colors.grey,
-                overflow: TextOverflow.visible,
-                fontWeight: FontWeight.w500,
-                fontsize: 12,
-                softwrap: true,
-              ),
-              trailing: Column(
-                children: <Widget>[
-                  TextWidget(
-                    text: constants
-                        .notificationDate(notification.result[index].createdOn),
-                    colors: Colors.black,
-                    overflow: TextOverflow.visible,
-                    fontWeight: FontWeight.w500,
-                    fontsize: 10,
-                    softwrap: true,
+      return (message.messageBody == "" || message.messageTitle == "")
+          ? Container()
+          : Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(top: 5, bottom: 5),
+                  child: ListTile(
+                    onTap: () {},
+                    title: TextWidget(
+                      text: message.messageTitle,
+                      colors: Colors.black,
+                      overflow: TextOverflow.visible,
+                      fontWeight: FontWeight.w600,
+                      fontsize: 13,
+                      softwrap: true,
+                    ),
+                    subtitle: TextWidget(
+                      text: message.messageBody,
+                      colors: Colors.grey,
+                      overflow: TextOverflow.visible,
+                      fontWeight: FontWeight.w500,
+                      fontsize: 12,
+                      softwrap: true,
+                    ),
+                    trailing: Column(
+                      children: <Widget>[
+                        TextWidget(
+                          text: constants.notificationDate(
+                              notification.result[index].createdOn),
+                          colors: Colors.black,
+                          overflow: TextOverflow.visible,
+                          fontWeight: FontWeight.w500,
+                          fontsize: 10,
+                          softwrap: true,
+                        ),
+                        TextWidget(
+                          text: constants.notificationTime(
+                              notification.result[index].createdOn),
+                          colors: Color(CommonUtil().getMyPrimaryColor()),
+                          overflow: TextOverflow.visible,
+                          fontWeight: FontWeight.w600,
+                          fontsize: 10,
+                          softwrap: true,
+                        ),
+                      ],
+                    ),
                   ),
-                  TextWidget(
-                    text: constants
-                        .notificationTime(notification.result[index].createdOn),
-                    colors: Color(CommonUtil().getMyPrimaryColor()),
-                    overflow: TextOverflow.visible,
-                    fontWeight: FontWeight.w600,
-                    fontsize: 10,
-                    softwrap: true,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Container(
-            height: 0.2,
-            color: Colors.black,
-          )
-        ],
-      );
+                ),
+                Container(
+                  height: 0.2,
+                  color: Colors.black,
+                )
+              ],
+            );
     } else {
       return Container();
     }

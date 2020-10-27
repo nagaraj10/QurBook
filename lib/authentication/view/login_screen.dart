@@ -116,7 +116,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                               controller: passwordController,
                               validator: (value) {
                                 return AuthenticationValidator()
-                                    .passwordValidation(value, patternPassword,
+                                    .loginPasswordValidation(value, patternPassword,
                                         strPassCantEmpty);
                               },
                             ),
