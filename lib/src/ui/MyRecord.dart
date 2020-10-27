@@ -1356,7 +1356,7 @@ class _CustomTabsState extends State<CustomTabView>
         Padding(padding: EdgeInsets.only(top: 10)),
         dataObj.logo != null
             ? Image.network(
-                Constants.BASE_URL + dataObj.logo,
+                /*Constants.BASE_URL + */ dataObj.logo,
                 width: 20,
                 height: 20,
                 color: Colors.white,
