@@ -23,6 +23,13 @@ class GoogleFitData {
     return signedIn;
   }
 
+  
+  Future<bool> signInSilently()async{
+   bool signedIn = await _signInHelper.signInSilently();
+   return signedIn;
+  }
+
+
   Future<bool> signIn() async {
     bool ret = false;
 
