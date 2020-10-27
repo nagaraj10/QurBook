@@ -203,6 +203,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                       color: Color(
                                           CommonUtil().getMyPrimaryColor()),
                                     )),
+                                errorMaxLines: 2,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(

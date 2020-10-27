@@ -13,6 +13,16 @@ class AuthenticationValidator {
     return null;
   }
 
+  String loginPasswordValidation(
+      String password, String pattern, String validText) {
+    if (password.length == 0) {
+      return strPassCantEmpty;
+    } else if (password.length < 6) {
+      return strPasswordCheck;
+    }
+    return null;
+  }
+
   String passwordValidation(String password, String pattern, String validText) {
     RegExp regexPassword = new RegExp(pattern);
     if (password.length == 0) {
