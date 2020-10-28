@@ -290,6 +290,7 @@ const String checkSlots = 'Checking available slots..';
 const String selectSlotsMsg = 'Please select your time slot before you book';
 const String noUrl = 'Something went wrong ..please try again..';
 const String noAddress = 'Please fill the address details before you book';
+const String noPhoneEmail = 'Please fill the phone no, email or firstName before you book';
 
 //Payment
 const String PAYMENT_STATUS = 'payment_status';
