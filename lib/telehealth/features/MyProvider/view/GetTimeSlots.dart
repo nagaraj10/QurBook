@@ -32,6 +32,8 @@ class GetTimeSlots extends StatelessWidget {
   final List<HealthOrganizationResult> healthOrganizationResult;
   final int doctorListPos;
   Function(String) closePage;
+  bool isAddressCheck;
+  bool isPhoneMailCheck;
 
   GetTimeSlots(
       {this.dateSlotTimingsObj,
@@ -42,7 +44,7 @@ class GetTimeSlots extends StatelessWidget {
       this.doctorsData,
       this.healthOrganizationResult,
       this.doctorListPos,
-      this.closePage});
+      this.closePage,this.isAddressCheck,this.isPhoneMailCheck});
 
   @override
   Widget build(BuildContext context) {
@@ -89,22 +91,29 @@ class GetTimeSlots extends StatelessWidget {
                       doctorsData.doctorSessionId);
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
-                    if (patientAddressCheck()) {
-                      if (doctorsData == null) {
-                        navigateToConfirmBook(context, rowPosition,
-                            itemPosition, null, false, false);
-                      } else {
-                        navigateToConfirmBook(
-                            context,
-                            rowPosition,
-                            itemPosition,
-                            doctorsData.doctorFollowUpFee,
-                            true,
-                            true);
+                    if(isPhoneMailCheck){
+                      if (isAddressCheck) {
+                        if (doctorsData == null) {
+                          navigateToConfirmBook(context, rowPosition,
+                              itemPosition, null, false, false);
+                        } else {
+                          navigateToConfirmBook(
+                              context,
+                              rowPosition,
+                              itemPosition,
+                              doctorsData.doctorFollowUpFee,
+                              true,
+                              true);
+                        }
                       }
-                    } else {
-                      toast.getToast(noAddress, Colors.red);
+                      else {
+                        toast.getToast(noAddress, Colors.red);
+                      }
                     }
+                    else{
+                      toast.getToast(noPhoneEmail, Colors.red);
+                    }
+
                   } else {
                     toast.getToast(selectSlotsMsg, Colors.red);
                   }
@@ -181,19 +190,4 @@ class GetTimeSlots extends StatelessWidget {
     return resheduleAppointment;
   }
 
-  bool patientAddressCheck() {
-    bool condition;
-
-    String address1 = PreferenceUtil.getStringValue(Constants.ADDRESS1);
-    String city = PreferenceUtil.getStringValue(Constants.CITY);
-    String state = PreferenceUtil.getStringValue(Constants.STATE);
-    String pincode = PreferenceUtil.getStringValue(Constants.PINCODE);
-
-    if (address1 != '' && city != '' && state != '' && pincode != '') {
-      condition = true;
-    } else {
-      condition = false;
-    }
-    return condition;
-  }
 }

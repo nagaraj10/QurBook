@@ -3,13 +3,19 @@ import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
+import 'package:myfhb/my_providers/models/User.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/AvailableTimeSlotsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotSessionsModel.dart';
@@ -19,6 +25,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/Doctor
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/DoctorSessionTimeSlot.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class HealthOrganization extends StatefulWidget {
   final List<Doctors> doctors;
@@ -46,12 +53,18 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   List<Slots> slotsModel = new List<Slots>();
   ProvidersBloc _providersBloc;
   MyProvidersResponse myProvidersResponseList;
+  MyProfileModel myProfile;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
+  bool addressCheck = false;
+  bool mailPhoneCheck = false;
 
   @override
   void initState() {
     super.initState();
     getDataForProvider();
     _providersBloc = new ProvidersBloc();
+    fetchUserProfileInfo();
   }
 
   @override
@@ -64,14 +77,18 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       body: Container(
           child: Column(
         children: [
-          Expanded(
-            child: (providerViewModel.healthOrganizationResult != null &&
-                    providerViewModel.healthOrganizationResult.length > 0)
-                ? providerListWidget(providerViewModel.healthOrganizationResult)
-                : getHospitalProviderList(widget.doctors[widget.index].id),
-          )
+          getMainList(),
         ],
       )),
+    );
+  }
+
+  Widget getMainList() {
+    return Expanded(
+      child: (providerViewModel.healthOrganizationResult != null &&
+              providerViewModel.healthOrganizationResult.length > 0)
+          ? providerListWidget(providerViewModel.healthOrganizationResult)
+          : getHospitalProviderList(widget.doctors[widget.index].id),
     );
   }
 
@@ -252,6 +269,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                 widget.closePage(value);
                 Navigator.pop(context);
               },
+              isValidAddress: addressCheck,
+              isValidPhoneMail: mailPhoneCheck,
             ),
           ],
         ),
@@ -404,8 +423,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
       if (result.doctorFeeCollection.length > 0) {
         for (int i = 0; i < result.doctorFeeCollection.length; i++) {
           String feesCode = result.doctorFeeCollection[i].feeType.code;
-          bool isActive=result.doctorFeeCollection[i].isActive;
-          if (feesCode == CONSULTING && isActive==true) {
+          bool isActive = result.doctorFeeCollection[i].isActive;
+          if (feesCode == CONSULTING && isActive == true) {
             fees = result.doctorFeeCollection[i].fee;
           }
         }
@@ -434,7 +453,9 @@ class _HealthOrganizationState extends State<HealthOrganization> {
           final items = snapshot.data ??
               <DoctorIds>[]; // handle the case that data is null
 
-          return providerListWidget(snapshot.data);
+          return myProfile != null
+              ? providerListWidget(snapshot.data)
+              : Container();
         }
       },
     );
@@ -452,5 +473,105 @@ class _HealthOrganizationState extends State<HealthOrganization> {
               child: Text(variable.strNoHospitaldata),
             ),
           );
+  }
+
+  fetchUserProfileInfo() async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+    await addFamilyUserInfoRepository
+        .getMyProfileInfoNew(userId)
+        .then((value) => setState(() {
+              myProfile = value;
+            }));
+
+    if (myProfile != null) {
+      if (myProfile.isSuccess) {
+        if (myProfile.result != null) {
+          if (myProfile.result.userAddressCollection3 != null) {
+            if (myProfile.result.userAddressCollection3.length > 0) {
+              patientAddressCheck(myProfile.result.userAddressCollection3[0]);
+            } else {
+              addressCheck = false;
+            }
+          } else {
+            addressCheck = false;
+          }
+        } else {
+          addressCheck = false;
+        }
+      } else {
+        addressCheck = false;
+      }
+    } else {
+      addressCheck = false;
+    }
+
+    if (myProfile != null) {
+      if (myProfile.isSuccess) {
+        if (myProfile.result != null) {
+          if (myProfile.result.userContactCollection3 != null) {
+            if (myProfile.result.userContactCollection3.length > 0) {
+              patientEmailPhone(
+                  myProfile.result.userContactCollection3[0], myProfile.result);
+            } else {
+              mailPhoneCheck = false;
+            }
+          } else {
+            mailPhoneCheck = false;
+          }
+        } else {
+          mailPhoneCheck = false;
+        }
+      } else {
+        mailPhoneCheck = false;
+      }
+    } else {
+      mailPhoneCheck = false;
+    }
+  }
+
+  bool patientAddressCheck(UserAddressCollection3 userAddressCollection) {
+    String address1 = userAddressCollection.addressLine1 != null
+        ? userAddressCollection.addressLine1
+        : '';
+    String city = userAddressCollection.city.name != null
+        ? userAddressCollection.city.name
+        : '';
+    String state = userAddressCollection.state.name != null
+        ? userAddressCollection.state.name
+        : '';
+
+    if (address1 != '' && city != '' && state != '') {
+      addressCheck = true;
+      print('address true');
+    } else {
+      addressCheck = false;
+    }
+  }
+
+  bool patientEmailPhone(UserContactCollection3 userContactCollection,
+      MyProfileResult myProfileResult) {
+    String fName = '';
+    String lName = '';
+
+    String phoneNumber = userContactCollection.phoneNumber != null
+        ? userContactCollection.phoneNumber
+        : '';
+    String email =
+        userContactCollection.email != null ? userContactCollection.email : '';
+
+    if (myProfileResult != null) {
+      fName = myProfileResult.firstName;
+      lName = myProfileResult.lastName;
+    } else {
+      mailPhoneCheck = false;
+    }
+
+    if (phoneNumber != '' && email != '' && fName != '' && lName != '') {
+      mailPhoneCheck = true;
+      print('phoneMail true');
+    } else {
+      mailPhoneCheck = false;
+    }
   }
 }

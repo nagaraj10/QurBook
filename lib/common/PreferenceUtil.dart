@@ -9,6 +9,7 @@ import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/RelationShip.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/my_family/models/relationships.dart';
+import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
@@ -321,4 +322,11 @@ class PreferenceUtil {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(key, json.encode(value));
   }
+
+  static UserModel getPatientDetails(String keyProfile) {
+    if (_prefsInstance == null) {}
+    return UserModel.fromJson(
+        json.decode(_prefsInstance.getString(keyProfile)));
+  }
+
 }
