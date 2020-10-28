@@ -128,7 +128,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                     ''),
                             SizedBoxWidget(height: 5.0),
                             SizedBoxWidget(height: 15.0),
-                            commonWidget.docIcons(doc, context, () {})
+                            commonWidget.docIcons(false,doc, context, () {})
                           ],
                         ),
                       ],
