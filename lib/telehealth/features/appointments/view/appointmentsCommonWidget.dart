@@ -82,7 +82,7 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Widget docIcons(Past doc, BuildContext context, Function refresh) {
+  Widget docIcons(bool isUpcoming,Past doc, BuildContext context, Function refresh) {
     List<String> recordIds = new List();
     List<String> notesId = new List();
     List<String> voiceIds = new List();
@@ -97,12 +97,12 @@ class AppointmentsCommonWidget {
         doc.healthRecord.voice == null || doc.healthRecord.voice == ''
             ? 0.toString()
             : 1.toString();
-    int healthRecord = doc.healthRecord.prescription == null
+    int healthRecord = doc.healthRecord.associatedRecords == null
         ? 0
-        : doc.healthRecord.prescription.length;
-    int otherRecords =
-        doc.healthRecord.others == null ? 0 : doc.healthRecord.others.length;
-    String rxCount = (healthRecord + otherRecords).toString();
+        : doc.healthRecord.associatedRecords.length;
+    //int otherRecords =  doc.healthRecord.others == null ? 0 : doc.healthRecord.others.length;
+    //String rxCount = (healthRecord + otherRecords).toString();
+    String rxCount = healthRecord.toString();
 
     if (int.parse(notesCount) > 0 && doc.healthRecord.notes != null) {
       notesId.add(doc.healthRecord.notes);
@@ -111,14 +111,14 @@ class AppointmentsCommonWidget {
       voiceIds.add(doc.healthRecord.voice);
     }
     if (int.parse(rxCount) > 0) {
-      if (otherRecords > 0) {
+      /* if (otherRecords > 0) {
         recordIds.addAll(doc.healthRecord.others);
-      }
-      if (doc.healthRecord.prescription != null &&
-          doc.healthRecord.prescription.length > 0) {
-        for (int i = 0; i < doc.healthRecord.prescription.length; i++) {
-          if (!recordIds.contains(doc.healthRecord.prescription[i])) {
-            recordIds.add(doc.healthRecord.prescription[i]);
+      }*/
+      if (doc.healthRecord.associatedRecords != null &&
+          doc.healthRecord.associatedRecords.length > 0) {
+        for (int i = 0; i < doc.healthRecord.associatedRecords.length; i++) {
+          if (!recordIds.contains(doc.healthRecord.associatedRecords[i])) {
+            recordIds.add(doc.healthRecord.associatedRecords[i]);
           }
         }
       }
@@ -134,7 +134,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_notes, () async {
-          if (notesCount != '') {
+          if (notesCount != '' && isUpcoming) {
             await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => MyRecords(
                 categoryPosition: getCategoryPosition(Constants.STR_NOTES),
@@ -153,7 +153,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.STR_VOICE_NOTES, () async {
-          if (voiceNotesCount != '') {
+          if (voiceNotesCount != '' && isUpcoming) {
             await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => MyRecords(
                   categoryPosition:
@@ -173,7 +173,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_recordsImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records, () async {
-          if (rxCount != null) {
+          if (rxCount != null &&isUpcoming) {
             await Navigator.of(context)
                 .push(MaterialPageRoute(
               builder: (context) => MyRecords(
@@ -405,30 +405,43 @@ class AppointmentsCommonWidget {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult> categoryDataList = getCategoryList();
-    for (int i = 0; i < categoryDataList.length; i++) {
-      if (categoryName == categoryDataList[i].categoryName) {
-        print(categoryName + ' ****' + categoryDataList[i].categoryName);
-        position = i;
-      }
-    }
-    if (categoryName == Constants.STR_PRESCRIPTION) {
-      return position;
-    } else {
-      return position;
-    }
+    return getCategoryList(categoryName);
   }
 
-  List<CategoryResult> getCategoryList() {
+  int getCategoryList(String categoryName) {
+    int position = 0;
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         filteredCategoryData = new CommonUtil().fliterCategories(value.result);
 
         //filteredCategoryData.add(categoryDataObjClone);
+        for (int i = 0; i < filteredCategoryData.length; i++) {
+          if (categoryName == filteredCategoryData[i].categoryName) {
+            print(
+                categoryName + ' ****' + filteredCategoryData[i].categoryName);
+            position = i;
+          }
+        }
+        if (categoryName == Constants.STR_PRESCRIPTION) {
+          return position;
+        } else {
+          return position;
+        }
+        // return filteredCategoryData;
       });
-      return filteredCategoryData;
     } else {
-      return filteredCategoryData;
+      for (int i = 0; i < filteredCategoryData.length; i++) {
+        if (categoryName == filteredCategoryData[i].categoryName) {
+          print(categoryName + ' ****' + filteredCategoryData[i].categoryName);
+          position = i;
+        }
+      }
+      if (categoryName == Constants.STR_PRESCRIPTION) {
+        return position;
+      } else {
+        return position;
+      }
+      // return filteredCategoryData;
     }
   }
 

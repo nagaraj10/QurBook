@@ -174,23 +174,25 @@ class FHBBasicWidget {
   }
 
   Widget getProfilePicWidgeUsingUrl(String profilePicThumbnailUrl) {
+/*
     setAuthToken().then((authToken) {
-      if (authToken != '') {
-        return Image.network(
-          profilePicThumbnailUrl,
-          height: 50,
-          width: 50,
-          fit: BoxFit.cover,
-          headers: {HttpHeaders.authorizationHeader: authToken},
-        );
-      } else {
-        return Container(
-          color: Color(fhbColors.bgColorContainer),
-          height: 50,
-          width: 50,
-        );
-      }
-    });
+*/
+    if (profilePicThumbnailUrl != '') {
+      return Image.network(
+        profilePicThumbnailUrl,
+        height: 50,
+        width: 50,
+        fit: BoxFit.cover,
+        headers: {HttpHeaders.authorizationHeader: authToken},
+      );
+    } else {
+      return Container(
+        color: Color(fhbColors.bgColorContainer),
+        height: 50,
+        width: 50,
+      );
+    }
+    /* });*/
   }
 
   Future<String> setAuthToken() async {

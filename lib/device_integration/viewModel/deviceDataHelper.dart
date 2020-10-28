@@ -31,7 +31,11 @@ class DeviceDataHelper {
 
   Future<void> syncGoogleFit() async {
     try {
-      await _syncGoogleFitData.syncGoogleFitData();
+      bool bRet = await _syncGoogleFitData.syncGoogleFitData();
+      if (bRet) {
+        Fluttertoast.showToast(
+            msg: 'Syncing Health Data from Google Fit completed', backgroundColor: Colors.green);
+      }
     } catch (e) {
       Fluttertoast.showToast(msg: '${e}', backgroundColor: Colors.red);
     }

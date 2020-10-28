@@ -24,6 +24,8 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   final List<HealthOrganizationResult> healthOrganizationResult;
   final int doctorListPos;
   Function(String) closePage;
+  bool isValidAddress;
+  bool isValidPhoneMail;
 
   DoctorSessionTimeSlot(
       {this.doctorId,
@@ -35,7 +37,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
       this.healthOrganizationId,
       this.healthOrganizationResult,
       this.doctorListPos,
-      this.closePage});
+      this.closePage,this.isValidAddress,this.isValidPhoneMail});
 
   @override
   State<StatefulWidget> createState() {
@@ -140,6 +142,8 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                       closePage: (value) {
                         widget.closePage(value);
                       },
+                      isAddressCheck: widget.isValidAddress,
+                      isPhoneMailCheck: widget.isValidPhoneMail,
                     ),
                   )
                 : Column(

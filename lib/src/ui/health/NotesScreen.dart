@@ -193,8 +193,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
                         softWrap: false,
                       ),
                       Text(
-                        new FHBUtils().getFormattedDateString(mediaMetaInfoObj
-                            .createdOn),
+                        new FHBUtils()
+                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(color: Colors.grey[400], fontSize: 12),
                       )
                     ],

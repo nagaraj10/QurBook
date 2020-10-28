@@ -81,7 +81,7 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList>{
                 child: Row(
                   children: <Widget>[
                     CircleAvatar(
-                      radius: 15,
+                      radius: 18,
                       child: ClipOval(
                           child: eachLabModel != null
                               ? /*myProfile.result.profilePicThumbnailUrl != null
@@ -151,29 +151,15 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList>{
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              InkWell(
-                                  onTap: (){
-                                    providerViewModel
-                                        .bookMarkHealthOrg(eachLabModel,false,'ListItem')
-                                        .then((status) {
-                                      if (status) {
-                                        print('onClick');
-                                        widget.isRefresh();
-                                      }
-                                    });
-                                  },
-                                  child: eachLabModel.isDefault == true
-                                      ? ImageIcon(
-                                    AssetImage(
-                                        variable.icon_record_fav_active),
-                                    color: Color(new CommonUtil()
-                                        .getMyPrimaryColor()),
-                                    size: 20,
-                                  )
-                                      : Container(
-                                    height: 0,
-                                    width: 0,
-                                  )),
+                              commonWidgets.getBookMarkedIconHealth(eachLabModel, () {
+                                providerViewModel
+                                    .bookMarkHealthOrg(eachLabModel,false, 'ListItem')
+                                    .then((status) {
+                                  if (status) {
+                                    widget.isRefresh();
+                                  }
+                                });
+                              }),
                             ],
                           ),
                         )),

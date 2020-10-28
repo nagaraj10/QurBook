@@ -23,7 +23,7 @@ class IDDocsList extends StatefulWidget {
   final Function(String, String) getDataForParticularLabel;
   final Function(String, bool) mediaSelected;
   final Function(String, List<HealthRecordCollection>, bool)
-  healthRecordSelected;
+      healthRecordSelected;
   final bool allowSelect;
   List<String> mediaMeta;
   final bool isNotesSelect;
@@ -42,7 +42,8 @@ class IDDocsList extends StatefulWidget {
       this.mediaMeta,
       this.isNotesSelect,
       this.isAudioSelect,
-      this.showDetails,this.allowAttach,
+      this.showDetails,
+      this.allowAttach,
       this.healthRecordSelected);
 
   @override
@@ -123,7 +124,6 @@ class _IDDocsListState extends State<IDDocsList> {
         },
         onTap: () {
           if (widget.allowSelect && widget.showDetails == false) {
-
             if (widget.allowAttach) {
               bool condition;
               if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
@@ -155,7 +155,6 @@ class _IDDocsListState extends State<IDDocsList> {
               // setState(() {});
               widget.mediaSelected(mediaMetaInfoObj.id, condition);
             }
-
           } else {
             Navigator.push(
               context,
@@ -228,8 +227,8 @@ class _IDDocsListState extends State<IDDocsList> {
                           style: TextStyle(color: Colors.grey),
                         )),
                     Text(
-                      new FHBUtils().getFormattedDateString(
-                          mediaMetaInfoObj.createdOn),
+                      new FHBUtils()
+                          .getFormattedDateString(mediaMetaInfoObj.createdOn),
                       style: TextStyle(
                           fontSize: 12,
                           color: Colors.grey[400],

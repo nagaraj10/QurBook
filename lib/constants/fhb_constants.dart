@@ -314,14 +314,14 @@ const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
-const String ADDRESS1 = 'address1';
-const String CITY = 'city';
-const String STATE = 'state';
-const String PINCODE = 'pincode';
 const String INR = 'INR ';
 const String LAST_RECEIVED = 'Last Received: ';
 const String DATE_FORMAT = 'dd MMM kk:mm';
 const String NOTHING_SEND = 'Nothing to send';
+const String PHONE_NUMBER = 'phoneNumber';
+const String EMAIL = 'email';
+const String FIRST_NAME = 'firstName';
+const String LAST_NAME = 'lastName';
 
 
 const String STR_MESSAGES = 'messages';
@@ -358,3 +358,4 @@ const String STR_FAILED = 'failed';
 const String STR_DONE = 'Done';
 
 const String SHEELA_LANG = 'sheela_lang';
+const String STR_FAMILY_ADD_MSG = 'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';

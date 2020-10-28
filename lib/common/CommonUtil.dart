@@ -978,6 +978,31 @@ class CommonUtil {
 
     MyProfileModel myProfileModel = new MyProfileModel();
 
+    _myProfileBloc.getMyProfileData(Constants.KEY_USERID).then((profileData) {
+      if (profileData != null &&
+          profileData.isSuccess &&
+          profileData.result != null) {
+        PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData)
+            .then((value) {
+          try {
+            if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
+                PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE, profileData);
+            } else {
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE, profileData);
+            }
+          } catch (e) {
+            PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
+          }
+
+          myProfileModel = profileData;
+        });
+      }
+      //return profileData;
+    });
+
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
@@ -989,12 +1014,15 @@ class CommonUtil {
           try {
             if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) !=
                 PreferenceUtil.getProfileData(Constants.KEY_PROFILE)) {
+              PreferenceUtil.saveProfileData(
+                  Constants.KEY_PROFILE_MAIN, profileData);
             } else {
               PreferenceUtil.saveProfileData(
-                  Constants.KEY_PROFILE, profileData);
+                  Constants.KEY_PROFILE_MAIN, profileData);
             }
           } catch (e) {
-            PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData);
+            PreferenceUtil.saveProfileData(
+                Constants.KEY_PROFILE_MAIN, profileData);
           }
 
           myProfileModel = profileData;
@@ -1277,7 +1305,7 @@ class CommonUtil {
       http.Client _client = new http.Client();
       var req = await _client.get(Uri.parse(url));
       var bytes = req.bodyBytes;
-      String dir = (await getTemporaryDirectory()).path;
+      String dir = await FHBUtils.createFolderInAppDocDir('images');
       File file = new File('$dir/${basename(url)}$extension');
       await file.writeAsBytes(bytes);
       return file;
@@ -1310,10 +1338,10 @@ class CommonUtil {
         // File file = new File(
         //     '$dir/${basename(currentImage.response.data.fileContent)}${currentImage.response.data.fileType}');
         // await file.writeAsBytes(bytes);
-        var file_status =
+        /* var file_status =
             await GallerySaver.saveImage(file.path, albumName: 'myfhb');
         print('image file save status $file_status');
-
+*/
         // Scaffold.of(context).showSnackBar(SnackBar(
         //   content: const Text(variable.strFilesDownloaded),
         //   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),

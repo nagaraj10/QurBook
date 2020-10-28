@@ -23,8 +23,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DoctorPastAppointments extends StatefulWidget {
   Past doc;
   ValueChanged<String> onChanged;
+  Function(String) closePage;
 
-  DoctorPastAppointments({this.doc, this.onChanged});
+  DoctorPastAppointments({this.doc, this.onChanged,this.closePage});
 
   @override
   DoctorPastAppointmentState createState() => DoctorPastAppointmentState();
@@ -86,8 +87,32 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             SizedBoxWidget(height: 3.0, width: 0),
                             widget.doc?.doctor?.specialization == null
                                 ? Container()
-                                : commonWidget.docStatus(context,
-                                    widget.doc.doctor.specialization ?? ''),
+                                : Text((widget.doc.doctor.doctorProfessionalDetailCollection !=
+                                            null &&
+                                        widget
+                                                .doc
+                                                .doctor
+                                                .doctorProfessionalDetailCollection
+                                                .length >
+                                            0)
+                                    ? widget.doc.doctor.doctorProfessionalDetailCollection[0].specialty != null
+                                        ? widget
+                                                    .doc
+                                                    .doctor
+                                                    .doctorProfessionalDetailCollection[
+                                                        0]
+                                                    .specialty
+                                                    .name !=
+                                                null
+                                            ? widget
+                                                .doc
+                                                .doctor
+                                                .doctorProfessionalDetailCollection[0]
+                                                .specialty
+                                                .name
+                                            : ''
+                                        : ''
+                                    : ''),
                             widget.doc.doctor.specialization == null
                                 ? Container()
                                 : SizedBox(height: 3.0),
@@ -103,7 +128,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                     ''),
                             SizedBoxWidget(height: 5.0),
                             SizedBoxWidget(height: 15.0),
-                            commonWidget.docIcons(doc, context, () {})
+                            commonWidget.docIcons(false,doc, context, () {})
                           ],
                         ),
                       ],
@@ -161,19 +186,17 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             colors: Colors.black,
                           ),
                           TextWidget(
-                                  fontsize: 15,
-                                  text: doc.plannedFollowupDate == null
-                                      ? ''
-                                      : 'INR ' +
-                                          providerCommonWidget
-                                              .getMoneyWithForamt(
-                                                  doc.doctorFollowUpFee) ??
-                                      '',
-                                  fontWeight: FontWeight.w600,
-                                  overflow: TextOverflow.visible,
-                                  colors: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
-                                ),
+                            fontsize: 15,
+                            text: doc.plannedFollowupDate == null
+                                ? ''
+                                : 'INR ' +
+                                        providerCommonWidget.getMoneyWithForamt(
+                                            doc.doctorFollowUpFee) ??
+                                    '',
+                            fontWeight: FontWeight.w600,
+                            overflow: TextOverflow.visible,
+                            colors: Color(new CommonUtil().getMyPrimaryColor()),
+                          ),
                         ],
                       ),
                     )
@@ -227,6 +250,9 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
           builder: (context) => ResheduleMain(
                 doc: doc,
                 isReshedule: isReshedule,
+            closePage: (value){
+                  widget.closePage(value);
+            },
               )),
     );
   }

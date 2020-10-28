@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/DatePicker/date_picker_widget.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -23,6 +24,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slo
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../../SearchWidget/view/SearchWidget.dart';
@@ -74,9 +76,7 @@ class _MyProvidersState extends State<MyProviders> {
               ),
             ),
             // you can put Icon as well, it accepts any widget.
-            title:
-                getTitle()
-            ),
+            title: getTitle()),
         body: Container(
             child: Column(
           children: [
@@ -102,7 +102,6 @@ class _MyProvidersState extends State<MyProviders> {
         )),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-
             Navigator.pushNamed(context, router.rt_SearchProvider,
                 arguments: SearchArguments(
                   searchWord: CommonConstants.doctors,
@@ -130,7 +129,17 @@ class _MyProvidersState extends State<MyProviders> {
             ),
           ),
         ),
-        Icon(Icons.notifications),
+        IconWidget(
+          icon: Icons.notifications,
+          colors: Colors.white,
+          size: 22,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationMain()),
+            );
+          },
+        ),
         new SwitchProfile()
             .buildActions(context, _keyLoader, callBackToRefresh),
         // Icon(Icons.more_vert),
@@ -163,6 +172,7 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   void callBackToRefresh() {
+    myProvidersResponseList = null;
     (context as Element).markNeedsBuild();
   }
 
@@ -214,12 +224,10 @@ class _MyProvidersState extends State<MyProviders> {
                           width: fhbStyles.imageWidth,
                           height: fhbStyles.imageHeight,
                           icon: Icons.check_circle,
-                          onTap: () {
-                          })
+                          onTap: () {})
                       : SizedBox(),
                   commonWidgets.getSizeBoxWidth(15.0),
-                  commonWidgets.getBookMarkedIcon(docs[i], () {
-                  }),
+                  commonWidgets.getBookMarkedIcon(docs[i], () {}),
                   commonWidgets.getSizeBoxWidth(10.0),
                 ],
               ),
@@ -356,127 +364,6 @@ class _MyProvidersState extends State<MyProviders> {
           );
   }
 
-  Widget providerListItem(Doctors eachDoctorModel) {
-    return InkWell(
-        onTap: () {},
-        child: Container(
-            padding: EdgeInsets.all(10),
-            margin: EdgeInsets.only(left: 12, right: 12, top: 12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(fhbColors.cardShadowColor),
-                  blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 0, // has the effect of extending the shadow
-                )
-              ],
-            ),
-            child: Row(
-              children: <Widget>[
-                ClipOval(
-                    child: eachDoctorModel.user != null
-                        ? eachDoctorModel.user.profilePicThumbnailUrl != null
-                            ? Image.network(
-                                eachDoctorModel.user.profilePicThumbnailUrl,
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                              )
-                            : Container(
-                                width: 50,
-                                height: 50,
-                                padding: EdgeInsets.all(12),
-                                color: Color(fhbColors.bgColorContainer))
-                        : Container(
-                            width: 50,
-                            height: 50,
-                            padding: EdgeInsets.all(12),
-                            color: Color(fhbColors.bgColorContainer))),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: 5),
-                      AutoSizeText(
-                        eachDoctorModel.user != null
-                            ? eachDoctorModel.user.name != null
-                                ? toBeginningOfSentenceCase(
-                                    eachDoctorModel.user.name)
-                                : ''
-                            : '',
-                        maxLines: 1,
-                        style: TextStyle(
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.start,
-                      ),
-                      SizedBox(height: 5),
-                      eachDoctorModel.doctorProfessionalDetailCollection != null
-                          ? AutoSizeText(
-                              (eachDoctorModel.doctorProfessionalDetailCollection !=
-                                          null &&
-                                      eachDoctorModel
-                                              .doctorProfessionalDetailCollection
-                                              .length >
-                                          0)
-                                  ? eachDoctorModel
-                                              .doctorProfessionalDetailCollection[
-                                                  0]
-                                              .specialty !=
-                                          null
-                                      ? toBeginningOfSentenceCase(eachDoctorModel
-                                          .doctorProfessionalDetailCollection[0]
-                                          .specialty
-                                          .name)
-                                      : ''
-                                  : '',
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontSize: 13.0,
-                                  fontWeight: FontWeight.w400,
-                                  color: ColorUtils.lightgraycolor),
-                              textAlign: TextAlign.start,
-                            )
-                          : SizedBox(height: 0, width: 0),
-                      SizedBox(height: 5),
-                    ],
-                  ),
-                ),
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          InkWell(
-                              child: eachDoctorModel.isActive == true
-                                  ? ImageIcon(
-                                      AssetImage(
-                                          variable.icon_record_fav_active),
-                                      color: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      size: 20,
-                                    )
-                                  : Container(
-                                      height: 0,
-                                      width: 0,
-                                    )),
-                        ],
-                      ),
-                    )),
-              ],
-            )));
-  }
-
   Widget providerDoctorItemWidget(int i, List<Doctors> docs) {
     return InkWell(
       onTap: () {
@@ -531,8 +418,7 @@ class _MyProvidersState extends State<MyProviders> {
                       Expanded(
                           child: Row(
                         children: [
-                          commonWidgets
-                              .getTextForDoctors('${docs[i].user.name}'),
+                          commonWidgets.setDoctorname(docs[i].user),
                           commonWidgets.getSizeBoxWidth(10.0),
                           commonWidgets.getIcon(
                               width: fhbStyles.imageWidth,
@@ -544,15 +430,27 @@ class _MyProvidersState extends State<MyProviders> {
                               }),
                         ],
                       )),
+                      commonWidgets.getSizeBoxWidth(10.0),
+                      commonWidgets.getBookMarkedIconNew(docs[i], () {
+                        providerViewModel
+                            .bookMarkDoctor(docs[i], false, 'ListItem')
+                            .then((status) {
+                          if (status) {
+                            setState(() {});
+                          }
+                        });
+                      }),
+                      commonWidgets.getSizeBoxWidth(15.0),
                       docs[i].isTelehealthEnabled
                           ? commonWidgets.getIcon(
                               width: fhbStyles.imageWidth,
                               height: fhbStyles.imageHeight,
                               icon: Icons.check_circle,
                               onTap: () {
-                                print('on check  pressed');
+                                //print('on check  pressed');
                               })
                           : SizedBox(),
+                      //commonWidgets.getFlagIcon(docs[i], () {})
                     ],
                   ),
                   commonWidgets.getSizedBox(5.0),
@@ -620,7 +518,7 @@ class _MyProvidersState extends State<MyProviders> {
           builder: (context) => HealthOrganization(
             doctors: docs,
             index: i,
-            closePage: (value){
+            closePage: (value) {
               widget.closePage(value);
             },
           ),

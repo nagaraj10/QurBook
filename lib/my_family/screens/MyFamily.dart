@@ -480,20 +480,21 @@ class _MyFamilyState extends State<MyFamily> {
                               ? myProfile?.result?.userContactCollection3[0]
                                   .phoneNumber
                               : ''
-                          : data?.child?.isVirtualUser != null
-                              ? data?.child?.isVirtualUser
-                                  ? userCollection
-                                          ?.virtualUserParent?.phoneNumber ??
-                                      ''
-                                  : (data?.child?.userContactCollection3 !=
-                                              null &&
-                                          data?.child?.userContactCollection3
-                                                  .length >
-                                              0)
-                                      ? data?.child?.userContactCollection3[0]
-                                          .phoneNumber
-                                      : ''
-                              : '',
+                          : (data?.child?.isVirtualUser != null &&
+                                  data?.child?.isVirtualUser)
+                              /*? data?.child?.isVirtualUser
+                                */
+                              ? userCollection
+                                      ?.virtualUserParent?.phoneNumber ??
+                                  ''
+                              : (data?.child?.userContactCollection3 != null &&
+                                      data?.child?.userContactCollection3
+                                              .length >
+                                          0)
+                                  ? data?.child?.userContactCollection3[0]
+                                      .phoneNumber
+                                  /*: ''*/
+                                  : '',
 
                       /* position == 0
                           ? myProfile != null

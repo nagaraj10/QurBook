@@ -26,11 +26,14 @@ import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWi
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
+import 'package:myfhb/constants/fhb_constants.dart' as prefKey;
+
 class ResheduleAppointments extends StatefulWidget {
   Past doc;
   bool isReshedule;
+  Function(String) closePage;
 
-  ResheduleAppointments({this.doc, this.isReshedule});
+  ResheduleAppointments({this.doc, this.isReshedule, this.closePage});
 
   @override
   _ResheduleAppointmentsState createState() => _ResheduleAppointmentsState();
@@ -57,19 +60,23 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   }
 
   getDoctorsData() async {
+    String userID = PreferenceUtil.getStringValue(prefKey.KEY_USERID_MAIN);
+
     await _providersBloc
-        .getMedicalPreferencesList()
+        .getMedicalPreferencesList(userId: userID)
         .then((value) => setState(() {
               doctors = value.result.doctors
                   .firstWhere((element) => element.id == widget.doc.doctor.id);
-              print(doctors.id);
             }));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(),
+      appBar: PreferredSize(
+          preferredSize:
+              Size.fromHeight(MediaQuery.of(context).size.height * 0.12),
+          child: getAppBar(doctors)),
       body: Container(
           child: Column(
         children: <Widget>[
@@ -82,36 +89,115 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     );
   }
 
-  Widget appBar() {
+  Widget getAppBar(Doctors doctors) {
     return AppBar(
-      flexibleSpace: GradientAppBar(),
-      leading: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          SizedBoxWidget(
-            height: 0,
-            width: 30,
+        automaticallyImplyLeading: false,
+        flexibleSpace: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.centerLeft,
+                    end: Alignment.centerRight,
+                    colors: <Color>[
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor())
+                ],
+                    stops: [
+                  0.3,
+                  1.0
+                ])),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: 10),
+                      child: GestureDetector(
+                        child: Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                        ),
+                        onTap: () {
+                          //Add code for tapping back
+                          Navigator.pop(context);
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          doctors?.user?.profilePicThumbnailUrl != null
+                              ? doctors.user.profilePicThumbnailUrl
+                              : ''),
+                      radius: 20,
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
+                    Container(
+                        child: Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                              doctors?.user?.name != null
+                                  ? doctors.user.name
+                                  : '',
+                              textAlign: TextAlign.left,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontFamily: variable.font_poppins,
+                                  fontSize: 16,
+                                  color: Colors.white)),
+                          Text(
+                            (doctors?.doctorProfessionalDetailCollection !=
+                                        null &&
+                                    doctors
+                                            .doctorProfessionalDetailCollection
+                                            .length >
+                                        0)
+                                ? doctors
+                                            ?.doctorProfessionalDetailCollection[
+                                                0]
+                                            ?.specialty !=
+                                        null
+                                    ? doctors
+                                                ?.doctorProfessionalDetailCollection[
+                                                    0]
+                                                ?.specialty
+                                                ?.name !=
+                                            null
+                                        ? '${doctors.doctorProfessionalDetailCollection[0].specialty.name}'
+                                        : ''
+                                    : ''
+                                : '',
+                            style: TextStyle(
+                                fontFamily: variable.font_poppins,
+                                fontSize: 12,
+                                color: Colors.white),
+                          ),
+                          Text(
+                            '' + getCity(doctors),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                                fontFamily: variable.font_poppins,
+                                fontSize: 12,
+                                color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ))
+                  ],
+                ),
+              ],
+            ),
           ),
-          IconWidget(
-            icon: Icons.arrow_back_ios,
-            colors: Colors.white,
-            size: 20,
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-        ],
-      ),
-      title: TextWidget(
-        text: widget.doc.doctor.user.name ?? '',
-        colors: Colors.white,
-        overflow: TextOverflow.visible,
-        fontWeight: FontWeight.w600,
-        fontsize: 18,
-        softwrap: true,
-      ),
-    );
+        ));
   }
 
   Widget providerListWidget(List<HealthOrganizationResult> hospitalList) {
@@ -186,6 +272,9 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               healthOrganizationId: widget.doc.healthOrganization.id,
               healthOrganizationResult: docs,
               doctorListPos: 0,
+              closePage: (value) {
+                widget.closePage(value);
+              },
             ),
           ],
         ),
@@ -287,7 +376,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               SizedBox(height: 5),
               AutoSizeText(
                 '' + commonWidgets.getCity(eachHospitalModel[i]) == ''
-                    ? getCity(widget.doc)
+                    ? getCity(doctors)
                     : '',
                 maxLines: 1,
                 style: TextStyle(
@@ -348,10 +437,19 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     return fees;
   }
 
-  getCity(Past doc) {
-    String city = '';
-    if (doc.doctor?.user?.userAddressCollection3[0]?.city != null) {
-      city = doc.doctor?.user?.userAddressCollection3[0]?.city?.name ?? '';
+  String getCity(Doctors doctors) {
+    String city;
+
+    if (doctors?.user?.userAddressCollection3 != null) {
+      if (doctors.user.userAddressCollection3.length > 0) {
+        if (doctors.user.userAddressCollection3[0].city != null) {
+          city = doctors.user.userAddressCollection3[0].city.name;
+        } else {
+          city = '';
+        }
+      } else {
+        city = '';
+      }
     } else {
       city = '';
     }

@@ -294,6 +294,7 @@ const String strAddVoiceNote = 'Add voice note';
 const String strDownloadStart = 'Download Started';
 const String strFilesDownloaded = 'All Files are downloaded, view in Gallery';
 const String strFilesView = 'File downloaded, view in Gallery';
+const String strFileDownloaded = 'File downloaded';
 const String strFilesErrorDownload = 'Error in File download.';
 const String strAfter = 'After';
 const String strDateFormatDay = 'dd/MM/yyyy';
@@ -544,7 +545,7 @@ const String strLogout = 'Logout';
 const String strLogoutMsg =
     'Stay Healthy.. See you Soon. \nSheela will be waiting to serve you.';
 const String strYes = 'Yes';
-const String strRelaoding = 'Relaoding';
+const String strRelaoding = 'Reloading';
 const String strStartNow = 'Start now';
 const String strAccounts = 'Accounts';
 const String strDevices = 'Devices';
@@ -566,6 +567,9 @@ const String strNoAppointments = 'No Appoinments Available';
 
 const String strNoDataAvailable = 'Unable To load';
 const String strHealthOrganizationName = 'healthOrganizationName';
+
+const String EMAIL_REGEXP =
+    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{​​​​​|}​​​​​~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 
 //decode code
 Map<String, dynamic> parseJwtPayLoad(String token) {

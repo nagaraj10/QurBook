@@ -31,6 +31,7 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/authentication/model/resend_otp_model.dart'
     as ResendModel;
 import 'package:myfhb/src/ui/Dashboard.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
 
 class VerifyPatient extends StatefulWidget {
   VerifyPatient(
@@ -350,18 +351,22 @@ class _VerifyPatientState extends State<VerifyPatient> {
           .then((value) {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
-            Navigator.push(
+            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+
+            /* Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => DashboardScreen()));
+                    builder: (BuildContext context) => DashboardScreen()));*/
             //Navigator.pop(context, 'code:${mURL}');
           });
         } else {
           new FHBBasicWidget().showDialogWithTwoButtons(context, () {
-            Navigator.push(
+            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+
+            /*  Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => DashboardScreen()));
+                    builder: (BuildContext context) => DashboardScreen()));*/
           }, value.message, strConfirmDialog);
         }
       });
@@ -403,18 +408,22 @@ class _VerifyPatientState extends State<VerifyPatient> {
           .then((value) {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
-            Navigator.push(
+            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+
+            /* Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => DashboardScreen()));
+                    builder: (BuildContext context) => DashboardScreen()));*/
             //Navigator.pop(context, 'code:${mURL}');
           });
         } else {
           new FHBBasicWidget().showDialogWithTwoButtons(context, () {
-            Navigator.push(
+            PageNavigator.goToPermanent(context, router.rt_Dashboard);
+
+            /* Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (BuildContext context) => DashboardScreen()));
+                    builder: (BuildContext context) => DashboardScreen()));*/
           }, value.message, strConfirmDialog);
         }
       });

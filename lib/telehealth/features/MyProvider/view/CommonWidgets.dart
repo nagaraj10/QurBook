@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/my_providers/models/DoctorLanguageCollection.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/Hospitals.dart';
+import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
@@ -214,16 +216,34 @@ class CommonWidgets {
         onTap: () {
           onClick();
         },
-        child: docs.isActive
+        child: docs.isDefault
             ? ImageIcon(
                 AssetImage('assets/icons/record_fav_active.png'),
                 color: Color(new CommonUtil().getMyPrimaryColor()),
-                size: fhbStyles.imageWidth,
+                size: 18.0,
               )
             : ImageIcon(
                 AssetImage('assets/icons/record_fav.png'),
                 color: Colors.black,
-                size: fhbStyles.imageWidth,
+                size: 18.0,
+              ));
+  }
+
+  Widget getBookMarkedIconHealth(Hospitals docs, Function onClick) {
+    return GestureDetector(
+        onTap: () {
+          onClick();
+        },
+        child: docs.isDefault
+            ? ImageIcon(
+                AssetImage('assets/icons/record_fav_active.png'),
+                color: Color(new CommonUtil().getMyPrimaryColor()),
+                size: 17.0,
+              )
+            : ImageIcon(
+                AssetImage('assets/icons/record_fav.png'),
+                color: Colors.black,
+                size: 17.0,
               ));
   }
 
@@ -524,6 +544,21 @@ class CommonWidgets {
     return languageWidget;
   }
 
+  getLanguagesNew(Doctors docs) {
+    List<Widget> languageWidget = new List();
+    if (docs.doctorLanguageCollection != null &&
+        docs.doctorLanguageCollection.length > 0) {
+      for (int i = 0; i < docs.doctorLanguageCollection.length; i++) {
+        languageWidget.add(getDoctorsAddress(
+            docs.doctorLanguageCollection[i].language.name + ','));
+      }
+    } else {
+      languageWidget.add(SizedBox());
+    }
+
+    return languageWidget;
+  }
+
   Widget showDoctorDetailViewNew(Doctors docs, BuildContext context) {
     showDialog(
         context: context,
@@ -571,14 +606,29 @@ class CommonWidgets {
                               children: <Widget>[
                                 getTextForDoctors('${docs.user.name}'),
                                 AutoSizeText(
-                                  (docs.doctorProfessionalDetailCollection != null &&
-                                      docs.doctorProfessionalDetailCollection.length > 0)
-                                      ? docs.doctorProfessionalDetailCollection[0].specialty != null
-                                      ? docs.doctorProfessionalDetailCollection[0].specialty.name !=
-                                      null
-                                      ? docs.doctorProfessionalDetailCollection[0].specialty.name
-                                      : ''
-                                      : ''
+                                  (docs.doctorProfessionalDetailCollection !=
+                                              null &&
+                                          docs.doctorProfessionalDetailCollection
+                                                  .length >
+                                              0)
+                                      ? docs
+                                                  .doctorProfessionalDetailCollection[
+                                                      0]
+                                                  .specialty !=
+                                              null
+                                          ? docs
+                                                      .doctorProfessionalDetailCollection[
+                                                          0]
+                                                      .specialty
+                                                      .name !=
+                                                  null
+                                              ? docs
+                                                  .doctorProfessionalDetailCollection[
+                                                      0]
+                                                  .specialty
+                                                  .name
+                                              : ''
+                                          : ''
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
@@ -592,14 +642,16 @@ class CommonWidgets {
                                         ? docs.user.userAddressCollection3[0]
                                             .city.name
                                         : ''),
-                                /*(docs.languages != null &&
-                                    docs.languages.length > 0)
-                                    ? getTextForDoctors('Can Speak')
+                                (docs.doctorLanguageCollection != null &&
+                                        docs.doctorLanguageCollection.length >
+                                            0)
+                                    ? getTextForDoctors('Can Speak:')
                                     : SizedBox(),
-                                (docs.languages != null &&
-                                    docs.languages.length > 0)
-                                    ? Row(children: getLanguages(docs))
-                                    : SizedBox(),*/
+                                (docs.doctorLanguageCollection != null &&
+                                        docs.doctorLanguageCollection.length >
+                                            0)
+                                    ? Row(children: getLanguagesNew(docs))
+                                    : SizedBox(),
                               ],
                             ),
                           ),
@@ -637,5 +689,113 @@ class CommonWidgets {
     } else {
       return amount = '0';
     }
+  }
+
+  Widget getFlagIcon(Doctors docs, Function onClick) {
+    return GestureDetector(
+        onTap: () {
+          onClick();
+        },
+        child: docs.isTelehealthEnabled
+            ? ImageIcon(
+                AssetImage('assets/providers/bookmarked.png'),
+                color: Color(new CommonUtil().getMyPrimaryColor()),
+                size: 14.0,
+              )
+            : ImageIcon(
+                AssetImage('assets/providers/not_bookmarked.png'),
+                color: Colors.black,
+                size: 14.0,
+              ));
+  }
+
+  String getAddressLineForDoctors(Doctors result, String whichAddress) {
+    String address;
+
+    if (whichAddress == 'address1') {
+      if (result.user.userAddressCollection3.isNotEmpty) {
+        if (result.user.userAddressCollection3.length > 0) {
+          if (result.user.userAddressCollection3[0].addressLine1 != null) {
+            address = result.user.userAddressCollection3[0].addressLine1;
+          } else {
+            address = '';
+          }
+        } else {
+          address = '';
+        }
+      } else {
+        address = '';
+      }
+    } else {
+      if (result.user.userAddressCollection3.isNotEmpty) {
+        if (result.user.userAddressCollection3.length > 0) {
+          if (result.user.userAddressCollection3[0].addressLine2 != null) {
+            address = result.user.userAddressCollection3[0].addressLine2;
+          } else {
+            address = '';
+          }
+        } else {
+          address = '';
+        }
+      } else {
+        address = '';
+      }
+    }
+
+    return address;
+  }
+
+  String getAddressLineForHealthOrg(Hospitals result, String whichAddress) {
+    String address;
+
+    if (whichAddress == 'address1') {
+      if (result.healthOrganizationAddressCollection.isNotEmpty) {
+        if (result.healthOrganizationAddressCollection.length > 0) {
+          if (result.healthOrganizationAddressCollection[0].addressLine1 !=
+              null) {
+            address =
+                result.healthOrganizationAddressCollection[0].addressLine1;
+          } else {
+            address = '';
+          }
+        } else {
+          address = '';
+        }
+      } else {
+        address = '';
+      }
+    } else {
+      if (result.healthOrganizationAddressCollection.isNotEmpty) {
+        if (result.healthOrganizationAddressCollection.length > 0) {
+          if (result.healthOrganizationAddressCollection[0].addressLine2 !=
+              null) {
+            address =
+                result.healthOrganizationAddressCollection[0].addressLine2;
+          } else {
+            address = '';
+          }
+        } else {
+          address = '';
+        }
+      } else {
+        address = '';
+      }
+    }
+
+    return address;
+  }
+
+  Widget setDoctorname(User user) {
+    return Text(
+      user != null
+          ? toBeginningOfSentenceCase((user.name != null && user.name != '')
+              ? user.name
+              : (user.firstName + user.lastName))
+          : '',
+      style: TextStyle(
+          fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
+      softWrap: true,
+      overflow: TextOverflow.ellipsis,
+    );
   }
 }

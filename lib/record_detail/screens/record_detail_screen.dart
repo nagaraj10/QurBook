@@ -41,6 +41,7 @@ import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/imageSlider.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -401,7 +402,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           ? await Permission.storage.request()
           : await Permission.photos.request();
     }
-    var _currentImage;
+
+    HealthRecordCollection _currentImage;
     Scaffold.of(contxt).showSnackBar(SnackBar(
       content: const Text(variable.strDownloadStart),
       backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
@@ -420,10 +422,23 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       } else {
         _currentImage = imagesPathMain[0];
         try {
-          CommonUtil.downloadFile(_currentImage.response.data.fileContent,
-                  _currentImage.response.data.fileType)
+          CommonUtil.downloadFile(
+                  _currentImage.healthRecordUrl, _currentImage.fileType)
               .then((filePath) async {
-            GallerySaver.saveImage(filePath.path, albumName: 'myfhb')
+            if (Platform.isAndroid) {
+              Scaffold.of(contxt).showSnackBar(SnackBar(
+                content: const Text(variable.strFileDownloaded),
+                backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                action: SnackBarAction(
+                  label: 'Open',
+                  onPressed: () async {
+                    await OpenFile.open(filePath.path);
+                  },
+                ),
+              ));
+            }
+
+            /* GallerySaver.saveImage(filePath.path, albumName: 'myfhb')
                 .then((value) {
               if (value) {
                 Scaffold.of(contxt).showSnackBar(SnackBar(
@@ -436,7 +451,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                   backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
                 ));
               }
-            });
+            });*/
           });
         } catch (e) {
           print('$e exception thrown');
@@ -448,49 +463,49 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   getCategoryInfo(HealthResult metaInfo) {
     switch (metaInfo.metadata.healthRecordCategory.categoryDescription) {
       case CommonConstants.categoryDescriptionPrescription:
-        return RecordInfoCard().getCardForPrescription(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForPrescription(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionDevice:
-        return RecordInfoCard().getCardForDevices(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard()
+            .getCardForDevices(widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionLabReport:
-        return RecordInfoCard().getCardForLab(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard()
+            .getCardForLab(widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionMedicalReport:
-        return RecordInfoCard().getCardForMedicalRecord(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForMedicalRecord(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionBills:
-        return RecordInfoCard().getCardForBillsAndOthers(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionIDDocs:
-        return RecordInfoCard().getCardForIDDocs(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard()
+            .getCardForIDDocs(widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionOthers:
-        return RecordInfoCard().getCardForBillsAndOthers(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionVoiceRecord:
-        return RecordInfoCard().getCardForBillsAndOthers(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionClaimsRecord:
-        return RecordInfoCard().getCardForBillsAndOthers(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionNotes:
-        return RecordInfoCard().getCardForBillsAndOthers(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForBillsAndOthers(
+            widget.data.metadata, widget.data.createdOn);
         break;
 
       default:
-        return RecordInfoCard().getCardForPrescription(widget.data.metadata,
-            widget.data.metadata.healthRecordType.createdOn);
+        return RecordInfoCard().getCardForPrescription(
+            widget.data.metadata, widget.data.createdOn);
     }
   }
 
@@ -1351,7 +1366,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void getPdfFileData(HealthRecordCollection pdfFileMediaId) {
-    print(pdfFileMediaId.healthRecordUrl + 'PDFFFFFFF');
     if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
       _healthReportListForUserBlock = new HealthReportListForUserBlock();

@@ -156,7 +156,6 @@ class _OtherDocsState extends State<OtherDocsList> {
               // setState(() {});
               widget.mediaSelected(mediaMetaInfoObj.id, condition);
             }
-
           } else {
             Navigator.push(
               context,

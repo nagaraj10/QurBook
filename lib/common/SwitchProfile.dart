@@ -32,9 +32,11 @@ class SwitchProfile {
     context = _context;
     keyLoader = _keyLoader;
     callBackToRefresh = _callBackToRefresh;
+    String profileImage;
     MyProfileModel myProfile;
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      profileImage = PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
     } catch (e) {
       myProfile = null;
     }
@@ -63,25 +65,24 @@ class SwitchProfile {
               child: ClipOval(
                   child: myProfile != null
                       ? myProfile.result != null
-                          ? /*myProfile.result.profilePicThumbnailUrl != null
+                          ? myProfile.result.profilePicThumbnailUrl != null
                               ? new FHBBasicWidget().getProfilePicWidgeUsingUrl(
                                   myProfile.result.profilePicThumbnailUrl)
-                              :*/
-                          Container(
-                              height: 50,
-                              width: 50,
-                              color: Color(fhbColors.bgColorContainer),
-                              child: Center(
-                                child: Text(
-                                  myProfile.result.firstName != null
-                                      ? myProfile.result.firstName[0]
-                                          .toUpperCase()
-                                      : '',
-                                  style: TextStyle(
-                                      color: Color(
-                                          CommonUtil().getMyPrimaryColor())),
-                                ),
-                              ))
+                              : Container(
+                                  height: 50,
+                                  width: 50,
+                                  color: Color(fhbColors.bgColorContainer),
+                                  child: Center(
+                                    child: Text(
+                                      myProfile.result.firstName != null
+                                          ? myProfile.result.firstName[0]
+                                              .toUpperCase()
+                                          : '',
+                                      style: TextStyle(
+                                          color: Color(CommonUtil()
+                                              .getMyPrimaryColor())),
+                                    ),
+                                  ))
                           : Container(
                               height: 50,
                               width: 50,

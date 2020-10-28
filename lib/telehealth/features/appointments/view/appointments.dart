@@ -30,9 +30,12 @@ class _AppointmentsState extends State<Appointments> {
   bool isSearch = false;
   List<Past> upcomingTimeInfo = List();
   SharedPreferences prefs;
+  Function(String) closePage;
 
   @override
   void initState() {
+    //commonWidget.getCategoryPosition(Constants.STR_NOTES);
+
     Provider.of<AppointmentsListViewModel>(context, listen: false)
         .fetchAppointments();
     super.initState();
@@ -171,8 +174,8 @@ class _AppointmentsState extends State<Appointments> {
                             appointmentsData.result.upcoming.sort((a, b) =>
                                 a.plannedStartDateTime.compareTo(
                                     b.plannedStartDateTime.toLowerCase()));
-                            upcomingInfo.sort((a, b) =>
-                                a.plannedStartDateTime.compareTo(
+                            upcomingInfo.sort((a, b) => a.plannedStartDateTime
+                                .compareTo(
                                     b.plannedStartDateTime.toLowerCase()));
                             return DoctorUpcomingAppointments(
                                 doc: isSearch
@@ -214,24 +217,28 @@ class _AppointmentsState extends State<Appointments> {
                                 physics: NeverScrollableScrollPhysics(),
                                 shrinkWrap: true,
                                 itemBuilder: (BuildContext ctx, int i) {
-                                  appointmentsData.result.past.sort((b, a) =>
-                                      a.plannedStartDateTime.compareTo(
-                                          b.plannedStartDateTime.toLowerCase()));
-                                  historyInfo.sort((b, a) =>
-                                      a.plannedStartDateTime.compareTo(
-                                          b.plannedStartDateTime.toLowerCase()));
-                                 return   DoctorPastAppointments(
-                                        doc: isSearch
-                                            ? historyInfo[i]
-                                            : appointmentsData.result.past[i],
-                                        onChanged: (value) {
-                                          Provider.of<
-                                                  AppointmentsListViewModel>(
-                                              context,
-                                              listen: false)
-                                            ..clearAppointments()
-                                            ..fetchAppointments();
-                                        });},
+                                  appointmentsData.result.past.sort((b, a) => a
+                                      .plannedStartDateTime
+                                      .compareTo(b.plannedStartDateTime
+                                          .toLowerCase()));
+                                  historyInfo.sort((b, a) => a
+                                      .plannedStartDateTime
+                                      .compareTo(b.plannedStartDateTime
+                                          .toLowerCase()));
+                                  return DoctorPastAppointments(
+                                      doc: isSearch
+                                          ? historyInfo[i]
+                                          : appointmentsData.result.past[i],
+                                      onChanged: (value) {
+                                        Provider.of<AppointmentsListViewModel>(
+                                            context,
+                                            listen: false)
+                                          ..clearAppointments()
+                                          ..fetchAppointments();
+                                      },closePage: (value){
+                                       Navigator.pop(context);
+                                  },);
+                                },
                                 itemCount: isSearch
                                     ? historyInfo.length
                                     : appointmentsData.result.past.length,

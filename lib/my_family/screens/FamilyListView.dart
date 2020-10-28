@@ -139,35 +139,34 @@ class FamilyListView {
                               ClipOval(
                                   child: sharedByMe[index].nickName ==
                                           variable.Self
-                                      ? /*myProfile.result
+                                      ? myProfile.result
                                                   .profilePicThumbnailUrl !=
                                               null
                                           ? new FHBBasicWidget()
                                               .getProfilePicWidgeUsingUrl(
                                                   myProfile.result
                                                       .profilePicThumbnailUrl)
-                                          : */
-                                      Container(
-                                          height: 50,
-                                          width: 50,
-                                          child: Center(
-                                              child: Text(
-                                                  myProfile.result != null
-                                                      ? myProfile.result
-                                                                  .firstName !=
-                                                              null
+                                          : Container(
+                                              height: 50,
+                                              width: 50,
+                                              child: Center(
+                                                  child: Text(
+                                                      myProfile.result != null
                                                           ? myProfile.result
-                                                              .firstName[0]
-                                                              .toUpperCase()
-                                                          : 'S'
-                                                      : '',
-                                                  style: TextStyle(
-                                                      color: Color(CommonUtil()
-                                                          .getMyPrimaryColor()),
-                                                      fontSize: 22))),
-                                          color: const Color(
-                                              fhbColors.bgColorContainer),
-                                        )
+                                                                      .firstName !=
+                                                                  null
+                                                              ? myProfile.result
+                                                                  .firstName[0]
+                                                                  .toUpperCase()
+                                                              : 'S'
+                                                          : '',
+                                                      style: TextStyle(
+                                                          color: Color(CommonUtil()
+                                                              .getMyPrimaryColor()),
+                                                          fontSize: 22))),
+                                              color: const Color(
+                                                  fhbColors.bgColorContainer),
+                                            )
                                       : /*sharedByMe[index]
                                                   .child
                                                   .profilePicThumbnailUrl !=

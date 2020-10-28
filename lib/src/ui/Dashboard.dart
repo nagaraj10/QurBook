@@ -126,7 +126,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             moveToNextScreen(2);
                           },
                           child: Image.asset(
-                            variable.icon_maya,
+                            PreferenceUtil.getStringValue(
+                                        Constants.keyMayaAsset) !=
+                                    null
+                                ? PreferenceUtil.getStringValue(
+                                        Constants.keyMayaAsset) +
+                                    variable.strExtImg
+                                : variable.icon_mayaMain,
                             height: 25,
                             width: 25,
                           ),
