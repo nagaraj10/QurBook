@@ -314,14 +314,14 @@ const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';
 const String HealthOrg = 'Health Organization';
 const String HEALTH_RECORDIDS = 'healthRecordIds';
-const String ADDRESS1 = 'address1';
-const String CITY = 'city';
-const String STATE = 'state';
-const String PINCODE = 'pincode';
 const String INR = 'INR ';
 const String LAST_RECEIVED = 'Last Received: ';
 const String DATE_FORMAT = 'dd MMM kk:mm';
 const String NOTHING_SEND = 'Nothing to send';
+const String PHONE_NUMBER = 'phoneNumber';
+const String EMAIL = 'email';
+const String FIRST_NAME = 'firstName';
+const String LAST_NAME = 'lastName';
 
 
 const String STR_MESSAGES = 'messages';

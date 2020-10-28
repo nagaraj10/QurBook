@@ -82,7 +82,7 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Widget docIcons(Past doc, BuildContext context, Function refresh) {
+  Widget docIcons(bool isUpcoming,Past doc, BuildContext context, Function refresh) {
     List<String> recordIds = new List();
     List<String> notesId = new List();
     List<String> voiceIds = new List();
@@ -134,7 +134,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_notes, () async {
-          if (notesCount != '') {
+          if (notesCount != '' && isUpcoming) {
             await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => MyRecords(
                 categoryPosition: getCategoryPosition(Constants.STR_NOTES),
@@ -153,7 +153,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.STR_VOICE_NOTES, () async {
-          if (voiceNotesCount != '') {
+          if (voiceNotesCount != '' && isUpcoming) {
             await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => MyRecords(
                   categoryPosition:
@@ -173,7 +173,7 @@ class AppointmentsCommonWidget {
             Constants.Appointments_recordsImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records, () async {
-          if (rxCount != null) {
+          if (rxCount != null &&isUpcoming) {
             await Navigator.of(context)
                 .push(MaterialPageRoute(
               builder: (context) => MyRecords(
