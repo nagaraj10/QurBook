@@ -161,7 +161,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                       /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                           ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                           : */
-                      Constants.BASE_URL +
+                      /*Constants.BASE_URL +*/
                           mediaMetaInfoObj.metadata.healthRecordCategory.logo,
                       height: 25,
                       width: 25,

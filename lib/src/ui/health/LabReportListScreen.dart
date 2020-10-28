@@ -25,7 +25,7 @@ class LabReportListScreen extends StatefulWidget {
   final Function(String, String) getDataForParticularLabel;
   final Function(String, bool) mediaSelected;
   final Function(String, List<HealthRecordCollection>, bool)
-  healthRecordSelected;
+      healthRecordSelected;
   final bool allowSelect;
   List<String> mediaMeta;
   final bool isNotesSelect;
@@ -44,8 +44,9 @@ class LabReportListScreen extends StatefulWidget {
       this.mediaMeta,
       this.isNotesSelect,
       this.isAudioSelect,
-      this.showDetails,this.allowAttach,
-  this.healthRecordSelected);
+      this.showDetails,
+      this.allowAttach,
+      this.healthRecordSelected);
 
   @override
   _LabReportListScreenState createState() => _LabReportListScreenState();
