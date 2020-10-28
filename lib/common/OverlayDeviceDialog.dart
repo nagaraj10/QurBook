@@ -114,7 +114,8 @@ class OverlayDeviceDialog extends ModalRoute<void> {
                 width: 25,
                 height: 25,
                 child: CachedNetworkImage(
-                  imageUrl: Constants.BASE_URL + mediaDataForDevice[i].imageUrl,
+                  imageUrl: /*Constants.BASE_URL +*/ mediaDataForDevice[i]
+                      .imageUrl,
                   color: Colors.white70,
                   placeholder: (context, url) =>
                       new CircularProgressIndicator(),
