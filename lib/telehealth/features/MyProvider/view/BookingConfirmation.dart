@@ -613,10 +613,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                 child: TextWidget(
                     text: 'Pay INR ' +
                         commonWidgets.getMoneyWithForamt(widget.isFollowUp
-                            ? widget.followUpFee != null
-                                ? widget.followUpFee
-                                : getFees(
-                                    widget.healthOrganizationResult[widget.i])
+                            ? getFollowUpFee()
                             : getFees(
                                 widget.healthOrganizationResult[widget.i])),
                     fontsize: 22.0,
@@ -669,6 +666,25 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         ),
       ),
     );
+  }
+
+  String getFollowUpFee() {
+    if (widget.followUpFee != null) {
+      if (widget.doctorsData?.plannedFollowupDate == null) {
+        return widget.followUpFee;
+      } else {
+        if (widget.selectedDate
+            .difference(DateTime
+            .parse(widget.doctorsData.plannedFollowupDate))
+            .inDays <= 0) {
+          return  widget.followUpFee;
+        } else {
+         return getFees(widget.healthOrganizationResult[widget.i]);
+        }
+      }
+    } else {
+      return getFees(widget.healthOrganizationResult[widget.i]);
+    }
   }
 
   _displayDialog(BuildContext context) async {
@@ -750,7 +766,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                                     healthRecords.length > 0)
                                                 ? true
                                                 : false,
-                                            widget.isFollowUp,
+                                            isFollowUp(),
                                             (healthRecords != null &&
                                                     healthRecords.length > 0)
                                                 ? healthRecords
@@ -775,6 +791,25 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             ),
           );
         });
+  }
+
+  bool isFollowUp(){
+    if (widget.followUpFee != null && widget.isFollowUp==true) {
+      if (widget.doctorsData?.plannedFollowupDate == null) {
+        return true;
+      } else {
+        if (widget.selectedDate
+            .difference(DateTime
+            .parse(widget.doctorsData.plannedFollowupDate))
+            .inDays <= 0) {
+          return  true;
+        } else {
+          return false;
+        }
+      }
+    } else {
+      return false;
+    }
   }
 
   Future<CreateAppointmentModel> bookAppointmentCall(
