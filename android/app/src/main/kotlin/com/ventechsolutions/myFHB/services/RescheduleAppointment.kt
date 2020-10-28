@@ -17,18 +17,21 @@ class RescheduleAppointment:BroadcastReceiver() {
     override fun onReceive(p0: Context?, p1: Intent?) {
         val notificationId = p1?.getIntExtra(p0?.getString(R.string.nsid), 0)
         val value = p1?.getStringExtra(Intent.EXTRA_TEXT)
-        val docId = p1?.getStringExtra(Constants.PROP_DOC_KEY)
+        val docId = p1?.getStringExtra(Constants.PROP_docId)
+        val docSessionId = p1?.getStringExtra(Constants.PROP_docSessionId)
+        val healthOrgId = p1?.getStringExtra(Constants.PROP_healthOrgId)
+        val bookingId = p1?.getStringExtra(Constants.PROP_BookingId)
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
-//        MyApp.isMissedNSShown=false
-//        MyApp().updateStatus(true)
-//        MyApp.recordId = ""
         val pm: PackageManager = p0.packageManager
         val launchIntent = pm.getLaunchIntentForPackage(p0.packageName)
         launchIntent?.action = Intent.ACTION_SEND
         launchIntent?.type=Constants.TXT_PLAIN
         launchIntent?.putExtra(Intent.EXTRA_TEXT,value)
-        launchIntent?.putExtra(Constants.PROP_DOC_KEY,docId)
+        launchIntent?.putExtra(Constants.PROP_docId,docId)
+        launchIntent?.putExtra(Constants.PROP_docSessionId,docSessionId)
+        launchIntent?.putExtra(Constants.PROP_healthOrgId,healthOrgId)
+        launchIntent?.putExtra(Constants.PROP_BookingId,bookingId)
         p0.startActivity(launchIntent)
     }
 }

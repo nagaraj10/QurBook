@@ -128,13 +128,28 @@ class _SuperMayaState extends State<SuperMaya> {
                                   ],
                                 ),
                                 onPressed: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return ChatScreen();
-                                      },
-                                    ),
-                                  );
+                                  String sheela_lang =
+                                      PreferenceUtil.getStringValue(
+                                          Constants.SHEELA_LANG);
+                                  if (sheela_lang != null &&
+                                      sheela_lang != '') {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return ChatScreen(isSheelaAskForLang: false,langCode: sheela_lang,);
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return ChatScreen(isSheelaAskForLang: true,);
+                                        },
+                                      ),
+                                    );
+                                  }
+
                                   /* requestPermission(_micpermission)
                                       .then((status) {
                                     if (status == PermissionStatus.granted) {

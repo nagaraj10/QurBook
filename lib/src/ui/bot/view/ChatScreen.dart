@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/ui/bot/common/botutils.dart';
 import 'package:myfhb/src/ui/bot/widgets/chatdata.dart';
 import 'package:provider/provider.dart';
 import 'package:myfhb/src/model/bot/ConversationModel.dart';
@@ -14,7 +16,10 @@ import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class ChatScreen extends StatefulWidget {
-  List<Conversation> conversation;
+  //List<Conversation> conversation;
+  final bool isSheelaAskForLang;
+  final String langCode;
+  ChatScreen({@required this.isSheelaAskForLang,this.langCode});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -38,9 +43,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 2000), vsync: this, value: 0.1);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
-    getMyViewModel()
-      ..clearMyConversation()
-      ..startMayaAutomatically();
+    getMyViewModel().clearMyConversation();
+    widget.isSheelaAskForLang 
+    ? getMyViewModel().askUserForLanguage() 
+    : getMyViewModel().startMayaAutomatically();
   }
 
   @override
@@ -51,7 +57,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   stopTTSEngine() async {
     await variable.tts_platform.invokeMethod(variable.strtts,
-        {parameters.strMessage: "", parameters.strIsClose: true});
+        {parameters.strMessage: "", parameters.strIsClose: true,parameters.strLanguage:Utils.getCurrentLanCode()});
   }
 
   dynamic getMyViewModel() {
@@ -86,6 +92,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         ),
         body: Consumer<ChatScreenViewModel>(
           builder: (contxt, model, child) {
+            isLoading = model.isLoading;
             return ChatData(conversations: model.getMyConversations);
           },
         ),

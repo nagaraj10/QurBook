@@ -31,7 +31,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     val CHANNEL_CANCEL_APP = "cha_cancel_app"
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        //Log.d(TAG, "Token: $token")
+        Log.d(TAG, "Token: $token")
     }
 
 
@@ -257,15 +257,18 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val cancelAppointmentIntent = Intent(applicationContext,CancelAppointment::class.java)
         cancelAppointmentIntent.putExtra(getString(R.string.nsid), NS_ID)
         cancelAppointmentIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_CANCEL_APPS)
-        Log.d(TAG, "createNotificationCancelAppointment: meeting id ${data[getString(R.string.meetid)]}")
-        cancelAppointmentIntent.putExtra(Constants.PROP_CANCEL_KEY, MEETING_ID)
+        cancelAppointmentIntent.putExtra(Constants.PROP_BookingId, data[Constants.PROP_BookingId])
+        cancelAppointmentIntent.putExtra(Constants.PROP_PlannedStartTime, data[Constants.PROP_PlannedStartTime])
         val cancelAppointmentPendingIntent = PendingIntent.getBroadcast(applicationContext, 0, cancelAppointmentIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
 
         val rescheduleIntent = Intent(applicationContext, RescheduleAppointment::class.java)
         rescheduleIntent.putExtra(getString(R.string.nsid), NS_ID)
         rescheduleIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_RESCHEDULE)
-        rescheduleIntent.putExtra(Constants.PROP_DOC_KEY, DOC_ID)
+        rescheduleIntent.putExtra(Constants.PROP_docSessionId, data[Constants.PROP_docSessionId])
+        rescheduleIntent.putExtra(Constants.PROP_BookingId, data[Constants.PROP_BookingId])
+        rescheduleIntent.putExtra(Constants.PROP_healthOrgId, data[Constants.PROP_healthOrgId])
+        rescheduleIntent.putExtra(Constants.PROP_docId, data[Constants.PROP_docId])
         val reschedulePendingIntent = PendingIntent.getBroadcast(applicationContext, 0, rescheduleIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
 

@@ -356,3 +356,5 @@ const String STR_NOT_VERIFIED = 'Not Verified';
 const String STR_SUCCESS = 'success';
 const String STR_FAILED = 'failed';
 const String STR_DONE = 'Done';
+
+const String SHEELA_LANG = 'sheela_lang';

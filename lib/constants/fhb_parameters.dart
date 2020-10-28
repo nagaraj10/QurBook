@@ -93,6 +93,9 @@ const String strSessionId = 'sessionId';
 const String strReceiptId = 'recipient_id';
 const String strEndOfConv = 'endOfConv';
 const String strSpeechImageURL = 'imageURL';
+const String strLanguage = 'lang';
+const String strSearchUrl = 'searchURL'; 
+const String strButtons = 'buttons';
 
 //for category
 const String strCategoryName = 'categoryName';
