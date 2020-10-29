@@ -35,38 +35,41 @@ class MyProfileResult {
   List<UserContactCollection3> userContactCollection3;
   List<UserRoleCollection3> userRoleCollection3;
   List<UserRelationshipCollection> userRelationshipCollection;
+  AdditionalInfo additionalInfo;
 
-  MyProfileResult(
-      {this.id,
-        this.name,
-        this.userName,
-        this.firstName,
-        this.middleName,
-        this.lastName,
-        this.gender,
-        this.dateOfBirth,
-        this.bloodGroup,
-        this.countryCode,
-        this.profilePicThumbnailUrl,
-        this.isTempUser,
-        this.isVirtualUser,
-        this.isMigrated,
-        this.isClaimed,
-        this.isIeUser,
-        this.isEmailVerified,
-        this.isCpUser,
-        this.communicationPreferences,
-        this.medicalPreferences,
-        this.isSignedIn,
-        this.isActive,
-        // this.createdBy,
-        // this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.userAddressCollection3,
-        this.userContactCollection3,
-        this.userRoleCollection3,
-        this.userRelationshipCollection});
+  MyProfileResult({
+    this.id,
+    this.name,
+    this.userName,
+    this.firstName,
+    this.middleName,
+    this.lastName,
+    this.gender,
+    this.dateOfBirth,
+    this.bloodGroup,
+    this.countryCode,
+    this.profilePicThumbnailUrl,
+    this.isTempUser,
+    this.isVirtualUser,
+    this.isMigrated,
+    this.isClaimed,
+    this.isIeUser,
+    this.isEmailVerified,
+    this.isCpUser,
+    this.communicationPreferences,
+    this.medicalPreferences,
+    this.isSignedIn,
+    this.isActive,
+    // this.createdBy,
+    // this.createdOn,
+    this.lastModifiedBy,
+    this.lastModifiedOn,
+    this.userAddressCollection3,
+    this.userContactCollection3,
+    this.userRoleCollection3,
+    this.userRelationshipCollection,
+    this.additionalInfo,
+  });
 
   MyProfileResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -116,9 +119,14 @@ class MyProfileResult {
     if (json['userRelationshipCollection'] != null) {
       userRelationshipCollection = new List<UserRelationshipCollection>();
       json['userRelationshipCollection'].forEach((v) {
-        userRelationshipCollection.add(new UserRelationshipCollection.fromJson(v));
+        userRelationshipCollection
+            .add(new UserRelationshipCollection.fromJson(v));
       });
     }
+
+    additionalInfo = json['additionalInfo'] != null
+        ? new AdditionalInfo.fromJson(json['additionalInfo'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -165,6 +173,28 @@ class MyProfileResult {
       data['userRelationshipCollection'] =
           this.userRelationshipCollection.map((v) => v.toJson()).toList();
     }
+    if (this.additionalInfo != null) {
+      data['additionalInfo'] = this.additionalInfo.toJson();
+    }
+    return data;
+  }
+}
+
+class AdditionalInfo {
+  String height;
+  String weight;
+
+  AdditionalInfo({this.height, this.weight});
+
+  AdditionalInfo.fromJson(Map<String, dynamic> json) {
+    height = json['height'];
+    weight = json['weight'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['height'] = this.height;
+    data['weight'] = this.weight;
     return data;
   }
 }
@@ -181,13 +211,13 @@ class UserContactCollection3 {
 
   UserContactCollection3(
       {this.id,
-        this.phoneNumber,
-        this.isPrimary,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.email,
-        this.phoneNumberType});
+      this.phoneNumber,
+      this.isPrimary,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.email,
+      this.phoneNumberType});
 
   UserContactCollection3.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -262,14 +292,14 @@ class Role {
 
   Role(
       {this.id,
-        this.name,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.roleCode,
-        this.description,
-        this.isSystemRole,
-        this.isEnabled});
+      this.name,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.roleCode,
+      this.description,
+      this.isSystemRole,
+      this.isEnabled});
 
   Role.fromJson(Map<String, dynamic> json) {
     id = json['id'];

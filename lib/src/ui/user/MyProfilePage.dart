@@ -36,6 +36,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   var dob = TextEditingController();
 
+  var heightController = TextEditingController();
+  var weightController = TextEditingController();
+
   var firstName = TextEditingController();
   var middleName = TextEditingController();
   var lastName = TextEditingController();
@@ -158,6 +161,15 @@ class _MyProfilePageState extends State<MyProfilePage> {
         if (data.userContactCollection3.length > 0) {
           email.text = data.userContactCollection3[0].email;
         }
+      }
+
+      if (data.additionalInfo != null) {
+        heightController.text = data.additionalInfo.height != null
+            ? data.additionalInfo.height
+            : '';
+        weightController.text = data.additionalInfo.weight != null
+            ? data.additionalInfo.weight
+            : '';
       }
       if (data.gender != null) {
         gender.text = toBeginningOfSentenceCase(data.gender.toLowerCase());
@@ -329,6 +341,36 @@ class _MyProfilePageState extends State<MyProfilePage> {
                               hintText: CommonConstants.STR_RHTYPE,
                               hintStyle: TextStyle(fontSize: 12),
                               labelText: CommonConstants.STR_RHTYPE),
+                        ),
+                      )),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2 - 40,
+                        child: TextField(
+                          controller: heightController,
+                          enabled: false,
+                          decoration: InputDecoration(
+                              hintText: CommonConstants.height,
+                              hintStyle: TextStyle(fontSize: 12),
+                              labelText: CommonConstants.height),
+                        ),
+                      )),
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2 - 40,
+                        child: TextField(
+                          controller: weightController,
+                          enabled: false,
+                          decoration: InputDecoration(
+                              hintText: CommonConstants.weight,
+                              hintStyle: TextStyle(fontSize: 12),
+                              labelText: CommonConstants.weight),
                         ),
                       )),
                 ],

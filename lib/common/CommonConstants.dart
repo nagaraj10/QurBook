@@ -153,6 +153,9 @@ class CommonConstants {
   static String date_of_birth = "Date of Birth";
   static String user_linking = 'user_linking';
 
+  static String height = 'Height(cm)';
+  static String weight = 'Weight(Kg)';
+
   static String add = 'Add';
   static String save = 'Save';
   static String update = 'Update';
@@ -198,6 +201,8 @@ class CommonConstants {
   static String middleNameWithStar = "MiddleName*";
   static String lastNameWithStar = "LastName*";
   static String exprityDate = "Expiry Date*";
+  static String heightName = "Height(Cm)";
+  static String weightName = "Weight(Kg)";
 
   //===========================================//
 

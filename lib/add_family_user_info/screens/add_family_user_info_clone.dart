@@ -79,6 +79,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   final dateOfBirthController = TextEditingController(text: '');
   FocusNode dateOfBirthFocus = FocusNode();
 
+  final heightController = TextEditingController(text: '');
+  FocusNode heightFocus = FocusNode();
+
+  final weightController = TextEditingController(text: '');
+  FocusNode weightFocus = FocusNode();
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
   AddFamilyUserInfoRepository _addFamilyUserInfoRepository;
 
@@ -212,28 +217,32 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     firstNameFocus,
                     CommonConstants.mobile_numberWithStar,
                     CommonConstants.mobile_number,
-                    false),
+                    false,
+                    isheightOrWeight: false),
                 _showCommonEditText(
                     firstNameController,
                     firstNameFocus,
                     middleNameFocus,
                     CommonConstants.firstNameWithStar,
                     CommonConstants.firstName,
-                    true),
+                    true,
+                    isheightOrWeight: false),
                 _showCommonEditText(
                     middleNameController,
                     middleNameFocus,
                     lastNameFocus,
                     CommonConstants.middleName,
                     CommonConstants.middleName,
-                    true),
+                    true,
+                    isheightOrWeight: false),
                 _showCommonEditText(
                     lastNameController,
                     lastNameFocus,
                     relationShipFocus,
                     CommonConstants.lastNameWithStar,
                     CommonConstants.lastName,
-                    true),
+                    true,
+                    isheightOrWeight: false),
                 widget.arguments.fromClass == CommonConstants.my_family
                     ? (relationShipResponseList != null &&
                             relationShipResponseList.length > 0)
@@ -261,7 +270,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             widget.arguments.fromClass ==
                                 CommonConstants.add_family)
                         ? true
-                        : false),
+                        : false,
+                    isheightOrWeight: false),
                 Row(
                   children: <Widget>[Expanded(child: getGenderDetails())],
                 ),
@@ -269,6 +279,28 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   children: <Widget>[
                     Expanded(child: getBloodGroupDetails()),
                     Expanded(child: getBloodRangeDetails())
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: _showCommonEditText(
+                            heightController,
+                            emailFocus,
+                            heightFocus,
+                            CommonConstants.heightName,
+                            CommonConstants.heightName,
+                            true,
+                            isheightOrWeight: true)),
+                    Expanded(
+                        child: _showCommonEditText(
+                            weightController,
+                            heightFocus,
+                            middleNameFocus,
+                            CommonConstants.weightName,
+                            CommonConstants.weightName,
+                            true,
+                            isheightOrWeight: true))
                   ],
                 ),
                 _showDateOfBirthTextField(),
@@ -397,7 +429,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       FocusNode nextFocusNode,
       String labelText,
       String hintText,
-      bool isEnabled) {
+      bool isEnabled,
+      {bool isheightOrWeight}) {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
@@ -406,7 +439,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           controller: textEditingController,
           maxLines: 1,
           enableInteractiveSelection: false,
-          keyboardType: TextInputType.text,
+          keyboardType:
+              isheightOrWeight ? TextInputType.number : TextInputType.text,
           focusNode: focusNode,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
@@ -976,6 +1010,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 ? widget.arguments.myProfileResult.lastName
                 : '';
       }
+
+      if (widget.arguments.myProfileResult.additionalInfo != null) {
+        heightController.text =
+            widget.arguments.myProfileResult.additionalInfo.height != null
+                ? widget.arguments.myProfileResult.additionalInfo.height
+                : '';
+        weightController.text =
+            widget.arguments.myProfileResult.additionalInfo.weight != null
+                ? widget.arguments.myProfileResult.additionalInfo.weight
+                : '';
+      }
       if (commonUtil
           .checkIfStringisNull(widget.arguments.myProfileResult.bloodGroup)) {
         currentselectedBloodGroup =
@@ -990,8 +1035,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       if (widget.arguments.myProfileResult.gender != null) {
         selectedGender = widget.arguments.myProfileResult.gender;
       }
-    }
-    else if (widget.arguments.fromClass == CommonConstants.my_family) {
+    } else if (widget.arguments.fromClass == CommonConstants.my_family) {
       //* my-family member details update sections
       addFamilyUserInfoBloc.userId = widget
           .arguments.sharedbyme.id; //widget.arguments.addFamilyUserInfo.id;
@@ -1099,8 +1143,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               widget.arguments.sharedbyme.child.dateOfBirth);
         }
       }
-    }
-    else {
+    } else {
       //* primary user adding section
       addFamilyUserInfoBloc.userId =
           widget.arguments.addFamilyUserInfo?.childInfo?.id;
@@ -1199,6 +1242,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     profileResult.lastModifiedBy = null;
     profileResult.lastModifiedOn = null;
     profileResult.profilePicThumbnailUrl = '';
+
+    AdditionalInfo additionalInfo = new AdditionalInfo();
+    additionalInfo.height = heightController.text;
+    additionalInfo.weight = weightController.text;
+
+    profileResult.additionalInfo = additionalInfo;
 
     if (currentselectedBloodGroup != null &&
         currentselectedBloodGroupRange != null) {
@@ -1328,13 +1377,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
               if (widget.arguments.myProfileResult.firstName != null) {
                 String firstName =
-                widget.arguments.myProfileResult.firstName != null
-                    ? widget.arguments.myProfileResult.firstName
-                    : '';
+                    widget.arguments.myProfileResult.firstName != null
+                        ? widget.arguments.myProfileResult.firstName
+                        : '';
                 String lastName =
-                widget.arguments.myProfileResult.lastName != null
-                    ? widget.arguments.myProfileResult.lastName
-                    : '';
+                    widget.arguments.myProfileResult.lastName != null
+                        ? widget.arguments.myProfileResult.lastName
+                        : '';
 
                 PreferenceUtil.saveString(Constants.FIRST_NAME, firstName);
                 PreferenceUtil.saveString(Constants.LAST_NAME, lastName);
