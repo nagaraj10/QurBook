@@ -143,7 +143,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                 onChanged: widget.onChanged,
                               ),
                               SizedBoxWidget(height: 15.0),
-                              commonWidget.docIcons(true,widget.doc, context, () {
+                              commonWidget.docIcons(true, widget.doc, context,
+                                  () {
+                                widget.onChanged(Constants.callBack);
                                 setState(() {});
                               })
                             ],
@@ -385,7 +387,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
           selectedMedias: paymentID,
           isFromChat: false,
           showDetails: true,
-          isAssociateOrChat: true),
+          isAssociateOrChat: false),
     ));
   }
 

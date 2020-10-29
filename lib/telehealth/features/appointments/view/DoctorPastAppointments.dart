@@ -7,6 +7,8 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
@@ -25,7 +27,7 @@ class DoctorPastAppointments extends StatefulWidget {
   ValueChanged<String> onChanged;
   Function(String) closePage;
 
-  DoctorPastAppointments({this.doc, this.onChanged,this.closePage});
+  DoctorPastAppointments({this.doc, this.onChanged, this.closePage});
 
   @override
   DoctorPastAppointmentState createState() => DoctorPastAppointmentState();
@@ -39,6 +41,8 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   AppointmentsListViewModel appointmentsViewModel;
   SharedPreferences prefs;
   ChatViewModel chatViewModel = ChatViewModel();
+  List<CategoryResult> filteredCategoryData = new List();
+  CategoryListBlock _categoryListBlock = new CategoryListBlock();
 
   @override
   void initState() {
@@ -128,7 +132,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                                     ''),
                             SizedBoxWidget(height: 5.0),
                             SizedBoxWidget(height: 15.0),
-                            commonWidget.docIcons(false,doc, context, () {})
+                            commonWidget.docIcons(false, doc, context, () {})
                           ],
                         ),
                       ],
@@ -250,9 +254,9 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
           builder: (context) => ResheduleMain(
                 doc: doc,
                 isReshedule: isReshedule,
-            closePage: (value){
+                closePage: (value) {
                   widget.closePage(value);
-            },
+                },
               )),
     );
   }
@@ -275,18 +279,75 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
         paymentID.add(healthRecord.bills[i]);
       }
     }
-//    print(paymentID.length);
+    int position = getCategoryPosition(Constants.STR_BILLS);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-          categoryPosition: new AppointmentsCommonWidget()
-              .getCategoryPosition(Constants.STR_BILLS),
+          categoryPosition: position,
           allowSelect: true,
           isAudioSelect: false,
           isNotesSelect: false,
           selectedMedias: paymentID,
           isFromChat: false,
           showDetails: true,
-          isAssociateOrChat: true),
+          isAssociateOrChat: false),
     ));
+  }
+
+  getCategoryPosition(String categoryName) {
+    int categoryPosition;
+    switch (categoryName) {
+      case Constants.STR_NOTES:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+
+      case Constants.STR_PRESCRIPTION:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+
+      case Constants.STR_VOICERECORDS:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+      case Constants.STR_BILLS:
+        categoryPosition = pickPosition(categoryName);
+        return categoryPosition;
+        break;
+      default:
+        categoryPosition = 0;
+        return categoryPosition;
+
+        break;
+    }
+  }
+
+  int pickPosition(String categoryName) {
+    int position = 0;
+    List<CategoryResult> categoryDataList = getCategoryList();
+    for (int i = 0; i < categoryDataList.length; i++) {
+      if (categoryName == categoryDataList[i].categoryName) {
+        print(categoryName + ' ****' + categoryDataList[i].categoryName);
+        position = i;
+      }
+    }
+    if (categoryName == Constants.STR_PRESCRIPTION) {
+      return position;
+    } else {
+      return position;
+    }
+  }
+
+  List<CategoryResult> getCategoryList() {
+    if (filteredCategoryData == null || filteredCategoryData.length == 0) {
+      _categoryListBlock.getCategoryLists().then((value) {
+        filteredCategoryData = new CommonUtil().fliterCategories(value.result);
+
+        //filteredCategoryData.add(categoryDataObjClone);
+        return filteredCategoryData;
+      });
+    } else {
+      return filteredCategoryData;
+    }
   }
 }
