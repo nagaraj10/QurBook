@@ -1,6 +1,6 @@
 import 'package:myfhb/telehealth/features/Notifications/model/content.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/messageContent.dart';
-import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/payload.dart';
+import 'package:myfhb/telehealth/features/Notifications/model/payload.dart';
 
 class MessageDetails {
   Content content;

@@ -6,7 +6,7 @@ class NotificationResult {
   String id;
   MessageDetails messageDetails;
   String transportMedium;
-  String responseText;
+  var responseText;
   String deliveredDateTime;
   String createdOn;
   var recipientUserDetails;

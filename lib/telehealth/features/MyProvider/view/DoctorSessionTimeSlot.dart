@@ -37,7 +37,9 @@ class DoctorSessionTimeSlot extends StatefulWidget {
       this.healthOrganizationId,
       this.healthOrganizationResult,
       this.doctorListPos,
-      this.closePage,this.isValidAddress,this.isValidPhoneMail});
+      this.closePage,
+      this.isValidAddress,
+      this.isValidPhoneMail});
 
   @override
   State<StatefulWidget> createState() {
@@ -55,6 +57,28 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   @override
   void initState() {
     super.initState();
+    getSelectedValue();
+  }
+
+  getSelectedValue() {
+    DateTime sValue;
+    if (widget.doctorsData != null) {
+      if (widget.doctorsData.plannedFollowupDate != null) {
+        int scrollDays = DateTime.parse(widget.doctorsData.plannedFollowupDate)
+            .difference(DateTime.now())
+            .inDays;
+        if (scrollDays >= 0) {
+          sValue = DateTime.parse(widget.doctorsData.plannedFollowupDate);
+        } else {
+          sValue = DateTime.now();
+        }
+      } else {
+        sValue = DateTime.now();
+      }
+      setState(() {
+        _selectedValue = sValue;
+      });
+    }
   }
 
   @override
@@ -81,6 +105,14 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                 _selectedValue = date;
               });
             },
+            isScrollToDate: widget.doctorsData != null
+                ? widget.doctorsData.plannedFollowupDate != null ? true : false
+                : false,
+            scrollToDate: widget.doctorsData != null
+                ? widget.doctorsData.plannedFollowupDate != null
+                    ? widget.doctorsData.plannedFollowupDate
+                    : DateTime.now().toString()
+                : DateTime.now().toString(),
           ),
         ),
         getTimeSlots(),
@@ -91,7 +123,14 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   DateTime initialDate() {
     if (widget.doctorsData != null) {
       if (widget.doctorsData.plannedFollowupDate != null) {
-        return DateTime.parse(widget.doctorsData.plannedFollowupDate);
+        int scrollDays = DateTime.parse(widget.doctorsData.plannedFollowupDate)
+            .difference(DateTime.now())
+            .inDays;
+        if (scrollDays >= 0) {
+          return DateTime.parse(widget.doctorsData.plannedFollowupDate);
+        } else {
+          return DateTime.now();
+        }
       } else {
         return DateTime.now();
       }
