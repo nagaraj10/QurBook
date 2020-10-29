@@ -41,8 +41,6 @@ class _NotificationScreen extends State<NotificationScreen> {
         colors: Colors.white,
         size: 20,
         onTap: () {
-          Provider.of<FetchNotificationViewModel>(context, listen: false)
-            ..clearNotifications();
           Navigator.pop(context);
         },
       ),
@@ -68,7 +66,7 @@ class _NotificationScreen extends State<NotificationScreen> {
         );
       case LoadingStatus.completed:
         return (notificationData.notifications != null)
-            ? notificationData.notifications.result.length != 0
+            ? notificationData.notifications?.result != null
                 ? ListView.builder(
                     itemCount: notificationData.notifications.result.length,
                     shrinkWrap: true,

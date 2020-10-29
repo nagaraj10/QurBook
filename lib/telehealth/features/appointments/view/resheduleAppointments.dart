@@ -156,20 +156,14 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                           Text(
                             (doctors?.doctorProfessionalDetailCollection !=
                                         null &&
-                                    doctors
-                                            .doctorProfessionalDetailCollection
+                                    doctors.doctorProfessionalDetailCollection
                                             .length >
                                         0)
-                                ? doctors
-                                            ?.doctorProfessionalDetailCollection[
-                                                0]
+                                ? doctors?.doctorProfessionalDetailCollection[0]
                                             ?.specialty !=
                                         null
-                                    ? doctors
-                                                ?.doctorProfessionalDetailCollection[
-                                                    0]
-                                                ?.specialty
-                                                ?.name !=
+                                    ? doctors?.doctorProfessionalDetailCollection[0]
+                                                ?.specialty?.name !=
                                             null
                                         ? '${doctors.doctorProfessionalDetailCollection[0].specialty.name}'
                                         : ''

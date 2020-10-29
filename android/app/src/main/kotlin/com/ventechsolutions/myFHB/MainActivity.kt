@@ -42,6 +42,9 @@ class MainActivity : FlutterActivity() {
     private var sharedValue: String? = null
     private var username: String? = null
     private var bookingId: String? = null
+    private var appDate: String? = null
+    private var docSessionId: String? = null
+    private var healthOrgId: String? = null
     private var docId: String? = null
     private var docPic: String? = null
     private lateinit var mEventChannel:EventSink
@@ -65,6 +68,7 @@ class MainActivity : FlutterActivity() {
 
     private val smsBroadcastReceiver by lazy { SMSBroadcastReceiver() }
     private val SMS_CONSENT_REQUEST = 2  // Set to an unused request code
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,7 +99,7 @@ class MainActivity : FlutterActivity() {
 
         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
             if (status != TextToSpeech.ERROR) {
-                tts!!.language = Locale(Constants.EN_US)
+                tts!!.language = Locale(Constants.EN_US) //todo this need to be comment
             }
 
         })
@@ -202,8 +206,10 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VOICE_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_VOICE_ASST) {
+                //val lang_code = call.argument<String>(Constants.PROP_LANG_CODE) //todo uncomment this line
                 _result=result
-                speakWithVoiceAssistant()
+                //speakWithVoiceAssistant(lang_code!!) //todo uncomment this line
+                speakWithVoiceAssistant()//todo line need to remove
             } else {
                 result.notImplemented()
             }
@@ -214,6 +220,8 @@ class MainActivity : FlutterActivity() {
             if(call.method==Constants.FUN_TEXT2SPEECH){
                 val msg = call.argument<String>(Constants.PROP_MSG)
                 val iscls = call.argument<Boolean>(Constants.PROP_IS_CLOSE)
+                //val langCode = call.argument<String>(Constants.PROP_LANG) //todo this has to be uncomment
+                //tts!!.language = Locale(langCode!!) //todo this has to be uncomment
                 textToSpeech(msg!!,iscls!!)
             }else{
                 result.notImplemented()
@@ -235,17 +243,20 @@ class MainActivity : FlutterActivity() {
     fun handleSendText(intent: Intent) {
         sharedValue = intent.getStringExtra(Intent.EXTRA_TEXT)
         username = intent.getStringExtra(getString(R.string.username))
-        docId = intent.getStringExtra(getString(R.string.docId))
+        docId = intent.getStringExtra(Constants.PROP_docId)
         docPic= intent.getStringExtra(getString(R.string.docPic))
-        bookingId= intent.getStringExtra(Constants.PROP_CANCEL_KEY)
+        bookingId= intent.getStringExtra(Constants.PROP_BookingId)
+        appDate= intent.getStringExtra(Constants.PROP_PlannedStartTime)
+        docSessionId= intent.getStringExtra(Constants.PROP_docSessionId)
+        healthOrgId= intent.getStringExtra(Constants.PROP_healthOrgId)
         if(sharedValue!=null && username !=null && docId!=null && docPic !=null){
             sharedValue="$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}"
         }else if(sharedValue==Constants.PROP_RESCHEDULE){
             //todo redirect to telehealth page
-            sharedValue="${Constants.PROP_RESCHEDULE}&${docId!!}"
+            sharedValue="${Constants.PROP_RESCHEDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}"
         }else if(sharedValue==Constants.PROP_CANCEL_APPS){
             //todo redirect to telehealth page
-            sharedValue="${Constants.PROP_CANCEL_APPS}&${bookingId!!}"
+            sharedValue="${Constants.PROP_CANCEL_APPS}&${bookingId!!}&${appDate}"
         }else{
             sharedValue=Constants.PROP_ACK
         }
@@ -270,13 +281,39 @@ class MainActivity : FlutterActivity() {
         stopService(serviceIntent)
     }
 
+    //todo this method need to uncomment
+    /*private fun speakWithVoiceAssistant(langCode:String) {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) //todo this has to be comment
+        GetSrcTargetLanguages()
+        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
+        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+        try {
+            startActivityForResult(intent, REQ_CODE)
+        } catch (a: ActivityNotFoundException) {
+            // Toast.makeText(applicationContext,
+            //         "Sorry your device not supported",
+            //         Toast.LENGTH_SHORT).show()
+            //CalledFromListen = false
+        }
+        *//* tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
+             if (status != TextToSpeech.ERROR) {
+                 tts!!.language = Locale(langDest)
+             }
+         })*//*
+    }*/
+
+    //todo this method need to remove
     private fun speakWithVoiceAssistant() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) //todo this has to be comment
         GetSrcTargetLanguages()
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Constants.EN_US)
+        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
         try {
