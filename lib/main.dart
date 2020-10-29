@@ -24,6 +24,8 @@ import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart' as doc;
+import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/services/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
@@ -35,6 +37,8 @@ import 'common/CommonUtil.dart';
 import 'my_family/viewmodel/my_family_view_model.dart';
 import 'src/ui/SplashScreen.dart';
 import 'src/ui/connectivity_bloc.dart';
+import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
+import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -219,26 +223,32 @@ class _MyFHBState extends State<MyFHB> {
           arguments: HomeScreenArguments(selectedIndex: 0),
         ));
       } else if (passedValArr[0] == 'reschedule') {
-        Get.to(TelehealthProviders(
-          arguments: HomeScreenArguments(selectedIndex: 1),
-        ));
-        // History doc = History(
-        //   doctorId: '',
-        //   bookingId: '', //this shoould be booking id
-        // );
+        /* Get.to(TelehealthProviders(
+          arguments: HomeScreenArguments(
+            selectedIndex: 1,
+          doctorID: passedValArr[1] ?? '',
+          bookingId: passedValArr[2] ?? '',
+          doctorSessionId: passedValArr[3] ?? '',
+          healthOrganizationId: passedValArr[4] ?? ''
+          ),
+        )); */
 
-        // Get.to(
-        //   ResheduleMain(
-        //     doc: doc,
-        //     isReshedule: true,
-        //   ),
-        // );
+        Get.to(ResheduleMain(
+          isReshedule: true,
+          doc: Past( //! this is has to be correct
+            doctorSessionId: passedValArr[3],
+            bookingId: passedValArr[2],
+            doctor: doc.Doctor(id: passedValArr[1]),
+            healthOrganization: City(id: passedValArr[4])
+          ),
+        ));
       } else if (passedValArr[0] == 'cancel_appointment') {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
               isCancelDialogShouldShow: true,
-              bookingId: passedValArr[1] ?? ''),
+              bookingId: passedValArr[1] ?? '',
+              date:passedValArr[2] ?? ''),
         ));
       } else if (passedValArr[4] == 'call') {
         try {
@@ -333,11 +343,15 @@ class _MyFHBState extends State<MyFHB> {
         return SplashScreen(
           nsRoute: 'reschedule',
           doctorID: navRoute.split('&')[1],
+          bookingID: navRoute.split('&')[2],
+          doctorSessionId: navRoute.split('&')[3],
+          healthOrganizationId: navRoute.split('&')[4],
         );
       } else if (navRoute.split('&')[0] == 'cancel_appointment') {
         return SplashScreen(
           nsRoute: 'cancel_appointment',
           bookingID: navRoute.split('&')[1],
+          appointmentDate: navRoute.split('&')[2],
         );
       } else {
         return StartTheCall();

@@ -72,6 +72,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
     if (widget.arguments.isCancelDialogShouldShow != null) {
       _isCancelDialogShouldShown = widget.arguments.isCancelDialogShouldShow;
       _bookingId = widget.arguments.bookingId;
+      date = widget.arguments.date;
     }
 
     getAllValuesForBottom();

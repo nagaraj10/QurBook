@@ -10,6 +10,11 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart' as doc;
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
+
 
 import '../utils/PageNavigator.dart';
 
@@ -17,8 +22,17 @@ class SplashScreen extends StatefulWidget {
   final String nsRoute;
   final String bookingID;
   final String doctorID;
+  final String appointmentDate;
+  final String doctorSessionId;
+  final String healthOrganizationId;
 
-  SplashScreen({this.nsRoute, this.bookingID, this.doctorID});
+  SplashScreen(
+      {this.nsRoute,
+      this.bookingID,
+      this.doctorID,
+      this.appointmentDate,
+      this.doctorSessionId,
+      this.healthOrganizationId});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -51,8 +65,15 @@ class _SplashScreenState extends State<SplashScreen> {
         if (authToken != null) {
           if (deviceIfo) {
             if (widget.nsRoute == 'reschedule') {
-              Get.offAll(TelehealthProviders(
-                arguments: HomeScreenArguments(selectedIndex: 1),
+              Get.to(ResheduleMain(
+                isReshedule: true,
+                doc: Past(
+                    //! this is has to be correct
+                    doctorSessionId: widget.doctorSessionId,
+                    bookingId: widget.bookingID,
+                    doctor: doc.Doctor(id: widget.doctorID),
+                    healthOrganization: City(id: widget.healthOrganizationId)
+                    ),
               ));
             } else if (widget.nsRoute == 'cancel_appointment') {
               //cancel appointments route
@@ -60,7 +81,8 @@ class _SplashScreenState extends State<SplashScreen> {
                 arguments: HomeScreenArguments(
                     selectedIndex: 0,
                     isCancelDialogShouldShow: true,
-                    bookingId: widget.bookingID),
+                    bookingId: widget.bookingID,
+                    date: widget.appointmentDate),
               ));
             } else {
               PageNavigator.goToPermanent(context, router.rt_Dashboard);
