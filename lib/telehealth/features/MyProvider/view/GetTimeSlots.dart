@@ -9,14 +9,17 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as AppointmentConstant;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/model/resheduleAppointments/resheduleModel.dart';
+import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/resheduleAppointmentViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +37,7 @@ class GetTimeSlots extends StatelessWidget {
   Function(String) closePage;
   bool isAddressCheck;
   bool isPhoneMailCheck;
+  bool isFromNotification;
 
   GetTimeSlots(
       {this.dateSlotTimingsObj,
@@ -44,7 +48,10 @@ class GetTimeSlots extends StatelessWidget {
       this.doctorsData,
       this.healthOrganizationResult,
       this.doctorListPos,
-      this.closePage,this.isAddressCheck,this.isPhoneMailCheck});
+      this.closePage,
+      this.isAddressCheck,
+      this.isPhoneMailCheck,
+      this.isFromNotification});
 
   @override
   Widget build(BuildContext context) {
@@ -91,30 +98,23 @@ class GetTimeSlots extends StatelessWidget {
                       doctorsData.doctorSessionId);
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
-                   if (doctorsData == null) {
-                     //normal appointment
-                    if(isPhoneMailCheck){
-                      if (isAddressCheck) {
+                    if (doctorsData == null) {
+                      //normal appointment
+                      if (isPhoneMailCheck) {
+                        if (isAddressCheck) {
                           navigateToConfirmBook(context, rowPosition,
                               itemPosition, null, false, false);
+                        } else {
+                          toast.getToast(noAddress, Colors.red);
+                        }
+                      } else {
+                        toast.getToast(noPhoneEmail, Colors.red);
                       }
-                      else {
-                        toast.getToast(noAddress, Colors.red);
-                      }
+                    } else {
+                      //follow up appointment
+                      navigateToConfirmBook(context, rowPosition, itemPosition,
+                          doctorsData.doctorFollowUpFee, true, true);
                     }
-                    else{
-                      toast.getToast(noPhoneEmail, Colors.red);
-                    }
-                   } else {
-                     //follow up appointment
-                     navigateToConfirmBook(
-                         context,
-                         rowPosition,
-                         itemPosition,
-                         doctorsData.doctorFollowUpFee,
-                         true,
-                         true);
-                   }
                   } else {
                     toast.getToast(selectSlotsMsg, Colors.red);
                   }
@@ -161,7 +161,17 @@ class GetTimeSlots extends StatelessWidget {
     resheduleAppointment(
             context, appointments, slotNumber, resheduledDate, doctorSessionId)
         .then((value) {
-      Navigator.pop(context);
+      if (isFromNotification == true) {
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TelehealthProviders(
+                      arguments: HomeScreenArguments(selectedIndex: 0),
+                    )),
+            (Route<dynamic> route) => route.isFirst).then((value) {});
+      } else {
+        Navigator.pop(context);
+      }
       if (value == null) {
         toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
       } else if (value.isSuccess == true) {
@@ -190,5 +200,4 @@ class GetTimeSlots extends StatelessWidget {
         bookingIds, slotNumber.toString(), resheduledDate, doctorSessionId);
     return resheduleAppointment;
   }
-
 }

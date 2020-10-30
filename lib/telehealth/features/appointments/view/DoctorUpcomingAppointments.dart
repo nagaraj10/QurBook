@@ -219,16 +219,16 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                       Colors.black38,
                       Constants.Appointments_reshedule, () {
                     (widget.doc.status != null &&
-                        widget.doc.status.code == Constants.PATDNA)
+                            widget.doc.status.code == Constants.PATDNA)
                         ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)
                         : navigateToProviderScreen(widget.doc, true);
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
                       Colors.black38, Constants.Appointments_cancel, () {
-                        (widget.doc.status != null &&
+                    (widget.doc.status != null &&
                             widget.doc.status.code == Constants.PATDNA)
-                            ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)
+                        ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)
                         : _displayDialog(context, [widget.doc]);
                   }, null),
                   SizedBoxWidget(width: 15.0),
@@ -255,6 +255,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
           builder: (context) => ResheduleMain(
                 doc: doc,
                 isReshedule: isReshedule,
+                isFromNotification: false,
               )),
     ).then((value) => widget.onChanged(Constants.callBack));
   }

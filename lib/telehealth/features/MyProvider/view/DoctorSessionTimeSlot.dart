@@ -26,6 +26,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   Function(String) closePage;
   bool isValidAddress;
   bool isValidPhoneMail;
+  bool isFromNotification;
 
   DoctorSessionTimeSlot(
       {this.doctorId,
@@ -39,6 +40,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
       this.doctorListPos,
       this.closePage,
       this.isValidAddress,
+      this.isFromNotification,
       this.isValidPhoneMail});
 
   @override
@@ -181,6 +183,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                       closePage: (value) {
                         widget.closePage(value);
                       },
+                      isFromNotification: widget.isFromNotification,
                       isAddressCheck: widget.isValidAddress,
                       isPhoneMailCheck: widget.isValidPhoneMail,
                     ),

@@ -35,7 +35,6 @@ class _AppointmentsState extends State<Appointments> {
   @override
   void initState() {
     //commonWidget.getCategoryPosition(Constants.STR_NOTES);
-
     Provider.of<AppointmentsListViewModel>(context, listen: false)
         .fetchAppointments();
     super.initState();

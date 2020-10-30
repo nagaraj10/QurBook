@@ -252,6 +252,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
       context,
       MaterialPageRoute(
           builder: (context) => ResheduleMain(
+            isFromNotification: false,
                 doc: doc,
                 isReshedule: isReshedule,
                 closePage: (value) {

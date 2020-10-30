@@ -66,6 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
           if (deviceIfo) {
             if (widget.nsRoute == 'reschedule') {
               Get.to(ResheduleMain(
+                isFromNotification: true,
                 isReshedule: true,
                 doc: Past(
                     //! this is has to be correct

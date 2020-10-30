@@ -30,10 +30,12 @@ import 'package:myfhb/constants/fhb_constants.dart' as prefKey;
 
 class ResheduleAppointments extends StatefulWidget {
   Past doc;
+  bool isFromNotification;
   bool isReshedule;
   Function(String) closePage;
 
-  ResheduleAppointments({this.doc, this.isReshedule, this.closePage});
+  ResheduleAppointments(
+      {this.doc, this.isReshedule, this.closePage, this.isFromNotification});
 
   @override
   _ResheduleAppointmentsState createState() => _ResheduleAppointmentsState();
@@ -269,6 +271,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               closePage: (value) {
                 widget.closePage(value);
               },
+              isFromNotification: widget.isFromNotification,
             ),
           ],
         ),
