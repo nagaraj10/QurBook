@@ -30,6 +30,7 @@ const String VERIFIED = 'Verified';
 const String NOT_VERIFIED = 'Not Verified';
 
 //Appointments Messages
+const String DNA_APPOINTMENT='This Appointment cannot be cancelled or rescheduled';
 const String YOUR_BOOKING_SUCCESS =
     "Your booking has been cancelled succesfully..";
 const String YOUR_RESHEDULE_SUCCESS =
@@ -70,3 +71,6 @@ const String CANCEL_SOURCE = "cancellationSource";
 const String qr_appoinment_reshedule = "appointment/reschedule";
 const String qr_appointment_cancel = "appointment";
 const String qr_appointment_fetch = 'appointment?patientId=';
+
+// conditions
+const String PATDNA='PATDNA';

@@ -218,12 +218,18 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                       Constants.Appointments_resheduleImage,
                       Colors.black38,
                       Constants.Appointments_reshedule, () {
-                    navigateToProviderScreen(widget.doc, true);
+                    (widget.doc.status != null &&
+                        widget.doc.status.code == Constants.PATDNA)
+                        ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)
+                        : navigateToProviderScreen(widget.doc, true);
                   }, null),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_cancelImage,
                       Colors.black38, Constants.Appointments_cancel, () {
-                    _displayDialog(context, [widget.doc]);
+                        (widget.doc.status != null &&
+                            widget.doc.status.code == Constants.PATDNA)
+                            ? toast.getToast(Constants.DNA_APPOINTMENT, Colors.red)
+                        : _displayDialog(context, [widget.doc]);
                   }, null),
                   SizedBoxWidget(width: 15.0),
                 ],
