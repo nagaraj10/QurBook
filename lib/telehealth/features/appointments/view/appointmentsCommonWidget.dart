@@ -82,7 +82,8 @@ class AppointmentsCommonWidget {
     );
   }
 
-  Widget docIcons(bool isUpcoming,Past doc, BuildContext context, Function refresh) {
+  Widget docIcons(
+      bool isUpcoming, Past doc, BuildContext context, Function refresh) {
     List<String> recordIds = new List();
     List<String> notesId = new List();
     List<String> voiceIds = new List();
@@ -134,16 +135,19 @@ class AppointmentsCommonWidget {
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_notes, () async {
-          if (notesCount != '' && isUpcoming) {
+          if (notesCount != '' /* && isUpcoming*/) {
+            int position = getCategoryPosition(Constants.STR_NOTES);
+
             await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => MyRecords(
-                categoryPosition: getCategoryPosition(Constants.STR_NOTES),
+                categoryPosition: position,
                 allowSelect: false,
                 isAudioSelect: false,
                 isNotesSelect: true,
                 selectedMedias: notesId,
                 isFromChat: false,
                 showDetails: true,
+                isAssociateOrChat: isUpcoming ? false : false,
               ),
             ));
           }
@@ -153,18 +157,20 @@ class AppointmentsCommonWidget {
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.STR_VOICE_NOTES, () async {
-          if (voiceNotesCount != '' && isUpcoming) {
+          if (voiceNotesCount != '' /* && isUpcoming*/) {
+            int position = getCategoryPosition(Constants.STR_VOICERECORDS);
+
             await Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => MyRecords(
-                  categoryPosition:
-                      getCategoryPosition(Constants.STR_VOICERECORDS),
-                  allowSelect: false,
-                  isAudioSelect: true,
-                  isNotesSelect: true,
-                  selectedMedias: voiceIds,
-                  isFromChat: false,
-                  showDetails: true,
-                  isAssociateOrChat: true),
+                categoryPosition: position,
+                allowSelect: false,
+                isAudioSelect: true,
+                isNotesSelect: true,
+                selectedMedias: voiceIds,
+                isFromChat: false,
+                showDetails: true,
+                isAssociateOrChat: isUpcoming ? false : false,
+              ),
             ));
           }
         }, voiceNotesCount),
@@ -173,19 +179,20 @@ class AppointmentsCommonWidget {
             Constants.Appointments_recordsImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_records, () async {
-          if (rxCount != null &&isUpcoming) {
+          if (rxCount != null /*&& isUpcoming*/) {
+            int position = getCategoryPosition(Constants.STR_PRESCRIPTION);
+
             await Navigator.of(context)
                 .push(MaterialPageRoute(
               builder: (context) => MyRecords(
-                  categoryPosition:
-                      getCategoryPosition(Constants.STR_PRESCRIPTION),
+                  categoryPosition: position,
                   allowSelect: true,
                   isAudioSelect: false,
                   isNotesSelect: false,
                   selectedMedias: recordIds,
                   isFromChat: false,
                   showDetails: false,
-                  isAssociateOrChat: true),
+                  isAssociateOrChat: isUpcoming ? true : false),
             ))
                 .then((results) {
               try {
@@ -405,43 +412,30 @@ class AppointmentsCommonWidget {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    return getCategoryList(categoryName);
+    List<CategoryResult> categoryDataList = getCategoryList();
+    for (int i = 0; i < categoryDataList.length; i++) {
+      if (categoryName == categoryDataList[i].categoryName) {
+        print(categoryName + ' ****' + categoryDataList[i].categoryName);
+        position = i;
+      }
+    }
+    if (categoryName == Constants.STR_PRESCRIPTION) {
+      return position;
+    } else {
+      return position;
+    }
   }
 
-  int getCategoryList(String categoryName) {
-    int position = 0;
+  List<CategoryResult> getCategoryList() {
     if (filteredCategoryData == null || filteredCategoryData.length == 0) {
       _categoryListBlock.getCategoryLists().then((value) {
         filteredCategoryData = new CommonUtil().fliterCategories(value.result);
 
         //filteredCategoryData.add(categoryDataObjClone);
-        for (int i = 0; i < filteredCategoryData.length; i++) {
-          if (categoryName == filteredCategoryData[i].categoryName) {
-            print(
-                categoryName + ' ****' + filteredCategoryData[i].categoryName);
-            position = i;
-          }
-        }
-        if (categoryName == Constants.STR_PRESCRIPTION) {
-          return position;
-        } else {
-          return position;
-        }
-        // return filteredCategoryData;
+        return filteredCategoryData;
       });
     } else {
-      for (int i = 0; i < filteredCategoryData.length; i++) {
-        if (categoryName == filteredCategoryData[i].categoryName) {
-          print(categoryName + ' ****' + filteredCategoryData[i].categoryName);
-          position = i;
-        }
-      }
-      if (categoryName == Constants.STR_PRESCRIPTION) {
-        return position;
-      } else {
-        return position;
-      }
-      // return filteredCategoryData;
+      return filteredCategoryData;
     }
   }
 

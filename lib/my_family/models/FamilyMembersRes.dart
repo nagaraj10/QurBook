@@ -203,37 +203,40 @@ class Child {
   List<UserContactCollection3> userContactCollection3;
   List<UserRoleCollection3> userRoleCollection3;
   List<UserAddressCollection3> userAddressCollection3;
+  AdditionalInfo additionalInfo;
 
-  Child(
-      {this.id,
-      this.name,
-      this.userName,
-      this.firstName,
-      this.middleName,
-      this.lastName,
-      this.gender,
-      this.dateOfBirth,
-      this.bloodGroup,
-      this.countryCode,
-      this.profilePicThumbnailUrl,
-      this.isTempUser,
-      this.isVirtualUser,
-      this.isMigrated,
-      this.isClaimed,
-      this.isIeUser,
-      this.isEmailVerified,
-      this.isCpUser,
-      this.communicationPreferences,
-      this.medicalPreferences,
-      this.isSignedIn,
-      this.isActive,
-      this.createdBy,
-      this.createdOn,
-      this.lastModifiedBy,
-      this.lastModifiedOn,
-      this.userContactCollection3,
-      this.userRoleCollection3,
-      this.userAddressCollection3});
+  Child({
+    this.id,
+    this.name,
+    this.userName,
+    this.firstName,
+    this.middleName,
+    this.lastName,
+    this.gender,
+    this.dateOfBirth,
+    this.bloodGroup,
+    this.countryCode,
+    this.profilePicThumbnailUrl,
+    this.isTempUser,
+    this.isVirtualUser,
+    this.isMigrated,
+    this.isClaimed,
+    this.isIeUser,
+    this.isEmailVerified,
+    this.isCpUser,
+    this.communicationPreferences,
+    this.medicalPreferences,
+    this.isSignedIn,
+    this.isActive,
+    this.createdBy,
+    this.createdOn,
+    this.lastModifiedBy,
+    this.lastModifiedOn,
+    this.userContactCollection3,
+    this.userRoleCollection3,
+    this.userAddressCollection3,
+    this.additionalInfo,
+  });
 
   Child.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -280,6 +283,9 @@ class Child {
         userAddressCollection3.add(new UserAddressCollection3.fromJson(v));
       });
     }
+    additionalInfo = json['additionalInfo'] != null
+        ? new AdditionalInfo.fromJson(json['additionalInfo'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -322,6 +328,28 @@ class Child {
       data['userAddressCollection3'] =
           this.userAddressCollection3.map((v) => v.toJson()).toList();
     }
+    if (this.additionalInfo != null) {
+      data['additionalInfo'] = this.additionalInfo.toJson();
+    }
+    return data;
+  }
+}
+
+class AdditionalInfo {
+  String height;
+  String weight;
+
+  AdditionalInfo({this.height, this.weight});
+
+  AdditionalInfo.fromJson(Map<String, dynamic> json) {
+    height = json['height'];
+    weight = json['weight'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['height'] = this.height;
+    data['weight'] = this.weight;
     return data;
   }
 }
@@ -387,7 +415,6 @@ class Child {
     return data;
   }
 } */
-
 
 class UserContactCollection3 {
   String id;

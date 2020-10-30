@@ -101,6 +101,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   String selectedGender;
 
+  var heightConroller = TextEditingController();
+  FocusNode heightFocus = FocusNode();
+
+  var weightController = TextEditingController();
+  FocusNode weightFocus = FocusNode();
+
   @override
   void initState() {
     super.initState();
@@ -224,12 +230,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipController = TextEditingController(text: '');
     relationShipFocus = FocusNode();
 
+    heightConroller = new TextEditingController(text: '');
+    weightController = new TextEditingController(text: '');
 
-  cntrlr_addr_one = TextEditingController(text: '');
-  cntrlr_addr_two = TextEditingController(text: '');
-  cntrlr_addr_city = TextEditingController(text: '');
-  cntrlr_addr_state = TextEditingController(text: '');
-  cntrlr_addr_zip = TextEditingController(text: '');
+    cntrlr_addr_one = TextEditingController(text: '');
+    cntrlr_addr_two = TextEditingController(text: '');
+    cntrlr_addr_city = TextEditingController(text: '');
+    cntrlr_addr_state = TextEditingController(text: '');
+    cntrlr_addr_zip = TextEditingController(text: '');
 
     if (sharedbyme.child != null) {
       if (sharedbyme.child.firstName != null &&
@@ -269,6 +277,15 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       } catch (e) {
         mobileNoController.text = '';
         emailController.text = '';
+      }
+
+      if (sharedbyme?.child?.additionalInfo != null) {
+        heightConroller.text = sharedbyme?.child?.additionalInfo.height != null
+            ? sharedbyme?.child?.additionalInfo.height
+            : '';
+        weightController.text = sharedbyme?.child?.additionalInfo.weight != null
+            ? sharedbyme?.child?.additionalInfo.weight
+            : '';
       }
 
       /* if (sharedbyme.child.isVirtualUser == true) {
@@ -318,13 +335,17 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           new FHBUtils().getFormattedDateOnlyNew(sharedbyme.child.dateOfBirth);
     }
 
-    if(sharedbyme?.child?.userAddressCollection3.length>0){
-      
-    cntrlr_addr_one.text = sharedbyme?.child?.userAddressCollection3[0].addressLine1;
-    cntrlr_addr_two.text = sharedbyme?.child?.userAddressCollection3[0].addressLine2;
-    cntrlr_addr_city.text = sharedbyme?.child?.userAddressCollection3[0].city.name;
-    cntrlr_addr_state.text = sharedbyme?.child?.userAddressCollection3[0].state.name;
-    cntrlr_addr_zip.text = sharedbyme?.child?.userAddressCollection3[0].pincode;
+    if (sharedbyme?.child?.userAddressCollection3.length > 0) {
+      cntrlr_addr_one.text =
+          sharedbyme?.child?.userAddressCollection3[0].addressLine1;
+      cntrlr_addr_two.text =
+          sharedbyme?.child?.userAddressCollection3[0].addressLine2;
+      cntrlr_addr_city.text =
+          sharedbyme?.child?.userAddressCollection3[0].city.name;
+      cntrlr_addr_state.text =
+          sharedbyme?.child?.userAddressCollection3[0].state.name;
+      cntrlr_addr_zip.text =
+          sharedbyme?.child?.userAddressCollection3[0].pincode;
     }
 
     String profilebanner =
@@ -402,6 +423,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             children: <Widget>[
               _showBloodGroupTextField(),
               _showBloodRangeTextField(),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              showHeight(),
+              showWeight(),
             ],
           ),
           _showDateOfBirthTextField(),
@@ -866,6 +893,84 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             )));
   }
 
+  Widget showHeight() {
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        child: Container(
+            width: MediaQuery.of(context).size.width / 2 - 40,
+            child: TextField(
+              cursorColor: Theme.of(context).primaryColor,
+              controller: heightConroller,
+              maxLines: 1,
+              enabled: false,
+              keyboardType: TextInputType.text,
+              focusNode: heightFocus,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (term) {
+                FocusScope.of(context).requestFocus(bloodRangeFocus);
+              },
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+              decoration: InputDecoration(
+                labelText: CommonConstants.height,
+                hintText: CommonConstants.heightName,
+                labelStyle: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.myFamilyGreyColor),
+                hintStyle: TextStyle(
+                  fontSize: 12.0,
+                  color: ColorUtils.myFamilyGreyColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: new UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: ColorUtils.myFamilyGreyColor)),
+              ),
+            )));
+  }
+
+  Widget showWeight() {
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        child: Container(
+            width: MediaQuery.of(context).size.width / 2 - 40,
+            child: TextField(
+              cursorColor: Theme.of(context).primaryColor,
+              controller: weightController,
+              maxLines: 1,
+              enabled: false,
+              keyboardType: TextInputType.text,
+              focusNode: weightFocus,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (term) {
+                FocusScope.of(context).requestFocus(dateOfBirthFocus);
+              },
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+              decoration: InputDecoration(
+                labelText: CommonConstants.weight,
+                hintText: CommonConstants.weightName,
+                labelStyle: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.myFamilyGreyColor),
+                hintStyle: TextStyle(
+                  fontSize: 12.0,
+                  color: ColorUtils.myFamilyGreyColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: new UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: ColorUtils.myFamilyGreyColor)),
+              ),
+            )));
+  }
+
   Widget _showDateOfBirthTextField() {
     return GestureDetector(
       onTap: null,
@@ -1153,7 +1258,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
                 hintStyle: TextStyle(fontSize: 12),
-                labelText: CommonConstants.addr_line_1.substring(0,CommonConstants.addr_line_1.length-1),
+                labelText: CommonConstants.addr_line_1
+                    .substring(0, CommonConstants.addr_line_1.length - 1),
               ),
               validator: (res) {
                 return (res.isEmpty || res == null)
@@ -1167,7 +1273,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
                 hintStyle: TextStyle(fontSize: 12),
-                labelText: CommonConstants.addr_line_2.substring(0,CommonConstants.addr_line_2.length-1),
+                labelText: CommonConstants.addr_line_2
+                    .substring(0, CommonConstants.addr_line_2.length - 1),
               ),
             ),
             TextFormField(
@@ -1176,7 +1283,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
                 hintStyle: TextStyle(fontSize: 12),
-                labelText: CommonConstants.addr_city.substring(0,CommonConstants.addr_city.length-1),
+                labelText: CommonConstants.addr_city
+                    .substring(0, CommonConstants.addr_city.length - 1),
               ),
             ),
             TextFormField(
@@ -1185,7 +1293,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               keyboardType: TextInputType.streetAddress,
               decoration: InputDecoration(
                 hintStyle: TextStyle(fontSize: 12),
-                labelText: CommonConstants.addr_state.substring(0,CommonConstants.addr_state.length-1),
+                labelText: CommonConstants.addr_state
+                    .substring(0, CommonConstants.addr_state.length - 1),
               ),
             ),
             TextFormField(
@@ -1194,7 +1303,8 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 hintStyle: TextStyle(fontSize: 12),
-                labelText: CommonConstants.addr_zip.substring(0,CommonConstants.addr_zip.length-1),
+                labelText: CommonConstants.addr_zip
+                    .substring(0, CommonConstants.addr_zip.length - 1),
               ),
               validator: (res) {
                 return (res.isEmpty || res == null)
@@ -1207,5 +1317,4 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       ),
     );
   }
-
 }
