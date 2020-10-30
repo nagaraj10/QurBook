@@ -286,8 +286,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     Expanded(
                         child: _showCommonEditText(
                             heightController,
-                            emailFocus,
                             heightFocus,
+                            middleNameFocus,
                             CommonConstants.heightName,
                             CommonConstants.heightName,
                             true,
@@ -295,7 +295,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     Expanded(
                         child: _showCommonEditText(
                             weightController,
-                            heightFocus,
+                            weightFocus,
                             middleNameFocus,
                             CommonConstants.weightName,
                             CommonConstants.weightName,
@@ -1094,6 +1094,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                   : '';
         } else {
           firstNameController.text = '';
+        }
+
+        if (widget.arguments.sharedbyme.child.additionalInfo != null) {
+          heightController.text =
+              widget.arguments.sharedbyme.child.additionalInfo.height != null
+                  ? widget.arguments.sharedbyme.child.additionalInfo.height
+                  : '';
+          weightController.text =
+              widget.arguments.sharedbyme.child.additionalInfo.weight != null
+                  ? widget.arguments.sharedbyme.child.additionalInfo.weight
+                  : '';
         }
         if (commonUtil.checkIfStringisNull(
             widget.arguments.sharedbyme.child.bloodGroup)) {
