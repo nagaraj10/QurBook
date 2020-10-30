@@ -91,20 +91,12 @@ class GetTimeSlots extends StatelessWidget {
                       doctorsData.doctorSessionId);
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
+                   if (doctorsData == null) {
+                     //normal appointment
                     if(isPhoneMailCheck){
                       if (isAddressCheck) {
-                        if (doctorsData == null) {
                           navigateToConfirmBook(context, rowPosition,
                               itemPosition, null, false, false);
-                        } else {
-                          navigateToConfirmBook(
-                              context,
-                              rowPosition,
-                              itemPosition,
-                              doctorsData.doctorFollowUpFee,
-                              true,
-                              true);
-                        }
                       }
                       else {
                         toast.getToast(noAddress, Colors.red);
@@ -113,7 +105,16 @@ class GetTimeSlots extends StatelessWidget {
                     else{
                       toast.getToast(noPhoneEmail, Colors.red);
                     }
-
+                   } else {
+                     //follow up appointment
+                     navigateToConfirmBook(
+                         context,
+                         rowPosition,
+                         itemPosition,
+                         doctorsData.doctorFollowUpFee,
+                         true,
+                         true);
+                   }
                   } else {
                     toast.getToast(selectSlotsMsg, Colors.red);
                   }
