@@ -1638,6 +1638,7 @@ class CommonDialogBox {
 
       postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
       postMediaData[parameters.strmemoTextRaw] = memoController.text;
+      var commonConstants = new CommonConstants();
 
       if (categoryName == CommonConstants.strDevice) {
         List<Map<String, dynamic>> postDeviceData = new List();
@@ -1662,8 +1663,7 @@ class CommonDialogBox {
           postDeviceValues[parameters.strParameters] =
               CommonConstants.strTemperature;
           postDeviceValues[parameters.strvalue] = deviceController.text;
-          postDeviceValues[parameters.strunit] =
-              CommonConstants.strTemperatureUnit;
+          postDeviceValues[parameters.strunit] = commonConstants.tempUNIT;
           postDeviceData.add(postDeviceValues);
         } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
           postDeviceValues[parameters.strParameters] =
