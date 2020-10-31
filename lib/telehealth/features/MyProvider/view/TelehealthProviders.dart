@@ -107,7 +107,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
           return AlertDialog(
             title: Center(
               child: Text(
-                parameters.warning,
+                'Confirmation',
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
