@@ -115,7 +115,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   void initState() {
     providerViewModel = new MyProviderViewModel();
     createAppointMentViewModel = new CreateAppointMentViewModel();
-    createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     selectedId = createdBy;
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
@@ -197,6 +197,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               if (snapshot.data.data.result != null) {
                 familyData = snapshot.data.data;
               }
+
               return dropDownButton(snapshot.data.data.result != null
                   ? snapshot.data.data.result.sharedByUsers
                   : null);
@@ -232,6 +233,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         _familyNames.add(sharedByMeList[i]);
       }
     }
+
+    /*if (_familyNames.length > 1) {
+      for (SharedByUsers sharedByUsers in _familyNames) {
+        if (sharedByUsers.id == selectedId) {
+          selectedUser = selectedUser;
+        }
+      }
+    }*/
 
     return SizedBoxWithChild(
       height: 30,
@@ -674,12 +683,13 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         return widget.followUpFee;
       } else {
         if (widget.selectedDate
-            .difference(DateTime
-            .parse(widget.doctorsData.plannedFollowupDate))
-            .inDays <= 0) {
-          return  widget.followUpFee;
+                .difference(
+                    DateTime.parse(widget.doctorsData.plannedFollowupDate))
+                .inDays <=
+            0) {
+          return widget.followUpFee;
         } else {
-         return getFees(widget.healthOrganizationResult[widget.i]);
+          return getFees(widget.healthOrganizationResult[widget.i]);
         }
       }
     } else {
@@ -793,16 +803,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         });
   }
 
-  bool isFollowUp(){
-    if (widget.followUpFee != null && widget.isFollowUp==true) {
+  bool isFollowUp() {
+    if (widget.followUpFee != null && widget.isFollowUp == true) {
       if (widget.doctorsData?.plannedFollowupDate == null) {
         return true;
       } else {
         if (widget.selectedDate
-            .difference(DateTime
-            .parse(widget.doctorsData.plannedFollowupDate))
-            .inDays <= 0) {
-          return  true;
+                .difference(
+                    DateTime.parse(widget.doctorsData.plannedFollowupDate))
+                .inDays <=
+            0) {
+          return true;
         } else {
           return false;
         }
@@ -853,7 +864,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
     try {
       if (CommonUtil.recordIds.length > 0) {
-        associateRecords(doctorId, createdBy, CommonUtil.recordIds)
+        associateRecords(doctorId, selectedId, CommonUtil.recordIds)
             .then((value) {
           if (value != null && value.isSuccess) {
             bookAppointmentOnly(

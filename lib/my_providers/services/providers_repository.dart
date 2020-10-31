@@ -101,12 +101,12 @@ class ProvidersListRepository {
 
   Future<AssociateSuccessResponse> associateRecords(
       String doctorId, String userId, List<String> healthRecords) async {
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var associateRecord = {};
     //var parentAppoint = {};
     associateRecord[qr_shareToProvider] = doctorId;
-    associateRecord[qr_shareFromUser] = userID;
+    associateRecord[qr_shareFromUser] = userId;
     associateRecord[qr_metadata] = healthRecords;
     var jsonString = convert.jsonEncode(associateRecord);
     print(jsonString + '******************');
