@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/painting.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -44,9 +45,18 @@ class EachDeviceValues extends StatelessWidget {
   }
 
   String getFormattedDateTime(String datetime) {
+    print(datetime.toString());
     DateTime dateTimeStamp = DateTime.parse(datetime);
     String formattedDate =
-        DateFormat('yyyy-MM-dd – kk:mm:ss').format(dateTimeStamp);
+        DateFormat('MMM d, yyyy').format(dateTimeStamp);
+    return formattedDate;
+  }
+
+  String getFormattedTime(String datetime) {
+    print(datetime.toString());
+    DateTime dateTimeStamp = DateTime.parse(datetime);
+    String formattedDate =
+    DateFormat('h:mm a').format(dateTimeStamp);
     return formattedDate;
   }
 
@@ -78,7 +88,7 @@ class EachDeviceValues extends StatelessWidget {
                               '',
                               'Systolic',
                               'Diastolic',
-                              '');
+                              '',getFormattedTime(translist[i].startDateTime));
                         },
                       )
                     : Container(
@@ -115,7 +125,7 @@ class EachDeviceValues extends StatelessWidget {
                         shrinkWrap: true,
                         itemCount: translist.length,
                         itemBuilder: (context, i) {
-                          return buildRow(
+                          return buildRowForGulcose(
                               translist[i].sourceType,
                               getFormattedDateTime(translist[i].startDateTime),
                               '${translist[i].bloodGlucoseLevel}',
@@ -127,7 +137,7 @@ class EachDeviceValues extends StatelessWidget {
                                   : '${translist[i].mealType}',
                               '${translist[i].bgUnit}',
                               'Meal Context',
-                              'Meal Type');
+                              'Meal Type',getFormattedTime(translist[i].startDateTime));
                         },
                       )
                     : Container(
@@ -172,7 +182,7 @@ class EachDeviceValues extends StatelessWidget {
                               '',
                               'OxygenSaturation Value',
                               '',
-                              '');
+                              '',getFormattedTime(translist[i].startDateTime));
                         },
                       )
                     : Container(
@@ -218,7 +228,7 @@ class EachDeviceValues extends StatelessWidget {
                               '',
                               '${translist[i].weightUnit}',
                               '',
-                              '');
+                              '',getFormattedTime(translist[i].startDateTime));
                         },
                       )
                     : Container(
@@ -263,7 +273,7 @@ class EachDeviceValues extends StatelessWidget {
                               '',
                               '${translist[i].temperatureUnit}',
                               '',
-                              '');
+                              '',getFormattedTime(translist[i].startDateTime));
                         },
                       )
                     : Container(
@@ -327,18 +337,23 @@ class EachDeviceValues extends StatelessWidget {
 }
 
 Widget buildRow(String type, String date, String value1, String value2,
-    String value3, String valuename1, String valuename2, String valuename3) {
-  return Padding(
+    String value3, String valuename1, String valuename2, String valuename3,time) {
+  /*return Padding(
     padding: const EdgeInsets.only(top: 5.0),
     child: Container(
+      height: 100,
       color: Colors.white,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 10.0, top: 10.0),
+            padding: const EdgeInsets.only(left: 8.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                SizedBox(
+                  width: 10.0,
+                ),
                 type == null ? Icons.device_unknown : TypeIcon(type),
                 SizedBox(
                   width: 10.0,
@@ -403,10 +418,25 @@ Widget buildRow(String type, String date, String value1, String value2,
                 SizedBox(
                   width: 10.0,
                 ),
+                Column(
+                  children: [
+                    Text(
+                      date,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Text(
+                      time,
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
-          Row(
+         *//* Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
@@ -417,7 +447,237 @@ Widget buildRow(String type, String date, String value1, String value2,
                 width: 5.0,
               ),
             ],
-          )
+          )*//*
+        ],
+      ),
+    ),
+  );*/
+  return Padding(
+    padding: const EdgeInsets.only(top: 5.0),
+    child: Container(
+      height: 90,
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                width: 15,
+              ),
+              type == null ? Icons.device_unknown : TypeIcon(type),
+              SizedBox(
+                width: 20,
+              ),
+              valuename1!=''?Expanded(
+                flex: 5,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 5),
+                    Text(
+                      valuename1,
+                      style: TextStyle(color: Colors.black),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(height: 5),
+                    Text(
+                      value1 == '' ? '' : value1,
+                      style: TextStyle(
+                          color: Colors.lightBlueAccent,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ):SizedBox(),
+              valuename2!=''?Expanded(
+                flex: 4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 5),
+                    Text(
+                      valuename2 == '' ? '' : valuename2,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Text(
+                      value2,
+                      style: TextStyle(
+                          color: Colors.lightBlueAccent,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ):SizedBox(),
+              valuename3!=''?Expanded(
+                flex: 4,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: 5),
+                    Text(
+                      valuename3 == '' ? '' : valuename3,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Text(
+                      value3,
+                      style: TextStyle(
+                          color: Colors.lightBlueAccent,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ):SizedBox(),
+              Expanded(
+                  flex: 4,
+                  child: Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          date,
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                        SizedBox(
+                          width: 10.0,
+                        ),
+                        Text(
+                          time,
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  )),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+Widget buildRowForGulcose(String type, String date, String value1, String value2,
+    String value3, String valuename1, String valuename2, String valuename3,time) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 5.0),
+    child: Container(
+      height: 100,
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 5.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(
+                  width: 2.0,
+                ),
+                type == null ? Icons.device_unknown : TypeIcon(type),
+                SizedBox(
+                  width: 6.0,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      valuename1,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Text(
+                      value1 == '' ? '' : value1,
+                      style: TextStyle(
+                          color: Colors.lightBlueAccent,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 6.0,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      valuename2 == '' ? '' : valuename2,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Text(
+                      value2,
+                      style: TextStyle(
+                          color: Colors.lightBlueAccent,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 6.0,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      valuename3 == '' ? '' : valuename3,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    SizedBox(
+                      height: 5.0,
+                    ),
+                    Text(
+                      value3,
+                      style: TextStyle(
+                          color: Colors.lightBlueAccent,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 6.0,
+                ),
+                Column(
+                  children: [
+                    Text(
+                      date,
+                      style: TextStyle(color: Colors.grey,fontSize: 10),
+                    ),
+                    SizedBox(
+                      width: 10.0,
+                    ),
+                    Text(
+                      time,
+                      style: TextStyle(color: Colors.grey,fontSize: 10),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          /* Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                date,
+                style: TextStyle(color: Colors.grey),
+              ),
+              SizedBox(
+                width: 5.0,
+              ),
+            ],
+          )*/
         ],
       ),
     ),
