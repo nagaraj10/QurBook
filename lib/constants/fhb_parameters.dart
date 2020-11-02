@@ -292,8 +292,9 @@ const String someWentWrong = 'Booking appointment failed.. Some went wrong!';
 const String checkSlots = 'Checking available slots..';
 const String selectSlotsMsg = 'Please select your time slot before you book';
 const String noUrl = 'Something went wrong ..please try again..';
-const String noAddress = 'Please fill the address details before you book';
-const String noPhoneEmail = 'Please fill the phone no, email or firstName before you book';
+const String noAddress = 'Please fill your address details before you book';
+const String noGender = 'Please fill your gender & address details before you book';
+const String noDOB = 'Please fill your date of birth details before you book';
 
 //Payment
 const String PAYMENT_STATUS = 'payment_status';

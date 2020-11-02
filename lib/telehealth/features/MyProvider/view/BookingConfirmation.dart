@@ -6,6 +6,7 @@ import 'package:gmiwidgetspackage/widgets/IconButtonWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -15,12 +16,16 @@ import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
+
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/appointments/CreateAppointmentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
@@ -663,7 +668,14 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       textColor: Colors.blue[800],
                       padding: EdgeInsets.all(8.0),
                       onPressed: () {
-                        _displayDialog(context);
+                        new FHBUtils().check().then((intenet) {
+                          if (intenet != null && intenet) {
+                            _displayDialog(context);
+                          } else {
+                            toast.getToast(
+                                Constants.STR_NO_CONNECTIVITY, Colors.black54);
+                          }
+                        });
                       },
                       child: TextWidget(text: payNow, fontsize: 12),
                     ),

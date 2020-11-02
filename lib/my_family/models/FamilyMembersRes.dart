@@ -200,7 +200,7 @@ class Child {
   String createdOn;
   String lastModifiedBy;
   String lastModifiedOn;
-  List<UserContactCollection3> userContactCollection3;
+  List<UserContactCollectionFamily> userContactCollection3;
   List<UserRoleCollection3> userRoleCollection3;
   List<UserAddressCollection3> userAddressCollection3;
   AdditionalInfo additionalInfo;
@@ -266,9 +266,9 @@ class Child {
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
     if (json['userContactCollection3'] != null) {
-      userContactCollection3 = new List<UserContactCollection3>();
+      userContactCollection3 = new List<UserContactCollectionFamily>();
       json['userContactCollection3'].forEach((v) {
-        userContactCollection3.add(new UserContactCollection3.fromJson(v));
+        userContactCollection3.add(new UserContactCollectionFamily.fromJson(v));
       });
     }
     if (json['userRoleCollection3'] != null) {
@@ -416,7 +416,7 @@ class AdditionalInfo {
   }
 } */
 
-class UserContactCollection3 {
+class UserContactCollectionFamily {
   String id;
   String phoneNumber;
   bool isPrimary;
@@ -425,7 +425,7 @@ class UserContactCollection3 {
   String lastModifiedOn;
   String email;
 
-  UserContactCollection3(
+  UserContactCollectionFamily(
       {this.id,
       this.phoneNumber,
       this.isPrimary,
@@ -434,7 +434,7 @@ class UserContactCollection3 {
       this.lastModifiedOn,
       this.email});
 
-  UserContactCollection3.fromJson(Map<String, dynamic> json) {
+  UserContactCollectionFamily.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     phoneNumber = json['phoneNumber'];
     isPrimary = json['isPrimary'];
