@@ -387,14 +387,16 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     int position = getCategoryPosition(Constants.STR_BILLS);
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => MyRecords(
-          categoryPosition: position,
-          allowSelect: true,
-          isAudioSelect: false,
-          isNotesSelect: false,
-          selectedMedias: paymentID,
-          isFromChat: false,
-          showDetails: true,
-          isAssociateOrChat: false),
+        categoryPosition: position,
+        allowSelect: true,
+        isAudioSelect: false,
+        isNotesSelect: false,
+        selectedMedias: paymentID,
+        isFromChat: false,
+        showDetails: true,
+        isAssociateOrChat: false,
+        isFromBills: true,
+      ),
     ));
   }
 

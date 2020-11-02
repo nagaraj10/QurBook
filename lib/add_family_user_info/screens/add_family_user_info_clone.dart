@@ -1077,6 +1077,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           mobileNoController.text = '';
           emailController.text = '';
         }
+      } else {
+        if (widget
+            ?.arguments?.sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+          mobileNoController.text = widget?.arguments?.sharedbyme?.child
+              ?.userContactCollection3[0].phoneNumber;
+          emailController.text = widget
+              ?.arguments?.sharedbyme?.child?.userContactCollection3[0].email;
+        }
       }
       if (widget.arguments.sharedbyme != null) {
         if (widget.arguments.sharedbyme.child.firstName != null) {

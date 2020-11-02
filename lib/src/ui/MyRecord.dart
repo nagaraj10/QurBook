@@ -62,6 +62,7 @@ class MyRecords extends StatefulWidget {
   bool showDetails;
   List<HealthRecordCollection> selectedRecordIds;
   bool isAssociateOrChat;
+  bool isFromBills;
 
   MyRecords(
       {this.categoryPosition,
@@ -72,7 +73,8 @@ class MyRecords extends StatefulWidget {
       this.isFromChat,
       this.showDetails,
       this.selectedRecordIds,
-      this.isAssociateOrChat});
+      this.isAssociateOrChat,
+      this.isFromBills});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -347,6 +349,7 @@ class _MyRecordsState extends State<MyRecords> {
       showDetails: widget.showDetails ?? false,
       selectedRecordsId: widget.selectedRecordIds,
       isAssociateOrChat: widget.isAssociateOrChat ?? false,
+      isFromBills: widget.isFromBills ?? false,
       onPositionChange: (index) {
         try {
           initPosition = index;
@@ -573,6 +576,7 @@ class CustomTabView extends StatefulWidget {
   HealthResult healthResult;
   List<HealthRecordCollection> selectedRecordsId = new List();
   bool isAssociateOrChat;
+  bool isFromBills;
   CustomTabView(
       {@required this.itemCount,
       this.tabBuilder,
@@ -596,7 +600,8 @@ class CustomTabView extends StatefulWidget {
       this.recordsState,
       this.healthResult,
       this.selectedRecordsId,
-      this.isAssociateOrChat});
+      this.isAssociateOrChat,
+      this.isFromBills});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -1218,7 +1223,8 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelectVoice,
             widget.showDetails,
             widget.isFromChat,
-            addHealthRecords));
+            addHealthRecords,
+            widget.isFromBills));
       } else if (dataObj.categoryDescription ==
           CommonConstants.categoryDescriptionIDDocs) {
         tabWidgetList.add(new IDDocsList(

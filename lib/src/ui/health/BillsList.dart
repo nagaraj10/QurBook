@@ -31,6 +31,7 @@ class BillsList extends StatefulWidget {
   final bool isAudioSelect;
   final bool showDetails;
   final bool allowAttach;
+  final bool isFromBills;
 
   BillsList(
       this.completeData,
@@ -45,7 +46,8 @@ class BillsList extends StatefulWidget {
       this.isAudioSelect,
       this.showDetails,
       this.allowAttach,
-      this.healthRecordSelected);
+      this.healthRecordSelected,
+      this.isFromBills);
 
   @override
   _BillsListState createState() => new _BillsListState();

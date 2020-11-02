@@ -278,42 +278,24 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         mobileNoController.text = '';
         emailController.text = '';
       }
-
-      if (sharedbyme?.child?.additionalInfo != null) {
-        heightConroller.text = sharedbyme?.child?.additionalInfo.height != null
-            ? sharedbyme?.child?.additionalInfo.height
-            : '';
-        weightController.text = sharedbyme?.child?.additionalInfo.weight != null
-            ? sharedbyme?.child?.additionalInfo.weight
-            : '';
+    } else {
+      // this is non primary user
+      if (sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+        mobileNoController.text =
+            sharedbyme?.child?.userContactCollection3[0].phoneNumber;
+        emailController.text =
+            sharedbyme?.child?.userContactCollection3[0].email;
       }
-
-      /* if (sharedbyme.child.isVirtualUser == true) {
-        try {
-          MyProfileModel myProf =
-              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-          if (myProf.result.userContactCollection3 != null) {
-            if (myProf.result.userContactCollection3.length > 0) {
-              mobileNoController.text =
-                  myProf.result.userContactCollection3[0].phoneNumber;
-              emailController.text =
-                  myProf.result.userContactCollection3[0].email;
-            }
-          }
-        } catch (e) {
-          mobileNoController.text = '';
-          emailController.text = '';
-        }
-      } else {
-        if (sharedbyme.child.userContactCollection3.isNotEmpty) {
-          mobileNoController.text =
-              sharedbyme.child.userContactCollection3[0].phoneNumber;
-          emailController.text =
-              sharedbyme.child.userContactCollection3[0].email;
-        }
-      } */
     }
 
+    if (sharedbyme?.child?.additionalInfo != null) {
+      heightConroller.text = sharedbyme?.child?.additionalInfo.height != null
+          ? sharedbyme?.child?.additionalInfo.height
+          : '';
+      weightController.text = sharedbyme?.child?.additionalInfo.weight != null
+          ? sharedbyme?.child?.additionalInfo.weight
+          : '';
+    }
     if (new CommonUtil().checkIfStringisNull(sharedbyme.child.bloodGroup)) {
       //renameBloodGroup(sharedbyme.child.bloodGroup);
       String bloodGroup = sharedbyme.child.bloodGroup;
