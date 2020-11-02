@@ -399,9 +399,12 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                               commonWidgets.getMoneyWithForamt(
                                   widget.isReshedule
                                       ? 0.toString()
-                                      : widget.doc.doctorFollowUpFee != null
-                                          ? widget.doc.doctorFollowUpFee
-                                          : getFees(eachHospitalModel[i])),
+                                      : followUpFee(eachHospitalModel[i])),
+//                                  widget.doc.plannedFollowupDate == null
+//                                          ? getFees(eachHospitalModel[i])
+//                                          : widget.doc.doctorFollowUpFee != null
+//                                              ? widget.doc.doctorFollowUpFee
+//                                              : getFees(eachHospitalModel[i])),
                           fontsize: 14.0,
                           fontWeight: FontWeight.w400,
                           colors: Colors.blue[800]),
@@ -412,6 +415,27 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
             )),
       ],
     );
+  }
+
+  String followUpFee(value) {
+    if (widget.doc?.plannedFollowupDate != null &&
+        widget.doc?.doctorFollowUpFee != null) {
+      if (widget.doc?.plannedFollowupDate == null) {
+        return getFees(value);
+      } else {
+        if (DateTime.now()
+            .difference(
+            DateTime.parse(widget.doc.plannedFollowupDate))
+            .inDays <=
+            0) {
+          return widget.doc.doctorFollowUpFee;
+        } else {
+          return getFees(value);
+        }
+      }
+    } else {
+      return getFees(value);
+    }
   }
 
   String getFees(HealthOrganizationResult result) {

@@ -678,9 +678,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   String getFollowUpFee() {
-    if (widget.followUpFee != null) {
+    if (widget.doctorsData?.plannedFollowupDate != null &&
+        widget.followUpFee != null) {
       if (widget.doctorsData?.plannedFollowupDate == null) {
-        return widget.followUpFee;
+        return getFees(widget.healthOrganizationResult[widget.i]);
       } else {
         if (widget.selectedDate
                 .difference(
@@ -804,9 +805,11 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   bool isFollowUp() {
-    if (widget.followUpFee != null && widget.isFollowUp == true) {
+    if (widget.doctorsData?.plannedFollowupDate != null &&
+        widget.followUpFee != null &&
+        widget.isFollowUp == true) {
       if (widget.doctorsData?.plannedFollowupDate == null) {
-        return true;
+        return false;
       } else {
         if (widget.selectedDate
                 .difference(
