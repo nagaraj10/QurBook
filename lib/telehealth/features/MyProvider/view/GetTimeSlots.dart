@@ -4,12 +4,16 @@ import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
@@ -35,9 +39,11 @@ class GetTimeSlots extends StatelessWidget {
   final List<HealthOrganizationResult> healthOrganizationResult;
   final int doctorListPos;
   Function(String) closePage;
-  bool isAddressCheck;
-  bool isPhoneMailCheck;
   bool isFromNotification;
+
+  MyProfileModel myProfile;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
 
   GetTimeSlots(
       {this.dateSlotTimingsObj,
@@ -49,8 +55,6 @@ class GetTimeSlots extends StatelessWidget {
       this.healthOrganizationResult,
       this.doctorListPos,
       this.closePage,
-      this.isAddressCheck,
-      this.isPhoneMailCheck,
       this.isFromNotification});
 
   @override
@@ -99,17 +103,17 @@ class GetTimeSlots extends StatelessWidget {
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
                     if (doctorsData == null) {
-                      //normal appointment
-                      if (isPhoneMailCheck) {
-                        if (isAddressCheck) {
-                          navigateToConfirmBook(context, rowPosition,
-                              itemPosition, null, false, false);
-                        } else {
-                          toast.getToast(noAddress, Colors.red);
-                        }
-                      } else {
-                        toast.getToast(noPhoneEmail, Colors.red);
-                      }
+                      new FHBUtils().check().then((intenet) {
+                          if (intenet != null && intenet) {
+                            var userId =
+                            PreferenceUtil.getStringValue(Constants.KEY_USERID);
+                            profileValidationCheck(
+                                context, rowPosition, itemPosition, userId);
+                          } else {
+                            toast.getToast(
+                                Constants.STR_NO_CONNECTIVITY, Colors.red);
+                          }
+                      });
                     } else {
                       //follow up appointment
                       navigateToConfirmBook(context, rowPosition, itemPosition,
@@ -199,5 +203,77 @@ class GetTimeSlots extends StatelessWidget {
     ResheduleModel resheduleAppointment = await reshedule.resheduleAppointment(
         bookingIds, slotNumber.toString(), resheduledDate, doctorSessionId);
     return resheduleAppointment;
+  }
+
+  profileValidationCheck(BuildContext context, int rowPosition,
+      int itemPosition, String userId) async {
+    await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
+      myProfile = value;
+    });
+
+    if (myProfile != null) {
+      addressValidation(context, rowPosition, itemPosition);
+    } else {
+      toast.getToast('unable to fetch profile details', Colors.red);
+    }
+  }
+
+  addressValidation(BuildContext context, int rowPosition, int itemPosition) {
+    if (myProfile != null) {
+      if (myProfile.isSuccess) {
+        if (myProfile.result != null) {
+          if (myProfile.result.gender != null &&
+              myProfile.result.gender.isNotEmpty) {
+            if (myProfile.result.dateOfBirth != null &&
+                myProfile.result.dateOfBirth.isNotEmpty) {
+              if (myProfile.result.userAddressCollection3 != null) {
+                if (myProfile.result.userAddressCollection3.length > 0) {
+                  patientAddressCheck(
+                      myProfile.result.userAddressCollection3[0],
+                      context,
+                      rowPosition,
+                      itemPosition);
+                } else {
+                  toast.getToast(noAddress, Colors.red);
+                }
+              } else {
+                toast.getToast(noAddress, Colors.red);
+              }
+            } else {
+              toast.getToast(noDOB, Colors.red);
+            }
+          } else {
+            toast.getToast(noGender, Colors.red);
+          }
+        } else {
+          toast.getToast(noAddress, Colors.red);
+        }
+      } else {
+        toast.getToast(noAddress, Colors.red);
+      }
+    } else {
+      toast.getToast(noAddress, Colors.red);
+    }
+  }
+
+  patientAddressCheck(UserAddressCollection3 userAddressCollection,
+      BuildContext context, int rowPosition, int itemPosition) {
+    String address1 = userAddressCollection.addressLine1 != null
+        ? userAddressCollection.addressLine1
+        : '';
+    String city = userAddressCollection.city.name != null
+        ? userAddressCollection.city.name
+        : '';
+    String state = userAddressCollection.state.name != null
+        ? userAddressCollection.state.name
+        : '';
+
+    if (address1 != '' && city != '' && state != '') {
+      //normal appointment
+      navigateToConfirmBook(
+          context, rowPosition, itemPosition, null, false, false);
+    } else {
+      toast.getToast(noAddress, Colors.red);
+    }
   }
 }

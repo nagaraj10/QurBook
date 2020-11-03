@@ -56,15 +56,12 @@ class _HealthOrganizationState extends State<HealthOrganization> {
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
-  bool addressCheck = false;
-  bool mailPhoneCheck = false;
 
   @override
   void initState() {
     super.initState();
     getDataForProvider();
     _providersBloc = new ProvidersBloc();
-    fetchUserProfileInfo();
   }
 
   @override
@@ -269,8 +266,6 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                 widget.closePage(value);
                 Navigator.pop(context);
               },
-              isValidAddress: addressCheck,
-              isValidPhoneMail: mailPhoneCheck,
             ),
           ],
         ),
@@ -453,9 +448,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
           final items = snapshot.data ??
               <DoctorIds>[]; // handle the case that data is null
 
-          return myProfile != null
-              ? providerListWidget(snapshot.data)
-              : Container();
+          return providerListWidget(snapshot.data);
         }
       },
     );
@@ -473,105 +466,5 @@ class _HealthOrganizationState extends State<HealthOrganization> {
               child: Text(variable.strNoHospitaldata),
             ),
           );
-  }
-
-  fetchUserProfileInfo() async {
-    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-
-    await addFamilyUserInfoRepository
-        .getMyProfileInfoNew(userId)
-        .then((value) => setState(() {
-              myProfile = value;
-            }));
-
-    if (myProfile != null) {
-      if (myProfile.isSuccess) {
-        if (myProfile.result != null) {
-          if (myProfile.result.userAddressCollection3 != null) {
-            if (myProfile.result.userAddressCollection3.length > 0) {
-              patientAddressCheck(myProfile.result.userAddressCollection3[0]);
-            } else {
-              addressCheck = false;
-            }
-          } else {
-            addressCheck = false;
-          }
-        } else {
-          addressCheck = false;
-        }
-      } else {
-        addressCheck = false;
-      }
-    } else {
-      addressCheck = false;
-    }
-
-    if (myProfile != null) {
-      if (myProfile.isSuccess) {
-        if (myProfile.result != null) {
-          if (myProfile.result.userContactCollection3 != null) {
-            if (myProfile.result.userContactCollection3.length > 0) {
-              patientEmailPhone(
-                  myProfile.result.userContactCollection3[0], myProfile.result);
-            } else {
-              mailPhoneCheck = false;
-            }
-          } else {
-            mailPhoneCheck = false;
-          }
-        } else {
-          mailPhoneCheck = false;
-        }
-      } else {
-        mailPhoneCheck = false;
-      }
-    } else {
-      mailPhoneCheck = false;
-    }
-  }
-
-  bool patientAddressCheck(UserAddressCollection3 userAddressCollection) {
-    String address1 = userAddressCollection.addressLine1 != null
-        ? userAddressCollection.addressLine1
-        : '';
-    String city = userAddressCollection.city.name != null
-        ? userAddressCollection.city.name
-        : '';
-    String state = userAddressCollection.state.name != null
-        ? userAddressCollection.state.name
-        : '';
-
-    if (address1 != '' && city != '' && state != '') {
-      addressCheck = true;
-      print('address true');
-    } else {
-      addressCheck = false;
-    }
-  }
-
-  bool patientEmailPhone(UserContactCollection3 userContactCollection,
-      MyProfileResult myProfileResult) {
-    String fName = '';
-    String lName = '';
-
-    String phoneNumber = userContactCollection.phoneNumber != null
-        ? userContactCollection.phoneNumber
-        : '';
-    String email =
-        userContactCollection.email != null ? userContactCollection.email : '';
-
-    if (myProfileResult != null) {
-      fName = myProfileResult.firstName;
-      lName = myProfileResult.lastName;
-    } else {
-      mailPhoneCheck = false;
-    }
-
-    if (phoneNumber != '' && email != '' && fName != '' && lName != '') {
-      mailPhoneCheck = true;
-      print('phoneMail true');
-    } else {
-      mailPhoneCheck = false;
-    }
   }
 }

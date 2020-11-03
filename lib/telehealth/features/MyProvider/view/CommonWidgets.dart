@@ -790,7 +790,7 @@ class CommonWidgets {
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
               ? user.name
-              : (user.firstName + user.lastName))
+              : user.firstName!=null && user.lastName !=null? (user.firstName + user.lastName):'')
           : '',
       style: TextStyle(
           fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
