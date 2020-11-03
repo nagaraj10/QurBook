@@ -249,6 +249,7 @@ class MainActivity : FlutterActivity() {
         appDate= intent.getStringExtra(Constants.PROP_PlannedStartTime)
         docSessionId= intent.getStringExtra(Constants.PROP_docSessionId)
         healthOrgId= intent.getStringExtra(Constants.PROP_healthOrgId)
+        val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
         if(sharedValue!=null && username !=null && docId!=null && docPic !=null){
             sharedValue="$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}"
         }else if(sharedValue==Constants.PROP_RESCHEDULE){
@@ -257,6 +258,12 @@ class MainActivity : FlutterActivity() {
         }else if(sharedValue==Constants.PROP_CANCEL_APPS){
             //todo redirect to telehealth page
             sharedValue="${Constants.PROP_CANCEL_APPS}&${bookingId!!}&${appDate}"
+        }else if(providerReqId != null && providerReqId != ""){
+            if(sharedValue==Constants.PROP_ACCEPT){
+                sharedValue="$sharedValue&${providerReqId}&${"accepted"}"
+            }else{
+                sharedValue="$sharedValue&${providerReqId}&${"rejected"}"
+            }
         }else{
             sharedValue=Constants.PROP_ACK
         }

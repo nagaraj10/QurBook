@@ -1,29 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/schedules/my_appointments.dart';
+import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
-import 'package:myfhb/notifications/myfhb_notifications.dart';
-import 'package:myfhb/schedules/my_schedules.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
-import 'package:myfhb/src/ui/bot/view/ChatScreen.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavigationArguments.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigation.dart';
-import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigationMain.dart';
-import 'package:myfhb/telehealth/features/Devices/view/Devices.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as AppConstants;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
+    as AppConstants;
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/appointments/model/cancelAppointments/cancelModel.dart';
 import 'package:myfhb/telehealth/features/appointments/view/appointmentsMain.dart';
-import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
-import 'package:myfhb/telehealth/features/telehealth/view/Telehealth.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../../../../src/ui/MyRecord.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'dart:convert' as convert;
 
 class TelehealthProviders extends StatefulWidget {
   static _TelehealthProvidersState of(BuildContext context) =>
@@ -80,9 +73,10 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isCancelDialogShouldShown) {
+    if  (_selectedIndex==0 && _isCancelDialogShouldShown) {
       Future.delayed(Duration(seconds: 5), () {
-        showPromptToUser(context);
+         //* show cancel app. dialog
+          showCanelAppointmentPromptToUser(context);
       });
     }
     return Scaffold(
@@ -99,7 +93,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
     );
   }
 
-  Future showPromptToUser(BuildContext context) {
+  Future showCanelAppointmentPromptToUser(BuildContext context) {
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -139,14 +133,14 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                         Navigator.of(context).pop(true);
                         CancelAppointmentModel cancelAppointment =
                             await CancelAppointmentViewModel()
-                                .fetchCancelAppointment([_bookingId],[date]);
+                                .fetchCancelAppointment([_bookingId], [date]);
 
-                        if (
-                            cancelAppointment.isSuccess == true) {
+                        if (cancelAppointment.isSuccess == true) {
                           toast.getToast(
                               AppConstants.YOUR_BOOKING_SUCCESS, Colors.green);
                         } else {
-                          toast.getToast(AppConstants.BOOKING_CANCEL, Colors.red);
+                          toast.getToast(
+                              AppConstants.BOOKING_CANCEL, Colors.red);
                         }
                       },
                     ),

@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/authentication/service/authservice.dart';
 import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -24,7 +25,8 @@ import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart' as doc;
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
+    as doc;
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/services/push_notification_provider.dart';
@@ -164,6 +166,7 @@ class _MyFHBState extends State<MyFHB> {
 
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   var globalContext;
+  AuthService authService = AuthService();
   @override
   void initState() {
     // TODO: implement initState
@@ -236,21 +239,27 @@ class _MyFHBState extends State<MyFHB> {
         Get.to(ResheduleMain(
           isFromNotification: true,
           isReshedule: true,
-          doc: Past( //! this is has to be correct
-            doctorSessionId: passedValArr[3],
-            bookingId: passedValArr[2],
-            doctor: doc.Doctor(id: passedValArr[1]),
-            healthOrganization: City(id: passedValArr[4])
-          ),
+          doc: Past(
+              //! this is has to be correct
+              doctorSessionId: passedValArr[3],
+              bookingId: passedValArr[2],
+              doctor: doc.Doctor(id: passedValArr[1]),
+              healthOrganization: City(id: passedValArr[4])),
         ));
       } else if (passedValArr[0] == 'cancel_appointment') {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
+              dialogType: 'CANCEL',
               isCancelDialogShouldShow: true,
               bookingId: passedValArr[1] ?? '',
-              date:passedValArr[2] ?? ''),
+              date: passedValArr[2] ?? ''),
         ));
+      } else if (passedValArr[0] == 'accept' || passedValArr[0] == 'decline') {
+        var jsonInput = {};
+        jsonInput['providerRequestId'] = passedValArr[1];
+        jsonInput['action'] = passedValArr[2];
+        onBoardNSAcknowledge(jsonInput);
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
@@ -354,6 +363,13 @@ class _MyFHBState extends State<MyFHB> {
           bookingID: navRoute.split('&')[1],
           appointmentDate: navRoute.split('&')[2],
         );
+      } else if (navRoute.split('&')[0] == 'accept' ||
+          navRoute.split('&')[0] == 'decline') {
+        var jsonInput = {};
+        jsonInput['providerRequestId'] = navRoute.split('&')[1];
+        jsonInput['action'] = navRoute.split('&')[2];
+        onBoardNSAcknowledge(jsonInput);
+        return SplashScreen();
       } else {
         return StartTheCall();
       }
@@ -507,5 +523,17 @@ class _MyFHBState extends State<MyFHB> {
       doctorId: navRoute.split('&')[2] ?? 'Doctor',
       doctorPic: docPic,
     );
+  }
+
+  void onBoardNSAcknowledge(dynamic data) {
+    var jsonString = jsonEncode(data);
+    FlutterToast toast = new FlutterToast();
+    authService.addDoctorAsProvider(jsonString).then((response) {
+      if (response['isSuccess']) {
+        toast.getToast(response['message'], Colors.green);
+      } else {
+        toast.getToast(response['diagnostics']['message'], Colors.red);
+      }
+    });
   }
 }
