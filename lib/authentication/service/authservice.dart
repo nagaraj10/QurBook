@@ -252,4 +252,23 @@ class AuthService {
       return spocketException();
     }
   }
+
+  Future<dynamic> addDoctorAsProvider(String jsonBody) async {
+    var responseJson;
+    Map<String, String> requestHeaders = {
+      'authorization': PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN),
+      'Content-Type': 'application/json'
+    };
+    try {
+      final response = await http.put(
+          Constants.BASE_URL + 'doctor/onboard-existing-entity-acknowledgement',
+          body: jsonBody,
+          headers: requestHeaders);
+
+      responseJson = jsonDecode(response.body);
+    } on SocketException {
+      return spocketException();
+    }
+    return responseJson;
+  }
 }

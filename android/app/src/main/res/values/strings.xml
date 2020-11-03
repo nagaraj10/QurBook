@@ -73,4 +73,6 @@
     <string name="avs_cha_name">AV Service Channel</string>
     <string name="ns_type_call">call</string>
     <string name="ns_type_ack">ack</string>
+    <string name="channel_onboard">doctor onboard</string>
+    <string name="channel_onboard_desc">This channel belong to doctor onboard</string>
 </resources>

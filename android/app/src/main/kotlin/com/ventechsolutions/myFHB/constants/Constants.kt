@@ -45,4 +45,7 @@ object Constants {
     val PROP_docSessionId ="doctorSessionId"
     val PROP_healthOrgId ="healthOrganizationId"
     val PROP_docId ="doctorId"
+    val PROP_ACCEPT ="accept"
+    val PROP_DECLINE ="decline"
+    val PROP_PROVIDER_REQID ="providerRequestId"
 }

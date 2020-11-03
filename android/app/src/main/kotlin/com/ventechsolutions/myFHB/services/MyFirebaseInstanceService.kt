@@ -29,6 +29,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     val CHANNEL_ACK = "cha_ack"
     val CHANNEL_MISS_CALL = "cha_missed_call_ns"
     val CHANNEL_CANCEL_APP = "cha_cancel_app"
+    val CHANNEL_ONBOARD = "cha_doc_onboard"
     override fun onNewToken(token: String) {
         super.onNewToken(token)
         Log.d(TAG, "Token: $token")
@@ -173,6 +174,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         //createNotificationCancelAppointment(data)
         if(data["templateName"]=="DoctorCancellation"){
             createNotificationCancelAppointment(data)
+        }else if(data["templateName"]=="GoFHBPatientOnboardingByDoctor" || data["templateName"]=="GoFHBPatientOnboardingByHospital"){
+            docOnBoardNotification(data)
         }else{
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
             val NS_ID = System.currentTimeMillis().toInt()
@@ -283,6 +286,53 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .addAction(R.drawable.ic_cancel_app, getString(R.string.ns_act_cancel), cancelAppointmentPendingIntent)
                 .addAction(R.drawable.ic_reschedule, getString(R.string.ns_act_reschedule), reschedulePendingIntent)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)]))
+                .setSound(ack_sound)
+                .setAutoCancel(true)
+                .build()
+        //notification.flags=Notification.FLAG_INSISTENT
+        nsManager.notify(NS_ID,notification)
+    }
+
+    private fun docOnBoardNotification(data:Map<String, String> = HashMap()){
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val ack_sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            val manager = getSystemService(NotificationManager::class.java)
+            val channelCancelApps = NotificationChannel(CHANNEL_ONBOARD, getString(R.string.channel_onboard), NotificationManager.IMPORTANCE_HIGH)
+            channelCancelApps.description = getString(R.string.channel_onboard_desc)
+            val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelCancelApps.setSound(ack_sound,attributes)
+            manager.createNotificationChannel(channelCancelApps)
+        }
+
+        val acceptIntent = Intent(applicationContext, Accept::class.java)
+        acceptIntent.putExtra(getString(R.string.nsid), NS_ID)
+        acceptIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_ACCEPT)
+        acceptIntent.putExtra(Constants.PROP_PROVIDER_REQID, data[Constants.PROP_PROVIDER_REQID])
+        val acceptPendingIntent = PendingIntent.getBroadcast(applicationContext, 0, acceptIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+
+
+        val declineIntent = Intent(applicationContext, Decline::class.java)
+        declineIntent.putExtra(getString(R.string.nsid), NS_ID)
+        declineIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_DECLINE)
+        declineIntent.putExtra(Constants.PROP_PROVIDER_REQID, data[Constants.PROP_PROVIDER_REQID])
+        val declinePendingIntent = PendingIntent.getBroadcast(applicationContext, 0, declineIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+
+
+
+        var notification = NotificationCompat.Builder(this, CHANNEL_ONBOARD)
+                .setSmallIcon(R.mipmap.app_ns_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
+                .setContentTitle(data[getString(R.string.pro_ns_title)])
+                .setContentText(data[getString(R.string.pro_ns_body)])
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setWhen(0)
+                .setCategory(NotificationCompat.CATEGORY_REMINDER)
+                .addAction(R.drawable.ic_decline_doc, Constants.PROP_DECLINE, declinePendingIntent)
+                .addAction(R.drawable.ic_add_doc, Constants.PROP_ACCEPT, acceptPendingIntent)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)]))
                 .setSound(ack_sound)
                 .setAutoCancel(true)

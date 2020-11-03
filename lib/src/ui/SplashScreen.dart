@@ -78,9 +78,11 @@ class _SplashScreenState extends State<SplashScreen> {
               ));
             } else if (widget.nsRoute == 'cancel_appointment') {
               //cancel appointments route
+              
               Get.offAll(TelehealthProviders(
                 arguments: HomeScreenArguments(
                     selectedIndex: 0,
+                    dialogType: 'CANCEL',
                     isCancelDialogShouldShow: true,
                     bookingId: widget.bookingID,
                     date: widget.appointmentDate),
