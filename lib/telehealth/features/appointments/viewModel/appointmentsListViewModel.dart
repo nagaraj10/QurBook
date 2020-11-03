@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart' as Constants;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
+    as Constants;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsData.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/appointmentsModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/model/timeModel.dart';
 import 'package:myfhb/telehealth/features/appointments/services/fetch_appointments_service.dart';
-
 
 enum LoadingStatus {
   completed,
@@ -17,7 +17,8 @@ enum LoadingStatus {
 class AppointmentsListViewModel extends ChangeNotifier {
   LoadingStatus loadingStatus = LoadingStatus.searching;
   AppointmentsModel _appointmentsModel;
-  FetchAppointmentsService _fetchAppointmentsService=FetchAppointmentsService();
+  FetchAppointmentsService _fetchAppointmentsService =
+      FetchAppointmentsService();
 
   AppointmentsModel appointmentsModel;
 
@@ -29,8 +30,9 @@ class AppointmentsListViewModel extends ChangeNotifier {
   Future<AppointmentsModel> fetchAppointments() async {
     try {
       this.loadingStatus = LoadingStatus.searching;
-      AppointmentsModel appointments = await _fetchAppointmentsService.fetchAppointments();
-      _appointmentsModel=appointments;
+      AppointmentsModel appointments =
+          await _fetchAppointmentsService.fetchAppointments();
+      _appointmentsModel = appointments;
       this.loadingStatus = LoadingStatus.completed;
       notifyListeners();
       return _appointmentsModel;
@@ -97,7 +99,7 @@ class AppointmentsListViewModel extends ChangeNotifier {
     min = dur.inHours >= 0 && dur.inHours <= 24
         ? (dur.inMinutes.remainder(60)).toString().padLeft(2, Constants.ZERO)
         : Constants.STATIC_HOUR;
-    Time time=Time();
+    Time time = Time();
     time.hours = hours;
     time.minutes =
         dur.inHours >= 24 || int.parse(min) <= 0 ? Constants.STATIC_HOUR : min;
