@@ -104,15 +104,15 @@ class GetTimeSlots extends StatelessWidget {
                   if (rowPosition > -1 && itemPosition > -1) {
                     if (doctorsData == null) {
                       new FHBUtils().check().then((intenet) {
-                          if (intenet != null && intenet) {
-                            var userId =
-                            PreferenceUtil.getStringValue(Constants.KEY_USERID);
-                            profileValidationCheck(
-                                context, rowPosition, itemPosition, userId);
-                          } else {
-                            toast.getToast(
-                                Constants.STR_NO_CONNECTIVITY, Colors.red);
-                          }
+                        if (intenet != null && intenet) {
+                          var userId = PreferenceUtil.getStringValue(
+                              Constants.KEY_USERID);
+                          profileValidationCheck(
+                              context, rowPosition, itemPosition, userId);
+                        } else {
+                          toast.getToast(
+                              Constants.STR_NO_CONNECTIVITY, Colors.red);
+                        }
                       });
                     } else {
                       //follow up appointment
@@ -214,7 +214,9 @@ class GetTimeSlots extends StatelessWidget {
     if (myProfile != null) {
       addressValidation(context, rowPosition, itemPosition);
     } else {
-      toast.getToast('unable to fetch profile details', Colors.red);
+      toast.getToast(
+          'Please fill your gender and address details in your profile  before you book an appointment',
+          Colors.red);
     }
   }
 
