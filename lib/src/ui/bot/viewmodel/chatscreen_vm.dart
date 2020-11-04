@@ -92,7 +92,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.strSource] = variable.strdevice;
     reqJson[parameters.strSessionId] = uuidString;
     reqJson[parameters.strAuthtoken] = auth_token;
-    //reqJson[parameters.strLanguage] = Utils.getCurrentLanCode();
+    reqJson[parameters.strLanguage] = Utils.getCurrentLanCode();
 
     Service mService = Service();
     final response = await mService.sendMetaToMaya(reqJson);
@@ -105,7 +105,7 @@ class ChatScreenViewModel extends ChangeNotifier {
         if (list.length > 0) {
           SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
           isEndOfConv = res.endOfConv;
-          /* PreferenceUtil.saveString(constants.SHEELA_LANG, res.lang); */
+          PreferenceUtil.saveString(constants.SHEELA_LANG, res.lang);
           var date =
               new FHBUtils().getFormattedDateString(DateTime.now().toString());
           Conversation model = new Conversation(
@@ -117,8 +117,8 @@ class ChatScreenViewModel extends ChangeNotifier {
                 : '',
             imageUrl: res.imageURL,
             timeStamp: date,
-            /* buttons: res.buttons,
-            langCode: res.lang */
+            buttons: res.buttons,
+            langCode: res.lang
           );
           conversations.add(model);
            isLoading = true;
@@ -131,7 +131,7 @@ class ChatScreenViewModel extends ChangeNotifier {
               variable.tts_platform.invokeMethod(variable.strtts, {
                 parameters.strMessage: res.text,
                 parameters.strIsClose: false,
-                /* parameters.strLanguage:res.lang */
+                parameters.strLanguage:res.lang
               }).then((res) {
                 if (res == 1) {
                   isMayaSpeaks = 1;
@@ -156,7 +156,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     try {
       await variable.voice_platform
           .invokeMethod(variable.strspeakAssistant,{
-            /* 'langcode':Utils.getCurrentLanCode() */
+            'langcode':Utils.getCurrentLanCode()
           }) 
           .then((response) {
         sendToMaya(response);

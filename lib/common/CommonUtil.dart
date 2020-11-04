@@ -28,6 +28,7 @@ import 'package:myfhb/my_family/models/LinkedData.dart';
 import 'package:myfhb/my_family/models/ProfileData.dart';
 import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_providers/models/ProfilePicThumbnail.dart';
+import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
@@ -1369,5 +1370,10 @@ class CommonUtil {
     } catch (e) {}
 
     return mediaMasterIdsList.length > 0 ? mediaMasterIdsList : new List();
+  }
+
+  void openWebViewNew(String title, String url, bool isLocal) {
+    Get.to(MyFhbWebView(
+            title: title, selectedUrl: url, isLocalAsset: isLocal));
   }
 }

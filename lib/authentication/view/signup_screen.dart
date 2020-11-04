@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
@@ -8,16 +7,14 @@ import 'package:myfhb/authentication/model/patientsignup_model.dart';
 import 'package:myfhb/authentication/constants/constants.dart';
 import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/authentication/view/login_screen.dart';
-import 'package:myfhb/authentication/view/verify_arguments.dart';
 import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/patientsignup_model.dart'
     as signuplModel;
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class PatientSignUpScreen extends StatefulWidget {
   @override
@@ -36,6 +33,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   var _SignupKey = GlobalKey<FormState>();
   List<UserContactCollection3> userCollection;
   AuthViewModel authViewModel;
+  var checkedValue = true;
 
   @override
   void initState() {
@@ -222,7 +220,11 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                         ],
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
+                      ),
+                      _termsAndCondtionsView(),
+                      SizedBox(
+                        height: 10,
                       ),
                       _saveUser(),
                       _accountToSign(),
@@ -242,6 +244,10 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
       onTap: () {
         AuthenticationValidator().checkNetwork().then((intenet) {
           if (intenet != null && intenet) {
+            checkedValue
+                ? null
+                : FlutterToast().getToast(
+                    'Please accept terms and conditions', Colors.black54);
             _savePatientDetails();
           } else {
             toast.getToast(strNetworkIssue, Colors.red);
@@ -280,7 +286,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
 
   _savePatientDetails() async {
     FocusScope.of(context).unfocus();
-    if (_SignupKey.currentState.validate()) {
+    if (_SignupKey.currentState.validate() && checkedValue) {
       _SignupKey.currentState.save();
       UserContactCollection3 user3 = UserContactCollection3();
       user3.phoneNumber = mobileNoController.text;
@@ -359,5 +365,41 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   Widget _signupTextFields(TextFormField textFormField) {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 2), child: textFormField);
+  }
+
+  Widget _termsAndCondtionsView() {
+    return Row(
+      children: [
+        Checkbox(
+          activeColor: Color(CommonUtil().getMyPrimaryColor()),
+          checkColor: Colors.white,
+          value: checkedValue,
+          onChanged: (newValue) {
+            setState(() {
+              checkedValue = newValue;
+            });
+          },
+        ),
+        new RichText(
+          text: new TextSpan(
+            text: '',
+            children: [
+              new TextSpan(
+                  text: 'By signing up, I agree to the ',
+                  style: TextStyle(color: Colors.black)),
+              new TextSpan(
+                text: 'terms and condition.',
+                style: TextStyle(color: Color(0xff138fcf)),
+                recognizer: new TapGestureRecognizer()
+                  ..onTap = () {
+                    CommonUtil().openWebViewNew(
+                        Constants.terms_of_service, variable.file_terms, true);
+                  },
+              )
+            ],
+          ),
+        )
+      ],
+    );
   }
 }

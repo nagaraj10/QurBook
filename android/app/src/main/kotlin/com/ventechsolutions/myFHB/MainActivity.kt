@@ -99,7 +99,7 @@ class MainActivity : FlutterActivity() {
 
         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
             if (status != TextToSpeech.ERROR) {
-                tts!!.language = Locale(Constants.EN_US) //todo this need to be comment
+                //tts!!.language = Locale(Constants.EN_US) //todo this need to be comment
             }
 
         })
@@ -206,10 +206,10 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VOICE_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_VOICE_ASST) {
-                //val lang_code = call.argument<String>(Constants.PROP_LANG_CODE) //todo uncomment this line
+                val lang_code = call.argument<String>(Constants.PROP_LANG_CODE) //todo uncomment this line
                 _result=result
-                //speakWithVoiceAssistant(lang_code!!) //todo uncomment this line
-                speakWithVoiceAssistant()//todo line need to remove
+                speakWithVoiceAssistant(lang_code!!) //todo uncomment this line
+                //speakWithVoiceAssistant()//todo line need to remove
             } else {
                 result.notImplemented()
             }
@@ -220,8 +220,8 @@ class MainActivity : FlutterActivity() {
             if(call.method==Constants.FUN_TEXT2SPEECH){
                 val msg = call.argument<String>(Constants.PROP_MSG)
                 val iscls = call.argument<Boolean>(Constants.PROP_IS_CLOSE)
-                //val langCode = call.argument<String>(Constants.PROP_LANG) //todo this has to be uncomment
-                //tts!!.language = Locale(langCode!!) //todo this has to be uncomment
+                val langCode = call.argument<String>(Constants.PROP_LANG) //todo this has to be uncomment
+                tts!!.language = Locale(langCode!!) //todo this has to be uncomment
                 textToSpeech(msg!!,iscls!!)
             }else{
                 result.notImplemented()
@@ -289,13 +289,13 @@ class MainActivity : FlutterActivity() {
     }
 
     //todo this method need to uncomment
-    /*private fun speakWithVoiceAssistant(langCode:String) {
+    private fun speakWithVoiceAssistant(langCode:String) {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) //todo this has to be comment
+        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) //todo this has to be comment
         GetSrcTargetLanguages()
-        //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
         intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
         try {
@@ -306,15 +306,15 @@ class MainActivity : FlutterActivity() {
             //         Toast.LENGTH_SHORT).show()
             //CalledFromListen = false
         }
-        *//* tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
-             if (status != TextToSpeech.ERROR) {
-                 tts!!.language = Locale(langDest)
-             }
-         })*//*
-    }*/
+//         tts = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
+//             if (status != TextToSpeech.ERROR) {
+//                 tts!!.language = Locale(langDest)
+//             }
+//         })
+    }
 
     //todo this method need to remove
-    private fun speakWithVoiceAssistant() {
+    /*private fun speakWithVoiceAssistant() {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
@@ -336,7 +336,7 @@ class MainActivity : FlutterActivity() {
                  tts!!.language = Locale(langDest)
              }
          })*/
-    }
+    }*/
 
     private fun listenForSMS(){
         //Initialize the SmsRetriever client
