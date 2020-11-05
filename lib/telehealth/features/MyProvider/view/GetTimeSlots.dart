@@ -214,9 +214,7 @@ class GetTimeSlots extends StatelessWidget {
     if (myProfile != null) {
       addressValidation(context, rowPosition, itemPosition);
     } else {
-      toast.getToast(
-          'Please fill your gender and address details in your profile  before you book an appointment',
-          Colors.red);
+      toast.getToast(noGender, Colors.red);
     }
   }
 
@@ -228,18 +226,35 @@ class GetTimeSlots extends StatelessWidget {
               myProfile.result.gender.isNotEmpty) {
             if (myProfile.result.dateOfBirth != null &&
                 myProfile.result.dateOfBirth.isNotEmpty) {
-              if (myProfile.result.userAddressCollection3 != null) {
-                if (myProfile.result.userAddressCollection3.length > 0) {
-                  patientAddressCheck(
-                      myProfile.result.userAddressCollection3[0],
-                      context,
-                      rowPosition,
-                      itemPosition);
-                } else {
-                  toast.getToast(noAddress, Colors.red);
+              if(myProfile.result.additionalInfo!=null){
+                if(myProfile.result.additionalInfo.height!=null &&
+                    myProfile.result.additionalInfo.height.isNotEmpty){
+                  if(myProfile.result.additionalInfo.weight!=null &&
+                      myProfile.result.additionalInfo.weight.isNotEmpty){
+                    if (myProfile.result.userAddressCollection3 != null) {
+                      if (myProfile.result.userAddressCollection3.length > 0) {
+                        patientAddressCheck(
+                            myProfile.result.userAddressCollection3[0],
+                            context,
+                            rowPosition,
+                            itemPosition);
+                      } else {
+                        toast.getToast(noAddress, Colors.red);
+                      }
+                    } else {
+                      toast.getToast(noAddress, Colors.red);
+                    }
+                  }
+                  else {
+                    toast.getToast(noWeight, Colors.red);
+                  }
                 }
-              } else {
-                toast.getToast(noAddress, Colors.red);
+                else {
+                  toast.getToast(noHeight, Colors.red);
+                }
+              }
+              else {
+                toast.getToast(noAdditionalInfo, Colors.red);
               }
             } else {
               toast.getToast(noDOB, Colors.red);
