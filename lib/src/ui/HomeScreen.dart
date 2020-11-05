@@ -13,8 +13,9 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/ui/user/UserAccountMain.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
-
 
 class HomeScreen extends StatefulWidget {
   static _HomeScreenState of(BuildContext context) =>
@@ -30,7 +31,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex;
+  int _selectedIndex = 1;
   GlobalKey _bottomNavigationKey = GlobalKey();
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -38,8 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     MyFhbNotifications(),
     MyRecords(),
     SuperMaya(),
-    UserAccounts(
-            arguments: UserAccountsArguments(selectedIndex: 0)),
+    UserAccounts(arguments: UserAccountsArguments(selectedIndex: 0)),
     MoreMenuScreen()
   ];
 
@@ -76,6 +76,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void _myFunc(int index) {
     if (index == 0) {
       Navigator.of(context).pop();
+    }
+    if (index == 3) {
+      Navigator.pushNamed(
+        context,
+        router.rt_UserAccounts,
+        arguments: UserAccountsArguments(selectedIndex: 0),
+      ).then((value) {
+        _selectedIndex = 1;
+        setState(() {});
+      });
     } else {
       setState(() {
         _selectedIndex = index;
@@ -159,8 +169,11 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Image.asset(
-                      PreferenceUtil.getStringValue(Constants.keyMayaAsset) != null
-                          ? PreferenceUtil.getStringValue(Constants.keyMayaAsset) + variable.strExtImg
+                      PreferenceUtil.getStringValue(Constants.keyMayaAsset) !=
+                              null
+                          ? PreferenceUtil.getStringValue(
+                                  Constants.keyMayaAsset) +
+                              variable.strExtImg
                           : variable.icon_mayaMain,
                       height: 32,
                       width: 32,
@@ -230,7 +243,6 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           backgroundColor: Colors.transparent,
           animationCurve: Curves.linearToEaseOut,
           animationDuration: Duration(milliseconds: 450),
-        
           onTap: (index) {
             widget.myFunc(index);
           }),

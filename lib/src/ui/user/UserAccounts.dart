@@ -106,7 +106,14 @@ class _UserAccountsState extends State<UserAccounts>
                   size: 20,
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.popUntil(context, (Route<dynamic> route) {
+                    bool shouldPop = false;
+                    if (route.settings.name == router.rt_Dashboard ||
+                        route.settings == null) {
+                      shouldPop = true;
+                    }
+                    return shouldPop;
+                  });
                 },
               ),
               actions: <Widget>[
@@ -123,21 +130,23 @@ class _UserAccountsState extends State<UserAccounts>
                             } else {
                               _isEditable = true;
                               //sliverBarHeight = 50;
-                              if(myProfile?.result!=null){
+                              if (myProfile?.result != null) {
                                 Navigator.pushNamed(
-                                      context, router.rt_AddFamilyUserInfo,
-                                      arguments: AddFamilyUserInfoArguments(
-                                          myProfileResult: myProfile?.result,
-                                          fromClass:
-                                              CommonConstants.user_update))
-                                  .then((value) {
-                                setState(() {
-                                  _isEditable = false;
+                                        context, router.rt_AddFamilyUserInfo,
+                                        arguments: AddFamilyUserInfoArguments(
+                                            myProfileResult: myProfile?.result,
+                                            fromClass:
+                                                CommonConstants.user_update))
+                                    .then((value) {
+                                  setState(() {
+                                    _isEditable = false;
+                                  });
                                 });
-                              });
-                              }else{
-                                FlutterToast().getToast('Unable to Fetch User Profile data',Colors.red);
-                                 setState(() {
+                              } else {
+                                FlutterToast().getToast(
+                                    'Unable to Fetch User Profile data',
+                                    Colors.red);
+                                setState(() {
                                   _isEditable = false;
                                 });
                               }
