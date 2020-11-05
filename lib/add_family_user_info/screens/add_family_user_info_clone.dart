@@ -956,9 +956,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               widget.arguments.myProfileResult.userContactCollection3[0].email;
         }
       }
-
-      dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
-          widget.arguments.myProfileResult.dateOfBirth);
+      if (widget.arguments.myProfileResult.dateOfBirth != null) {
+        dateofBirthStr = new FHBUtils().getFormattedDateForUserBirth(
+            widget.arguments.myProfileResult.dateOfBirth);
+        dateOfBirthController.text = new FHBUtils().getFormattedDateOnlyNew(
+            widget.arguments.myProfileResult.dateOfBirth);
+      }
 
       if (widget.arguments.myProfileResult.userAddressCollection3 != null &&
           widget.arguments.myProfileResult.userAddressCollection3.length > 0) {
@@ -1291,6 +1294,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           .arguments?.myProfileResult?.userAddressCollection3.isNotEmpty) {
         userAddressCollection3.id =
             widget.arguments?.myProfileResult?.userAddressCollection3[0].id;
+      }
+
+      //allow only user who logged in to update their email address
+      if (widget
+          .arguments?.myProfileResult?.userContactCollection3.isNotEmpty) {
+        UserContactCollection3 userContact = widget
+          .arguments?.myProfileResult?.userContactCollection3[0];
+          userContact.email= emailController.text;
+        List<UserContactCollection3> userContactCollection3List = new List();
+        userContactCollection3List.add(userContact);
+        profileResult.userContactCollection3 = userContactCollection3List;
       }
     } else {
       profileResult.id = widget.arguments.addFamilyUserInfo.childInfo.id;

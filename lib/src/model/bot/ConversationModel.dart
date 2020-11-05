@@ -8,16 +8,16 @@ class Conversation {
   String imageUrl;
   String name;
   String timeStamp;
-  /* String langCode;
-  List<Buttons> buttons; */
+  String langCode;
+  List<Buttons> buttons;
   Conversation(
       {@required this.isMayaSaid,
       @required this.text,
       this.imageUrl,
       @required this.name,
       this.timeStamp,
-      /* this.buttons,
-      this.langCode */
+      this.buttons,
+      this.langCode
       });
 
   Conversation.fromJson(Map<String, dynamic> json) {
@@ -26,13 +26,13 @@ class Conversation {
     imageUrl = json[parameters.strImageUrl];
     name = json[parameters.strName];
     timeStamp = json[parameters.strTimeStamp];
-    /* langCode = json[parameters.strLanguage];
+    langCode = json[parameters.strLanguage];
     if (json[parameters.strButtons] != null) {
       buttons = new List<Buttons>();
       json[parameters.strButtons].forEach((v) {
         buttons.add(new Buttons.fromJson(v));
       });
-    } */
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -42,10 +42,10 @@ class Conversation {
     data[parameters.strImageUrl] = this.imageUrl;
     data[parameters.strName] = this.name;
     data[parameters.strTimeStamp] = this.timeStamp;
-    /* data[parameters.strLanguage] = this.langCode;
+    data[parameters.strLanguage] = this.langCode;
     if (this.buttons != null) {
       data[parameters.strButtons] = this.buttons.map((v) => v.toJson()).toList();
-    } */
+    }
     return data;
   }
 }
