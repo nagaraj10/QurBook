@@ -441,8 +441,10 @@ class AddProvidersState extends State<AddProviders> {
             : '';
         isPreferred = widget.arguments.doctorsModel.isDefault;
         myprovidersPreferred = widget.arguments.doctorsModel.isDefault;
-        addressLine1 = commonWidgets.getAddressLineForDoctors(widget.arguments.doctorsModel,'address1');
-        addressLine2 = commonWidgets.getAddressLineForDoctors(widget.arguments.doctorsModel,'address2');
+        addressLine1 = commonWidgets.getAddressLineForDoctors(
+            widget.arguments.doctorsModel, 'address1');
+        addressLine2 = commonWidgets.getAddressLineForDoctors(
+            widget.arguments.doctorsModel, 'address2');
 
         /* latitude = widget.arguments.data.latitude == null
             ? 0.0
@@ -466,8 +468,10 @@ class AddProvidersState extends State<AddProviders> {
 
         center = LatLng(latitude, longtiude);*/
 
-        addressLine1 = commonWidgets.getAddressLineForHealthOrg(widget.arguments.hospitalsModel,'address1');
-        addressLine2 = commonWidgets.getAddressLineForHealthOrg(widget.arguments.hospitalsModel,'address2');
+        addressLine1 = commonWidgets.getAddressLineForHealthOrg(
+            widget.arguments.hospitalsModel, 'address1');
+        addressLine2 = commonWidgets.getAddressLineForHealthOrg(
+            widget.arguments.hospitalsModel, 'address2');
       } else {
         doctorController.text = widget.arguments.labsModel.name != null
             ? toBeginningOfSentenceCase(widget.arguments.labsModel.name)
@@ -484,8 +488,10 @@ class AddProvidersState extends State<AddProviders> {
 //
 //        center = LatLng(latitude, longtiude);
 
-        addressLine1 = commonWidgets.getAddressLineForHealthOrg(widget.arguments.labsModel,'address1');
-        addressLine2 = commonWidgets.getAddressLineForHealthOrg(widget.arguments.labsModel,'address2');
+        addressLine1 = commonWidgets.getAddressLineForHealthOrg(
+            widget.arguments.labsModel, 'address1');
+        addressLine2 = commonWidgets.getAddressLineForHealthOrg(
+            widget.arguments.labsModel, 'address2');
       }
     }
     try {
@@ -880,7 +886,7 @@ class AddProvidersState extends State<AddProviders> {
 
       Navigator.popUntil(context, (Route<dynamic> route) {
         bool shouldPop = false;
-        if (route.settings.name == routeClassName) {
+        if (route.settings.name == routeClassName || route.settings == null) {
           shouldPop = true;
         }
         return shouldPop;
