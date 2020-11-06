@@ -468,7 +468,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           inputFormatters: (textEditingController == firstNameController ||
                   textEditingController == lastNameController ||
                   textEditingController == middleNameController)
-              ? [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"))]
+              ? [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))]
               : [],
         ));
   }
@@ -1299,9 +1299,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       //allow only user who logged in to update their email address
       if (widget
           .arguments?.myProfileResult?.userContactCollection3.isNotEmpty) {
-        UserContactCollection3 userContact = widget
-          .arguments?.myProfileResult?.userContactCollection3[0];
-          userContact.email= emailController.text;
+        UserContactCollection3 userContact =
+            widget.arguments?.myProfileResult?.userContactCollection3[0];
+        userContact.email = emailController.text;
         List<UserContactCollection3> userContactCollection3List = new List();
         userContactCollection3List.add(userContact);
         profileResult.userContactCollection3 = userContactCollection3List;
