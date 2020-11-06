@@ -283,8 +283,8 @@ class _MyFamilyState extends State<MyFamily> {
             if (value) {
               rebuildFamilyBlock();
               setState(() {});
-              FlutterToast toast = new FlutterToast();
-              toast.getToast('list updated', Colors.green);
+              // FlutterToast toast = new FlutterToast();
+              // toast.getToast('list updated', Colors.green);
             }
 
             /*  _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
@@ -1221,7 +1221,7 @@ class _MyFamilyState extends State<MyFamily> {
                           .pop();
 
                       Alert.displayAlertPlain(context,
-                          title: variable.Error, content: value.message);
+                          title: variable.Error, content: value?.message);
                     }
                   });
                 } else {
@@ -1375,7 +1375,7 @@ class _MyFamilyState extends State<MyFamily> {
                 Navigator.pop(_keyLoader.currentContext);
 
                 Alert.displayAlertPlain(context,
-                    title: variable.Error, content: userLinking.message);
+                    title: variable.Error, content: userLinking?.message);
               }
             });
           }
