@@ -388,12 +388,23 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                   text: 'By signing up, I agree to the ',
                   style: TextStyle(color: Colors.black)),
               new TextSpan(
-                text: 'terms and condition.',
+                text: 'T&C',
                 style: TextStyle(color: Color(0xff138fcf)),
                 recognizer: new TapGestureRecognizer()
                   ..onTap = () {
                     CommonUtil().openWebViewNew(
                         Constants.terms_of_service, variable.file_terms, true);
+                  },
+              ),
+              new TextSpan(
+                  text: ' and \n', style: TextStyle(color: Colors.black)),
+              new TextSpan(
+                text: 'Privacy Policy  ',
+                style: TextStyle(color: Color(0xff138fcf)),
+                recognizer: new TapGestureRecognizer()
+                  ..onTap = () {
+                    CommonUtil().openWebViewNew(
+                        Constants.privacy_policy, variable.file_privacy, true);
                   },
               )
             ],

@@ -54,7 +54,7 @@ const String KEY_USERID_MAIN = 'mainUserUD';
 const String KEY_PROFILE_MAIN = 'profileMain';
 const String KEY_SEARCHED_LIST = 'searchedList';
 const String KEY_SEARCHED_CATEGORY = 'searchedCategory';
-const String terms_of_service = 'Terms of service';
+const String terms_of_service = 'Terms of use';
 const String privacy_policy = 'Privacy policy';
 const String help_support = 'Help and support';
 const String STR_MSG_SIGNUP = 'Please signup and then try again';
@@ -323,7 +323,6 @@ const String EMAIL = 'email';
 const String FIRST_NAME = 'firstName';
 const String LAST_NAME = 'lastName';
 
-
 const String STR_MESSAGES = 'messages';
 const String STR_ID_FROM = 'idFrom';
 const String STR_ID_TO = 'idTo';
@@ -345,7 +344,6 @@ const String STR_MIP_MAP_LAUNCHER = '@mipmap/ic_launcher';
 const String STR_HTTPS = 'https';
 const String STR_FILE = 'File';
 
-
 const String STR_JPG = '.jpg';
 const String STR_PNG = '.png';
 const String STR_PDF = '.pdf';
@@ -358,4 +356,5 @@ const String STR_FAILED = 'failed';
 const String STR_DONE = 'Done';
 
 const String SHEELA_LANG = 'sheela_lang';
-const String STR_FAMILY_ADD_MSG = 'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';
+const String STR_FAMILY_ADD_MSG =
+    'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';
