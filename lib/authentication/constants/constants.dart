@@ -122,7 +122,7 @@ const String strKeyConfirmForgotPassword = 'confirm-forgot-password';
 const String strKeyVerifyFamilyMemberEP = 'user-relationship/verify-otp';
 final Pattern patternPhone = r'^(?:[+0]9)?[0-9]{11}$';
 final Pattern patternOtp = r'(^[0-9]{6}$)';
-final Pattern patternChar = r'^[a-z]+$';
+final Pattern patternChar = r'^[a-zA-Z_ ]+$';
 final Pattern patternPassword =
     r'^((?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,20})';
 final Pattern patternEmail =
