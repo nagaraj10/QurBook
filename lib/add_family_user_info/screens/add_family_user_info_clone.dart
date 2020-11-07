@@ -38,6 +38,7 @@ import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/user/State.dart' as stateObj;
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart' as contactObj;
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments arguments;
@@ -126,6 +127,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       new DoctorPersonalViewModel();
 
   String currentUserID;
+
+  UserContactCollection3 mContactInfo;
 
   @override
   void initState() {
@@ -468,7 +471,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           inputFormatters: (textEditingController == firstNameController ||
                   textEditingController == lastNameController ||
                   textEditingController == middleNameController)
-              ? [FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]"))]
+              ? [WhitelistingTextInputFormatter(RegExp("[a-zA-Z]"))]
               : [],
         ));
   }
@@ -1183,6 +1186,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               value?.result?.userContactCollection3[0].email != '') {
             emailController.text = value.result.userContactCollection3[0].email;
           }
+
+          mContactInfo = value?.result?.userContactCollection3[0];
         }
         //*user already user exist set the address data if available
         if (value?.result?.userAddressCollection3.length > 0) {
@@ -1287,6 +1292,17 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         userAddressCollection3.id =
             widget?.arguments?.sharedbyme?.child?.userAddressCollection3[0].id;
       }
+
+      //allow family member update their email address when they non primary user
+      // if (widget
+      //     .arguments?.sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+      //   UserContactCollection3 userContact = widget.arguments?.sharedbyme?.child
+      //       ?.userContactCollection3[0] as UserContactCollection3;
+      //   userContact.email = emailController.text;
+      //   List<UserContactCollection3> userContactCollection3List = new List();
+      //   userContactCollection3List.add(userContact);
+      //   profileResult.userContactCollection3 = userContactCollection3List;
+      // }
     } else if (widget.arguments.fromClass == CommonConstants.user_update) {
       addFamilyUserInfoBloc.isUpdate = false;
       profileResult.id = widget.arguments.myProfileResult.id;
@@ -1299,9 +1315,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       //allow only user who logged in to update their email address
       if (widget
           .arguments?.myProfileResult?.userContactCollection3.isNotEmpty) {
-        UserContactCollection3 userContact = widget
-          .arguments?.myProfileResult?.userContactCollection3[0];
-          userContact.email= emailController.text;
+        UserContactCollection3 userContact =
+            widget.arguments?.myProfileResult?.userContactCollection3[0];
+        userContact.email = emailController.text;
         List<UserContactCollection3> userContactCollection3List = new List();
         userContactCollection3List.add(userContact);
         profileResult.userContactCollection3 = userContactCollection3List;
@@ -1309,6 +1325,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     } else {
       profileResult.id = widget.arguments.addFamilyUserInfo.childInfo.id;
       addFamilyUserInfoBloc.isUpdate = false;
+      if (widget
+          ?.arguments?.addFamilyUserInfo?.childInfo?.contactInfo.isNotEmpty) {
+        UserContactCollection3 userContact = mContactInfo;
+        userContact?.email = emailController.text;
+        List<UserContactCollection3> userContactCollection3List = new List();
+        userContactCollection3List.add(userContact);
+        profileResult.userContactCollection3 = userContactCollection3List;
+      }
     }
     userAddressCollection3.addressLine1 = cntrlr_addr_one.text.trim();
     userAddressCollection3.addressLine2 = cntrlr_addr_two.text.trim();

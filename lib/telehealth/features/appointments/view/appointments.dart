@@ -13,6 +13,11 @@ import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'DoctorPastAppointments.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:gmiwidgetspackage/widgets/text_widget.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 
 class Appointments extends StatefulWidget {
   @override
@@ -31,6 +36,7 @@ class _AppointmentsState extends State<Appointments> {
   List<Past> upcomingTimeInfo = List();
   SharedPreferences prefs;
   Function(String) closePage;
+  final GlobalKey<State> _key = new GlobalKey<State>();
 
   @override
   void initState() {
@@ -44,6 +50,7 @@ class _AppointmentsState extends State<Appointments> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: body(),
+        appBar: appBar(),
         floatingActionButton: commonWidget.floatingButton(context));
   }
 
@@ -101,10 +108,6 @@ class _AppointmentsState extends State<Appointments> {
             ],
           ),
         ));
-  }
-
-  void callBackToRefresh() {
-    (context as Element).markNeedsBuild();
   }
 
   Widget body() {
@@ -181,11 +184,7 @@ class _AppointmentsState extends State<Appointments> {
                                     ? upcomingInfo[i]
                                     : appointmentsData.result.upcoming[i],
                                 onChanged: (value) {
-                                  Provider.of<AppointmentsListViewModel>(
-                                      context,
-                                      listen: false)
-                                    ..clearAppointments()
-                                    ..fetchAppointments();
+                                  refreshAppointments();
                                 });
                           },
                           itemCount: !isSearch
@@ -229,11 +228,7 @@ class _AppointmentsState extends State<Appointments> {
                                           ? historyInfo[i]
                                           : appointmentsData.result.past[i],
                                       onChanged: (value) {
-                                        Provider.of<AppointmentsListViewModel>(
-                                            context,
-                                            listen: false)
-                                          ..clearAppointments()
-                                          ..fetchAppointments();
+                                        refreshAppointments();
                                       },closePage: (value){
                                        Navigator.pop(context);
                                   },);
@@ -271,5 +266,77 @@ class _AppointmentsState extends State<Appointments> {
           ),
         );
     }
+  }
+
+  Widget appBar() {
+    return AppBar(
+        flexibleSpace: GradientAppBar(),
+        leading: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            SizedBoxWidget(
+              height: 0,
+              width: 30,
+            ),
+            IconWidget(
+              icon: Icons.arrow_back_ios,
+              colors: Colors.white,
+              size: 20,
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+        title: getTitle());
+  }
+
+  Widget getTitle() {
+    return Row(
+      children: [
+        Expanded(
+          child: TextWidget(
+            text: Constants.Appointments_Title,
+            colors: Colors.white,
+            overflow: TextOverflow.visible,
+            fontWeight: FontWeight.w600,
+            fontsize: 18,
+            softwrap: true,
+          ),
+        ),
+        IconWidget(
+          icon: Icons.notifications,
+          colors: Colors.white,
+          size: 22,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationMain()),
+            );
+          },
+        ),
+        SwitchProfile().buildActions(context, _key, callBackToRefresh),
+        // IconWidget(
+        //   icon: Icons.more_vert,
+        //   colors: Colors.white,
+        //   size: 24,
+        //   onTap: () {},
+        // ),
+      ],
+    );
+  }
+
+  void callBackToRefresh() {
+    (context as Element).markNeedsBuild();
+    refreshAppointments();
+  }
+
+  void refreshAppointments(){
+    Provider.of<AppointmentsListViewModel>(
+        context,
+        listen: false)
+      ..clearAppointments()
+      ..fetchAppointments();
   }
 }

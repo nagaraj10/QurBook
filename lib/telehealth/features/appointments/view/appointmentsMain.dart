@@ -20,12 +20,11 @@ class AppointmentsMain extends StatefulWidget {
 }
 
 class _AppointmentsMainState extends State<AppointmentsMain> {
-  final GlobalKey<State> _key = new GlobalKey<State>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: appBar(),
+        /*appBar: appBar(),*/
         body: MultiProvider(
           providers: [
             ChangeNotifierProvider(
@@ -42,7 +41,7 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
         ));
   }
 
-  Widget appBar() {
+ /* Widget appBar() {
     return AppBar(
         flexibleSpace: GradientAppBar(),
         leading: Row(
@@ -103,5 +102,5 @@ class _AppointmentsMainState extends State<AppointmentsMain> {
 
   void callBackToRefresh() {
     (context as Element).markNeedsBuild();
-  }
+  }*/
 }

@@ -8,7 +8,7 @@ class AuthenticationValidator {
     if (name.length == 0) {
       return strUserNameCantEmpty;
     } else if (!regexName.hasMatch(name)) {
-      return strUserNameValid;
+      return strUserNameCantEmpty;
     }
     return null;
   }

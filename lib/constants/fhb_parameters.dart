@@ -290,11 +290,14 @@ const String appointmentCreatedMessage =
     'Created a new appointment successfully.';
 const String someWentWrong = 'Booking appointment failed.. Some went wrong!';
 const String checkSlots = 'Checking available slots..';
-const String selectSlotsMsg = 'Please select your time slot before you book';
+const String selectSlotsMsg = 'Please select your time slot before you book an appointment';
 const String noUrl = 'Something went wrong ..please try again..';
-const String noAddress = 'Please fill your address details before you book';
-const String noGender = 'Please fill your gender & address details before you book';
-const String noDOB = 'Please fill your date of birth details before you book';
+const String noAddress = 'Please fill your address details in your profile before you book an appointment';
+const String noGender = 'Please fill your gender and address details in your profile before you book an appointment';
+const String noDOB = 'Please fill your date of birth in your profile before you book an appointment';
+const String noHeight = 'Please fill your height in your profile before you book an appointment';
+const String noWeight = 'Please fill your weight in your profile before you book an appointment';
+const String noAdditionalInfo = 'Please fill your height & weight in your profile before you book an appointment';
 
 //Payment
 const String PAYMENT_STATUS = 'payment_status';

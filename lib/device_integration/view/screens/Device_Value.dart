@@ -589,5 +589,11 @@ Widget TypeIcon(String type) {
       height: 40.0,
       width: 40.0,
     );
+  }else{
+    return Image.asset(
+      'assets/launcher/myfhb.png',
+      height: 40.0,
+      width: 40.0,
+    );
   }
 }

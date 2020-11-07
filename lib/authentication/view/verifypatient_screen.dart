@@ -252,7 +252,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
             await authViewModel.verifyMyOTP(params.toJson());
         if (response.isSuccess) {
           //? this might be change
-          toast.getToast('user Added successfully', Colors.green);
+          toast.getToast('User added successfully', Colors.green);
           //Navigator.pop(context);
           Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                   arguments: AddFamilyUserInfoArguments(

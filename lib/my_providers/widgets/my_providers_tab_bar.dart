@@ -120,7 +120,6 @@ class MyProviderTabBarState extends State<MyProvidersTabBar> {
                   providersBloc: widget.providersBloc,
                   myProviderState: widget.myProviderState,
                   refresh: () {
-                    print('tab refresh');
                     widget.refresh();
                   },
                 ))
