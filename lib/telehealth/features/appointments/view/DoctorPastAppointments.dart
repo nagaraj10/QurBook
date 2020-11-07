@@ -237,7 +237,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                       null),*/
                   commonWidget.iconWithText(
                       Constants.Appointments_prescriptionImage,
-                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Colors.black38,
                       Constants.STR_PRESCRIPTION, () async {
                     if (healthRecord > 0) {
                       int position =
