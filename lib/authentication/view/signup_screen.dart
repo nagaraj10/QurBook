@@ -286,23 +286,25 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
 
   _savePatientDetails() async {
     FocusScope.of(context).unfocus();
+    userCollection.clear();
+    userCollection = new List();
     if (_SignupKey.currentState.validate() && checkedValue) {
       _SignupKey.currentState.save();
       UserContactCollection3 user3 = UserContactCollection3();
-      user3.phoneNumber = mobileNoController.text;
-      user3.email = emailController.text;
+      user3.phoneNumber = mobileNoController.text.trim();
+      user3.email = emailController.text.trim();
       user3.isPrimary = true;
       userCollection.add(user3);
       PatientSignUp patientSignUp = PatientSignUp();
-      patientSignUp.firstName = firstNameController.text;
-      patientSignUp.lastName = lastNamController.text;
+      patientSignUp.firstName = firstNameController.text.trim();
+      patientSignUp.lastName = lastNamController.text.trim();
       patientSignUp.source = strSource;
       patientSignUp.password = passwordController.text;
       Map<String, dynamic> postMediaData = new Map();
-      postMediaData[strfirstName] = firstNameController.text;
-      postMediaData[strlastName] = lastNamController.text;
+      postMediaData[strfirstName] = firstNameController.text.trim();
+      postMediaData[strlastName] = lastNamController.text.trim();
       postMediaData[strsource] = strSource;
-      postMediaData[strpassword] = passwordController.text;
+      postMediaData[strpassword] = passwordController.text.trim();
       postMediaData[struserContactCollection3] = userCollection.toList();
       signuplModel.PatientSignUp response =
           await authViewModel.registerPatient(postMediaData);

@@ -63,6 +63,16 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
   }
 
   Widget doctorsHistoryListCard(Past doc) {
+    List<String> recordIds = new List();
+    if (doc.healthRecord.prescription != null &&
+        doc.healthRecord.prescription.length > 0) {
+      for (int i = 0; i < doc.healthRecord.prescription.length; i++) {
+        if (!recordIds.contains(doc.healthRecord.prescription[i])) {
+          recordIds.add(doc.healthRecord.prescription[i]);
+        }
+      }
+    }
+    int healthRecord = (recordIds.length > 0) ? recordIds.length : 0;
     return Card(
         color: Colors.white,
         elevation: 0.5,
@@ -219,12 +229,34 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                     goToChatIntegration(doc);
                   }, null),
                   SizedBoxWidget(width: 15.0),
-                  commonWidget.iconWithText(
+                  /*commonWidget.iconWithText(
                       Constants.Appointments_prescriptionImage,
                       Colors.black38,
                       Constants.STR_PRESCRIPTION,
                       () {},
-                      null),
+                      null),*/
+                  commonWidget.iconWithText(
+                      Constants.Appointments_prescriptionImage,
+                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Constants.STR_PRESCRIPTION, () async {
+                    if (healthRecord > 0) {
+                      int position =
+                          getCategoryPosition(Constants.STR_PRESCRIPTION);
+
+                      await Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => MyRecords(
+                          categoryPosition: position,
+                          allowSelect: false,
+                          isAudioSelect: false,
+                          isNotesSelect: true,
+                          selectedMedias: recordIds,
+                          isFromChat: false,
+                          showDetails: true,
+                          isAssociateOrChat: false,
+                        ),
+                      ));
+                    }
+                  }, healthRecord.toString()),
                   SizedBoxWidget(width: 15.0),
                   commonWidget.iconWithText(Constants.Appointments_receiptImage,
                       Colors.black38, Constants.Appointments_receipt, () {
@@ -252,7 +284,7 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
       context,
       MaterialPageRoute(
           builder: (context) => ResheduleMain(
-            isFromNotification: false,
+                isFromNotification: false,
                 doc: doc,
                 isReshedule: isReshedule,
                 closePage: (value) {
