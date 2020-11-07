@@ -56,6 +56,7 @@ class _MyProvidersState extends State<MyProviders> {
   List<Slots> slotsModel = new List<Slots>();
   ProvidersBloc _providersBloc;
   MyProvidersResponse myProvidersResponseList;
+  List<Doctors> copyOfdoctorsModel;
 
   @override
   void initState() {
@@ -342,26 +343,30 @@ class _MyProvidersState extends State<MyProviders> {
   }
 
   Widget myProviderList(MyProvidersResponse myProvidersResponse) {
-    return (myProvidersResponse != null && myProvidersResponse.isSuccess)
-        ? ListView.separated(
-            itemBuilder: (BuildContext context, index) =>
-                providerDoctorItemWidget(index,
-                    isSearch ? doctors : myProvidersResponse.result.doctors),
-            separatorBuilder: (BuildContext context, index) {
-              return Divider(
-                height: 0,
-                color: Colors.transparent,
-              );
-            },
-            itemCount: isSearch
-                ? doctors.length
-                : myProvidersResponse.result.doctors.length,
-          )
-        : Container(
-            child: Center(
-              child: Text(variable.strNoDoctordata),
-            ),
+    if (myProvidersResponse != null && myProvidersResponse.isSuccess) {
+      copyOfdoctorsModel = myProvidersResponse?.result?.doctors;
+      final ids = copyOfdoctorsModel.map((e) => e?.user?.id).toSet();
+      copyOfdoctorsModel.retainWhere((x) => ids.remove(x?.user?.id));
+      return ListView.separated(
+        itemBuilder: (BuildContext context, index) => providerDoctorItemWidget(
+            index, isSearch ? doctors : copyOfdoctorsModel),
+        separatorBuilder: (BuildContext context, index) {
+          return Divider(
+            height: 0,
+            color: Colors.transparent,
           );
+        },
+        itemCount: isSearch
+            ? doctors.length
+            : copyOfdoctorsModel.length,
+      );
+    } else {
+      return Container(
+        child: Center(
+          child: Text(variable.strNoDoctordata),
+        ),
+      );
+    }
   }
 
   Widget providerDoctorItemWidget(int i, List<Doctors> docs) {

@@ -34,6 +34,7 @@ class MyProvidersDoctorsList extends StatefulWidget {
 
 class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   List<Doctors> doctorsModel;
+  List<Doctors> copyOfdoctorsModel;
   MyProviderState myProviderState;
   MyProviderViewModel providerViewModel;
   CommonWidgets commonWidgets = new CommonWidgets();
@@ -42,6 +43,16 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   void initState() {
     providerViewModel = new MyProviderViewModel();
     super.initState();
+    filterDuplicateDoctor();
+  }
+
+  void filterDuplicateDoctor() {
+    if (widget?.doctorsModel.length > 0) {
+      copyOfdoctorsModel = widget.doctorsModel;
+      final ids = copyOfdoctorsModel.map((e) => e?.user?.id).toSet();
+      copyOfdoctorsModel.retainWhere((x) => ids.remove(x?.user?.id));
+      doctorsModel = copyOfdoctorsModel;
+    }
   }
 
   @override
@@ -52,7 +63,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
-        Doctors eachDoctorModel = widget.doctorsModel[index];
+        Doctors eachDoctorModel = doctorsModel[index];
         String specialization =
             eachDoctorModel.doctorProfessionalDetailCollection != null
                 ? eachDoctorModel.doctorProfessionalDetailCollection.length > 0
@@ -176,9 +187,11 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              commonWidgets.getBookMarkedIconNew(eachDoctorModel, () {
+                              commonWidgets
+                                  .getBookMarkedIconNew(eachDoctorModel, () {
                                 providerViewModel
-                                    .bookMarkDoctor(eachDoctorModel,false, 'ListItem')
+                                    .bookMarkDoctor(
+                                        eachDoctorModel, false, 'ListItem')
                                     .then((status) {
                                   if (status) {
                                     widget.refresh();
@@ -197,7 +210,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
           color: Colors.transparent,
         );
       },
-      itemCount: widget.doctorsModel.length,
+      itemCount: doctorsModel.length,
     );
   }
 }
