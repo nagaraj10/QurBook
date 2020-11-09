@@ -40,6 +40,7 @@ class _GridViewNew extends State<GridViewNew> {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
+      primary: false,
       crossAxisCount: 4,
       crossAxisSpacing: 10,
       childAspectRatio: 1.6,
