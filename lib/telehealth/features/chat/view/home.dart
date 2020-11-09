@@ -406,9 +406,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         child: Text(
                           document[STR_CREATED_AT] != null
                               ? LAST_RECEIVED +
-                                  DateFormat(DATE_FORMAT).format(
-                                      DateTime.fromMillisecondsSinceEpoch(
-                                          int.parse(document[STR_CREATED_AT])))
+                              getFormattedNewDateTime(int.parse(document[STR_CREATED_AT]))
                               : '',
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
@@ -434,5 +432,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
         ],
       );
     }
+  }
+
+  String getFormattedNewDateTime(int timeStamp) {
+    var date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
+    var formattedDate = DateFormat('MMM d, hh:mm a').format(date);
+    return formattedDate;
   }
 }

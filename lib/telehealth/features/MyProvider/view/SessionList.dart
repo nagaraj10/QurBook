@@ -28,6 +28,7 @@ class SessionListState extends State<SessionList> {
   Widget build(BuildContext context) {
     return Container(
       child: ListView.builder(
+          primary: false,
           shrinkWrap: true,
           itemCount: widget.sessionData.length,
           itemBuilder: (BuildContext context, int index) {

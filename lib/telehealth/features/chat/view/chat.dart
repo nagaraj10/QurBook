@@ -156,9 +156,7 @@ class ChatState extends State<Chat> {
                     Text(
                       widget.lastDate != null
                           ? LAST_RECEIVED +
-                              DateFormat(DATE_FORMAT).format(
-                                  DateTime.fromMillisecondsSinceEpoch(
-                                      int.parse(widget.lastDate)))
+                          getFormattedNewDateTime(int.parse(widget.lastDate))
                           : '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -206,6 +204,12 @@ class ChatState extends State<Chat> {
         _patientDetailOrSearch();
       }
     });
+  }
+
+  String getFormattedNewDateTime(int timeStamp) {
+    var date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
+    var formattedDate = DateFormat('MMM d, hh:mm a').format(date);
+    return formattedDate;
   }
 }
 
@@ -749,14 +753,11 @@ class ChatScreenState extends State<ChatScreen> {
                               ),
               ],
             ),
-
             // Time
             isLastMessageLeft(index)
                 ? Container(
                     child: Text(
-                      DateFormat(DATE_FORMAT).format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              int.parse(document[STR_TIME_STAMP]))),
+                      getFormattedDateTime(int.parse(document[STR_TIME_STAMP])),
                       style: TextStyle(
                           color: greyColor,
                           fontSize: 12.0,
@@ -777,6 +778,12 @@ class ChatScreenState extends State<ChatScreen> {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => PDFViewURL(url: url),
     ));
+  }
+
+  String getFormattedDateTime(int timeInMillis) {
+    var date = DateTime.fromMillisecondsSinceEpoch(timeInMillis);
+    var formattedDate = DateFormat('MMM d, hh:mm a').format(date);
+    return formattedDate;
   }
 
   bool isLastMessageLeft(int index) {
