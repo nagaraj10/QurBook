@@ -499,8 +499,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
             widget.data.metadata, widget.data.createdOn);
         break;
       case CommonConstants.categoryDescriptionNotes:
-        return RecordInfoCard().getCardForBillsAndOthers(
-            widget.data.metadata, widget.data.createdOn);
+        return RecordInfoCard()
+            .getCardForNotes(widget.data.metadata, widget.data.createdOn);
         break;
 
       default:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Health/MetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
@@ -344,6 +345,62 @@ class RecordInfoCard {
   }
 
   getCardForBillsAndOthers(Metadata metaInfo, String createdDate) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Container(),
+              ),
+              Text(
+                createdDate != null
+                    ? FHBUtils().getMonthDateYear(createdDate)
+                    : '',
+                textAlign: TextAlign.end,
+                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+              )
+            ],
+          ),
+          Text(
+            metaInfo.fileName != null ? metaInfo.fileName : '',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+          /*metaInfo.memoText != null
+              ? Text(toBeginningOfSentenceCase(metaInfo.memoText))
+              : Text(''),*/
+          SizedBox(
+            height: 10,
+          ),
+          metaInfo.doctor != null
+              ? Text(
+                  metaInfo.doctor.name,
+                  style: TextStyle(fontSize: 13),
+                )
+              : SizedBox(height: 0),
+          metaInfo.memoText != null
+              ? Text(
+                  metaInfo.memoText,
+                  style: TextStyle(fontSize: 13),
+                )
+              : SizedBox(height: 0),
+        ],
+      ),
+    );
+  }
+
+  getCardForNotes(Metadata metaInfo, String createdDate) {
+    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME,
+            metaInfo.healthRecordCategory.categoryName)
+        .then((value) {
+      PreferenceUtil.saveString(
+              Constants.KEY_CATEGORYID, metaInfo.healthRecordCategory.id)
+          .then((value) {});
+    });
+
     return Container(
       padding: EdgeInsets.all(20),
       color: Colors.white,
