@@ -536,6 +536,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               transitionBuilder: (context, suggestionsBox, controller) {
                 return suggestionsBox;
               },
+              errorBuilder: (context, suggestion) {
+                return ListTile(
+                  title: Text(
+                    'Oops. We could not find the city you typed.',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
+                  ),
+                );
+              },
               onSuggestionSelected: (suggestion) {
                 cntrlr_addr_city.text = suggestion.name;
                 cityVal = suggestion;
@@ -573,6 +583,16 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               },
               transitionBuilder: (context, suggestionsBox, controller) {
                 return suggestionsBox;
+              },
+              errorBuilder: (context, suggestion) {
+                return ListTile(
+                  title: Text(
+                    'Oops. We could not find the state you typed.',
+                    style: TextStyle(
+                      fontSize: 14.0,
+                    ),
+                  ),
+                );
               },
               onSuggestionSelected: (suggestion) {
                 cntrlr_addr_state.text = suggestion.name;

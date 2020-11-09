@@ -1058,7 +1058,8 @@ class ApiBaseHelper {
       final body = jsonDecode(response.body);
       return body;
     } else {
-      throw Exception("Unable to perform request!");
+      //throw Exception("Unable to perform request!");
+      throw InnerException('No Data Found');
     }
   }
 
@@ -1309,5 +1310,22 @@ class ApiBaseHelper {
       print(e);
       return response?.data;
     }
+  }
+}
+
+abstract class InnerException {
+  factory InnerException([var message]) => _Exception(message);
+}
+
+/** Default implementation of [Exception] which carries a message. */
+class _Exception implements InnerException {
+  final dynamic message;
+
+  _Exception([this.message]);
+
+  String toString() {
+    String message = this.message;
+    if (message == null) return "Exception";
+    return "$message";
   }
 }

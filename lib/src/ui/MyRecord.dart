@@ -1431,9 +1431,11 @@ class _CustomTabsState extends State<CustomTabView>
           widget.categoryData.elementAt(_currentPosition).categoryName;
       categoryID = widget.categoryData.elementAt(_currentPosition).id;
 
-      if (categoryName == Constants.STR_VOICERECORDS) {
+      if (categoryName == Constants.STR_VOICERECORDS ||
+          categoryName == Constants.STR_HOSPITALDOCUMENT) {
         new FHBBasicWidget().showInSnackBar(
-            Constants.MSG_NO_CAMERA_VOICERECORDS, widget.scaffold_state);
+            Constants.MSG_NO_CAMERA_VOICERECORDS + ' ' + categoryName,
+            widget.scaffold_state);
       } else if (categoryName == Constants.STR_NOTES) {
         openNotesDialog();
       } else {

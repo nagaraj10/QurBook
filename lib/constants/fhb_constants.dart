@@ -48,6 +48,7 @@ const String STR_VOICERECORDS = 'Voice Records';
 const String STR_CLAIMSRECORD = 'Claim Records';
 const String STR_FEEDBACK = 'Feedback';
 const String STR_WEARABLES = 'Wearable';
+const String STR_HOSPITALDOCUMENT = 'Hospital Documents';
 
 const String STR_VOICE_NOTES = 'Voice Notes';
 const String KEY_USERID_MAIN = 'mainUserUD';
@@ -89,8 +90,7 @@ const String KEY_PROFILE_BANNER = 'profileBanner';
 const String KEY_PROFILE_IMAGE = 'profileImage';
 
 const String KEY_DASHBOARD_BANNER = 'dashboardBanner';
-const String MSG_NO_CAMERA_VOICERECORDS =
-    'No Camera Option Available for Voice Records';
+const String MSG_NO_CAMERA_VOICERECORDS = 'No Camera Option Available for';
 const String INTRO_SLIDE_TITLE_1 = 'Click ‘n’ Store';
 const String INTRO_SLIDE_DESC_1 =
     ' You are just a click away from a healthy family! Start capturing medical records and readings at the touch of a button. ';

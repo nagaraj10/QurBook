@@ -1385,7 +1385,7 @@ class CommonDialogBox {
             fhbBasicWidget.getTextFiledWithHintAndSuffixText(
                 context,
                 CommonConstants.strSystolicPressure,
-                commonConstants.bpSPUNIT,
+                commonConstants.bpDPUNIT,
                 deviceController, (errorValue) {
               setState(() {
                 errForbpSp = errorValue;
