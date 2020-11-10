@@ -206,7 +206,7 @@ class AppointmentsCommonWidget {
                           doc.doctor.user.id, doc.bookedBy.id, recordIds)
                       .then((value) {
                     if (value != null && value.isSuccess) {
-                      toast.getToast('Sucess', Colors.green);
+                      toast.getToast('Success', Colors.green);
                       refresh();
                     } else {
                       //pr.hide();
