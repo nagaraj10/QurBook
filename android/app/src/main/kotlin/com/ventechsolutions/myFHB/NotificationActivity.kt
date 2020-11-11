@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.view.WindowManager.LayoutParams.*
@@ -41,6 +42,13 @@ class NotificationActivity : AppCompatActivity() {
         docId=intent.getStringExtra(getString(R.string.docId))
         docPic=intent.getStringExtra(getString(R.string.docPic))
         listenEvent(id=channelName)
+        val handler = Handler()
+        val r = object:Runnable {
+            public override fun run() {
+                finish()
+            }
+        }
+        handler.postDelayed(r, 30000)
 
     }
 
