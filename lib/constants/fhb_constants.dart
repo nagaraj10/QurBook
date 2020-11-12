@@ -361,3 +361,5 @@ const String STR_FAMILY_ADD_MSG =
 
 const String MSG_NO_VOICERECORDS = 'Voice record cannot be added for';
 const String KEY_USERID_BOOK = 'userID_BOOK';
+const String ERR_MSG_RECORD_CREATE =
+    'Unable to save the information as the server rejected the message. Please contact Support';

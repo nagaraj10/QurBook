@@ -1245,11 +1245,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   void saveCategoryToprefernce(CategoryResult category) async {
-/*    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, category.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, category.id)
-          .then((value) {});
-    });*/
 
     await PreferenceUtil.saveString(
         Constants.KEY_CATEGORYNAME, category.categoryName);

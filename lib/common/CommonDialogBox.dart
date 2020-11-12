@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
@@ -79,6 +80,7 @@ class CommonDialogBox {
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
 
   FocusNode dateOfBirthFocus = FocusNode();
+  FlutterToast toast = new FlutterToast();
 
   Future<Widget> getDialogBoxForPrescription(
       BuildContext context,
@@ -1753,6 +1755,7 @@ class CommonDialogBox {
             });
           } else {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            toast.getToast(Constants.ERR_MSG_RECORD_CREATE, Colors.red);
           }
         });
       } else {
@@ -1785,6 +1788,7 @@ class CommonDialogBox {
             });
           } else {
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            toast.getToast(Constants.ERR_MSG_RECORD_CREATE, Colors.red);
           }
         });
       }
