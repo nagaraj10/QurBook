@@ -965,7 +965,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           }
         } else {
           pr.hide();
-          toast.getToast(someWentWrong, Colors.red);
+          toast.getToast(value.message != null ? value.message : someWentWrong, Colors.red);
         }
       } else {
         pr.hide();
