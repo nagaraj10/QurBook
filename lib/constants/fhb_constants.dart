@@ -358,3 +358,6 @@ const String STR_DONE = 'Done';
 const String SHEELA_LANG = 'sheela_lang';
 const String STR_FAMILY_ADD_MSG =
     'Your doctor will reach the appointee through your app (name) since the user does not have MyFHB app downloaded';
+
+const String MSG_NO_VOICERECORDS = 'Voice record cannot be added for';
+const String KEY_USERID_BOOK = 'userID_BOOK';

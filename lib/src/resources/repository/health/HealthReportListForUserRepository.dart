@@ -152,11 +152,11 @@ class HealthReportListForUserRepository {
     return imagesList;
   }
 
-  Future<HealthRecordList> getHealthReportLists() async {
+  Future<HealthRecordList> getHealthReportLists({String commonUserId}) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    //String userID = '6aa4195b-56c6-487d-8993-dfd1b39b1a49';
     var requestParam = {};
-    requestParam[query.qr_userid] = userID;
+    requestParam[query.qr_userid] =
+        (commonUserId != null && commonUserId != '') ? commonUserId : userID;
 
     var jsonString = convert.jsonEncode(requestParam);
     String queryVal = query.qr_health_record + query.qr_slash + query.qr_filter;

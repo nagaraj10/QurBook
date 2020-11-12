@@ -139,6 +139,15 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     healthRecords.addAll(CommonUtil.voiceIds);
   }
 
+  clearAttachedRecords() {
+    CommonUtil.recordIds.clear();
+    CommonUtil.notesId.clear();
+    CommonUtil.voiceIds.clear();
+    voiceIdCount = 0;
+    recordIdCount = 0;
+    notesIdCount = 0;
+  }
+
   Future<FamilyMembers> getList() async {
     _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
       familyMembersModel = familyMembersList;
@@ -280,10 +289,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               .toList(),
           onChanged: (SharedByUsers user) {
             setState(() {
+              if (selectedUser != user) {
+                clearAttachedRecords();
+              }
               selectedUser = user;
-              selectedId = user.child.id;
-              print(selectedId);
-              /*toast.getToastForLongTime(STR_FAMILY_ADD_MSG, Colors.deepOrangeAccent);*/
+              if (user.child != null) {
+                if (user.child.id != null) {
+                  selectedId = user.child.id;
+                }
+              } else {
+                selectedId = createdBy;
+              }
             });
           },
         ),
@@ -931,6 +947,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             if (value.result.paymentInfo.payload.paymentGatewayDetail
                     .responseInfo.longurl !=
                 null) {
+              PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
+
               goToPaymentPage(
                   value.result.paymentInfo.payload.paymentGatewayDetail
                       .responseInfo.longurl,
@@ -953,6 +971,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         pr.hide();
         toast.getToast(noUrl, Colors.red);
       }
+      PreferenceUtil.saveString(Constants.KEY_USERID_BOOK, '');
     });
   }
 
@@ -1140,7 +1159,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
     List<CategoryResult> categoryDataList = getCategoryList();
     for (int i = 0; i < categoryDataList.length; i++) {
       if (categoryName == categoryDataList[i].categoryName) {
-        print(categoryName + ' ****' + categoryDataList[i].categoryName);
+        saveCategoryToprefernce(categoryDataList[i]);
         position = i;
       }
     }
@@ -1153,22 +1172,19 @@ class BookingConfirmationState extends State<BookingConfirmation> {
 
   void FetchRecords(int position, bool allowSelect, bool isAudioSelect,
       bool isNotesSelect, List<String> mediaIds) async {
-    print(allowSelect);
-    print(isAudioSelect);
-    print(isNotesSelect);
-    print(position);
-
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
-          categoryPosition: position,
-          allowSelect: allowSelect,
-          isAudioSelect: isAudioSelect,
-          isNotesSelect: isNotesSelect,
-          selectedMedias: mediaIds,
-          isFromChat: false,
-          showDetails: false,
-          isAssociateOrChat: true),
+        categoryPosition: position,
+        allowSelect: allowSelect,
+        isAudioSelect: isAudioSelect,
+        isNotesSelect: isNotesSelect,
+        selectedMedias: mediaIds,
+        isFromChat: false,
+        showDetails: false,
+        isAssociateOrChat: true,
+        userID: selectedId,
+      ),
     ))
         .then((results) {
       if (results.containsKey(STR_META_ID)) {
@@ -1226,5 +1242,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       fees = '';
     }
     return fees;
+  }
+
+  void saveCategoryToprefernce(CategoryResult category) async {
+/*    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, category.categoryName)
+        .then((value) {
+      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, category.id)
+          .then((value) {});
+    });*/
+
+    await PreferenceUtil.saveString(
+        Constants.KEY_CATEGORYNAME, category.categoryName);
+    await PreferenceUtil.saveString(Constants.KEY_CATEGORYID, category.id);
+    await PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, selectedId);
   }
 }

@@ -1596,6 +1596,7 @@ class CommonDialogBox {
 
       Map<String, dynamic> postMainData = new Map();
       Map<String, dynamic> postMediaData = new Map();
+
       String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       if (modeOfSave) {
         postMainData[parameters.struserId] = userID;
@@ -1787,79 +1788,6 @@ class CommonDialogBox {
           }
         });
       }
-      /*if (imagePath != null) {
-        if (modeOfSave) {
-          _healthReportListForUserBlock
-              .updateMedia(params.toString(), metaInfoId)
-              .then((updateMediaResponse) {
-            if (updateMediaResponse.success) {
-              PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
-              PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
-
-              _healthReportListForUserBlock.getHelthReportLists().then((value) {
-                PreferenceUtil.saveCompleteData(
-                    Constants.KEY_COMPLETE_DATA, value);
-
-                Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                    .pop();
-
-                if (categoryName == Constants.STR_NOTES) {
-                  Navigator.of(context).pop();
-                  onRefresh(true);
-                } else {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                }
-              });
-            }
-          });
-        } else {
-          _healthReportListForUserBlock
-              .submit(params.toString())
-              .then((savedMetaDataResponse) {
-            if (savedMetaDataResponse.success) {
-              if (categoryName == Constants.STR_IDDOCS) {
-                PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
-                PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
-              }
-
-              postAudioToServer(
-                  savedMetaDataResponse.response.data.mediaMetaID, context,
-                  onRefresh: onRefresh);
-            }
-          });
-        }
-      } else {
-        _healthReportListForUserBlock
-            .submit(params.toString())
-            .then((savedMetaDataResponse) {
-          if (savedMetaDataResponse.success) {
-            PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
-            PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
-            if (audioPathMain != '') {
-              saveAudioFile(context, audioPathMain,
-                  savedMetaDataResponse.response.data.mediaMetaID,
-                  onRefresh: onRefresh);
-            } else {
-              _healthReportListForUserBlock.getHelthReportLists().then((value) {
-                PreferenceUtil.saveCompleteData(
-                        Constants.KEY_COMPLETE_DATA, value)
-                    .then((value) {
-                  if (categoryName == Constants.STR_NOTES) {
-                    Navigator.of(_keyLoader.currentContext, rootNavigator: true)
-                        .pop();
-                    Navigator.of(context).pop();
-                    onRefresh(true);
-                  } else {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  }
-                });
-              });
-            }
-          }
-        });
-      }*/
     } else {
       showDialog(
           context: context,

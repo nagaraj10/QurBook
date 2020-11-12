@@ -249,13 +249,13 @@ class HealthReportListForUserBlock implements BaseBloc {
     return userHealthResponseList;
   }
 
-  Future<HealthRecordList> getHelthReportLists() async {
+  Future<HealthRecordList> getHelthReportLists({String userID}) async {
     HealthRecordList userHealthResponseList;
     healthReportListSinks
         .add(ApiResponse.loading(variable.strGettingHealthRecords));
     try {
-      userHealthResponseList =
-          await _healthReportListForUserRepository.getHealthReportLists();
+      userHealthResponseList = await _healthReportListForUserRepository
+          .getHealthReportLists(commonUserId: userID);
       healthReportListSinks.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       healthReportListSink.add(ApiResponse.error(e.toString()));

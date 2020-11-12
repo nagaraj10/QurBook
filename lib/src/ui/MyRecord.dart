@@ -63,6 +63,7 @@ class MyRecords extends StatefulWidget {
   List<HealthRecordCollection> selectedRecordIds;
   bool isAssociateOrChat;
   bool isFromBills;
+  String userID;
 
   MyRecords(
       {this.categoryPosition,
@@ -74,7 +75,8 @@ class MyRecords extends StatefulWidget {
       this.showDetails,
       this.selectedRecordIds,
       this.isAssociateOrChat,
-      this.isFromBills});
+      this.isFromBills,
+      this.userID});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -335,7 +337,6 @@ class _MyRecordsState extends State<MyRecords> {
         completeData =
             PreferenceUtil.getCompleteData(Constants.KEY_SEARCHED_LIST);
       }
-      print('end of getMainWidgets');
     }
     return CustomTabView(
       initPosition: initPosition,
@@ -384,6 +385,7 @@ class _MyRecordsState extends State<MyRecords> {
       scaffold_state: scaffold_state,
       completeData: completeData,
       recordsState: this,
+      userID: widget.userID ?? '',
     );
   }
 
@@ -577,6 +579,7 @@ class CustomTabView extends StatefulWidget {
   List<HealthRecordCollection> selectedRecordsId = new List();
   bool isAssociateOrChat;
   bool isFromBills;
+  String userID;
   CustomTabView(
       {@required this.itemCount,
       this.tabBuilder,
@@ -601,7 +604,8 @@ class CustomTabView extends StatefulWidget {
       this.healthResult,
       this.selectedRecordsId,
       this.isAssociateOrChat,
-      this.isFromBills});
+      this.isFromBills,
+      this.userID});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -797,23 +801,7 @@ class _CustomTabsState extends State<CustomTabView>
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME,
-                            Constants.STR_VOICERECORDS)
-                        .then((value) {
-                      PreferenceUtil.saveString(
-                              Constants.KEY_CATEGORYID,
-                              PreferenceUtil.getStringValue(
-                                  Constants.KEY_VOICE_ID))
-                          .then((value) {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(
-                              builder: (context) => AudioRecordScreen(
-                                fromVoice: true,
-                              ),
-                            ))
-                            .then((results) {});
-                      });
-                    });
+                    onVoiceRecordClicked();
                   },
                 ),
                 Constants.VOICE_TITLE),
@@ -970,12 +958,12 @@ class _CustomTabsState extends State<CustomTabView>
 
     if (_healthReportListForUserBlock == null) {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportLists();
+      _healthReportListForUserBlock.getHelthReportLists(userID: widget.userID);
     } else if (_healthReportListForUserBlock != null) {
       _healthReportListForUserBlock = null;
 
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
-      _healthReportListForUserBlock.getHelthReportLists();
+      _healthReportListForUserBlock.getHelthReportLists(userID: widget.userID);
     }
 
     if (_mediaTypeBlock == null) {
@@ -1427,10 +1415,7 @@ class _CustomTabsState extends State<CustomTabView>
     if (status.isUndetermined || status.isDenied) {
       await _handleCameraAndMic();
     } else {
-      categoryName =
-          widget.categoryData.elementAt(_currentPosition).categoryName;
-      categoryID = widget.categoryData.elementAt(_currentPosition).id;
-
+      saveCategoryToPrefernce();
       if (categoryName == Constants.STR_VOICERECORDS ||
           categoryName == Constants.STR_HOSPITALDOCUMENT) {
         new FHBBasicWidget().showInSnackBar(
@@ -1472,5 +1457,33 @@ class _CustomTabsState extends State<CustomTabView>
 //    );
   }
 
-  CategoryResult getOthersCategory() {}
+  onVoiceRecordClicked() async {
+    saveCategoryToPrefernce();
+    if (categoryName == Constants.STR_HOSPITALDOCUMENT) {
+      new FHBBasicWidget().showInSnackBar(
+          Constants.MSG_NO_VOICERECORDS + ' ' + categoryName,
+          widget.scaffold_state);
+    } else {
+      PreferenceUtil.saveString(
+              Constants.KEY_CATEGORYNAME, Constants.STR_VOICERECORDS)
+          .then((value) {
+        PreferenceUtil.saveString(Constants.KEY_CATEGORYID,
+                PreferenceUtil.getStringValue(Constants.KEY_VOICE_ID))
+            .then((value) {
+          Navigator.of(context)
+              .push(MaterialPageRoute(
+                builder: (context) => AudioRecordScreen(
+                  fromVoice: true,
+                ),
+              ))
+              .then((results) {});
+        });
+      });
+    }
+  }
+
+  saveCategoryToPrefernce() {
+    categoryName = widget.categoryData.elementAt(_currentPosition).categoryName;
+    categoryID = widget.categoryData.elementAt(_currentPosition).id;
+  }
 }

@@ -11,10 +11,10 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
-import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart' as doc;
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
+    as doc;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
-
 
 import '../utils/PageNavigator.dart';
 
@@ -50,6 +50,8 @@ class _SplashScreenState extends State<SplashScreen> {
       var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
 
       var deviceIfo = PreferenceUtil.isKeyValid(Constants.KEY_DEVICEINFO);
+      PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, '');
+
       if (!isFirstTime) {
         PreferenceUtil.saveString(Constants.KEY_INTRO_SLIDER, variable.strtrue);
         Navigator.pushAndRemoveUntil(
@@ -73,12 +75,11 @@ class _SplashScreenState extends State<SplashScreen> {
                     doctorSessionId: widget.doctorSessionId,
                     bookingId: widget.bookingID,
                     doctor: doc.Doctor(id: widget.doctorID),
-                    healthOrganization: City(id: widget.healthOrganizationId)
-                    ),
+                    healthOrganization: City(id: widget.healthOrganizationId)),
               ));
             } else if (widget.nsRoute == 'cancel_appointment') {
               //cancel appointments route
-              
+
               Get.offAll(TelehealthProviders(
                 arguments: HomeScreenArguments(
                     selectedIndex: 0,
