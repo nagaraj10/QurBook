@@ -120,8 +120,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   void initState() {
     providerViewModel = new MyProviderViewModel();
     createAppointMentViewModel = new CreateAppointMentViewModel();
-    createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    selectedId = createdBy;
+    createdBy = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    selectedId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     _familyListBloc = new FamilyListBloc();
     _familyListBloc.getFamilyMembersListNew();
 
@@ -965,7 +965,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
           }
         } else {
           pr.hide();
-          toast.getToast(value.message != null ? value.message : someWentWrong, Colors.red);
+          toast.getToast(value.message != null ? value.message : someWentWrong,
+              Colors.red);
         }
       } else {
         pr.hide();
@@ -1245,7 +1246,6 @@ class BookingConfirmationState extends State<BookingConfirmation> {
   }
 
   void saveCategoryToprefernce(CategoryResult category) async {
-
     await PreferenceUtil.saveString(
         Constants.KEY_CATEGORYNAME, category.categoryName);
     await PreferenceUtil.saveString(Constants.KEY_CATEGORYID, category.id);

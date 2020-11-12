@@ -203,7 +203,7 @@ class AppointmentsCommonWidget {
                   recordIds = results['metaId'].cast<String>();
 
                   associateRecords(
-                          doc.doctor.user.id, doc.bookedBy.id, recordIds)
+                          doc.doctor.user.id, doc.bookedFor.id, recordIds)
                       .then((value) {
                     if (value != null && value.isSuccess) {
                       toast.getToast('Success', Colors.green);
