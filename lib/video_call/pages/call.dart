@@ -10,6 +10,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
+import 'package:screen/screen.dart';
 
 import '../utils/settings.dart';
 
@@ -47,6 +48,7 @@ class _CallPageState extends State<CallPage> {
     AgoraRtcEngine.destroy();
     cancelOnGoingNS();
     super.dispose();
+    Screen.keepOn(false);
   }
 
   @override
@@ -61,6 +63,7 @@ class _CallPageState extends State<CallPage> {
 
     // initialize agora sdk
     initialize();
+    Screen.keepOn(true);
   }
 
   cancelOnGoingNS() async {
