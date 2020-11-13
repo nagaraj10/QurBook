@@ -21,7 +21,7 @@ dependencies:
     sdk: flutter
   
   gmiwidgetspackage:
-    path: D:\commonWidget
+    path: C:\source.code\flutter\fhb_common\myfhb-flutter-common\
 
   # The following adds the Cupertino Icons font to your application.
   flutter_launcher_icons: ^0.7.0
@@ -99,6 +99,7 @@ dependencies:
   flutter_money_formatter:
     git:
       url: git://github.com/anisalibegic/flutter_money_formatter.git
+  screen: ^0.0.5    
 
 
 
