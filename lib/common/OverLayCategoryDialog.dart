@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Media/DeviceModel.dart';
 
 class OverlayCategoryDialog extends ModalRoute<void> {
@@ -104,7 +106,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
   List<Widget> getWidgetsFordevices(BuildContext context) {
     List<Widget> categoryWidgetList = new List();
 
-    List<CategoryData> catgoryDataList = PreferenceUtil.getCategoryTypeDisplay(
+    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryTypeDisplay(
         Constants.KEY_CATEGORYLIST_VISIBLE);
 
     for (int i = 0; i < catgoryDataList.length; i++) {
@@ -117,7 +119,7 @@ class OverlayCategoryDialog extends ModalRoute<void> {
                   width: 25,
                   height: 25,
                   child: CachedNetworkImage(
-                    imageUrl: Constants.BASERURL + catgoryDataList[i].logo,
+                    imageUrl: Constants.BASE_URL + catgoryDataList[i].logo,
                     color: Colors.white70,
                     placeholder: (context, url) =>
                         new CircularProgressIndicator(),
@@ -151,7 +153,6 @@ class OverlayCategoryDialog extends ModalRoute<void> {
         ),
       );
     }
-    print('categoryWidgetList' + categoryWidgetList.length.toString());
 
     return categoryWidgetList;
   }

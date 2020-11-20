@@ -3,7 +3,14 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
+import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
+import 'AppleHealthSettings.dart';
+import 'dart:io';
 
 class MySettings extends StatefulWidget {
   @override
@@ -11,27 +18,87 @@ class MySettings extends StatefulWidget {
 }
 
 class _MySettingsState extends State<MySettings> {
-  //MyProfile myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
   bool _isdigitRecognition = true;
   bool _isdeviceRecognition = true;
-  bool _isGoogleFit = true;
+  bool _isGFActive = false;
+  DevicesViewModel _deviceModel;
+  bool _isHKActive = false;
+  bool _firstTym = true;
+  bool _isBPActive = false;
+  bool _isGLActive = false;
+  bool _isOxyActive = false;
+  bool _isTHActive = false;
+  bool _isWSActive = false;
+  bool _isHealthFirstTime = false;
 
+  List<DeviceData> selectedList;
+  DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
   @override
   void initState() {
+    selectedList = List();
+    _deviceModel = new DevicesViewModel();
     super.initState();
     PreferenceUtil.init();
     setState(() {
+      _deviceDataHelper = DeviceDataHelper();
       _isdeviceRecognition =
           PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
-                  'false'
+                  variable.strFalse
               ? false
               : true;
       _isdigitRecognition =
           PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
-                  'false'
+                  variable.strFalse
+              ? false
+              : true;
+      _isGFActive = PreferenceUtil.getStringValue(Constants.activateGF) ==
+              variable.strFalse
+          ? false
+          : true;
+      _isHKActive = PreferenceUtil.getStringValue(Constants.activateHK) ==
+              variable.strFalse
+          ? false
+          : true;
+      _isBPActive =
+          PreferenceUtil.getStringValue(Constants.bpMon) == variable.strFalse
+              ? false
+              : true;
+      _isGLActive =
+          PreferenceUtil.getStringValue(Constants.glMon) == variable.strFalse
+              ? false
+              : true;
+      _isOxyActive =
+          PreferenceUtil.getStringValue(Constants.oxyMon) == variable.strFalse
+              ? false
+              : true;
+      _isWSActive =
+          PreferenceUtil.getStringValue(Constants.wsMon) == variable.strFalse
+              ? false
+              : true;
+      _isTHActive =
+          PreferenceUtil.getStringValue(Constants.thMon) == variable.strFalse
+              ? false
+              : true;
+      _firstTym = PreferenceUtil.getStringValue(Constants.isFirstTym) ==
+              variable.strFalse
+          ? false
+          : true;
+      _isHealthFirstTime =
+          PreferenceUtil.getStringValue(Constants.isHealthFirstTime) ==
+                  variable.strFalse
               ? false
               : true;
     });
+    if (_firstTym) {
+      _firstTym = false;
+      _isGFActive = false;
+      PreferenceUtil.saveString(Constants.activateGF, _firstTym.toString());
+      PreferenceUtil.saveString(Constants.isFirstTym, _firstTym.toString());
+    }
+    if (_isHealthFirstTime) {
+      _isHKActive = false;
+      PreferenceUtil.saveString(Constants.activateHK, _isHKActive.toString());
+    }
   }
 
   @override
@@ -52,208 +119,327 @@ class _MySettingsState extends State<MySettings> {
         ),
         flexibleSpace: GradientAppBar(),
       ),
-      body: ListView(
-        padding: EdgeInsets.all(10),
-        children: <Widget>[
-          /*   Container(
-              color: Colors.white,
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView(
               padding: EdgeInsets.all(10),
-              child: InkWell(
-                onTap: () {},
-                child: ListTile(
-                  leading: ClipOval(
-                    child: FHBBasicWidget().getProfilePicWidget(myProfile
-                        .response.data.generalInfo.profilePicThumbnail),
-
-                    /*  Image.memory(
-                    Uint8List.fromList(myProfile
-                        .response.data.generalInfo.profilePicThumbnail.data),
-                    height: 40,
-                    width: 40,
-                    fit: BoxFit.cover,
-                  ) */
-                  ),
-                  title: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  color: Colors.white,
+                  child: Column(
                     children: <Widget>[
-                      Text(myProfile.response.data.generalInfo.name),
-                      Text(
-                        myProfile.response.data.generalInfo.countryCode +
-                            ' ' +
-                            myProfile.response.data.generalInfo.phoneNumber,
-                        style: TextStyle(fontSize: 12),
+                      ListTile(
+                          leading: ImageIcon(
+                            AssetImage(variable.icon_digit_reco),
+                            //size: 30,
+                            color: Colors.black,
+                          ),
+                          title: Text(variable.strAllowDigit),
+                          subtitle: Text(
+                            variable.strScanDevices,
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          trailing: Transform.scale(
+                            scale: 0.8,
+                            child: Switch(
+                              value: _isdigitRecognition,
+                              activeColor:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                              onChanged: (bool newValue) {
+                                setState(() {
+                                  _isdigitRecognition = newValue;
+
+                                  PreferenceUtil.saveString(
+                                      Constants.allowDigitRecognition,
+                                      _isdigitRecognition.toString());
+                                });
+                              },
+                            ),
+                          )),
+                      Container(
+                        height: 1,
+                        color: Colors.grey[200],
                       ),
-                      Text(
-                        myProfile.response.data.generalInfo.email,
-                        style: TextStyle(fontSize: 11),
-                      )
+                      ListTile(
+                          leading: ImageIcon(
+                            AssetImage(variable.icon_device_recon),
+                            //size: 30,
+                            color: Colors.black,
+                          ),
+                          title: Text(variable.strAllowDevice),
+                          subtitle: Text(
+                            variable.strScanAuto,
+                            style: TextStyle(fontSize: 10),
+                          ),
+                          trailing: Transform.scale(
+                            scale: 0.8,
+                            child: Switch(
+                              value: _isdeviceRecognition,
+                              activeColor:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                              onChanged: (bool newValue) {
+                                setState(() {
+                                  _isdeviceRecognition = newValue;
+
+                                  PreferenceUtil.saveString(
+                                      Constants.allowDeviceRecognition,
+                                      _isdeviceRecognition.toString());
+                                });
+                              },
+                            ),
+                          )),
+                      Container(
+                        height: 1,
+                        color: Colors.grey[200],
+                      ),
+                      FutureBuilder(
+                          future: _handleGoogleFit(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return ListTile(
+                                leading: ImageIcon(
+                                  AssetImage(variable.icon_digit_googleFit),
+                                  //size: 30,
+                                  color: Colors.black,
+                                ),
+                                title: Text(variable.strGoogleFit),
+                                subtitle: Text(
+                                  variable.strAllowGoogle,
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                trailing: Wrap(
+                                  children: <Widget>[
+                                    Transform.scale(
+                                      scale: 0.8,
+                                      child: IconButton(
+                                        icon: Icon(Icons.sync),
+                                        onPressed: () {
+                                          _deviceDataHelper.syncGoogleFit();
+                                        },
+                                      ),
+                                    ),
+                                    Transform.scale(
+                                      scale: 0.8,
+                                      child: Switch(
+                                        value: _isGFActive,
+                                        activeColor: Color(new CommonUtil()
+                                            .getMyPrimaryColor()),
+                                        onChanged: (bool newValue) {
+                                          setState(() {
+                                            _isGFActive = newValue;
+                                          });
+                                        },
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return Container();
+                            }
+                          }),
+                      Container(
+                        height: 1,
+                        color: Colors.grey[200],
+                      ),
+                      (Platform.isIOS)
+                          ? ListTile(
+                              leading: Icon(
+                                Icons.favorite,
+                                color: Colors.pink,
+                              ),
+                              title: Text(variable.strHealthKit),
+                              subtitle: Text(
+                                variable.strAllowHealth,
+                                style: TextStyle(fontSize: 10),
+                              ),
+                              trailing: Wrap(
+                                children: <Widget>[
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: IconButton(
+                                      icon: Icon(Icons.sync),
+                                      onPressed: () {
+                                        _deviceDataHelper.syncHealthKit();
+                                      },
+                                    ),
+                                  ),
+                                  Transform.scale(
+                                    scale: 0.8,
+                                    child: Switch(
+                                      value: _isHKActive,
+                                      activeColor: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      onChanged: (bool newValue) {
+                                        if (_isHealthFirstTime) {
+                                          _isHealthFirstTime = false;
+                                          PreferenceUtil.saveString(
+                                              Constants.isHealthFirstTime,
+                                              _isHealthFirstTime.toString());
+
+                                          newValue == true
+                                              ? _deviceDataHelper
+                                                  .activateHealthKit()
+                                              : _deviceDataHelper
+                                                  .deactivateHealthKit();
+                                          
+                                        } else {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HealthApp()),
+                                          );
+                                        }
+                                        setState(() {
+                                          _isHKActive = newValue;
+
+                                          PreferenceUtil.saveString(
+                                              Constants.activateHK,
+                                              _isHKActive.toString());
+                                        });
+                                      },
+                                    ),
+                                  )
+                                ],
+                              ))
+                          : SizedBox.shrink(),
+                      Container(
+                        height: 1,
+                        color: Colors.grey[200],
+                      ),
                     ],
                   ),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 14,
-                  ),
-                ),
-              )),
-          SizedBox(
-            height: 20,
-          ),
-          */
-          Container(
-            color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                ListTile(
-                    leading: ImageIcon(
-                      AssetImage('assets/settings/digit_recognition.png'),
-                      //size: 30,
-                      color: Colors.black,
-                    ),
-                    title: Text('Allow digit recognition'),
-                    subtitle: Text(
-                      'scans for the values from device images',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    trailing: Transform.scale(
-                      scale: 0.8,
-                      child: Switch(
-                        value: _isdigitRecognition,
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                        onChanged: (bool newValue) {
-                          setState(() {
-                            _isdigitRecognition = newValue;
-
-                            PreferenceUtil.saveString(
-                                Constants.allowDigitRecognition,
-                                _isdigitRecognition.toString());
-                          });
-                        },
-                      ),
-                    )),
-                Container(
-                  height: 1,
-                  color: Colors.grey[200],
-                ),
-                ListTile(
-                    leading: ImageIcon(
-                      AssetImage('assets/settings/device_recognition.png'),
-                      //size: 30,
-                      color: Colors.black,
-                    ),
-                    title: Text('Allow device recognition'),
-                    subtitle: Text(
-                      'scans and auto-detects devices',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    trailing: Transform.scale(
-                      scale: 0.8,
-                      child: Switch(
-                        value: _isdeviceRecognition,
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                        onChanged: (bool newValue) {
-                          setState(() {
-                            _isdeviceRecognition = newValue;
-
-                            PreferenceUtil.saveString(
-                                Constants.allowDeviceRecognition,
-                                _isdeviceRecognition.toString());
-                          });
-                        },
-                      ),
-                    )),
-                Container(
-                  height: 1,
-                  color: Colors.grey[200],
-                ),
-                /*   ListTile(
-                    leading: ImageIcon(
-                      AssetImage('assets/settings/googlefit.png'),
-                      //size: 30,
-                      color: Colors.black,
-                    ),
-                    title: Text('Google fit'),
-                    subtitle: Text(
-                      'Connect your data from google fit',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    trailing: Transform.scale(
-                      scale: 0.8,
-                      child: Switch(
-                        value: _isGoogleFit,
-                        activeColor:
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                        onChanged: (bool newValue) {
-                          setState(() {
-                            _isGoogleFit = newValue;
-                          });
-                        },
-                      ),
-                    )),
-                Container(
-                  height: 1,
-                  color: Colors.grey[200],
-                ), */
-                /*    ListTile(
-                    leading: ImageIcon(
-                      AssetImage('assets/settings/privacy.png'),
-                      //size: 30,
-                      color: Colors.black,
-                    ),
-                    title: Text('Privacy policy'),
-                    subtitle: Text(
-                      'Manage account security and policy',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 12,
-                    )),
-                Container(
-                  height: 1,
-                  color: Colors.grey[200],
-                ),
-                ListTile(
-                    leading: ImageIcon(
-                      AssetImage('assets/settings/terms.png'),
-                      //size: 30,
-                      color: Colors.black,
-                    ),
-                    title: Text('Terms of service'),
-                    subtitle: Text(
-                      'Manage account terms and conditions',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 12,
-                    )),
-                Container(
-                  height: 1,
-                  color: Colors.grey[200],
-                ),
-                ListTile(
-                    leading: ImageIcon(
-                      AssetImage('assets/settings/help.png'),
-                      //ssize: 30,
-                      color: Colors.black,
-                    ),
-                    title: Text('Help and support'),
-                    subtitle: Text(
-                      'Help and customer support',
-                      style: TextStyle(fontSize: 10),
-                    ),
-                    trailing: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 12,
-                    ))
-               */
+                )
               ],
             ),
-          )
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  Text(
+                    variable.strAddDevice,
+                    style: TextStyle(color: Colors.black, fontSize: 12),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  FutureBuilder<List<DeviceData>>(
+                    future: _deviceModel.getDevices(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        for (int i = 0; i <= snapshot.data.length; i++) {
+                          switch (i) {
+                            case 0:
+                              snapshot.data[i].isSelected = _isBPActive;
+                              break;
+                            case 1:
+                              snapshot.data[i].isSelected = _isGLActive;
+                              break;
+                            case 2:
+                              snapshot.data[i].isSelected = _isOxyActive;
+                              break;
+                            case 3:
+                              snapshot.data[i].isSelected = _isTHActive;
+                              break;
+                            case 4:
+                              snapshot.data[i].isSelected = _isWSActive;
+                              break;
+
+                            default:
+                          }
+                        }
+                      }
+                      return snapshot.hasData
+                          ? Container(
+                              height: 75,
+                              color: Colors.white,
+                              child: new ListView.builder(
+                                shrinkWrap: true,
+                                scrollDirection: Axis.horizontal,
+                                itemCount: snapshot.data.length,
+                                itemBuilder: (context, i) {
+                                  return DeviceCard(
+                                      deviceData: snapshot.data[i],
+                                      isSelected: (bool value) {
+                                        switch (i) {
+                                          case 0:
+                                            _isBPActive = value;
+                                            PreferenceUtil.saveString(
+                                                Constants.bpMon,
+                                                _isBPActive.toString());
+                                            break;
+                                          case 1:
+                                            _isGLActive = value;
+                                            PreferenceUtil.saveString(
+                                                Constants.glMon,
+                                                _isGLActive.toString());
+
+                                            break;
+                                          case 2:
+                                            _isOxyActive = value;
+                                            PreferenceUtil.saveString(
+                                                Constants.oxyMon,
+                                                _isOxyActive.toString());
+                                            break;
+                                          case 3:
+                                            _isTHActive = value;
+                                            PreferenceUtil.saveString(
+                                                Constants.thMon,
+                                                _isTHActive.toString());
+                                            break;
+                                          case 4:
+                                            _isWSActive = value;
+                                            PreferenceUtil.saveString(
+                                                Constants.wsMon,
+                                                _isWSActive.toString());
+                                            break;
+                                          default:
+                                        }
+                                        setState(() {
+                                          if (value) {
+                                            selectedList.add(snapshot.data[i]);
+                                          } else {
+                                            selectedList
+                                                .remove(snapshot.data[i]);
+                                          }
+                                        });
+                                      },
+                                      key: Key(
+                                          snapshot.data[i].status.toString()));
+                                },
+                              ),
+                            )
+                          : Center(
+                              child: CircularProgressIndicator(),
+                            );
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
+  }
+
+  Future<bool> _handleGoogleFit() async {
+    bool ret = false;
+    bool _isSignedIn = await _deviceDataHelper.isGoogleFitSignedIn();
+    if (_isGFActive == _isSignedIn) {
+      ret = _isGFActive;
+    } else {
+      if (_isGFActive) {
+        _isGFActive = await _deviceDataHelper.activateGoogleFit();
+      } else {
+        _isGFActive = !await _deviceDataHelper.deactivateGoogleFit();
+      }
+    }
+    PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
+    return ret;
   }
 }

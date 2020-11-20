@@ -1,0 +1,15 @@
+const String addNoteHint = 'Add notes here';
+const String prescribeButtonText = 'Prescribe';
+const String createNewButtonText = 'Create New';
+const String duplicateButtonText = 'Duplicate';
+const String medicineNameHint = 'Medicine Name';
+const String addMedicineNoteHint = 'Add medicine notes here';
+const String medicineQuantityHint = 'Qty';
+const String numberOfDaysHint = 'Days';
+const String scheduleOptionOne = '0';
+const String scheduleOptionTwo = '1';
+const String scheduleOptionThree = '0.5';
+const String beforeFoodSwitchText = 'BF';
+const String afterFoodSwitchText = 'AF';
+const String testPatientName = 'Vignesh Kumar';
+const String testPatientID = '#AD5729488';

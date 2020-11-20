@@ -1,23 +1,27 @@
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
+import 'package:myfhb/my_family/models/relationships.dart';
 import 'package:myfhb/my_family_detail/models/my_family_detail_arguments.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:http/http.dart' as http;
 
 class MyFamilyDetailScreen extends StatefulWidget {
   MyFamilyDetailArguments arguments;
@@ -71,31 +75,43 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   var dateOfBirthController = TextEditingController();
   FocusNode dateOfBirthFocus = FocusNode();
 
+  var cntrlr_addr_one = TextEditingController(text: '');
+  var cntrlr_addr_two = TextEditingController(text: '');
+  var cntrlr_addr_city = TextEditingController(text: '');
+  var cntrlr_addr_state = TextEditingController(text: '');
+  var cntrlr_addr_zip = TextEditingController(text: '');
+  final _formkey = GlobalKey<FormState>();
+
   RelationShipResponseList relationShipResponseList;
-  RelationShip selectedRelationShip;
+  RelationsShipModel selectedRelationShip;
 
   DateTime dateTime = DateTime.now();
-  MyProfile myProfile;
+  // MyProfileModel myProfile;
   bool isCalled = false;
 
   List<int> fetchedProfileData;
 
   AddFamilyUserInfoBloc addFamilyUserInfoBloc;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository;
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'UnKnown'];
-
-  List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
+  MyProfileModel myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
 
   String selectedBloodGroup;
   String selectedBloodRange;
 
-  List<String> genderArray = ['Male', 'Female', 'Others'];
   String selectedGender;
+
+  var heightConroller = TextEditingController();
+  FocusNode heightFocus = FocusNode();
+
+  var weightController = TextEditingController();
+  FocusNode weightFocus = FocusNode();
 
   @override
   void initState() {
     super.initState();
-
+    addFamilyUserInfoBloc = new AddFamilyUserInfoBloc();
+    getAllCustomRoles();
     setState(() {
       _currentPage = widget.arguments.currentPage;
     });
@@ -103,57 +119,70 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          title: Text(
-            CommonConstants.my_family_title,
-            style: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-              fontSize: 18,
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.of(context).pop(true);
+        return true;
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            title: Text(
+              CommonConstants.my_family_title,
+              style: TextStyle(
+                fontWeight: FontWeight.w400,
+                color: Colors.white,
+                fontSize: 18,
+              ),
             ),
-          ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back_ios,
-              size: 20,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back_ios,
+                size: 20,
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
             ),
-            onPressed: () {
-              Navigator.of(context).pop();
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
+                            arguments: AddFamilyUserInfoArguments(
+                                //TODO we need to pass the logged in user id
+                                id: widget.arguments
+                                    .profilesSharedByMe[_currentPage].child.id,
+                                sharedbyme: widget
+                                    .arguments.profilesSharedByMe[_currentPage],
+                                fromClass: CommonConstants.my_family,
+                                defaultrelationShips:
+                                    relationShipResponseList?.result?.isNotEmpty
+                                        ? relationShipResponseList
+                                            ?.result[0].referenceValueCollection
+                                        : List<RelationsShipModel>()))
+                        .then((value) {});
+                  })
+            ]),
+        body: PageView(
+            scrollDirection: Axis.horizontal,
+            physics: ClampingScrollPhysics(),
+            controller: PageController(
+                initialPage: _currentPage,
+                keepPage: false,
+                viewportFraction: 1.0),
+            onPageChanged: (int page) {
+              setState(() {
+                _currentPage = page;
+              });
             },
-          ),
-          actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.edit),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/add_family_user_info',
-                          arguments: AddFamilyUserInfoArguments(
-                              sharedbyme: widget
-                                  .arguments.profilesSharedByMe[_currentPage],
-                              fromClass: CommonConstants.my_family))
-                      .then((value) {});
-                })
-          ]),
-      body: PageView(
-          scrollDirection: Axis.horizontal,
-          physics: ClampingScrollPhysics(),
-          controller: PageController(
-              initialPage: _currentPage,
-              keepPage: false,
-              viewportFraction: 1.0),
-          onPageChanged: (int page) {
-            setState(() {
-              _currentPage = page;
-            });
-          },
-          children: buildMyFamilDetailPages()),
-      bottomSheet: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: _buildPageIndicator(),
+            children: buildMyFamilDetailPages()),
+        bottomSheet: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: _buildPageIndicator(),
+        ),
       ),
     );
   }
@@ -167,7 +196,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return children;
   }
 
-  Widget _showPageData(Sharedbyme sharedbyme) {
+  Widget _showPageData(SharedByUsers sharedbyme) {
     nameController = TextEditingController(text: '');
     nameFocus = FocusNode();
 
@@ -201,60 +230,108 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     relationShipController = TextEditingController(text: '');
     relationShipFocus = FocusNode();
 
-    if (sharedbyme.profileData.qualifiedFullName != null) {
-      firstNameController.text =
-          sharedbyme.profileData.qualifiedFullName.firstName;
-      middleNameController.text =
-          sharedbyme.profileData.qualifiedFullName.middleName;
-      lastNameController.text =
-          sharedbyme.profileData.qualifiedFullName.lastName;
+    heightConroller = new TextEditingController(text: '');
+    weightController = new TextEditingController(text: '');
+
+    cntrlr_addr_one = TextEditingController(text: '');
+    cntrlr_addr_two = TextEditingController(text: '');
+    cntrlr_addr_city = TextEditingController(text: '');
+    cntrlr_addr_state = TextEditingController(text: '');
+    cntrlr_addr_zip = TextEditingController(text: '');
+
+    if (sharedbyme.child != null) {
+      if (sharedbyme.child.firstName != null &&
+          sharedbyme.child.lastName != null) {
+        firstNameController.text = sharedbyme.child.firstName;
+        middleNameController.text = sharedbyme.child.middleName;
+        lastNameController.text = sharedbyme.child.lastName;
+      }
     } else {
-      firstNameController.text = sharedbyme.profileData.name;
+      firstNameController.text = sharedbyme.child.name;
       middleNameController.text = '';
       lastNameController.text = '';
     }
 
-    if (sharedbyme.profileData.isVirtualUser) {
-      MyProfile myProf = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-      mobileNoController.text = myProf.response.data.generalInfo.phoneNumber;
-      emailController.text = myProf.response.data.generalInfo.email;
+    if (sharedbyme?.child?.isVirtualUser != null) {
+      try {
+        if (sharedbyme.child.isVirtualUser) {
+          MyProfileModel myProf =
+              PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          if (myProf.result.userContactCollection3 != null) {
+            if (myProf.result.userContactCollection3.length > 0) {
+              mobileNoController.text =
+                  myProf.result.userContactCollection3[0].phoneNumber;
+              emailController.text =
+                  myProf.result.userContactCollection3[0].email;
+            }
+          }
+        } else {
+          // this is non primary user
+          if (sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+            mobileNoController.text =
+                sharedbyme?.child?.userContactCollection3[0].phoneNumber;
+            emailController.text =
+                sharedbyme?.child?.userContactCollection3[0].email;
+          }
+        }
+      } catch (e) {
+        mobileNoController.text = '';
+        emailController.text = '';
+      }
     } else {
-      mobileNoController.text = sharedbyme.profileData.phoneNumber;
-      emailController.text = sharedbyme.profileData.email;
+      // this is non primary user
+      if (sharedbyme?.child?.userContactCollection3.isNotEmpty) {
+        mobileNoController.text =
+            sharedbyme?.child?.userContactCollection3[0].phoneNumber;
+        emailController.text =
+            sharedbyme?.child?.userContactCollection3[0].email;
+      }
     }
 
-    if (sharedbyme.profileData.bloodGroup != null &&
-        sharedbyme.profileData.bloodGroup != "null") {
-//      bloodGroupController.text = sharedbyme.profileData.bloodGroup;
-
-      renameBloodGroup(sharedbyme.profileData.bloodGroup);
+    if (sharedbyme?.child?.additionalInfo != null) {
+      heightConroller.text = sharedbyme?.child?.additionalInfo.height != null
+          ? sharedbyme?.child?.additionalInfo.height
+          : '';
+      weightController.text = sharedbyme?.child?.additionalInfo.weight != null
+          ? sharedbyme?.child?.additionalInfo.weight
+          : '';
+    }
+    if (new CommonUtil().checkIfStringisNull(sharedbyme.child.bloodGroup)) {
+      //renameBloodGroup(sharedbyme.child.bloodGroup);
+      String bloodGroup = sharedbyme.child.bloodGroup;
+      bloodGroupController.text = bloodGroup.split(' ')[0];
+      bloodRangeController.text = bloodGroup.split(' ')[1];
     }
 
-    if (sharedbyme.profileData.gender != null) {
-      genderController.text = toBeginningOfSentenceCase(
-          sharedbyme.profileData.gender.toLowerCase());
+    if (sharedbyme.child.gender != null) {
+      genderController.text =
+          toBeginningOfSentenceCase(sharedbyme.child.gender.toLowerCase());
     }
 
-    if (sharedbyme.linkedData.roleName != null) {
-      relationShipController.text = sharedbyme.linkedData.roleName;
+    if (sharedbyme.relationship != null) {
+      relationShipController.text = sharedbyme.relationship.name;
     }
 
-    if (sharedbyme.profileData.dateOfBirth != null) {
-      List<String> list = sharedbyme.profileData.dateOfBirth
-          .split("T"); //by space" " the string need to splited
-      print('DOOOOB' + sharedbyme.profileData.dateOfBirth);
-      print('DOOOOB' +
-          new FHBUtils()
-              .getFormattedDateOnlyNew(sharedbyme.profileData.dateOfBirth));
-      // dateOfBirthController.text = list[0];
+    if (sharedbyme.child.dateOfBirth != null) {
+      dateOfBirthController.text =
+          new FHBUtils().getFormattedDateOnlyNew(sharedbyme.child.dateOfBirth);
+    }
 
-      dateOfBirthController.text = new FHBUtils()
-          .getFormattedDateOnlyNew(sharedbyme.profileData.dateOfBirth);
+    if (sharedbyme?.child?.userAddressCollection3.length > 0) {
+      cntrlr_addr_one.text =
+          sharedbyme?.child?.userAddressCollection3[0].addressLine1;
+      cntrlr_addr_two.text =
+          sharedbyme?.child?.userAddressCollection3[0].addressLine2;
+      cntrlr_addr_city.text =
+          sharedbyme?.child?.userAddressCollection3[0].city.name;
+      cntrlr_addr_state.text =
+          sharedbyme?.child?.userAddressCollection3[0].state.name;
+      cntrlr_addr_zip.text =
+          sharedbyme?.child?.userAddressCollection3[0].pincode;
     }
 
     String profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
-    //print('profilebanner $profilebanner');
 
     return SingleChildScrollView(
       child: Column(
@@ -281,16 +358,19 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                               opacity: 1,
                               child: ClipOval(
                                 child: sharedbyme
-                                            .profileData.profilePicThumbnail !=
+                                            .child.profilePicThumbnailUrl !=
                                         null
-                                    ? Image.memory(
-                                        Uint8List.fromList(sharedbyme
-                                            .profileData
-                                            .profilePicThumbnail
-                                            .data),
+                                    ? Image.network(
+                                        sharedbyme.child.profilePicThumbnailUrl,
                                         fit: BoxFit.cover,
                                         width: 100,
-                                        height: 100)
+                                        height: 100,
+                                        headers: {
+                                          HttpHeaders.authorizationHeader:
+                                              PreferenceUtil.getStringValue(
+                                                  Constants.KEY_AUTHTOKEN)
+                                        },
+                                      )
                                     : Container(
                                         width: 100,
                                         height: 100,
@@ -298,8 +378,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                                             .getMyPrimaryColor()),
                                         child: Center(
                                           child: Text(
-                                            sharedbyme.linkedData.nickName[0]
-                                                .toUpperCase(),
+                                            sharedbyme.child.firstName != null
+                                                ? sharedbyme.child.firstName[0]
+                                                    .toUpperCase()
+                                                : '',
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 60.0,
@@ -325,7 +407,14 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
               _showBloodRangeTextField(),
             ],
           ),
+          Row(
+            children: <Widget>[
+              showHeight(),
+              showWeight(),
+            ],
+          ),
           _showDateOfBirthTextField(),
+          _userAddressInfo(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -340,6 +429,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             ],
           ),
           SizedBox(height: 20),
+
 //          Row(
 //            mainAxisAlignment: MainAxisAlignment.center,
 //            children: _buildPageIndicator(),
@@ -373,21 +463,19 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
   }
 
   void renameBloodGroup(String selectedBloodGroupClone) {
-    print('selectedBloodGroupClone renameBloodGroup' + selectedBloodGroupClone);
     if (selectedBloodGroupClone != null) {
       var bloodGroupSplitName = selectedBloodGroupClone.split('_');
 
       try {
         if (bloodGroupSplitName.length > 1) {
-          for (String bloodGroup in bloodGroupArray) {
-//      var bloodgroupClone = bloodGroup.split(' ');
+          for (String bloodGroup in variable.bloodGroupArray) {
             if (bloodGroupSplitName[0] == bloodGroup) {
               selectedBloodGroup = bloodGroup;
               bloodGroupController.text = selectedBloodGroup;
             }
           }
 
-          for (String bloodRange in bloodRangeArray) {
+          for (String bloodRange in variable.bloodRangeArray) {
             if (bloodGroupSplitName[1] == bloodRange) {
               selectedBloodRange = bloodRange;
               bloodRangeController.text = selectedBloodRange;
@@ -396,14 +484,13 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         } else {
           var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
           if (bloodGroupSplitName.length > 1) {
-            for (String bloodGroup in bloodGroupArray) {
-//      var bloodgroupClone = bloodGroup.split(' ');
+            for (String bloodGroup in variable.bloodGroupArray) {
               if (bloodGroupSplitName[0] == bloodGroup) {
                 selectedBloodGroup = bloodGroup;
                 bloodGroupController.text = selectedBloodGroup;
               }
 
-              for (String bloodRange in bloodRangeArray) {
+              for (String bloodRange in variable.bloodRangeArray) {
                 if (bloodGroupSplitName[1][0] == bloodRange) {
                   selectedBloodRange = bloodRange;
                   bloodRangeController.text = selectedBloodRange;
@@ -422,7 +509,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     }
   }
 
-  // 1
   Widget _showMobileNoTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -460,7 +546,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-  // 2
   Widget _showNameTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -605,7 +690,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-  // 3
   Widget _showRelationShipTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -615,7 +699,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
-//          focusNode: relationShipFocus,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
             FocusScope.of(context).requestFocus(emailFocus);
@@ -642,7 +725,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-  // 4
   Widget _showEmailAddTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -652,7 +734,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
           maxLines: 1,
           enabled: false,
           keyboardType: TextInputType.text,
-//          focusNode: emailFocus,
           autofocus: false,
           textInputAction: TextInputAction.done,
           onSubmitted: (term) {
@@ -680,7 +761,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-  // 5
   Widget _showGenderTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -717,7 +797,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         ));
   }
 
-  // 6
   Widget _showBloodGroupTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -757,7 +836,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             )));
   }
 
-  // 6
   Widget _showBloodRangeTextField() {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -797,10 +875,87 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             )));
   }
 
-  // 7
+  Widget showHeight() {
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        child: Container(
+            width: MediaQuery.of(context).size.width / 2 - 40,
+            child: TextField(
+              cursorColor: Theme.of(context).primaryColor,
+              controller: heightConroller,
+              maxLines: 1,
+              enabled: false,
+              keyboardType: TextInputType.text,
+              focusNode: heightFocus,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (term) {
+                FocusScope.of(context).requestFocus(bloodRangeFocus);
+              },
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+              decoration: InputDecoration(
+                labelText: CommonConstants.height,
+                hintText: CommonConstants.heightName,
+                labelStyle: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.myFamilyGreyColor),
+                hintStyle: TextStyle(
+                  fontSize: 12.0,
+                  color: ColorUtils.myFamilyGreyColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: new UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: ColorUtils.myFamilyGreyColor)),
+              ),
+            )));
+  }
+
+  Widget showWeight() {
+    return Padding(
+        padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+        child: Container(
+            width: MediaQuery.of(context).size.width / 2 - 40,
+            child: TextField(
+              cursorColor: Theme.of(context).primaryColor,
+              controller: weightController,
+              maxLines: 1,
+              enabled: false,
+              keyboardType: TextInputType.text,
+              focusNode: weightFocus,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (term) {
+                FocusScope.of(context).requestFocus(dateOfBirthFocus);
+              },
+              style: new TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.0,
+                  color: ColorUtils.blackcolor),
+              decoration: InputDecoration(
+                labelText: CommonConstants.weight,
+                hintText: CommonConstants.weightName,
+                labelStyle: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w400,
+                    color: ColorUtils.myFamilyGreyColor),
+                hintStyle: TextStyle(
+                  fontSize: 12.0,
+                  color: ColorUtils.myFamilyGreyColor,
+                  fontWeight: FontWeight.w400,
+                ),
+                border: new UnderlineInputBorder(
+                    borderSide:
+                        BorderSide(color: ColorUtils.myFamilyGreyColor)),
+              ),
+            )));
+  }
+
   Widget _showDateOfBirthTextField() {
     return GestureDetector(
-      onTap: dateOfBirthTapped,
+      onTap: null,
       child: Padding(
           padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
           child: TextField(
@@ -811,7 +966,6 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             readOnly: true,
             enabled: false,
             keyboardType: TextInputType.text,
-//          focusNode: dateOfBirthFocus,
             textInputAction: TextInputAction.done,
             onSubmitted: (term) {
               dateOfBirthFocus.unfocus();
@@ -823,9 +977,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
             decoration: InputDecoration(
               suffixIcon: new IconButton(
                 icon: new Icon(Icons.calendar_today),
-                onPressed: () {
-//                  _selectDate(context);
-                },
+                onPressed: () {},
               ),
               labelText: CommonConstants.date_of_birth,
               hintText: CommonConstants.date_of_birth,
@@ -845,10 +997,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     );
   }
 
-  Widget _showViewInsuranceButton(Sharedbyme sharedbyme) {
+  Widget _showViewInsuranceButton(SharedByUsers sharedbyme) {
     final GestureDetector viewInsuranceButtonWithGesture = new GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/my_family_detail_view_insurance',
+        Navigator.pushNamed(context, router.rt_FamilyInsurance,
             arguments:
                 MyFamilyDetailViewArguments(index: 0, sharedbyme: sharedbyme));
       },
@@ -886,16 +1038,12 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     );
 
     return viewInsuranceButtonWithGesture;
-
-    /* return new Padding(
-        padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 30.0),
-        child: viewInsuranceButtonWithGesture);*/
   }
 
-  Widget _showViewHospitalButton(Sharedbyme sharedbyme) {
+  Widget _showViewHospitalButton(SharedByUsers sharedbyme) {
     final GestureDetector viewHospitalButtonWithGesture = new GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/my_family_detail_view_insurance',
+        Navigator.pushNamed(context, router.rt_FamilyInsurance,
             arguments:
                 MyFamilyDetailViewArguments(index: 1, sharedbyme: sharedbyme));
       },
@@ -935,59 +1083,10 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return viewHospitalButtonWithGesture;
   }
 
-  Widget getAllCustomRoles() {
-    Widget familyWidget;
-
-    return StreamBuilder<ApiResponse<RelationShipResponseList>>(
-      stream: addFamilyUserInfoBloc.relationShipStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<RelationShipResponseList>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-//              familyWidget = Center(
-//                  child: SizedBox(
-//                child: CircularProgressIndicator(),
-//                width: 30,
-//                height: 30,
-//              ));
-              break;
-
-            case Status.ERROR:
-              familyWidget = Center(
-                  child: Text(Constants.STR_ERROR_LOADING_DATA,
-                      style: TextStyle(color: Colors.red)));
-              break;
-
-            case Status.COMPLETED:
-              isCalled = true;
-
-              relationShipResponseList = snapshot.data.data;
-
-//              if (widget.arguments.fromClass == CommonConstants.my_family) {
-//                for (var i = 0;
-//                    i < snapshot.data.data.relationShipAry.length;
-//                    i++) {
-//                  if (snapshot.data.data.relationShipAry[i].roleName ==
-//                      widget.arguments.sharedbyme.linkedData.roleName) {
-//                    selectedRelationShip =
-//                        snapshot.data.data.relationShipAry[i];
-//                  }
-//                }
-//              }
-
-              familyWidget = getRelationshipDetails(snapshot.data.data);
-              break;
-          }
-        } else {
-          familyWidget = Container(
-            width: 100,
-            height: 100,
-          );
-        }
-        return familyWidget;
-      },
-    );
+  Future<void> getAllCustomRoles() async {
+    addFamilyUserInfoRepository = new AddFamilyUserInfoRepository();
+    relationShipResponseList =
+        await addFamilyUserInfoRepository.getCustomRoles();
   }
 
   Widget getRelationshipDetails(RelationShipResponseList data) {
@@ -1000,9 +1099,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.relationship),
                 value: selectedRelationShip,
-                items: data.relationShipAry.map((relationShipDetail) {
+                items: data.result.map((relationShipDetail) {
                   return DropdownMenuItem(
-                    child: new Text(relationShipDetail.roleName,
+                    child: new Text(relationShipDetail.name,
                         style: new TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 16.0,
@@ -1010,7 +1109,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                     value: relationShipDetail,
                   );
                 }).toList(),
-                onChanged: (RelationShip newValue) {
+                onChanged: (newValue) {
                   setState(() {
                     selectedRelationShip = newValue;
                   });
@@ -1029,7 +1128,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.blood_group),
                 value: selectedBloodGroup,
-                items: bloodGroupArray.map((eachBloodGroup) {
+                items: variable.bloodGroupArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
                     child: new Text(eachBloodGroup,
                         style: new TextStyle(
@@ -1058,7 +1157,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 isExpanded: true,
                 hint: Text(CommonConstants.blood_range),
                 value: selectedBloodRange,
-                items: bloodRangeArray.map((eachBloodGroup) {
+                items: variable.bloodRangeArray.map((eachBloodGroup) {
                   return DropdownMenuItem(
                     child: new Text(eachBloodGroup,
                         style: new TextStyle(
@@ -1089,7 +1188,7 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
                 value: selectedGender != null
                     ? toBeginningOfSentenceCase(selectedGender.toLowerCase())
                     : selectedGender,
-                items: genderArray.map((eachGender) {
+                items: variable.genderArray.map((eachGender) {
                   return DropdownMenuItem(
                     child: new Text(eachGender,
                         style: new TextStyle(
@@ -1119,12 +1218,85 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
       setState(() {
         dateTime = picked ?? dateTime;
         dateOfBirthController.text =
-            new DateFormat("yyyy-MM-dd").format(dateTime).toString();
+            new DateFormat(variable.strDateYear).format(dateTime).toString();
       });
     }
   }
 
   void dateOfBirthTapped() {
     _selectDate(context);
+  }
+
+  Widget _userAddressInfo() {
+    return Padding(
+      padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+      child: Form(
+        key: _formkey,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: cntrlr_addr_one,
+              enabled: false,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_line_1
+                    .substring(0, CommonConstants.addr_line_1.length - 1),
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'Address line1 can\'t be empty'
+                    : null;
+              },
+            ),
+            TextFormField(
+              controller: cntrlr_addr_two,
+              enabled: false,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_line_2
+                    .substring(0, CommonConstants.addr_line_2.length - 1),
+              ),
+            ),
+            TextFormField(
+              controller: cntrlr_addr_city,
+              enabled: false,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_city
+                    .substring(0, CommonConstants.addr_city.length - 1),
+              ),
+            ),
+            TextFormField(
+              controller: cntrlr_addr_state,
+              enabled: false,
+              keyboardType: TextInputType.streetAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_state
+                    .substring(0, CommonConstants.addr_state.length - 1),
+              ),
+            ),
+            TextFormField(
+              controller: cntrlr_addr_zip,
+              enabled: false,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(fontSize: 12),
+                labelText: CommonConstants.addr_zip
+                    .substring(0, CommonConstants.addr_zip.length - 1),
+              ),
+              validator: (res) {
+                return (res.isEmpty || res == null)
+                    ? 'Zip can\'t be empty'
+                    : null;
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

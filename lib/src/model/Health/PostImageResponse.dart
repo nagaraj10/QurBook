@@ -1,3 +1,5 @@
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 class PostImageResponse {
   int status;
   bool success;
@@ -7,22 +9,23 @@ class PostImageResponse {
   PostImageResponse({this.status, this.success, this.message, this.response});
 
   PostImageResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
-    response = json['response'] != null
-        ? new Response.fromJson(json['response'])
+  status = json[parameters.strStatus];
+    success = json[parameters.strSuccess];
+    message = json[parameters.strMessage];
+    response = json[parameters.strResponse] != null
+        ? new Response.fromJson(json[parameters.strResponse])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['success'] = this.success;
-    data['message'] = this.message;
+  data[parameters.strStatus] = this.status;
+    data[parameters.strSuccess] = this.success;
+    data[parameters.strMessage] = this.message;
     if (this.response != null) {
-      data['response'] = this.response.toJson();
+      data[parameters.strResponse] = this.response.toJson();
     }
+  
     return data;
   }
 }
@@ -34,15 +37,15 @@ class Response {
   Response({this.count, this.data});
 
   Response.fromJson(Map<String, dynamic> json) {
-    count = json['count'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    count = json[parameters.strCount];
+    data = json[parameters.strData] != null ? new Data.fromJson(json[parameters.strData]) : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['count'] = this.count;
+    data[parameters.strCount] = this.count;
     if (this.data != null) {
-      data['data'] = this.data.toJson();
+      data[parameters.strData] = this.data.toJson();
     }
     return data;
   }
@@ -54,12 +57,12 @@ class Data {
   Data({this.mediaMasterId});
 
   Data.fromJson(Map<String, dynamic> json) {
-    mediaMasterId = json['mediaMasterId'];
+    mediaMasterId = json[parameters.strmediaMasterId];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['mediaMasterId'] = this.mediaMasterId;
+    data[parameters.strmediaMasterId] = this.mediaMasterId;
     return data;
   }
 }

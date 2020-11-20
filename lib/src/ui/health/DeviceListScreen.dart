@@ -1,27 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DeviceListScreen extends StatefulWidget {
-  final CompleteData completeData;
+  final HealthRecordList completeData;
   final Function callBackToRefresh;
 
   final String categoryName;
   final String categoryId;
 
   final Function(String, String) getDataForParticularLabel;
+  final Function(String, bool) mediaSelected;
+  final Function(String, List<HealthRecordCollection>, bool)
+      healthRecordSelected;
+  final bool allowSelect;
+  List<String> mediaMeta;
+  final bool isNotesSelect;
+  final bool isAudioSelect;
+  final bool showDetails;
+  final bool allowAttach;
 
-  DeviceListScreen(this.completeData, this.callBackToRefresh, this.categoryName,
-      this.categoryId, this.getDataForParticularLabel);
+  DeviceListScreen(
+      this.completeData,
+      this.callBackToRefresh,
+      this.categoryName,
+      this.categoryId,
+      this.getDataForParticularLabel,
+      this.mediaSelected,
+      this.allowSelect,
+      this.mediaMeta,
+      this.isNotesSelect,
+      this.isAudioSelect,
+      this.showDetails,
+      this.allowAttach,
+      this.healthRecordSelected);
 
   @override
   _DeviceListScreentState createState() => _DeviceListScreentState();
@@ -33,17 +58,12 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
+  List<HealthRecordCollection> mediMasterId = new List();
+  FlutterToast toast = new FlutterToast();
+
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    /*  PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
 
     super.initState();
   }
@@ -53,8 +73,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
     return _getWidgetToDisplayDeviceList(widget.completeData);
   }
 
-  Widget _getWidgetToDisplayDeviceList(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget _getWidgetToDisplayDeviceList(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionDevice);
@@ -77,7 +97,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     child: Text(
                       Constants.NO_DATA_DEVICES,
                       textAlign: TextAlign.center,
-                      style: TextStyle(fontFamily: 'Poppins'),
+                      style: TextStyle(fontFamily: variable.font_poppins),
                     ),
                   ),
                 ),
@@ -91,17 +111,56 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
     widget.callBackToRefresh();
   }
 
-  Widget getCardWidgetForDevice(MediaMetaInfo data, int position) {
+  Widget getCardWidgetForDevice(HealthResult data, int position) {
     return InkWell(
+        onLongPress: () {
+          if (widget.allowSelect) {
+            data.isSelected = !data.isSelected;
+
+            setState(() {});
+            widget.mediaSelected(data.id, data.isSelected);
+          }
+        },
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RecordDetailScreen(
-                data: data,
+          if (widget.allowSelect && widget.showDetails == false) {
+            if (widget.allowAttach) {
+              bool condition;
+              if (widget.mediaMeta.contains(data.id)) {
+                condition = false;
+              } else {
+                condition = true;
+              }
+              data.isSelected = !data.isSelected;
+              if (data != null && data.healthRecordCollection.length > 0) {
+                mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
+                if (mediMasterId.length > 0) {
+                  widget.healthRecordSelected(data.id, mediMasterId, condition);
+                } else {
+                  toast.getToast('No Image Attached ', Colors.red);
+                }
+              }
+            } else {
+              bool condition;
+              if (widget.mediaMeta.contains(data.id)) {
+                condition = false;
+              } else {
+                condition = true;
+              }
+              data.isSelected = !data.isSelected;
+
+              // setState(() {});
+              widget.mediaSelected(data.id, condition);
+            }
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RecordDetailScreen(
+                  data: data,
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
         child: Container(
             //height: 70,
@@ -120,78 +179,19 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
             ),
             child: Row(
               children: <Widget>[
-                /*  Expanded(
-              flex: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Container(
-                    color: Colors.grey[200],
-                    width: 50.0,
-                    height: 50.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          new FHBUtils().convertMonthFromString(data.createdOn),
-                          style: TextStyle(color: Colors.black54),
-                        ),
-                        Text(
-                            new FHBUtils()
-                                .convertDateFromString(data.createdOn),
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500))
-                      ],
-                    ),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                ],
-              ),
-            ), */
-
                 CircleAvatar(
                   radius: 25,
                   backgroundColor: const Color(fhbColors.bgColorContainer),
                   child: Image.network(
-                    data.metaInfo.mediaTypeInfo.url != null
+                    /* data.metaInfo.mediaTypeInfo.url != null
                         ? data.metaInfo.mediaTypeInfo.url
-                        : Constants.BASERURL + data.metaInfo.categoryInfo.logo,
+                        : */
+                    Constants.BASE_URL +
+                        data.metadata.healthRecordCategory.logo,
                     height: 25,
                     width: 25,
                     color: Color(new CommonUtil().getMyPrimaryColor()),
                   ),
-
-                  /* FadeInImage(
-                      height: 30,
-                      width: 30,
-                      placeholder: NetworkImage(
-                          'https://healthbook.vsolgmi.com/hb/api/v3/static/logos/categories/device-c.png'),
-                      image: NetworkImage(
-                        data.metaInfo.mediaTypeInfo.url != null
-                            ? data.metaInfo.mediaTypeInfo.url
-                            : Constants.BASERURL +
-                                data.metaInfo.mediaTypeInfo.logo,
-                      )), */
-
-                  /*  FadeInImage(
-                      height: 30,
-                      width: 30,
-                      placeholder: NetworkImage(
-                          'https://healthbook.vsolgmi.com/hb/api/v3/static/logos/categories/device-c.png'),
-                      image: NetworkImage(
-                        data.metaInfo.mediaTypeInfo.url,
-                      )), */
-                  /*  child: Image.network(
-                  data.metaInfo.mediaTypeInfo.url,
-                  width: 30,
-                  height: 30,
-                  color: Colors.white,
-                ):Image.network('https://healthbook.vsolgmi.com/hb/api/v3/static/logos/categories/device-c.png') */
                 ),
                 SizedBox(
                   width: 20,
@@ -203,19 +203,15 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        data.metaInfo.mediaTypeInfo.name != null
+                        data.metadata.healthRecordType.name != null
                             ? toBeginningOfSentenceCase(
-                                data.metaInfo.mediaTypeInfo.name)
+                                data.metadata.healthRecordType.name)
                             : '',
                         style: TextStyle(fontWeight: FontWeight.w500),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      //SizedBox(height: 10.0),
                       Text(
-                        /*  data.metaInfo.fileName != null
-                        ? data.metaInfo.fileName
-                        : '', */
                         new FHBUtils().getFormattedDateString(data.createdOn),
                         style: TextStyle(
                             color: Colors.grey[400],
@@ -227,48 +223,43 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                     ],
                   ),
                 ),
-                /*  Expanded(
-              flex: 1,
-              child: Column(
-                children: <Widget>[getDocumentImageWidget(data)],
-              ),
-            ), */
                 Expanded(
                   flex: 1,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      /* Icon(
-                        Icons.more_horiz,
-                        color: Colors.grey,
-                        size: 20,
-                      ),
-                      SizedBox(height: 10), */
                       IconButton(
                           icon: data.isBookmarked
                               ? ImageIcon(
-                                  AssetImage(
-                                      'assets/icons/record_fav_active.png'),
+                                  AssetImage(variable.icon_record_fav_active),
                                   //TODO chnage theme
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
+                                  AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
                                   size: 20,
                                 ),
                           onPressed: () {
                             new CommonUtil().bookMarkRecord(data, _refresh);
                           }),
-                      /*  data.metaInfo.hasVoiceNotes
+                      (data.metadata.hasVoiceNotes != null &&
+                              data.metadata.hasVoiceNotes)
                           ? Icon(
-                              Icons.audiotrack,
-                              color: Colors.grey,
+                              Icons.mic,
+                              color: Colors.black54,
                             )
-                          : Container() */
+                          : Container(),
+                      widget.mediaMeta.contains(data.id)
+                          ? Icon(
+                              Icons.done,
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ),
@@ -297,8 +288,6 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                 height: 50,
               ));
         }
-
-        ///load until snapshot.hasData resolves to true
       },
     );
   }

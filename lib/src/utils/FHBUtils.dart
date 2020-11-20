@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/services.dart';
 import 'package:devicelocale/devicelocale.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:myfhb/constants/db_constants.dart' as DBConstants;
 import 'package:myfhb/src/model/AppointmentModel.dart';
 import 'package:myfhb/src/model/ReminderModel.dart';
 import 'package:path/path.dart';
@@ -81,23 +82,38 @@ class FHBUtils {
   }
 
   String getFormattedDateString(String strDate) {
-    String formattedDate;
-    if (CURRENT_DATE_CODE == 'MDY') {
-      formattedDate = DateFormat('MMM dd yyyy, hh:mm aa')
-          .format(DateTime.parse(strDate).toLocal());
-    } else if (CURRENT_DATE_CODE == 'YMD') {
-      formattedDate = DateFormat('yyyy MMM dd, hh:mm aa')
-          .format(DateTime.parse(strDate).toLocal());
-    } else {
-      formattedDate = DateFormat('dd MMM yyyy, hh:mm aa')
-          .format(DateTime.parse(strDate).toLocal());
+    String formattedDate = '';
+
+    if (strDate != null && strDate != '') {
+      if (CURRENT_DATE_CODE == 'MDY') {
+        formattedDate = DateFormat('MMM dd yyyy, hh:mm aa')
+            .format(DateTime.parse(strDate).toLocal());
+      } else if (CURRENT_DATE_CODE == 'YMD') {
+        formattedDate = DateFormat('yyyy MMM dd, hh:mm aa')
+            .format(DateTime.parse(strDate).toLocal());
+      } else {
+        formattedDate = DateFormat('dd MMM yyyy, hh:mm aa')
+            .format(DateTime.parse(strDate).toLocal());
+      }
     }
     return formattedDate;
   }
 
   String getFormattedDateForUser(String strDate) {
+    String formattedDate;
+    try {
+      formattedDate =
+          DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate).toLocal());
+    } catch (e) {
+      formattedDate = strDate;
+    }
+
+    return formattedDate;
+  }
+
+  String getFormattedDateForUserBirth(String strDate) {
     String formattedDate =
-        DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate));
+        DateFormat('yyyy-MM-dd').format(DateTime.parse(strDate));
     return formattedDate;
   }
 
@@ -140,7 +156,6 @@ class FHBUtils {
   }
 
   String getMonthDateYear(String strDate) {
-    //print('----------------CURRENT INVOKING METHOD{getMonthDateYear}-------------------');
     String formattedDate;
     if (CURRENT_DATE_CODE == 'MDY') {
       formattedDate = DateFormat('MM-dd-yyyy').format(DateTime.parse(strDate));
@@ -149,7 +164,6 @@ class FHBUtils {
     } else {
       formattedDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(strDate));
     }
-    //print('----------------MY DATE FORMAT$CURRENT_DATE_CODE-------------------');
     return formattedDate;
   }
 
@@ -173,9 +187,7 @@ class FHBUtils {
     // Platform messages may fail, so we use a try/catch PlatformException.
     /* try {
         languages = await Devicelocale.preferredLanguages;
-      print('preferred language $languages');
     } on PlatformException {
-      print("Error obtaining preferred languages");
     }*/
     try {
       await Devicelocale.currentLocale.then((val) {
@@ -184,9 +196,7 @@ class FHBUtils {
           getMyDateFormat(val);
         }
       });
-    } on PlatformException {
-      print("Error obtaining current locale");
-    }
+    } on PlatformException {}
   }
 
   void getMyDateFormat(String localeCode) {
@@ -205,7 +215,7 @@ class FHBUtils {
   Future<Database> getDb() async {
     return openDatabase(
       //const path = await getDatabasesPath(),
-      join(await getDatabasesPath(), 'myfhb.db'),
+      join(await getDatabasesPath(), DBConstants.DB_NAME_2),
       version: 1,
       onCreate: (db, version) => _createTable(db),
     );
@@ -213,21 +223,19 @@ class FHBUtils {
 
   static void _createTable(Database db) async {
     await db.execute(
-      "CREATE TABLE appointments(id TEXT PRIMARY KEY, hosname TEXT, docname TEXT, appdate TEXT, apptime TEXT, reason TEXT)",
+      DBConstants.CT_APPOINTMENTS,
     );
     await db.execute(
-      "CREATE TABLE reminders(id TEXT PRIMARY KEY, title TEXT, notes TEXT, date TEXT, time TEXT, interval TEXT)",
+      DBConstants.CT_REMINDERS,
     );
   }
 
   Future<void> createNewAppointment(AppointmentModel appModel) async {
     final Database db = await getDb();
     await db
-        .insert('appointments', appModel.toMap(),
+        .insert(DBConstants.TL_APPNT, appModel.toMap(),
             conflictAlgorithm: ConflictAlgorithm.replace)
-        .then((res) {
-      print('--------------createNewAppointment result $res');
-    });
+        .then((res) {});
   }
 
   static String base64String(List<dynamic> data) {
@@ -263,16 +271,17 @@ class FHBUtils {
     // Get a reference to the database.
     final Database db = await getDb();
     // Query the table for all The Appointments.
-    final List<Map<String, dynamic>> maps = await db.query('appointments');
+    final List<Map<String, dynamic>> maps =
+        await db.query(DBConstants.TL_APPNT);
     // Convert the List<Map<String, dynamic> into a List<Appointment>.
     return List.generate(maps.length, (i) {
       return AppointmentModel(
-        id: maps[i]['id'],
-        hName: maps[i]['hosname'],
-        dName: maps[i]['docname'],
-        appDate: maps[i]['appdate'],
-        appTime: maps[i]['apptime'],
-        reason: maps[i]['reason'],
+        id: maps[i][DBConstants.PRO_ID],
+        hName: maps[i][DBConstants.PRO_HNAME],
+        dName: maps[i][DBConstants.PRO_DOC_NAME],
+        appDate: maps[i][DBConstants.PRO_APP_DATE],
+        appTime: maps[i][DBConstants.PRO_APP_TIME],
+        reason: maps[i][DBConstants.PRO_REASON],
       );
     });
   }
@@ -283,9 +292,9 @@ class FHBUtils {
 
     // Remove the Appointment from the database.
     await db.delete(
-      'appointments',
+      DBConstants.TL_APPNT,
       // Use a `where` clause to delete a specific Appointment.
-      where: "id = ?",
+      where: DBConstants.PRO_ID + " = ?",
       // Pass the Appointment's id as a whereArg to prevent SQL injection.
       whereArgs: [id],
     );
@@ -296,9 +305,7 @@ class FHBUtils {
     await db
         .insert(tableName, model.toMap(),
             conflictAlgorithm: ConflictAlgorithm.replace)
-        .then((res) {
-      print('--------------inserted $res row into $tableName----------');
-    });
+        .then((res) {});
   }
 
   Future<void> delete(String tableName, String id) async {
@@ -309,12 +316,10 @@ class FHBUtils {
     await db.delete(
       tableName,
       // Use a `where` clause to delete a specific Appointment.
-      where: "id = ?",
+      where: DBConstants.PRO_ID + " = ?",
       // Pass the Appointment's id as a whereArg to prevent SQL injection.
       whereArgs: [id],
-    ).then((res) {
-      print('--------------deleted $res row into $tableName------------------');
-    });
+    ).then((res) {});
   }
 
   Future<void> update(String tableName, dynamic model) async {
@@ -326,12 +331,10 @@ class FHBUtils {
       tableName,
       model.toMap(),
       // Ensure that the Dog has a matching id.
-      where: "id = ?",
+      where: DBConstants.PRO_ID + " = ?",
       // Pass the Dog's id as a whereArg to prevent SQL injection.
       whereArgs: [model.id],
-    ).then((res) {
-      print('--------------updated $res row into $tableName------------------');
-    });
+    ).then((res) {});
   }
 
   Future<List<dynamic>> getAll(
@@ -343,23 +346,23 @@ class FHBUtils {
     final List<Map<String, dynamic>> maps = await db.query(tableName);
     // Convert the List<Map<String, dynamic> into a List<Appointment>.
     return List.generate(maps.length, (i) {
-      if (tableName == 'appointments') {
+      if (tableName == DBConstants.TL_APPNT) {
         return AppointmentModel(
-          id: maps[i]['id'],
-          hName: maps[i]['hosname'],
-          dName: maps[i]['docname'],
-          appDate: maps[i]['appdate'],
-          appTime: maps[i]['apptime'],
-          reason: maps[i]['reason'],
+          id: maps[i][DBConstants.PRO_ID],
+          hName: maps[i][DBConstants.PRO_HNAME],
+          dName: maps[i][DBConstants.PRO_DOC_NAME],
+          appDate: maps[i][DBConstants.PRO_APP_DATE],
+          appTime: maps[i][DBConstants.PRO_APP_TIME],
+          reason: maps[i][DBConstants.PRO_REASON],
         );
-      } else if (tableName == 'reminders') {
+      } else if (tableName == DBConstants.TL_REMIND) {
         return ReminderModel(
-          id: maps[i]['id'],
-          title: maps[i]['title'],
-          notes: maps[i]['notes'],
-          date: maps[i]['date'],
-          time: maps[i]['time'],
-          interval: maps[i]['interval'],
+          id: maps[i][DBConstants.PRO_ID],
+          title: maps[i][DBConstants.PRO_TITLE],
+          notes: maps[i][DBConstants.PRO_NOTES],
+          date: maps[i][DBConstants.PRO_DATE],
+          time: maps[i][DBConstants.PRO_TIME],
+          interval: maps[i][DBConstants.PRO_INTERVAL],
         );
       } else {
         return null;
@@ -371,7 +374,6 @@ class FHBUtils {
     var currentDate = DateTime.now();
     pickedDate = DateTime(pickedDate.year, pickedDate.month, pickedDate.day);
     final dateDifference = currentDate.difference(pickedDate).isNegative;
-    //print('date difference count $dateDifference');
     return dateDifference;
   }
 

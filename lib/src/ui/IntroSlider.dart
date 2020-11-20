@@ -4,6 +4,10 @@ import 'package:intro_slider/slide_object.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
+
 
 class IntroSliderPage extends StatefulWidget {
   @override
@@ -12,14 +16,7 @@ class IntroSliderPage extends StatefulWidget {
 
 class _IntroSliderState extends State<IntroSliderPage> {
   List<Slide> pages = new List<Slide>();
-  List<String> slideIcons = [
-    'assets/slide_icons/slide1.png',
-    'assets/slide_icons/slide2.png',
-    'assets/slide_icons/slide3.png',
-    'assets/slide_icons/slide4.png',
-    'assets/slide_icons/slide5.png'
-  ];
-
+ 
   @override
   void initState() {
     super.initState();
@@ -37,12 +34,13 @@ class _IntroSliderState extends State<IntroSliderPage> {
   }
 
   void onDonePress() {
-    PageNavigator.goToPermanent(context, '/sign_in_screen');
+    //PageNavigator.goToPermanent(context,router.rt_Signinscreen);
+    PageNavigator.goToPermanent(context,router.rt_WebCognito);
   }
 
   Widget renderNextBtn() {
     return Text(
-      'NEXT',
+      variable.strNext,
       style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18),
     );
@@ -50,7 +48,7 @@ class _IntroSliderState extends State<IntroSliderPage> {
 
   Widget renderDoneBtn() {
     return Text(
-      'DONE',
+      variable.strDONE,
       style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18),
     );
@@ -58,7 +56,7 @@ class _IntroSliderState extends State<IntroSliderPage> {
 
   Widget renderSkipBtn() {
     return Text(
-      'SKIP',
+      variable.strSKIP,
       style: TextStyle(
           color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18),
     );
@@ -107,7 +105,7 @@ class _IntroSliderState extends State<IntroSliderPage> {
         color: Colors.black,
         fontSize: 16.0,
       ),
-      pathImage: slideIcons[index - 1],
+      pathImage: variable.slideIcons[index - 1],
       heightImage: 150,
       widthImage: 150,
       foregroundImageFit: BoxFit.scaleDown,

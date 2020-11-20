@@ -1,38 +1,42 @@
 import 'package:myfhb/add_address/models/place.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
-import 'package:myfhb/search_providers/models/doctors_list_response.dart';
-import 'package:myfhb/search_providers/models/hospital_list_response.dart';
-import 'package:myfhb/search_providers/models/labs_list_response.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/Hospitals.dart';
+import 'package:myfhb/search_providers/models/doctor_list_response_new.dart';
+import 'package:myfhb/search_providers/models/hospital_list_response_new.dart';
+import 'package:myfhb/search_providers/models/labs_list_response_new.dart';
 
 class AddProvidersArguments {
-  Data data;
-  HospitalData hospitalData;
-  LabData labData;
+  DoctorsListResult data;
+  HospitalsListResult hospitalData;
+  LabListResult labData;
 
   String searchKeyWord;
   bool hasData;
   String searchText;
   String fromClass;
 
-  DoctorsModel doctorsModel;
-  HospitalsModel hospitalsModel;
-  LaboratoryModel labsModel;
+  Doctors doctorsModel;
+  Hospitals hospitalsModel;
+  Hospitals labsModel;
   PlaceDetail placeDetail;
   Place place;
   String confirmAddressDescription;
+  Function isRefresh;
 
-  AddProvidersArguments(
-      {this.data,
-      this.searchKeyWord,
-      this.hospitalData,
-      this.hasData,
-      this.labData,
-      this.searchText,
-      this.fromClass,
-      this.doctorsModel,
-      this.hospitalsModel,
-      this.labsModel,
-      this.placeDetail,
-      this.place,
-      this.confirmAddressDescription});
+  AddProvidersArguments({
+    this.data,
+    this.searchKeyWord,
+    this.hospitalData,
+    this.hasData,
+    this.labData,
+    this.searchText,
+    this.fromClass,
+    this.doctorsModel,
+    this.hospitalsModel,
+    this.labsModel,
+    this.placeDetail,
+    this.place,
+    this.confirmAddressDescription,
+    this.isRefresh
+  });
 }

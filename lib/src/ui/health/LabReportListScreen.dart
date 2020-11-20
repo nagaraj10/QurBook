@@ -1,27 +1,52 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class LabReportListScreen extends StatefulWidget {
-  final CompleteData completeData;
+  final HealthRecordList completeData;
   final Function callBackToRefresh;
 
   final String categoryName;
   final String categoryId;
 
   final Function(String, String) getDataForParticularLabel;
+  final Function(String, bool) mediaSelected;
+  final Function(String, List<HealthRecordCollection>, bool)
+      healthRecordSelected;
+  final bool allowSelect;
+  List<String> mediaMeta;
+  final bool isNotesSelect;
+  final bool isAudioSelect;
+  final bool showDetails;
+  final bool allowAttach;
 
-  LabReportListScreen(this.completeData, this.callBackToRefresh,
-      this.categoryName, this.categoryId, this.getDataForParticularLabel);
+  LabReportListScreen(
+      this.completeData,
+      this.callBackToRefresh,
+      this.categoryName,
+      this.categoryId,
+      this.getDataForParticularLabel,
+      this.mediaSelected,
+      this.allowSelect,
+      this.mediaMeta,
+      this.isNotesSelect,
+      this.isAudioSelect,
+      this.showDetails,
+      this.allowAttach,
+      this.healthRecordSelected);
 
   @override
   _LabReportListScreenState createState() => _LabReportListScreenState();
@@ -33,20 +58,15 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
+  List<HealthRecordCollection> mediMasterId = new List();
+
+  FlutterToast toast = new FlutterToast();
+
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    /*  PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
+
     super.initState();
-    /*  WidgetsBinding.instance
-        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show()); */
   }
 
   @override
@@ -54,8 +74,8 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
     return _getWidgetToDisplayLabReport(widget.completeData);
   }
 
-  Widget _getWidgetToDisplayLabReport(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget _getWidgetToDisplayLabReport(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionLabReport);
@@ -77,7 +97,7 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                   child: Text(
                     Constants.NO_DATA_LAB_REPORT,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Poppins'),
+                    style: TextStyle(fontFamily: variable.font_poppins),
                   ),
                 ),
               ),
@@ -92,131 +112,194 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
     widget.callBackToRefresh();
   }
 
-  Widget getCardWidgetForLabReport(MediaMetaInfo mediaMetaInfo, int position) {
-    //print('logo url ' + mediaMetaInfo.metaInfo.laboratory.logoThumbnail);
+  Widget getCardWidgetForLabReport(HealthResult mediaMetaInfo, int position) {
     return InkWell(
+      onLongPress: () {
+        if (widget.allowSelect) {
+          mediaMetaInfo.isSelected = !mediaMetaInfo.isSelected;
+
+          // setState(() {});
+          widget.mediaSelected(mediaMetaInfo.id, mediaMetaInfo.isSelected);
+        }
+      },
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => RecordDetailScreen(
-              data: mediaMetaInfo,
+        if (widget.allowSelect && widget.showDetails == false) {
+          if (widget.allowAttach) {
+            bool condition;
+            if (widget.mediaMeta.contains(mediaMetaInfo.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            mediaMetaInfo.isSelected = !mediaMetaInfo.isSelected;
+            if (mediaMetaInfo != null &&
+                mediaMetaInfo.healthRecordCollection.length > 0) {
+              mediMasterId =
+                  new CommonUtil().getMetaMasterIdListNew(mediaMetaInfo);
+              if (mediMasterId.length > 0) {
+                widget.healthRecordSelected(
+                    mediaMetaInfo.id, mediMasterId, condition);
+              } else {
+                toast.getToast('No Image Attached ', Colors.red);
+              }
+            }
+          } else {
+            bool condition;
+            if (widget.mediaMeta.contains(mediaMetaInfo.id)) {
+              condition = false;
+            } else {
+              condition = true;
+            }
+            mediaMetaInfo.isSelected = !mediaMetaInfo.isSelected;
+
+            // setState(() {});
+            widget.mediaSelected(mediaMetaInfo.id, condition);
+          }
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RecordDetailScreen(
+                data: mediaMetaInfo,
+              ),
             ),
-          ),
-        );
+          );
+        }
       },
       child: Container(
-          //height: 90,
-          padding: EdgeInsets.all(10.0),
-          margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(fhbColors.cardShadowColor),
-                blurRadius: 16, // has the effect of softening the shadow
-                spreadRadius: 0, // has the effect of extending the shadow
-              )
-            ],
-          ),
-          child: Row(
-            children: <Widget>[
-              ClipOval(
-                  child: mediaMetaInfo.metaInfo.laboratory.logoThumbnail != null
-                      ? Image.network(
-                          Constants.BASERURL +
-                              mediaMetaInfo.metaInfo.laboratory.logoThumbnail,
-                          width: 50,
+        //height: 90,
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(fhbColors.cardShadowColor),
+              blurRadius: 16, // has the effect of softening the shadow
+              spreadRadius: 0, // has the effect of extending the shadow
+            )
+          ],
+        ),
+        child: Row(
+          children: <Widget>[
+            ClipOval(
+                child:
+                    /* data.metadata.hospital != null
+                      ? data.metadata.hospital.l != null
+                          ? Image.network(
+                              Constants.BASE_URL +
+                                  data.metadata.hospital.logoThumbnail,
+                              height: 50,
+                              width: 50,
+                            )
+                          :*/
+                    Container(
+              padding: EdgeInsets.all(10),
+              child: Image.network(
+                Constants.BASE_URL +
+                    mediaMetaInfo.metadata.healthRecordCategory.logo,
+                height: 30,
+                width: 30,
+                color: Color(
+                  CommonUtil().getMyPrimaryColor(),
+                ),
+              ),
+              color: const Color(
+                fhbColors.bgColorContainer,
+              ),
+            )
+                /*: Container(
                           height: 50,
-                        )
-                      : Container(
                           width: 50,
-                          height: 50,
-                          padding: EdgeInsets.all(10),
-                          child: Image.network(
-                            Constants.BASERURL +
-                                mediaMetaInfo.metaInfo.categoryInfo.logo,
-                            color: Color(
-                              CommonUtil().getMyPrimaryColor(),
+                          color: Colors.grey[200],
+                        )*/
+                ),
+            SizedBox(width: 20),
+            Expanded(
+              flex: 6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    mediaMetaInfo.metadata.laboratory != null
+                        ? toBeginningOfSentenceCase(mediaMetaInfo
+                            .metadata.laboratory.healthOrganizationName)
+                        : '',
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    mediaMetaInfo.metadata.doctor != null
+                        ? mediaMetaInfo.metadata.doctor.name != null
+                            ? toBeginningOfSentenceCase(
+                                mediaMetaInfo.metadata.doctor.name)
+                            : ''
+                        : '',
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        color: Colors.grey, fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    new FHBUtils()
+                        .getFormattedDateString(mediaMetaInfo.createdOn),
+                    style: TextStyle(
+                        color: Colors.grey[400],
+                        fontWeight: FontWeight.w200,
+                        fontSize: 12),
+                  )
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  IconButton(
+                      icon: mediaMetaInfo.isBookmarked
+                          ? ImageIcon(
+                              AssetImage(variable.icon_record_fav_active),
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                              size: 20,
+                            )
+                          : ImageIcon(
+                              AssetImage(variable.icon_record_fav),
+                              color: Colors.black,
+                              size: 20,
                             ),
-                          ),
-                          color: const Color(
-                            fhbColors.bgColorContainer,
-                          ),
-                        )),
-              SizedBox(width: 20),
-              Expanded(
-                flex: 6,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      mediaMetaInfo.metaInfo.laboratory.name != null
-                          ? toBeginningOfSentenceCase(
-                              mediaMetaInfo.metaInfo.laboratory.name)
-                          : '',
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      mediaMetaInfo.metaInfo.doctor != null
-                          ? toBeginningOfSentenceCase(
-                              mediaMetaInfo.metaInfo.doctor.name)
-                          : '',
-                      softWrap: false,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          color: Colors.grey, fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      new FHBUtils()
-                          .getFormattedDateString(mediaMetaInfo.createdOn),
-                      style: TextStyle(
-                          color: Colors.grey[400],
-                          fontWeight: FontWeight.w200,
-                          fontSize: 12),
-                    )
-                  ],
-                ),
+                      onPressed: () {
+                        new CommonUtil()
+                            .bookMarkRecord(mediaMetaInfo, _refresh);
+                      }),
+                  (mediaMetaInfo.metadata.hasVoiceNotes != null &&
+                          mediaMetaInfo.metadata.hasVoiceNotes)
+                      ? Icon(
+                          Icons.mic,
+                          color: Colors.black54,
+                        )
+                      : Container(),
+                  widget.mediaMeta.contains(mediaMetaInfo.id)
+                      ? Icon(
+                          Icons.done,
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                        )
+                      : SizedBox(),
+                ],
               ),
-              Expanded(
-                flex: 1,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    IconButton(
-                        icon: mediaMetaInfo.isBookmarked
-                            ? ImageIcon(
-                                AssetImage(
-                                    'assets/icons/record_fav_active.png'),
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                size: 20,
-                              )
-                            : ImageIcon(
-                                AssetImage('assets/icons/record_fav.png'),
-                                color: Colors.black,
-                                size: 20,
-                              ),
-                        onPressed: () {
-                          new CommonUtil()
-                              .bookMarkRecord(mediaMetaInfo, _refresh);
-                        }),
-                  ],
-                ),
-              ),
-            ],
-          )),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {
-    print('lab id ${data.metaInfo.laboratory.id}');
-
     return FutureBuilder(
       future:
           _healthReportListForUserBlock.getProfilePic(data.metaInfo.doctor.id),

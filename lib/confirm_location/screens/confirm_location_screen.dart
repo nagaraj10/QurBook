@@ -9,6 +9,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/confirm_location/models/confirm_location_arguments.dart';
+import 'package:myfhb/constants/router_variable.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 
 class ConfirmLocationScreen extends StatefulWidget {
@@ -18,7 +19,6 @@ class ConfirmLocationScreen extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return ConfirmLocationScreenState();
   }
 }
@@ -29,10 +29,12 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
   GoogleMapController googleMapControll;
   List<Marker> _markers = [];
-
+  static const double _lat = 12.861693;
+  static const double _lang = 80.227242;
+  static const double _zoom = 14.4746;
   CameraPosition kGooglePlex = CameraPosition(
-    target: LatLng(12.861693, 80.227242),
-    zoom: 14.4746,
+    target: LatLng(_lat, _lang),
+    zoom: _zoom,
   );
   LatLng lastMapPosition;
   LatLng center = LatLng(0, 0);
@@ -41,7 +43,6 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     searchController.text = widget.arguments.place.description;
@@ -60,7 +61,6 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
 
     return Scaffold(
         body: Stack(children: <Widget>[
@@ -202,7 +202,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
   void confirmBtnTapped() {
     Navigator.popUntil(context, (Route<dynamic> route) {
       bool shouldPop = false;
-      if (route.settings.name == '/add_providers') {
+      if (route.settings.name == rt_AddProvider) {
         (route.settings.arguments as AddProvidersArguments).placeDetail =
             widget.arguments.placeDetail;
         (route.settings.arguments as AddProvidersArguments).place =
@@ -233,8 +233,7 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
           ),
           icon: descriptor,
           onDragEnd: ((value) {
-            print(value.latitude);
-            print(value.longitude);
+          
 
             if (googleMapControll != null) {
               getAddressesFromCoordinates(value.latitude, value.longitude);
@@ -265,7 +264,5 @@ class ConfirmLocationScreenState extends State<ConfirmLocationScreen> {
         await Geocoder.local.findAddressesFromCoordinates(coordinates);
     address = addresses.first;
     searchController.text = address.addressLine;
-    print(
-        ' ${address.locality}, ${address.adminArea},${address.subLocality}, ${address.subAdminArea},${address.addressLine}, ${address.featureName},${address.thoroughfare}, ${address.subThoroughfare}');
-  }
+     }
 }

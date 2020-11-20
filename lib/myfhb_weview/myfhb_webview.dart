@@ -5,6 +5,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class MyFhbWebView extends StatefulWidget {
   final String title;
@@ -26,7 +27,6 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
 
   @override
   Widget build(BuildContext context) {
-    print('selected url :' + widget.selectedUrl);
 
     return Scaffold(
         appBar: AppBar(
@@ -69,7 +69,7 @@ class _MyFhbWebViewState extends State<MyFhbWebView> {
   _loadHtmlFromAssets(String selectedUrl) async {
     String fileText = await rootBundle.loadString(selectedUrl);
     _controller.loadUrl(Uri.dataFromString(fileText,
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+            mimeType: variable.strtexthtml, encoding: Encoding.getByName(variable.strUtf))
         .toString());
   }
 }

@@ -1,18 +1,21 @@
 import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 
 import 'MyProfilePage.dart';
@@ -32,15 +35,25 @@ class _UserAccountsState extends State<UserAccounts>
   TabController _sliverTabController;
   int selectedTab = 0;
   bool _isEditable = false;
-  File imageURIProfile;
+  File imageURIProfile, profileImage;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
+
+  MyProfileModel myProfile;
 
   @override
   void initState() {
     super.initState();
     PreferenceUtil.init();
+    //fetchUserProfileInfo();
     _sliverTabController = TabController(
         vsync: this, length: 3, initialIndex: widget.arguments.selectedIndex);
     _sliverTabController.addListener(_handleSelected);
+  }
+
+  fetchUserProfileInfo() async {
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
   }
 
   void _handleSelected() {
@@ -56,139 +69,187 @@ class _UserAccountsState extends State<UserAccounts>
 
   @override
   Widget build(BuildContext context) {
-    MyProfile myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    //MyProfileModel myProfile;
+    fetchUserProfileInfo();
+    try {
+      // var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      // myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userid);
 
-    Sharedbyme sharedbyme = new CommonUtil().getProfileDetails();
+      Sharedbyme sharedbyme = new CommonUtil().getProfileDetails();
 
-    String profilebanner =
-        PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
-    if (profilebanner != null) {
-      imageURIProfile = File(profilebanner);
-    }
+      String profilebanner =
+          PreferenceUtil.getStringValue(Constants.KEY_PROFILE_BANNER);
+      if (profilebanner != null) {
+        imageURIProfile = File(profilebanner);
+      }
 
-    return Scaffold(
-      backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
-              expandedHeight: sliverBarHeight,
-              floating: false,
-              pinned: true,
-              leading: IconButton(
-                icon: Icon(
-                  Icons.arrow_back_ios,
-                  size: 20,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              actions: <Widget>[
-                selectedTab == 0
-                    ? IconButton(
-                        icon: _isEditable
-                            ? Visibility(
-                                visible: false, child: Icon(Icons.save))
-                            : Icon(Icons.edit),
-                        onPressed: () {
-                          setState(() {
-                            if (_isEditable) {
-                              _isEditable = false;
-                            } else {
-                              _isEditable = true;
-                              //sliverBarHeight = 50;
+      String profileImageFile =
+          PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+      if (profileImageFile != null) {
+        profileImage = File(profileImageFile);
+      }
+    } catch (e) {}
 
-                              Navigator.pushNamed(
-                                      context, '/add_family_user_info',
-                                      arguments: AddFamilyUserInfoArguments(
-                                          sharedbyme: sharedbyme,
-                                          fromClass:
-                                              CommonConstants.user_update))
-                                  .then((value) {
-                                setState(() {
+    return new WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
+          backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+          body: NestedScrollView(
+            headerSliverBuilder:
+                (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+                  expandedHeight: sliverBarHeight,
+                  floating: false,
+                  pinned: true,
+                  leading: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      size: 20,
+                    ),
+                    onPressed: () {
+                      Navigator.popUntil(context, (Route<dynamic> route) {
+                        bool shouldPop = false;
+                        if (route.settings.name == router.rt_Dashboard ||
+                            route.settings == null) {
+                          shouldPop = true;
+                        }
+                        return shouldPop;
+                      });
+                    },
+                  ),
+                  actions: <Widget>[
+                    selectedTab == 0
+                        ? IconButton(
+                            icon: _isEditable
+                                ? Visibility(
+                                    visible: false, child: Icon(Icons.save))
+                                : Icon(Icons.edit),
+                            onPressed: () {
+                              setState(() {
+                                if (_isEditable) {
                                   _isEditable = false;
-                                });
+                                } else {
+                                  _isEditable = true;
+                                  //sliverBarHeight = 50;
+                                  if (myProfile?.result != null) {
+                                    Navigator.pushNamed(context,
+                                            router.rt_AddFamilyUserInfo,
+                                            arguments:
+                                                AddFamilyUserInfoArguments(
+                                                    myProfileResult:
+                                                        myProfile?.result,
+                                                    fromClass: CommonConstants
+                                                        .user_update))
+                                        .then((value) {
+                                      setState(() {
+                                        _isEditable = false;
+                                      });
+                                    });
+                                  } else {
+                                    FlutterToast().getToast(
+                                        'Unable to Fetch User Profile data',
+                                        Colors.red);
+                                    setState(() {
+                                      _isEditable = false;
+                                    });
+                                  }
+                                }
+                                sliverBarHeight = 220;
                               });
-                            }
-                            sliverBarHeight = 220;
-                          });
-                        })
-                    : Container(
-                        height: 0,
-                        width: 0,
-                      )
-              ],
-              flexibleSpace: FlexibleSpaceBar(
-                  titlePadding: EdgeInsets.only(left: 40),
-                  centerTitle: false,
-                  title: Container(
-                    padding: EdgeInsets.all(10),
-                    color: Colors.transparent,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          height: 30,
-                          width: 30,
-                          child: ClipOval(
-                            child: FHBBasicWidget().getProfilePicWidget(
-                                myProfile.response.data.generalInfo
-                                    .profilePicThumbnail),
-                          ),
+                            })
+                        : Container(
+                            height: 0,
+                            width: 0,
+                          )
+                  ],
+                  flexibleSpace: FlexibleSpaceBar(
+                      titlePadding: EdgeInsets.only(left: 40),
+                      centerTitle: false,
+                      title: Container(
+                        padding: EdgeInsets.all(10),
+                        color: Colors.transparent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                              height: 30,
+                              width: 30,
+                              // child: ClipOval(
+                              //   child: profileImage != null
+                              //       ? Image.file(profileImage,
+                              //           fit: BoxFit.cover, width: 100, height: 100)
+                              //       : FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                              //           myProfile.response.data.generalInfo
+                              //               .profilePicThumbnailURL),
+                              // ),
+                            ),
+                            SizedBox(width: 10),
+                            // Text(
+                            //   myProfile.response.data.generalInfo
+                            //               .qualifiedFullName !=
+                            //           null
+                            //       ? toBeginningOfSentenceCase(myProfile
+                            //                   .response
+                            //                   .data
+                            //                   .generalInfo
+                            //                   .qualifiedFullName
+                            //                   .firstName ??
+                            //               '') +
+                            //           ' ' +
+                            //           toBeginningOfSentenceCase(myProfile
+                            //                   .response
+                            //                   .data
+                            //                   .generalInfo
+                            //                   .qualifiedFullName
+                            //                   .lastName ??
+                            //               '')
+                            //       : '',
+                            //   style: TextStyle(
+                            //       color: Colors.white,
+                            //       fontSize: 13.0,
+                            //       fontWeight: FontWeight.w400),
+                            //   overflow: TextOverflow.fade,
+                            // )
+                          ],
                         ),
-                        SizedBox(width: 10),
-                        Text(
-                          myProfile.response.data.generalInfo.name != null
-                              ? toBeginningOfSentenceCase(
-                                  myProfile.response.data.generalInfo.name)
-                              : '',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13.0,
-                              fontWeight: FontWeight.w400),
-                          overflow: TextOverflow.fade,
-                        )
+                      ),
+                      background: imageURIProfile != null
+                          ? Image.file(imageURIProfile,
+                              fit: BoxFit.cover, width: 100, height: 100)
+                          : Container(
+                              color: Colors.black.withOpacity(0.2),
+                            )),
+                ),
+                SliverPersistentHeader(
+                  delegate: _SliverAppBarDelegate(
+                    TabBar(
+                      controller: _sliverTabController,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.white70,
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicatorWeight: 2,
+                      tabs: [
+                        Tab(text: variable.strMyInfo),
+                        Tab(text: variable.strMyFamily),
+                        Tab(text: variable.strMyProvider),
                       ],
                     ),
                   ),
-                  background: imageURIProfile != null
-                      ? Image.file(imageURIProfile,
-                          fit: BoxFit.cover, width: 100, height: 100)
-                      : Container(
-                          color: Colors.black.withOpacity(0.2),
-                        )),
-            ),
-            SliverPersistentHeader(
-              delegate: _SliverAppBarDelegate(
-                TabBar(
-                  controller: _sliverTabController,
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.white70,
-                  indicatorSize: TabBarIndicatorSize.label,
-                  indicatorWeight: 2,
-                  tabs: [
-                    Tab(text: "My Info"),
-                    Tab(text: "My Family"),
-                    Tab(text: "My Provider"),
-                  ],
+                  pinned: true,
+                  floating: false,
                 ),
+              ];
+            },
+            body: Container(
+              child: TabBarView(
+                controller: _sliverTabController,
+                children: <Widget>[MyProfilePage(), MyFamily(), MyProvider()],
               ),
-              pinned: true,
-              floating: false,
             ),
-          ];
-        },
-        body: Container(
-          child: TabBarView(
-            controller: _sliverTabController,
-            children: <Widget>[MyProfilePage(), MyFamily(), MyProvider()],
           ),
-        ),
-      ),
-    );
+        ));
   }
 }
 

@@ -14,6 +14,7 @@ import 'package:myfhb/common/OverlayDeviceDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/devices_tensorflow/widgets/camera.dart';
+import 'package:myfhb/exception/FetchException.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
@@ -21,7 +22,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:tflite/tflite.dart';
 
 import 'CropAndRotateScreen.dart';
-import 'DisplayPictureScreen.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class TakePictureScreenForDevices extends StatefulWidget {
   final List<CameraDescription> cameras;
@@ -73,7 +78,6 @@ class TakePictureScreenForDevicesState
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
         ? Constants.IS_CATEGORYNAME_DEVICES
         : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
-    print('pary categoryName' + categoryName);
 
     isObjectDetecting =
         PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
@@ -103,8 +107,6 @@ class TakePictureScreenForDevicesState
   }
 
   void initilzeData() {
-    print('inside initilzeData');
-
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
         ? Constants.IS_CATEGORYNAME_DEVICES
@@ -121,8 +123,7 @@ class TakePictureScreenForDevicesState
   loadModel() async {
     String res;
     res = await Tflite.loadModel(
-        model: "assets/device_detection.tflite",
-        labels: "assets/devicelabels.txt");
+        model: variable.strdflit, labels: variable.file_device);
   }
 
   @override
@@ -186,14 +187,21 @@ class TakePictureScreenForDevicesState
                                     child: AutoSizeText(
                                       _recognitions != null
                                           ? _recognitions.length > 0
-                                              ? deviceNames(_recognitions[0]
-                                                          ["detectedClass"]) !=
-                                                      "Choose Device"
+                                              ? deviceNames(_recognitions[0][
+                                                          Constants
+                                                              .keyDetectedClass]) !=
+                                                      Constants
+                                                          .IS_CATEGORYNAME_DEVICES
                                                   ? deviceNames(_recognitions[0]
-                                                      ["detectedClass"])
-                                                  : deviceName
-                                              : deviceName
-                                          : deviceName,
+                                                      [Constants
+                                                          .keyDetectedClass])
+                                                  : deviceName[0]
+                                                          .toUpperCase() +
+                                                      deviceName.substring(1)
+                                              : deviceName[0].toUpperCase() +
+                                                  deviceName.substring(1)
+                                          : deviceName[0].toUpperCase() +
+                                              deviceName.substring(1),
                                       maxFontSize: 14,
                                       minFontSize: 10,
                                       textAlign: TextAlign.center,
@@ -234,7 +242,8 @@ class TakePictureScreenForDevicesState
                                         backgroundColor: Colors.white))
                               ]))
                       : _recognitions.length == 0 ||
-                              _recognitions[0]["detectedClass"] == "Others"
+                              _recognitions[0][Constants.keyDetectedClass] ==
+                                  variable.strOthers
                           ? Container(
                               height: 80,
                               color:
@@ -267,7 +276,8 @@ class TakePictureScreenForDevicesState
                                     SizedBox(width: 10),
                                     Flexible(
                                       child: Text(
-                                          'We find the device is ${deviceNames(_recognitions[0]["detectedClass"])}',
+                                          variable.strDeviceFound +
+                                              ' ${deviceNames(_recognitions[0]["detectedClass"])}',
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.w400)),
@@ -294,10 +304,6 @@ class TakePictureScreenForDevicesState
                                       height: 40,
                                       fit: BoxFit.cover,
                                     ),
-                                    /*  new Positioned(
-                                    right: 0,
-                                    top: 0,
-                                    child:  */
                                     new Container(
                                       padding: EdgeInsets.all(2),
                                       decoration: new BoxDecoration(
@@ -354,7 +360,7 @@ class TakePictureScreenForDevicesState
                                             // Find the temp directory using the `path_provider` plugin.
                                             (await getTemporaryDirectory())
                                                 .path,
-                                            'Prescription_${DateTime.now()}.jpg',
+                                            'Prescription_${DateTime.now().minute}.jpg',
                                           );
 
                                           // Attempt to take a picture and log where it's been saved.
@@ -365,7 +371,6 @@ class TakePictureScreenForDevicesState
                                           setState(() {});
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
-                                          print(e);
                                         }
                                       }
                                     },
@@ -411,43 +416,6 @@ class TakePictureScreenForDevicesState
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              /*  Expanded(
-                                child: Center(
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.photo_library,
-                                      color: Colors.white,
-                                      size: 32,
-                                    ),
-                                    onPressed: () async {
-                                      // Take the Picture in a try / catch block. If anything goes wrong,
-                                      // catch the error.
-
-                                      if (isMultipleImages) {
-                                        await loadAssets();
-                                        callDisplayPictureScreen(context);
-                                      } else {
-                                        try {
-                                          String filePath;
-                                          var image =
-                                              await ImagePicker.pickImage(
-                                                  source: ImageSource.gallery);
-                                          filePath = image.uri.path;
-                                          imagePaths.add(filePath);
-                                          callDisplayPictureScreen(context);
-                                        } catch (e) {
-                                          // If an error occurs, log the error to the console.
-                                          print(e);
-                                        }
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
-                               */
-                              /*  Expanded(
-                                child: Container(),
-                              ), */
                               Expanded(
                                 child: Center(
                                   child: IconButton(
@@ -477,7 +445,7 @@ class TakePictureScreenForDevicesState
                                             // Find the temp directory using the `path_provider` plugin.
                                             (await getTemporaryDirectory())
                                                 .path,
-                                            'Prescription_${DateTime.now()}.jpg',
+                                            'Prescription_${DateTime.now().minute}.jpg',
                                           );
 
                                           // Attempt to take a picture and log where it's been saved.
@@ -496,81 +464,12 @@ class TakePictureScreenForDevicesState
                                           }
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
-                                          print(e);
                                         }
                                       }
                                     },
                                   ),
                                 ),
                               ),
-                              /*  Expanded(
-                                child: Center(
-                                  child: Column(
-                                    children: <Widget>[
-                                      new IconButton(
-                                          icon: new ImageIcon(
-                                            AssetImage(
-                                                'assets/icons/img_multi.png'),
-                                            size: 24,
-                                            color: isMultipleImages
-                                                ? Colors.white
-                                                : Colors.white54,
-                                            //color: Colors.white,
-                                          ),
-                                          onPressed: () {
-                                            isMultipleImages = true;
-                                            setState(() {});
-                                          }),
-                                      Visibility(
-                                          visible:
-                                              isMultipleImages ? true : false,
-                                          child: Container(
-                                            height: 5,
-                                            width: 5,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              color: Colors.white,
-                                            ),
-                                          ))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Center(
-                                  child: Column(
-                                    children: <Widget>[
-                                      new IconButton(
-                                          icon: new ImageIcon(
-                                            AssetImage(
-                                                'assets/icons/img_single.png'),
-                                            color: isMultipleImages
-                                                ? Colors.white54
-                                                : Colors.white,
-                                            size: 24,
-                                          ),
-                                          onPressed: () {
-                                            isMultipleImages = false;
-                                            setState(() {});
-                                          }),
-                                      Visibility(
-                                          visible:
-                                              isMultipleImages ? false : true,
-                                          child: Container(
-                                            height: 5,
-                                            width: 5,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(30),
-                                              color: Colors.white,
-                                            ),
-                                          ))
-                                    ],
-                                  ),
-                                ),
-                              ),
-                             */
                             ],
                           ),
                         ))
@@ -579,25 +478,20 @@ class TakePictureScreenForDevicesState
 
   Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();
-    String error = 'No Error Dectected';
 
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 300,
         enableCamera: true,
         selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
         materialOptions: MaterialOptions(
-          actionBarColor: "#6d35de",
-          //actionBarTitle: "Example App",
-          //allViewTitle: "All Photos",
+          actionBarColor: fhbColors.actionColor,
           useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
+          selectCircleStrokeColor: fhbColors.colorBlack,
         ),
       );
-    } on Exception catch (e) {
-      error = e.toString();
-    }
+    } on FetchException catch (e) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -607,21 +501,13 @@ class TakePictureScreenForDevicesState
     for (Asset asset in resultList) {
       String filePath =
           await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
-      imagePaths.clear();
       imagePaths.add(filePath);
     }
-  }
 
-  /*  void callDisplayPictureScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DisplayPictureScreen(imagePath: imagePaths),
-      ),
-    ).then((value) {
-      Navigator.pop(context);
+    setState(() {
+      images = resultList;
     });
-  } */
+  }
 
   void callDisplayPictureScreen(BuildContext context) {
     Navigator.push(
@@ -661,15 +547,13 @@ class TakePictureScreenForDevicesState
       recognitions, imageHeight, imageWidth, CameraController control) {
     setState(() {
       recognitions.map((re) {
-        print(
-            "Detected Text : --------------${re["detectedClass"]} ${(re["confidenceInClass"] * 100).toStringAsFixed(0)}%");
         _recognitions = recognitions;
       });
 
       _recognitions = recognitions;
 
       PreferenceUtil.saveString(Constants.KEY_DEVICENAME,
-          deviceNames(_recognitions[0]["detectedClass"]));
+          deviceNames(_recognitions[0][Constants.keyDetectedClass]));
 
       _controller = control;
     });
@@ -695,7 +579,7 @@ class TakePictureScreenForDevicesState
         ),
         child: new Center(
           child: new Text(
-            'Choose',
+            variable.strChoose,
             style: new TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -712,7 +596,7 @@ class TakePictureScreenForDevicesState
   }
 
   void _chooseBtnTapped() {
-    PreferenceUtil.saveString(Constants.stop_detecting, 'YES');
+    PreferenceUtil.saveString(Constants.stop_detecting, variable.strYES);
 
     setState(() {
       isObjectDetecting = false;
@@ -739,7 +623,7 @@ class TakePictureScreenForDevicesState
         ),
         child: new Center(
           child: new Text(
-            'Confirm',
+            variable.strConfirm,
             style: new TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -756,7 +640,7 @@ class TakePictureScreenForDevicesState
   }
 
   void _confirmBtnTapped() {
-    PreferenceUtil.saveString(Constants.stop_detecting, 'YES');
+    PreferenceUtil.saveString(Constants.stop_detecting, variable.strYES);
 
     setState(() {
       isObjectDetecting = false;
@@ -767,26 +651,26 @@ class TakePictureScreenForDevicesState
     String device;
 
     switch (detectedClass) {
-      case "BP":
-        device = "BP Monitor";
+      case variable.strBP:
+        device = Constants.STR_BP_MONITOR;
         break;
-      case "WS":
-        device = "Weighing Scale";
+      case variable.strWS:
+        device = Constants.STR_WEIGHING_SCALE;
         break;
-      case "DT":
-        device = "Thermometer";
+      case variable.strDT:
+        device = Constants.STR_THERMOMETER;
         break;
-      case "GL":
-        device = "Glucometer";
+      case variable.strGL:
+        device = Constants.STR_GLUCOMETER;
         break;
-      case "PO":
-        device = "Pulse Oximeter";
+      case variable.strPO:
+        device = Constants.STR_PULSE_OXIMETER;
         break;
-      case "Others":
-        device = "Choose Device";
+      case variable.strOthers:
+        device = Constants.IS_CATEGORYNAME_DEVICES;
         break;
       default:
-        device = "Choose Device";
+        device = Constants.IS_CATEGORYNAME_DEVICES;
         break;
     }
 
@@ -805,7 +689,7 @@ class TakePictureScreenForDevicesState
   void initializeData(BuildContext _context) {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     if (categoryName != Constants.STR_DEVICES) {
-      Navigator.pushNamed(_context, '/take_picture_screen').then((value) {
+      Navigator.pushNamed(_context, router.rt_TakePictureScreen).then((value) {
         Navigator.pop(_context);
       });
     } else {

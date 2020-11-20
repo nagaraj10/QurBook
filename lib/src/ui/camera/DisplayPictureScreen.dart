@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/AudioWidget.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -14,19 +13,20 @@ import 'package:myfhb/common/OverlayDeviceDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
-import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
-import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
+import 'package:myfhb/src/model/Media/MediaData.dart';
+import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
-
-export 'package:myfhb/src/search/Doctors/DoctorsListResponse.dart';
 
 class DisplayPictureScreen extends StatefulWidget {
   final List<String> imagePath;
@@ -74,9 +74,9 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
 
-  MediaData mediaDataObj = new MediaData();
+  MediaResult mediaDataObj = new MediaResult();
 
-  CategoryData categoryDataObj = new CategoryData();
+  CategoryResult categoryDataObj = new CategoryResult();
 
   var doctorsData, hospitalData, labData;
 
@@ -93,7 +93,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   bool containsAudio = false;
   String audioPath = '';
-  List<String> documentList = ['Hospital IDS', 'Insurance IDs', 'Other IDs'];
 
   bool skipTapped;
 
@@ -154,7 +153,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                     ],
                   ),
                   onPressed: () {
-                    saveMediaDialog(context, categoryName, deviceName);
+                    saveMediaDialog(context, categoryName,
+                        deviceName[0].toUpperCase() + deviceName.substring(1));
                   },
                 ),
               )
@@ -175,17 +175,13 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   saveMediaDialog(
       BuildContext context, String categoryName, String deviceName) {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-    //print('pary categoryName' + categoryName);
 
     audioPath = '';
     containsAudio = false;
     try {
       deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
-      //print('pary deviceName' + deviceName);
       setFileName();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
 
     if (categoryName != Constants.STR_DEVICES) {
       switch (categoryName) {
@@ -197,9 +193,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               dateOfVisit,
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            print('Audio Path delete' + containsAudio.toString());
-            print('Audio Path delete' + audioPath.toString());
-
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -207,16 +200,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('Audio Path DisplayPicture' + containsAudio.toString());
-            print('Audio Path DisplayPicture' + audioPath.toString());
-
             audioPath = audioPath;
             containsAudio = containsAudio;
 
             setState(() {});
           }, widget.imagePath, null, false, fileName);
 
-          // getDialogBoxForPrescription(context);
           break;
         case Constants.STR_BILLS:
           new CommonDialogBox().getDialogBoxForBillsAndOthers(
@@ -224,9 +213,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                print('Audio Path delete' + containsAudio.toString());
-                print('Audio Path delete' + audioPath.toString());
-
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -234,9 +220,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               },
               widget.imagePath,
               (containsAudio, audioPath) {
-                print('Audio Path DisplayPicture' + containsAudio.toString());
-                print('Audio Path DisplayPicture' + audioPath.toString());
-
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -245,7 +228,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               null,
               false,
               fileName);
-          //getDialogBoxForBillsAndOthers(context);
           break;
         case Constants.STR_OTHERS:
           new CommonDialogBox().getDialogBoxForBillsAndOthers(
@@ -253,9 +235,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                print('Audio Path delete' + containsAudio.toString());
-                print('Audio Path delete' + audioPath.toString());
-
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -263,9 +242,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               },
               widget.imagePath,
               (containsAudio, audioPath) {
-                print('Audio Path DisplayPicture' + containsAudio.toString());
-                print('Audio Path DisplayPicture' + audioPath.toString());
-
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -274,7 +250,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               null,
               false,
               fileName);
-          //getDialogBoxForBillsAndOthers(context);
 
           break;
         case Constants.STR_MEDICALREPORT:
@@ -285,9 +260,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               dateOfVisit,
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            print('Audio Path delete' + containsAudio.toString());
-            print('Audio Path delete' + audioPath.toString());
-
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -295,9 +267,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('Audio Path DisplayPicture' + containsAudio.toString());
-            print('Audio Path DisplayPicture' + audioPath.toString());
-
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -312,9 +281,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               dateOfVisit,
               containsAudio,
               audioPath, (containsAudio, audioPath) {
-            print('Audio Path delete' + containsAudio.toString());
-            print('Audio Path delete' + audioPath.toString());
-
             setState(() {
               audioPath = audioPath;
               containsAudio = containsAudio;
@@ -322,9 +288,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           }, () {
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('Audio Path DisplayPicture' + containsAudio.toString());
-            print('Audio Path DisplayPicture' + audioPath.toString());
-
             audioPath = audioPath;
             containsAudio = containsAudio;
 
@@ -337,9 +300,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               containsAudio,
               audioPath,
               (containsAudio, audioPath) {
-                //print('Audio Path delete' + containsAudio.toString());
-                //print('Audio Path delete' + audioPath.toString());
-
                 setState(() {
                   audioPath = audioPath;
                   containsAudio = containsAudio;
@@ -347,9 +307,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
               },
               widget.imagePath,
               (containsAudio, audioPath) {
-                print('Audio Path DisplayPicture' + containsAudio.toString());
-                print('Audio Path DisplayPicture' + audioPath.toString());
-
                 audioPath = audioPath;
                 containsAudio = containsAudio;
 
@@ -363,14 +320,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           break;
       }
     } else {
-      //print(deviceName + " Paaaaaaaaaaaaaaaaaaru");
-
       var digitRecog = true;
-      //      displayDevicesList(deviceName);
 
       digitRecog =
           PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
-                  'false'
+                  variable.strFalse
               ? false
               : true;
 
@@ -433,7 +387,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         ),
         child: new Center(
           child: new Text(
-            'Skip',
+            variable.strSkip,
             style: new TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -451,7 +405,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   _skipBtnTapped(String device) {
     _scaffoldKey.currentState.hideCurrentSnackBar();
-    displayDevicesList(deviceName, null);
+    displayDevicesList(device[0].toUpperCase() + device.substring(1), null);
     skipTapped = true;
   }
 
@@ -462,7 +416,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           if (digitRecogResponse.response.data.deviceMeasurements != null) {
             if (digitRecogResponse
                     .response.data.deviceMeasurements.data[0].values !=
-                'Image not clear') {
+                variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
                   .response.data.deviceMeasurements.data[0].values;
             }
@@ -498,7 +452,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           if (digitRecogResponse.response.data.deviceMeasurements != null) {
             if (digitRecogResponse
                     .response.data.deviceMeasurements.data[0].values !=
-                'Image not clear') {
+                variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
                   .response.data.deviceMeasurements.data[0].values;
             }
@@ -533,7 +487,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           if (digitRecogResponse.response.data.deviceMeasurements != null) {
             if (digitRecogResponse
                     .response.data.deviceMeasurements.data[0].values !=
-                'Image not clear') {
+                variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
                   .response.data.deviceMeasurements.data[0].values;
             }
@@ -568,7 +522,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           if (digitRecogResponse.response.data.deviceMeasurements != null) {
             if (digitRecogResponse
                     .response.data.deviceMeasurements.data[0].values !=
-                'Image not clear') {
+                variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
                   .response.data.deviceMeasurements.data[0].values;
               pulse.text = digitRecogResponse
@@ -606,7 +560,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           if (digitRecogResponse.response.data.deviceMeasurements != null) {
             if (digitRecogResponse
                     .response.data.deviceMeasurements.data[0].values !=
-                'Image not clear') {
+                variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
                   .response.data.deviceMeasurements.data[0].values;
               diaStolicPressure.text = digitRecogResponse
@@ -656,174 +610,29 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                 )))
         .then((results) {
       if (results != null) {
-        if (results.containsKey('doctor')) {
-          doctorsData = json.decode(results['doctor']);
+        if (results.containsKey(Constants.keyDoctor)) {
+          doctorsData = json.decode(results[Constants.keyDoctor]);
 
-          print('doctor data' + doctorsData.toString());
           setState(() {
-            doctorsName.text = doctorsData['name'];
+            doctorsName.text = doctorsData[parameters.strName];
           });
-        } else if (results.containsKey('hospital')) {
-          hospitalData = json.decode(results['hospital']);
-
-          hospitalName.text = hospitalData['name'];
-        } else if (results.containsKey('laborartory')) {
-          labData = json.decode(results['laborartory']);
-
-          labName.text = labData['name'];
+        } else if (results.containsKey(Constants.keyHospital)) {
+          hospitalData = json.decode(results[Constants.keyHospital]);
+          setState(() {
+            hospitalName.text =
+                hospitalData[parameters.strHealthOrganizationName];
+          });
+        } else if (results.containsKey(Constants.keyLab)) {
+          labData = json.decode(results[Constants.keyLab]);
+          setState(() {
+            labName.text = labData[parameters.strHealthOrganizationName];
+          });
         }
-        setState(() {});
       }
     });
   }
 
-  void onPostDataToServer() async {
-    if (doValidationBeforePosting()) {
-      Map<String, dynamic> postMainData = new Map();
-      Map<String, dynamic> postMediaData = new Map();
-      String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-
-      postMainData["userId"] = userID;
-      postMediaData["categoryInfo"] = categoryDataObj.toJson();
-
-      List<MediaData> metaDataFromSharedPrefernce =
-          PreferenceUtil.getMediaType();
-
-      if (categoryName != Constants.STR_DEVICES) {
-        mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(
-            categoryID, metaDataFromSharedPrefernce, categoryName);
-      } else {
-        mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularDevice(
-            deviceName, metaDataFromSharedPrefernce);
-      }
-
-      postMediaData["mediaTypeInfo"] = mediaDataObj.toJson();
-
-      postMediaData["dateOfVisit"] = dateOfVisit.text;
-      postMediaData["memoText"] = memoController.text;
-      postMediaData["hasVoiceNote"] =
-          (audioPath != '' && audioPath != null) ? true : false;
-      postMediaData["isDraft"] = false;
-
-      postMediaData["sourceName"] = CommonConstants.strTridentValue;
-      postMediaData["memoTextRaw"] = 'memoTextRaw';
-
-      if (categoryName == CommonConstants.strDevice) {
-        List<Map<String, dynamic>> postDeviceData = new List();
-        Map<String, dynamic> postDeviceValues = new Map();
-        Map<String, dynamic> postDeviceValuesExtra = new Map();
-        Map<String, dynamic> postDeviceValuesExtraClone = new Map();
-
-        if (deviceName == Constants.STR_GLUCOMETER) {
-          postDeviceValues['parameter'] = CommonConstants.strSugarLevel;
-          postDeviceValues['value'] = int.parse(deviceController.text);
-          postDeviceValues['unit'] = CommonConstants.strGlucometerValue;
-          postDeviceData.add(postDeviceValues);
-          postDeviceValuesExtra['parameter'] = CommonConstants.strTimeIntake;
-          postDeviceValuesExtra['value'] = '';
-          postDeviceValuesExtra['unit'] =
-              isSelected[0] == true ? 'Before' : 'After';
-          postDeviceData.add(postDeviceValuesExtra);
-        } else if (deviceName == Constants.STR_THERMOMETER) {
-          postDeviceValues['parameter'] = CommonConstants.strTemperature;
-          postDeviceValues['value'] = int.parse(deviceController.text);
-          postDeviceValues['unit'] = CommonConstants.strTemperatureUnit;
-          postDeviceData.add(postDeviceValues);
-        } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
-          postDeviceValues['parameter'] = CommonConstants.strWeightParam;
-          postDeviceValues['value'] = deviceController.text;
-          postDeviceValues['unit'] = CommonConstants.strWeightUnit;
-          postDeviceData.add(postDeviceValues);
-        } else if (deviceName == Constants.STR_PULSE_OXIMETER) {
-          postDeviceValues['parameter'] = CommonConstants.strOxygenParams;
-          postDeviceValues['value'] = deviceController.text;
-          postDeviceValues['unit'] = CommonConstants.strOxygenUnits;
-          postDeviceData.add(postDeviceValues);
-
-          postDeviceValuesExtra['parameter'] = CommonConstants.strPulseRate;
-          postDeviceValuesExtra['value'] = pulse.text;
-          postDeviceValuesExtra['unit'] = CommonConstants.strPulseUnit;
-
-          postDeviceData.add(postDeviceValuesExtra);
-        } else if (deviceName == Constants.STR_BP_MONITOR) {
-          postDeviceValues['parameter'] = CommonConstants.strBPParams;
-          postDeviceValues['value'] = deviceController.text;
-
-          postDeviceValues['unit'] = CommonConstants.strBPUNits;
-          postDeviceData.add(postDeviceValues);
-
-          postDeviceValuesExtra['parameter'] =
-              CommonConstants.strDiastolicParams;
-          postDeviceValuesExtra['value'] = diaStolicPressure.text;
-          postDeviceValuesExtra['unit'] = CommonConstants.strBPUNits;
-
-          postDeviceData.add(postDeviceValuesExtra);
-
-          postDeviceValuesExtraClone['parameter'] =
-              CommonConstants.strPulseRate;
-          postDeviceValuesExtraClone['value'] = pulse.text;
-          postDeviceValuesExtraClone['unit'] = CommonConstants.strPulseUnit;
-
-          postDeviceData.add(postDeviceValuesExtraClone);
-        }
-        print(postDeviceData.toString() + 'Values of readings');
-        postMediaData['deviceReadings'] = postDeviceData;
-      } else if (categoryName == Constants.STR_PRESCRIPTION ||
-          categoryName == Constants.STR_MEDICALREPORT) {
-        postMediaData["doctor"] = doctorsData;
-        if (hospitalData == null) {
-          //postMediaData["hospital"] = {};
-        } else {
-          postMediaData["hospital"] = hospitalData;
-        }
-      } else if (categoryName == Constants.STR_IDDOCS) {
-        if (selectedID != null) {
-          print(selectedID.split(' ')[0]);
-
-          postMediaData['idType'] = selectedID.split(' ')[0];
-        }
-      } else if (categoryName == Constants.STR_LABREPORT) {
-        postMediaData["doctor"] = doctorsData;
-        postMediaData["laboratory"] = labData;
-      }
-      postMediaData["fileName"] = fileName.text;
-
-      postMainData['metaInfo'] = postMediaData;
-
-      print('body' + postMainData.toString());
-      print('postDeviceData ' + postMediaData['deviceReadings'].toString());
-
-      var params = json.encode(postMainData);
-
-      print('params' + params.toString());
-      print('params' + postMainData['metaInfo'].toString());
-
-      //print('imagePath' + widget.imagePath);
-
-      //imageFile = File(widget.imagePath);
-
-      _healthReportListForUserBlock
-          .submit(
-        params.toString(),
-      )
-          .then((savedMetaDataResponse) {
-        if (savedMetaDataResponse.success) {
-          PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
-          postAudioToServer(savedMetaDataResponse.response.data.mediaMetaID);
-        }
-      });
-    } else {
-      showDialog(
-          context: context,
-          child: new AlertDialog(
-            title: new Text("MyFHB"),
-            content: new Text(validationMsg),
-          ));
-    }
-  }
-
   getAllObjectToPost() {
-    print('inside getAllObjectToPost');
     initialData();
     setFileName();
 
@@ -831,26 +640,23 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     deviceController = new TextEditingController(text: '');
     memoController = new TextEditingController(text: '');
 
-    if (doctorsName.text != null) {
-      print('doctors Controller' + doctorsName.text);
-      print('hospital Controller' + hospitalName.text);
-    }
-
-    dateOfVisit = new TextEditingController(
-        text: FHBUtils().getFormattedDateOnly(dateTime.toString()));
-
     pulse = new TextEditingController(text: '');
     diaStolicPressure = new TextEditingController(text: '');
 
-    List<CategoryData> catgoryDataList = PreferenceUtil.getCategoryType();
+    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType();
 
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+
+    if (categoryName != Constants.STR_IDDOCS) {
+      dateOfVisit = new TextEditingController(
+          text: FHBUtils().getFormattedDateOnly(dateTime.toString()));
+    } else {
+      dateOfVisit = new TextEditingController(text: '');
+    }
 
     isCategoryNameDevices =
         categoryName == Constants.IS_CATEGORYNAME_DEVICES ? true : false;
     categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
-
-    print('categoryID' + categoryID);
 
     categoryDataObj = new CommonUtil()
         .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
@@ -871,531 +677,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     }
   }
 
-  onDateSelected(DateTime dateTimeSelected, String selectedDate) {
-    print('inside setState');
-    print('inside setState' + dateTimeSelected.toString());
-    print('inside setState' + selectedDate);
-
-    setState(() {
-      dateTime = dateTimeSelected;
-      dateOfVisit.text = selectedDate;
-    });
-  }
-
-  void postImageToServer(String mediaMetaID) {
-    Map<String, dynamic> postImage = new Map();
-
-    postImage['mediaMetaId'] = mediaMetaID;
-    print('I am here ' + mediaMetaID);
-
-    /* _healthReportListForUserBlock
-                  .saveImage(widget.imagePath, mediaMetaID, '')
-                  .then((postImageResponse) {
-                print(
-                    'output mediaMaster' + postImageResponse.response.data.mediaMasterId);
-          
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              });*/
-  }
-
-  void postAudioToServer(String mediaMetaID) {
-    Map<String, dynamic> postImage = new Map();
-
-    postImage['mediaMetaId'] = mediaMetaID;
-    print('I am here ' + mediaMetaID);
-    print('I am here audioPath' + audioPath);
-    int k = 0;
-    for (int i = 0; i < widget.imagePath.length; i++) {
-      _healthReportListForUserBlock
-          .saveImage(widget.imagePath[i], mediaMetaID, '')
-          .then((postImageResponse) {
-        print('output audio mediaMaster images' +
-            postImageResponse.response.data.mediaMasterId);
-        k++;
-        if (audioPath != '' && k == widget.imagePath.length) {
-          _healthReportListForUserBlock
-              .saveImage(audioPath, mediaMetaID, '')
-              .then((postImageResponse) {
-            print('output audio mediaMaster' +
-                postImageResponse.response.data.mediaMasterId);
-            Navigator.of(context).pop();
-            Navigator.of(context).pop();
-          });
-        } else if (k == widget.imagePath.length - 1) {
-          Navigator.of(context).pop();
-          Navigator.of(context).pop();
-        } else {}
-        PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
-      });
-    }
-  }
-
-  Future<Widget> getDialogBoxForPrescription(BuildContext context) {
-    print('inside prescription');
-    if (fileName.text == '' || fileName.text == null) {
-      setFileName();
-    }
-    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
-      return new AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
-        content: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strDoctorsName),
-                    fhbBasicWidget
-                        .getTextFieldForDialogWithControllerAndPressed(context,
-                            (context, value) {
-                      moveToSearchScreen(context, CommonConstants.keyDoctor);
-                    }, doctorsName, CommonConstants.keyDoctor),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strFileName),
-                    fhbBasicWidget.getTextFieldWithNoCallbacks(
-                        context, fileName),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strHospitalNameWithoutStar),
-                    fhbBasicWidget
-                        .getTextFieldForDialogWithControllerAndPressed(context,
-                            (context, value) {
-                      moveToSearchScreen(context, CommonConstants.keyHospital);
-                    }, hospitalName, CommonConstants.keyHospital),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strDateOfVisit),
-                    Container(
-                        width: MediaQuery.of(context).size.width - 60,
-                        child: TextField(
-                          autofocus: false,
-                          onTap: () => _selectDate(context),
-                          controller: dateOfVisit,
-                          decoration: InputDecoration(
-                              suffixIcon: new IconButton(
-                            icon: new Icon(Icons.calendar_today),
-                            onPressed: () => _selectDate(context),
-                          )),
-                        )),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strMemo),
-                    fhbBasicWidget.getTextFiledWithNoHInt(context),
-                    SizedBox(
-                      height: 15,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            containsAudio
-                ? getAudioIconWithFile()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      getMicIcon(),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer();
-                      })
-                    ],
-                  ),
-          ],
-        ),
-      );
-    });
-
-    return showDialog(
-        context: context, builder: (BuildContext context) => dialog);
-  }
-
-  Future<Widget> getDialogBoxForGlucometer(
-      BuildContext context, String deviceName) {
-    print('inside initilzeData');
-    if (fileName.text == '' || fileName.text == null) {
-      setFileName();
-    }
-    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
-      return new AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName),
-          content: SingleChildScrollView(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              fhbBasicWidget.getTextForAlertDialog(
-                  context, CommonConstants.strFileName),
-              fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-              SizedBox(
-                height: 15,
-              ),
-              fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                  context,
-                  CommonConstants.strValue,
-                  CommonConstants.strGlucometerValue,
-                  deviceController, (errorValue) {
-                setState(() {
-                  errGluco = errorValue;
-                });
-              }, errGluco, CommonConstants.strGlucometerValue),
-              SizedBox(
-                height: 15,
-              ),
-              fhbBasicWidget.getTextFiledWithHint(
-                  context, CommonConstants.strMemo, memoController),
-              SizedBox(
-                height: 15,
-              ),
-              fhbBasicWidget.getTextForAlertDialog(
-                  context, CommonConstants.strTimeTaken),
-              ToggleButtons(
-                borderColor: Colors.black,
-                fillColor: Colors.grey[100],
-                borderWidth: 2,
-                selectedBorderColor:
-                    Color(new CommonUtil().getMyPrimaryColor()),
-                selectedColor: Color(new CommonUtil().getMyPrimaryColor()),
-                borderRadius: BorderRadius.circular(10),
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Before Food',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'After Food',
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ],
-                onPressed: (int index) {
-                  setState(() {
-                    print('inside setState');
-                    for (int i = 0; i < isSelected.length; i++) {
-                      isSelected[i] = i == index;
-                    }
-                  });
-                },
-                isSelected: isSelected,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              containsAudio
-                  ? getAudioIconWithFile()
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        getMicIcon(),
-                        fhbBasicWidget.getSaveButton(() {
-                          onPostDataToServer();
-                        })
-                      ],
-                    ),
-            ],
-          )));
-    });
-
-    return showDialog(context: context, builder: (context) => dialog);
-  }
-
-  Future<Widget> getDialogBoxForTemperature(
-      BuildContext context, String deviceName) {
-    if (fileName.text == '' || fileName.text == null) {
-      setFileName();
-    }
-    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
-      return new AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName),
-        content: SingleChildScrollView(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strFileName),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-              context,
-              CommonConstants.strTemperature,
-              CommonConstants.strTemperatureValue,
-              deviceController,
-              (errorValue) {
-                setState(() {
-                  errTemp = errorValue;
-                });
-              },
-              errTemp,
-              CommonConstants.strTemperatureValue,
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHint(
-                context, CommonConstants.strMemo, memoController),
-            SizedBox(
-              height: 15,
-            ),
-            containsAudio
-                ? getAudioIconWithFile()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      getMicIcon(),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer();
-                      })
-                    ],
-                  ),
-          ],
-        )),
-      );
-    });
-
-    return showDialog(
-        context: context, builder: (BuildContext context) => dialog);
-  }
-
-  Future<Widget> getDialogBoxForWeightingScale(
-      BuildContext context, String deviceName) {
-    if (fileName.text == '' || fileName.text == null) {
-      setFileName();
-    }
-    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
-      return new AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName),
-        content: SingleChildScrollView(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strFileName),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-              context,
-              CommonConstants.strWeight,
-              CommonConstants.strWeightValue,
-              deviceController,
-              (errorValue) {
-                setState(() {
-                  errWeight = errorValue;
-                });
-              },
-              errWeight,
-              CommonConstants.strWeightValue,
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHint(
-                context, CommonConstants.strMemo, memoController),
-            SizedBox(
-              height: 15,
-            ),
-            containsAudio
-                ? getAudioIconWithFile()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      getMicIcon(),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer();
-                      })
-                    ],
-                  ),
-          ],
-        )),
-      );
-    });
-
-    return showDialog(
-        context: context, builder: (BuildContext context) => dialog);
-  }
-
-  Future<Widget> getDialogBoxForPulseOxidometer(
-      BuildContext context, String deviceName) {
-    if (fileName.text == '' || fileName.text == null) {
-      setFileName();
-    }
-    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
-      return new AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName),
-        content: SingleChildScrollView(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strFileName),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strOxygenSaturation,
-                CommonConstants.strOxygenValue,
-                deviceController, (errorValue) {
-              setState(() {
-                errPoOs = errorValue;
-              });
-            }, errPoOs, '%spo2'),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strPulse,
-                CommonConstants.strPulseValue,
-                pulse, (errorValue) {
-              setState(() {
-                errPoPulse = errorValue;
-              });
-            }, errPoPulse, 'pulse'),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHint(
-                context, CommonConstants.strMemo, memoController),
-            SizedBox(
-              height: 15,
-            ),
-            containsAudio
-                ? getAudioIconWithFile()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      getMicIcon(),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer();
-                      })
-                    ],
-                  ),
-          ],
-        )),
-      );
-    });
-
-    return showDialog(
-        context: context, builder: (BuildContext context) => dialog);
-  }
-
-  Future<Widget> getDialogBoxForBPMonitor(
-      BuildContext context, String deviceName) {
-    if (fileName.text == '' || fileName.text == null) {
-      setFileName();
-    }
-    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
-      return new AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: fhbBasicWidget.getTextTextTitleWithPurpleColor(deviceName),
-        content: SingleChildScrollView(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strFileName),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strSystolicPressure,
-                CommonConstants.strSysPulseValue,
-                deviceController, (errorValue) {
-              setState(() {
-                errForbpSp = errorValue;
-              });
-            }, errForbpSp, 'mmHg'),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strDiastolicPressure,
-                CommonConstants.strPressureValue,
-                diaStolicPressure, (errorValue) {
-              setState(() {
-                errFForbpDp = errorValue;
-              });
-            }, errFForbpDp, 'dp'),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHintAndSuffixText(
-                context,
-                CommonConstants.strPulse,
-                CommonConstants.strSysPulseValue,
-                pulse, (errorValue) {
-              setState(() {
-                errForbpPulse = errorValue;
-              });
-            }, errForbpPulse, 'pulse'),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHint(
-                context, CommonConstants.strMemo, memoController),
-            SizedBox(
-              height: 15,
-            ),
-            containsAudio
-                ? getAudioIconWithFile()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      getMicIcon(),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer();
-                      })
-                    ],
-                  ),
-          ],
-        )),
-      );
-    });
-
-    return showDialog(
-        context: context, builder: (BuildContext context) => dialog);
-  }
-
   void initialData() {
-    print('inside initilzeData');
-
     if (!firstTym) {
       categoryNameClone =
           PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
@@ -1406,8 +688,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
         ? Constants.IS_CATEGORYNAME_DEVICES
         : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
-
-    print('category name : ' + categoryName);
   }
 
   Widget getToggleButton() {
@@ -1441,350 +721,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
   onToggleBUttonPressed(int index) async {
     setState(() {
-      print('inside setState');
       for (int i = 0; i < isSelected.length; i++) {
         isSelected[i] = i == index;
       }
     });
-  }
-
-  Future<Widget> getDialogBoxForLabReport(BuildContext context) {
-    if (fileName.text == '' || fileName.text == null) {
-      setFileName();
-    }
-    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
-      return new AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
-        content: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(
-              height: 20,
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strLabName),
-                    fhbBasicWidget
-                        .getTextFieldForDialogWithControllerAndPressed(context,
-                            (context, value) {
-                      moveToSearchScreen(context, CommonConstants.keyLab);
-                    }, labName, CommonConstants.keyLab),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strDoctorsName),
-                    fhbBasicWidget
-                        .getTextFieldForDialogWithControllerAndPressed(context,
-                            (context, value) {
-                      moveToSearchScreen(context, CommonConstants.keyDoctor);
-                    }, doctorsName, CommonConstants.keyDoctor),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strFileName),
-                    fhbBasicWidget.getTextFieldWithNoCallbacks(
-                        context, fileName),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strDateOfVisit),
-                    Container(
-                        width: MediaQuery.of(context).size.width - 60,
-                        child: TextField(
-                          autofocus: false,
-                          onTap: () => _selectDate(context),
-                          controller: dateOfVisit,
-                          decoration: InputDecoration(
-                              suffixIcon: new IconButton(
-                            icon: new Icon(Icons.calendar_today),
-                            onPressed: () => _selectDate(context),
-                          )),
-                        )),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    fhbBasicWidget.getTextForAlertDialog(
-                        context, CommonConstants.strMemo),
-                    fhbBasicWidget.getTextFiledWithNoHInt(context),
-                    SizedBox(
-                      height: 15,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            containsAudio
-                ? getAudioIconWithFile()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      getMicIcon(),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer();
-                      })
-                    ],
-                  ),
-          ],
-        ),
-      );
-    });
-
-    return showDialog(
-        context: context, builder: (BuildContext context) => dialog);
-  }
-
-  Future<Widget> getDialogBoxForBillsAndOthers(BuildContext context) {
-    if (fileName.text == '' || fileName.text == null) {
-      setFileName();
-    }
-    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
-      return new AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
-        content: SingleChildScrollView(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strFileName),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHint(
-                context, CommonConstants.strMemo, memoController),
-            SizedBox(
-              height: 15,
-            ),
-            containsAudio
-                ? getAudioIconWithFile()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      getMicIcon(),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer();
-                      })
-                    ],
-                  ),
-          ],
-        )),
-      );
-    });
-
-    return showDialog(
-        context: context, builder: (BuildContext context) => dialog);
-  }
-
-  Future<Widget> getDialogForIDDocs(BuildContext context) {
-    if (fileName.text == '' || fileName.text == null) {
-      setFileName();
-    }
-    StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
-      return new AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: fhbBasicWidget.getTextTextTitleWithPurpleColor(categoryName),
-        content: SingleChildScrollView(
-            child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            fhbBasicWidget.getTextForAlertDialog(
-                context, CommonConstants.strFileName),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, fileName),
-            SizedBox(
-              height: 15,
-            ),
-            fhbBasicWidget.getTextFiledWithHint(
-                context, CommonConstants.strMemo, memoController),
-            SizedBox(
-              height: 15,
-            ),
-            Container(
-                width: MediaQuery.of(context).size.width - 60,
-                child: TextField(
-                  autofocus: false,
-                  onTap: () => _selectDate(context),
-                  controller: dateOfVisit,
-                  decoration: InputDecoration(
-                      suffixIcon: new IconButton(
-                    icon: new Icon(Icons.calendar_today),
-                    onPressed: () => _selectDate(context),
-                  )),
-                )),
-            SizedBox(
-              height: 15,
-            ),
-            new Center(
-              child: new DropdownButton<String>(
-                hint: new Text("Select ID Type"),
-                value: selectedID,
-                onChanged: (String newValue) {
-                  setState(() {
-                    selectedID = newValue;
-                  });
-                },
-                items: documentList.map((String idType) {
-                  return new DropdownMenuItem<String>(
-                    value: idType,
-                    child: new Text(
-                      idType,
-                      style: new TextStyle(color: Colors.black),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            SizedBox(
-              height: 15,
-            ),
-            containsAudio
-                ? getAudioIconWithFile()
-                : Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      getMicIcon(),
-                      fhbBasicWidget.getSaveButton(() {
-                        onPostDataToServer();
-                      })
-                    ],
-                  ),
-          ],
-        )),
-      );
-    });
-
-    return showDialog(context: context, builder: (context) => dialog);
-  }
-
-  bool doValidationBeforePosting() {
-    bool validationConditon = false;
-    print('selectedID $selectedID');
-    if (categoryName == Constants.STR_PRESCRIPTION ||
-        categoryName == Constants.STR_MEDICALREPORT) {
-      if (doctorsName.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strDoctorsEmpty;
-      } else if (fileName.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strFileEmpty;
-      } else {
-        validationConditon = true;
-      }
-    } else if (categoryName == Constants.STR_LABREPORT) {
-      if (labName.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strLabEmpty;
-      } else if (doctorsName.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strDoctorsEmpty;
-      } else if (fileName.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strFileEmpty;
-      } else {
-        validationConditon = true;
-      }
-    } else if (categoryName == Constants.STR_BILLS ||
-        categoryName == Constants.STR_OTHERS) {
-      if (fileName.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strFileEmpty;
-      } else {
-        validationConditon = true;
-      }
-    } else if (categoryName == Constants.STR_IDDOCS) {
-      if (fileName.text == '') {
-        validationConditon = false;
-        validationMsg = CommonConstants.strFileEmpty;
-      } else if (PreferenceUtil.getMediaData(Constants.KEY_MEDIADATA) == null) {
-        validationConditon = false;
-        validationMsg = CommonConstants.strIDEmpty;
-      } else {
-        validationConditon = true;
-      }
-    } else if (categoryName == Constants.STR_DEVICES) {
-      if (deviceName == Constants.STR_GLUCOMETER) {
-        if (fileName.text == '') {
-          validationConditon = false;
-          validationMsg = CommonConstants.strFileEmpty;
-        } else if (deviceController.text == '' ||
-            deviceController.text == null) {
-          validationConditon = false;
-          validationMsg = CommonConstants.strSugarLevelEmpty;
-        } else {
-          validationConditon = true;
-        }
-      } else if (deviceName == Constants.STR_BP_MONITOR) {
-        if (fileName.text == '') {
-          validationConditon = false;
-          validationMsg = CommonConstants.strFileEmpty;
-        } else if (deviceController.text == '' ||
-            deviceController.text == null) {
-          validationConditon = false;
-          validationMsg = CommonConstants.strSystolicsEmpty;
-        } else if (diaStolicPressure.text == '' ||
-            diaStolicPressure.text == null) {
-          validationConditon = false;
-          validationMsg = CommonConstants.strDiastolicEmpty;
-        } else if (pulse.text == '' || pulse.text == null) {
-          validationConditon = false;
-          validationMsg = CommonConstants.strPulse;
-        } else {
-          validationConditon = true;
-        }
-      } else if (deviceName == Constants.STR_THERMOMETER) {
-        if (fileName.text == '') {
-          validationConditon = false;
-          validationMsg = CommonConstants.strFileEmpty;
-        } else if (deviceController.text == '' ||
-            deviceController.text == null) {
-          validationConditon = false;
-          validationMsg = CommonConstants.strtemperatureEmpty;
-        } else {
-          validationConditon = true;
-        }
-      } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
-        if (fileName.text == '') {
-          validationConditon = false;
-          validationMsg = CommonConstants.strFileEmpty;
-        } else if (deviceController.text == '' ||
-            deviceController.text == null) {
-          validationConditon = false;
-          validationMsg = CommonConstants.strWeightEmpty;
-        } else {
-          validationConditon = true;
-        }
-      } else if (deviceName == Constants.STR_PULSE_OXIMETER) {
-        if (fileName.text == '') {
-          validationConditon = false;
-          validationMsg = CommonConstants.strFileEmpty;
-        } else if (deviceController.text == '' ||
-            deviceController.text == null) {
-          validationConditon = false;
-          validationMsg = CommonConstants.strOxugenSaturationEmpty;
-        } else if (pulse.text == '' || pulse.text == null) {
-          validationConditon = false;
-          validationMsg = CommonConstants.strPulse;
-        } else {
-          validationConditon = true;
-        }
-      }
-    }
-
-    print('category Name' +
-        categoryName +
-        '  validationConditon' +
-        validationConditon.toString());
-    return validationConditon;
   }
 
   void setFileName() {
@@ -1797,69 +737,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           text: categoryName +
               '_${DateTime.now().toUtc().millisecondsSinceEpoch}');
     }
-  }
-
-  Widget getMicIcon() {
-    return GestureDetector(
-      child: Container(
-        height: 80,
-        width: 80,
-        padding: EdgeInsets.all(10),
-        child: Material(
-          color: Colors.transparent,
-          shadowColor: Colors.transparent,
-          shape: CircleBorder(),
-          child: CircleAvatar(
-            //backgroundColor: Colors.transparent,
-            backgroundColor: ColorUtils.greycolor,
-            child: Icon(
-              Icons.mic,
-              size: 40,
-              color: Colors.black,
-            ),
-            radius: 30.0,
-          ),
-        ),
-      ),
-      onTap: () {
-        Navigator.of(context)
-            .push(MaterialPageRoute(
-          builder: (context) => AudioRecordScreen(),
-        ))
-            .then((results) {
-          if (results != null) {
-            if (results.containsKey('audioFile')) {
-              containsAudio = true;
-              audioPath = results['audioFile'];
-              print('Audio Path' + audioPath);
-
-              setState(() {});
-            }
-          }
-        });
-      },
-    );
-  }
-
-  Widget getAudioIconWithFile() {
-    return Column(
-      children: <Widget>[
-        new AudioWidget(audioPath, (containsAudio, audioPath) {}),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-        ),
-        fhbBasicWidget.getSaveButton(() {
-          onPostDataToServer();
-        })
-      ],
-    );
-  }
-
-  void deleteAudioFile() {
-    print('inside delete');
-    audioPath = '';
-    containsAudio = false;
-    setState(() {});
   }
 
   Widget getCarousalImage() {
@@ -1893,8 +770,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
                         decoration: BoxDecoration(),
                         child: Container(
                           height: double.infinity,
-                          child: imgUrl.contains('pdf')
-                              ? Image.asset('assets/icons/attach.png')
+                          child: imgUrl.contains(variable.strpdf)
+                              ? Image.asset(variable.icon_attach)
                               : Image.file(
                                   File(imgUrl),
                                   fit: BoxFit.scaleDown,
@@ -1951,10 +828,11 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     Map<String, dynamic> postMediaData = new Map();
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    postMainData["userId"] = userID;
+    postMainData[parameters.struserId] = userID;
 
-    postMediaData["categoryInfo"] = categoryDataObj.toJson();
-    List<MediaData> metaDataFromSharedPrefernce = PreferenceUtil.getMediaType();
+    postMediaData[parameters.strcategoryInfo] = categoryDataObj.toJson();
+    List<MediaResult> metaDataFromSharedPrefernce =
+        PreferenceUtil.getMediaType();
 
     if (categoryName != Constants.STR_DEVICES) {
       mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(
@@ -1964,16 +842,16 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           deviceName, metaDataFromSharedPrefernce);
     }
 
-    postMediaData["mediaTypeInfo"] = mediaDataObj.toJson();
+    postMediaData[parameters.strmediaTypeInfo] = mediaDataObj.toJson();
 
     //    postMediaData["dateOfVisit"] = dateOfVisit.text;
-    postMediaData["memoText"] = '';
-    postMediaData["hasVoiceNote"] = false;
-    postMediaData["isDraft"] = false;
+    postMediaData[parameters.strmemoText] = '';
+    postMediaData[parameters.strhasVoiceNotes] = false;
+    postMediaData[parameters.strisDraft] = false;
 
-    postMediaData["sourceName"] = CommonConstants.strTridentValue;
-    postMediaData["memoTextRaw"] = 'memoTextRaw';
-    postMainData['metaInfo'] = postMediaData;
+    postMediaData[parameters.strsourceName] = CommonConstants.strTridentValue;
+    postMediaData[parameters.strmemoTextRaw] = parameters.strMemoRawTxtVal;
+    postMainData[parameters.strmetaInfo] = postMediaData;
 
     var params = json.encode(postMainData);
 
@@ -1982,9 +860,6 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           .saveDeviceImage(widget.imagePath[i], params.toString(), '')
           .then((postImageResponse) {
         _scaffoldKey.currentState.hideCurrentSnackBar();
-
-        //print('post image response' + postImageResponse.message);
-        //displayDevicesList(deviceName, null);
 
         if (skipTapped == false) {
           displayDevicesList(deviceName, postImageResponse);
@@ -2010,9 +885,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
   }
 
   void callBackToRefresh() {
-    setState(() {
-      print('setState of home Screen');
-    });
+    setState(() {});
   }
 
   void _showOverlayCategoryDialog(BuildContext context) {
@@ -2021,25 +894,15 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     });
   }
 
-  /*  void initialData() {
-    print('inside initilzeData');
-
-    if (!firstTym) {
-      categoryNameClone =
-          PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-      firstTym = true;
-    }
-  } */
-
   void initializeData() {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
     if (categoryNameClone == categoryName &&
         categoryName == Constants.STR_DEVICES) {
     } else if (categoryName == Constants.STR_DEVICES) {
-      PreferenceUtil.saveString(Constants.stop_detecting, 'NO');
+      PreferenceUtil.saveString(Constants.stop_detecting, variable.strNo);
 
-      Navigator.pushNamed(context, '/take_picture_screen_for_devices')
+      Navigator.pushNamed(context, router.rt_TakePictureForDevices)
           .then((value) {
         Navigator.pop(context);
       });

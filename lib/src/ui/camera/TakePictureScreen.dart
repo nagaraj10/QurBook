@@ -6,9 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/OverLayCategoryDialog.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/exception/FetchException.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -16,6 +18,10 @@ import 'package:showcaseview/showcase_widget.dart';
 import 'CropAndRotateScreen.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class TakePictureScreen extends StatefulWidget {
   final CameraDescription camera;
@@ -56,6 +62,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   bool isFlash = false;
   bool _hasFlashlight = false;
+  String deviceName;
 
   @override
   void initState() {
@@ -77,6 +84,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
     initializeData();
 
+/*
     var isFirstTime =
         PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_CAMERASCREEN);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -86,12 +94,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               ? null
               : ShowCaseWidget.of(_cameraScreenContext)
                   .startShowCase([_gallery, _attachments, _singleMultiImg]));
-    });
+    }); */
   }
 
   initFlashlight() async {
     bool hasFlash = await Flashlight.hasFlashlight;
-    //print("Device has flash ? $hasFlash");
     setState(() {
       _hasFlashlight = hasFlash;
     });
@@ -108,7 +115,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     _context = context;
     return ShowCaseWidget(onFinish: () {
-      PreferenceUtil.saveString(Constants.KEY_SHOWCASE_CAMERASCREEN, 'true');
+      PreferenceUtil.saveString(
+          Constants.KEY_SHOWCASE_CAMERASCREEN, variable.strtrue);
     }, builder: Builder(builder: (context) {
       _cameraScreenContext = context;
       return Scaffold(
@@ -201,7 +209,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                             child: Center(
                               child: IconButton(
                                 icon: new ImageIcon(
-                                  AssetImage('assets/icons/attach.png'),
+                                  AssetImage(variable.icon_attach),
                                   color: Colors.white,
                                   size: 32,
                                 ),
@@ -216,12 +224,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     try {
                                       var image = await FilePicker.getFile(
                                           type: FileType.custom,
-                                          allowedExtensions: ['pdf']);
+                                          allowedExtensions: [variable.strpdf]);
                                       imagePaths.add(image.path);
                                       callDisplayPictureScreen(context);
                                     } catch (e) {
                                       // If an error occurs, log the error to the console.
-                                      print(e);
                                     }
                                   }
                                 },
@@ -249,7 +256,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       // Store the picture in the temp directory.
                                       // Find the temp directory using the `path_provider` plugin.
                                       (await getTemporaryDirectory()).path,
-                                      'Prescription_${DateTime.now()}.jpg',
+                                      setFileName() +
+                                          '${DateTime.now().second}.jpg'.trim(),
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.
@@ -258,7 +266,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     setState(() {});
                                   } catch (e) {
                                     // If an error occurs, log the error to the console.
-                                    print(e);
                                   }
                                 },
                               ),
@@ -331,7 +338,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                           callDisplayPictureScreen(context);
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
-                                          print(e);
                                         }
                                       }
                                     },
@@ -346,7 +352,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                   Constants.ATTACH_DESC,
                                   IconButton(
                                     icon: new ImageIcon(
-                                      AssetImage('assets/icons/attach.png'),
+                                      AssetImage(variable.icon_attach),
                                       color: Colors.white,
                                       size: 32,
                                     ),
@@ -365,7 +371,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                           callDisplayPictureScreen(context);
                                         } catch (e) {
                                           // If an error occurs, log the error to the console.
-                                          print(e);
                                         }
                                       }
                                     },
@@ -394,7 +399,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       // Store the picture in the temp directory.
                                       // Find the temp directory using the `path_provider` plugin.
                                       (await getTemporaryDirectory()).path,
-                                      'Prescription_${DateTime.now()}.jpg',
+                                      setFileName() +
+                                          '${DateTime.now().second}.jpg'.trim(),
                                     );
 
                                     // Attempt to take a picture and log where it's been saved.
@@ -412,7 +418,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                     }
                                   } catch (e) {
                                     // If an error occurs, log the error to the console.
-                                    print(e);
                                   }
                                 },
                               ),
@@ -427,8 +432,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                       Constants.MULTI_IMG_DESC,
                                       new IconButton(
                                           icon: new ImageIcon(
-                                            AssetImage(
-                                                'assets/icons/img_multi.png'),
+                                            AssetImage(variable.icon_multi),
                                             size: 24,
                                             color: isMultipleImages
                                                 ? Colors.white
@@ -461,8 +465,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                                 children: <Widget>[
                                   new IconButton(
                                       icon: new ImageIcon(
-                                        AssetImage(
-                                            'assets/icons/img_single.png'),
+                                        AssetImage(variable.icon_image_single),
                                         color: isMultipleImages
                                             ? Colors.white54
                                             : Colors.white,
@@ -497,25 +500,20 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();
-    String error = 'No Error Dectected';
 
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 300,
         enableCamera: true,
         selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
         materialOptions: MaterialOptions(
-          actionBarColor: "#6d35de",
-          //actionBarTitle: "Example App",
-          //allViewTitle: "All Photos",
+          actionBarColor: fhbColors.actionColor,
           useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
+          selectCircleStrokeColor: fhbColors.colorBlack,
         ),
       );
-    } on Exception catch (e) {
-      error = e.toString();
-    }
+    } on FetchException catch (e) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -527,18 +525,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
           await FlutterAbsolutePath.getAbsolutePath(asset.identifier);
       imagePaths.add(filePath);
     }
-  }
 
-  /*  void callDisplayPictureScreen(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DisplayPictureScreen(imagePath: imagePaths),
-      ),
-    ).then((value) {
-      Navigator.pop(context);
+    setState(() {
+      images = resultList;
     });
-  } */
+  }
 
   void callDisplayPictureScreen(BuildContext context) {
     if (imagePaths.length > 0) {
@@ -557,6 +548,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     }
   }
 
+  String setFileName() {
+    if (categoryName == CommonConstants.strDevice) {
+      return categoryName;
+    } else {
+      return categoryName;
+    }
+  }
+
   getWidgetForTitle(BuildContext context) {
     return InkWell(
       child: Text(categoryName),
@@ -568,11 +567,15 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   void initializeData() {
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+    deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
+        ? Constants.IS_CATEGORYNAME_DEVICES
+        : PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
+
     categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
     if (categoryName == Constants.STR_DEVICES) {
-      PreferenceUtil.saveString(Constants.stop_detecting, 'NO');
+      PreferenceUtil.saveString(Constants.stop_detecting, variable.strNO);
 
-      Navigator.pushNamed(_context, '/take_picture_screen_for_devices')
+      Navigator.pushNamed(_context, router.rt_TakePictureForDevices)
           .then((value) {
         Navigator.pop(_context);
       });
@@ -590,7 +593,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   Future<void> getFilePath() async {
     List<File> filePaths = await FilePicker.getMultiFile(
       type: FileType.custom,
-      allowedExtensions: ['pdf'],
+      allowedExtensions: [variable.strpdf],
     );
 
     for (File file in filePaths) {

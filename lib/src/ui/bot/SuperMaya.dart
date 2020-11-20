@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
-import 'package:myfhb/widgets/RaisedGradientButton.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:showcaseview/showcase_widget.dart';
-import 'ChatScreen.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/widgets/RaisedGradientButton.dart';
+import 'package:showcaseview/showcase_widget.dart';
+
+import 'view/ChatScreen.dart';
 
 class SuperMaya extends StatefulWidget {
   @override
@@ -19,8 +21,8 @@ class _SuperMayaState extends State<SuperMaya> {
   final GlobalKey _micKey = GlobalKey();
   BuildContext _myContext;
 
-  PermissionStatus permissionStatus = PermissionStatus.undetermined;
-  final Permission _micpermission = Permission.microphone;
+  // PermissionStatus permissionStatus = PermissionStatus.undetermined;
+  // final Permission _micpermission = Permission.microphone;
 
   @override
   void initState() {
@@ -38,24 +40,25 @@ class _SuperMayaState extends State<SuperMaya> {
   }
 
   void _listenForPermissionStatus() async {
-    final status = await _micpermission.status;
-    setState(() => permissionStatus = status);
+    // final status = await _micpermission.status;
+    //setState(() => permissionStatus = status);
   }
 
-  Future<PermissionStatus> requestPermission(Permission micPermission) async {
-    final status = await micPermission.request();
+/* Future<PermissionStatus> requestPermission(Permission micPermission) async {
+   final status = await micPermission.request();
     setState(() {
-      print(status);
+      
       permissionStatus = status;
     });
     return status;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return ShowCaseWidget(
       onFinish: () {
-        PreferenceUtil.saveString(Constants.KEY_SHOWCASE_MAYA, 'true');
+        PreferenceUtil.saveString(
+            Constants.KEY_SHOWCASE_MAYA, variable.strtrue);
       },
       builder: Builder(
         builder: (context) {
@@ -67,9 +70,16 @@ class _SuperMayaState extends State<SuperMaya> {
                 child: AppBar(
                   flexibleSpace: GradientAppBar(),
                   backgroundColor: Colors.transparent,
-                  leading: Container(),
+                  leading: IconWidget(
+                    icon: Icons.arrow_back_ios,
+                    colors: Colors.white,
+                    size: 20,
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                  ),
                   elevation: 0,
-                  title: Text('Maya'),
+                  title: Text('Sheela'),
                   centerTitle: true,
                 ),
               ),
@@ -79,16 +89,19 @@ class _SuperMayaState extends State<SuperMaya> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Image.asset(
-                      PreferenceUtil.getStringValue('maya_asset') != null
-                          ? PreferenceUtil.getStringValue('maya_asset') + '.png'
-                          : 'assets/maya/maya_us_main.png',
+                      PreferenceUtil.getStringValue(Constants.keyMayaAsset) !=
+                              null
+                          ? PreferenceUtil.getStringValue(
+                                  Constants.keyMayaAsset) +
+                              variable.strExtImg
+                          : variable.icon_mayaMain,
                       height: 160,
                       width: 160,
                       //color: Colors.deepPurple,
                     ),
                     //Icon(Icons.people),
                     Text(
-                      'Hi, I am Maya your voice health assistant.',
+                      variable.strIntromaya,
                       softWrap: true,
                     ),
                     SizedBox(
@@ -99,11 +112,11 @@ class _SuperMayaState extends State<SuperMaya> {
                         height: 50,
                         child: FHBBasicWidget.customShowCase(
                             _micKey,
-                            'Tap me and invoke. Lets converse',
+                            variable.strTapMaya,
                             RaisedGradientButton(
                                 borderRadius: 30,
                                 child: Text(
-                                  'Start now',
+                                  variable.strStartNow,
                                   style: TextStyle(
                                       color: Colors.white, fontSize: 16),
                                 ),
@@ -115,23 +128,36 @@ class _SuperMayaState extends State<SuperMaya> {
                                   ],
                                 ),
                                 onPressed: () {
-                                  requestPermission(_micpermission)
+                                  String sheela_lang =
+                                      PreferenceUtil.getStringValue(
+                                          Constants.SHEELA_LANG);
+                                  if (sheela_lang != null &&
+                                      sheela_lang != '') {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return ChatScreen(isSheelaAskForLang: false,langCode: sheela_lang,);
+                                        },
+                                      ),
+                                    );
+                                  } else {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return ChatScreen(isSheelaAskForLang: true,);
+                                        },
+                                      ),
+                                    );
+                                  }
+
+                                  /* requestPermission(_micpermission)
                                       .then((status) {
                                     if (status == PermissionStatus.granted) {
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder: (context) {
-                                            return ChatScreen();
-                                          },
-                                        ),
-                                      );
-                                    } else {
-                                      print(
-                                          'Mic permission has not been given by the user');
-                                    }
-                                  });
+
+                                    } 
+                                  });*/
                                 }),
-                            'Maya')),
+                            variable.strMaya)),
                   ],
                 ),
               ));
@@ -139,10 +165,4 @@ class _SuperMayaState extends State<SuperMaya> {
       ),
     );
   }
-
-  /*  void checkForVoicePermission() async {
-    try {
-      await voice_platform.invokeMethod('speakWithVoiceAssistant');
-    } on PlatformException catch (e) {}
-  } */
 }

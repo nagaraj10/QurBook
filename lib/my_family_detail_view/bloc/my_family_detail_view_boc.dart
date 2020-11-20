@@ -3,12 +3,18 @@ import 'dart:async';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_repository.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Category/catergory_data_list.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class MyFamilyDetailViewBloc implements BaseBloc {
   StreamController _healthReportListController;
   StreamController _categoryController;
+  StreamController _categoryControllers;
+  StreamController _healthListControlllers;
 
   // 1
 
@@ -25,16 +31,29 @@ class MyFamilyDetailViewBloc implements BaseBloc {
   Stream<ApiResponse<CategoryResponseList>> get categoryListStream =>
       _categoryController.stream;
 
+  //3
+
+  StreamSink<ApiResponse<CategoryDataList>> get categoryListSinks =>
+      _categoryControllers.sink;
+
+  Stream<ApiResponse<CategoryDataList>> get categoryListStreams =>
+      _categoryControllers.stream;
+
+  StreamSink<ApiResponse<HealthRecordList>> get healthReportListSinks =>
+      _healthListControlllers.sink;
+  Stream<ApiResponse<HealthRecordList>> get healthReportStreams =>
+      _healthListControlllers.stream;
+
   MyFamilyDetailViewRepository _healthReportListForUserRepository;
 
   String userId;
 
   @override
   void dispose() {
-    // TODO: implement dispose
-
     _healthReportListController?.close();
     _categoryController?.close();
+    _categoryControllers?.close();
+    _healthListControlllers?.close();
   }
 
   MyFamilyDetailViewBloc() {
@@ -44,22 +63,38 @@ class MyFamilyDetailViewBloc implements BaseBloc {
         StreamController<ApiResponse<UserHealthResponseList>>();
 
     _categoryController = StreamController<ApiResponse<CategoryResponseList>>();
+    _categoryControllers = StreamController<ApiResponse<CategoryDataList>>();
+
+    _healthListControlllers = StreamController<ApiResponse<HealthRecordList>>();
   }
 
   getHelthReportList() async {
-    healthReportListSink.add(ApiResponse.loading('Signing in user'));
+    healthReportListSink.add(ApiResponse.loading(variable.strFetchingHealth));
     try {
       UserHealthResponseList userHealthResponseList =
           await _healthReportListForUserRepository.getHealthReportList(userId);
       healthReportListSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       healthReportListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 
+  Future<HealthRecordList> getHelthReportLists(String userId) async {
+    HealthRecordList userHealthResponseList;
+    healthReportListSinks
+        .add(ApiResponse.loading(variable.strGettingHealthRecords));
+    try {
+      userHealthResponseList =
+          await _healthReportListForUserRepository.getHealthReportLists(userId);
+      healthReportListSinks.add(ApiResponse.completed(userHealthResponseList));
+    } catch (e) {
+      healthReportListSinks.add(ApiResponse.error(e.toString()));
+    }
+    return userHealthResponseList;
+  }
+
   Future<CategoryResponseList> getCategoryList() async {
-    categoryListSink.add(ApiResponse.loading('Signing in user'));
+    categoryListSink.add(ApiResponse.loading(variable.strFetchCategory));
 
     CategoryResponseList categoryResponseList;
 
@@ -68,7 +103,22 @@ class MyFamilyDetailViewBloc implements BaseBloc {
           await _healthReportListForUserRepository.getCategoryList();
     } catch (e) {
       categoryListSink.add(ApiResponse.error(e.toString()));
-      print(e);
+    }
+
+    return categoryResponseList;
+  }
+
+  Future<CategoryDataList> getCategoryLists() async {
+    categoryListSinks.add(ApiResponse.loading(variable.strFetchCategory));
+
+    CategoryDataList categoryResponseList;
+
+    try {
+      categoryResponseList =
+          await _healthReportListForUserRepository.getCategoryLists();
+      categoryListSinks.add(ApiResponse.completed(categoryResponseList));
+    } catch (e) {
+      categoryListSinks.add(ApiResponse.error(e.toString()));
     }
 
     return categoryResponseList;

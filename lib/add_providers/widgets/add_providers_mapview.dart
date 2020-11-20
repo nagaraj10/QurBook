@@ -5,10 +5,13 @@ class AddProvidersMapView extends StatelessWidget {
   GoogleMapController googleMapControll;
   LatLng lastMapPosition;
   Set<Marker> markers = {};
+  static const double _lat = 12.861693;
+  static const double _lan = 80.227242;
+  static const double _zoom = 14.4746;
 
   CameraPosition kGooglePlex = CameraPosition(
-    target: LatLng(12.861693, 80.227242),
-    zoom: 14.4746,
+    target: LatLng(_lat, _lan),
+    zoom: _zoom,
   );
 
   AddProvidersMapView(
@@ -19,7 +22,6 @@ class AddProvidersMapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return GoogleMap(
       scrollGesturesEnabled: false,
       mapType: MapType.normal,

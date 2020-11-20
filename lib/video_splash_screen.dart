@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 class VideoSplashScreen extends StatefulWidget {
   VideoSplashScreen({Key key}) : super(key: key);
 
@@ -20,7 +23,7 @@ class _VideoSplashScreenState extends State<VideoSplashScreen> {
     // offers several different constructors to play videos from assets, files,
     // or the internet.
     _controller = VideoPlayerController.asset(
-      'assets/video/splash_video.mp4',
+      variable.video_splash,
     );
 
     // Initialize the controller and store the Future for later use.

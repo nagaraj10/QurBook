@@ -1,21 +1,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
-import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_query.dart' as query;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 
 class HealthReportListScreen extends StatefulWidget {
-  final CompleteData completeData;
+  final HealthRecordList completeData;
 
   final Function callBackToRefresh;
 
@@ -23,9 +28,29 @@ class HealthReportListScreen extends StatefulWidget {
   final String categoryId;
 
   final Function(String, String) getDataForParticularLabel;
+  final Function(String, bool) mediaSelected;
+  final Function(String, List<HealthRecordCollection>, bool)
+  healthRecordSelected;
+  final bool allowSelect;
+  final bool isNotesSelect;
+  final bool isAudioSelect;
+  final bool showDetails;
+  final bool allowAttach;
 
-  HealthReportListScreen(this.completeData, this.callBackToRefresh,
-      this.categoryName, this.categoryId, this.getDataForParticularLabel);
+  List<String> mediaMeta;
+  HealthReportListScreen(
+      this.completeData,
+      this.callBackToRefresh,
+      this.categoryName,
+      this.categoryId,
+      this.getDataForParticularLabel,
+      this.mediaSelected,
+      this.allowSelect,
+      this.mediaMeta,
+      this.isNotesSelect,
+      this.isAudioSelect,
+      this.showDetails,this.allowAttach,
+  this.healthRecordSelected);
 
   @override
   _HealthReportListScreenState createState() => _HealthReportListScreenState();
@@ -37,23 +62,19 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
+  List<HealthRecordCollection> mediMasterId = new List();
+
+  FlutterToast toast = new FlutterToast();
 
   bool _enabled = true;
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    _healthReportListForUserBlock.getHelthReportList();
+    _healthReportListForUserBlock.getHelthReportLists();
     _bookmarkRecordBloc = BookmarkRecordBloc();
 
     PreferenceUtil.init();
-    /*  PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
+
     super.initState();
   }
 
@@ -62,46 +83,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     return _getWidgetToDisplayHealthRecords(widget.completeData);
   }
 
-  Widget getResponseWithHealthRecordListWidget() {
-    return StreamBuilder<ApiResponse<UserHealthResponseList>>(
-      stream: _healthReportListForUserBlock.healthReportStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<UserHealthResponseList>> snapshot) {
-        if (snapshot.hasData) {
-          switch (snapshot.data.status) {
-            case Status.LOADING:
-              return Center(
-                  child: SizedBox(
-                child: CircularProgressIndicator(),
-                width: 30,
-                height: 30,
-              ));
-              break;
-
-            case Status.ERROR:
-              return Text('Unable To load Tabs',
-                  style: TextStyle(color: Colors.red));
-              break;
-
-            case Status.COMPLETED:
-              //print(snapshot.data.message);
-
-              return _getWidgetToDisplayHealthRecords(
-                  snapshot.data.data.response.data);
-              break;
-          }
-        } else {
-          return Container(
-            width: 0,
-            height: 0,
-          );
-        }
-      },
-    );
-  }
-
-  Widget _getWidgetToDisplayHealthRecords(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget _getWidgetToDisplayHealthRecords(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, CommonConstants.categoryDescriptionPrescription);
@@ -123,7 +106,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                   child: Text(
                     Constants.NO_DATA_PRESCRIPTION,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Poppins'),
+                    style: TextStyle(fontFamily: variable.font_poppins),
                   ),
                 ),
               ),
@@ -139,20 +122,65 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
     widget.callBackToRefresh();
   }
 
-  Widget getCardWidgetForPrescription(MediaMetaInfo data, int position) {
-    return InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RecordDetailScreen(
-                data: data,
-              ),
-            ),
-          );
-        },
-        child: Container(
-            //height: 90,
+  Widget getCardWidgetForPrescription(
+      HealthResult mediaMetaInfoObj, int position) {
+    if (mediaMetaInfoObj.metadata.doctor != null)
+      return InkWell(
+          onLongPress: () {
+            if (widget.allowSelect) {
+              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+              setState(() {});
+              widget.mediaSelected(
+                  mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
+            }
+          },
+          onTap: () {
+            if (widget.allowSelect && widget.showDetails == false) {
+
+              if (widget.allowAttach) {
+                bool condition;
+                if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+                  condition = false;
+                } else {
+                  condition = true;
+                }
+                mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+                if (mediaMetaInfoObj != null &&
+                    mediaMetaInfoObj.healthRecordCollection.length > 0) {
+                  mediMasterId =
+                      new CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
+                  if (mediMasterId.length > 0) {
+                    widget.healthRecordSelected(
+                        mediaMetaInfoObj.id, mediMasterId, condition);
+                  } else {
+                    toast.getToast('No Image Attached ', Colors.red);
+                  }
+                }
+              } else {
+                bool condition;
+                if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+                  condition = false;
+                } else {
+                  condition = true;
+                }
+                mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+                widget.mediaSelected(mediaMetaInfoObj.id, condition);
+              }
+
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => RecordDetailScreen(
+                    data: mediaMetaInfoObj,
+                  ),
+                ),
+              );
+            }
+          },
+          child: Container(
             padding: EdgeInsets.all(10.0),
             margin: EdgeInsets.only(left: 10, right: 10, top: 10),
             decoration: BoxDecoration(
@@ -169,8 +197,10 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
             child: Row(
               children: <Widget>[
                 ClipOval(
-                    child: data.metaInfo.doctor != null
-                        ? getDoctorProfileImageWidget(data)
+                    child: mediaMetaInfoObj.metadata.doctor != null
+                        ? CommonUtil().getDoctorProfileImageWidget(
+                            mediaMetaInfoObj
+                                .metadata.doctor.profilePicThumbnailUrl)
                         : Container(
                             width: 50,
                             height: 50,
@@ -183,18 +213,24 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        toBeginningOfSentenceCase(data.metaInfo.doctor.name),
+                        toBeginningOfSentenceCase(
+                            mediaMetaInfoObj.metadata.doctor != null
+                                ? mediaMetaInfoObj.metadata.doctor.name != null
+                                    ? mediaMetaInfoObj.metadata.doctor.name
+                                    : ''
+                                : ''),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Visibility(
-                          visible:
-                              data.metaInfo.hospital != null ? true : false,
+                          visible: mediaMetaInfoObj.metadata.hospital != null
+                              ? true
+                              : false,
                           child: Text(
-                            data.metaInfo.hospital != null
-                                ? toBeginningOfSentenceCase(
-                                    data.metaInfo.hospital.name)
+                            mediaMetaInfoObj.metadata.hospital != null
+                                ? toBeginningOfSentenceCase(mediaMetaInfoObj
+                                    .metadata.hospital.healthOrganizationName)
                                 : '',
                             softWrap: false,
                             overflow: TextOverflow.ellipsis,
@@ -203,7 +239,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                                 fontWeight: FontWeight.w500),
                           )),
                       Text(
-                        new FHBUtils().getFormattedDateString(data.createdOn),
+                        new FHBUtils()
+                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
                         style: TextStyle(
                             color: Colors.grey[400],
                             fontWeight: FontWeight.w200,
@@ -218,190 +255,45 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      /*   Icon(Icons.more_horiz, color: Colors.grey, size: 20),
-                      SizedBox(height: 20), */
                       IconButton(
-                          icon: data.isBookmarked
+                          icon: mediaMetaInfoObj.isBookmarked
                               ? ImageIcon(
-                                  AssetImage(
-                                      'assets/icons/record_fav_active.png'),
+                                  AssetImage(variable.icon_record_fav_active),
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
                                   size: 20,
                                 )
                               : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
+                                  AssetImage(variable.icon_record_fav),
                                   color: Colors.black,
                                   size: 20,
                                 ),
-                          /* ImageIcon(
-                            AssetImage('assets/icons/record_fav.png'),
-                            color:
-                                data.isBookmarked ? Colors.red : Colors.black,
-                          ), */
                           onPressed: () {
-                            new CommonUtil().bookMarkRecord(data, _refresh);
+                            new CommonUtil()
+                                .bookMarkRecord(mediaMetaInfoObj, _refresh);
                           }),
+                      (mediaMetaInfoObj.metadata.hasVoiceNotes != null &&
+                              mediaMetaInfoObj.metadata.hasVoiceNotes)
+                          ? Icon(
+                              Icons.mic,
+                              color: Colors.black54,
+                            )
+                          : Container(),
+                      widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                          ? Icon(
+                              Icons.done,
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                            )
+                          : SizedBox(),
                     ],
                   ),
                 ),
               ],
-            )));
-
-    /*  child: Container(
-            padding: EdgeInsets.only(left: 10, right: 10),
-            margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(fhbColors.cardShadowColor),
-                  blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 0, // has the effect of extending the shadow
-                )
-              ],
             ),
-            child: Row(
-              children: <Widget>[
-                ClipOval(
-                  child: getDoctorProfileImageWidget(
-                    data,
-                  ),
-                ),
-
-                /* Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  getDoctorProfileImageWidget(
-                    data,
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Container(
-                    color: Colors.grey[200],
-                    width: 50.0,
-                    height: 50.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          new FHBUtils().convertMonthFromString(data.createdOn),
-                          style: TextStyle(color: Colors.black54),
-                        ),
-                        Text(
-                            new FHBUtils()
-                                .convertDateFromString(data.createdOn),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500))
-                      ],
-                    ),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                ],
-              ), */
-
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        data.metaInfo.doctor == null
-                            ? ''
-                            : data.metaInfo.doctor.name,
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      //SizedBox(height: 10.0),
-                      Text(
-                        data.metaInfo.hospital == null
-                            ? 'Apollo Hospital'
-                            : data.metaInfo.hospital.name,
-                        softWrap: false,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                            color: Colors.grey, fontWeight: FontWeight.w500),
-                      ),
-                      //SizedBox(height: 10.0),
-                      Text(
-                        new FHBUtils().getFormattedDateString(data.createdOn),
-                        style: TextStyle(
-                            color: Colors.grey[400],
-                            fontWeight: FontWeight.w200,
-                            fontSize: 12),
-                      )
-                      /* Text(
-                    data.metaInfo.fileName == null
-                        ? ''
-                        : data.metaInfo.fileName,
-                    softWrap: false,
-                    overflow: TextOverflow.ellipsis,
-                  ), */
-                    ],
-                  ),
-                ),
-                /* Expanded(
-              flex: 1,
-              child: Column(
-                children: <Widget>[
-                  getDocumentImageWidget(data),
-                ],
-              ),
-            ),
-            */
-                Expanded(
-                    flex: 1,
-                    child: Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          InkWell(
-                            child: Icon(
-                              Icons.more_horiz,
-                              size: 22,
-                              color: Colors.grey,
-                            ),
-                            onTap: () {},
-                          ),
-                          SizedBox(height: 20),
-                          IconButton(
-                            icon: data.isBookmarked
-                                ? Icon(
-                                    Icons.bookmark,
-                                    size: 22,
-                                    color: Colors.red,
-                                  )
-                                : Icon(
-                                    Icons.bookmark_border,
-                                    size: 22,
-                                    color: Colors.grey,
-                                  ),
-                            onPressed: () {},
-                          )
-
-                          /*  (data.mediaMasterIds.isNotEmpty &&
-                          data.metaInfo.hasVoiceNotes)
-                      ? Icon(
-                          Icons.mic,
-                          color: Colors.black54,
-                        )
-                      : Container() */
-                        ],
-                      ),
-                    )),
-              ],
-            )));
-   */
+          ));
+    else
+      return SizedBox();
   }
 
   getDoctorProfileImageWidget(MediaMetaInfo data) {
@@ -435,7 +327,7 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
   getDoctorProfileImageWidgetNew(MediaMetaInfo data) {
     return CachedNetworkImage(
-      imageUrl: Constants.BASERURL +
+      imageUrl: Constants.BASE_URL +
           "doctors/" +
           data.metaInfo.doctor.id +
           "/getprofilepic",
@@ -460,7 +352,6 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {
-    //print(data.mediaMasterIds);
     if (data.mediaMasterIds.isNotEmpty) {
       return FutureBuilder(
         future: _healthReportListForUserBlock
@@ -503,10 +394,11 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
   getDocumentImageWidgetNew(MediaMetaInfo data) {
     String usrId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     return CachedNetworkImage(
-      imageUrl: Constants.BASERURL +
-          "mediameta/" +
+      imageUrl: Constants.BASE_URL +
+          query.qr_mediameta +
           usrId +
-          "/getRawMedia/" +
+          query.qr_slash +
+          query.qr_rawMedia +
           new CommonUtil().getMetaMasterId(data),
       imageBuilder: (context, imageProvider) => Container(
         decoration: BoxDecoration(

@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -7,15 +5,55 @@ import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
-import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
+import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
+import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 
-class MyProvidersDoctorsList extends StatelessWidget {
-  List<DoctorsModel> doctorsModel;
-  ProvidersBloc providersBloc;
+import 'my_provider.dart';
 
-  MyProvidersDoctorsList({this.doctorsModel, this.providersBloc});
+class MyProvidersDoctorsList extends StatefulWidget {
+  final List<Doctors> doctorsModel;
+  final ProvidersBloc providersBloc;
+  final MyProviderState myProviderState;
+  Function refresh;
+
+  MyProvidersDoctorsList(
+      {this.doctorsModel,
+      this.providersBloc,
+      this.myProviderState,
+      this.refresh});
+
+  @override
+  _MyProvidersDoctorsList createState() => _MyProvidersDoctorsList();
+}
+
+class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
+  List<Doctors> doctorsModel;
+  List<Doctors> copyOfdoctorsModel;
+  MyProviderState myProviderState;
+  MyProviderViewModel providerViewModel;
+  CommonWidgets commonWidgets = new CommonWidgets();
+
+  @override
+  void initState() {
+    providerViewModel = new MyProviderViewModel();
+    super.initState();
+    filterDuplicateDoctor();
+  }
+
+  void filterDuplicateDoctor() {
+    if (widget?.doctorsModel.length > 0) {
+      copyOfdoctorsModel = widget.doctorsModel;
+      final ids = copyOfdoctorsModel.map((e) => e?.user?.id).toSet();
+      copyOfdoctorsModel.retainWhere((x) => ids.remove(x?.user?.id));
+      doctorsModel = copyOfdoctorsModel;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,18 +63,42 @@ class MyProvidersDoctorsList extends StatelessWidget {
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
-        DoctorsModel eachDoctorModel = doctorsModel[index];
-        print(index);
+        Doctors eachDoctorModel = doctorsModel[index];
+        String specialization =
+            eachDoctorModel.doctorProfessionalDetailCollection != null
+                ? eachDoctorModel.doctorProfessionalDetailCollection.length > 0
+                    ? eachDoctorModel.doctorProfessionalDetailCollection[0]
+                                .specialty !=
+                            null
+                        ? (eachDoctorModel.doctorProfessionalDetailCollection[0]
+                                        .specialty.name !=
+                                    null &&
+                                eachDoctorModel
+                                        .doctorProfessionalDetailCollection[0]
+                                        .specialty
+                                        .name !=
+                                    '')
+                            ? eachDoctorModel
+                                .doctorProfessionalDetailCollection[0]
+                                .specialty
+                                .name
+                            : ''
+                        : ''
+                    : ''
+                : '';
         return InkWell(
             onTap: () {
-              Navigator.pushNamed(context, '/add_providers',
-                      arguments: AddProvidersArguments(
-                          searchKeyWord: CommonConstants.doctors,
-                          doctorsModel: eachDoctorModel,
-                          fromClass: CommonConstants.fromClass,
-                          hasData: true))
-                  .then((value) {
-                providersBloc.getMedicalPreferencesList();
+              Navigator.pushNamed(context, router.rt_AddProvider,
+                  arguments: AddProvidersArguments(
+                      searchKeyWord: CommonConstants.doctors,
+                      doctorsModel: eachDoctorModel,
+                      fromClass: router.rt_myprovider,
+                      hasData: true,
+                      isRefresh: () {
+                        widget.refresh();
+                      })).then((value) {
+//                providersBloc.getMedicalPreferencesList();
+                myProviderState.refreshPage();
               });
             },
             child: Container(
@@ -56,14 +118,20 @@ class MyProvidersDoctorsList extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     ClipOval(
-                        child: eachDoctorModel.profilePic != null
-                            ? Image.memory(
-                                Uint8List.fromList(
-                                    eachDoctorModel.profilePic.data),
-                                height: 50,
-                                width: 50,
-                                fit: BoxFit.cover,
-                              )
+                        child: eachDoctorModel.user != null
+                            ? eachDoctorModel.user.profilePicThumbnailUrl !=
+                                    null
+                                ? Image.network(
+                                    eachDoctorModel.user.profilePicThumbnailUrl,
+                                    height: 50,
+                                    width: 50,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(
+                                    width: 50,
+                                    height: 50,
+                                    padding: EdgeInsets.all(12),
+                                    color: Color(fhbColors.bgColorContainer))
                             : Container(
                                 width: 50,
                                 height: 50,
@@ -80,9 +148,11 @@ class MyProvidersDoctorsList extends StatelessWidget {
                         children: <Widget>[
                           SizedBox(height: 5),
                           AutoSizeText(
-                            eachDoctorModel.name != null
-                                ? toBeginningOfSentenceCase(
-                                    eachDoctorModel.name)
+                            eachDoctorModel.user != null
+                                ? eachDoctorModel.user.name != null
+                                    ? toBeginningOfSentenceCase(
+                                        eachDoctorModel.user.name)
+                                    : ''
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
@@ -92,11 +162,11 @@ class MyProvidersDoctorsList extends StatelessWidget {
                             textAlign: TextAlign.start,
                           ),
                           SizedBox(height: 5),
-                          eachDoctorModel.specialization != null
+                          specialization != null
                               ? AutoSizeText(
-                                  eachDoctorModel.specialization != null
+                                  specialization != null
                                       ? toBeginningOfSentenceCase(
-                                          eachDoctorModel.specialization)
+                                          specialization)
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
@@ -117,19 +187,17 @@ class MyProvidersDoctorsList extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              InkWell(
-                                  child: eachDoctorModel.isDefault == true
-                                      ? ImageIcon(
-                                          AssetImage(
-                                              'assets/icons/record_fav_active.png'),
-                                          color: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
-                                          size: 20,
-                                        )
-                                      : Container(
-                                          height: 0,
-                                          width: 0,
-                                        )),
+                              commonWidgets
+                                  .getBookMarkedIconNew(eachDoctorModel, () {
+                                providerViewModel
+                                    .bookMarkDoctor(
+                                        eachDoctorModel, false, 'ListItem')
+                                    .then((status) {
+                                  if (status) {
+                                    widget.refresh();
+                                  }
+                                });
+                              }),
                             ],
                           ),
                         )),

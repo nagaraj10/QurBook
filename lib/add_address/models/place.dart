@@ -1,3 +1,6 @@
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 class Place {
   final String title;
   final String description;
@@ -6,15 +9,15 @@ class Place {
   Place({this.title, this.description, this.placeId});
 
   Place.fromJson(Map<String, dynamic> json)
-      : this.title = json['terms'][0]['value'],
-        this.description = json['description'],
-        this.placeId = json['place_id'];
+      : this.title = json[parameters.strTerms][0][parameters.strvalue],
+        this.description = json[parameters.strDescription],
+        this.placeId = json[parameters.strplace_id];
 
   Map<String, dynamic> toMap() {
     return {
-      'title': this.title,
-      'description': this.description,
-      'placeId': this.placeId,
+      parameters.strtitle: this.title,
+      parameters.strDescription: this.description,
+      parameters.strplaceId: this.placeId,
     };
   }
 }
@@ -45,29 +48,31 @@ class PlaceDetail {
   });
 
   PlaceDetail.fromJson(Map<String, dynamic> json)
-      : this.placeId = json['place_id'],
-        this.formattedAddress = json['formatted_address'],
-        this.formattedPhoneNumber = json['formatted_phone_number'],
-        this.name = json['name'],
-        this.rating = json['rating'].toDouble(),
-        this.vicinity = json['vicinity'],
-        this.website = json['website'] ?? '',
-        this.url = json['url'] ?? '',
-        this.lat = json['geometry']['location']['lat'],
-        this.lng = json['geometry']['location']['lng'];
+      : this.placeId = json[parameters.strplace_id],
+        this.formattedAddress = json[parameters.strformatted_address],
+        this.formattedPhoneNumber = json[parameters.strformatted_phone_number],
+        this.name = json[parameters.strName],
+        this.rating = json[parameters.strrating].toDouble(),
+        this.vicinity = json[parameters.strvicinity],
+        this.website = json[parameters.strWebsite] ?? '',
+        this.url = json[parameters.strurl] ?? '',
+        this.lat = json[parameters.strgeometry][parameters.strlocation]
+            [parameters.strlat],
+        this.lng = json[parameters.strgeometry][parameters.strlocation]
+            [parameters.strlng];
 
   Map<String, dynamic> toMap() {
     return {
-      'placeId': this.placeId,
-      'formateedAddress': this.formattedAddress,
-      'formateedPhoneNumber': this.formattedPhoneNumber,
-      'name': this.name,
-      'rating': this.rating,
-      'vicinity': this.vicinity,
-      'website': this.website,
-      'url': this.url,
-      'lat': this.lat,
-      'lng': this.lng,
+      parameters.strplaceId: this.placeId,
+      variable.strformateedAddress: this.formattedAddress,
+      variable.strformateedPhoneNumber: this.formattedPhoneNumber,
+      parameters.strName: this.name,
+      parameters.strrating: this.rating,
+      parameters.strvicinity: this.vicinity,
+      parameters.strWebsite: this.website,
+      parameters.strurl: this.url,
+      parameters.strlat: this.lat,
+      parameters.strlng: this.lng,
     };
   }
 }

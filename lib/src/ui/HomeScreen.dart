@@ -5,10 +5,17 @@ import 'package:myfhb/more_menu/screens/more_menu_screen.dart';
 import 'package:myfhb/notifications/myfhb_notifications.dart';
 import 'package:myfhb/schedules/my_schedules.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/src/ui/MyRecord.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
-import 'package:myfhb/src/ui/MyRecordClone.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/ui/user/UserAccountMain.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 
 class HomeScreen extends StatefulWidget {
   static _HomeScreenState of(BuildContext context) =>
@@ -24,15 +31,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex;
+  int _selectedIndex = 1;
   GlobalKey _bottomNavigationKey = GlobalKey();
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   var _widgetOptions = [
     MyFhbNotifications(),
-    MyRecordsClone(),
+    MyRecords(),
     SuperMaya(),
-    MySchedule(),
+    UserAccounts(arguments: UserAccountsArguments(selectedIndex: 0)),
     MoreMenuScreen()
   ];
 
@@ -69,6 +76,16 @@ class _HomeScreenState extends State<HomeScreen> {
   void _myFunc(int index) {
     if (index == 0) {
       Navigator.of(context).pop();
+    }
+    if (index == 3) {
+      Navigator.pushNamed(
+        context,
+        router.rt_UserAccounts,
+        arguments: UserAccountsArguments(selectedIndex: 0),
+      ).then((value) {
+        _selectedIndex = 1;
+        setState(() {});
+      });
     } else {
       setState(() {
         _selectedIndex = index;
@@ -105,7 +122,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ImageIcon(
-                      AssetImage('assets/navicons/home.png'),
+                      AssetImage(variable.icon_home),
                       size: 20,
                       color: widget.selectedPageIndex == 0
                           ? Colors.white
@@ -118,7 +135,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                             width: 0,
                           )
                         : Text(
-                            'Home',
+                            variable.strhome,
                             style: TextStyle(fontSize: 10),
                           )
                   ],
@@ -129,7 +146,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ImageIcon(
-                      AssetImage('assets/navicons/records.png'),
+                      AssetImage(variable.icon_records),
                       color: widget.selectedPageIndex == 1
                           ? Colors.white
                           : Colors.black,
@@ -141,7 +158,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                             width: 0,
                           )
                         : Text(
-                            'My Records',
+                            variable.strMyRecords,
                             style: TextStyle(fontSize: 10),
                           )
                   ],
@@ -152,9 +169,12 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Image.asset(
-                      PreferenceUtil.getStringValue('maya_asset') != null
-                          ? PreferenceUtil.getStringValue('maya_asset') + '.png'
-                          : 'assets/maya/maya_us_main.png',
+                      PreferenceUtil.getStringValue(Constants.keyMayaAsset) !=
+                              null
+                          ? PreferenceUtil.getStringValue(
+                                  Constants.keyMayaAsset) +
+                              variable.strExtImg
+                          : variable.icon_mayaMain,
                       height: 32,
                       width: 32,
                     ),
@@ -164,7 +184,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                             width: 0,
                           )
                         : Text(
-                            'Maya',
+                            variable.strMaya,
                             style: TextStyle(fontSize: 10),
                           )
                   ],
@@ -175,11 +195,11 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ImageIcon(
-                      AssetImage('assets/navicons/schedule.png'),
+                      AssetImage(variable.icon_profile),
                       color: widget.selectedPageIndex == 3
                           ? Colors.white
                           : Colors.black,
-                      size: 22,
+                      size: 24,
                     ),
                     widget.selectedPageIndex == 3
                         ? Container(
@@ -187,7 +207,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                             width: 0,
                           )
                         : Text(
-                            'Schedules',
+                            variable.strProfile,
                             style: TextStyle(fontSize: 10),
                           )
                   ],
@@ -198,7 +218,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ImageIcon(
-                      AssetImage('assets/navicons/more.png'),
+                      AssetImage(variable.icon_more),
                       color: widget.selectedPageIndex == 4
                           ? Colors.white
                           : Colors.black,
@@ -210,7 +230,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                             width: 0,
                           )
                         : Text(
-                            'More',
+                            variable.strMore,
                             style: TextStyle(fontSize: 10),
                           )
                   ],
@@ -223,11 +243,6 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
           backgroundColor: Colors.transparent,
           animationCurve: Curves.linearToEaseOut,
           animationDuration: Duration(milliseconds: 450),
-          /* onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        }, */
           onTap: (index) {
             widget.myFunc(index);
           }),

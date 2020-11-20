@@ -8,6 +8,8 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/resources/repository/AuthenticationRepository.dart';
 import 'package:myfhb/src/utils/Validators.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class AddFamilyOTPBloc with Validators implements BaseBloc {
   AuthenticationRepository _authenticationRepository;
@@ -38,22 +40,24 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _otpVerifyController?.close();
   }
 
   Future<AddFamilyOTPResponse> verifyAddFamilyOtp(
       String enteredMobNumber, String selectedCountryCode, String otp) async {
     var verifyOTP = {};
-    verifyOTP['sourceName'] = CommonConstants.strTrident;
-    verifyOTP['countryCode'] = '+' + selectedCountryCode;
-    verifyOTP['phoneNumber'] = enteredMobNumber;
-    verifyOTP['otp'] = otp;
-    verifyOTP['operation'] = CommonConstants.user_linking;
+    //verifyOTP[variable.strSrcName] = CommonConstants.strTrident;
+    verifyOTP[variable.strCountryCode] = '+' + selectedCountryCode;
+    verifyOTP[variable.strPhoneNumber] = enteredMobNumber;
+    verifyOTP[variable.strOTP] = otp;
+    verifyOTP[variable.strOperation] = CommonConstants.user_linking;
+    verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
+    verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
+    verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
 
     var jsonString = convert.jsonEncode(verifyOTP);
 
-    otpSink.add(ApiResponse.loading('Signing in user'));
+    otpSink.add(ApiResponse.loading(variable.strVerifyOtp));
     AddFamilyOTPResponse addFamilyOTPResponse;
 
     try {
@@ -61,7 +65,6 @@ class AddFamilyOTPBloc with Validators implements BaseBloc {
           await _authenticationRepository.verifyAddFamilyOTP(jsonString);
     } catch (e) {
       otpSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return addFamilyOTPResponse;
   }

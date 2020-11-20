@@ -114,7 +114,8 @@ class OverlayDeviceDialog extends ModalRoute<void> {
                 width: 25,
                 height: 25,
                 child: CachedNetworkImage(
-                  imageUrl: Constants.BASERURL + mediaDataForDevice[i].imageUrl,
+                  imageUrl: /*Constants.BASE_URL +*/ mediaDataForDevice[i]
+                      .imageUrl,
                   color: Colors.white70,
                   placeholder: (context, url) =>
                       new CircularProgressIndicator(),
@@ -132,7 +133,8 @@ class OverlayDeviceDialog extends ModalRoute<void> {
                 padding: const EdgeInsets.all(8),
                 child: Center(
                   child: Text(
-                    mediaDataForDevice[i].deviceName,
+                    mediaDataForDevice[i].deviceName[0].toUpperCase() +
+                        mediaDataForDevice[i].deviceName.substring(1),
                     style: TextStyle(
                       color: Colors.white,
                     ),
@@ -141,11 +143,13 @@ class OverlayDeviceDialog extends ModalRoute<void> {
           ],
         ),
         onTap: () {
-          callBackPage(mediaDataForDevice[i].deviceName, context);
+          callBackPage(
+              mediaDataForDevice[i].deviceName[0].toUpperCase() +
+                  mediaDataForDevice[i].deviceName.substring(1),
+              context);
         },
       ));
     }
-    print('deviceWidgetList' + deviceWidgetList.length.toString());
 
     return deviceWidgetList;
   }

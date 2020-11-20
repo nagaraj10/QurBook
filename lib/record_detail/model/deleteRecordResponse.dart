@@ -1,3 +1,5 @@
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+
 class DeleteRecordResponse {
   int status;
   bool success;
@@ -6,16 +8,20 @@ class DeleteRecordResponse {
   DeleteRecordResponse({this.status, this.success, this.message});
 
   DeleteRecordResponse.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    success = json['success'];
-    message = json['message'];
+    status = json[parameters.strStatus];
+    if (json.containsKey(parameters.strSuccess)) {
+      success = json[parameters.strSuccess];
+    }
+    if (json.containsKey(parameters.strMessage)) {
+      message = json[parameters.strMessage];
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['status'] = this.status;
-    data['success'] = this.success;
-    data['message'] = this.message;
+    data[parameters.strStatus] = this.status;
+    data[parameters.strSuccess] = this.success;
+    data[parameters.strMessage] = this.message;
     return data;
   }
 }

@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
+import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/ui/authentication/OtpVerifyScreen.dart';
-import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-
+import 'package:myfhb/src/utils/colors_utils.dart';
 
 class MyProfilePage extends StatefulWidget {
   @override
@@ -20,8 +23,10 @@ class MyProfilePage extends StatefulWidget {
 
 class _MyProfilePageState extends State<MyProfilePage> {
   //MyProfileBloc _myProfileBloc;
-
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  FlutterToast toast = new FlutterToast();
   var mobile = TextEditingController();
   var name = TextEditingController();
   var email = TextEditingController();
@@ -31,22 +36,23 @@ class _MyProfilePageState extends State<MyProfilePage> {
 
   var dob = TextEditingController();
 
+  var heightController = TextEditingController();
+  var weightController = TextEditingController();
+
   var firstName = TextEditingController();
   var middleName = TextEditingController();
   var lastName = TextEditingController();
 
-  List<String> bloodGroupArray = ['A', 'B', 'AB', 'O', 'UnKnown'];
-
-  List<String> bloodRangeArray = ['+ve', '-ve', 'UnKnown'];
+  var cntrlr_addr_one = TextEditingController(text: '');
+  var cntrlr_addr_two = TextEditingController(text: '');
+  var cntrlr_addr_city = TextEditingController(text: '');
+  var cntrlr_addr_state = TextEditingController(text: '');
+  var cntrlr_addr_zip = TextEditingController(text: '');
 
   @override
   void initState() {
     PreferenceUtil.init();
     super.initState();
-    /* _myProfileBloc = new MyProfileBloc();
-    _myProfileBloc.getMyProfileData().then((profileData) {
-      PreferenceUtil.saveProfileData(Constants.KEY_PROFILE, profileData); 
-    });*/
   }
 
   @override
@@ -54,49 +60,84 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return Scaffold(key: scaffold_state, body: getProfileDetailClone());
   }
 
-  Widget getProfileDetailClone() {
+  /* Widget getProfileDetailClone() {
     Widget profileWidget;
-
-    MyProfile myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    //print('profile data :${myProfile.response.data}');
-
-    profileWidget = getProfileWidget(myProfile.response.data);
+    MyProfileModel myProfile;
+    try {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+      profileWidget = getProfileWidget(myProfile.result);
+    } catch (e) {
+      profileWidget = getProfileWidget(null);
+    }
 
     return profileWidget;
+  } */
+
+  Widget getProfileDetailClone() {
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+    return FutureBuilder<MyProfileModel>(
+      future: addFamilyUserInfoRepository.getMyProfileInfoNew(userid),
+      builder: (BuildContext context, AsyncSnapshot<MyProfileModel> snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          //* its done with fetching the data from remote
+          if (snapshot.hasData && snapshot.data != null) {
+            return getProfileWidget(snapshot.data.result);
+          } else {
+            //todo proper error msg to users
+            toast.getToast('something went wrong!', Colors.red);
+            return getProfileWidget(null);
+          }
+        } else if (snapshot.connectionState == ConnectionState.waiting) {
+          //* its fetching the data from remote
+          return Center(
+            child: Column(
+              children: [
+                CircularProgressIndicator(
+                  backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+                ),
+                Text(
+                  'Hey Please Hangon!\nprofile is loading.',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
+          );
+        } else {
+          toast.getToast('${snapshot.error.toString()}', Colors.red);
+          return getProfileWidget(null);
+        }
+      },
+    );
   }
 
   void renameBloodGroup(String selectedBloodGroupClone) {
-    print('selectedBloodGroupClone renameBloodGroup' + selectedBloodGroupClone);
     if (selectedBloodGroupClone != null) {
       var bloodGroupSplitName = selectedBloodGroupClone.split('_');
 
       if (bloodGroupSplitName.length > 1) {
-        for (String bloodGroup in bloodGroupArray) {
+        for (String bloodGroup in variable.bloodGroupArray) {
           if (bloodGroupSplitName[0] == bloodGroup) {
             bloodGroupController.text = bloodGroup;
           }
         }
 
-        for (String bloodRange in bloodRangeArray) {
+        for (String bloodRange in variable.bloodRangeArray) {
           if (bloodGroupSplitName[1] == bloodRange) {
             bloodRangeController.text = bloodRange;
           }
         }
       } else {
-        var bloodGroupSplitName = selectedBloodGroupClone.split(' ');
+        var bloodGroupSplitName = selectedBloodGroupClone.split('');
         if (bloodGroupSplitName.length > 1) {
-          for (String bloodGroup in bloodGroupArray) {
+          for (String bloodGroup in variable.bloodGroupArray) {
             if (bloodGroupSplitName[0] == bloodGroup) {
               bloodGroupController.text = bloodGroup;
             }
 
-            for (String bloodRange in bloodRangeArray) {
+            for (String bloodRange in variable.bloodRangeArray) {
               if (bloodGroupSplitName[1][0] == bloodRange) {
                 bloodRangeController.text = bloodRange;
-                /*  if (!bloodRangeController.text.contains('ve')) {
-                  bloodRangeController.text = bloodRange + ' ve';
-                } */
               }
             }
           }
@@ -105,42 +146,64 @@ class _MyProfilePageState extends State<MyProfilePage> {
     }
   }
 
-  Widget getProfileWidget(MyProfileData data) {
-    if (data.generalInfo.phoneNumber != null) {
-      mobile.text = data.generalInfo.phoneNumber;
-    }
-    if (data.generalInfo.name != null) {
-      name.text =
-          toBeginningOfSentenceCase(data.generalInfo.name.toLowerCase());
-    }
-    if (data.generalInfo.email != null) {
-      email.text = data.generalInfo.email;
-    }
-    if (data.generalInfo.gender != null) {
-      gender.text =
-          toBeginningOfSentenceCase(data.generalInfo.gender.toLowerCase());
-    }
-    if (data.generalInfo.bloodGroup != null) {
-      renameBloodGroup(data.generalInfo.bloodGroup);
-    }
-    if (data.generalInfo.dateOfBirth != null) {
-      print(data.generalInfo.dateOfBirth);
-      dob.text = new FHBUtils().getFormattedDateOnlyNew(data.generalInfo.dateOfBirth);
-      print(dob.text);
-    }
-    if (data.generalInfo.qualifiedFullName != null) {
-      firstName.text = data.generalInfo.qualifiedFullName.firstName;
-      middleName.text =
-          (data.generalInfo.qualifiedFullName.middleName != null &&
-                  data.generalInfo.qualifiedFullName.middleName != '')
-              ? data.generalInfo.qualifiedFullName.middleName
-              : '';
-      lastName.text = data.generalInfo.qualifiedFullName.lastName;
-    } else {
-      firstName.text =
-          data.generalInfo.name != null ? data.generalInfo.name : '';
-      middleName.text = '';
-      lastName.text = '';
+  Widget getProfileWidget(MyProfileResult data) {
+    if (data != null) {
+      if (data.userContactCollection3 != null) {
+        if (data.userContactCollection3.length > 0) {
+          mobile.text = data.userContactCollection3[0].phoneNumber;
+        }
+      }
+      if (data != null) {
+        name.text = toBeginningOfSentenceCase(
+            data.firstName.toLowerCase() + data.lastName.toLowerCase());
+      }
+      if (data.userContactCollection3 != null) {
+        if (data.userContactCollection3.length > 0) {
+          email.text = data.userContactCollection3[0].email;
+        }
+      }
+
+      if (data.additionalInfo != null) {
+        heightController.text = data.additionalInfo.height != null
+            ? data.additionalInfo.height
+            : '';
+        weightController.text = data.additionalInfo.weight != null
+            ? data.additionalInfo.weight
+            : '';
+      }
+      if (data.gender != null) {
+        gender.text = toBeginningOfSentenceCase(data.gender.toLowerCase());
+      }
+      if (data.bloodGroup != null) {
+        print('current blood group ${data?.bloodGroup}');
+        bloodGroupController.text = data?.bloodGroup.split(' ')[0];
+        bloodRangeController.text = data?.bloodGroup.split(' ')[1];
+        //renameBloodGroup(data.bloodGroup);
+      }
+      if (data.dateOfBirth != null) {
+        dob.text = new FHBUtils().getFormattedDateOnlyNew(data.dateOfBirth);
+      }
+      if (data != null) {
+        firstName.text = data.firstName;
+        middleName.text = (data.middleName != null && data.middleName != '')
+            ? data.middleName
+            : '';
+        lastName.text = data.lastName;
+      } else {
+        firstName.text = data != null ? data.firstName + data.lastName : '';
+        middleName.text = '';
+        lastName.text = '';
+      }
+
+      if (data.userAddressCollection3 != null) {
+        if (data.userAddressCollection3.length > 0) {
+          cntrlr_addr_one.text = data.userAddressCollection3[0].addressLine1;
+          cntrlr_addr_two.text = data.userAddressCollection3[0].addressLine2;
+          cntrlr_addr_zip.text = data.userAddressCollection3[0].pincode;
+          cntrlr_addr_city.text = data.userAddressCollection3[0].city?.name;
+          cntrlr_addr_state.text = data.userAddressCollection3[0].state?.name;
+        }
+      }
     }
 
     return Container(
@@ -155,9 +218,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                     controller: mobile,
                     enabled: false,
                     decoration: InputDecoration(
-                      hintText: 'MobileNumber',
+                      hintText: variable.strMobileNum,
                       hintStyle: TextStyle(fontSize: 12),
-                      labelText: 'MobileNumber',
+                      labelText: variable.strMobileNum,
                     ),
                   )),
 
@@ -204,39 +267,39 @@ class _MyProfilePageState extends State<MyProfilePage> {
                       controller: email,
                       enabled: false,
                       decoration: InputDecoration(
-                        hintText: 'Email Address',
+                        hintText: variable.strEmailAddress,
                         hintStyle: TextStyle(fontSize: 12),
-                        labelText: 'Email Address',
+                        labelText: variable.strEmailAddress,
                         //suffix: Text('Tap to verify')
                       ),
                     ),
                   ),
-                  ((data.generalInfo.isEmailVerified == null &&
-                              data.generalInfo.email != '') ||
-                          (data.generalInfo.isEmailVerified == false &&
-                              data.generalInfo.email != ''))
-                      ? GestureDetector(
-                          child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Text('Tap to verify Email address',
-                                  style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.w400,
-                                      color: Color(new CommonUtil()
-                                          .getMyPrimaryColor())))),
-                          onTap: () {
-                            new FHBUtils().check().then((intenet) {
-                            if (intenet != null && intenet) {
-                              verifyEmail();
-                            } else {
-                              new FHBBasicWidget().showInSnackBar(
-                                  Constants.STR_NO_CONNECTIVITY,
-                                  scaffold_state);
-                            }
-                          });
-                          },
-                        )
-                      : Text('')
+                  // ((data.generalInfo.isEmailVerified == null &&
+                  //             data.generalInfo.email != '') ||
+                  //         (data.generalInfo.isEmailVerified == false &&
+                  //             data.generalInfo.email != ''))
+                  //     ? GestureDetector(
+                  //         child: Padding(
+                  //             padding: EdgeInsets.all(10),
+                  //             child: Text(Constants.VerifyEmail,
+                  //                 style: TextStyle(
+                  //                     fontSize: 13.0,
+                  //                     fontWeight: FontWeight.w400,
+                  //                     color: Color(new CommonUtil()
+                  //                         .getMyPrimaryColor())))),
+                  //         onTap: () {
+                  //           new FHBUtils().check().then((intenet) {
+                  //             if (intenet != null && intenet) {
+                  //               verifyEmail();
+                  //             } else {
+                  //               new FHBBasicWidget().showInSnackBar(
+                  //                   Constants.STR_NO_CONNECTIVITY,
+                  //                   scaffold_state);
+                  //             }
+                  //           });
+                  //         },
+                  //       )
+                  //     : Text('')
                 ],
               ),
 
@@ -246,9 +309,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   controller: gender,
                   enabled: false,
                   decoration: InputDecoration(
-                    hintText: 'Gender',
+                    hintText: CommonConstants.gender,
                     hintStyle: TextStyle(fontSize: 12),
-                    labelText: 'Gender',
+                    labelText: CommonConstants.gender,
                   ),
                 ),
               ),
@@ -262,9 +325,9 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           controller: bloodGroupController,
                           enabled: false,
                           decoration: InputDecoration(
-                              hintText: 'Blood Group',
+                              hintText: CommonConstants.blood_group,
                               hintStyle: TextStyle(fontSize: 12),
-                              labelText: 'Blood Group'),
+                              labelText: CommonConstants.blood_group),
                         ),
                       )),
                   Padding(
@@ -275,9 +338,39 @@ class _MyProfilePageState extends State<MyProfilePage> {
                           controller: bloodRangeController,
                           enabled: false,
                           decoration: InputDecoration(
-                              hintText: 'Rh type',
+                              hintText: CommonConstants.STR_RHTYPE,
                               hintStyle: TextStyle(fontSize: 12),
-                              labelText: 'Rh type'),
+                              labelText: CommonConstants.STR_RHTYPE),
+                        ),
+                      )),
+                ],
+              ),
+              Row(
+                children: <Widget>[
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2 - 40,
+                        child: TextField(
+                          controller: heightController,
+                          enabled: false,
+                          decoration: InputDecoration(
+                              hintText: CommonConstants.height,
+                              hintStyle: TextStyle(fontSize: 12),
+                              labelText: CommonConstants.height),
+                        ),
+                      )),
+                  Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 2 - 40,
+                        child: TextField(
+                          controller: weightController,
+                          enabled: false,
+                          decoration: InputDecoration(
+                              hintText: CommonConstants.weight,
+                              hintStyle: TextStyle(fontSize: 12),
+                              labelText: CommonConstants.weight),
                         ),
                       )),
                 ],
@@ -289,9 +382,64 @@ class _MyProfilePageState extends State<MyProfilePage> {
                   controller: dob,
                   enabled: false,
                   decoration: InputDecoration(
-                      hintText: 'Date of Birth',
+                      hintText: CommonConstants.date_of_birth,
                       hintStyle: TextStyle(fontSize: 12),
-                      labelText: 'Date of Birth'),
+                      labelText: CommonConstants.date_of_birth),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_one,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_line_1,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_two,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_line_2,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_city,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_city,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_state,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_state,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: cntrlr_addr_zip,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(fontSize: 12),
+                    labelText: CommonConstants.addr_zip,
+                  ),
                 ),
               ),
             ],
@@ -307,7 +455,6 @@ class _MyProfilePageState extends State<MyProfilePage> {
         new FHBBasicWidget().showInSnackBar(value.message, scaffold_state);
       } else {
         PreferenceUtil.saveString(Constants.PROFILE_EMAIL, email.text);
-        print(PreferenceUtil.getStringValue(Constants.MOB_NUM) + " NUMBER");
 
         Navigator.of(context)
             .push(MaterialPageRoute(

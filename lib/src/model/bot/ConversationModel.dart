@@ -1,30 +1,51 @@
 import 'package:flutter/foundation.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/src/model/bot/button_model.dart';
 
-class Conversation{
-    bool isMayaSaid;
-    String text;
-    String imageUrl;
-    String name;
-    String timeStamp;
-    Conversation({@required this.isMayaSaid,@required this.text,this.imageUrl,@required this.name,this.timeStamp});
+class Conversation {
+  bool isMayaSaid;
+  String text;
+  String imageUrl;
+  String name;
+  String timeStamp;
+  String langCode;
+  List<Buttons> buttons;
+  Conversation(
+      {@required this.isMayaSaid,
+      @required this.text,
+      this.imageUrl,
+      @required this.name,
+      this.timeStamp,
+      this.buttons,
+      this.langCode
+      });
 
-    Conversation.fromJson(Map<String,dynamic> json){
-        isMayaSaid = json['isMayaSaid'];
-        text = json['text'];
-        imageUrl = json['imageUrl'];
-        name = json['name'];
-        timeStamp = json['timeStamp'];
+  Conversation.fromJson(Map<String, dynamic> json) {
+    isMayaSaid = json[parameters.strIsMayaSaid];
+    text = json[parameters.strText];
+    imageUrl = json[parameters.strImageUrl];
+    name = json[parameters.strName];
+    timeStamp = json[parameters.strTimeStamp];
+    langCode = json[parameters.strLanguage];
+    if (json[parameters.strButtons] != null) {
+      buttons = new List<Buttons>();
+      json[parameters.strButtons].forEach((v) {
+        buttons.add(new Buttons.fromJson(v));
+      });
     }
+  }
 
-
-    Map<String,dynamic> toJson(){
-      final Map<String,dynamic> data = new Map<String,dynamic>();
-      data['isMayaSaid'] = this.isMayaSaid;
-      data['text']=this.text;
-      data['imageUrl']=this.imageUrl;
-      data['name']=this.name;
-      data['timeStamp']=this.timeStamp;
-      return data;
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data[parameters.strIsMayaSaid] = this.isMayaSaid;
+    data[parameters.strText] = this.text;
+    data[parameters.strImageUrl] = this.imageUrl;
+    data[parameters.strName] = this.name;
+    data[parameters.strTimeStamp] = this.timeStamp;
+    data[parameters.strLanguage] = this.langCode;
+    if (this.buttons != null) {
+      data[parameters.strButtons] = this.buttons.map((v) => v.toJson()).toList();
     }
-
+    return data;
+  }
 }

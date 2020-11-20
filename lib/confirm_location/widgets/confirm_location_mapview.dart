@@ -7,10 +7,12 @@ class ConfirmLocationMapView extends StatelessWidget {
   Completer<GoogleMapController> googleMapControll = Completer();
   LatLng lastMapPosition;
   Set<Marker> markers = {};
-
+  static const double _lat = 12.861693;
+  static const double _lang = 80.227242;
+  static const double _zoom = 14.4746;
   CameraPosition kGooglePlex = CameraPosition(
-    target: LatLng(12.861693, 80.227242),
-    zoom: 14.4746,
+    target: LatLng(_lat, _lang),
+    zoom: _zoom,
   );
 
   ConfirmLocationMapView(
@@ -21,7 +23,6 @@ class ConfirmLocationMapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
 
     return GoogleMap(
       scrollGesturesEnabled: true,

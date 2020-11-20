@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
-import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
-import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/common/CommonConstants.dart';
-import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
-import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:shimmer/shimmer.dart';
 
 class OtherDocsList extends StatefulWidget {
-  final CompleteData completeData;
+  final HealthRecordList completeData;
   final Function callBackToRefresh;
   final String categoryName;
   final String categoryId;
   final String categoryDescription;
 
   final Function(String, String) getDataForParticularLabel;
+  final Function(String, bool) mediaSelected;
+  final Function(String, List<HealthRecordCollection>, bool)
+      healthRecordSelected;
+  final bool allowSelect;
+  List<String> mediaMeta;
+  final bool isNotesSelect;
+  final bool isAudioSelect;
+  final bool showDetails;
+  final bool allowAttach;
 
   OtherDocsList(
       this.completeData,
@@ -25,7 +37,15 @@ class OtherDocsList extends StatefulWidget {
       this.categoryName,
       this.categoryId,
       this.getDataForParticularLabel,
-      this.categoryDescription);
+      this.categoryDescription,
+      this.mediaSelected,
+      this.allowSelect,
+      this.mediaMeta,
+      this.isNotesSelect,
+      this.isAudioSelect,
+      this.showDetails,
+      this.allowAttach,
+      this.healthRecordSelected);
 
   @override
   _OtherDocsState createState() => _OtherDocsState();
@@ -37,17 +57,14 @@ class _OtherDocsState extends State<OtherDocsList> {
   GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
+  List<HealthRecordCollection> mediMasterId = new List();
+
+  FlutterToast toast = new FlutterToast();
+
   @override
   void initState() {
     _healthReportListForUserBlock = new HealthReportListForUserBlock();
-    /*  PreferenceUtil.saveString(Constants.KEY_CATEGORYNAME, widget.categoryName)
-        .then((value) {
-      PreferenceUtil.saveString(Constants.KEY_CATEGORYID, widget.categoryId)
-          .then((value) {
-        widget.getDataForParticularLabel(
-            widget.categoryName, widget.categoryId);
-      });
-    }); */
+
     super.initState();
   }
 
@@ -56,15 +73,12 @@ class _OtherDocsState extends State<OtherDocsList> {
     return getWidgetToDisplayOtherDocsList(widget.completeData);
   }
 
-  Widget getWidgetToDisplayOtherDocsList(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget getWidgetToDisplayOtherDocsList(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
-    /*  mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
-        completeData, CommonConstants.categoryDescriptionOthers); */
     mediaMetaInfoObj = new CommonUtil().getDataForParticularCategoryDescription(
         completeData, widget.categoryDescription);
 
-    print('oothers ' + mediaMetaInfoObj.length.toString());
     return RefreshIndicator(
       key: _refreshIndicatorKey,
       onRefresh: _refresh,
@@ -83,7 +97,7 @@ class _OtherDocsState extends State<OtherDocsList> {
                   child: Text(
                     Constants.NO_DATA_OTHERS,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontFamily: 'Poppins'),
+                    style: TextStyle(fontFamily: variable.font_poppins),
                   ),
                 ),
               ),
@@ -98,155 +112,164 @@ class _OtherDocsState extends State<OtherDocsList> {
     widget.callBackToRefresh();
   }
 
-  getCardWidgetForOtherDocs(MediaMetaInfo mediaMetaInfoObj, int i) {
+  getCardWidgetForOtherDocs(HealthResult mediaMetaInfoObj, int i) {
     return InkWell(
+        onLongPress: () {
+          if (widget.allowSelect) {
+            mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+            setState(() {});
+            widget.mediaSelected(
+                mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
+          }
+        },
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => RecordDetailScreen(
-                data: mediaMetaInfoObj,
+          if (widget.allowSelect && widget.showDetails == false) {
+            if (widget.allowAttach) {
+              bool condition;
+              if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+                condition = false;
+              } else {
+                condition = true;
+              }
+              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+              if (mediaMetaInfoObj != null &&
+                  mediaMetaInfoObj.healthRecordCollection.length > 0) {
+                mediMasterId =
+                    new CommonUtil().getMetaMasterIdListNew(mediaMetaInfoObj);
+                if (mediMasterId.length > 0) {
+                  widget.healthRecordSelected(
+                      mediaMetaInfoObj.id, mediMasterId, condition);
+                } else {
+                  toast.getToast('No Image Attached ', Colors.red);
+                }
+              }
+            } else {
+              bool condition;
+              if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
+                condition = false;
+              } else {
+                condition = true;
+              }
+              mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
+
+              // setState(() {});
+              widget.mediaSelected(mediaMetaInfoObj.id, condition);
+            }
+          } else {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => RecordDetailScreen(
+                  data: mediaMetaInfoObj,
+                ),
               ),
-            ),
-          );
+            );
+          }
         },
         child: Container(
-            padding: EdgeInsets.all(10.0),
-            margin: EdgeInsets.only(left: 10, right: 10, top: 10),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(fhbColors.cardShadowColor),
-                  blurRadius: 16, // has the effect of softening the shadow
-                  spreadRadius: 0, // has the effect of extending the shadow
-                )
-              ],
-            ),
-            child: Row(
-              children: <Widget>[
-                /* Expanded(
-              flex: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  Container(
-                    color: Colors.grey[200],
-                    width: 50.0,
-                    height: 50.0,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          new FHBUtils().convertMonthFromString(
-                              mediaMetaInfoObj.createdOn),
-                          style: TextStyle(color: Colors.black54),
-                        ),
-                        Text(
-                            new FHBUtils().convertDateFromString(
-                                mediaMetaInfoObj.createdOn),
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 18))
-                      ],
+          padding: EdgeInsets.all(10.0),
+          margin: EdgeInsets.only(left: 10, right: 10, top: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: const Color(fhbColors.cardShadowColor),
+                blurRadius: 16, // has the effect of softening the shadow
+                spreadRadius: 0, // has the effect of extending the shadow
+                // has the effect of extending the shadow
+              )
+            ],
+          ),
+          child: Row(
+            children: <Widget>[
+              CircleAvatar(
+                radius: 25,
+                backgroundColor: const Color(fhbColors.bgColorContainer),
+                child: Image.network(
+                  /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                      ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
+                      :*/
+                  Constants.BASE_URL +
+                      mediaMetaInfoObj.metadata.healthRecordCategory.logo,
+                  height: 25,
+                  width: 25,
+                  color: Color(new CommonUtil().getMyPrimaryColor()),
+                ),
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 10.0),
+                    Text(
+                      mediaMetaInfoObj.metadata.fileName != null
+                          ? mediaMetaInfoObj.metadata.fileName
+                          : '',
+                      style: TextStyle(fontWeight: FontWeight.w500),
+                      overflow: TextOverflow.fade,
+                      softWrap: false,
                     ),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                ],
+                    Text(
+                      mediaMetaInfoObj.createdOn != ''
+                          ? new FHBUtils().getFormattedDateString(
+                              mediaMetaInfoObj.createdOn)
+                          : new FHBUtils().getFormattedDateString(
+                              mediaMetaInfoObj
+                                  .metadata.healthRecordType.createdOn),
+                      style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                    )
+                  ],
+                ),
               ),
-            ),
-            
-            */
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: const Color(fhbColors.bgColorContainer),
-                  child: Image.network(
-                    mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
-                        ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                        : Constants.BASERURL +
-                            mediaMetaInfoObj.metaInfo.categoryInfo.logo,
-                    height: 25,
-                    width: 25,
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    IconButton(
+                        icon: mediaMetaInfoObj.isBookmarked
+                            ? ImageIcon(
+                                AssetImage(variable.icon_record_fav_active),
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                size: 20,
+                              )
+                            : ImageIcon(
+                                AssetImage(variable.icon_record_fav),
+                                color: Colors.black,
+                                size: 20,
+                              ),
+                        onPressed: () {
+                          new CommonUtil()
+                              .bookMarkRecord(mediaMetaInfoObj, _refresh);
+                        }),
+                    (mediaMetaInfoObj.metadata.hasVoiceNotes != null &&
+                            mediaMetaInfoObj.metadata.hasVoiceNotes)
+                        ? Icon(
+                            Icons.mic,
+                            color: Colors.black54,
+                          )
+                        : Container(),
+                    widget.mediaMeta.contains(mediaMetaInfoObj.id)
+                        ? Icon(
+                            Icons.done,
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
+                          )
+                        : SizedBox(),
+                  ],
                 ),
-                SizedBox(
-                  width: 20,
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: 10.0),
-                      Text(
-                        mediaMetaInfoObj.metaInfo.fileName != null
-                            ? mediaMetaInfoObj.metaInfo.fileName
-                            : '',
-                        style: TextStyle(fontWeight: FontWeight.w500),
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
-                      ),
-                      Text(
-                        new FHBUtils()
-                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
-                      )
-                    ],
-                  ),
-                ),
-                /* Expanded(
-              flex: 1,
-              child: Column(
-                children: <Widget>[
-                  getDocumentImageWidget(mediaMetaInfoObj),
-                ],
               ),
-            ), */
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      /*  Icon(Icons.more_horiz, size: 20, color: Colors.grey),
-                  SizedBox(height: 20), */
-                      IconButton(
-                          icon: mediaMetaInfoObj.isBookmarked
-                              ? ImageIcon(
-                                  AssetImage(
-                                      'assets/icons/record_fav_active.png'),
-                                  //TODO chnage theme
-                                  color: Color(
-                                      new CommonUtil().getMyPrimaryColor()),
-                                  size: 20,
-                                )
-                              : ImageIcon(
-                                  AssetImage('assets/icons/record_fav.png'),
-                                  color: Colors.black,
-                                  size: 20,
-                                ),
-                          onPressed: () {
-                            new CommonUtil()
-                                .bookMarkRecord(mediaMetaInfoObj, _refresh);
-                          }),
-                      /*  mediaMetaInfoObj.metaInfo.hasVoiceNotes
-                          ? Icon(
-                              Icons.audiotrack,
-                              color: Colors.grey,
-                            )
-                          : Container() */
-                    ],
-                  ),
-                ),
-              ],
-            )));
+            ],
+          ),
+        ));
   }
 
   getDocumentImageWidget(MediaMetaInfo data) {

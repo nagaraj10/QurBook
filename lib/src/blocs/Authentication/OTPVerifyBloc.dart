@@ -8,6 +8,10 @@ import 'package:rxdart/rxdart.dart';
 import 'dart:convert' as convert;
 import '../../../common/CommonConstants.dart';
 
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+
 class OTPVerifyBloc with Validators implements BaseBloc {
   AuthenticationRepository _authenticationRepository;
   StreamController _otpVerifyController;
@@ -44,24 +48,26 @@ class OTPVerifyBloc with Validators implements BaseBloc {
   Future<OTPResponse> verifyOtp(String enteredMobNumber,
       String selectedCountryCode, String otp, bool isFromSignIn) async {
     var verifyOTP = {};
-    verifyOTP['sourceName'] = CommonConstants.strTrident;
-    verifyOTP['countryCode'] = '+' + selectedCountryCode;
-    verifyOTP['phoneNumber'] = enteredMobNumber;
-    verifyOTP['otp'] = otp;
+    //verifyOTP['sourceName'] = CommonConstants.strTrident;
+    verifyOTP[parameters.strCountryCode] = '+' + selectedCountryCode;
+    verifyOTP[parameters.strPhoneNumber] = enteredMobNumber;
+    verifyOTP[parameters.strotp] = otp;
+      verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
+    verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
+    verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
     if (isFromSignIn)
-      verifyOTP['operation'] = CommonConstants.strOperationSignIN;
+      verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignIN;
     else
-      verifyOTP['operation'] = CommonConstants.strOperationSignUp;
+      verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignUp;
 
     var jsonString = convert.jsonEncode(verifyOTP);
 
-    otpSink.add(ApiResponse.loading('Signing in user'));
+    otpSink.add(ApiResponse.loading(variable.strVerifyOtp));
     OTPResponse otpResponse;
     try {
       otpResponse = await _authenticationRepository.verifyOTP(jsonString);
     } catch (e) {
       otpSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return otpResponse;
   }
@@ -69,41 +75,41 @@ class OTPVerifyBloc with Validators implements BaseBloc {
   Future<OTPResponse> generateOTP(String enteredMobNumber,
       String selectedCountryCode, bool isFromSignIn) async {
     var verifyOTP = {};
-    verifyOTP['sourceName'] = CommonConstants.strTrident;
-    verifyOTP['countryCode'] = '+' + selectedCountryCode;
-    verifyOTP['phoneNumber'] = enteredMobNumber;
+    //verifyOTP['sourceName'] = CommonConstants.strTrident;
+    verifyOTP[parameters.strCountryCode] = '+' + selectedCountryCode;
+    verifyOTP[parameters.strPhoneNumber] = enteredMobNumber;
+     verifyOTP[parameters.strSourceId] = parameters.strSrcIdVal;
+    verifyOTP[parameters.strEntityId] =parameters.strEntityIdVal;
+    verifyOTP[parameters.strRoleId] = parameters.strRoleIdVal;
     if (isFromSignIn)
-      verifyOTP['operation'] = CommonConstants.strOperationSignIN;
+      verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignIN;
     else
-      verifyOTP['operation'] = CommonConstants.strOperationSignUp;
+      verifyOTP[parameters.strOperation] = CommonConstants.strOperationSignUp;
 
     var jsonString = convert.jsonEncode(verifyOTP);
 
-    otpSink.add(ApiResponse.loading('Signing in user'));
+    otpSink.add(ApiResponse.loading(variable.strGeneratingOtp));
     OTPResponse otpResponse;
     try {
       otpResponse = await _authenticationRepository.generateOTP(jsonString);
     } catch (e) {
-      otpSink.add(ApiResponse.error(e.toString()));
-      print(e);
-    }
+      otpSink.add(ApiResponse.error(e.toString()));    }
     return otpResponse;
   }
 
   Future<OTPEmailResponse> verifyOTPFromEmail(String otp) async {
     var verifyEmailOTP = {};
-    verifyEmailOTP['verificationCode'] = otp;
+    verifyEmailOTP[parameters.strverification] = otp;
 
     var jsonString = convert.jsonEncode(verifyEmailOTP);
 
-    otpFromEmailSink.add(ApiResponse.loading('verify otp'));
+    otpFromEmailSink.add(ApiResponse.loading(variable.strVerifyOtp));
     OTPEmailResponse otpEmailResponse;
     try {
       otpEmailResponse =
           await _authenticationRepository.verifyOTPFromEmail(jsonString);
     } catch (e) {
       otpFromEmailSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
     return otpEmailResponse;
   }

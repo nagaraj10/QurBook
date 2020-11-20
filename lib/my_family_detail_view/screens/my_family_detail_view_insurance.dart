@@ -6,10 +6,15 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/record_detail/screens/record_detail_screen.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_query.dart' as query;
 
 class MyFamilyDetailViewInsurance extends StatefulWidget {
-  CompleteData completeData;
+  HealthRecordList completeData;
 
   MyFamilyDetailViewInsurance({this.completeData});
 
@@ -30,8 +35,8 @@ class MyFamilyDetailViewInsuranceState
     return getWidgetToDisplayIDDocs(widget.completeData);
   }
 
-  Widget getWidgetToDisplayIDDocs(CompleteData completeData) {
-    List<MediaMetaInfo> mediaMetaInfoObj = new List();
+  Widget getWidgetToDisplayIDDocs(HealthRecordList completeData) {
+    List<HealthResult> mediaMetaInfoObj = new List();
 
     mediaMetaInfoObj = new CommonUtil().getDataForInsurance(
         completeData,
@@ -48,13 +53,13 @@ class MyFamilyDetailViewInsuranceState
             ))
         : Container(
             child: Center(
-              child: Text('No Data Available'),
+              child: Text(variable.strNodata),
             ),
             color: const Color(fhbColors.bgColorContainer),
           );
   }
 
-  getCardWidgetForDocs(MediaMetaInfo mediaMetaInfoObj, int i) {
+  getCardWidgetForDocs(HealthResult mediaMetaInfoObj, int i) {
     return InkWell(
         onTap: () {
           Navigator.push(
@@ -86,10 +91,11 @@ class MyFamilyDetailViewInsuranceState
                   radius: 25,
                   backgroundColor: const Color(fhbColors.bgColorContainer),
                   child: Image.network(
-                    mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
+                    /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                        : Constants.BASERURL +
-                            mediaMetaInfoObj.metaInfo.mediaTypeInfo.logo,
+                        :*/
+                    Constants.BASE_URL +
+                        mediaMetaInfoObj.metadata.healthRecordCategory.logo,
                     height: 20,
                     width: 20,
                     color: Color(CommonUtil().getMyPrimaryColor()),
@@ -105,30 +111,29 @@ class MyFamilyDetailViewInsuranceState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        mediaMetaInfoObj.metaInfo.fileName != null
-                            ? mediaMetaInfoObj.metaInfo.fileName
+                        mediaMetaInfoObj.metadata.fileName != null
+                            ? mediaMetaInfoObj.metadata.fileName
                             : '',
                         style: TextStyle(fontWeight: FontWeight.w500),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                       ),
                       Visibility(
-                          visible:
-                              mediaMetaInfoObj.metaInfo.dateOfExpiry != null
-                                  ? true
-                                  : false,
+                          visible: mediaMetaInfoObj.metadata.dateOfVisit != null
+                              ? true
+                              : false,
                           child: Text(
-                            mediaMetaInfoObj.metaInfo.dateOfExpiry != null
-                                ? 'Valid thru - ' +
-                                    mediaMetaInfoObj.metaInfo.dateOfExpiry
+                            mediaMetaInfoObj.metadata.dateOfVisit != null
+                                ? variable.strValidThru +
+                                    mediaMetaInfoObj.metadata.dateOfVisit
                                 : '',
                             overflow: TextOverflow.ellipsis,
                             softWrap: false,
                             style: TextStyle(color: Colors.grey),
                           )),
                       Text(
-                        new FHBUtils()
-                            .getFormattedDateString(mediaMetaInfoObj.createdOn),
+                        new FHBUtils().getFormattedDateString(mediaMetaInfoObj
+                            .metadata.healthRecordType.createdOn),
                         style: TextStyle(
                             fontSize: 12,
                             color: Colors.grey[400],
@@ -145,22 +150,16 @@ class MyFamilyDetailViewInsuranceState
                     children: <Widget>[
                       mediaMetaInfoObj.isBookmarked
                           ? ImageIcon(
-                              AssetImage('assets/icons/record_fav_active.png'),
+                              AssetImage(variable.icon_record_fav_active),
                               color:
                                   Color(new CommonUtil().getMyPrimaryColor()),
                               size: 20,
                             )
                           : ImageIcon(
-                              AssetImage('assets/icons/record_fav.png'),
+                              AssetImage(variable.icon_record_fav),
                               color: Colors.black,
                               size: 20,
                             ),
-                      /*  mediaMetaInfoObj.metaInfo.hasVoiceNotes
-                          ? Icon(
-                              Icons.mic,
-                              color: Colors.black54,
-                            )
-                          : Container() */
                     ],
                   ),
                 ),

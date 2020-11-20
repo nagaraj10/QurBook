@@ -9,6 +9,10 @@ import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:random_color/random_color.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
+
 
 class MyAppointment extends StatefulWidget {
   static _MyAppointmentState of(BuildContext context) =>
@@ -30,58 +34,30 @@ class _MyAppointmentState extends State<MyAppointment> {
   dynamic reverseDetailsList =
       new List(); // our default setting is to login, and we should switch to creating an account when the user chooses to
 
-  _MyAppointmentState() {
-    //_emailFilter.addListener(_emailListen);
-    //_passwordFilter.addListener(_passwordListen);
-  }
+  _MyAppointmentState() {}
 
   void refresh() {
     setState(() {});
   }
 
-  /*  void _emailListen() {
-    if (_emailFilter.text.isEmpty) {
-      _email = "";
-    } else {
-      //email = emailFilter.text;
-    }
-  } */
-
-  /*  void _passwordListen() {
-    if (_passwordFilter.text.isEmpty) {
-      _password = "";
-    } else {
-      // password = passwordFilter.text;
-    }
-  } */
-
-  // Swap in between our two forms, registering and logging in
-  /* void _formChange(InitialPageModel model, BuildContext context) async {
-    //Navigator.pushNamed(context, Router.registration);
-  } */
-
   @override
   Widget build(BuildContext context) {
-    /* return BaseView<InitialPageModel>(
-      builder: (baseContext, model, child) { */
     return FutureBuilder(
       builder: (context, projectSnap) {
         if (detailsList == null) {
           return MaterialApp(
             home: Scaffold(
                 body: Center(
-              child: Text('Loading...'),
+              child: Text(variable.strLoadWait),
             )),
           );
         } else {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            //onGenerateRoute: Router.createRoute,
             home: new Scaffold(
-              //appBar: _buildBar(context),
               floatingActionButton: FloatingActionButton(
                 onPressed: () {
-                  PageNavigator.goTo(context, '/add_appointments');
+                  PageNavigator.goTo(context, router.rt_AddAppointments);
                 },
                 child: Icon(Icons.add),
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
@@ -115,39 +91,11 @@ class _MyAppointmentState extends State<MyAppointment> {
                                   radius: 25,
                                   backgroundColor:
                                       Color(fhbColors.bgColorContainer),
-                                  //_randomColor.randomColor(),
-//                                  Color(new CommonUtil().getMyPrimaryColor()),
-
                                   child: Center(
                                     child: Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: <Widget>[
-                                          /*Padding(
-                                        padding: EdgeInsets.zero,
-                                        child: Text(
-                                          */ /*new FHBUtils().convertMonthFromString(
-                                              reverseDetailsList[index]['date']),*/ /*
-                                          model.appDate
-                                          ,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w300),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.zero,
-                                        child: Text(
-                                          */ /*new FHBUtils().convertDateFromString(
-                                              reverseDetailsList[index]['date'])*/ /*
-                                          model.appDate,
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 18),
-                                        ),
-                                      )*/
                                           Padding(
                                             padding: EdgeInsets.all(2),
                                             child: Text(
@@ -180,7 +128,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                                               color: Colors.black)),
                                       SizedBox(height: 5),
                                       Text(
-                                        'Dr. ' +
+                                        variable.strDr +
                                             toBeginningOfSentenceCase(
                                                 model.dName),
                                         style: TextStyle(
@@ -228,52 +176,6 @@ class _MyAppointmentState extends State<MyAppointment> {
                                     ))
                               ],
                             ));
-                        /*  return Card(
-                      child: ListTile(
-                        leading: Icon(Icons.ac_unit),
-                        title: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Expanded(child: Text('Name of Hospital:')),
-                                Expanded(
-                                    child: Text('' +
-                                        reverseDetailsList[index]['nameHos'])),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Expanded(child: Text("Docxtor's Name:")),
-                                Expanded(
-                                    child: Text('' +
-                                        reverseDetailsList[index]['nameDoc'])),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Expanded(child: Text('Date:')),
-                                Expanded(
-                                    child: Text('' +
-                                        reverseDetailsList[index]['date'])),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                Expanded(child: Text('Reason:')),
-                                Expanded(
-                                    child: Text('' +
-                                        reverseDetailsList[index]['reason'])),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ); */
                       })
                   : Container(
                       child: Center(
@@ -282,7 +184,7 @@ class _MyAppointmentState extends State<MyAppointment> {
                           child: Text(
                             Constants.NO_DATA_SCHEDULES,
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Poppins'),
+                            style: TextStyle(fontFamily: variable.font_poppins),
                           ),
                         ),
                       ),
@@ -294,48 +196,12 @@ class _MyAppointmentState extends State<MyAppointment> {
       },
       future: getProjectDetails(),
     );
-    /*    },
-    ); */
+   
   }
-
-  /*  Widget _buildBar(BuildContext context) {
-    return new AppBar(
-      title: new Text("Demo App Page"),
-      centerTitle: true,
-    );
-  } */
-
-  /*  Widget _buildTextFields() {
-    return new Container(
-      child: new Column(
-        children: <Widget>[
-          new Container(
-            child: new TextField(
-              controller: _emailFilter,
-              decoration: new InputDecoration(labelText: 'Employee Id'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
- */
 
   getProjectDetails() async {
-    /*prefs = await SharedPreferences.getInstance();
-
-    String getData = await prefs.get('key');
-    if (getData == null) {
-      detailsList = new List();
-    } else {
-      detailsList = json.decode(getData);
-
-      reverseDetailsList = detailsList.reversed.toList();
-    }*/
-
     detailsList = await FHBUtils().getAllAppointments();
     reverseDetailsList = detailsList.reversed.toList();
-    //print(reverseDetailsList.toString());
     return detailsList;
   }
 }

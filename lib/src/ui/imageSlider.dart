@@ -3,11 +3,16 @@ import 'dart:typed_data';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
+
+
 class ImageSlider extends StatefulWidget {
-  final List<dynamic> imageList;
+  final List<HealthRecordCollection> imageList;
 
   ImageSlider({this.imageList});
 
@@ -31,73 +36,19 @@ class _ImageSliderState extends State<ImageSlider> {
             Padding(
               padding: EdgeInsets.only(top: 30, right: 10),
               child: OutlineButton(
-                  child: Text('Close'),
+                  child: Text(variable.strClose),
                   textColor: Colors.white70,
                   borderSide: BorderSide(color: Colors.white70),
                   onPressed: Navigator.of(context).pop),
             ),
 
             Expanded(flex: 7, child: showPhotoView(widget.imageList)
-                //_loadImage(widget.imageList),
                 ),
-            //Expanded(flex: 1,child: SizedBox(height: 5,)),
           ],
         ),
       ),
     );
   }
-
-  /*  Widget _loadImage(List<dynamic> imagesPath) {
-    index = _current + 1;
-    _current = 0;
-    length = imagesPath.length;
-    if (imagesPath.length > 0) {
-      return Row(
-        children: <Widget>[
-          /* Expanded(
-                        flex: 0,
-                        child: IconButton(icon: Icon(Icons.chevron_left),onPressed: (){goToPrevious();},color: Colors.white,iconSize: 30.0,),
-                      ),*/
-          Expanded(
-            flex: 1,
-            child: CarouselSlider(
-              height: 500,
-              //width: MediaQuery.of(context).size.width,
-              initialPage: 0,
-              enlargeCenterPage: true,
-              reverse: false,
-              enableInfiniteScroll: false,
-              pauseAutoPlayOnTouch: Duration(seconds: 10),
-              scrollDirection: Axis.horizontal,
-              onPageChanged: (index) {
-                setState(() {
-                  _current = index;
-                });
-              },
-              items: imagesPath.map((imgUrl) {
-                return Builder(
-                  builder: (BuildContext context) {
-                    return Container(
-                        height: double.infinity,
-                        width: double.infinity,
-                        child: PhotoView(
-                            minScale: 0.6,
-                            imageProvider:
-                                MemoryImage(Uint8List.fromList(imgUrl))));
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-        ],
-      );
-    } else {
-      return Container();
-    }
-  }
-
-  */
-
   goToPrevious() {
     carouselSlider.previousPage(
         duration: Duration(milliseconds: 300), curve: Curves.ease);
@@ -108,17 +59,18 @@ class _ImageSliderState extends State<ImageSlider> {
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 
-  showPhotoView(List imageList) {
+  showPhotoView(List<HealthRecordCollection> imageList) {
     return Container(
         child: PhotoViewGallery.builder(
       scrollPhysics: const BouncingScrollPhysics(),
       builder: (BuildContext context, int index) {
         return PhotoViewGalleryPageOptions(
-            imageProvider: MemoryImage(imageList[index]),
+               imageProvider: NetworkImage(
+                imageList[index].healthRecordUrl),
             initialScale: PhotoViewComputedScale.contained * 1.0,
             minScale: PhotoViewComputedScale.contained * 1.0,
             maxScale: PhotoViewComputedScale.contained * 2.0
-            //heroAttributes: HeroAttributes(tag: galleryItems[index].id),
+
             );
       },
       itemCount: imageList.length,
@@ -133,9 +85,6 @@ class _ImageSliderState extends State<ImageSlider> {
           ),
         ),
       ),
-      /*  backgroundDecoration: widget.backgroundDecoration,
-      pageController: widget.pageController,
-      onPageChanged: onPageChanged, */
     ));
   }
 }

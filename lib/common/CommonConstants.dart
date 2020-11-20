@@ -1,20 +1,22 @@
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/database/model/CountryMetrics.dart';
 import 'package:myfhb/database/model/UnitsMesurement.dart';
 import 'package:myfhb/database/services/database_helper.dart';
 
 class CommonConstants {
-  static String categoryDescriptionPrescription = 'Catcode001';
-  static String categoryDescriptionDevice = 'Catcode002';
-  static String categoryDescriptionLabReport = 'Catcode003';
-  static String categoryDescriptionMedicalReport = 'Catcode004';
-  static String categoryDescriptionBills = 'Catcode005';
-  static String categoryDescriptionIDDocs = 'Catcode006';
-  static String categoryDescriptionOthers = 'Catcode007';
-  static String categoryDescriptionWearable = 'Catcode008';
-  static String categoryDescriptionFeedback = 'Catcode009';
-  static String categoryDescriptionVoiceRecord = 'Catcode010';
-  static String categoryDescriptionClaimsRecord = 'Catcode011';
+  static const String categoryDescriptionPrescription = 'Catcode001';
+  static const String categoryDescriptionDevice = 'Catcode002';
+  static const String categoryDescriptionLabReport = 'Catcode003';
+  static const String categoryDescriptionMedicalReport = 'Catcode004';
+  static const String categoryDescriptionBills = 'Catcode005';
+  static const String categoryDescriptionIDDocs = 'Catcode006';
+  static const String categoryDescriptionOthers = 'Catcode007';
+  static const String categoryDescriptionWearable = 'Catcode008';
+  static const String categoryDescriptionFeedback = 'Catcode009';
+  static const String categoryDescriptionVoiceRecord = 'Catcode010';
+  static const String categoryDescriptionClaimsRecord = 'Catcode011';
+  static const String categoryDescriptionNotes = 'Catcode013';
 
   static final String CAT_JSON_GLUCOMETER = "Catcode002_Typecode001";
   static final String CAT_JSON_BP_METER = "Catcode002_Typecode002";
@@ -38,14 +40,14 @@ class CommonConstants {
   static String serach_specific_list = 'Search Specific List';
 
   /**
-   * KeyWords tp save prefernce values,error dipslay 
+   * KeyWords tp save prefernce values,error dipslay
    */
   static String keyDoctor = 'Doctors';
   static String keyHospital = 'Hospitals';
   static String keyLab = 'Lab';
 
   /**
-   * Following are the constants string used as hint text for the pop 
+   * Following are the constants string used as hint text for the pop
    * box that appears when a card is saved
    */
   //static String strMessage = 'Message';
@@ -81,7 +83,7 @@ class CommonConstants {
 
   static String strGlucometerValue = 'mg/dL';
   static String strValue = 'Value';
-  static String strMemo = 'Memo (50)';
+  static String strMemo = 'Memo (500)';
   static String strTimeTaken = 'Time taken';
   static String strSugarLevel = 'sugarLevel';
   static String strTimeIntake = 'Time of Intake';
@@ -121,6 +123,7 @@ class CommonConstants {
   static String strFileEmpty = 'Please Enter File Name';
   static String strLabEmpty = 'Please Enter Lab Name';
   static String strIDEmpty = 'Please Select ID';
+  static String strMemoEmpty = 'Please Enter Memo';
 
   static String strSugarLevelEmpty = 'Please Enter Sugar Level';
 
@@ -134,18 +137,24 @@ class CommonConstants {
   static String strOxugenSaturationEmpty =
       'Please Enter Oxygen Saturation Value';
 
+  static String strExpDateEmpty = 'Please Enter Expiry Date';
+
   //From senthil
 
+  static String add_family = "Add Family";
   static String mobile_number = "Mobile Number";
   static String primary_number = "Same as primary number";
   static String name = "Name";
   static String relationship = "Relationship";
-  static String email_address_optional = "Emai Address (Optional)";
+  static String email_address_optional = "Emai Address";
   static String gender = "Gender";
   static String blood_group = "Blood Group";
   static String blood_range = "+";
   static String date_of_birth = "Date of Birth";
   static String user_linking = 'user_linking';
+
+  static String height = 'Height(cm)';
+  static String weight = 'Weight(Kg)';
 
   static String add = 'Add';
   static String save = 'Save';
@@ -160,6 +169,8 @@ class CommonConstants {
   static String user_update = 'Profile Update';
 
   static String all_fields = 'Please fill all the fields';
+
+  static String profile_update_fail = 'unable to add Family member';
 
   static String view_insurance = 'View Insurance';
 
@@ -189,6 +200,9 @@ class CommonConstants {
   static String firstNameWithStar = "FirstName*";
   static String middleNameWithStar = "MiddleName*";
   static String lastNameWithStar = "LastName*";
+  static String exprityDate = "Expiry Date*";
+  static String heightName = "Height(Cm)";
+  static String weightName = "Weight(Kg)";
 
   //===========================================//
 
@@ -208,14 +222,29 @@ class CommonConstants {
   static String middleName = "MiddleName";
   static String lastName = "LastName";
 
+  static const String addr_line_1 = "Address line 1*";
+  static const String addr_line_2 = "Address line 2";
+  static const String addr_city = "City*";
+  static const String addr_state = "State*";
+  static const String addr_zip = "Zipcode*";
+
   static String KEY_COUNTRYCODE = 'CountryCode';
   static String KEY_COUNTRYNAME = 'CountryName';
 
   static String KEY_COUNTRYMETRICS = 'CountryMetrics';
 
+  static String STR_RHTYPE = 'Rh type';
+
+  static String SEARCH_HOSPIT_ID = "HOSPTL";
+  static String SEARCH_LAB_ID = "LAB";
+
   static final CommonConstants _instance = new CommonConstants.internal();
   static CountryMetrics countryMetrics;
   static UnitsMesurements unitsMeasurements;
+
+  static const String strQueryString = '?';
+  static const String strGetProfilePic = 'section=profilePicture';
+  static const String strUserQuery = 'user/';
 
   factory CommonConstants() => _instance;
 
@@ -240,13 +269,6 @@ class CommonConstants {
 
     unitsMeasurements = await db.getMeasurementsBasedOnUnits(units);
 
-    print('unitsMeasurements for ' +
-        units +
-        "  max" +
-        unitsMeasurements.maxValue.toString() +
-        ' min' +
-        unitsMeasurements.minValue.toString());
-
     return unitsMeasurements;
   }
 
@@ -258,6 +280,17 @@ class CommonConstants {
   String get poPulseUNIT => countryMetrics.poPulseUnit;
   String get tempUNIT => countryMetrics.tempUnit;
   String get weightUNIT => countryMetrics.weightUnit;
+
+  static const String strId = 'id';
+  static const String strName = 'name';
+  static const String strCode = 'code';
+  static const String strSuccess = 'isSuccess';
+  static const String strResult = 'result';
+  static const String strCodePhone = 'PHNTYP';
+
+  static const String strReferenceValue = 'reference-value';
+  static const String strDataCodes = 'data-codes';
+  static const String strSlash = '/';
 }
 
 class ImageUrlUtils {
@@ -272,5 +305,5 @@ class ImageUrlUtils {
 }
 
 class GoogleApiKey {
-  static String place_key = 'AIzaSyBJVk-_P30Ix8eqfZj0E7nWJdWJDbz3e6I';
+  static String place_key = CommonUtil.GOOGLE_PLACE_API_KEY;
 }

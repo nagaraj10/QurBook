@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/my_family_detail_view/bloc/my_family_detail_view_boc.dart';
 import 'package:myfhb/my_family_detail_view/models/my_family_detail_view_arguments.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view_hospital.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view_insurance.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
+import 'package:myfhb/src/model/Category/catergory_data_list.dart';
+import 'package:myfhb/src/model/Health/CompleteData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
+
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-
+import 'package:myfhb/src/model/Health/CompleteData.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/fhb_query.dart' as query;
 
 class MyFamilyDetailView extends StatefulWidget {
   MyFamilyDetailViewArguments arguments;
@@ -23,7 +34,6 @@ class MyFamilyDetailView extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return MyFamilyDetailViewState();
   }
 }
@@ -33,12 +43,11 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
   TabController tabController;
   int activeTabIndex = 0;
   MyFamilyDetailViewBloc myFamilyDetailViewBloc;
-  List<CategoryData> categoryData;
+  List<CategoryResult> categoryData;
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     tabController = new TabController(length: 2, vsync: this);
@@ -48,15 +57,12 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
     tabController.animateTo(activeTabIndex);
 
     myFamilyDetailViewBloc = new MyFamilyDetailViewBloc();
-    myFamilyDetailViewBloc.getCategoryList().then((value) {
-      categoryData = value.response.data;
-      PreferenceUtil.saveCategoryList(Constants.KEY_CATEGORYLIST, categoryData);
-    });
+    //getCategories();
 
-    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.profileData.id;
+    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.child.id;
 
-    PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID,
-        widget.arguments.sharedbyme.profileData.id);
+    PreferenceUtil.saveString(
+        Constants.KEY_FAMILYMEMBERID, myFamilyDetailViewBloc.userId);
   }
 
   void _setActiveTabIndex() {
@@ -65,7 +71,6 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
       key: scaffold_state,
       appBar: AppBar(
@@ -126,14 +131,14 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                         PreferenceUtil.saveString(
                                 Constants.KEY_CATEGORYID, e.id)
                             .then((value) {
-                          //PageNavigator.goTo(context, '/take_picture_screen');
                           PreferenceUtil.saveString(
                                   Constants.KEY_FAMILYMEMBERID,
-                                  widget.arguments.sharedbyme.profileData.id)
+                                  widget.arguments.sharedbyme.child.id)
                               .then((value) {
-                            Navigator.pushNamed(context, '/take_picture_screen')
+                            Navigator.pushNamed(context, router.rt_TakePicture)
                                 .then((value) {
-                              myFamilyDetailViewBloc.getHelthReportList();
+                              myFamilyDetailViewBloc.getHelthReportLists(
+                                  myFamilyDetailViewBloc.userId);
                             });
                           });
                         });
@@ -142,25 +147,44 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
                   }
                 }
               } else {
-                 new FHBBasicWidget().showInSnackBar(
-                              Constants.STR_NO_CONNECTIVITY, scaffold_state);
+                new FHBBasicWidget().showInSnackBar(
+                    Constants.STR_NO_CONNECTIVITY, scaffold_state);
               }
             });
           }),
-      body: getHealthReportToDisplayInBody(),
+      body: getResponseFromApiWidget(),
+    );
+  }
+
+  Widget getValuesFromSharedPrefernce() {
+    return new FutureBuilder<List<CategoryResult>>(
+      future: getCategories(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return new Center(
+            child: new CircularProgressIndicator(
+              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return new Text('Error: ${snapshot.error}');
+        } else {
+          return getHealthReportToDisplayInBody();
+        }
+      },
     );
   }
 
   Widget getHealthReportToDisplayInBody() {
     myFamilyDetailViewBloc = new MyFamilyDetailViewBloc();
-    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.profileData.id;
+    myFamilyDetailViewBloc.userId = widget.arguments.sharedbyme.child.id;
+    //getCategories();
+    myFamilyDetailViewBloc.getHelthReportLists(myFamilyDetailViewBloc.userId);
 
-    myFamilyDetailViewBloc.getHelthReportList();
-
-    return StreamBuilder<ApiResponse<UserHealthResponseList>>(
-      stream: myFamilyDetailViewBloc.healthReportStream,
-      builder: (context,
-          AsyncSnapshot<ApiResponse<UserHealthResponseList>> snapshot) {
+    return StreamBuilder<ApiResponse<HealthRecordList>>(
+      stream: myFamilyDetailViewBloc.healthReportStreams,
+      builder:
+          (context, AsyncSnapshot<ApiResponse<HealthRecordList>> snapshot) {
         if (snapshot.hasData) {
           switch (snapshot.data.status) {
             case Status.LOADING:
@@ -184,8 +208,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
             case Status.COMPLETED:
               myFamilyDetailViewBloc = null;
 
-              return displayTabBarViewInFamilyDetail(
-                  snapshot.data.data.response.data);
+              return displayTabBarViewInFamilyDetail(snapshot.data.data);
               break;
           }
         } else {
@@ -195,7 +218,7 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
     );
   }
 
-  Widget displayTabBarViewInFamilyDetail(CompleteData completeData) {
+  Widget displayTabBarViewInFamilyDetail(HealthRecordList completeData) {
     return TabBarView(
       controller: tabController,
       children: [
@@ -206,6 +229,66 @@ class MyFamilyDetailViewState extends State<MyFamilyDetailView>
             color: ColorUtils.greycolor,
             child: MyFamilyDetailViewHospital(completeData: completeData)),
       ],
+    );
+  }
+
+  Future<List<CategoryResult>> getCategories() async {
+    var categoryDatalist = await myFamilyDetailViewBloc.getCategoryLists();
+    categoryData = categoryDatalist.result;
+    return categoryData;
+  }
+
+  Widget getResponseFromApiWidget() {
+    myFamilyDetailViewBloc = new MyFamilyDetailViewBloc();
+
+    myFamilyDetailViewBloc.getCategoryLists();
+
+    return StreamBuilder<ApiResponse<CategoryDataList>>(
+      stream: myFamilyDetailViewBloc.categoryListStreams,
+      builder:
+          (context, AsyncSnapshot<ApiResponse<CategoryDataList>> snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return Center(
+                  child: SizedBox(
+                child: CircularProgressIndicator(
+                  backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+                ),
+                width: 30,
+                height: 30,
+              ));
+              break;
+
+            case Status.ERROR:
+              return FHBBasicWidget.getRefreshContainerButton(
+                  snapshot.data.message, () {
+                setState(() {});
+              });
+              break;
+
+            case Status.COMPLETED:
+              if (snapshot.data.data.result != null &&
+                  snapshot.data.data.result.length > 0) {
+                categoryData = snapshot.data.data.result;
+                return getHealthReportToDisplayInBody();
+              } else {
+                return Container(
+                  width: 100,
+                  height: 100,
+                  child: Text(''),
+                );
+              }
+
+              break;
+          }
+        } else {
+          return Container(
+            width: 100,
+            height: 100,
+          );
+        }
+      },
     );
   }
 }

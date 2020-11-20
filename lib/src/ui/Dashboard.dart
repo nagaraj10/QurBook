@@ -1,19 +1,27 @@
-import 'package:avatar_glow/avatar_glow.dart';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
-import 'package:myfhb/common/DatabseUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/device_integration/view/screens/Device_Widget.dart';
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/src/blocs/User/MyProfileBloc.dart';
+import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
-import 'package:myfhb/src/utils/ShapesPainter.dart';
+import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
-import 'dart:io';
+import 'package:myfhb/device_integration/viewModel/Device_model.dart';
+import 'package:provider/provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -28,7 +36,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final GlobalKey _records = GlobalKey();
   final GlobalKey _family = GlobalKey();
   final GlobalKey _coverImage = GlobalKey();
+  UserModel saveuser = UserModel();
   File imageURIProfile;
+  String date;
+  String devicevalue1;
+  String devicevalue2;
 
   bool noInternet = true;
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
@@ -36,6 +48,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   void initState() {
     super.initState();
+
+    /*
     var isFirstTime =
         PreferenceUtil.isKeyValid(Constants.KEY_SHOWCASE_DASHBOARD);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -46,9 +60,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
               : ShowCaseWidget.of(_myContext).startShowCase(
                   [_showMaya, _provider, _records, _family, _coverImage]));
     });
+    */
     dbInitialize();
 
     callImportantsMethod();
+
+    print(
+        'User Id : ${PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN)}');
+    print(
+        'Auth Token : ${PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)}');
 
     String profilebanner =
         PreferenceUtil.getStringValue(Constants.KEY_DASHBOARD_BANNER);
@@ -61,297 +81,258 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return ShowCaseWidget(
       onFinish: () {
-        PreferenceUtil.saveString(Constants.KEY_SHOWCASE_DASHBOARD, 'true');
+        PreferenceUtil.saveString(
+            Constants.KEY_SHOWCASE_DASHBOARD, variable.strtrue);
       },
       builder: Builder(
         builder: (context) {
           _myContext = context;
           return Scaffold(
               key: scaffold_state,
-              body: Stack(
-                children: <Widget>[
-                  Container(
-                      decoration: imageURIProfile != null
-                          ? BoxDecoration(
-                              image: DecorationImage(
-                                  image: new FileImage(imageURIProfile),
-                                  fit: BoxFit.cover))
-                          : BoxDecoration(color: Colors.white),
-                      child: Stack(
-                        children: <Widget>[
-                          Container(
-                            color: Colors.black.withOpacity(0.1),
+              bottomNavigationBar: BottomNavigationBar(
+                  type: BottomNavigationBarType.fixed,
+                  selectedFontSize: 10,
+                  unselectedFontSize: 10,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              navigateToTelehealthScreen(0);
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_th),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strTelehealth,
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              moveToFamilyOrprovider(2);
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_provider),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strMyProvider,
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                          onTap: () {
+                            moveToNextScreen(2);
+                          },
+                          child: Image.asset(
+                            PreferenceUtil.getStringValue(
+                                        Constants.keyMayaAsset) !=
+                                    null
+                                ? PreferenceUtil.getStringValue(
+                                        Constants.keyMayaAsset) +
+                                    variable.strExtImg
+                                : variable.icon_mayaMain,
+                            height: 25,
+                            width: 25,
                           ),
-                          CustomPaint(
-                              painter: ShapesPainter(),
-                              child: Container(
-                                  child: Stack(
-                                children: <Widget>[
-                                  Positioned(
-                                      bottom: -20,
-                                      left: (MediaQuery.of(context).size.width /
-                                              2) -
-                                          60,
-                                      child: InkWell(
-                                        child: AvatarGlow(
-                                          startDelay:
-                                              Duration(milliseconds: 1000),
-                                          glowColor: Color(new CommonUtil()
-                                              .getMyPrimaryColor()),
-                                          endRadius: 60.0,
-                                          duration:
-                                              Duration(milliseconds: 2000),
-                                          repeat: true,
-                                          showTwoGlows: true,
-                                          repeatPauseDuration:
-                                              Duration(milliseconds: 100),
-                                          child: Material(
-                                            color: Colors.transparent,
-                                            shadowColor: Colors.transparent,
-                                            shape: CircleBorder(),
-                                            child:
-                                                FHBBasicWidget.customShowCase(
-                                                    _showMaya,
-                                                    Constants.MAYA_DESC,
-                                                    CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.transparent,
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.all(5),
-                                                        child: Image.asset(
-                                                          PreferenceUtil.getStringValue(
-                                                                      'maya_asset') !=
-                                                                  null
-                                                              ? PreferenceUtil
-                                                                      .getStringValue(
-                                                                          'maya_asset') +
-                                                                  '.png'
-                                                              : 'assets/maya/maya_us_main.png',
-                                                          height: 60,
-                                                          width: 60,
-                                                        ),
-                                                      ),
-                                                      radius: 30.0,
-                                                    ),
-                                                    Constants.MAYA_TITLE),
-                                          ),
-                                          shape: BoxShape.circle,
-                                          animate: true,
-                                          curve: Curves.fastOutSlowIn,
-                                        ),
-                                        onTap: () {
-                                          moveToNextScreen(2);
-                                        },
-                                      )),
-                                  Positioned(
-                                      bottom: 50,
-                                      left: 20,
-                                      child: InkWell(
+                        ),
+                        title: Text(
+                          'Sheela',
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatHomeScreen()),
+                              );
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_chat),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strChat,
+                          style: TextStyle(color: Colors.black54),
+                        )),
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              moveToNextScreen(1);
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_records),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strMyRecords,
+                          style: TextStyle(color: Colors.black54),
+                        ))
+                  ]),
+              body: SingleChildScrollView(
+                //height: MediaQuery.of(context).size.height - 200,
+                child: ChangeNotifierProvider(
+                  create: (context) => DevicesViewModel(),
+                  child: ShowDevicesNew(),
+                ),
+              )
+
+              /*
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  decoration: imageURIProfile != null
+                      ? BoxDecoration(
+                          image: DecorationImage(
+                              image: new FileImage(imageURIProfile),
+                              fit: BoxFit.cover))
+                      : BoxDecoration(color: Colors.white),
+                  child: Column(
+                    //mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 40, horizontal: 10),
+                          alignment: Alignment.topRight,
+                          child: (imageURIProfile != null)
+                              ? Container(
+                                  height: 50,
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30),
+                                      gradient: LinearGradient(colors: [
+                                        Color(CommonUtil().getMyPrimaryColor()),
+                                        Color(CommonUtil().getMyGredientColor())
+                                      ])),
+                                  child: IconButton(
+                                      icon: Icon(
+                                        Icons.add_a_photo,
+                                        color: Colors.white,
+                                      ),
+                                      onPressed: () {
+                                        saveMediaDialog(context, false);
+                                      }))
+                              : SizedBox.shrink()),
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: Center(
+                          child: Container(
+                            child: Stack(
+                              children: <Widget>[
+                                Container(
+                                  color: Colors.black.withOpacity(0.1),
+                                ),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                    top: 20,
+                                  ),
+                                  alignment: Alignment.topRight,
+                                  child: imageURIProfile != null
+                                      ? SizedBox.shrink()
+                                      : Center(
                                           child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: <Widget>[
                                               FHBBasicWidget.customShowCase(
-                                                  _provider,
-                                                  Constants.PROVIDERS_DESC,
-                                                  Padding(
-                                                    padding:
-                                                        EdgeInsets.all(10.0),
-                                                    child: Image.asset(
-                                                      'assets/navicons/my_providers.png',
-                                                      width: 30,
-                                                      height: 30,
-                                                      color: Colors.white,
-                                                    ),
-                                                  ),
-                                                  Constants.PROVIDERS_TITLE),
-                                              SizedBox(
-                                                height: 5,
-                                              ),
-                                              Text(
-                                                'My Providers',
-                                                style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 11),
+                                                  _coverImage,
+                                                  Constants.COVER_IMG_DESC,
+                                                  Container(
+                                                      height: 60,
+                                                      width: 60,
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(30),
+                                                          gradient:
+                                                              LinearGradient(
+                                                                  colors: [
+                                                                Color(CommonUtil()
+                                                                    .getMyPrimaryColor()),
+                                                                Color(CommonUtil()
+                                                                    .getMyGredientColor())
+                                                              ])),
+                                                      child: IconButton(
+                                                          icon: Icon(
+                                                            Icons.add_a_photo,
+                                                            color: Colors.white,
+                                                          ),
+                                                          onPressed: () {
+                                                            saveMediaDialog(
+                                                                context, false);
+                                                          })),
+                                                  Constants.COVER_IMG_TITLE),
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    top: 10,
+                                                    left: 40,
+                                                    right: 40),
+                                                child: Text(
+                                                  Constants.NO_DATA_DASHBOARD,
+                                                  textAlign: TextAlign.center,
+                                                  maxLines: 2,
+                                                  style: TextStyle(
+                                                      color: Color(CommonUtil()
+                                                          .getMyPrimaryColor()),
+                                                      fontSize: 13,
+                                                      fontFamily: variable
+                                                          .font_poppins),
+                                                ),
                                               )
                                             ],
                                           ),
-                                          onTap: () {
-                                            //moveToNextScreen(3);
-
-                                            moveToFamilyOrprovider(2);
-                                          })),
-                                  Positioned(
-                                      bottom: 130,
-                                      left: (MediaQuery.of(context).size.width /
-                                              2) -
-                                          35,
-                                      child: InkWell(
-                                        splashColor: Colors.red,
-                                        child: Column(
-                                          children: <Widget>[
-                                            FHBBasicWidget.customShowCase(
-                                                _records,
-                                                Constants.RECORDS_DESC,
-                                                Padding(
-                                                  padding: EdgeInsets.all(10.0),
-                                                  child: Image.asset(
-                                                    'assets/navicons/records.png',
-                                                    color: Colors.white,
-                                                    height: 25,
-                                                    width: 25,
-                                                  ),
-                                                ),
-                                                Constants.RECORDS_TITLE),
-                                            SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              'My Records',
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 11),
-                                            )
-                                          ],
                                         ),
-                                        onTap: () {
-                                          moveToNextScreen(1);
-                                        },
-                                      )),
-                                  Positioned(
-                                    bottom: 50,
-                                    right: 20,
-                                    child: InkWell(
-                                      child: Column(
-                                        children: <Widget>[
-                                          FHBBasicWidget.customShowCase(
-                                              _family,
-                                              Constants.FAMILY_DESC,
-                                              Padding(
-                                                padding: EdgeInsets.all(10.0),
-                                                child: Image.asset(
-                                                  'assets/navicons/my_family.png',
-                                                  height: 30,
-                                                  width: 30,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                              Constants.FAMILY_TITLE),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            'My Family',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 11),
-                                          )
-                                        ],
-                                      ),
-                                      onTap: () {
-                                        moveToFamilyOrprovider(1);
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ))),
-                          Container(
-                            margin: EdgeInsets.only(
-                              top: 20,
+                                ),
+                              ],
                             ),
-                            alignment: Alignment.topRight,
-                            child: imageURIProfile != null
-                                ? IconButton(
-                                    icon: Icon(
-                                      Icons.more_vert,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                    onPressed: () {
-                                      saveMediaDialog(context, false);
-                                    },
-                                  )
-                                : Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        FHBBasicWidget.customShowCase(
-                                            _coverImage,
-                                            Constants.COVER_IMG_DESC,
-                                            Container(
-                                                height: 60,
-                                                width: 60,
-                                                decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            30),
-                                                    gradient:
-                                                        LinearGradient(colors: [
-                                                      Color(CommonUtil()
-                                                          .getMyPrimaryColor()),
-                                                      Color(CommonUtil()
-                                                          .getMyGredientColor())
-                                                    ])),
-                                                child: IconButton(
-                                                    icon: Icon(
-                                                      Icons.add_a_photo,
-                                                      color: Colors.white,
-                                                    ),
-                                                    onPressed: () {
-                                                      saveMediaDialog(
-                                                          context, false);
-                                                    })),
-                                            Constants.COVER_IMG_TITLE),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 10, left: 40, right: 40),
-                                          child: Text(
-                                            Constants.NO_DATA_DASHBOARD,
-                                            textAlign: TextAlign.center,
-                                            maxLines: 2,
-                                            style: TextStyle(
-                                                color: Color(CommonUtil()
-                                                    .getMyPrimaryColor()),
-                                                fontSize: 13,
-                                                fontFamily: 'Poppins'),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                          )
-                        ],
-                      )),
-                ],
-              ));
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height - 200,
+                  child: ChangeNotifierProvider(
+                    create: (context) => DevicesViewModel(),
+                    child: ShowDevicesNew(),
+                  ),
+                ),
+              ],
+            ),
+
+            */
+              );
         },
       ),
     );
   }
 
   saveMediaDialog(BuildContext cont, bool isProfileImage) {
-    print('Inside saveMedia');
     return showDialog<void>(
       context: cont,
       builder: (BuildContext context) {
         return StatefulBuilder(builder: (context, setState) {
           return AlertDialog(
-              title: Text('Make a Choice!'),
+              title: Text(Constants.makeAChoice),
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(1)),
               content: SingleChildScrollView(
                 child: ListBody(
                   children: <Widget>[
                     GestureDetector(
-                      child: Text('Gallery'),
+                      child: Text(Constants.GALLERY_TITLE),
                       onTap: () {
                         Navigator.pop(context);
 
                         var image =
                             ImagePicker.pickImage(source: ImageSource.gallery);
                         image.then((value) {
-                          print('file Path' + value.path);
-
                           imageURIProfile = value;
                           PreferenceUtil.saveString(
                               Constants.KEY_DASHBOARD_BANNER, value.path);
@@ -364,7 +345,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       padding: EdgeInsets.all(8.0),
                     ),
                     GestureDetector(
-                      child: Text('Camera'),
+                      child: Text(Constants.CAMERA_TITLE),
                       onTap: () {
                         Navigator.pop(context);
 
@@ -390,9 +371,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void moveToFamilyOrprovider(int position) {
     Navigator.pushNamed(
       context,
-      '/user_accounts',
+      router.rt_UserAccounts,
       arguments: UserAccountsArguments(selectedIndex: position),
     );
+
+    /* Navigator.of(context).push(
+      MaterialPageRoute(
+        settings: RouteSettings(name: router.rt_UserAccounts),
+        builder: (context) => UserAccounts(
+            arguments: UserAccountsArguments(selectedIndex: position)),
+      ),
+    );*/
   }
 
   moveToNextScreen(int position) {
@@ -412,7 +401,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void navigateToHomeScreen(int position) {
     Navigator.pushNamed(
       context,
-      '/home_screen',
+      router.rt_HomeScreen,
+      arguments: HomeScreenArguments(selectedIndex: position),
+    ).then((value) {
+      setState(() {});
+    });
+  }
+
+  void navigateToTelehealthScreen(int position) async {
+    // await for camera and mic permissions before pushing video page
+    Navigator.pushNamed(
+      context,
+      router.rt_TelehealthProvider,
       arguments: HomeScreenArguments(selectedIndex: position),
     ).then((value) {});
   }
@@ -466,20 +466,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void dbInitialize() {
-    DatabaseUtil.getCountryMetrics(
-        PreferenceUtil.getIntValue(CommonConstants.KEY_COUNTRYCODE));
-
     var commonConstants = new CommonConstants();
     commonConstants.getCountryMetrics();
   }
 
   void callImportantsMethod() async {
-    
     getFamilyRelationAndMediaType();
     getProfileData();
+    syncDevices();
 
     await new CommonUtil().getMedicalPreference();
-
   }
 
   void getFamilyRelationAndMediaType() async {
@@ -489,5 +485,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void getProfileData() async {
     await new CommonUtil().getUserProfileData();
+  }
+
+  void syncDevices() async {
+    await new CommonUtil().syncDevices();
+  }
+
+  Future<void> _handleCameraAndMic() async {
+    await Permission.microphone.request();
+    await Permission.camera.request();
   }
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:myfhb/global_search/model/GlobalSearch.dart';
 import 'package:myfhb/global_search/services/GlobalSearchRepository.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class GlobalSearchBloc implements BaseBloc {
   GlobalSearchrepository _globalSearchrepository;
@@ -26,14 +27,13 @@ class GlobalSearchBloc implements BaseBloc {
   }
 
   searchBasedOnMediaType(String param) async {
-    globalSearchSink.add(ApiResponse.loading('Searching'));
+    globalSearchSink.add(ApiResponse.loading(variable.strSearching));
     try {
       GlobalSearch globalSearch =
           await _globalSearchrepository.getSearchedMediaType(param);
       globalSearchSink.add(ApiResponse.completed(globalSearch));
     } catch (e) {
       globalSearchSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
   }
 }

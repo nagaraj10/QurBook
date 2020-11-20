@@ -2,13 +2,20 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:myfhb/add_family_user_info/models/update_add_family_info.dart';
+import 'package:myfhb/add_family_user_info/models/update_relatiosnship_model.dart';
+import 'package:myfhb/add_family_user_info/models/update_self_profile_model.dart';
 import 'package:myfhb/add_family_user_info/models/updated_add_family_relation_info.dart';
 import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/my_family/models/relationship_response_list.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/City.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/State.dart';
+import 'package:myfhb/src/model/user/city_list_model.dart';
+import 'package:myfhb/src/model/user/state_list_model.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/add_family_user_info/models/verify_email_response.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class AddFamilyUserInfoBloc extends BaseBloc {
   AddFamilyUserInfoRepository addFamilyUserInfoRepository;
@@ -25,10 +32,10 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   // 2
   StreamController _myProfileController;
 
-  StreamSink<ApiResponse<MyProfile>> get myProfileSink =>
+  StreamSink<ApiResponse<MyProfileModel>> get myProfileSink =>
       _myProfileController.sink;
 
-  Stream<ApiResponse<MyProfile>> get myProfileStream =>
+  Stream<ApiResponse<MyProfileModel>> get myProfileStream =>
       _myProfileController.stream;
 
   // 3
@@ -65,10 +72,19 @@ class AddFamilyUserInfoBloc extends BaseBloc {
       gender,
       bloodGroup,
       dateOfBirth,
-      relationship,
       firstName,
       middleName,
-      lastName;
+      lastName,
+      addressLine1,
+      addressLine2,
+      cityId,
+      stateId,
+      zipcode;
+      
+      bool isUpdate;
+      UpdateRelationshipModel relationship;
+
+  MyProfileModel myProfileModel;
 
   String relationshipJsonString;
 
@@ -91,7 +107,7 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     _relationshipListController =
         StreamController<ApiResponse<RelationShipResponseList>>();
 
-    _myProfileController = StreamController<ApiResponse<MyProfile>>();
+    _myProfileController = StreamController<ApiResponse<MyProfileModel>>();
 
     _userProfileController =
         StreamController<ApiResponse<UpdateAddFamilyInfo>>();
@@ -103,25 +119,24 @@ class AddFamilyUserInfoBloc extends BaseBloc {
   }
 
   Future<RelationShipResponseList> getCustomRoles() async {
-    relationShipListSink.add(ApiResponse.loading('Fetching Custom Roles'));
+    relationShipListSink.add(ApiResponse.loading(variable.strFetchRoles));
     RelationShipResponseList relationShipResponseList;
     try {
       relationShipResponseList =
           await addFamilyUserInfoRepository.getCustomRoles();
     } catch (e) {
       relationShipListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return relationShipResponseList;
   }
 
-  Future<MyProfile> getMyProfileInfo() async {
-    myProfileSink.add(ApiResponse.loading('Fetching Custom Roles'));
-    MyProfile myProfile;
+  Future<MyProfileModel> getMyProfileInfo() async {
+    myProfileSink.add(ApiResponse.loading(variable.strFetchRoles));
+    MyProfileModel myProfile;
 
     try {
-      myProfile = await addFamilyUserInfoRepository.getMyProfileInfo(userId);
+      myProfile = await addFamilyUserInfoRepository.getMyProfileInfoNew(userId);
     } catch (e) {
       myProfileSink.add(ApiResponse.error(e.toString()));
     }
@@ -129,8 +144,8 @@ class AddFamilyUserInfoBloc extends BaseBloc {
     return myProfile;
   }
 
-  Future<UpdateAddFamilyInfo> updateUserProfile() async {
-    userProfileSink.add(ApiResponse.loading('Signing in user'));
+  Future<UpdateAddFamilyInfo> updateUserProfile(bool fromFamily) async {
+    userProfileSink.add(ApiResponse.loading(variable.strUpdatingProfile));
     UpdateAddFamilyInfo updateAddFamilyInfo;
 
     try {
@@ -146,18 +161,24 @@ class AddFamilyUserInfoBloc extends BaseBloc {
               profilePic,
               firstName,
               middleName,
-              lastName);
+              lastName,
+              cityId,
+              stateId,
+              addressLine1,
+              addressLine2,
+              zipcode,
+              fromFamily);
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return updateAddFamilyInfo;
   }
 
   Future<UpdateAddFamilyRelationInfo> updateUserRelationShip() async {
-    updateRelationshipSink.add(ApiResponse.loading('Signing in user'));
+    updateRelationshipSink
+        .add(ApiResponse.loading(variable.strUpdateUserRelation));
     UpdateAddFamilyRelationInfo updateAddFamilyRelationInfo;
 
     try {
@@ -166,41 +187,47 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       updateRelationshipSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return updateAddFamilyRelationInfo;
   }
 
-  Future<UpdateAddFamilyInfo> updateSelfProfile() async {
-    userProfileSink.add(ApiResponse.loading('Signing in user'));
-    UpdateAddFamilyInfo updateAddFamilyInfo;
+  Future<UpdateSelfProfileModel> updateSelfProfile(bool fromFamily) async {
+    userProfileSink.add(ApiResponse.loading(variable.strUpdatedSelfProfile));
+    UpdateSelfProfileModel updateAddFamilyInfo;
 
     try {
-      updateAddFamilyInfo =
-          await addFamilyUserInfoRepository.updateSelfProfileInfo(
-              userId,
-              name,
-              phoneNo,
-              email,
-              gender,
-              bloodGroup,
-              dateOfBirth,
-              profilePic,
-              firstName,
-              middleName,
-              lastName);
-//      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
+      updateAddFamilyInfo = await addFamilyUserInfoRepository.updateUserInfoNew(
+          userId,
+          name,
+          phoneNo,
+          email,
+          gender,
+          bloodGroup,
+          dateOfBirth,
+          profilePic,
+          firstName,
+          middleName,
+          lastName,
+          cityId,
+          stateId,
+          isUpdate,
+          addressLine1,
+          addressLine2,
+          zipcode,
+          fromFamily,
+          myProfileModel,
+          relationship);
+      //userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       userProfileSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return updateAddFamilyInfo;
   }
 
   Future<VerifyEmailResponse> verifyEmail() async {
-    verifyEmailSink.add(ApiResponse.loading('verify email'));
+    verifyEmailSink.add(ApiResponse.loading(variable.strVerifyingMail));
     VerifyEmailResponse verifyEmailResponse;
 
     try {
@@ -208,9 +235,25 @@ class AddFamilyUserInfoBloc extends BaseBloc {
 //      userProfileSink.add(ApiResponse.completed(updateAddFamilyInfo));
     } catch (e) {
       verifyEmailSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
 
     return verifyEmailResponse;
+  }
+
+  Future<List<City>> getCityDataList(
+      String cityname, String apibody) async {
+    CityModel cityListModel;
+
+    cityListModel = await addFamilyUserInfoRepository.getValuesBaseOnSearch(
+        cityname, apibody);
+    return cityListModel.result;
+  }
+
+  Future<List<State>> geStateDataList(String cityname, String apibody) async {
+    StateModel stateModel;
+
+    stateModel = await addFamilyUserInfoRepository.getStateValuesBaseOnSearch(
+        cityname, apibody);
+    return stateModel.result;
   }
 }

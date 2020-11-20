@@ -1,3 +1,5 @@
+import 'dart:convert' as convert;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -9,11 +11,12 @@ import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
-import 'package:myfhb/src/blocs/Authentication/OTPVerifyBloc.dart';
 import 'package:myfhb/src/utils/alert.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
-import 'dart:convert' as convert;
 
 class AddFamilyOTPScreen extends StatefulWidget {
   AddFamilyOTPArguments arguments;
@@ -31,6 +34,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
   TextEditingController controller2 = new TextEditingController();
   TextEditingController controller3 = new TextEditingController();
   TextEditingController controller4 = new TextEditingController();
+  TextEditingController controller5 = new TextEditingController();
+  TextEditingController controller6 = new TextEditingController();
   TextEditingController currController = new TextEditingController();
 
   AddFamilyOTPBloc _addFamilyOTPBloc;
@@ -44,6 +49,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     controller2.dispose();
     controller3.dispose();
     controller4.dispose();
+    controller5.dispose();
+    controller6.dispose();
   }
 
   @override
@@ -67,22 +74,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
       Padding(
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
-            //width: 10,
             alignment: Alignment.center,
-            /*   decoration: new BoxDecoration(
-              //color: Color.fromRGBO(0, 0, 0, 0.1),
-              border: new Border(
-                  top: BorderSide.none,
-                  left: BorderSide.none,
-                  right: BorderSide.none,
-                  bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                  //width: 1.0,
-                  //color: Colors.deepPurple.withOpacity(0.5)
-                  ),
-              //borderRadius: new BorderRadius.circular(4.0)
-            ), */
             child: new TextField(
-              //obscureText: true,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(1),
               ],
@@ -97,20 +90,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
           alignment: Alignment.center,
-          /*  decoration: new BoxDecoration(
-            //color: Color.fromRGBO(0, 0, 0, 0.1),
-            border: new Border(
-                top: BorderSide.none,
-                left: BorderSide.none,
-                right: BorderSide.none,
-                bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                //width: 1.0,
-                //color: Colors.deepPurple.withOpacity(0.5)
-                ),
-            //borderRadius: new BorderRadius.circular(4.0)
-          ), */
           child: new TextField(
-            //obscureText: true,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -127,20 +107,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
           alignment: Alignment.center,
-          /* decoration: new BoxDecoration(
-            //color: Color.fromRGBO(0, 0, 0, 0.1),
-            border: new Border(
-                top: BorderSide.none,
-                left: BorderSide.none,
-                right: BorderSide.none,
-                bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                //width: 1.0,
-                //color: Colors.deepPurple.withOpacity(0.5)
-                ),
-            //borderRadius: new BorderRadius.circular(4.0)
-          ), */
           child: new TextField(
-            //obscureText: true,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -157,20 +124,7 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         padding: const EdgeInsets.only(right: 2.0, left: 2.0),
         child: new Container(
           alignment: Alignment.center,
-          /*  decoration: new BoxDecoration(
-            //color: Color.fromRGBO(0, 0, 0, 0.1),
-            border: new Border(
-                top: BorderSide.none,
-                left: BorderSide.none,
-                right: BorderSide.none,
-                bottom: BorderSide(color: Colors.deepPurple, width: 1.0)
-                //width: 1.0,
-                //color: Colors.deepPurple.withOpacity(0.5)
-                ),
-            //borderRadius: new BorderRadius.circular(4.0)
-          ), */
           child: new TextField(
-            //obscureText: true,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -191,23 +145,19 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     ];
 
     return Scaffold(
-        //resizeToAvoidBottomInset: false,
         appBar: AppBar(
           flexibleSpace: GradientAppBar(),
-          title: Text('Otp Verification', style: TextStyle(fontSize: 18)),
+          title:
+              Text(variable.strOTPVerification, style: TextStyle(fontSize: 18)),
         ),
         key: scaffold_state,
         body: Column(
-          //mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(top: 40),
               child: Text(
-                toBeginningOfSentenceCase(widget.arguments.enteredFirstName +
-                    " " +
-                    widget.arguments.enteredMiddleName +
-                    " " +
-                    widget.arguments.enteredLastName),
+                toBeginningOfSentenceCase(
+                    '${widget.arguments.enteredFirstName} ${widget.arguments.enteredMiddleName} ${widget.arguments.enteredLastName}'),
                 style: TextStyle(
                     color: Color(new CommonUtil().getMyPrimaryColor()),
                     fontWeight: FontWeight.w500),
@@ -216,298 +166,225 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
             Padding(
               padding: EdgeInsets.only(top: 10),
               child: Text(
-                'Please enter the received OTP',
+                variable.strEnterOtp,
                 style: TextStyle(
                     color: Colors.black38, fontWeight: FontWeight.w400),
               ),
             ),
             Expanded(
               child: Image.asset(
-                'assets/icons/otp_icon.png',
+                variable.strOtpIcon,
                 width: 70,
                 height: 70,
               ),
             ),
             Expanded(
-                flex: 2,
-                child: ListView(
-                    //mainAxisAlignment: MainAxisAlignment.center,
-                    //crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      GridView.count(
-                          crossAxisCount: 6,
-                          crossAxisSpacing: 10,
-                          shrinkWrap: true,
-                          primary: false,
-                          scrollDirection: Axis.vertical,
-                          children: List<Container>.generate(
-                              6,
-                              (int index) => Container(
-                                    constraints: BoxConstraints(maxWidth: 20),
-                                    child: widgetList[index],
-                                  ))),
-                      SizedBox(height: 20),
-                      Text(
-                        'Didn\'t receive the OTP?',
-                        style: TextStyle(
-                          fontSize: 11,
-                          color: Colors.grey,
-                        ),
-                        textAlign: TextAlign.center,
+              flex: 2,
+              child: ListView(
+                children: <Widget>[
+                  GridView.count(
+                    crossAxisCount: 6,
+                    crossAxisSpacing: 10,
+                    shrinkWrap: true,
+                    primary: false,
+                    scrollDirection: Axis.vertical,
+                    children: List<Container>.generate(
+                      6,
+                      (int index) => Container(
+                        constraints: BoxConstraints(maxWidth: 20),
+                        child: widgetList[index],
                       ),
-                      FlatButton(
-                          onPressed: () {
-                            generateOtp(widget.arguments.selectedCountryCode,
-                                widget.arguments.enteredMobNumber);
-                          },
-                          child: Text(
-                            'Resend Code',
-                            style: TextStyle(
-                                //color: Colors.deepPurple[300],
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                fontWeight: FontWeight.w600),
-                          )),
-                      SizedBox(height: 20)
-                    ])),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    variable.strdidtReceive,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.grey,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  FlatButton(
+                    onPressed: () {
+                      generateOtp(widget.arguments.selectedCountryCode,
+                          widget.arguments.enteredMobNumber);
+                    },
+                    child: Text(
+                      variable.strResendCode,
+                      style: TextStyle(
+                          //color: Colors.deepPurple[300],
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                ],
+              ),
+            ),
             Expanded(
-                flex: 3,
-                child: SingleChildScrollView(
-                  //width: MediaQuery.of(context).size.width,
-                  //color: Colors.grey.withOpacity(0.1),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      new Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, top: 8.0, right: 8.0, bottom: 0.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField("1");
-                                },
-                                child: Text("1",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField("2");
-                                },
-                                child: Text("2",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField("3");
-                                },
-                                child: Text("3",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.black),
-                                    textAlign: TextAlign.center),
-                              ),
-                            ],
-                          ),
+              flex: 3,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    new Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, top: 8.0, right: 8.0, bottom: 0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numOne);
+                              },
+                              child: getNumberWidet(variable.numOne),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numTwo);
+                              },
+                              child: getNumberWidet(variable.numTwo),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numThree);
+                              },
+                              child: getNumberWidet(variable.numThree),
+                            ),
+                          ],
                         ),
                       ),
-                      new Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField("4");
-                                },
-                                child: Text("4",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField("5");
-                                },
-                                child: Text("5",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField("6");
-                                },
-                                child: Text("6",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
-                              ),
-                            ],
-                          ),
+                    ),
+                    new Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numFour);
+                              },
+                              child: getNumberWidet(variable.numFour),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numFive);
+                              },
+                              child: getNumberWidet(variable.numFive),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numSix);
+                              },
+                              child: getNumberWidet(variable.numSix),
+                            ),
+                          ],
                         ),
                       ),
-                      new Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField("7");
-                                },
-                                child: Text("7",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField("8");
-                                },
-                                child: Text("8",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
-                              ),
-                              MaterialButton(
-                                onPressed: () {
-                                  inputTextToField("9");
-                                },
-                                child: Text("9",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
-                              ),
-                            ],
-                          ),
+                    ),
+                    new Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numSeven);
+                              },
+                              child: getNumberWidet(variable.numSeven),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numEight);
+                              },
+                              child: getNumberWidet(variable.numEight),
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numNine);
+                              },
+                              child: getNumberWidet(variable.numNine),
+                            ),
+                          ],
                         ),
                       ),
-                      new Container(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              MaterialButton(
-                                  onPressed: () {
-                                    deleteText();
-                                  },
-                                  child: Icon(
-                                    Icons.backspace,
-                                    color: Color(
-                                        new CommonUtil().getMyPrimaryColor()),
-                                  )),
-                              MaterialButton(
+                    ),
+                    new Container(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            MaterialButton(
                                 onPressed: () {
-                                  inputTextToField("0");
-                                },
-                                child: Text("0",
-                                    style: TextStyle(
-                                        fontSize: 22.0,
-                                        fontWeight: FontWeight.w400),
-                                    textAlign: TextAlign.center),
-                              ),
-                              //submitButton(_otpVerifyBloc)
-                              MaterialButton(
-                                onPressed: () {
-                                  if (controller1.text.length > 0 &&
-                                      controller2.text.length > 0 &&
-                                      controller3.text.length > 0 &&
-                                      controller4.text.length > 0) {
-                                    String otp = controller1.text +
-                                        controller2.text +
-                                        controller3.text +
-                                        controller4.text;
-                                    _addFamilyOTPBloc.fromClass =
-                                        CommonConstants.add_family_otp;
-                                    _addFamilyOTPBloc
-                                        .verifyAddFamilyOtp(
-                                            widget.arguments.enteredMobNumber,
-                                            widget
-                                                .arguments.selectedCountryCode,
-                                            otp)
-                                        .then((otpResponse) {
-                                      checkOTPResponse(otpResponse);
-                                    });
-                                  } else {
-                                    Alert.displayAlertPlain(context,
-                                        title: "Error",
-                                        content: CommonConstants.all_fields);
-                                  }
-                                  //matchOtp();
+                                  deleteText();
                                 },
                                 child: Icon(
-                                  Icons.done,
+                                  Icons.backspace,
                                   color: Color(
                                       new CommonUtil().getMyPrimaryColor()),
-                                ),
+                                )),
+                            MaterialButton(
+                              onPressed: () {
+                                inputTextToField(variable.numZero);
+                              },
+                              child: getNumberWidet(variable.numZero),
+                            ),
+                            //submitButton(_otpVerifyBloc)
+                            MaterialButton(
+                              onPressed: () {
+                                if (controller1.text.length > 0 &&
+                                    controller2.text.length > 0 &&
+                                    controller3.text.length > 0 &&
+                                    controller4.text.length > 0) {
+                                  String otp =
+                                      '${controller1.text}${controller2.text}${controller3.text}${controller4.text}';
+                                  _addFamilyOTPBloc.fromClass =
+                                      CommonConstants.add_family_otp;
+                                  _addFamilyOTPBloc
+                                      .verifyAddFamilyOtp(
+                                          widget.arguments.enteredMobNumber,
+                                          widget.arguments.selectedCountryCode,
+                                          otp)
+                                      .then((otpResponse) {
+                                    checkOTPResponse(otpResponse);
+                                  });
+                                } else {
+                                  Alert.displayAlertPlain(context,
+                                      title: variable.strError,
+                                      content: CommonConstants.all_fields);
+                                }
+                                //matchOtp();
+                              },
+                              child: Icon(
+                                Icons.done,
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                )
-
-                //flex: 40,
+                    ),
+                  ],
                 ),
+              ),
+            ),
           ],
         ));
   }
-
-  //  Widget submitButton(OTPVerifyBloc _otpVerifyBloc) {
-  //    return StreamBuilder(
-  //      stream: _otpVerifyBloc.submitCheck,
-  //      builder: (context, snapshot) {
-  //        return Container(
-  //          padding: EdgeInsets.all(20),
-  //          constraints: BoxConstraints(minWidth: 220, maxWidth: double.infinity),
-  //          child: MaterialButton(
-  //              child: Icon(Icons.done, color: Colors.deepPurple),
-  //              onPressed: //snapshot.hasData ? bloc.submit : null,
-  //                  () {
-  //                String otp = controller1.text +
-  //                    controller2.text +
-  //                    controller3.text +
-  //                    controller4.text;
-  //                _otpVerifyBloc
-  //                    .verifyOtp(widget.arguments.enteredMobNumber,
-  //                        widget.arguments.selectedCountryCode, otp)
-  //                    .then((otpResponse) {
-  //                  checkOTPResponse(otpResponse);
-  //                });
-  //              }),
-  //        );
-  //      },
-  //    );
-  //  }
 
   void inputTextToField(String str) {
     //Edit first textField
@@ -533,6 +410,18 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
       controller4.text = str;
       currController = controller4;
     }
+
+    //Edit fifth textField
+    else if (currController == controller5) {
+      controller5.text = str;
+      currController = controller5;
+    }
+
+    //Edit sixth textField
+    else if (currController == controller6) {
+      controller6.text = str;
+      currController = controller6;
+    }
   }
 
   void deleteText() {
@@ -554,6 +443,12 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     } else if (currController == controller4) {
       controller3.text = "";
       currController = controller3;
+    } else if (currController == controller5) {
+      controller4.text = "";
+      currController = controller4;
+    } else if (currController == controller6) {
+      controller5.text = "";
+      currController = controller5;
     }
   }
 
@@ -562,8 +457,8 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Successfully"),
-            content: Text("Otp matched successfully."),
+            title: Text(variable.strSuccessfully),
+            content: Text(variable.strOTPMatched),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.check),
@@ -575,32 +470,30 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         });
   }
 
-  void verifyOTP() {}
-
   void checkOTPResponse(AddFamilyOTPResponse addFamilyOTPResponse) {
-    if (addFamilyOTPResponse.success && addFamilyOTPResponse.status == 200) {
+    if (addFamilyOTPResponse.isSuccess) {
       Alert.displayConfirmation(
         context,
-        title: "Success",
-        content: "Your family member has been added successfully",
+        title: variable.strSucess,
+        content: variable.strFamilySucess,
         onPressedConfirm: () {
-          Navigator.pushNamed(context, '/add_family_user_info',
+          Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                   arguments: AddFamilyUserInfoArguments(
+                      fromClass: CommonConstants.add_family,
                       enteredFirstName: widget.arguments.enteredFirstName,
                       enteredMiddleName: widget.arguments.enteredMiddleName,
                       enteredLastName: widget.arguments.enteredLastName,
                       relationShip: widget.arguments.relationShip,
                       isPrimaryNoSelected: widget.arguments.isPrimaryNoSelected,
-                      addFamilyUserInfo: addFamilyOTPResponse.response.data))
-              .then((value) {
-            // Navigator.of(context).pop();
-            //Navigator.of(context).pop(true);
-          });
+                      addFamilyUserInfo: addFamilyOTPResponse.result != null
+                          ? addFamilyOTPResponse.result
+                          : ''))
+              .then((value) {});
         },
       );
     } else {
       Alert.displayAlertPlain(context,
-          title: "Error", content: addFamilyOTPResponse.message);
+          title: variable.strError, content: 'Error Adding Family member');
     }
   }
 
@@ -608,29 +501,34 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
     FamilyListBloc _familyListBloc = new FamilyListBloc();
 
     var signInData = {};
-    signInData['countryCode'] = "+" + selectedCountryCode;
-    signInData['phoneNumber'] = enteredMobNumber;
-    signInData['isPrimaryUser'] = widget.arguments.isPrimaryNoSelected;
-    signInData['firstName'] = widget.arguments.enteredFirstName;
-    signInData['middleName'] = widget.arguments.enteredMiddleName.length > 0
-        ? widget.arguments.enteredMiddleName
-        : '';
-    signInData['lastName'] = widget.arguments.enteredLastName;
-    signInData['relation'] = widget.arguments.relationShip.id;
+    signInData[variable.strCountryCode] = '+$selectedCountryCode';
+    signInData[variable.strPhoneNumber] = enteredMobNumber;
+    signInData[variable.strisPrimaryUser] =
+        widget.arguments.isPrimaryNoSelected;
+    signInData[variable.strFirstName] = widget.arguments.enteredFirstName;
+    signInData[variable.strMiddleName] =
+        widget.arguments.enteredMiddleName.length > 0
+            ? widget.arguments.enteredMiddleName
+            : '';
+    signInData[variable.strLastName] = widget.arguments.enteredLastName;
+    signInData[variable.strRelation] = widget.arguments.relationShip.id;
+    signInData[variable.strOperation] = CommonConstants.user_linking;
 
+    signInData[parameters.strSourceId] = parameters.strSrcIdVal;
+    signInData[parameters.strEntityId] = parameters.strEntityIdVal;
+    signInData[parameters.strRoleId] = parameters.strRoleIdVal;
     var jsonString = convert.jsonEncode(signInData);
 
     if (widget.arguments.isPrimaryNoSelected) {
       _familyListBloc
           .postUserLinkingForPrimaryNo(jsonString)
           .then((addFamilyOTPResponse) {
-        if (addFamilyOTPResponse.success &&
-            addFamilyOTPResponse.status == 200) {
+        if (addFamilyOTPResponse.isSuccess) {
           new FHBBasicWidget()
-              .showInSnackBar(addFamilyOTPResponse.message, scaffold_state);
+              .showInSnackBar('New Family has been added', scaffold_state);
         } else {
           new FHBBasicWidget()
-              .showInSnackBar(addFamilyOTPResponse.message, scaffold_state);
+              .showInSnackBar('Error Adding Family member', scaffold_state);
         }
       });
     } else {
@@ -644,5 +542,11 @@ class AddFamilyOTPScreenState extends State<AddFamilyOTPScreen> {
         }
       });
     }
+  }
+
+  Widget getNumberWidet(String text) {
+    return Text(text,
+        style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
+        textAlign: TextAlign.center);
   }
 }

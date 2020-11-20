@@ -9,9 +9,14 @@ import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/my_family/models/FamilyData.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/my_family/models/LinkedData.dart';
+import 'package:myfhb/my_family/models/ProfileData.dart';
+import 'package:myfhb/my_family/models/Sharedbyme.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiResponse.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class FamilyListDialog extends StatefulWidget {
   final FamilyData familyData;
@@ -30,7 +35,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
     super.initState();
 
     _familyListBloc = new FamilyListBloc();
-    _familyListBloc.getFamilyMembersList();
+    _familyListBloc.getFamilyMembersListNew();
   }
 
   @override
@@ -40,13 +45,9 @@ class FamilyListDialogState extends State<FamilyListDialog> {
       _familyListBloc = new FamilyListBloc();
     }
 
-    //CommonUtil.showLoadingDialogWithCustomChild(context, _keyLoader, '', getDialogBoxWithFamilyList(widget.familyData));
-
     getDialogBoxWithFamilyMember(widget.familyData).then((widget) {
       return widget;
     });
-
-    //return Container(child: Text('Empty'),);
   }
 
   Widget getFamilyMemberList() {
@@ -61,12 +62,12 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                 switch (snapshot.data.status) {
                   case Status.LOADING:
                     CommonUtil.showLoadingDialog(
-                        context, _keyLoader, 'Please Wait');
+                        context, _keyLoader, variable.Please_Wait);
                     break;
 
                   case Status.ERROR:
                     return Center(
-                        child: Text('Oops, something went wrong',
+                        child: Text(variable.strSomethingWrong,
                             style: TextStyle(color: Colors.red)));
                     break;
 
@@ -89,7 +90,6 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   }
 
   Future<Widget> getDialogBoxWithFamilyMember(FamilyData data) async {
-    print('INSIDE DIALOG BOX CLASS');
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -100,7 +100,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text('Switch User'),
+                  Text(variable.Switch_User),
                   IconButton(
                     icon: Icon(
                       Icons.close,
@@ -126,7 +126,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text('Switch User'),
+            Text(variable.Switch_User),
             IconButton(
               icon: Icon(
                 Icons.close,
@@ -144,25 +144,21 @@ class FamilyListDialogState extends State<FamilyListDialog> {
   }
 
   Widget setupAlertDialoadContainer(List<Sharedbyme> sharedByMe) {
-    print('INSIDE setupAlertDialoadContainer');
-    MyProfile myProfile =
+    MyProfileModel myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
-    LinkedData linkedData = new LinkedData(roleName: 'Self', nickName: 'Self');
+    LinkedData linkedData =
+        new LinkedData(roleName: variable.Self, nickName: variable.Self);
 
     if (sharedByMe == null) {
       sharedByMe = new List();
       sharedByMe.add(
           new Sharedbyme(profileData: profileData, linkedData: linkedData));
-      print(
-          'inside setupAlertDialoadContainer ' + sharedByMe.length.toString());
     } else {
       sharedByMe.insert(
           0, new Sharedbyme(profileData: profileData, linkedData: linkedData));
-      print(
-          'inside setupAlertDialoadContainer ' + sharedByMe.length.toString());
     }
     if (sharedByMe.length > 0) {
       return Container(
@@ -191,10 +187,10 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                           children: <Widget>[
                             ClipOval(
                                 child: sharedByMe[index].linkedData.nickName ==
-                                        'Self'
-                                    ? new FHBBasicWidget().getProfilePicWidget(
-                                        myProfile.response.data.generalInfo
-                                            .profilePicThumbnail)
+                                        variable.Self
+                                    ? new FHBBasicWidget()
+                                        .getProfilePicWidgeUsingUrl(myProfile
+                                            .result.profilePicThumbnailUrl)
                                     : Image.memory(
                                         Uint8List.fromList(sharedByMe[index]
                                             .profileData
@@ -228,12 +224,10 @@ class FamilyListDialogState extends State<FamilyListDialog> {
                         ),
                       ),
                       onTap: () {
-                        print('String tap');
                         PreferenceUtil.saveString(Constants.KEY_USERID,
                                 sharedByMe[index].profileData.id)
                             .then((onValue) {
                           Navigator.of(context).pop();
-                          //getUserProfileData();
                         });
                       },
                     ),
@@ -242,12 +236,11 @@ class FamilyListDialogState extends State<FamilyListDialog> {
               ),
               Container(
                 decoration: BoxDecoration(
-                    //TODO chnage theme
                     color: Color(new CommonUtil().getMyPrimaryColor()),
                     borderRadius: BorderRadius.circular(10)),
                 child: FlatButton(
                   child: Text(
-                    'Add new family member',
+                    variable.strAddFamily,
                     style: TextStyle(color: Colors.white),
                   ),
                   onPressed: () {},
@@ -256,7 +249,7 @@ class FamilyListDialogState extends State<FamilyListDialog> {
             ],
           ));
     } else {
-      return Center(child: Text('No family members added yet'));
+      return Center(child: Text(variable.strNoFamily));
     }
   }
 }

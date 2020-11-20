@@ -10,17 +10,24 @@ import 'dart:typed_data';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/exception/FetchException.dart';
 import 'package:myfhb/feedback/FeedbacksSucess.dart';
+import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/CategoryResponseList.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/src/model/Media/MediaData.dart';
 import 'package:myfhb/src/model/Media/MediaTypeResponse.dart';
+import 'package:myfhb/src/model/Media/media_data_list.dart';
+import 'package:myfhb/src/model/Media/media_result.dart';
 import 'dart:convert';
 import 'package:myfhb/src/utils/colors_utils.dart';
-import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
 class Feedbacks extends StatefulWidget {
-  Function refresh;
-
   Feedbacks();
   @override
   _FeedbacksState createState() => _FeedbacksState();
@@ -33,41 +40,37 @@ class _FeedbacksState extends State<Feedbacks> {
 
   List<dynamic> byteDataClonelist = new List();
   List<Asset> images = List<Asset>();
-  String _error = 'No Error Dectected';
 
   String audioPathMain = '';
   bool containsAudioMain = false;
   FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
   List<String> imagePaths = new List();
   final GlobalKey<State> _keyLoader = new GlobalKey<State>();
-  CategoryData categoryDataObj = new CategoryData();
-  MediaData mediaDataObj = new MediaData();
+  CategoryResult categoryDataObj = new CategoryResult();
+  MediaResult mediaDataObj = new MediaResult();
 
   final feedbackController = TextEditingController();
+  bool isFeedBackEmptied = false;
   FocusNode feedbackFocus = FocusNode();
   HealthReportListForUserBlock _healthReportListForUserBlock =
       new HealthReportListForUserBlock();
 
-  Future<void> loadAssets() async {
-    String error = 'No Error Dectected';
+  String currentDate = '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
 
+  Future<void> loadAssets() async {
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 300,
         enableCamera: true,
         selectedAssets: assests,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "chat"),
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: variable.strChat),
         materialOptions: MaterialOptions(
-          actionBarColor: "#6d35de",
-          //actionBarTitle: "Example App",
-          //allViewTitle: "All Photos",
+          actionBarColor: fhbColors.actionColor,
           useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
+          selectCircleStrokeColor: fhbColors.colorBlack,
         ),
       );
-    } on Exception catch (e) {
-      error = e.toString();
-    }
+    } on FetchException catch (e) {}
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -82,7 +85,6 @@ class _FeedbacksState extends State<Feedbacks> {
 
     setState(() {
       images = resultList;
-      _error = error;
     });
   }
 
@@ -92,33 +94,15 @@ class _FeedbacksState extends State<Feedbacks> {
       padding: EdgeInsets.all(8.0),
       itemExtent: length,
       itemBuilder: (BuildContext context, int index) {
-        //Asset asset = resultList[index];
-
         ByteData byteData = byteDataClonelist[index];
-        /*return AssetThumb(
-          asset: asset,
-          width: 50,
-          height: 50,
-        );*/
         return Container(
           height: 30,
           width: 30,
           child: Image.memory(
             byteData.buffer.asUint8List(),
-            // Uint8List.fromList(byteData),
             fit: BoxFit.fill,
           ),
         );
-      },
-    );
-  }
-
-  Widget getAssestWidget() {
-    ListView.builder(
-      padding: EdgeInsets.all(8.0),
-      itemExtent: resultList.length.toDouble(),
-      itemBuilder: (BuildContext context, int index) {
-        //return Image.memory(resultList[index].buffer.asUint8List());
       },
     );
   }
@@ -175,18 +159,18 @@ class _FeedbacksState extends State<Feedbacks> {
                         ), */
                         Padding(
                           padding: EdgeInsets.all(10),
-                          child: Image.asset('assets/launcher/myfhb.png',
+                          child: Image.asset(variable.icon_fhb,
                               width: 100, height: 100),
                         ),
                         Padding(
                             padding: EdgeInsets.only(left: 20),
-                            child: Text('Feedback',
+                            child: Text(variable.strFeedBack,
                                 style: TextStyle(
                                     fontSize: 24, color: Colors.white))),
                         Padding(
                           padding: EdgeInsets.only(left: 20),
                           child: Text(
-                            'We would like to hear from you on your experience with MyFHB',
+                            variable.strFeedbackExp,
                             softWrap: true,
                             style: TextStyle(color: Colors.white70),
                           ),
@@ -202,17 +186,13 @@ class _FeedbacksState extends State<Feedbacks> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    /*  Container(
-                      child: Text('Feedback'),
-                    ),*/
-
                     _showFeedbacktextFiled(),
                     Divider(),
                     Container(
                       height: 10,
                     ),
                     Container(
-                      child: Text('Attach Image'),
+                      child: Text(variable.strAttachImage),
                     ),
                     SizedBox(
                       height: 10,
@@ -223,7 +203,7 @@ class _FeedbacksState extends State<Feedbacks> {
                       color: ColorUtils.greycolor,
                       child: IconButton(
                         icon: new ImageIcon(
-                          AssetImage('assets/icons/attach.png'),
+                          AssetImage(variable.icon_attach),
                           color: Color(new CommonUtil().getMyPrimaryColor()),
                           size: 32,
                         ),
@@ -235,7 +215,7 @@ class _FeedbacksState extends State<Feedbacks> {
                       height: 20,
                     ),
                     Container(
-                      child: Text('Add Voice'),
+                      child: Text(variable.strAddVoice),
                     ),
                     SizedBox(
                       height: 10,
@@ -268,7 +248,14 @@ class _FeedbacksState extends State<Feedbacks> {
                   children: <Widget>[
                     SizedBox(height: 20),
                     fhbBasicWidget.getSaveButton(() {
-                      onPostDataToServer(context, imagePaths);
+                      setState(() {
+                        feedbackController.text.isEmpty
+                            ? isFeedBackEmptied = true
+                            : isFeedBackEmptied = false;
+                        isFeedBackEmptied
+                            ? null
+                            : onPostDataToServer(context, imagePaths);
+                      });
                     }),
                     SizedBox(height: 20)
                   ],
@@ -282,69 +269,81 @@ class _FeedbacksState extends State<Feedbacks> {
     );
   }
 
-  void recordAudio() {
-    print('Audio');
-  }
-
-  void onPostDataToServer(BuildContext context, List<String> imagePaths) {
-    print('Save');
-
-    CommonUtil.showLoadingDialog(context, _keyLoader, 'Please Wait');
+  void onPostDataToServer(BuildContext context, List<String> imagePaths) async {
+    CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
 
     Map<String, dynamic> postMainData = new Map();
     Map<String, dynamic> postMediaData = new Map();
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    List<CategoryData> catgoryDataList = PreferenceUtil.getCategoryType();
+    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType();
 
     String categoryID = new CommonUtil()
         .getIdForDescription(catgoryDataList, Constants.STR_FEEDBACKS);
     categoryDataObj = new CommonUtil()
         .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
-    postMediaData["categoryInfo"] = categoryDataObj.toJson();
-    List<MediaData> metaDataFromSharedPrefernce = PreferenceUtil.getMediaType();
+    postMediaData[parameters.strhealthRecordCategory] =
+        categoryDataObj.toJson();
+
+    MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+
+    MediaDataList mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
+
+    List<MediaResult> metaDataFromSharedPrefernce = mediaTypesResponse.result;
 
     mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(
         categoryID, metaDataFromSharedPrefernce, Constants.STR_FEEDBACKS);
 
-    postMediaData["mediaTypeInfo"] = mediaDataObj.toJson();
-    postMediaData['feedback'] = feedbackController.text;
-    postMediaData["memoText"] = '';
+    postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
 
-    postMediaData["isDraft"] = false;
+    postMediaData[variable.strfeedback] = feedbackController.text;
+    postMediaData[variable.strmemoText] = '';
 
-    postMediaData["sourceName"] = CommonConstants.strTridentValue;
-    postMediaData["memoTextRaw"] = 'memoTextRaw';
+    postMediaData[variable.strisDraft] = false;
 
-    String fileName = Constants.STR_FEEDBACKS +
-        '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
+    postMediaData[variable.strsourceName] = CommonConstants.strTridentValue;
+    postMediaData[variable.strmemoTextRaw] = variable.strmemoTextRaw;
 
-    postMediaData["fileName"] = fileName;
+    String fileName = Constants.STR_FEEDBACKS + currentDate;
 
-    postMainData['metaInfo'] = postMediaData;
+    postMediaData[variable.strfileName] = fileName;
 
-    var params = json.encode(postMainData);
+    postMainData[variable.strmetaInfo] = postMediaData;
 
-    print('params' + params.toString());
+    var params = json.encode(postMediaData);
 
     if (imagePaths != null && imagePaths.length > 0) {
       _healthReportListForUserBlock
-          .submit(params.toString())
-          .then((savedMetaDataResponse) {
-        if (savedMetaDataResponse.success) {
-          postAudioToServer(
-              savedMetaDataResponse.response.data.mediaMetaID, context);
+          .createHealtRecords(params.toString(), imagePaths, audioPathMain)
+          .then((value) {
+        if (value.isSuccess) {
+          _healthReportListForUserBlock.getHelthReportLists().then((value) {
+            PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
+
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+            callFeedBackSuccess(context);
+          });
+        } else {
+          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         }
       });
     } else {
       _healthReportListForUserBlock
-          .submit(params.toString())
+          .createHealtRecords(params.toString(), imagePaths, audioPathMain)
           .then((savedMetaDataResponse) {
-        if (savedMetaDataResponse.success) {
+        if (savedMetaDataResponse.isSuccess) {
           PreferenceUtil.saveString(Constants.KEY_FAMILYMEMBERID, "");
           PreferenceUtil.saveMediaData(Constants.KEY_MEDIADATA, null);
 
-          saveAudioFile(context, audioPathMain,
-              savedMetaDataResponse.response.data.mediaMetaID);
+          _healthReportListForUserBlock.getHelthReportLists().then((value) {
+            PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
+
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+
+            callFeedBackSuccess(context);
+          });
+        } else {
+          Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
         }
       });
     }
@@ -353,9 +352,8 @@ class _FeedbacksState extends State<Feedbacks> {
   void postAudioToServer(String mediaMetaID, BuildContext context) {
     Map<String, dynamic> postImage = new Map();
 
-    postImage['mediaMetaId'] = mediaMetaID;
-    print('I am here ' + mediaMetaID);
-    print('I am here audioPath' + audioPathMain);
+    postImage[variable.strmediaMetaId] = mediaMetaID;
+
     int k = 0;
 
     if (imagePaths != null && imagePaths.length > 0) {
@@ -363,52 +361,36 @@ class _FeedbacksState extends State<Feedbacks> {
         _healthReportListForUserBlock
             .saveImage(imagePaths[i], mediaMetaID, '')
             .then((postImageResponse) {
-          print('output image mediaMaster images' +
-              postImageResponse.response.data.mediaMasterId);
-
-          print('the value of k' +
-              k.toString() +
-              ' value of length' +
-              imagePaths.length.toString());
           if ((audioPathMain != '' && k == imagePaths.length) ||
               (audioPathMain != '' && k == imagePaths.length - 1)) {
             _healthReportListForUserBlock
                 .saveImage(audioPathMain, mediaMetaID, '')
                 .then((postImageResponse) {
-              print('output audio mediaMaster' +
-                  postImageResponse.response.data.mediaMasterId);
-
-              _healthReportListForUserBlock.getHelthReportList().then((value) {
+              _healthReportListForUserBlock.getHelthReportLists().then((value) {
                 PreferenceUtil.saveCompleteData(
-                    Constants.KEY_COMPLETE_DATA, value.response.data);
+                    Constants.KEY_COMPLETE_DATA, value);
 
-                print('Sucess 1');
                 Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                     .pop();
-                //PageNavigator.goTo(context, '/feedbacks_success');
                 callFeedBackSuccess(context);
               });
             });
           } else if (k == imagePaths.length - 1) {
-            _healthReportListForUserBlock.getHelthReportList().then((value) {
+            _healthReportListForUserBlock.getHelthReportLists().then((value) {
               PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value.response.data);
+                  Constants.KEY_COMPLETE_DATA, value);
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
-              print('Sucess 2');
 
               callFeedBackSuccess(context);
-              //PageNavigator.goTo(context, '/feedbacks_success');
             });
           } else if (k == imagePaths.length) {
-            _healthReportListForUserBlock.getHelthReportList().then((value) {
+            _healthReportListForUserBlock.getHelthReportLists().then((value) {
               PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value.response.data);
+                  Constants.KEY_COMPLETE_DATA, value);
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
-              print('Sucess 3');
 
-              //PageNavigator.goTo(context, '/feedbacks_success');
               callFeedBackSuccess(context);
             });
           }
@@ -443,12 +425,8 @@ class _FeedbacksState extends State<Feedbacks> {
       _healthReportListForUserBlock
           .saveImage(audioPathMain, mediaMetaID, '')
           .then((postImageResponse) {
-        print('output audio mediaMaster saveAudioFile' +
-            postImageResponse.response.data.mediaMasterId);
-        _healthReportListForUserBlock.getHelthReportList().then((value) {
-          PreferenceUtil.saveCompleteData(
-              Constants.KEY_COMPLETE_DATA, value.response.data);
-          print('Sucess 4');
+        _healthReportListForUserBlock.getHelthReportLists().then((value) {
+          PreferenceUtil.saveCompleteData(Constants.KEY_COMPLETE_DATA, value);
 
           Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
@@ -463,14 +441,14 @@ class _FeedbacksState extends State<Feedbacks> {
   }
 
   Widget _showFeedbacktextFiled() {
-    return TextField(
+    return TextFormField(
       cursorColor: Theme.of(context).primaryColor,
       controller: feedbackController,
       maxLines: 1,
       keyboardType: TextInputType.text,
       focusNode: feedbackFocus,
       textInputAction: TextInputAction.done,
-      onSubmitted: (term) {
+      onFieldSubmitted: (term) {
         feedbackFocus.unfocus();
       },
       style: new TextStyle(
@@ -478,11 +456,8 @@ class _FeedbacksState extends State<Feedbacks> {
           fontSize: 16.0,
           color: ColorUtils.blackcolor),
       decoration: InputDecoration(
-//            suffixIcon: IconButton(
-//              onPressed: () => searchController.clear(),
-//              icon: Icon(Icons.clear, color: ColorUtils.lightgraycolor),
-//            ),
-        hintText: 'Feedback',
+        errorText: isFeedBackEmptied ? variable.strFeedbackEmpty : null,
+        hintText: variable.strFeedBack,
         labelStyle: TextStyle(
             fontSize: 12.0,
             fontWeight: FontWeight.w400,

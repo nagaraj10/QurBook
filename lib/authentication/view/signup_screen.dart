@@ -1,0 +1,418 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:gmiwidgetspackage/widgets/asset_image.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/authentication/model/patientsignup_model.dart';
+import 'package:myfhb/authentication/constants/constants.dart';
+import 'package:myfhb/authentication/view/authentication_validator.dart';
+import 'package:myfhb/authentication/view/login_screen.dart';
+import 'package:myfhb/authentication/view/verifypatient_screen.dart';
+import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
+import 'package:myfhb/authentication/model/patientsignup_model.dart'
+    as signuplModel;
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+class PatientSignUpScreen extends StatefulWidget {
+  @override
+  _PatientSignUpScreenState createState() => _PatientSignUpScreenState();
+}
+
+class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
+  final firstNameController = TextEditingController();
+  final lastNamController = TextEditingController();
+  final mobileNoController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  var isLoading = false;
+  bool _autoValidateBool = false;
+  FlutterToast toast = new FlutterToast();
+  var _SignupKey = GlobalKey<FormState>();
+  List<UserContactCollection3> userCollection;
+  AuthViewModel authViewModel;
+  var checkedValue = true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    authViewModel = new AuthViewModel();
+    userCollection = new List();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: Form(
+        key: _SignupKey,
+        child: Container(
+          height: height,
+          child: Stack(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SizedBox(height: height * .1),
+                      AssetImageWidget(
+                        icon: myFHB_logo,
+                        height: 120,
+                        width: 120,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(strSignUpText),
+                      Column(
+                        children: [
+                          _signupTextFields(
+                            TextFormField(
+                              decoration: InputDecoration(
+                                hintText: strFirstNameHint,
+                                labelText: strFirstNameHint,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: BorderSide(
+                                    color: Color(0xff138fcf),
+                                  ),
+                                ),
+                              ),
+                              controller: firstNameController,
+                              autovalidate: _autoValidateBool,
+                              validator: (value) {
+                                return AuthenticationValidator().charValidation(
+                                    value, patternChar, strEnterFirstname);
+                              },
+                              onSaved: (value) {},
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          _signupTextFields(
+                            TextFormField(
+                              autovalidate: _autoValidateBool,
+                              decoration: InputDecoration(
+                                hintText: strLastNameHint,
+                                labelText: strLastNameHint,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: BorderSide(
+                                    color: Color(0xff138fcf),
+                                  ),
+                                ),
+                              ),
+                              controller: lastNamController,
+                              validator: (value) {
+                                return AuthenticationValidator().charValidation(
+                                    value, patternChar, strEnterLastNamee);
+                              },
+                              onSaved: (value) {},
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          _signupTextFields(
+                            TextFormField(
+                              autovalidate: _autoValidateBool,
+                              decoration: InputDecoration(
+                                hintText: strPhoneHint,
+                                labelText: strNumberHint,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: BorderSide(
+                                    color: Color(0xff138fcf),
+                                  ),
+                                ),
+                              ),
+                              validator: (value) {
+                                return AuthenticationValidator()
+                                    .phoneValidation(
+                                        value, patternPhone, strPhoneCantEmpty);
+                              },
+                              controller: mobileNoController,
+                              onSaved: (value) {},
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          _signupTextFields(
+                            TextFormField(
+                              autovalidate: _autoValidateBool,
+                              decoration: InputDecoration(
+                                hintText: strEmailHintText,
+                                labelText: strEmailHint,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: BorderSide(
+                                    color: Color(0xff138fcf),
+                                  ),
+                                ),
+                              ),
+                              keyboardType: TextInputType.emailAddress,
+                              controller: emailController,
+                              validator: (value) {
+                                return AuthenticationValidator()
+                                    .emailValidation(
+                                        value, patternEmail, strEmailValidText);
+                              },
+                              onSaved: (value) {},
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          _signupTextFields(
+                            TextFormField(
+                              autovalidate: _autoValidateBool,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                hintText: strPassword,
+                                labelText: strPassword,
+                                focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
+                                errorMaxLines: 2,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: BorderSide(
+                                    color: Color(0xff138fcf),
+                                  ),
+                                ),
+                              ),
+                              controller: passwordController,
+                              validator: (value) {
+                                return AuthenticationValidator()
+                                    .passwordValidation(value, patternPassword,
+                                        strPassCantEmpty);
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _termsAndCondtionsView(),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      _saveUser(),
+                      _accountToSign(),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _saveUser() {
+    return InkWell(
+      onTap: () {
+        AuthenticationValidator().checkNetwork().then((intenet) {
+          if (intenet != null && intenet) {
+            checkedValue
+                ? null
+                : FlutterToast().getToast(
+                    'Please accept terms and conditions', Colors.black54);
+            _savePatientDetails();
+          } else {
+            toast.getToast(strNetworkIssue, Colors.red);
+          }
+        });
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(5)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                  color: Colors.grey.shade200,
+                  offset: Offset(2, 4),
+                  blurRadius: 5,
+                  spreadRadius: 2)
+            ],
+            gradient: LinearGradient(
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+                colors: [
+//                  Color(0xff138fcf),
+//                  Color(0xff138fcf),
+                  Color(new CommonUtil().getMyPrimaryColor()),
+                  Color(new CommonUtil().getMyGredientColor())
+                ])),
+        child: Text(
+          strSignup,
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  _savePatientDetails() async {
+    FocusScope.of(context).unfocus();
+    userCollection.clear();
+    userCollection = new List();
+    if (_SignupKey.currentState.validate() && checkedValue) {
+      _SignupKey.currentState.save();
+      UserContactCollection3 user3 = UserContactCollection3();
+      user3.phoneNumber = mobileNoController.text.trim();
+      user3.email = emailController.text.trim();
+      user3.isPrimary = true;
+      userCollection.add(user3);
+      PatientSignUp patientSignUp = PatientSignUp();
+      patientSignUp.firstName = firstNameController.text.trim();
+      patientSignUp.lastName = lastNamController.text.trim();
+      patientSignUp.source = strSource;
+      patientSignUp.password = passwordController.text;
+      Map<String, dynamic> postMediaData = new Map();
+      postMediaData[strfirstName] = firstNameController.text.trim();
+      postMediaData[strlastName] = lastNamController.text.trim();
+      postMediaData[strsource] = strSource;
+      postMediaData[strpassword] = passwordController.text.trim();
+      postMediaData[struserContactCollection3] = userCollection.toList();
+      signuplModel.PatientSignUp response =
+          await authViewModel.registerPatient(postMediaData);
+      print(response.toString());
+      _checkResponse(response);
+    } else {
+      setState(() {
+        _autoValidateBool = true;
+      });
+    }
+  }
+
+  _checkResponse(PatientSignUp response) {
+    if (response.isSuccess) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => VerifyPatient(
+                    PhoneNumber: mobileNoController.text,
+                    from: strFromSignUp,
+                  )));
+    } else {
+      toast.getToast(response.message, Colors.red);
+    }
+  }
+
+  Widget _accountToSign() {
+    return InkWell(
+      onTap: () {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => PatientSignInScreen()));
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 20),
+        padding: EdgeInsets.all(15),
+        alignment: Alignment.bottomCenter,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              strAccount,
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              strSignIn,
+              style: TextStyle(
+                  color: Color(0xff138fcf),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _signupTextFields(TextFormField textFormField) {
+    return Container(
+        margin: EdgeInsets.symmetric(vertical: 2), child: textFormField);
+  }
+
+  Widget _termsAndCondtionsView() {
+    return Row(
+      children: [
+        Checkbox(
+          activeColor: Color(CommonUtil().getMyPrimaryColor()),
+          checkColor: Colors.white,
+          value: checkedValue,
+          onChanged: (newValue) {
+            setState(() {
+              checkedValue = newValue;
+            });
+          },
+        ),
+        new RichText(
+          text: new TextSpan(
+            text: '',
+            children: [
+              new TextSpan(
+                  text: 'By signing up, I agree to the ',
+                  style: TextStyle(color: Colors.black)),
+              new TextSpan(
+                text: 'T&C',
+                style: TextStyle(color: Color(0xff138fcf)),
+                recognizer: new TapGestureRecognizer()
+                  ..onTap = () {
+                    CommonUtil().openWebViewNew(
+                        Constants.terms_of_service, variable.file_terms, true);
+                  },
+              ),
+              new TextSpan(
+                  text: ' and \n', style: TextStyle(color: Colors.black)),
+              new TextSpan(
+                text: 'Privacy Policy  ',
+                style: TextStyle(color: Color(0xff138fcf)),
+                recognizer: new TapGestureRecognizer()
+                  ..onTap = () {
+                    CommonUtil().openWebViewNew(
+                        Constants.privacy_policy, variable.file_privacy, true);
+                  },
+              )
+            ],
+          ),
+        )
+      ],
+    );
+  }
+}

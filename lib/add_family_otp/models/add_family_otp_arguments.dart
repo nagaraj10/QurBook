@@ -1,4 +1,4 @@
-import 'package:myfhb/my_family/models/relationship_response_list.dart';
+import 'package:myfhb/my_family/models/relationships.dart';
 
 class AddFamilyOTPArguments {
   String enteredFirstName;
@@ -6,7 +6,7 @@ class AddFamilyOTPArguments {
   String enteredLastName;
   String enteredMobNumber;
   String selectedCountryCode;
-  RelationShip relationShip;
+  RelationsShipModel relationShip;
   bool isPrimaryNoSelected;
 
   AddFamilyOTPArguments(

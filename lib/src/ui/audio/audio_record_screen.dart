@@ -14,6 +14,7 @@ import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 enum t_MEDIA {
   FILE,
@@ -38,8 +39,8 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
   StreamSubscription _playerSubscription;
   FlutterSound flutterSound;
 
-  String _recorderTxt = '00:00';
-  String _playerTxt = '00:00';
+  String _recorderTxt = variable.strStartTime;
+  String _playerTxt = variable.strStartTime;
   double _dbLevel;
   String audioPathMain = '';
   bool containsAudioMain = true;
@@ -72,13 +73,13 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       String path = await flutterSound.startRecorder(
         codec: _codec,
       );
-      print('startRecorder: $path');
 
       _recorderSubscription = flutterSound.onRecorderStateChanged.listen((e) {
         DateTime date = new DateTime.fromMillisecondsSinceEpoch(
             e.currentPosition.toInt(),
             isUtc: true);
-        String txt = DateFormat('mm:ss', 'en_US').format(date);
+        String txt =
+            DateFormat(variable.strDatems, variable.strenUs).format(date);
 
         this.setState(() {
           this._recorderTxt = txt.substring(0, 5);
@@ -86,7 +87,6 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       });
       _dbPeakSubscription =
           flutterSound.onRecorderDbPeakChanged.listen((value) {
-        print("got update -> $value");
         setState(() {
           this._dbLevel = value;
         });
@@ -97,7 +97,6 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         this._path[_codec.index] = path;
       });
     } catch (err) {
-      print('startRecorder error: $err');
       setState(() {
         this._isRecording = false;
       });
@@ -108,7 +107,6 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     String result;
     try {
       result = await flutterSound.stopRecorder();
-      print('stopRecorder: $result');
 
       if (_recorderSubscription != null) {
         _recorderSubscription.cancel();
@@ -118,13 +116,10 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         _dbPeakSubscription.cancel();
         _dbPeakSubscription = null;
       }
-    } catch (err) {
-      print('stopRecorder error: $err');
-    }
+    } catch (err) {}
     this.setState(() {
       this._isRecording = false;
     });
-    print('babyyyyyyyyyyyyyyyyyyyyyyyyy ' + this._path[_codec.index]);
     if (widget.fromVoice) {
       PreferenceUtil.saveString(
               Constants.KEY_CATEGORYNAME, Constants.STR_VOICERECORDS)
@@ -139,18 +134,10 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
           new CommonDialogBox().getDialogForVoicerecords(
               context, containsAudioMain, this._path[_codec.index],
               (containsAudio, audioPath) {
-            print('áudio' +
-                audioPath +
-                ' contains Audio' +
-                containsAudio.toString());
             audioPathMain = audioPath;
             containsAudioMain = containsAudio;
             setState(() {});
           }, (containsAudio, audioPath) {
-            print('áudio' +
-                audioPath +
-                ' contains Audio' +
-                containsAudio.toString());
             audioPathMain = audioPath;
             containsAudioMain = containsAudio;
             setState(() {});
@@ -159,7 +146,8 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       });
     } else {
       if (result != null && result != '')
-        Navigator.of(context).pop({'audioFile': this._path[_codec.index]});
+        Navigator.of(context)
+            .pop({Constants.keyAudioFile: this._path[_codec.index]});
     }
   }
 
@@ -174,31 +162,21 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       File file = File(path);
       file.openRead();
       var contents = await file.readAsBytes();
-      print('The file is ${contents.length} bytes long.');
+
       return contents;
     } catch (e) {
-      print(e);
       return null;
     }
   }
-
-  List<String> assetSample = [
-    'assets/samples/sample.aac',
-    'assets/samples/sample.aac',
-    'assets/samples/sample.opus',
-    'assets/samples/sample.caf',
-    'assets/samples/sample.mp3',
-    'assets/samples/sample.ogg',
-    'assets/samples/sample.wav',
-  ];
 
   void startPlayer() async {
     try {
       String path = null;
       if (_media == t_MEDIA.ASSET) {
-        Uint8List buffer = (await rootBundle.load(assetSample[_codec.index]))
-            .buffer
-            .asUint8List();
+        Uint8List buffer =
+            (await rootBundle.load(variable.assetSample[_codec.index]))
+                .buffer
+                .asUint8List();
         path = await flutterSound.startPlayerFromBuffer(
           buffer,
           codec: _codec,
@@ -220,10 +198,8 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         }
       }
       if (path == null) {
-        print('Error starting player');
         return;
       }
-      print('startPlayer: $path');
       await flutterSound.setVolume(1.0);
 
       _playerSubscription = flutterSound.onPlayerStateChanged.listen((e) {
@@ -234,30 +210,26 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
           DateTime date = new DateTime.fromMillisecondsSinceEpoch(
               e.currentPosition.toInt(),
               isUtc: true);
-          String txt = DateFormat('mm:ss', 'en_US').format(date);
+          String txt =
+              DateFormat(variable.strDatems, variable.strenUs).format(date);
           this.setState(() {
             this._playerTxt = txt.substring(0, 5);
           });
         }
       });
-    } catch (err) {
-      print('error: $err');
-    }
+    } catch (err) {}
     setState(() {});
   }
 
   void stopPlayer() async {
     try {
       String result = await flutterSound.stopPlayer();
-      print('stopPlayer: $result');
       if (_playerSubscription != null) {
         _playerSubscription.cancel();
         _playerSubscription = null;
       }
       sliderCurrentPosition = 0.0;
-    } catch (err) {
-      print('error: $err');
-    }
+    } catch (err) {}
     this.setState(() {
       //this._isPlaying = false;
     });
@@ -268,20 +240,15 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
     try {
       if (flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED) {
         result = await flutterSound.resumePlayer();
-        print('resumePlayer: $result');
       } else {
         result = await flutterSound.pausePlayer();
-        print('pausePlayer: $result');
       }
-    } catch (err) {
-      print('error: $err');
-    }
+    } catch (err) {}
     setState(() {});
   }
 
   void seekToPlayer(int milliSecs) async {
     String result = await flutterSound.seekToPlayer(milliSecs);
-    print('seekToPlayer: $result');
   }
 
   onPausePlayerPressed() {
@@ -325,10 +292,10 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
       );
     return flutterSound.audioState == t_AUDIO_STATE.IS_STOPPED
         ? Text(
-            'Start Recording',
+            variable.strStartrecord,
             style: TextStyle(color: Colors.white),
           )
-        : Text('Stop Recording', style: TextStyle(color: Colors.white));
+        : Text(variable.strStopRecord, style: TextStyle(color: Colors.white));
   }
 
   setCodec(t_CODEC codec) async {
@@ -350,7 +317,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
           },
         ),
         elevation: 0,
-        title: Text('Voice Record'),
+        title: Text(variable.strVoiceRecord),
         centerTitle: true,
       ),
       body: Center(
@@ -374,7 +341,6 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                         shadowColor: Colors.transparent,
                         shape: CircleBorder(),
                         child: CircleAvatar(
-                          //backgroundColor: Colors.transparent,
                           backgroundColor:
                               ColorUtils.greycolor.withOpacity(0.5),
                           child: Icon(
@@ -399,7 +365,6 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                       shadowColor: Colors.transparent,
                       shape: CircleBorder(),
                       child: CircleAvatar(
-                        //backgroundColor: Colors.transparent,
                         backgroundColor: ColorUtils.greycolor,
                         child: Icon(
                           Icons.mic,
@@ -430,7 +395,6 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
               alignment: Alignment.center,
               child: Container(
                 constraints: BoxConstraints(minWidth: 160),
-                //margin: EdgeInsets.only(left: 40, right: 40),
                 decoration: BoxDecoration(
                     color: _isRecording ? Colors.red : Colors.green,
                     borderRadius: BorderRadius.circular(30)),
@@ -442,121 +406,7 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
                 ),
               ),
             ),
-            /*  Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(top: 12.0, bottom: 16.0),
-                      child: Text(
-                        this._playerTxt,
-                        style: TextStyle(
-                          fontSize: 35.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ), */
             SizedBox(height: 40),
-          /*  Container(
-              decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(30)),
-              padding: EdgeInsets.all(5),
-              margin: EdgeInsets.only(right: 20, left: 20),
-              child: Row(
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      width: 56.0,
-                      height: 50.0,
-                      child: ClipOval(
-                        child: FlatButton(
-                          onPressed: onStartPlayerPressed(),
-                          padding: EdgeInsets.all(8.0),
-                          child: onStartPlayerPressed() != null
-                              ? Icon(Icons.play_arrow)
-                              : Icon(
-                                  Icons.play_arrow,
-                                  color: Colors.grey,
-                                ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      width: 56.0,
-                      height: 50.0,
-                      child: ClipOval(
-                        child: FlatButton(
-                          onPressed: onPausePlayerPressed(),
-                          //disabledColor: Colors.white,
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(onPausePlayerPressed() != null
-                              ? Icons.pause
-                              : Icons.pause),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 6,
-                    child: Container(
-                        height: 30.0,
-                        child: Slider(
-                            activeColor: Color(new CommonUtil().getMyPrimaryColor()),
-                            inactiveColor: Colors.grey,
-                            value: sliderCurrentPosition,
-                            min: 0.0,
-                            max: maxDuration,
-                            onChanged: (double value) async {
-                              await flutterSound.seekToPlayer(value.toInt());
-                            },
-                            divisions: maxDuration.toInt())),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Text(
-                      this._playerTxt,
-                      style: TextStyle(
-                        fontSize: 12.0,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      width: 56.0,
-                      height: 50.0,
-                      child: ClipOval(
-                        child: FlatButton(
-                          onPressed: onStopPlayerPressed(),
-                          //disabledColor: Colors.white,
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(onStopPlayerPressed() != null
-                              ? Icons.stop
-                              : Icons.stop),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                      flex: 1,
-                      child: IconButton(
-                          icon: Icon(Icons.delete,
-                              size: 20, color: Colors.red[600]),
-                          onPressed: () {
-                            setState(() {});
-                          }))
-                ],
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-              ),
-            ),*/
           ],
         ),
       ),

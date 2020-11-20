@@ -11,6 +11,8 @@ import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/src/ui/camera/DisplayPictureScreen.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
 
 class CropAndRotateScreen extends StatefulWidget {
   final List<String> imagePath;
@@ -61,25 +63,6 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
               Expanded(
                 child: getCarousalImage(),
               ),
-              /*  Container(
-                child: RaisedGradientButton(
-                  borderRadius: 0,
-                  child: Text(
-                    'Done',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500),
-                  ),
-                  gradient: LinearGradient(
-                    colors: <Color>[
-                      Color(new CommonUtil().getMyPrimaryColor()),
-                      Color(new CommonUtil().getMyGredientColor())
-                    ],
-                  ),
-                  onPressed: () {},
-                ),
-              ) */
             ],
           ),
         ],
@@ -104,9 +87,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
   }
 
   void callBackToRefresh() {
-    /* setState(() {
-      print('setState of home Screen');
-    }); */
+  
     (context as Element).markNeedsBuild();
   }
 
@@ -135,7 +116,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
               onPageChanged: (index) {
                 setState(() {
                   _current = index;
-                  print(_current.toString() + ' onPageChanged');
+                  
                   currentImagePath = widget.imagePath[_current];
                 });
               },
@@ -148,39 +129,17 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                         decoration: BoxDecoration(),
                         child: Container(
                           height: double.infinity,
-                          child: imgUrl.contains('pdf')
-                              ? Image.asset('assets/icons/attach.png')
+                          child: imgUrl.contains(variable.strpdf)
+                              ? Image.asset(variable.icon_attach)
                               : Image.file(
                                   File(imgUrl),
                                   fit: BoxFit.scaleDown,
                                 )
 
-                          /*ExtendedImage.file(
-                                  File(imgUrl),
-                                  fit: BoxFit.contain,
-                                  mode: ExtendedImageMode.editor,
-                                  enableLoadState: true,
-                                  extendedImageEditorKey:
-                                      editorKeyList[_current],
-                                  initEditorConfigHandler: (state) {
-                                    return EditorConfig(
-                                        maxScale: 8.0,
-                                        cropRectPadding: EdgeInsets.all(20.0),
-                                        hitTestSize: 20.0,
-                                        initCropRectType:
-                                            InitCropRectType.imageRect,
-                                        cropAspectRatio: _aspectRatio.value);
-                                  },
-                                )*/
+                        
                           ,
                         ));
-                    /* return ImgCrop(
-                      //key: cropKey,
-                       chipRadius: 100,
-                       chipShape: 'rect',
-                      maximumScale: 3,
-                      image: FileImage(new File(imgUrl)),
-                    );*/
+                  
                   },
                 );
               }).toList(),
@@ -218,7 +177,6 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                     icon: Icon(Icons.crop, color: Colors.white),
                     onPressed: () {
                       cropImage(currentImagePath);
-                      //_cropImage(true);
                     },
                   ),
                   index == widget.imagePath.length
@@ -289,18 +247,16 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                 CropAspectRatioPreset.ratio16x9
               ],
         androidUiSettings: AndroidUiSettings(
-            toolbarTitle: 'Cropper',
+            toolbarTitle: variable.strCropper,
             toolbarColor: Color(new CommonUtil().getMyPrimaryColor()),
             toolbarWidgetColor: Colors.white,
-            //activeControlsWidgetColor: Colors.white,
-            //activeWidgetColor: Color(new CommonUtil().getMyPrimaryColor()),
+         
             initAspectRatio: CropAspectRatioPreset.original,
             lockAspectRatio: false),
         iosUiSettings: IOSUiSettings(
-          title: 'Cropper',
+          title: variable.strCropper,
         ));
     if (croppedFile != null) {
-      print('Cropper current' + _current.toString());
       widget.imagePath.removeAt(_current);
       setState(() {
         widget.imagePath.insert((_current), croppedFile.path);
@@ -329,7 +285,7 @@ class CropAndRotateScreenState extends State<CropAndRotateScreen> {
                   width: 10.0,
                 ),
                 Text(
-                  "cropping...",
+                  variable.strCropping,
                   style: TextStyle(color: primaryColor),
                 )
               ],

@@ -9,6 +9,9 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
 
 class MyReminders extends StatefulWidget {
   static _MyRemindersState of(BuildContext context) =>
@@ -39,7 +42,7 @@ class _MyRemindersState extends State<MyReminders> {
           return MaterialApp(
             home: Scaffold(
                 body: Center(
-              child: Text('Loading...'),
+              child: Text(variable.strLoadWait)
             )),
           );
         } else {
@@ -52,7 +55,7 @@ class _MyRemindersState extends State<MyReminders> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  PageNavigator.goTo(context, '/add_reminders');
+                  PageNavigator.goTo(context, router.rt_AddRemainder);
                 },
                 backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
@@ -61,7 +64,7 @@ class _MyRemindersState extends State<MyReminders> {
                       itemCount: detailsList.length,
                       itemBuilder: (BuildContext ctxt, int index) {
                         ReminderModel model = reverseDetailsList[index];
-                        var tempDate = DateFormat('E d MMM, yyyy')
+                        var tempDate = DateFormat(variable.dateFormatMMY)
                             .format(DateTime.parse(model.date));
                         var dateArr = tempDate.split(" ");
                         return GestureDetector(
@@ -201,7 +204,7 @@ class _MyRemindersState extends State<MyReminders> {
                                         InkWell(
                                           onTap: () {
                                             FHBUtils()
-                                                .delete('reminders', model.id);
+                                                .delete(variable.strremainder, model.id);
                                             setState(() {});
                                           },
                                           child: Icon(
@@ -223,7 +226,7 @@ class _MyRemindersState extends State<MyReminders> {
                           child: Text(
                             Constants.NO_DATA_SCHEDULES,
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontFamily: 'Poppins'),
+                            style: TextStyle(fontFamily: variable.font_poppins),
                           ),
                         ),
                       ),
@@ -238,20 +241,10 @@ class _MyRemindersState extends State<MyReminders> {
   }
 
   getRemindersList() async {
-    /*prefs = await SharedPreferences.getInstance();
+    
 
-    String getData = await prefs.get('reminders');
-    if (getData == null) {
-      detailsList = new List();
-    } else {
-      detailsList = json.decode(getData);
-
-      reverseDetailsList = detailsList.reversed.toList();
-    }*/
-
-    detailsList = await FHBUtils().getAll('reminders');
+    detailsList = await FHBUtils().getAll(variable.strremainder);
     reverseDetailsList = detailsList.reversed.toList();
-    print(reverseDetailsList.toString());
     return detailsList;
   }
 }

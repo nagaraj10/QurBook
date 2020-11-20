@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:myfhb/my_providers/models/Doctors.dart';
+import 'package:myfhb/my_providers/models/Hospitals.dart';
+import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/my_providers/models/my_providers_response_list.dart';
 import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/src/blocs/Authentication/LoginBloc.dart';
@@ -9,10 +12,14 @@ class ProvidersBloc implements BaseBloc {
   ProvidersListRepository _providersListRepository;
   StreamController _providersListControlller;
 
-  StreamSink<ApiResponse<MyProvidersResponseList>> get providersListSink =>
+  StreamSink<ApiResponse<MyProvidersResponse>> get providersListSink =>
       _providersListControlller.sink;
-  Stream<ApiResponse<MyProvidersResponseList>> get providersListStream =>
+  Stream<ApiResponse<MyProvidersResponse>> get providersListStream =>
       _providersListControlller.stream;
+
+  List<Doctors> doctors = new List();
+  List<Hospitals> hospitals = new List();
+  List<Hospitals> labs = new List();
 
   @override
   void dispose() {
@@ -21,19 +28,66 @@ class ProvidersBloc implements BaseBloc {
 
   ProvidersBloc() {
     _providersListControlller =
-        StreamController<ApiResponse<MyProvidersResponseList>>();
+        StreamController<ApiResponse<MyProvidersResponse>>();
     _providersListRepository = ProvidersListRepository();
   }
 
-  getMedicalPreferencesList() async {
-    providersListSink.add(ApiResponse.loading('Signing in user'));
+  Future<MyProvidersResponse> getMedicalPreferencesList({String userId}) async {
+    // providersListSink.add(ApiResponse.loading(variable.strFetchMedicalPrefernces));
+    MyProvidersResponse myProvidersResponseList;
     try {
-      MyProvidersResponseList myProvidersResponseList =
-          await _providersListRepository.getMedicalPreferencesList();
-      providersListSink.add(ApiResponse.completed(myProvidersResponseList));
+      myProvidersResponseList =
+          await _providersListRepository.getMedicalPreferencesList(userId: userId);
+      /*doctors = myProvidersResponseList.result.doctors;
+      hospitals = myProvidersResponseList.result.hospitals;
+      labs = myProvidersResponseList.result.labs;*/
     } catch (e) {
       providersListSink.add(ApiResponse.error(e.toString()));
-      print(e);
     }
+
+    return myProvidersResponseList;
+  }
+
+  List<Doctors> getFilterDoctorListNew(String doctorName) {
+    List<Doctors> filterDoctorData = new List();
+    for (Doctors doctorData in doctors) {
+      if (doctorData.user.name != null && doctorData.user.name != '') {
+        String speciality = doctorData.doctorProfessionalDetailCollection !=
+                null
+            ? doctorData.doctorProfessionalDetailCollection.length > 0
+                ? doctorData.doctorProfessionalDetailCollection[0].specialty !=
+                        null
+                    ? doctorData
+                        .doctorProfessionalDetailCollection[0].specialty.name
+                    : ''
+                : ''
+            : "";
+        String address = doctorData.user != null
+            ? doctorData.user.userAddressCollection3 != null
+                ? doctorData.user.userAddressCollection3.length > 0
+                    ? doctorData.user.userAddressCollection3[0].city != null
+                        ? doctorData.user.userAddressCollection3[0].city.name
+                        : ''
+                    : ''
+                : ''
+            : '';
+        if (doctorData.user.name
+                .toLowerCase()
+                .trim()
+                .contains(doctorName.toLowerCase().trim()) ||
+            (speciality != '' &&
+                speciality
+                    .toLowerCase()
+                    .trim()
+                    .contains(doctorName.toLowerCase().trim())) ||
+            address
+                .toLowerCase()
+                .trim()
+                .contains(doctorName.toLowerCase().trim())) {
+          filterDoctorData.add(doctorData);
+        }
+      }
+    }
+    return filterDoctorData;
   }
 }

@@ -14,6 +14,10 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/router_variable.dart' as router;
+
+
 
 class OtpVerifyScreen extends StatefulWidget {
   final String enteredMobNumber;
@@ -93,7 +97,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         child: new Container(
           alignment: Alignment.center,
           child: new TextField(
-            //obscureText: true,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -111,7 +114,6 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         child: new Container(
           alignment: Alignment.center,
           child: new TextField(
-            //obscureText: true,
             inputFormatters: [
               LengthLimitingTextInputFormatter(1),
             ],
@@ -151,7 +153,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     return Scaffold(
       appBar: AppBar(
         flexibleSpace: GradientAppBar(),
-        title: Text('OTP Verification', style: TextStyle(fontSize: 18)),
+        title: Text(variable.strOTPVerification, style: TextStyle(fontSize: 18)),
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
@@ -165,7 +167,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
               ? Padding(
                   padding: EdgeInsets.only(top: 20),
                   child: Text(
-                    'Please enter the OTP received',
+                    variable.strEnterOtp,
                     style: TextStyle(
                         color: Colors.black38, fontWeight: FontWeight.w500),
                   ),
@@ -176,7 +178,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
           widget.forEmailVerify || widget.fromSignIn
               ? Expanded(
                   child: ImageIcon(
-                    AssetImage('assets/icons/otp_icon.png'),
+                    AssetImage(variable.icon_otp),
                     size: 70,
                     color: Color(CommonUtil().getMyPrimaryColor()),
                   ),
@@ -188,7 +190,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: Text(
-                        'Enter the OTP received at',
+                        variable.strEnterotpReceived,
                         style: TextStyle(
                             color: Colors.black38, fontWeight: FontWeight.w500),
                       ),
@@ -229,7 +231,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             ))),
                 SizedBox(height: 20),
                 Text(
-                  'Didn\'t receive the OTP?',
+                  variable.strdidtReceive,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 11,
@@ -255,7 +257,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                       });
                     },
                     child: Text(
-                      'Resend Code',
+                     variable.strResendCode,
                       style: TextStyle(
                           color: Color(new CommonUtil().getMyPrimaryColor()),
                           fontWeight: FontWeight.w600),
@@ -282,9 +284,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                           children: <Widget>[
                             MaterialButton(
                               onPressed: () {
-                                inputTextToField("1");
+                                inputTextToField(variable.numOne);
                               },
-                              child: Text("1",
+                              child: Text(variable.numOne,
                                   style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w400),
@@ -292,9 +294,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                inputTextToField("2");
+                                inputTextToField(variable.numTwo);
                               },
-                              child: Text("2",
+                              child: Text(variable.numTwo,
                                   style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w400),
@@ -302,9 +304,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                inputTextToField("3");
+                                inputTextToField(variable.numThree);
                               },
-                              child: Text("3",
+                              child: Text(variable.numThree,
                                   style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w400,
@@ -325,9 +327,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                           children: <Widget>[
                             MaterialButton(
                               onPressed: () {
-                                inputTextToField("4");
+                                inputTextToField(variable.numFour);
                               },
-                              child: Text("4",
+                              child: Text(variable.numFour,
                                   style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w400),
@@ -335,9 +337,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                inputTextToField("5");
+                                inputTextToField(variable.numFive);
                               },
-                              child: Text("5",
+                              child: Text(variable.numFive,
                                   style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w400),
@@ -345,9 +347,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                inputTextToField("6");
+                                inputTextToField(variable.numSix);
                               },
-                              child: Text("6",
+                              child: Text(variable.numSix,
                                   style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w400),
@@ -367,9 +369,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                           children: <Widget>[
                             MaterialButton(
                               onPressed: () {
-                                inputTextToField("7");
+                                inputTextToField(variable.numSeven);
                               },
-                              child: Text("7",
+                              child: Text(variable.numSeven,
                                   style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w400),
@@ -377,9 +379,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                inputTextToField("8");
+                                inputTextToField(variable.numEight);
                               },
-                              child: Text("8",
+                              child: Text(variable.numEight,
                                   style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w400),
@@ -387,9 +389,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                             ),
                             MaterialButton(
                               onPressed: () {
-                                inputTextToField("9");
+                                inputTextToField(variable.numNine);
                               },
-                              child: Text("9",
+                              child: Text(variable.numNine,
                                   style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w400),
@@ -418,9 +420,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                                 )),
                             MaterialButton(
                               onPressed: () {
-                                inputTextToField("0");
+                                inputTextToField(variable.numZero);
                               },
-                              child: Text("0",
+                              child: Text(variable.numZero,
                                   style: TextStyle(
                                       fontSize: 22.0,
                                       fontWeight: FontWeight.w400),
@@ -590,8 +592,8 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text("Successfully"),
-            content: Text("Otp matched successfully."),
+            title: Text(variable.strSuccessfully),
+            content: Text(variable.strOTPMatched),
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.check),
@@ -606,7 +608,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   void verifyOTP() {}
 
   void moveToDashboardScreen() {
-    PageNavigator.goToPermanent(context, '/dashboard_screen');
+    PageNavigator.goToPermanent(context,router.rt_Dashboard);
   }
 
   void checkOTPResponse(OTPResponse otpResponse) {
@@ -659,10 +661,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
   
   acceptanceWidget() {
     TextStyle defaultStyle =
-        TextStyle(color: Colors.black, fontFamily: 'Poppins', fontSize: 12);
+        TextStyle(color: Colors.black, fontFamily: variable.font_poppins, fontSize: 12);
     TextStyle linkStyle = TextStyle(
         color: Color(CommonUtil().getMyPrimaryColor()),
-        fontFamily: 'Poppins',
+        fontFamily: variable.font_poppins,
         fontSize: 12);
     return Padding(
         padding: EdgeInsets.only(top: 10, bottom: 10, right: 40, left: 40),
@@ -671,23 +673,23 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
           text: TextSpan(
             style: defaultStyle,
             children: <TextSpan>[
-              TextSpan(text: 'By completing Sign Up, you agree to our '),
+              TextSpan(text: variable.strAgree),
               TextSpan(
-                  text: 'Terms of Service',
+                  text: variable.strTermService,
                   style: linkStyle,
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       openWebView(Constants.terms_of_service,
-                          'assets/help_docs/termsandconditions.html', true);
+                          variable.file_terms, true);
                     }),
-              TextSpan(text: ' and '),
+              TextSpan(text: variable.strAnd),
               TextSpan(
-                  text: 'Privacy Policy',
+                  text: variable.strPrivacyPolicy,
                   style: linkStyle,
                   recognizer: TapGestureRecognizer()
                     ..onTap = () {
                       openWebView(Constants.privacy_policy,
-                          'assets/help_docs/privacypolicy.html', true);
+                          variable.file_privacy, true);
                     }),
             ],
           ),
@@ -706,7 +708,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
     _myProfileBloc
         .getMyProfileData(Constants.KEY_USERID_MAIN)
         .then((profileData) {
-      print('Inside getUserProfileData' + profileData.toString());
+      
       PreferenceUtil.saveProfileData(Constants.KEY_PROFILE_MAIN, profileData)
           .then((value) {
         Navigator.of(context).pop();

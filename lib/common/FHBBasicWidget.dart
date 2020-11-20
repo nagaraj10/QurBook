@@ -1,16 +1,21 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/AudioWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/database/model/UnitsMesurement.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/src/model/user/ProfilePicThumbnail.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:showcaseview/showcase.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 import 'CommonConstants.dart';
 
@@ -18,20 +23,20 @@ class FHBBasicWidget {
   FHBBasicWidget();
 
   DateTime dateTime = DateTime.now();
+  String authToken;
 
   Widget getSaveButton(Function onSavedPressed) {
     return RaisedGradientButton(
       width: 120,
       height: 40,
       child: Text(
-        'Save',
+        variable.strSave,
         style: TextStyle(
             color: Colors.white, fontSize: 16, fontWeight: FontWeight.w500),
       ),
       borderRadius: 30,
       gradient: LinearGradient(
         colors: <Color>[
-          //Colors.deepPurple[300], Colors.deepPurple
           Color(new CommonUtil().getMyPrimaryColor()),
           Color(new CommonUtil().getMyGredientColor())
         ],
@@ -53,7 +58,6 @@ class FHBBasicWidget {
           autofocus: false,
           onTap: () {
             onTextFieldtap(context, searchParam);
-            //moveToSearchScreen(context, 'Doctors');
           },
           controller: searchController,
         ));
@@ -113,11 +117,11 @@ class FHBBasicWidget {
     if (picked != null && picked != dateTime) {
       dateTime = picked ?? dateTime;
 
-      print('setstate' +
-          new DateFormat("dd/MM/yyyy").format(dateTime).toString());
-
       return onDateSelected(
-          dateTime, new DateFormat("dd/MM/yyyy").format(dateTime).toString());
+          dateTime,
+          new DateFormat(variable.strDateFormatDay)
+              .format(dateTime)
+              .toString());
     }
   }
 
@@ -141,7 +145,7 @@ class FHBBasicWidget {
   Widget getContainerWithNoDataText() {
     return Container(
       child: Center(
-        child: Text('No data Available'),
+        child: Text(variable.strNoData),
       ),
     );
   }
@@ -169,9 +173,36 @@ class FHBBasicWidget {
           );
   }
 
+  Widget getProfilePicWidgeUsingUrl(String profilePicThumbnailUrl) {
+/*
+    setAuthToken().then((authToken) {
+*/
+    if (profilePicThumbnailUrl != '') {
+      return Image.network(
+        profilePicThumbnailUrl,
+        height: 50,
+        width: 50,
+        fit: BoxFit.cover,
+        headers: {HttpHeaders.authorizationHeader: authToken},
+      );
+    } else {
+      return Container(
+        color: Color(fhbColors.bgColorContainer),
+        height: 50,
+        width: 50,
+      );
+    }
+    /* });*/
+  }
+
+  Future<String> setAuthToken() async {
+    authToken = await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    return authToken;
+  }
+
   Widget getDefaultProfileImage() {
     return Image.network(
-      'https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50',
+      '',
       height: 50,
       width: 50,
     );
@@ -214,7 +245,7 @@ class FHBBasicWidget {
               errorValue = CommonConstants.strErrorStringForDevices +
                   ' ' +
                   unitsMesurements.minValue.toString() +
-                  ' and ' +
+                  variable.strAnd +
                   unitsMesurements.maxValue.toString();
 
               onTextChanged(errorValue);
@@ -265,11 +296,9 @@ class FHBBasicWidget {
         ))
             .then((results) {
           if (results != null) {
-            if (results.containsKey('audioFile')) {
+            if (results.containsKey(Constants.keyAudioFile)) {
               containsAudio = true;
-              audioPath = results['audioFile'];
-              print('Audio Path' + audioPath);
-              print('Audio Path' + containsAudio.toString());
+              audioPath = results[Constants.keyAudioFile];
 
               updateUI(containsAudio, audioPath);
             }
@@ -325,21 +354,20 @@ class FHBBasicWidget {
           context: context,
           child: AlertDialog(
             title: Text(
-              'Logout',
+              variable.strLogout,
               style: TextStyle(
                   fontSize: 16, color: Color(CommonUtil().getMyPrimaryColor())),
             ),
             content: Text(
-              'Stay Healthy.. See you Soon. \nMaya will be waiting to serve you.',
+              variable.strLogoutMsg,
               style: TextStyle(fontSize: 14),
             ),
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
-                  //print("you choose no");
                   Navigator.of(context).pop(false);
                 },
-                child: Text('Cancel',
+                child: Text(variable.Cancel,
                     style: TextStyle(
                         color: Color(CommonUtil().getMyPrimaryColor()))),
               ),
@@ -347,7 +375,7 @@ class FHBBasicWidget {
                 onPressed: () {
                   logout();
                 },
-                child: Text('Yes',
+                child: Text(variable.strYes,
                     style: TextStyle(
                         color: Color(CommonUtil().getMyPrimaryColor()))),
               ),
@@ -404,7 +432,6 @@ class FHBBasicWidget {
                         ],
                       )),
                   decoration: new BoxDecoration(
-                    //color: Colors.white,
                     gradient: LinearGradient(colors: [
                       Color(CommonUtil().getMyPrimaryColor()),
                       Color(CommonUtil().getMyGredientColor())
@@ -425,7 +452,7 @@ class FHBBasicWidget {
                   padding: EdgeInsets.all(4),
                   alignment: FractionalOffset.centerLeft,
                   child: new Image(
-                    image: new AssetImage('assets/maya/maya_us_main.png'),
+                    image: new AssetImage(variable.icon_mayaMain),
                     height: 80.0,
                     width: 80.0,
                   ),
@@ -433,54 +460,7 @@ class FHBBasicWidget {
                       color: Colors.white, shape: BoxShape.circle),
                 ),
               ],
-            ))
-
-        /* Container(
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
-        ),
-        child: Row(
-          children: <Widget>[
-            Image.asset(
-              'assets/maya/maya_us.png',
-              height: 80,
-              width: 80,
-            ),
-            SizedBox(width: 20),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    desc,
-                    style: TextStyle(
-                        fontSize: 20.0,
-                        color: Color(CommonUtil().getMyPrimaryColor()),
-                        fontFamily: 'Poppins'),
-                    maxLines: 2,
-                    softWrap: true,
-                  ),
-                ),
-                SizedBox(
-                  height: 10.0,
-                ),
-                Text(
-                  desc,
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Color(CommonUtil().getMyPrimaryColor()),
-                      fontFamily: 'Poppins'),
-                  softWrap: true,
-                ),
-              ],
-            )
-          ],
-        ),
-      ), */
-        );
+            )));
   }
 
   static Widget getRefreshContainerButton(
@@ -496,18 +476,65 @@ class FHBBasicWidget {
               style: TextStyle(
                 fontSize: 13,
               )),
-          /*  FlatButton(
-              onPressed: () {
-                onRefreshPressed();
-              },
-              child: Text(
-                'Refresh',
-                style: TextStyle(
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
-                    fontWeight: FontWeight.w600),
-              )),
-        */
         ],
+      ),
+    );
+  }
+
+  Future<bool> showDialogWithTwoButtons(
+      BuildContext context, Function logout, String title, String msg) {
+    return showDialog(
+          context: context,
+          child: AlertDialog(
+            title: Text(
+              title,
+              style: TextStyle(
+                  fontSize: 16, color: Color(CommonUtil().getMyPrimaryColor())),
+            ),
+            content: Text(
+              msg,
+              style: TextStyle(fontSize: 14),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text(variable.Cancel,
+                    style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()))),
+              ),
+              FlatButton(
+                onPressed: () {
+                  logout();
+                },
+                child: Text(variable.strYes,
+                    style: TextStyle(
+                        color: Color(CommonUtil().getMyPrimaryColor()))),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
+  Widget getRichTextFieldWithNoCallbacks(
+      BuildContext context, TextEditingController searchController) {
+    return Container(
+      height: MediaQuery.of(context).size.height / 5,
+      child: TextField(
+        decoration: InputDecoration(
+            disabledBorder:
+                OutlineInputBorder(borderSide: BorderSide(width: 5)),
+            hintStyle: TextStyle(fontSize: 13),
+            //hintText: MESSAGE_HINT,
+            border: OutlineInputBorder(
+                borderSide: BorderSide(width: 5),
+                borderRadius: BorderRadius.circular(7))),
+        controller: searchController,
+        maxLength: 500,
+        maxLines: 4,
+        onChanged: (value) {},
       ),
     );
   }

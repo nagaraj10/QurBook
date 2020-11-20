@@ -7,24 +7,30 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/my_family/models/FamilyData.dart';
+import 'package:myfhb/my_family/models/FamilyMembersRes.dart';
 import 'package:myfhb/my_family/models/FamilyMembersResponse.dart';
-import 'package:myfhb/src/model/user/MyProfile.dart';
+import 'package:myfhb/my_family/models/LinkedData.dart';
+import 'package:myfhb/my_family/models/ProfileData.dart';
+import 'package:myfhb/my_family/models/Sharedbyme.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/my_family/models/relationships.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
 
 class FamilyListView {
-  FamilyData familyData;
+  FamilyMemberResult familyData;
 
   FamilyListView(this.familyData);
 
   Future<Widget> getDialogBoxWithFamilyMember(
-      FamilyData data,
+      FamilyMemberResult data,
       BuildContext context,
       GlobalKey<State> _keyLoader,
       Function(BuildContext context, String searchParam, String name)
           onTextFieldtap) async {
     // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
-    print('INSIDE DIALOG BOX CLASS');
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -34,25 +40,10 @@ class FamilyListView {
                 child: Column(
                   children: <Widget>[
                     data != null
-                        ? setupAlertDialoadContainer(data.sharedbyme, context,
-                            onTextFieldtap, _keyLoader)
+                        ? setupAlertDialoadContainer(data.sharedByUsers,
+                            context, onTextFieldtap, _keyLoader)
                         : setupAlertDialoadContainer(
                             null, context, onTextFieldtap, _keyLoader),
-                    /*  Container(
-                      margin: EdgeInsets.only(left: 20, right: 20),
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                    color: Color( new CommonUtil().getMyPrimaryColor()),
-                          borderRadius: BorderRadius.circular(10)),
-                      child: FlatButton(
-                        child: Text(
-                          'Add new family member',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        onPressed: () {},
-                      ),
-                    ) */
                   ],
                 ),
               ));
@@ -60,36 +51,42 @@ class FamilyListView {
   }
 
   Widget setupAlertDialoadContainer(
-      List<Sharedbyme> sharedByMe,
+      List<SharedByUsers> sharedByMeList,
       BuildContext context,
       Function(BuildContext context, String searchParam, String name)
           onTextFieldtap,
       GlobalKey<State> _keyLoader) {
-    print('INSIDE setupAlertDialoadContainer');
-    MyProfile myProfile =
+    MyProfileModel myProfile =
         PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
 
     ProfileData profileData = new ProfileData(
         id: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         userId: PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN));
-    LinkedData linkedData = new LinkedData(roleName: 'Self', nickName: 'Self');
+    LinkedData linkedData =
+        new LinkedData(roleName: variable.Self, nickName: variable.Self);
 
-    if (sharedByMe == null) {
-      sharedByMe = new List();
-      sharedByMe.add(
-          new Sharedbyme(profileData: profileData, linkedData: linkedData));
-      print('inside setupAlertDialoadContainer single' +
-          sharedByMe.length.toString());
+    sharedByMeList.insert(
+        0,
+        new SharedByUsers(
+            id: myProfile.result.id,
+            nickName: 'Self',
+            relationship: RelationsShipModel(name: 'Self')));
+
+    /* if (sharedByMeList == null) {
+      sharedByMeList = new List();
+      sharedByMeList.add(
+          new SharedByUsers(profileData: profileData, linkedData: linkedData));
     } else {
-      sharedByMe.insert(
-          0, new Sharedbyme(profileData: profileData, linkedData: linkedData));
-      print('inside setupAlertDialoadContainer multiple' +
-          sharedByMe.length.toString());
-    }
+      if (!sharedByMeList.contains(
+          new Sharedbyme(profileData: profileData, linkedData: linkedData))) {
+        sharedByMeList.insert(0,
+            new Sharedbyme(profileData: profileData, linkedData: linkedData));
+      }
+    }*/
+    List<SharedByUsers> sharedByMe = removeDuplicates(sharedByMeList);
+
     if (sharedByMe.length > 0) {
       return Container(
-          /*  constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height - 200), */
           decoration: BoxDecoration(
               color: const Color(fhbColors.bgColorContainer),
               borderRadius: BorderRadius.circular(10)),
@@ -103,7 +100,7 @@ class FamilyListView {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(
-                      'Switch User',
+                      variable.Switch_User,
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                     ),
@@ -140,37 +137,28 @@ class FamilyListView {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               ClipOval(
-                                  child: sharedByMe[index]
-                                              .linkedData
-                                              .nickName ==
-                                          'Self'
-                                      ? myProfile.response.data.generalInfo
-                                                  .profilePicThumbnail !=
+                                  child: sharedByMe[index].nickName ==
+                                          variable.Self
+                                      ? myProfile.result
+                                                  .profilePicThumbnailUrl !=
                                               null
                                           ? new FHBBasicWidget()
-                                              .getProfilePicWidget(myProfile
-                                                  .response
-                                                  .data
-                                                  .generalInfo
-                                                  .profilePicThumbnail)
+                                              .getProfilePicWidgeUsingUrl(
+                                                  myProfile.result
+                                                      .profilePicThumbnailUrl)
                                           : Container(
                                               height: 50,
                                               width: 50,
                                               child: Center(
                                                   child: Text(
-                                                      myProfile
-                                                                  .response
-                                                                  .data
-                                                                  .generalInfo
-                                                                  .qualifiedFullName !=
-                                                              null
-                                                          ? myProfile
-                                                              .response
-                                                              .data
-                                                              .generalInfo
-                                                              .qualifiedFullName
-                                                              .firstName[0]
-                                                              .toUpperCase()
+                                                      myProfile.result != null
+                                                          ? myProfile.result
+                                                                      .firstName !=
+                                                                  null
+                                                              ? myProfile.result
+                                                                  .firstName[0]
+                                                                  .toUpperCase()
+                                                              : 'S'
                                                           : '',
                                                       style: TextStyle(
                                                           color: Color(CommonUtil()
@@ -179,55 +167,46 @@ class FamilyListView {
                                               color: const Color(
                                                   fhbColors.bgColorContainer),
                                             )
-                                      : sharedByMe[index]
-                                                  .profileData
-                                                  .profilePicThumbnail !=
+                                      : /*sharedByMe[index]
+                                                  .child
+                                                  .profilePicThumbnailUrl !=
                                               null
-                                          ? Image.memory(
-                                              Uint8List.fromList(
-                                                  sharedByMe[index]
-                                                      .profileData
-                                                      .profilePicThumbnail
-                                                      .data),
+                                          ? Image.network(
+                                              sharedByMe[index]
+                                                  .child
+                                                  .profilePicThumbnailUrl,
                                               height: 50,
                                               width: 50,
                                               fit: BoxFit.cover,
                                             )
-                                          : Container(
-                                              height: 50,
-                                              width: 50,
-                                              child: Center(
-                                                child: Text(
-                                                  sharedByMe[index]
-                                                              .profileData
-                                                              .qualifiedFullName
-                                                              .firstName !=
-                                                          null
-                                                      ? sharedByMe[index]
-                                                          .profileData
-                                                          .qualifiedFullName
-                                                          .firstName[0]
-                                                          .toUpperCase()
-                                                      : '',
-                                                  style: TextStyle(
-                                                      color: Color(CommonUtil()
-                                                          .getMyPrimaryColor()),
-                                                      fontSize: 22),
-                                                ),
-                                              ),
-                                              color: const Color(
-                                                  fhbColors.bgColorContainer),
-                                            )),
+                                          :*/
+                                      Container(
+                                          height: 50,
+                                          width: 50,
+                                          child: Center(
+                                            child: Text(
+                                              sharedByMe[index].nickName != null
+                                                  ? sharedByMe[index]
+                                                      .nickName[0]
+                                                      .toUpperCase()
+                                                  : '',
+                                              style: TextStyle(
+                                                  color: Color(CommonUtil()
+                                                      .getMyPrimaryColor()),
+                                                  fontSize: 22),
+                                            ),
+                                          ),
+                                          color: const Color(
+                                              fhbColors.bgColorContainer),
+                                        )),
                               SizedBox(width: 20),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    sharedByMe[index].linkedData.nickName !=
-                                            null
+                                    sharedByMe[index].nickName != null
                                         ? toBeginningOfSentenceCase(
                                             sharedByMe[index]
-                                                .linkedData
                                                 .nickName
                                                 .toLowerCase())
                                         : '',
@@ -238,13 +217,15 @@ class FamilyListView {
                                         fontWeight: FontWeight.w500),
                                   ),
                                   Text(
-                                    sharedByMe[index].linkedData.roleName !=
-                                            null
-                                        ? toBeginningOfSentenceCase(
-                                            sharedByMe[index]
-                                                .linkedData
-                                                .roleName
-                                                .toLowerCase())
+                                    sharedByMe[index].relationship != null
+                                        ? sharedByMe[index].relationship.name !=
+                                                null
+                                            ? toBeginningOfSentenceCase(
+                                                sharedByMe[index]
+                                                    .relationship
+                                                    .name
+                                                    .toLowerCase())
+                                            : ''
                                         : '',
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
@@ -256,11 +237,13 @@ class FamilyListView {
                           ),
                         ),
                         onTap: () {
-                          print('String tap');
-                          onTextFieldtap(
-                              context,
-                              sharedByMe[index].profileData.userId,
-                              sharedByMe[index].linkedData.nickName);
+                          if (index == 0) {
+                            onTextFieldtap(context, sharedByMe[index].id,
+                                sharedByMe[index].nickName);
+                          } else {
+                            onTextFieldtap(context, sharedByMe[index].child.id,
+                                sharedByMe[index].nickName);
+                          }
                         },
                       ),
                     );
@@ -270,7 +253,18 @@ class FamilyListView {
             ],
           ));
     } else {
-      return Center(child: Text('No family members added yet'));
+      return Center(child: Text(variable.strNoFamily));
     }
+  }
+
+  List<SharedByUsers> removeDuplicates(List<SharedByUsers> SharedbymeList) {
+    List<SharedByUsers> sharedByMeClone = new List();
+
+    for (SharedByUsers sharedbymeObj in SharedbymeList) {
+      if (!sharedByMeClone.contains(sharedbymeObj)) {
+        sharedByMeClone.add(sharedbymeObj);
+      }
+    }
+    return sharedByMeClone;
   }
 }
