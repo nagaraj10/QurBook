@@ -29,6 +29,7 @@ class DevicesViewModel with ChangeNotifier {
     devicelist.add(DeviceData(
         title: Constants.STR_BP_MONITOR,
         icon: Constants.Devices_BP,
+        icon_new: Constants.Devices_BP_Tool,
         status: 0,
         isSelected: false,
         value_name: parameters.strDataTypeBP,
@@ -39,6 +40,7 @@ class DevicesViewModel with ChangeNotifier {
     devicelist.add(DeviceData(
         title: Constants.STR_GLUCOMETER,
         icon: Constants.Devices_GL,
+        icon_new: Constants.Devices_GL_Tool,
         status: 0,
         isSelected: false,
         value_name: parameters.strGlusoceLevel,
@@ -48,6 +50,7 @@ class DevicesViewModel with ChangeNotifier {
     devicelist.add(DeviceData(
         title: Constants.STR_PULSE_OXIMETER,
         icon: Constants.Devices_OxY,
+        icon_new: Constants.Devices_OxY_Tool,
         status: 0,
         isSelected: false,
         value_name: parameters.strOxgenSaturation,
@@ -57,6 +60,7 @@ class DevicesViewModel with ChangeNotifier {
     devicelist.add(DeviceData(
         title: Constants.STR_THERMOMETER,
         icon: Constants.Devices_THM,
+        icon_new: Constants.Devices_THM_Tool,
         status: 0,
         isSelected: false,
         value_name: parameters.strTemperature,
@@ -66,6 +70,7 @@ class DevicesViewModel with ChangeNotifier {
     devicelist.add(DeviceData(
         title: Constants.STR_WEIGHING_SCALE,
         icon: Constants.Devices_WS,
+        icon_new: Constants.Devices_WS_Tool,
         status: 0,
         isSelected: false,
         value_name: parameters.strWeight,

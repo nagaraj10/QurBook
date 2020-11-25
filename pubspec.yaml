@@ -99,6 +99,8 @@ dependencies:
   flutter_money_formatter:
     git:
       url: git://github.com/anisalibegic/flutter_money_formatter.git
+  screen: ^0.0.5
+  grouped_list: ^3.7.0
 
 
 

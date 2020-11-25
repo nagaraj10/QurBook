@@ -260,7 +260,7 @@ const String AuthToken =
 const String countryCode = '91';
 const String mobileNumber = '9176117878';
 
-//for security purposes
+//for security purposesf
 
 const String STR_NOTES = 'Notes';
 const String STR_ONLY_ONE = 'Can attach only one record';
@@ -272,6 +272,12 @@ const String Devices_GL = 'assets/devices/gulco.png';
 const String Devices_OxY = 'assets/devices/pulse_oxim.png';
 const String Devices_THM = 'assets/devices/fever.png';
 const String Devices_WS = 'assets/devices/weight.png';
+
+const String Devices_BP_Tool = 'assets/devices/bp_tool.png';
+const String Devices_GL_Tool = 'assets/devices/gulcose_tool.png';
+const String Devices_OxY_Tool = 'assets/devices/spo2_tool.png';
+const String Devices_THM_Tool = 'assets/devices/temperature_tool.png';
+const String Devices_WS_Tool = 'assets/devices/weight_tool.png';
 
 const String audioFileAACType = '.aac';
 const String audioFileTypeAppStream = 'application/octet-stream';
@@ -354,6 +360,8 @@ const String STR_NOT_VERIFIED = 'Not Verified';
 const String STR_SUCCESS = 'success';
 const String STR_FAILED = 'failed';
 const String STR_DONE = 'Done';
+
+const String STR_LATEST_VALUE = 'Latest Value';
 
 const String SHEELA_LANG = 'sheela_lang';
 const String STR_FAMILY_ADD_MSG =

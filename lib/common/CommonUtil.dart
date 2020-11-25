@@ -1033,64 +1033,69 @@ class CommonUtil {
     });
   }
 
-  List<DeviceData> getDeviceList() {
-    List<DeviceData> devicelist = new List<DeviceData>();
+  DeviceData getDeviceList() {
+    DeviceData devicelist;
     if (PreferenceUtil.getStringValue(Constants.bpMon) != variable.strFalse) {
-      devicelist.add(DeviceData(
+      devicelist =DeviceData(
           title: Constants.STR_BP_MONITOR,
           icon: Constants.Devices_BP,
+          icon_new: Constants.Devices_BP_Tool,
           status: 0,
           isSelected: false,
           value_name: parameters.strDataTypeBP,
           value1: 'SYS',
           value2: 'DIS',
-          color: [Colors.teal, Colors.tealAccent]));
+          color: [Colors.teal, Colors.tealAccent]);
     }
     if (PreferenceUtil.getStringValue(Constants.glMon) != variable.strFalse) {
-      devicelist.add(DeviceData(
+      devicelist = DeviceData(
           title: Constants.STR_GLUCOMETER,
           icon: Constants.Devices_GL,
+          icon_new: Constants.Devices_GL_Tool,
           status: 0,
           isSelected: false,
           value_name: parameters.strGlusoceLevel,
           value1: 'GL',
           value2: '',
-          color: [Colors.deepOrange, Colors.deepOrangeAccent]));
+          color: [Colors.deepOrange, Colors.deepOrangeAccent]);
     }
 
     if (PreferenceUtil.getStringValue(Constants.oxyMon) != variable.strFalse) {
-      devicelist.add(DeviceData(
+      devicelist = DeviceData(
           title: Constants.STR_PULSE_OXIMETER,
           icon: Constants.Devices_OxY,
+          icon_new: Constants.Devices_OxY_Tool,
           status: 0,
           isSelected: false,
           value_name: parameters.strOxgenSaturation,
           value1: 'OS',
           value2: '',
-          color: [Colors.blue, Colors.blueAccent]));
+          color: [Colors.blue, Colors.blueAccent]);
     }
 
     if (PreferenceUtil.getStringValue(Constants.wsMon) != variable.strFalse) {
-      devicelist.add(DeviceData(
+      devicelist=DeviceData(
           title: Constants.STR_WEIGHING_SCALE,
           icon: Constants.Devices_WS,
+          icon_new: Constants.Devices_WS_Tool,
           status: 0,
           isSelected: false,
           value_name: parameters.strWeight,
           value1: 'WT',
           value2: '',
-          color: [Colors.amber[700], Colors.amber[300]]));
+          color: [Colors.amber[700], Colors.amber[300]]);
     }
     if (PreferenceUtil.getStringValue(Constants.thMon) != variable.strFalse) {
-      devicelist.add(DeviceData(
+      devicelist=DeviceData(
           title: Constants.STR_THERMOMETER,
           icon: Constants.Devices_THM,
+          icon_new: Constants.Devices_THM_Tool,
           status: 0,
           isSelected: false,
           value_name: parameters.strTemperature,
           value1: 'TEMP',
           value2: '',
-          color: [Colors.indigo, Colors.indigoAccent]));
+          color: [Colors.indigo, Colors.indigoAccent]);
     }
 
     return devicelist;
@@ -1376,4 +1381,5 @@ class CommonUtil {
     Get.to(MyFhbWebView(
             title: title, selectedUrl: url, isLocalAsset: isLocal));
   }
+
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:provider/provider.dart';
 
 import 'package:myfhb/constants/fhb_parameters.dart';
@@ -16,8 +19,11 @@ import 'package:myfhb/device_integration/model/WeightValues.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 
 class EachDeviceValues extends StatelessWidget {
-  EachDeviceValues({this.device_name});
+  EachDeviceValues({this.device_name, this.device_icon});
+
   final String device_name;
+  final String device_icon;
+
   @override
   Widget build(BuildContext context) {
     DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
@@ -25,15 +31,26 @@ class EachDeviceValues extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           getStringValue(),
+          style: TextStyle(fontSize: 18),
         ),
+        actions: <Widget>[
+          new Image.asset(
+            device_icon,
+            height: 40.0,
+            width: 40.0,
+          ),
+          SizedBoxWidget(
+            width: 15,
+          )
+        ],
         flexibleSpace: GradientAppBar(),
       ),
       body: Container(
-        color: Color(0xFFDCDCDC),
+        color: Colors.grey[200],
         child: Column(
           children: [
             Container(
-              height: 10.0,
+              height: 6.0,
             ),
             Expanded(
               child: getValues(context, _devicesmodel),
@@ -45,22 +62,19 @@ class EachDeviceValues extends StatelessWidget {
   }
 
   String getFormattedDateTime(String datetime) {
-    print(datetime.toString());
     DateTime dateTimeStamp = DateTime.parse(datetime);
-    String formattedDate =
-        DateFormat('MMM d, yyyy').format(dateTimeStamp);
+    String formattedDate = DateFormat('d MMM yyyy').format(dateTimeStamp);
     return formattedDate;
   }
 
   String getFormattedTime(String datetime) {
-    print(datetime.toString());
     DateTime dateTimeStamp = DateTime.parse(datetime);
-    String formattedDate =
-    DateFormat('h:mm a').format(dateTimeStamp);
+    String formattedDate = DateFormat('h:mm a').format(dateTimeStamp);
     return formattedDate;
   }
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
+    var todayDate = getFormattedDateTime(DateTime.now().toString());
     switch (device_name) {
       case strDataTypeBP:
         {
@@ -70,25 +84,44 @@ class EachDeviceValues extends StatelessWidget {
                 if (!snapshot.hasData) {
                   return new Center(
                     child: new CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.blueAccent,
                     ),
                   );
                 }
                 List<BPResult> translist = snapshot.data;
                 return !translist.isEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: translist.length,
-                        itemBuilder: (context, i) {
-                          return buildRow(
-                              translist[i].sourceType,
-                              getFormattedDateTime(translist[i].startDateTime),
-                              '${translist[i].systolic}',
-                              '${translist[i].diastolic}',
+                    ? GroupedListView<BPResult, String>(
+                        groupBy: (element) =>
+                            getFormattedDateTime(element.startDateTime),
+                        elements: translist,
+                        sort: true,
+                        groupSeparatorBuilder: (String value) => Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBoxWidget(width: 15),
+                              Text(
+                                todayDate != value ? value : 'Today, ' + value,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                        indexedItemBuilder: (context, i, index) {
+                          return buildRowForBp(
+                              translist[index].sourceType,
+                              getFormattedDateTime(
+                                  translist[index].startDateTime),
+                              '${translist[index].systolic}',
+                              '${translist[index].diastolic}',
                               '',
                               'Systolic',
                               'Diastolic',
-                              '',getFormattedTime(translist[i].startDateTime));
+                              '',
+                              getFormattedTime(translist[index].startDateTime));
                         },
                       )
                     : Container(
@@ -115,29 +148,49 @@ class EachDeviceValues extends StatelessWidget {
                 if (!snapshot.hasData) {
                   return new Center(
                     child: new CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.blueAccent,
                     ),
                   );
                 }
                 List<GVResult> translist = snapshot.data;
                 return !translist.isEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: translist.length,
-                        itemBuilder: (context, i) {
+                    ? GroupedListView<GVResult, String>(
+                        groupBy: (element) =>
+                            getFormattedDateTime(element.startDateTime),
+                        elements: translist,
+                        sort: true,
+                        groupSeparatorBuilder: (String value) => Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBoxWidget(width: 15),
+                              Text(
+                                value,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                        indexedItemBuilder: (context, i, index) {
                           return buildRowForGulcose(
-                              translist[i].sourceType,
-                              getFormattedDateTime(translist[i].startDateTime),
-                              '${translist[i].bloodGlucoseLevel}',
-                              translist[i].mealContext == null
+                              translist[index].sourceType,
+                              getFormattedDateTime(
+                                  translist[index].startDateTime),
+                              '${translist[index].bloodGlucoseLevel}',
+                              translist[index].mealContext == null
                                   ? 'Not Provided'
-                                  : '${translist[i].mealContext}',
-                              translist[i].mealType == null
+                                  : '${translist[index].mealContext}',
+                              translist[index].mealType == null
                                   ? 'Not Provided'
-                                  : '${translist[i].mealType}',
-                              '${translist[i].bgUnit}',
+                                  : '${translist[index].mealType}',
+                              'Blood Glucose',
                               'Meal Context',
-                              'Meal Type',getFormattedTime(translist[i].startDateTime));
+                              'Meal Type',
+                              getFormattedTime(translist[index].startDateTime),
+                              translist[index].bgUnit);
                         },
                       )
                     : Container(
@@ -164,25 +217,45 @@ class EachDeviceValues extends StatelessWidget {
                 if (!snapshot.hasData) {
                   return new Center(
                     child: new CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.blueAccent,
                     ),
                   );
                 }
                 List<OxyResult> translist = snapshot.data;
                 return !translist.isEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: translist.length,
-                        itemBuilder: (context, i) {
-                          return buildRow(
-                              translist[i].sourceType,
-                              getFormattedDateTime(translist[i].startDateTime),
-                              '${translist[i].oxygenSaturation}',
+                    ? GroupedListView<OxyResult, String>(
+                        groupBy: (element) =>
+                            getFormattedDateTime(element.startDateTime),
+                        elements: translist,
+                        sort: true,
+                        groupSeparatorBuilder: (String value) => Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBoxWidget(width: 15),
+                              Text(
+                                value,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                        indexedItemBuilder: (context, i, index) {
+                          return buildRowForOxygen(
+                              translist[index].sourceType,
+                              getFormattedDateTime(
+                                  translist[index].startDateTime),
+                              '${translist[index].oxygenSaturation}',
                               '',
                               '',
                               'OxygenSaturation Value',
                               '',
-                              '',getFormattedTime(translist[i].startDateTime));
+                              '',
+                              getFormattedTime(translist[index].startDateTime),
+                              '');
                         },
                       )
                     : Container(
@@ -209,26 +282,45 @@ class EachDeviceValues extends StatelessWidget {
                 if (!snapshot.hasData) {
                   return new Center(
                     child: new CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.blueAccent,
                     ),
                   );
                 }
                 List<WVResult> translist = snapshot.data;
-                //devicesViewModel.fetchWVDetails(snapshot.data.toString());
                 return !translist.isEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: translist.length,
-                        itemBuilder: (context, i) {
-                          return buildRow(
-                              translist[i].sourceType,
-                              getFormattedDateTime(translist[i].startDateTime),
-                              '${translist[i].weight}',
+                    ? GroupedListView<WVResult, String>(
+                        groupBy: (element) =>
+                            getFormattedDateTime(element.startDateTime),
+                        elements: translist,
+                        sort: true,
+                        groupSeparatorBuilder: (String value) => Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBoxWidget(width: 15),
+                              Text(
+                                value,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                        indexedItemBuilder: (context, i, index) {
+                          return buildRowForOxygen(
+                              translist[index].sourceType,
+                              getFormattedDateTime(
+                                  translist[index].startDateTime),
+                              '${translist[index].weight}',
                               '',
                               '',
-                              '${translist[i].weightUnit}',
+                              'Weight',
                               '',
-                              '',getFormattedTime(translist[i].startDateTime));
+                              '',
+                              getFormattedTime(translist[index].startDateTime),
+                              'Kg');
                         },
                       )
                     : Container(
@@ -255,25 +347,45 @@ class EachDeviceValues extends StatelessWidget {
                 if (!snapshot.hasData) {
                   return new Center(
                     child: new CircularProgressIndicator(
-                      backgroundColor: Colors.grey,
+                      backgroundColor: Colors.blueAccent,
                     ),
                   );
                 }
                 List<TMPResult> translist = snapshot.data;
                 return !translist.isEmpty
-                    ? ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: translist.length,
-                        itemBuilder: (context, i) {
-                          return buildRow(
-                              translist[i].sourceType,
-                              getFormattedDateTime(translist[i].startDateTime),
-                              '${translist[i].temperature}',
+                    ? GroupedListView<TMPResult, String>(
+                        groupBy: (element) =>
+                            getFormattedDateTime(element.startDateTime),
+                        elements: translist,
+                        sort: true,
+                        groupSeparatorBuilder: (String value) => Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Row(
+                            children: [
+                              SizedBoxWidget(width: 15),
+                              Text(
+                                value,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                        indexedItemBuilder: (context, i, index) {
+                          return buildRowForOxygen(
+                              translist[index].sourceType,
+                              getFormattedDateTime(
+                                  translist[index].startDateTime),
+                              '${translist[index].temperature}',
                               '',
                               '',
-                              '${translist[i].temperatureUnit}',
+                              'Temperature',
                               '',
-                              '',getFormattedTime(translist[i].startDateTime));
+                              '',
+                              getFormattedTime(translist[index].startDateTime),
+                              'F');
                         },
                       )
                     : Container(
@@ -336,12 +448,20 @@ class EachDeviceValues extends StatelessWidget {
   }
 }
 
-Widget buildRow(String type, String date, String value1, String value2,
-    String value3, String valuename1, String valuename2, String valuename3,time) {
+Widget buildRowForBp(
+    String type,
+    String date,
+    String value1,
+    String value2,
+    String value3,
+    String valuename1,
+    String valuename2,
+    String valuename3,
+    String time) {
   return Padding(
     padding: const EdgeInsets.only(top: 5.0),
     child: Container(
-      height: 90,
+      height: 60,
       color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -352,79 +472,148 @@ Widget buildRow(String type, String date, String value1, String value2,
               SizedBox(
                 width: 15,
               ),
-              type == null ? Icons.device_unknown : TypeIcon(type),
-              SizedBox(
-                width: 20,
+              Column(
+                children: [
+                  Container(
+                    width: 42,
+                    height: 14,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: <Color>[
+                              Color(new CommonUtil().getMyPrimaryColor()),
+                              Color(new CommonUtil().getMyGredientColor())
+                            ],
+                            stops: [
+                              0.3,
+                              1.0
+                            ])),
+                    child: Center(
+                      child: Text(time,
+                          style: TextStyle(color: Colors.white, fontSize: 9)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 2.0,
+                  ),
+                  type == null ? Icons.device_unknown : TypeIcon(type),
+                ],
               ),
-              valuename1!=''?Expanded(
-                flex: 5,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 5),
-                    Text(
-                      valuename1,
-                      style: TextStyle(color: Colors.black),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      value1 == '' ? '' : value1,
-                      style: TextStyle(
-                          color: Colors.lightBlueAccent,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ):SizedBox(),
-              valuename2!=''?Expanded(
-                flex: 4,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 5),
-                    Text(
-                      valuename2 == '' ? '' : valuename2,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Text(
-                      value2,
-                      style: TextStyle(
-                          color: Colors.lightBlueAccent,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ):SizedBox(),
-              valuename3!=''?Expanded(
-                flex: 4,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(height: 5),
-                    Text(
-                      valuename3 == '' ? '' : valuename3,
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    SizedBox(
-                      height: 5.0,
-                    ),
-                    Text(
-                      value3,
-                      style: TextStyle(
-                          color: Colors.lightBlueAccent,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ):SizedBox(),
-              Expanded(
+              SizedBox(
+                width: 60,
+              ),
+              valuename1 != ''
+                  ? Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 5),
+                          Text(
+                            valuename1,
+                            style: TextStyle(color: Colors.black, fontSize: 11),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: 5),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                value1 == '' ? '' : value1,
+                                style: TextStyle(
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                              SizedBoxWidget(
+                                width: 2,
+                              ),
+                              Text(
+                                value1 == '' ? '' : 'mm Hg',
+                                style: TextStyle(
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 9),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : SizedBox(),
+              valuename2 != ''
+                  ? Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          SizedBox(height: 5),
+                          Text(
+                            valuename2 == '' ? '' : valuename2,
+                            style: TextStyle(color: Colors.black, fontSize: 11),
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                value2,
+                                style: TextStyle(
+                                    color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 13,fontWeight: FontWeight.w500),
+                              ),
+                              SizedBoxWidget(
+                                width: 2,
+                              ),
+                              Text(
+                                value1 == '' ? '' : 'mm Hg',
+                                style: TextStyle(
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 9),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    )
+                  : SizedBox(),
+              /*valuename3 != ''
+                  ? Expanded(
+                      flex: 4,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(height: 5),
+                          Text(
+                            valuename3 == '' ? '' : valuename3,
+                            style: TextStyle(color: Colors.black),
+                          ),
+                          SizedBox(
+                            height: 5.0,
+                          ),
+                          Text(
+                            value3,
+                            style: TextStyle(
+                                color: Colors.lightBlueAccent,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    )
+                  : SizedBox(),*/
+              /*Expanded(
                   flex: 4,
                   child: Container(
                     child: Column(
@@ -434,16 +623,9 @@ Widget buildRow(String type, String date, String value1, String value2,
                           date,
                           style: TextStyle(color: Colors.grey),
                         ),
-                        SizedBox(
-                          width: 10.0,
-                        ),
-                        Text(
-                          time,
-                          style: TextStyle(color: Colors.grey),
-                        ),
                       ],
                     ),
-                  )),
+                  )),*/
             ],
           ),
         ],
@@ -452,12 +634,21 @@ Widget buildRow(String type, String date, String value1, String value2,
   );
 }
 
-Widget buildRowForGulcose(String type, String date, String value1, String value2,
-    String value3, String valuename1, String valuename2, String valuename3,time) {
+Widget buildRowForGulcose(
+    String type,
+    String date,
+    String value1,
+    String value2,
+    String value3,
+    String valuename1,
+    String valuename2,
+    String valuename3,
+    String time,
+    String unit) {
   return Padding(
     padding: const EdgeInsets.only(top: 5.0),
     child: Container(
-      height: 100,
+      height: 60,
       color: Colors.white,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -468,37 +659,83 @@ Widget buildRowForGulcose(String type, String date, String value1, String value2
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: 2.0,
-                ),
-                type == null ? Icons.device_unknown : TypeIcon(type),
-                SizedBox(
-                  width: 6.0,
+                  width: 8.0,
                 ),
                 Column(
                   children: [
+                    Container(
+                      width: 42,
+                      height: 14,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: <Color>[
+                                Color(new CommonUtil().getMyPrimaryColor()),
+                                Color(new CommonUtil().getMyGredientColor())
+                              ],
+                              stops: [
+                                0.3,
+                                1.0
+                              ])),
+                      child: Center(
+                        child: Text(time,
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 9)),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 2.0,
+                    ),
+                    type == null ? Icons.device_unknown : TypeIcon(type),
+                  ],
+                ),
+                SizedBox(
+                  width: 20.0,
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
                       valuename1,
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.black, fontSize: 11),
                     ),
                     SizedBox(
                       height: 5.0,
                     ),
-                    Text(
-                      value1 == '' ? '' : value1,
-                      style: TextStyle(
-                          color: Colors.lightBlueAccent,
-                          fontWeight: FontWeight.bold),
-                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          value1 == '' ? '' : value1,
+                          style: TextStyle(
+                              color: Color(new CommonUtil().getMyPrimaryColor()),
+                              fontSize: 13,fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          value1 == '' ? '' : unit,
+                          style: TextStyle(
+                              color: Color(new CommonUtil().getMyPrimaryColor()),
+                              fontSize: 9),
+                        ),
+                      ],
+                    )
+
                   ],
                 ),
                 SizedBox(
-                  width: 6.0,
+                  width: 18.0,
                 ),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       valuename2 == '' ? '' : valuename2,
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.black, fontSize: 11),
                     ),
                     SizedBox(
                       height: 5.0,
@@ -506,19 +743,21 @@ Widget buildRowForGulcose(String type, String date, String value1, String value2
                     Text(
                       value2,
                       style: TextStyle(
-                          color: Colors.lightBlueAccent,
-                          fontWeight: FontWeight.bold),
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          fontSize: 12),
                     ),
                   ],
                 ),
                 SizedBox(
-                  width: 6.0,
+                  width: 18.0,
                 ),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       valuename3 == '' ? '' : valuename3,
-                      style: TextStyle(color: Colors.black),
+                      style: TextStyle(color: Colors.black, fontSize: 11),
                     ),
                     SizedBox(
                       height: 5.0,
@@ -526,29 +765,29 @@ Widget buildRowForGulcose(String type, String date, String value1, String value2
                     Text(
                       value3,
                       style: TextStyle(
-                          color: Colors.lightBlueAccent,
-                          fontWeight: FontWeight.bold),
+                          color: Color(new CommonUtil().getMyPrimaryColor()),
+                          fontSize: 12),
                     ),
                   ],
                 ),
-                SizedBox(
+                /* SizedBox(
                   width: 6.0,
                 ),
                 Column(
                   children: [
                     Text(
                       date,
-                      style: TextStyle(color: Colors.grey,fontSize: 10),
+                      style: TextStyle(color: Colors.grey, fontSize: 10),
                     ),
                     SizedBox(
                       width: 10.0,
                     ),
                     Text(
                       time,
-                      style: TextStyle(color: Colors.grey,fontSize: 10),
+                      style: TextStyle(color: Colors.grey, fontSize: 10),
                     ),
                   ],
-                ),
+                ),*/
               ],
             ),
           ),
@@ -570,30 +809,129 @@ Widget buildRowForGulcose(String type, String date, String value1, String value2
   );
 }
 
+Widget buildRowForOxygen(
+    String type,
+    String date,
+    String value1,
+    String value2,
+    String value3,
+    String valuename1,
+    String valuename2,
+    String valuename3,
+    String time,
+    String unit) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 5.0),
+    child: Container(
+      height: 60,
+      color: Colors.white,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(
+                width: 15,
+              ),
+              Column(
+                children: [
+                  Container(
+                    width: 42,
+                    height: 14,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: <Color>[
+                              Color(new CommonUtil().getMyPrimaryColor()),
+                              Color(new CommonUtil().getMyGredientColor())
+                            ],
+                            stops: [
+                              0.3,
+                              1.0
+                            ])),
+                    child: Center(
+                      child: Text(time,
+                          style: TextStyle(color: Colors.white, fontSize: 9)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 2.0,
+                  ),
+                  type == null ? Icons.device_unknown : TypeIcon(type),
+                ],
+              ),
+              valuename1 != ''
+                  ? Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(height: 5),
+                          Text(
+                            valuename1,
+                            style: TextStyle(color: Colors.black, fontSize: 11),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(width: 15),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                value1 == '' ? '' : value1,
+                                style: TextStyle(
+                                    color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 13,fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                unit!=''?unit:'',
+                                style: TextStyle(
+                                    color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 10),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    )
+                  : SizedBoxWidget()
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 Widget TypeIcon(String type) {
   if (type == strsourceHK) {
     return Image.asset(
       'assets/devices/fit.png',
-      height: 40.0,
-      width: 40.0,
+      height: 32.0,
+      width: 32.0,
     );
   } else if (type == strsourceGoogle) {
     return Image.asset(
       'assets/settings/googlefit.png',
-      height: 40.0,
-      width: 40.0,
+      height: 32.0,
+      width: 32.0,
     );
   } else if (type == strsourceSheela) {
     return Image.asset(
       'assets/maya/maya_us.png',
-      height: 40.0,
-      width: 40.0,
+      height: 32.0,
+      width: 32.0,
     );
-  }else{
+  } else {
     return Image.asset(
       'assets/launcher/myfhb.png',
-      height: 40.0,
-      width: 40.0,
+      height: 32.0,
+      width: 32.0,
     );
   }
 }

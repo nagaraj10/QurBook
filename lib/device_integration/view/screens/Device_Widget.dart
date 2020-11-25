@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/device_integration/view/screens/Clipper.dart';
+import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
 
-import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
@@ -12,6 +20,7 @@ import 'package:myfhb/device_integration/view/screens/Device_Value.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class ShowDevicesNew extends StatefulWidget {
   @override
@@ -22,55 +31,67 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   DevicesViewModel devicesViewModel;
 
   LastMeasureSyncValues deviceValues;
-  List<DeviceData> finalList;
+  DeviceData finalList;
 
-  String date;
-  String time;
-  DateTime dateTimeStamp;
-  var devicevalue1;
-  var devicevalue2;
+  String dateForBp;
+  String dateForGulcose;
+  String dateForOs;
+  String dateForWeight;
+  String dateForTemp;
+
+  String timeForBp;
+  String timeForGulcose;
+  String timeForOs;
+  String timeForWeight;
+  String timeForTemp;
+
+  DateTime dateTimeStampForBp;
+  DateTime dateTimeStampForGulcose;
+  DateTime dateTimeStampForOs;
+  DateTime dateTimeStampForWeight;
+  DateTime dateTimeStampForTemp;
+
+  var devicevalue1ForBp;
+  var devicevalue2ForBp;
+
+  var devicevalue1ForGulcose;
+  var deviceMealContext;
+  var deviceMealType;
+  var devicevalue1ForOs;
+  var devicevalue1ForWeight;
+  var devicevalue1ForTemp;
+
+  MyProfileModel myProfile;
+  AddFamilyUserInfoRepository addFamilyUserInfoRepository =
+      AddFamilyUserInfoRepository();
+
   @override
   void initState() {
-    finalList = new List();
-    finalList = CommonUtil().getDeviceList();
+    //finalList = CommonUtil().getDeviceList();
     super.initState();
   }
 
+  getProfileData() async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
+      myProfile = value;
+    });
+  }
+
   Widget build(BuildContext context) {
-    finalList = CommonUtil().getDeviceList();
-    print("Refresh and updated the devices list");
+    //finalList = CommonUtil().getDeviceList();
+    getProfileData();
     return getBody(context);
-    /*Stack(
-      children: <Widget>[
-        Scaffold(
-            backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0.0,
-            ),
-            body: getBody(context))
-      ],
-    );*/
   }
 
   Widget getBody(BuildContext context) {
     DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
-    return Container(
-      margin: EdgeInsets.only(top: 40),
-      alignment: Alignment.center,
-      child: getValues(context, _devicesmodel),
-      /*
-      child: Column(
-        children: [
-          SizedBox(
-            height: 5.0,
-          ),
-          Expanded(
-            child: getValues(context, _devicesmodel),
-          ),
-        ],
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.only(top: 30),
+        alignment: Alignment.center,
+        child: getValues(context, _devicesmodel),
       ),
-      */
     );
   }
 
@@ -80,39 +101,18 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             deviceValues = snapshot.data;
-
-            return Padding(
-              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
-                runAlignment: WrapAlignment.center,
-                verticalDirection: VerticalDirection.down,
-                spacing: 10,
-                runSpacing: 10,
-                children: getDeviceCards(context, finalList),
-              ),
-            );
-
-            /*
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: finalList.length,
-                              itemBuilder: (context, i) {
-                                return Container(child: projectWidget(context, finalList[i]));
-                              });
-                              */
+            return projectWidget(context);
           } else {
             return new Center(
               child: new CircularProgressIndicator(
-                backgroundColor: Colors.grey,
+                backgroundColor: Colors.blueAccent,
               ),
             );
           }
         });
   }
 
-  Widget projectWidget(BuildContext context, DeviceData deviceData) {
+  Widget projectWidget(BuildContext context) {
     if (deviceValues.toString() == null) {
       print('device Values is empty reload to get data');
       return new Center(
@@ -122,31 +122,103 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       );
     }
 
-    switch (deviceData.value_name) {
-      case parameters.strDataTypeBP:
-        {
-          if (deviceValues.bloodPressure.entities.isNotEmpty) {
-            dateTimeStamp =
-                deviceValues.bloodPressure.entities[0].startDateTime;
-            //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
-            date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
-            time =
-                "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
+    if (deviceValues.bloodPressure.entities.isNotEmpty) {
+      dateTimeStampForBp = deviceValues.bloodPressure.entities[0].startDateTime;
+      //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
+      dateForBp =
+          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForBp)}";
+      timeForBp =
+          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForBp)}";
 
-            devicevalue1 =
-                deviceValues.bloodPressure.entities[0].systolic.toString();
-            devicevalue2 =
-                deviceValues.bloodPressure.entities[0].diastolic.toString();
-          } else {
-            date = 'Record not available';
-            devicevalue1 = '';
-            devicevalue2 = '';
-          }
-          return getDeviceData(
-              context, date, time, devicevalue1, devicevalue2, deviceData);
-        }
-      case parameters.strGlusoceLevel:
+      devicevalue1ForBp =
+          deviceValues.bloodPressure.entities[0].systolic.toString();
+      devicevalue2ForBp =
+          deviceValues.bloodPressure.entities[0].diastolic.toString();
+    } else {
+      dateForBp = 'Record not available';
+      devicevalue1ForBp = '';
+      devicevalue2ForBp = '';
+    }
+    if (deviceValues.bloodGlucose.entities.isNotEmpty) {
+      dateTimeStampForGulcose =
+          deviceValues.bloodGlucose.entities[0].startDateTime;
+      dateForGulcose =
+          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForGulcose)}";
+      timeForGulcose =
+          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForGulcose)}";
+      devicevalue1ForGulcose =
+          deviceValues.bloodGlucose.entities[0].bloodGlucoseLevel.toString();
+      deviceMealContext =
+          deviceValues.bloodGlucose.entities[0].mealContext.name.toString();
+      deviceMealType =
+          deviceValues.bloodGlucose.entities[0].mealType.name.toString();
+    } else {
+      dateForGulcose = 'Record not available';
+      devicevalue1ForGulcose = '';
+      deviceMealContext = '';
+      deviceMealType = '';
+    }
+    if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
+      dateTimeStampForOs =
+          deviceValues.oxygenSaturation.entities[0].startDateTime;
+      dateForOs =
+          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForOs)}";
+      timeForOs =
+          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForOs)}";
+      devicevalue1ForOs =
+          deviceValues.oxygenSaturation.entities[0].oxygenSaturation.toString();
+    } else {
+      dateForOs = 'Record not available';
+      devicevalue1ForOs = '';
+    }
+    if (deviceValues.bodyTemperature.entities.isNotEmpty) {
+      dateTimeStampForTemp =
+          deviceValues.bodyTemperature.entities[0].startDateTime;
+      dateForTemp =
+          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForTemp)}";
+      timeForTemp =
+          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForTemp)}";
+      devicevalue1ForTemp =
+          deviceValues.bodyTemperature.entities[0].temperature.toString();
+    } else {
+      dateForTemp = 'Record not available';
+      devicevalue1ForTemp = '';
+    }
+    if (deviceValues.bodyWeight.entities.isNotEmpty) {
+      dateTimeStampForWeight =
+          deviceValues.bodyWeight.entities[0].startDateTime;
+      dateForWeight =
+          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}";
+      timeForWeight =
+          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForWeight)}";
+      devicevalue1ForWeight =
+          deviceValues.bodyWeight.entities[0].weight.toString();
+    } else {
+      dateForWeight = 'Record not available';
+      devicevalue1ForWeight = '';
+    }
+    return getDeviceData(
+        context,
+        dateForBp,
+        dateForGulcose,
+        dateForOs,
+        dateForWeight,
+        dateForTemp,
+        timeForBp,
+        timeForGulcose,
+        timeForOs,
+        timeForWeight,
+        timeForTemp,
+        devicevalue1ForBp,
+        devicevalue1ForGulcose,
+        deviceMealContext,
+        deviceMealType,
+        devicevalue1ForOs,
+        devicevalue1ForWeight,
+        devicevalue1ForTemp,
+        devicevalue2ForBp);
+
+    /*case parameters.strGlusoceLevel:
         {
           if (deviceValues.bloodGlucose.entities.isNotEmpty) {
             dateTimeStamp = deviceValues.bloodGlucose.entities[0].startDateTime;
@@ -217,121 +289,882 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           }
           return getDeviceData(
               context, date, time, devicevalue1, '', deviceData);
-        }
-    }
+        }*/
     //}
   }
 
-  Widget getDeviceData(BuildContext context, String date, String time,
-      String value1, String value2, DeviceData deviceData) {
+  Widget getDeviceData(
+      BuildContext context,
+      String dateForBp,
+      String dateForGulcose,
+      String dateForOs,
+      String dateForWeight,
+      String dateForTemp,
+      String timeForBp,
+      String timeForGulcose,
+      String timeForOs,
+      String timeForWeight,
+      String timeForTemp,
+      String value1ForBp,
+      value1ForGulcose,
+      mealContext,
+      mealType,
+      value1ForOs,
+      value1ForWeight,
+      value1ForTemp,
+      String value2ForBp) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ChangeNotifierProvider(
-                        create: (context) => DevicesViewModel(),
-                        child: EachDeviceValues(
-                          device_name: deviceData.value_name,
-                        ),
-                      )),
-            );
-          },
+        ClipPath(
+          clipper: WaveClipperTwo(),
           child: Container(
-            width: 180,
-            height: 120,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                gradient: LinearGradient(colors: deviceData.color)
-                //color: Colors.white,
+            height: 200,
+            color: hexToColor('#025FEA'),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Row(
+                  children: [
+                    SizedBoxWidget(
+                      width: 25,
+                    ),
+                    CircleAvatar(
+                      backgroundColor: Colors.white,
+                      radius: 28,
+                      backgroundImage: AssetImage('assets/user/avatar.png'),
+                      child: CircleAvatar(
+                        radius: 28,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage: NetworkImage(myProfile != null ??
+                                myProfile.result.profilePicThumbnailUrl != null
+                            ? myProfile.result.profilePicThumbnailUrl
+                            : ''),
+                      ),
+                    ),
+                    SizedBoxWidget(
+                      width: 15,
+                    ),
+                    Text(
+                      myProfile != null ?? myProfile.result.firstName != null
+                          ? 'Hey ' +
+                              toBeginningOfSentenceCase(
+                                  myProfile.result.firstName) +
+                              ','
+                          : ' Hey User',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ],
                 ),
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              date != null ? date : '',
-                              style:
-                                  TextStyle(fontSize: 13, color: Colors.white),
-                            ),
-                            Text(
-                              time != null ? time : '',
-                              style: TextStyle(
-                                  fontSize: 11, color: Colors.white70),
-                            )
-                          ],
-                        ),
-                      ),
-                      Image.asset(
-                        deviceData.icon,
-                        height: 32.0,
-                        width: 32.0,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            deviceData.value1,
-                            style:
-                                TextStyle(color: Colors.white70, fontSize: 11),
-                          ),
-                          Text(
-                            value1.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 22),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          deviceData.value2 != ''
-                              ? Text(
-                                  deviceData.value2,
-                                  style: TextStyle(
-                                      color: Colors.white70, fontSize: 11),
-                                )
-                              : SizedBox(
-                                  width: 0,
-                                ),
-                          Text(
-                            value2.toString(),
-                            style: TextStyle(color: Colors.white, fontSize: 22),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ],
-              ),
+                SizedBoxWidget(height: 20),
+              ],
             ),
           ),
+        ),
+        SizedBoxWidget(
+          height: 5,
+        ),
+        Visibility(
+          visible: PreferenceUtil.getStringValue(Constants.glMon) !=
+                  variable.strFalse
+              ? true
+              : false,
+          child: Row(
+            children: [
+              SizedBoxWidget(
+                width: 10,
+              ),
+              Expanded(
+                flex: 1,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChangeNotifierProvider(
+                                create: (context) => DevicesViewModel(),
+                                child: EachDeviceValues(
+                                  device_name: strGlusoceLevel,
+                                  device_icon: Devices_GL_Tool,
+                                ),
+                              )),
+                    );
+                  },
+                  child: Container(
+                    width: 180,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: hexToColor('#91268E'),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              Container(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          STR_LATEST_VALUE,
+                                          style: TextStyle(
+                                              fontSize: 8, color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          dateForGulcose != null
+                                              ? dateForGulcose + ', '
+                                              : '',
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white),
+                                        ),
+                                        Text(
+                                          timeForGulcose != null
+                                              ? timeForGulcose
+                                              : '',
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Blood Glucose Level',
+                                    style: TextStyle(
+                                        color: Colors.white70, fontSize: 10),
+                                  ),
+                                  Row(
+                                    children: [
+                                      Text(
+                                        value1ForGulcose != ''
+                                            ? value1ForGulcose.toString()
+                                            : '',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      SizedBoxWidget(
+                                        width: 2,
+                                      ),
+                                      Text(
+                                        value1ForGulcose != '' ? 'mmol/L' : '',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Meal Context',
+                                    style: TextStyle(
+                                        color: Colors.white70, fontSize: 10),
+                                  ),
+                                  Text(
+                                    deviceMealContext != ''
+                                        ? deviceMealContext.toString()
+                                        : '',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 12),
+                                  ),
+                                  SizedBoxWidget(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    'Meal Type',
+                                    style: TextStyle(
+                                        color: Colors.white70, fontSize: 10),
+                                  ),
+                                  Text(
+                                    deviceMealType != ''
+                                        ? deviceMealType.toString()
+                                        : '',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 12),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Image.asset(
+                                    'assets/devices/gulcose_dashboard.png',
+                                    height: 45.0,
+                                    width: 45.0,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              )
+                              /*SizedBox(
+                                width: 10,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  deviceData.value2 != ''
+                                      ? Text(
+                                          deviceData.value2,
+                                          style: TextStyle(
+                                              color: Colors.white70,
+                                              fontSize: 11),
+                                        )
+                                      : SizedBox(
+                                          width: 0,
+                                        ),
+                                  Text(
+                                    value2.toString(),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 22),
+                                  )
+                                ],
+                              )*/
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBoxWidget(
+                width: 10,
+              )
+            ],
+          ),
+        ),
+        SizedBoxWidget(
+          height: 6,
+        ),
+        Column(
+          children: [
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.start,
+              runAlignment: WrapAlignment.start,
+              verticalDirection: VerticalDirection.down,
+              spacing: 6,
+              runSpacing: 6,
+              /*crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.end,*/
+              children: [
+                Visibility(
+                  visible: PreferenceUtil.getStringValue(Constants.thMon) !=
+                          variable.strFalse
+                      ? true
+                      : false,
+                  child: Container(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                    create: (context) => DevicesViewModel(),
+                                    child: EachDeviceValues(
+                                      device_name: strTemperature,
+                                      device_icon: Devices_THM_Tool,
+                                    ),
+                                  )),
+                        );
+                      },
+                      child: Container(
+                        width: 165,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: hexToColor('#4529DE'),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              STR_LATEST_VALUE,
+                                              style: TextStyle(
+                                                  fontSize: 8, color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              dateForTemp != null
+                                                  ? dateForTemp + ', '
+                                                  : '',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.white),
+                                            ),
+                                            Text(
+                                              timeForTemp != null
+                                                  ? timeForTemp
+                                                  : '',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.white),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Temperature',
+                                        style: TextStyle(
+                                            color: Colors.white70, fontSize: 10),
+                                      ),
+                                      Text(
+                                        value1ForTemp.toString() + 'F',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Image.asset(
+                                        'assets/devices/temp_dashboard.png',
+                                        height: 40.0,
+                                        width: 35.0,
+                                      ),
+                                    ],
+                                  )
+                                  /* SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      deviceData.value2 != ''
+                                          ? Text(
+                                              deviceData.value2,
+                                              style: TextStyle(
+                                                  color: Colors.white70,
+                                                  fontSize: 11),
+                                            )
+                                          : SizedBox(
+                                              width: 0,
+                                            ),
+                                      Text(
+                                        value2.toString(),
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 22),
+                                      )
+                                    ],
+                                  )*/
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: PreferenceUtil.getStringValue(Constants.bpMon) !=
+                          variable.strFalse
+                      ? true
+                      : false,
+                  child: Container(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                    create: (context) => DevicesViewModel(),
+                                    child: EachDeviceValues(
+                                      device_name: strDataTypeBP,
+                                      device_icon: Devices_BP_Tool,
+                                    ),
+                                  )),
+                        );
+                      },
+                      child: Container(
+                        width: 165,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: hexToColor('#05ADC7'),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              STR_LATEST_VALUE,
+                                              style: TextStyle(
+                                                  fontSize: 8, color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              dateForBp != null
+                                                  ? dateForBp + ', '
+                                                  : '',
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.white),
+                                            ),
+                                            Text(
+                                              timeForBp != null ? timeForBp : '',
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.white),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Systolic',
+                                        style: TextStyle(
+                                            color: Colors.white70, fontSize: 10),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            value1ForBp.toString(),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            value1ForBp != '' ? 'mmGh' : '',
+                                            style: TextStyle(
+                                                color: Colors.white, fontSize: 6),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Diastolic',
+                                        style: TextStyle(
+                                            color: Colors.white70, fontSize: 10),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            value2ForBp != ''
+                                                ? value2ForBp.toString()
+                                                : '',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            value2ForBp != '' ? 'mmGh' : '',
+                                            style: TextStyle(
+                                                color: Colors.white, fontSize: 6),
+                                          )
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Image.asset(
+                                        'assets/devices/bp_dashboard.png',
+                                        height: 32.0,
+                                        width: 32.0,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: PreferenceUtil.getStringValue(Constants.oxyMon) !=
+                          variable.strFalse
+                      ? true
+                      : false,
+                  child: Container(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                    create: (context) => DevicesViewModel(),
+                                    child: EachDeviceValues(
+                                      device_name: strOxgenSaturation,
+                                      device_icon: Devices_OxY_Tool,
+                                    ),
+                                  )),
+                        );
+                      },
+                      child: Container(
+                        width: 165,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: hexToColor('#F72B60'),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              STR_LATEST_VALUE,
+                                              style: TextStyle(
+                                                  fontSize: 8, color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              dateForOs != null
+                                                  ? dateForOs + ', '
+                                                  : '',
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.white),
+                                            ),
+                                            Text(
+                                              timeForOs != null ? timeForOs : '',
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.white),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'SPO2 Reading',
+                                        style: TextStyle(
+                                            color: Colors.white70, fontSize: 10),
+                                      ),
+                                      Text(
+                                        value1ForOs.toString(),
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Image.asset(
+                                        'assets/devices/os_dashboard.png',
+                                        height: 32.0,
+                                        width: 32.0,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: PreferenceUtil.getStringValue(Constants.wsMon) !=
+                          variable.strFalse
+                      ? true
+                      : false,
+                  child: Container(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                    create: (context) => DevicesViewModel(),
+                                    child: EachDeviceValues(
+                                      device_name: strWeight,
+                                      device_icon: Devices_WS_Tool,
+                                    ),
+                                  )),
+                        );
+                      },
+                      child: Container(
+                        width: 165,
+                        height: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color: hexToColor('#FF5733'),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Container(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              STR_LATEST_VALUE,
+                                              style: TextStyle(
+                                                  fontSize: 8, color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                              dateForWeight != null
+                                                  ? dateForWeight + ', '
+                                                  : '',
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.white),
+                                            ),
+                                            Text(
+                                              timeForWeight != null
+                                                  ? timeForWeight
+                                                  : '',
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.white),
+                                            )
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        'Weight',
+                                        style: TextStyle(
+                                            color: Colors.white70, fontSize: 10),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            value1ForWeight != ''
+                                                ? value1ForWeight.toString()
+                                                : '',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBoxWidget(
+                                            width: 2,
+                                          ),
+                                          Text(
+                                            value1ForWeight != '' ? 'kgs' : '',
+                                            style: TextStyle(
+                                                color: Colors.white, fontSize: 10),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      Image.asset(
+                                        'assets/devices/weight_dashboard.png',
+                                        height: 32.0,
+                                        width: 32.0,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  )
+                                  /*SizedBox(
+                                    width: 10,
+                                  ),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      deviceData.value2 != ''
+                                          ? Text(
+                                              deviceData.value2,
+                                              style: TextStyle(
+                                                  color: Colors.white70,
+                                                  fontSize: 11),
+                                            )
+                                          : SizedBox(
+                                              width: 0,
+                                            ),
+                                      Text(
+                                        value2.toString(),
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 22),
+                                      )
+                                    ],
+                                  )*/
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ],
     );
   }
 
-  getDeviceCards(BuildContext context, List<DeviceData> finalList) {
+  /*getDeviceCards(BuildContext context, List<DeviceData> finalList) {
     List<Widget> deviceCards = [];
 
     for (int i = 0; i < finalList.length; i++) {
@@ -339,5 +1172,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     }
 
     return deviceCards;
+  }*/
+
+  Color hexToColor(String hexString, {String alphaChannel = 'FF'}) {
+    return Color(int.parse(hexString.replaceFirst('#', '0x$alphaChannel')));
   }
 }
