@@ -15,6 +15,7 @@ import 'package:sqflite/sqflite.dart';
 
 class FHBUtils {
   static String CURRENT_DATE_CODE = 'DMY';
+  static final String ANDROID_FILE_PATH = '/storage/emulated/0/MYFHB/';
   List<String> YMDList = [
     'sq_AL',
     'en_AU',
@@ -250,11 +251,14 @@ class FHBUtils {
   }
 
   static Future<String> createFolderInAppDocDir(String folderName) async {
-    //Get this App Document Directory
-    final Directory _appDocDir = await getExternalStorageDirectory();
-    //App Document Directory + folder name
-    final Directory _appDocDirFolder =
-        Directory('${_appDocDir.path}/$folderName/');
+    Directory _appDocDirFolder;
+    //Create Directory with app name
+    if (Platform.isAndroid) {
+      _appDocDirFolder = Directory(ANDROID_FILE_PATH);
+    } else {
+      final Directory _appDocDir = await getApplicationDocumentsDirectory();
+      _appDocDirFolder = Directory('${_appDocDir.path}/MYFHB');
+    }
 
     if (await _appDocDirFolder.exists()) {
       //if folder already exists return path
