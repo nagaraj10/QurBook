@@ -385,7 +385,7 @@ class EachDeviceValues extends StatelessWidget {
                               '',
                               '',
                               getFormattedTime(translist[index].startDateTime),
-                              'F');
+                              'Fahrenheit');
                         },
                       )
                     : Container(
@@ -474,27 +474,10 @@ Widget buildRowForBp(
               ),
               Column(
                 children: [
-                  Container(
-                    width: 42,
-                    height: 14,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15),
-                        gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: <Color>[
-                              Color(new CommonUtil().getMyPrimaryColor()),
-                              Color(new CommonUtil().getMyGredientColor())
-                            ],
-                            stops: [
-                              0.3,
-                              1.0
-                            ])),
-                    child: Center(
+                    Center(
                       child: Text(time,
-                          style: TextStyle(color: Colors.white, fontSize: 9)),
+                          style: TextStyle(color: Colors.grey, fontSize: 9)),
                     ),
-                  ),
                   SizedBox(
                     height: 2.0,
                   ),
@@ -520,7 +503,7 @@ Widget buildRowForBp(
                           SizedBox(height: 5),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
                                 value1 == '' ? '' : value1,
@@ -563,7 +546,7 @@ Widget buildRowForBp(
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Text(
                                 value2,
@@ -663,28 +646,11 @@ Widget buildRowForGulcose(
                 ),
                 Column(
                   children: [
-                    Container(
-                      width: 42,
-                      height: 14,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: <Color>[
-                                Color(new CommonUtil().getMyPrimaryColor()),
-                                Color(new CommonUtil().getMyGredientColor())
-                              ],
-                              stops: [
-                                0.3,
-                                1.0
-                              ])),
-                      child: Center(
+                      Center(
                         child: Text(time,
                             style:
-                                TextStyle(color: Colors.white, fontSize: 9)),
+                                TextStyle(color: Colors.grey, fontSize: 9)),
                       ),
-                    ),
                     SizedBox(
                       height: 2.0,
                     ),
@@ -707,7 +673,7 @@ Widget buildRowForGulcose(
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           value1 == '' ? '' : value1,
@@ -715,6 +681,7 @@ Widget buildRowForGulcose(
                               color: Color(new CommonUtil().getMyPrimaryColor()),
                               fontSize: 13,fontWeight: FontWeight.w500),
                         ),
+                        SizedBoxWidget(width: 2,),
                         Text(
                           value1 == '' ? '' : unit,
                           style: TextStyle(
@@ -836,7 +803,7 @@ Widget buildRowForOxygen(
               ),
               Column(
                 children: [
-                  Container(
+                  /*Container(
                     width: 42,
                     height: 14,
                     decoration: BoxDecoration(
@@ -856,6 +823,10 @@ Widget buildRowForOxygen(
                       child: Text(time,
                           style: TextStyle(color: Colors.white, fontSize: 9)),
                     ),
+                  ),*/
+                  Center(
+                    child: Text(time,
+                        style: TextStyle(color: Colors.grey, fontSize: 9)),
                   ),
                   SizedBox(
                     height: 2.0,
@@ -887,12 +858,13 @@ Widget buildRowForOxygen(
                                     Color(new CommonUtil().getMyPrimaryColor()),
                                     fontSize: 13,fontWeight: FontWeight.w500),
                               ),
+                              SizedBoxWidget(width: 5,),
                               Text(
                                 unit!=''?unit:'',
                                 style: TextStyle(
                                     color:
                                     Color(new CommonUtil().getMyPrimaryColor()),
-                                    fontSize: 10),
+                                    fontSize: 12),
                               ),
                             ],
                           )

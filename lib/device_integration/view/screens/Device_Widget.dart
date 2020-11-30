@@ -337,7 +337,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                         radius: 28,
                         backgroundColor: Colors.transparent,
                         backgroundImage: NetworkImage(myProfile != null ??
-                                myProfile.result.profilePicThumbnailUrl != null
+                            myProfile.result!=null??myProfile.result.profilePicThumbnailUrl != null
                             ? myProfile.result.profilePicThumbnailUrl
                             : ''),
                       ),
@@ -469,10 +469,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                       Text(
                                         value1ForGulcose != ''
                                             ? value1ForGulcose.toString()
-                                            : '',
+                                            : '-',
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 22,
+                                            fontSize: value1ForGulcose!=''?22:10,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       SizedBoxWidget(
@@ -486,7 +486,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         ),
                                       ),
                                     ],
-                                  )
+                                  ),
+                                  SizedBoxWidget(
+                                    height: value1ForGulcose!=''?20:40,
+                                  ),
                                 ],
                               ),
                               Column(
@@ -501,7 +504,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   Text(
                                     deviceMealContext != ''
                                         ? deviceMealContext.toString()
-                                        : '',
+                                        : '-',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 12),
                                   ),
@@ -516,7 +519,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   Text(
                                     deviceMealType != ''
                                         ? deviceMealType.toString()
-                                        : '',
+                                        : '-',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 12),
                                   ),
@@ -617,10 +620,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Container(
                                     child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           crossAxisAlignment:
@@ -668,7 +673,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
@@ -678,12 +683,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             color: Colors.white70, fontSize: 10),
                                       ),
                                       Text(
-                                        value1ForTemp.toString() + 'F',
+                                        value1ForTemp!=''?value1ForTemp.toString() + 'F':'-',
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 22,
+                                            fontSize: value1ForTemp!=''?22:10,
                                             fontWeight: FontWeight.bold),
                                       ),
+                                      SizedBoxWidget(height: value1ForTemp!=''?0:15,),
                                     ],
                                   ),
                                   Column(
@@ -693,6 +699,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         height: 40.0,
                                         width: 35.0,
                                       ),
+                                      SizedBoxWidget(height: value1ForTemp!=''?0:10,),
                                     ],
                                   )
                                   /* SizedBox(
@@ -761,10 +768,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Container(
                                     child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           crossAxisAlignment:
@@ -819,19 +827,20 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                       Row(
                                         children: [
                                           Text(
-                                            value1ForBp.toString(),
+                                            value1ForBp!=''?value1ForBp.toString():'-',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 22,
+                                                fontSize: value1ForBp!=''?22:10,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(
-                                            value1ForBp != '' ? 'mmGh' : '',
+                                            value1ForBp != '' ? 'mmHg' : '',
                                             style: TextStyle(
                                                 color: Colors.white, fontSize: 6),
                                           ),
                                         ],
-                                      )
+                                      ),
+                                      SizedBoxWidget(height: value1ForBp!=''?0:10,),
                                     ],
                                   ),
                                   Column(
@@ -848,19 +857,20 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                           Text(
                                             value2ForBp != ''
                                                 ? value2ForBp.toString()
-                                                : '',
+                                                : '-',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 22,
+                                                fontSize: value2ForBp!=''?22:10,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           Text(
-                                            value2ForBp != '' ? 'mmGh' : '',
+                                            value2ForBp != '' ? 'mmHg' : '',
                                             style: TextStyle(
                                                 color: Colors.white, fontSize: 6),
                                           )
                                         ],
                                       ),
+                                      SizedBoxWidget(height: value2ForBp!=''?0:10,),
                                     ],
                                   ),
                                   Column(
@@ -871,8 +881,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         width: 32.0,
                                         color: Colors.white,
                                       ),
+                                      SizedBoxWidget(height: value2ForBp!=''?0:10,),
                                     ],
-                                  )
+                                  ),
                                 ],
                               ),
                             ],
@@ -915,7 +926,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Container(
                                     child: Column(
@@ -967,17 +978,18 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'SPO2 Reading',
+                                        'Pulse oximeter',
                                         style: TextStyle(
                                             color: Colors.white70, fontSize: 10),
                                       ),
                                       Text(
-                                        value1ForOs.toString(),
+                                        value1ForOs!=''?value1ForOs.toString():'-',
                                         style: TextStyle(
                                             color: Colors.white,
-                                            fontSize: 22,
+                                            fontSize: value1ForOs!=''?22:10,
                                             fontWeight: FontWeight.bold),
                                       ),
+                                      SizedBoxWidget(height: value1ForOs!=''?0:10,),
                                     ],
                                   ),
                                   Column(
@@ -988,6 +1000,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         width: 32.0,
                                         color: Colors.white,
                                       ),
+                                      SizedBoxWidget(height: value1ForOs!=''?0:10,),
                                     ],
                                   )
                                 ],
@@ -1032,7 +1045,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Container(
                                     child: Column(
@@ -1095,10 +1108,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                           Text(
                                             value1ForWeight != ''
                                                 ? value1ForWeight.toString()
-                                                : '',
+                                                : '-',
                                             style: TextStyle(
                                                 color: Colors.white,
-                                                fontSize: 22,
+                                                fontSize: value1ForWeight!=''?22:10,
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           SizedBoxWidget(
@@ -1109,6 +1122,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             style: TextStyle(
                                                 color: Colors.white, fontSize: 10),
                                           ),
+                                          SizedBoxWidget(height: value1ForWeight!=''?0:10,),
                                         ],
                                       )
                                     ],
@@ -1121,6 +1135,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         width: 32.0,
                                         color: Colors.white,
                                       ),
+                                      SizedBoxWidget(height: value1ForWeight!=''?0:10,),
                                     ],
                                   )
                                   /*SizedBox(
