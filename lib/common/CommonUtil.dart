@@ -1306,7 +1306,9 @@ class CommonUtil {
       http.Client _client = new http.Client();
       var req = await _client.get(Uri.parse(url));
       var bytes = req.bodyBytes;
-      String dir = await FHBUtils.createFolderInAppDocDir('images');
+      String dir = Platform.isIOS
+          ? await FHBUtils.createFolderInAppDocDirForIOS("images")
+          : await FHBUtils.createFolderInAppDocDir('images');
       File file = new File('$dir/${basename(url)}$extension');
       await file.writeAsBytes(bytes);
       return file;
@@ -1373,7 +1375,6 @@ class CommonUtil {
   }
 
   void openWebViewNew(String title, String url, bool isLocal) {
-    Get.to(MyFhbWebView(
-            title: title, selectedUrl: url, isLocalAsset: isLocal));
+    Get.to(MyFhbWebView(title: title, selectedUrl: url, isLocalAsset: isLocal));
   }
 }

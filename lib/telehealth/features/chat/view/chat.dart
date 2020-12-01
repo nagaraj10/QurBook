@@ -22,6 +22,7 @@ import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/PdfViewURL.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
+import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -156,7 +157,8 @@ class ChatState extends State<Chat> {
                     Text(
                       widget.lastDate != null
                           ? LAST_RECEIVED +
-                          getFormattedNewDateTime(int.parse(widget.lastDate))
+                              getFormattedNewDateTime(
+                                  int.parse(widget.lastDate))
                           : '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -700,7 +702,8 @@ class ChatScreenState extends State<ChatScreen> {
                                         bottomRight: Radius.circular(25))),
                                 child: InkWell(
                                   onTap: () {
-                                    goToPDFViewBasedonURL(document[STR_CONTENT]);
+                                    goToPDFViewBasedonURL(
+                                        document[STR_CONTENT]);
                                   },
                                   child: Container(
                                     constraints: BoxConstraints(
@@ -776,7 +779,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   goToPDFViewBasedonURL(String url) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => PDFViewURL(url: url),
+      builder: (context) =>
+          Platform.isIOS ? PDFiOSViewer(url: url) : PDFViewURL(url: url),
     ));
   }
 
@@ -1049,6 +1053,7 @@ class ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+
   Widget buildListMessage() {
     return Flexible(
       child: groupChatId == ''
@@ -1095,14 +1100,13 @@ class ChatScreenState extends State<ChatScreen> {
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
-        categoryPosition: position,
-        allowSelect: allowSelect,
-        isAudioSelect: isAudioSelect,
-        isNotesSelect: isNotesSelect,
-        selectedMedias: mediaIds,
-        isFromChat: true,
-          isAssociateOrChat:true
-      ),
+          categoryPosition: position,
+          allowSelect: allowSelect,
+          isAudioSelect: isAudioSelect,
+          isNotesSelect: isNotesSelect,
+          selectedMedias: mediaIds,
+          isFromChat: true,
+          isAssociateOrChat: true),
     ))
         .then((results) {
       if (results.containsKey(STR_META_ID)) {
@@ -1118,8 +1122,7 @@ class ChatScreenState extends State<ChatScreen> {
   getMediaURL(List<HealthRecordCollection> healthRecordCollection) {
     for (int i = 0; i < healthRecordCollection.length; i++) {
       String fileType = healthRecordCollection[i].fileType;
-      String fileURL =
-          healthRecordCollection[i].healthRecordUrl;
+      String fileURL = healthRecordCollection[i].healthRecordUrl;
       if ((fileType == STR_JPG) || (fileType == STR_PNG)) {
         onSendMessage(fileURL, 1);
       } else if ((fileType == STR_PDF)) {

@@ -267,6 +267,18 @@ class FHBUtils {
     }
   }
 
+  static Future<String> createFolderInAppDocDirForIOS(String folderName) async {
+    final Directory _appDocDir = await getApplicationDocumentsDirectory();
+    final Directory _appDocDirFolder =
+        Directory("${_appDocDir.path}/$folderName/");
+    if (await _appDocDirFolder.exists()) {
+      return _appDocDirFolder.path;
+    }
+    final Directory _appDocDirNewFolder =
+        await _appDocDirFolder.create(recursive: true);
+    return _appDocDirNewFolder.path;
+  }
+
   Future<List<AppointmentModel>> getAllAppointments() async {
     // Get a reference to the database.
     final Database db = await getDb();

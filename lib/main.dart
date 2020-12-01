@@ -42,7 +42,7 @@ import 'src/ui/connectivity_bloc.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
 
-var firstCamera;
+// var firstCamera;
 List<CameraDescription> listOfCameras;
 
 //variable for all outer
@@ -50,11 +50,11 @@ var routes;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final cameras = await availableCameras();
-  listOfCameras = cameras;
+  // final cameras = await availableCameras();
+  listOfCameras = [];
 
   // Get a specific camera from the list of available cameras.
-  firstCamera = cameras[0];
+  // firstCamera = cameras[0];
   routes = await router.setRouter(listOfCameras);
 
   //get secret from resource

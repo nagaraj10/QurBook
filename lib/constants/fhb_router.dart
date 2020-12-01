@@ -34,7 +34,7 @@ import '../feedback/FeedbacksSucess.dart';
 import '../my_family_detail/screens/my_family_detail_screen.dart';
 
 setRouter(List<CameraDescription> listOfCameras) async {
-  var firstCamera = listOfCameras[0];
+  // var firstCamera = listOfCameras[0];
 
   var fhb_router = <String, WidgetBuilder>{
     router.rt_Splash: (BuildContext context) => SplashScreen(),
@@ -60,8 +60,8 @@ setRouter(List<CameraDescription> listOfCameras) async {
           arguments: ModalRoute.of(context).settings.arguments,
           toPreviousScreen: false,
         ),
-    router.rt_TakePicture: (BuildContext context) =>
-        TakePictureScreen(camera: firstCamera),
+    // router.rt_TakePicture: (BuildContext context) =>
+    //     TakePictureScreen(camera: firstCamera),
     router.rt_TakePictureForDevices: (BuildContext context) =>
         TakePictureScreenForDevices(cameras: listOfCameras),
     router.rt_ConfirmLocation: (BuildContext context) => ConfirmLocationScreen(

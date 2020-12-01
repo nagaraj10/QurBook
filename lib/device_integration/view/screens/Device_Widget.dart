@@ -241,7 +241,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           },
           child: Container(
             width: 180,
-            height: 120,
+            height: 121,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 gradient: LinearGradient(colors: deviceData.color)
