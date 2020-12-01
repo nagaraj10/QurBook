@@ -212,6 +212,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   }
 
   _checkResponse(PatientLogIn response) {
+    print(response.toJson().toString());
     if (response.isSuccess) {
       Navigator.push(
           context,
@@ -219,9 +220,24 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
               builder: (context) => VerifyPatient(
                     PhoneNumber: numberController.text,
                     from: strFromLogin,
+                    userConfirm: false,
                   )));
-    } else {
-      toast.getToast(response.message, Colors.red);
+    }
+    else {
+      if(response.message=='User is not confirmed.'){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => VerifyPatient(
+                  PhoneNumber: response.diagnostics.errorData.userName,
+                  from: strFromSignUp,
+                  userConfirm: true,
+                  userId: response.diagnostics.errorData.userId,
+                )));
+      }else{
+        toast.getToast(response.message, Colors.red);
+      }
+
     }
   }
 

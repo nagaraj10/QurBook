@@ -1271,6 +1271,7 @@ class _MyFamilyState extends State<MyFamily> {
                       lName: lastNameController.text,
                       relationship: selectedRelationShip,
                       isPrimaryNoSelected: isPrimaryNoSelected,
+                      userConfirm: false,
                     ),
                   ),
                 ).then((value) {
