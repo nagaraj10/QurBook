@@ -97,6 +97,8 @@ dependencies:
   flutter_typeahead: ^1.8.8
   open_file: ^3.0.1
   screen: ^0.0.5
+  awesome_notifications: ^0.0.5+2
+
   flutter_money_formatter:
     git:
       url: git://github.com/anisalibegic/flutter_money_formatter.git

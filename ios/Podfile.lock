@@ -223,6 +223,10 @@ PODS:
   - AppAuth/ExternalUserAgent (1.4.0)
   - audioplayer (0.0.1):
     - Flutter
+  - awesome_notifications (0.0.1):
+    - Firebase
+    - Firebase/Messaging
+    - Flutter
   - BoringSSL-GRPC (0.0.7):
     - BoringSSL-GRPC/Implementation (= 0.0.7)
     - BoringSSL-GRPC/Interface (= 0.0.7)
@@ -283,6 +287,8 @@ PODS:
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
+  - Firebase (6.30.0):
+    - Firebase/Core (= 6.30.0)
   - Firebase/Auth (6.30.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 6.8.0)
@@ -533,6 +539,7 @@ PODS:
 DEPENDENCIES:
   - agora_rtc_engine (from `.symlinks/plugins/agora_rtc_engine/ios`)
   - audioplayer (from `.symlinks/plugins/audioplayer/ios`)
+  - awesome_notifications (from `.symlinks/plugins/awesome_notifications/ios`)
   - camera (from `.symlinks/plugins/camera/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
@@ -625,6 +632,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/agora_rtc_engine/ios"
   audioplayer:
     :path: ".symlinks/plugins/audioplayer/ios"
+  awesome_notifications:
+    :path: ".symlinks/plugins/awesome_notifications/ios"
   camera:
     :path: ".symlinks/plugins/camera/ios"
   cloud_firestore:
@@ -722,6 +731,7 @@ SPEC CHECKSUMS:
   AgoraRtcEngine_iOS: b2eedd8f9ab47b71163f3285e836bd23feb43fff
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
   audioplayer: 0584f31a697e4b0bbad405ae7903d7a93585e784
+  awesome_notifications: 263e7936224299a6cfad610c3fc73a9097043a44
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   BSGridCollectionViewLayout: 333dcb457a5a3bdd9212607ab5756553dcfe06cb
   BSImagePicker: 07404254f2fcdaf5a2eb403c0f8c337267ce8738
@@ -803,6 +813,6 @@ SPEC CHECKSUMS:
   video_player: 69c5f029fac4ffe4fc8a85ea7f7b793709661549
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
 
-PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
+PODFILE CHECKSUM: b293392b8fa842103009754ed54fb3f264371c53
 
 COCOAPODS: 1.10.0
