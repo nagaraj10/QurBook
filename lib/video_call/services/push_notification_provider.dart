@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/main.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/TelehealthProviderModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -61,40 +62,33 @@ class PushNotificationsProvider {
     // initLocalNotification();
     AwesomeNotifications().actionStream.listen((receivedNotification) {
       print("notification action ${receivedNotification.buttonKeyPressed}");
-      // if (receivedNotification.buttonKeyPressed.toLowerCase() ==
-      //     parameters.Accept.toLowerCase()) {
-      //   updateStatus(parameters.Accept.toLowerCase());
-      // } else if (receivedNotification.buttonKeyPressed.toLowerCase() ==
-      //     parameters.Decline.toLowerCase()) {
-      //   updateStatus(parameters.Decline.toLowerCase());
-      // } else
-      Get.to(CallMain(
-        doctorName: callDetails.userName,
-        doctorId: callDetails.doctorId,
-        doctorPic: callDetails.doctorPicture,
-        channelName: callDetails.meetingId,
-        role: callDetails.role,
-        isAppExists: callDetails.isAppExists,
-      ));
-      // if (receivedNotification.buttonKeyPressed.toLowerCase() ==
-      //         parameters.reschedule.toLowerCase() &&
-      //     rescheduleDetails != null) {
-      //   Get.to(ResheduleMain(
-      //     isFromNotification: true,
-      //     isReshedule: true,
-      //     doc: rescheduleDetails,
-      //   ));
-      // } else if (receivedNotification.buttonKeyPressed.toLowerCase() ==
-      //     parameters.cancel.toLowerCase()) {
-      //   Get.to(TelehealthProviders(
-      //     arguments: HomeScreenArguments(
-      //         selectedIndex: 0,
-      //         dialogType: 'CANCEL',
-      //         isCancelDialogShouldShow: true,
-      //         bookingId: bookingId ?? '',
-      //         date: plannedStartDateTime ?? ''),
-      //   ));
-      // }
+      if (receivedNotification.buttonKeyPressed.toLowerCase() ==
+          parameters.accept.toLowerCase()) {
+        updateStatus(parameters.accept.toLowerCase());
+      } else if (receivedNotification.buttonKeyPressed.toLowerCase() ==
+          parameters.decline.toLowerCase()) {
+        updateStatus(parameters.decline.toLowerCase());
+      } else if (receivedNotification.buttonKeyPressed.toLowerCase() ==
+              parameters.reschedule.toLowerCase() &&
+          rescheduleDetails != null) {
+        Get.to(ResheduleMain(
+          isFromNotification: true,
+          isReshedule: true,
+          doc: rescheduleDetails,
+        ));
+      } else if (receivedNotification.buttonKeyPressed.toLowerCase() ==
+          parameters.cancel.toLowerCase()) {
+        Get.to(TelehealthProviders(
+          arguments: HomeScreenArguments(
+              selectedIndex: 0,
+              dialogType: 'CANCEL',
+              isCancelDialogShouldShow: true,
+              bookingId: bookingId ?? '',
+              date: plannedStartDateTime ?? ''),
+        ));
+      } else {
+        Get.to(MyFHB());
+      }
     });
 
     _firebaseMessaging.configure(
@@ -115,7 +109,7 @@ class PushNotificationsProvider {
     }
     if (callDetails != null) {
       Get.to(CallMain(
-        doctorName: callDetails.userName,
+        arguments: CallArguments(userName: callDetails.userName),
         doctorId: callDetails.doctorId,
         doctorPic: callDetails.doctorPicture,
         channelName: callDetails.meetingId,
@@ -180,10 +174,10 @@ class PushNotificationsProvider {
         bookingId = message[parameters.strBookingId_S];
         plannedStartDateTime = message[parameters.strPlannedStartDateTime];
       } else {
-        keyForAccept = parameters.Accept;
-        keyForDecline = parameters.Decline;
+        keyForAccept = parameters.accept;
+        keyForDecline = parameters.decline;
         callDetails = CallArguments(
-            userName: message[parameters.notification][parameters.title],
+            userName: message[parameters.username],
             doctorId: message[parameters.doctorId],
             meetingId: message[parameters.meeting_id],
             doctorPicture: message[parameters.doctorPicture],
@@ -218,9 +212,9 @@ class PushNotificationsProvider {
   Future<dynamic> onMessage(Map<String, dynamic> message) async {
     print("OnMessage New: $message");
 
-    title = message[parameters.aps][parameters.alert][parameters.title];
-    body = message[parameters.aps][parameters.alert][parameters.body];
-    ringtone = message[parameters.aps][parameters.sound];
+    title = message[parameters.notification][parameters.title];
+    body = message[parameters.notification][parameters.body];
+    //ringtone = message[parameters.aps][parameters.sound];
 
     final userName = message[parameters.username];
     final channelName = message[parameters.meeting_id];
