@@ -105,7 +105,7 @@ const String strResendConfirmCode = 'resend-confirm-code';
 const String strChangePasswordText =
     'OTP has been sent to the registered mobile number, enter it below to change the password';
 const String strChangeButtonText = 'Change Password';
-const String strCodeHintText = 'Code';
+const String strCodeHintText = 'Otp';
 const String strNewPasswordHintTxt = 'New Password';
 const String strNewPasswordAgainHintText = 'Enter New Password Again';
 const String strOldPasswordHintTxt = 'Old Password';
