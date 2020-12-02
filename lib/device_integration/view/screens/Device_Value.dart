@@ -251,11 +251,11 @@ class EachDeviceValues extends StatelessWidget {
                               '${translist[index].oxygenSaturation}',
                               '',
                               '',
-                              'OxygenSaturation Value',
+                              'Oxygen Saturation Value',
                               '',
                               '',
                               getFormattedTime(translist[index].startDateTime),
-                              '');
+                              'bpm');
                         },
                       )
                     : Container(
@@ -320,7 +320,7 @@ class EachDeviceValues extends StatelessWidget {
                               '',
                               '',
                               getFormattedTime(translist[index].startDateTime),
-                              'Kg');
+                              'Kgs');
                         },
                       )
                     : Container(

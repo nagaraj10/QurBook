@@ -151,7 +151,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       deviceMealContext =
           deviceValues.bloodGlucose.entities[0].mealContext.name.toString();
       deviceMealType =
-          deviceValues.bloodGlucose.entities[0].mealType.name.toString();
+          deviceValues.bloodGlucose.entities[0].mealType!=null?deviceValues.bloodGlucose.entities[0].mealType.name.toString():'';
     } else {
       dateForGulcose = 'Record not available';
       devicevalue1ForGulcose = '';
@@ -674,8 +674,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Temperature',
@@ -978,16 +977,29 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Pulse oximeter',
+                                        'Pulse Oximeter',
                                         style: TextStyle(
                                             color: Colors.white70, fontSize: 10),
                                       ),
-                                      Text(
-                                        value1ForOs!=''?value1ForOs.toString():'-',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: value1ForOs!=''?22:10,
-                                            fontWeight: FontWeight.bold),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            value1ForOs!=''?value1ForOs.toString():'-',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: value1ForOs!=''?22:10,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          SizedBoxWidget(
+                                            width: 2,
+                                          ),
+                                          Text(
+                                            value1ForWeight != '' ? 'bpm' : '',
+                                            style: TextStyle(
+                                                color: Colors.white, fontSize: 10),
+                                          ),
+                                          SizedBoxWidget(height: value1ForWeight!=''?0:10,),
+                                        ],
                                       ),
                                       SizedBoxWidget(height: value1ForOs!=''?0:10,),
                                     ],
