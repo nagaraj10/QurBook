@@ -48,6 +48,7 @@ const String strUser = "user";
 const String strdoctor = 'doctor';
 const String strnotes = 'notes';
 const String strLastName = 'lastName';
+const String strIsFollowUpTaken="isFollowUpTaken";
 
 
 // For Telehealth Appointments

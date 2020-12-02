@@ -1,4 +1,5 @@
-import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'as parameters;
+import 'package:myfhb/telehealth/features/appointments/constants/appointments_parameters.dart'
+    as parameters;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/booked.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart';
@@ -57,6 +58,7 @@ class Past {
   String doctorFollowUpFee;
   Doctor doctor;
   City healthOrganization;
+  bool isFollowUpTaken;
 
   Past.fromJson(Map<String, dynamic> json) {
     id = json[parameters.strId];
@@ -100,6 +102,9 @@ class Past {
     healthOrganization = json[parameters.strHealthOrganization] != null
         ? new City.fromJson(json[parameters.strHealthOrganization])
         : null;
+    isFollowUpTaken = json[parameters.strIsFollowUpTaken] != null
+        ? json[parameters.strIsFollowUpTaken]
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -123,6 +128,7 @@ class Past {
     data[parameters.strBookedFor] = bookedFor.toJson();
     data[parameters.strBookedBy] = bookedBy.toJson();
     data[parameters.strStatus] = status.toJson();
+    data[parameters.strIsFollowUpTaken] = isFollowUpTaken;
     data[parameters.strPrescriptionCollection] =
         List<dynamic>.from(prescriptionCollection.map((x) => x));
     data[parameters.strHealthRecord] = healthRecord.toJson();

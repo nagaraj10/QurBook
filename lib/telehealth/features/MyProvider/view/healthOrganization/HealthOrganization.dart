@@ -262,6 +262,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
               healthOrganizationId: docs[i].healthOrganization.id,
               healthOrganizationResult: docs,
               doctorListPos: widget.index,
+              onChanged: (value){},
               closePage: (value) {
                 widget.closePage(value);
                 Navigator.pop(context);
