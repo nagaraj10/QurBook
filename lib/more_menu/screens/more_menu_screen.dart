@@ -18,6 +18,7 @@ import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MoreMenuScreen extends StatefulWidget {
   final Function refresh;
@@ -276,6 +277,25 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                     Text(variable.strRateus),
                   ],
                 )),
+              ),
+              InkWell(
+                onTap: () {
+                  launchWhatsApp(
+                      phone: variable.c_qurhealth_helpline,
+                      message: variable.c_chat_with_whatsapp_begin_conv);
+                },
+                child: ListTile(
+                    title: Row(
+                  children: <Widget>[
+                    ImageIcon(
+                      AssetImage(variable.icon_whatsapp),
+                      color: Color(0XFF66AB5B),
+                      size: 22,
+                    ),
+                    SizedBox(width: 20),
+                    Text(variable.c_chat_with_whatsapp),
+                  ],
+                )),
               )
             ],
           ),
@@ -408,5 +428,24 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               builder: (BuildContext context) => PatientSignInScreen()),
           (route) => false);
     });
+  }
+
+  void launchWhatsApp({
+    @required String phone,
+    @required String message,
+  }) async {
+    String url() {
+      if (Platform.isIOS) {
+        return "whatsapp://wa.me/$phone/?text=${Uri.parse(message)}";
+      } else {
+        return "whatsapp://send?phone=$phone&text=${Uri.parse(message)}";
+      }
+    }
+
+    if (await canLaunch(url())) {
+      await launch(url());
+    } else {
+      throw 'Could not launch ${url()}';
+    }
   }
 }
