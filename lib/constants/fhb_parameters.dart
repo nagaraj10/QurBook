@@ -324,7 +324,7 @@ const String strprofilePicThumbnailURL = 'profilePicThumbnailURL';
 
 const String strBPTitle = "BP Readings";
 const String strGLTitle = "Glucose Readings";
-const String strOxyTitle = "SPO2 Reading";
+const String strOxyTitle = "Pulse Oximeter";
 const String strWgTitle = "Weight Measurement";
 const String strTmpTitle = "Temperature Readings";
 const String strLatestTitle = "Latest Readings";

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 class DeviceData {
   final String title;
   final String icon;
+  final String icon_new;
   int status;
   bool isSelected;
   String value_name;
@@ -12,6 +13,7 @@ class DeviceData {
   DeviceData(
       {this.title,
       this.icon,
+      this.icon_new,
       this.status,
       this.isSelected,
       this.value_name,
@@ -22,6 +24,7 @@ class DeviceData {
     return DeviceData(
         title: json['title'],
         icon: json['icon'],
+        icon_new: json['icon_new'],
         status: json['status'],
         isSelected: json['isSelected'],
         value_name: json['value_name'],

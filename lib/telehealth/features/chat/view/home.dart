@@ -305,7 +305,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                             peerId: document.documentID,
                             peerAvatar: document[STR_PHOTO_URL],
                             peerName: document[STR_NICK_NAME],
-                            lastDate: document[STR_CREATED_AT],
+                            lastDate: getFormattedDateTime((document[STR_CREATED_AT] as Timestamp).toDate().toString()),
                           )));
             },
             child: Container(
@@ -406,7 +406,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         child: Text(
                           document[STR_CREATED_AT] != null
                               ? LAST_RECEIVED +
-                              getFormattedNewDateTime(int.parse(document[STR_CREATED_AT]))
+                              getFormattedDateTime((document[STR_CREATED_AT] as Timestamp).toDate().toString())
                               : '',
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
@@ -434,9 +434,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
     }
   }
 
-  String getFormattedNewDateTime(int timeStamp) {
-    var date = DateTime.fromMillisecondsSinceEpoch(timeStamp);
-    var formattedDate = DateFormat('MMM d, hh:mm a').format(date);
+  String getFormattedDateTime(String datetime) {
+    DateTime dateTimeStamp = DateTime.parse(datetime);
+    String formattedDate = DateFormat('MMM d, hh:mm a').format(dateTimeStamp);
     return formattedDate;
   }
 }

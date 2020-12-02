@@ -156,7 +156,7 @@ class ChatState extends State<Chat> {
                     Text(
                       widget.lastDate != null
                           ? LAST_RECEIVED +
-                          getFormattedNewDateTime(int.parse(widget.lastDate))
+                          widget.lastDate
                           : '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -386,7 +386,7 @@ class ChatScreenState extends State<ChatScreen> {
           {
             STR_ID_FROM: id == "" ? patientId : id,
             STR_ID_TO: peerId,
-            STR_TIME_STAMP: DateTime.now().millisecondsSinceEpoch.toString(),
+            STR_TIME_STAMP: FieldValue.serverTimestamp(),
             STR_CONTENT: content,
             STR_TYPE: type
           },
@@ -411,7 +411,7 @@ class ChatScreenState extends State<ChatScreen> {
       STR_NICK_NAME: peerName != null ? peerName : '',
       STR_PHOTO_URL: peerAvatar != null ? peerAvatar : '',
       STR_ID: peerId,
-      STR_CREATED_AT: DateTime.now().millisecondsSinceEpoch.toString(),
+      STR_CREATED_AT: FieldValue.serverTimestamp(),
       STR_LAST_MESSAGE: content
     });
 
@@ -424,7 +424,7 @@ class ChatScreenState extends State<ChatScreen> {
       STR_NICK_NAME: patientName != null ? patientName : '',
       STR_PHOTO_URL: patientPicUrl != null ? patientPicUrl : '',
       STR_ID: patientId,
-      STR_CREATED_AT: DateTime.now().millisecondsSinceEpoch.toString(),
+      STR_CREATED_AT: FieldValue.serverTimestamp(),
       STR_LAST_MESSAGE: content
     });
   }
@@ -757,7 +757,7 @@ class ChatScreenState extends State<ChatScreen> {
             isLastMessageLeft(index)
                 ? Container(
                     child: Text(
-                      getFormattedDateTime(int.parse(document[STR_TIME_STAMP])),
+                      getFormattedDateTime((document[STR_TIME_STAMP] as Timestamp).toDate().toString()),
                       style: TextStyle(
                           color: greyColor,
                           fontSize: 12.0,
@@ -780,9 +780,9 @@ class ChatScreenState extends State<ChatScreen> {
     ));
   }
 
-  String getFormattedDateTime(int timeInMillis) {
-    var date = DateTime.fromMillisecondsSinceEpoch(timeInMillis);
-    var formattedDate = DateFormat('MMM d, hh:mm a').format(date);
+  String getFormattedDateTime(String datetime) {
+    DateTime dateTimeStamp = DateTime.parse(datetime);
+    String formattedDate = DateFormat('MMM d, hh:mm a').format(dateTimeStamp);
     return formattedDate;
   }
 
@@ -1061,7 +1061,7 @@ class ChatScreenState extends State<ChatScreen> {
                   .document(groupChatId)
                   .collection(groupChatId)
                   .orderBy(STR_TIME_STAMP, descending: true)
-                  .limit(20)
+                  .limit(50)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
