@@ -77,7 +77,7 @@ const String strValidOtp = 'Otp should have six characters';
 const String strPasswordMultiChecks =
     'Password should one special character, number, lowercase and uppercase alphabets';
 const String strConfirmPasswordText =
-    'New password and confirm password should be same';
+    'New and confirm password should be same';
 const String strPasswordCheck = 'Password should more than six characters';
 const String strNeedAcoount = 'Sign up with a new account';
 const String strFromLogin = 'AfterLogin';

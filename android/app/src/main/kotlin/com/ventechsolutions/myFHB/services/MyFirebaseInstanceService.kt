@@ -262,7 +262,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         cancelAppointmentIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_CANCEL_APPS)
         cancelAppointmentIntent.putExtra(Constants.PROP_BookingId, data[Constants.PROP_BookingId])
         cancelAppointmentIntent.putExtra(Constants.PROP_PlannedStartTime, data[Constants.PROP_PlannedStartTime])
-        val cancelAppointmentPendingIntent = PendingIntent.getBroadcast(applicationContext, 0, cancelAppointmentIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val cancelAppointmentPendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, cancelAppointmentIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
 
         val rescheduleIntent = Intent(applicationContext, RescheduleAppointment::class.java)
@@ -272,7 +272,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         rescheduleIntent.putExtra(Constants.PROP_BookingId, data[Constants.PROP_BookingId])
         rescheduleIntent.putExtra(Constants.PROP_healthOrgId, data[Constants.PROP_healthOrgId])
         rescheduleIntent.putExtra(Constants.PROP_docId, data[Constants.PROP_docId])
-        val reschedulePendingIntent = PendingIntent.getBroadcast(applicationContext, 0, rescheduleIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val reschedulePendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, rescheduleIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
 
 
@@ -312,14 +312,14 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptIntent.putExtra(getString(R.string.nsid), NS_ID)
         acceptIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_ACCEPT)
         acceptIntent.putExtra(Constants.PROP_PROVIDER_REQID, data[Constants.PROP_PROVIDER_REQID])
-        val acceptPendingIntent = PendingIntent.getBroadcast(applicationContext, 0, acceptIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val acceptPendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, acceptIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
 
         val declineIntent = Intent(applicationContext, Decline::class.java)
         declineIntent.putExtra(getString(R.string.nsid), NS_ID)
         declineIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_DECLINE)
         declineIntent.putExtra(Constants.PROP_PROVIDER_REQID, data[Constants.PROP_PROVIDER_REQID])
-        val declinePendingIntent = PendingIntent.getBroadcast(applicationContext, 0, declineIntent, PendingIntent.FLAG_CANCEL_CURRENT)
+        val declinePendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, declineIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
 
 
