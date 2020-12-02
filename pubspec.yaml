@@ -100,6 +100,7 @@ dependencies:
     git:
       url: git://github.com/anisalibegic/flutter_money_formatter.git
   screen: ^0.0.5
+  url_launcher: ^5.7.10
 
 
 
