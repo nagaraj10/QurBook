@@ -50,7 +50,14 @@ class AuthService {
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
-      } else {
+      } else if(response.statusCode==500){
+        var responseResult = jsonDecode(response.body);
+        String responseString = responseResult[strResult];
+        await PreferenceUtil.saveString(
+            Constants.KEY_AUTHTOKEN, responseString);
+        return responseResult;
+      }
+      else {
         return createErrorJsonString(response);
       }
     } on SocketException {

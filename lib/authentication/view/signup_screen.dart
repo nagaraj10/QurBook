@@ -318,6 +318,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   }
 
   _checkResponse(PatientSignUp response) {
+    print(response.toJson().toString());
     if (response.isSuccess) {
       Navigator.push(
           context,
@@ -325,6 +326,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
               builder: (context) => VerifyPatient(
                     PhoneNumber: mobileNoController.text,
                     from: strFromSignUp,
+                    userConfirm: false,
                   )));
     } else {
       toast.getToast(response.message, Colors.red);

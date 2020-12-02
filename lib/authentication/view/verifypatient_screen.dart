@@ -41,7 +41,9 @@ class VerifyPatient extends StatefulWidget {
       this.lName,
       this.mName,
       this.isPrimaryNoSelected,
-      this.relationship});
+      this.relationship,
+      this.userConfirm,
+      this.userId});
 
   final String PhoneNumber;
   final String from;
@@ -50,6 +52,8 @@ class VerifyPatient extends StatefulWidget {
   final String lName;
   final RelationsShipModel relationship;
   final bool isPrimaryNoSelected;
+  final bool userConfirm;
+  final String userId;
 
   @override
   _VerifyPatientState createState() => _VerifyPatientState();
@@ -86,6 +90,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
     super.initState();
     from = widget.from;
     authViewModel = new AuthViewModel();
+    if (widget.userConfirm) {
+      _resendOtpDetails();
+    }
   }
 
   @override
@@ -236,8 +243,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
           verificationCode: OtpController.text,
           userName: widget.PhoneNumber,
           source: strSource,
-          userId:
-              await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
+          userId: widget.userConfirm?widget.userId:await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         );
         Map<String, dynamic> map = logInModel.toJson();
         OtpModel.PatientSignupOtp response =
@@ -315,7 +321,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
     ResendOtpModel logInModel = new ResendOtpModel(
       userName: widget.PhoneNumber,
       source: strSource,
-      userId: await PreferenceUtil.getStringValue(strKeyConfirmUserToken),
+      userId: widget.userConfirm?widget.userId:await PreferenceUtil.getStringValue(strKeyConfirmUserToken),
     );
     Map<String, dynamic> map = logInModel.toJson();
     ResendModel.ResendOtpModel response = await authViewModel.resendOtp(map);
@@ -330,12 +336,18 @@ class _VerifyPatientState extends State<VerifyPatient> {
   }
 
   Future<String> _getPatientDetails() async {
+    String userId;
     decodesstring =
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     saveuser.auth_token = decodesstring;
     if (widget.from == strFromSignUp) {
-      String userId =
-          await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+      if(widget.userConfirm){
+        userId = widget.userId;
+      }else{
+        userId =
+        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+      }
+
       saveuser.userId = userId;
       print(userId);
       PreferenceUtil.saveString(Constants.MOB_NUM, widget.PhoneNumber)
