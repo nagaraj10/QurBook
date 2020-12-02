@@ -167,7 +167,7 @@ class FamilyListView {
                                               color: const Color(
                                                   fhbColors.bgColorContainer),
                                             )
-                                      : /*sharedByMe[index]
+                                      : sharedByMe[index]
                                                   .child
                                                   .profilePicThumbnailUrl !=
                                               null
@@ -179,7 +179,7 @@ class FamilyListView {
                                               width: 50,
                                               fit: BoxFit.cover,
                                             )
-                                          :*/
+                                          :
                                       Container(
                                           height: 50,
                                           width: 50,

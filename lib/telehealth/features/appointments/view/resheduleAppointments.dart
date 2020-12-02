@@ -53,6 +53,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   String placeHolder = null;
   ProvidersBloc _providersBloc = ProvidersBloc();
   Doctors doctors = Doctors();
+  DateTime onUserChangedDate;
 
   @override
   void initState() {
@@ -271,6 +272,13 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               closePage: (value) {
                 widget.closePage(value);
               },
+              onChanged: (value) {
+                print(value);
+                setState(() {
+                  onUserChangedDate = DateTime.parse(value);
+                });
+              },
+              onUserChangedDate: onUserChangedDate,
               isFromNotification: widget.isFromNotification,
             ),
           ],
@@ -396,10 +404,12 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
                     child: Center(
                       child: TextWidget(
                           text: 'INR ' +
-                              commonWidgets.getMoneyWithForamt(
-                                  widget.isReshedule
+                              commonWidgets
+                                  .getMoneyWithForamt(widget.isReshedule
                                       ? 0.toString()
-                                      : followUpFee(eachHospitalModel[i])),
+                                      : widget.doc.isFollowUpTaken == true
+                                          ? getFees(eachHospitalModel[i])
+                                          : followUpFee(eachHospitalModel[i])),
 //                                  widget.doc.plannedFollowupDate == null
 //                                          ? getFees(eachHospitalModel[i])
 //                                          : widget.doc.doctorFollowUpFee != null
@@ -420,13 +430,21 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
   String followUpFee(value) {
     if (widget.doc?.plannedFollowupDate != null &&
         widget.doc?.doctorFollowUpFee != null) {
-      if (widget.doc?.plannedFollowupDate == null) {
+      if (onUserChangedDate != null) {
+        if (onUserChangedDate
+                .difference(DateTime.parse(widget.doc.plannedFollowupDate))
+                .inDays <=
+            0) {
+          return widget.doc.doctorFollowUpFee;
+        } else {
+          return getFees(value);
+        }
+      } else if (widget.doc?.plannedFollowupDate == null) {
         return getFees(value);
       } else {
         if (DateTime.now()
-            .difference(
-            DateTime.parse(widget.doc.plannedFollowupDate))
-            .inDays <=
+                .difference(DateTime.parse(widget.doc.plannedFollowupDate))
+                .inDays <=
             0) {
           return widget.doc.doctorFollowUpFee;
         } else {
@@ -481,21 +499,21 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
     return new FutureBuilder<List<HealthOrganizationResult>>(
       future: providerViewModel.getHealthOrgFromDoctor(doctorId),
       builder: (BuildContext context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Center(
-            child: new CircularProgressIndicator(
-              backgroundColor: Colors.grey,
-            ),
-          );
-        } else if (snapshot.hasData) {
+        if (snapshot.hasData) {
           List<HealthOrganizationResult> healthOrganizationResult =
               snapshot.data;
           healthOrganizationResult.retainWhere((element) =>
               element.healthOrganization.id ==
               widget.doc.healthOrganization.id);
           return providerListWidget(healthOrganizationResult);
-        } else {
+        } else if (snapshot.hasError) {
           return Container();
+        } else {
+          return Center(
+            child: new CircularProgressIndicator(
+              backgroundColor: Colors.grey,
+            ),
+          );
         }
       },
     );

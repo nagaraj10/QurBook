@@ -25,19 +25,23 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   final int doctorListPos;
   Function(String) closePage;
   bool isFromNotification;
+  ValueChanged<String> onChanged;
+  DateTime onUserChangedDate;
 
   DoctorSessionTimeSlot(
       {this.doctorId,
-      this.date,
-      this.docs,
-      this.i,
-      this.isReshedule,
-      this.doctorsData,
-      this.healthOrganizationId,
-      this.healthOrganizationResult,
-      this.doctorListPos,
-      this.closePage,
-      this.isFromNotification});
+        this.date,
+        this.docs,
+        this.i,
+        this.isReshedule,
+        this.doctorsData,
+        this.healthOrganizationId,
+        this.healthOrganizationResult,
+        this.doctorListPos,
+        this.closePage,
+        this.isFromNotification,
+        this.onChanged,
+        this.onUserChangedDate});
 
   @override
   State<StatefulWidget> createState() {
@@ -47,7 +51,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
 
 class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
   SlotsAvailabilityViewModel slotsAvailabilityViewModel =
-      new SlotsAvailabilityViewModel();
+  new SlotsAvailabilityViewModel();
   CommonWidgets commonWidgets = new CommonWidgets();
   DateTime _selectedValue = DateTime.now();
   DatePickerController _controller = DatePickerController();
@@ -102,14 +106,19 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
               setState(() {
                 _selectedValue = date;
               });
+              widget.onChanged(date.toString());
             },
             isScrollToDate: widget.doctorsData != null
-                ? widget.doctorsData.plannedFollowupDate != null ? true : false
+                ? widget.doctorsData.plannedFollowupDate != null
+                ? true
+                : false
                 : false,
             scrollToDate: widget.doctorsData != null
-                ? widget.doctorsData.plannedFollowupDate != null
-                    ? widget.doctorsData.plannedFollowupDate
-                    : DateTime.now().toString()
+                ? widget.onUserChangedDate != null
+                ? widget.onUserChangedDate.toString()
+                : widget.doctorsData.plannedFollowupDate != null
+                ? widget.doctorsData.plannedFollowupDate
+                : DateTime.now().toString()
                 : DateTime.now().toString(),
           ),
         ),
@@ -120,7 +129,12 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
 
   DateTime initialDate() {
     if (widget.doctorsData != null) {
-      if (widget.doctorsData.plannedFollowupDate != null) {
+      if (widget.onUserChangedDate != null) {
+        setState(() {
+          _selectedValue = widget.onUserChangedDate;
+        });
+        return widget.onUserChangedDate;
+      } else if (widget.doctorsData.plannedFollowupDate != null) {
         int scrollDays = DateTime.parse(widget.doctorsData.plannedFollowupDate)
             .difference(DateTime.now())
             .inDays;
@@ -148,54 +162,54 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return new Center(
                 child: new Column(
-              children: <Widget>[
-                SizedBoxWidget(height: 20.0),
-                new SizedBox(
-                  child: CircularProgressIndicator(
-                      strokeWidth: 2.0,
-                      backgroundColor:
+                  children: <Widget>[
+                    SizedBoxWidget(height: 20.0),
+                    new SizedBox(
+                      child: CircularProgressIndicator(
+                          strokeWidth: 2.0,
+                          backgroundColor:
                           Color(new CommonUtil().getMyPrimaryColor())),
-                  height: 20.0,
-                  width: 20.0,
-                ),
-                SizedBoxWidget(height: 120.0),
-              ],
-            ));
+                      height: 20.0,
+                      width: 20.0,
+                    ),
+                    SizedBoxWidget(height: 120.0),
+                  ],
+                ));
           } else if (snapshot.hasError) {
             return new Text('Error: ${snapshot.error}');
           } else {
             return snapshot.data.sessionCounts != null
                 ? Container(
-                    margin: EdgeInsets.only(left: 5, top: 12),
-                    child: GetTimeSlots(
-                      dateSlotTimingsObj: snapshot.data,
-                      docs: widget.docs,
-                      j: widget.i,
-                      selectedDate: _selectedValue,
-                      isReshedule: widget.isReshedule,
-                      doctorsData: widget.doctorsData,
-                      healthOrganizationResult: widget.healthOrganizationResult,
-                      doctorListPos: widget.doctorListPos,
-                      closePage: (value) {
-                        widget.closePage(value);
-                      },
-                      isFromNotification: widget.isFromNotification,
-                    ),
-                  )
+              margin: EdgeInsets.only(left: 5, top: 12),
+              child: GetTimeSlots(
+                dateSlotTimingsObj: snapshot.data,
+                docs: widget.docs,
+                j: widget.i,
+                selectedDate: _selectedValue,
+                isReshedule: widget.isReshedule,
+                doctorsData: widget.doctorsData,
+                healthOrganizationResult: widget.healthOrganizationResult,
+                doctorListPos: widget.doctorListPos,
+                closePage: (value) {
+                  widget.closePage(value);
+                },
+                isFromNotification: widget.isFromNotification,
+              ),
+            )
                 : Column(
-                    children: <Widget>[
-                      SizedBoxWidget(
-                        height: 8,
-                      ),
-                      new Text(
-                        slotsAreNotAvailable,
-                        style: TextStyle(fontSize: 10.0),
-                      ),
-                      SizedBoxWidget(
-                        height: 8,
-                      ),
-                    ],
-                  );
+              children: <Widget>[
+                SizedBoxWidget(
+                  height: 8,
+                ),
+                new Text(
+                  slotsAreNotAvailable,
+                  style: TextStyle(fontSize: 10.0),
+                ),
+                SizedBoxWidget(
+                  height: 8,
+                ),
+              ],
+            );
           }
         } else {
           return Column(

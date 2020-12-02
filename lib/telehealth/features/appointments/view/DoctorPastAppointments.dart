@@ -17,6 +17,7 @@ import 'package:myfhb/telehealth/features/appointments/view/appointmentsCommonWi
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
+import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/appointments/viewModel/appointmentsListViewModel.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:provider/provider.dart';
@@ -101,32 +102,53 @@ class DoctorPastAppointmentState extends State<DoctorPastAppointments> {
                             SizedBoxWidget(height: 3.0, width: 0),
                             widget.doc?.doctor?.specialization == null
                                 ? Container()
-                                : Text((widget.doc.doctor.doctorProfessionalDetailCollection !=
-                                            null &&
-                                        widget
-                                                .doc
-                                                .doctor
-                                                .doctorProfessionalDetailCollection
-                                                .length >
-                                            0)
-                                    ? widget.doc.doctor.doctorProfessionalDetailCollection[0].specialty != null
-                                        ? widget
-                                                    .doc
-                                                    .doctor
-                                                    .doctorProfessionalDetailCollection[
-                                                        0]
-                                                    .specialty
-                                                    .name !=
-                                                null
-                                            ? widget
-                                                .doc
-                                                .doctor
-                                                .doctorProfessionalDetailCollection[0]
-                                                .specialty
-                                                .name
-                                            : ''
-                                        : ''
-                                    : ''),
+                                : Container(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2,
+                                    child: Text(
+                                      toBeginningOfSentenceCase((widget
+                                                      .doc
+                                                      .doctor
+                                                      .doctorProfessionalDetailCollection !=
+                                                  null &&
+                                              widget
+                                                      .doc
+                                                      .doctor
+                                                      .doctorProfessionalDetailCollection
+                                                      .length >
+                                                  0)
+                                          ? widget
+                                                      .doc
+                                                      .doctor
+                                                      .doctorProfessionalDetailCollection[
+                                                          0]
+                                                      .specialty !=
+                                                  null
+                                              ? widget
+                                                          .doc
+                                                          .doctor
+                                                          .doctorProfessionalDetailCollection[
+                                                              0]
+                                                          .specialty
+                                                          .name !=
+                                                      null
+                                                  ? widget
+                                                      .doc
+                                                      .doctor
+                                                      .doctorProfessionalDetailCollection[
+                                                          0]
+                                                      .specialty
+                                                      .name
+                                                  : ''
+                                              : ''
+                                          : ''),
+                                      style: TextStyle(
+                                          fontSize:
+                                              fhbStyles.fnt_doc_specialist),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
                             widget.doc.doctor.specialization == null
                                 ? Container()
                                 : SizedBox(height: 3.0),
