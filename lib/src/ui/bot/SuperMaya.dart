@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/widgets/RaisedGradientButton.dart';
 import 'package:showcaseview/showcase_widget.dart';
@@ -80,6 +82,20 @@ class _SuperMayaState extends State<SuperMaya> {
                   ),
                   elevation: 0,
                   title: Text('Sheela'),
+                  actions: [
+                    IconWidget(
+                      icon: Icons.notifications,
+                      colors: Colors.white,
+                      size: 24,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => NotificationMain()),
+                        );
+                      },
+                    ),
+                    SizedBoxWidget(width: 10,),
+                  ],
                   centerTitle: true,
                 ),
               ),

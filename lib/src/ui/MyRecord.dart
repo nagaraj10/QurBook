@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/CommonDialogBox.dart';
 import 'package:myfhb/common/CommonUtil.dart';
@@ -43,6 +44,7 @@ import 'package:myfhb/src/ui/health/MedicalReportListScreen.dart';
 import 'package:myfhb/src/ui/health/NotesScreen.dart';
 import 'package:myfhb/src/ui/health/OtherDocsList.dart';
 import 'package:myfhb/src/ui/health/VoiceRecordList.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:showcaseview/showcase_widget.dart';
@@ -391,7 +393,7 @@ class _MyRecordsState extends State<MyRecords> {
 
   Widget _buildSearchField() {
     return Padding(
-      padding: EdgeInsets.only(top: 10, right: 10),
+      padding: EdgeInsets.only(top: 2, right: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -431,7 +433,7 @@ class _MyRecordsState extends State<MyRecords> {
                     ),
                   ),
                   border: InputBorder.none,
-                  hintStyle: TextStyle(color: Colors.black45, fontSize: 12),
+                  hintStyle: TextStyle(color: Colors.black45, fontSize: 10),
                 ),
                 style: TextStyle(color: Colors.black54, fontSize: 16.0),
                 onChanged: (editedValue) {
@@ -464,8 +466,20 @@ class _MyRecordsState extends State<MyRecords> {
               ),
             ),
           ),
+          SizedBoxWidget(width: 2,),
+          IconWidget(
+            icon: Icons.notifications,
+            colors: Colors.white,
+            size: 24,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationMain()),
+              );
+            },
+          ),
           new SwitchProfile()
-              .buildActions(context, _keyLoader, callBackToRefresh)
+              .buildActions(context, _keyLoader, callBackToRefresh),
         ],
       ),
     );
