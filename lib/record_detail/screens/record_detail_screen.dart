@@ -1299,7 +1299,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   downloadMedia(String url, BuildContext context, String fileType) async {
     var path;
-    FHBUtils.createFolderInAppDocDir(variable.stAudioPath)
+    FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath)
         .then((filePath) async {
       final bytes = await _loadFileBytes(url,
           onError: (Exception exception) =>
@@ -1325,7 +1325,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Future<bool> downloadFile(
       HealthRecordCollection audioMediaId, String fileType) async {
-    FHBUtils.createFolderInAppDocDir(variable.stAudioPath)
+    FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath)
         .then((filePath) async {
       File file =
           new File('$filePath${widget.data.metadata.fileName}' + fileType);
