@@ -27,7 +27,7 @@ class Variables {
   });
 
   String bookingId;
-  DateTime paidOn;
+  String paidOn;
   String endTime;
   String lastName;
   String firstName;
@@ -37,7 +37,7 @@ class Variables {
   dynamic slotNumber;
   String patientName;
   String modeOfPayment;
-  DateTime appointmentDate;
+  String appointmentDate;
   String transactionReference;
   String appointmentTime;
   String previousSlotNumber;
@@ -46,14 +46,14 @@ class Variables {
   String prescriptionNumber;
   String newBookingId;
   String oldBookingId;
-  DateTime newAppointmentDate;
+  String newAppointmentDate;
   String newAppointmentTime;
-  DateTime oldAppointmentDate;
+  String oldAppointmentDate;
   String oldAppointmentTime;
 
   Variables.fromJson(Map<String, dynamic> json) {
     bookingId= json["bookingId"] == null ? null : json["bookingId"];
-    paidOn= json["paidOn"] == null ? null : DateTime.parse(json["paidOn"]);
+    paidOn= json["paidOn"] == null ? null : (json["paidOn"]);
     endTime= json["endTime"] == null ? null : json["endTime"];
     lastName= json["lastName"] == null ? null : json["lastName"];
     firstName= json["firstName"] == null ? null : json["firstName"];
@@ -63,7 +63,7 @@ class Variables {
     slotNumber= json["slotNumber"];
     patientName= json["patientName"] == null ? null : json["patientName"];
     modeOfPayment= json["modeOfPayment"] == null ? null : json["modeOfPayment"];
-    appointmentDate= json["appointmentDate"] == null ? null : DateTime.parse(json["appointmentDate"]);
+    appointmentDate= json["appointmentDate"] == null ? null : (json["appointmentDate"]);
     transactionReference= json["transactionReference"] == null ? null : json["transactionReference"];
     appointmentTime= json["appointmentTime"] == null ? null : json["appointmentTime"];
     previousSlotNumber= json["previousSlotNumber"] == null ? null : json["previousSlotNumber"];
@@ -72,9 +72,9 @@ class Variables {
     prescriptionNumber= json["prescriptionNumber"] == null ? null : json["prescriptionNumber"];
     newBookingId= json["newBookingId"] == null ? null : json["newBookingId"];
     oldBookingId= json["oldBookingId"] == null ? null : json["oldBookingId"];
-    newAppointmentDate= json["newAppointmentDate"] == null ? null : DateTime.parse(json["newAppointmentDate"]);
+    newAppointmentDate= json["newAppointmentDate"] == null ? null : (json["newAppointmentDate"]);
     newAppointmentTime= json["newAppointmentTime"] == null ? null : json["newAppointmentTime"];
-    oldAppointmentDate= json["oldAppointmentDate"] == null ? null : DateTime.parse(json["oldAppointmentDate"]);
+    oldAppointmentDate= json["oldAppointmentDate"] == null ? null : (json["oldAppointmentDate"]);
     oldAppointmentTime= json["oldAppointmentTime"] == null ? null : json["oldAppointmentTime"];
 }
 
