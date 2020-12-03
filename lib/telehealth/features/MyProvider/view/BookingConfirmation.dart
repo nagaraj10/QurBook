@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/BadgesBlue.dart';
 import 'package:gmiwidgetspackage/widgets/FlutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/IconButtonWidget.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
@@ -34,6 +35,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/He
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/CreateAppointmentViewModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/Payment/PaymentPage.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -1011,7 +1013,17 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             style: TextStyle(fontSize: 18),
           ),
         ),
-        Icon(Icons.notifications),
+        IconWidget(
+          icon: Icons.notifications,
+          colors: Colors.white,
+          size: 24,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationMain()),
+            );
+          },
+        ),
         //new SwitchProfile().buildActions(context, _key, callBackToRefresh),
       ],
     );

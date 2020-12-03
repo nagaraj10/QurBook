@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
@@ -18,10 +19,12 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/PdfViewURL.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -62,17 +65,16 @@ class ChatState extends State<Chat> {
 
   Widget _patientChatBar() {
     return AppBar(
+      flexibleSpace: GradientAppBar(),
       automaticallyImplyLeading: false,
-      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
-      flexibleSpace: SafeArea(
-        child: Column(
+      title: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
               child: Row(
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: EdgeInsets.only(left: 2),
                     child: GestureDetector(
                       child: Icon(
                         Icons.arrow_back_ios,
@@ -98,8 +100,21 @@ class ChatState extends State<Chat> {
               ),
             ),
           ],
-        ),
       ),
+      actions: [
+        IconWidget(
+          icon: Icons.notifications,
+          colors: Colors.white,
+          size: 24,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationMain()),
+            );
+          },
+        ),
+        SizedBoxWidget(width: 10,),
+      ],
     );
   }
 

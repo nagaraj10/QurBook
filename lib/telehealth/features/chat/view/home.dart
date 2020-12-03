@@ -8,16 +8,19 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../../../../common/CommonUtil.dart';
 
@@ -214,18 +217,33 @@ class HomeScreenState extends State<ChatHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: GradientAppBar(),
         leading: IconButton(
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
               Navigator.of(context).pop();
             }),
         elevation: 0.0,
-        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        backgroundColor: Colors.transparent,
         title: Text(
           CHAT,
           style: TextStyle(color: Colors.white),
         ),
-        centerTitle: false,
+        centerTitle: true,
+        actions: [
+          IconWidget(
+            icon: Icons.notifications,
+            colors: Colors.white,
+            size: 24,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationMain()),
+              );
+            },
+          ),
+          SizedBoxWidget(width: 10,),
+        ],
       ),
       body: WillPopScope(
         child: checkIfDoctorIdExist(),
@@ -270,11 +288,24 @@ class HomeScreenState extends State<ChatHomeScreen> {
                   ),
                 );
               } else {
-                return ListView.builder(
+                return countChatListUsers(patientId, snapshot) > 0 ?
+                ListView.builder(
                   padding: EdgeInsets.all(10.0),
                   itemBuilder: (context, index) =>
                       buildItem(context, snapshot.data.documents[index]),
                   itemCount: snapshot.data.documents.length,
+                ): Container(
+                  child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                            Text(
+                              'No Messages',
+                              style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+                              textAlign: TextAlign.center,
+                            ),
+                        ],
+                      )),
                 );
               }
             },
@@ -438,5 +469,15 @@ class HomeScreenState extends State<ChatHomeScreen> {
     DateTime dateTimeStamp = DateTime.parse(datetime);
     String formattedDate = DateFormat('MMM d, hh:mm a').format(dateTimeStamp);
     return formattedDate;
+  }
+
+  int countChatListUsers(myID,snapshot) {
+    int resultInt = snapshot.data.documents.length;
+    for (var data in snapshot.data.documents) {
+      if (data[STR_ID] == myID) {
+        resultInt--;
+      }
+    }
+    return resultInt;
   }
 }

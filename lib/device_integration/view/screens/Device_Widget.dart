@@ -331,9 +331,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                       width: 25,
                     ),
                     CircleAvatar(
-                      backgroundColor: Colors.white,
                       radius: 28,
-                      backgroundImage: AssetImage('assets/user/avatar.png'),
+                      backgroundImage: AssetImage("assets/user/profile_pic_ph.png"),
                       child: CircleAvatar(
                         radius: 28,
                         backgroundColor: Colors.transparent,
