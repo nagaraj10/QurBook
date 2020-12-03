@@ -384,36 +384,41 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
             });
           },
         ),
-        new RichText(
-          text: new TextSpan(
-            text: '',
+        Flexible(
+          child: Wrap(
             children: [
-              new TextSpan(
-                  text: 'By signing up, I agree to the ',
-                  style: TextStyle(color: Colors.black)),
-              new TextSpan(
-                text: 'T&C',
-                style: TextStyle(color: Color(0xff138fcf)),
-                recognizer: new TapGestureRecognizer()
-                  ..onTap = () {
-                    CommonUtil().openWebViewNew(
-                        Constants.terms_of_service, variable.file_terms, true);
-                  },
+              Flexible(
+                child: Text('By signing up, I agree with Qurhealth\'s ',
+                    style: TextStyle(color: Colors.black)),
               ),
-              new TextSpan(
-                  text: ' and \n', style: TextStyle(color: Colors.black)),
-              new TextSpan(
-                text: 'Privacy Policy  ',
-                style: TextStyle(color: Color(0xff138fcf)),
-                recognizer: new TapGestureRecognizer()
-                  ..onTap = () {
-                    CommonUtil().openWebViewNew(
-                        Constants.privacy_policy, variable.file_privacy, true);
-                  },
-              )
+              InkWell(
+                child: Text(
+                  'T&C',
+                  style: TextStyle(
+                    color: Color(0xff138fcf),
+                  ),
+                ),
+                onTap: () {
+                  CommonUtil().openWebViewNew(
+                      Constants.terms_of_service, variable.file_terms, true);
+                },
+              ),
+              Text(' and '),
+              InkWell(
+                child: Text(
+                  'Privacy Policy ',
+                  style: TextStyle(
+                    color: Color(0xff138fcf),
+                  ),
+                ),
+                onTap: () {
+                  CommonUtil().openWebViewNew(
+                      Constants.privacy_policy, variable.file_privacy, true);
+                },
+              ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
