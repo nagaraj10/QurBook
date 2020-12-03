@@ -28,7 +28,7 @@ class Payload {
     appointmentDate= json["appointmentDate"] == null ? null : json["appointmentDate"];
     userName= json["userName"] == null ? null : json["userName"];
     doctorId= json["doctorId"] == null ? null : json["doctorId"];
-    payloadMeetingId= json["meeting_id"];
+    payloadMeetingId=  json["meetingId"] == null ? null : json["meetingId"];
     templateName= json["templateName"] == null ? null : json["templateName"];
     providerRequestId= json["providerRequestId"] == null ? null : json["providerRequestId"];
     }
