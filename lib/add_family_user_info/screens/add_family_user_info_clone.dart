@@ -144,7 +144,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     return WillPopScope(
       onWillPop: () async {
         Navigator.of(context).pop();
-        Navigator.of(context).pop();
+        //Navigator.of(context).pop();
         return Future.value(true);
       },
       child: Scaffold(
@@ -158,7 +158,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  //Navigator.of(context).pop();
                 },
               )),
           key: scaffold_state,
