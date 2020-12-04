@@ -387,10 +387,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
         Flexible(
           child: Wrap(
             children: [
-              Flexible(
-                child: Text('By signing up, I agree with Qurhealth\'s ',
-                    style: TextStyle(color: Colors.black)),
-              ),
+              Text('By signing up, I agree with Qurhealth\'s ',
+                  style: TextStyle(color: Colors.black)),
               InkWell(
                 child: Text(
                   'T&C',
