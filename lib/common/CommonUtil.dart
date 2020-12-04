@@ -10,10 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_downloader/image_downloader.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
+import 'package:myfhb/add_family_user_info/models/add_family_user_info_arguments.dart';
+import 'package:myfhb/add_family_user_info/services/add_family_user_info_repository.dart';
 import 'package:myfhb/bookmark_record/bloc/bookmarkRecordBloc.dart';
 import 'package:myfhb/common/CommonConstants.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -57,13 +60,16 @@ import 'package:myfhb/src/model/user/LaboratoryIds.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/MyProfileResult.dart';
 import 'package:myfhb/src/model/user/ProfileCompletedata.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:showcaseview/showcase.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class CommonUtil {
   static String SHEELA_URL = "";
@@ -1036,7 +1042,7 @@ class CommonUtil {
   DeviceData getDeviceList() {
     DeviceData devicelist;
     if (PreferenceUtil.getStringValue(Constants.bpMon) != variable.strFalse) {
-      devicelist =DeviceData(
+      devicelist = DeviceData(
           title: Constants.STR_BP_MONITOR,
           icon: Constants.Devices_BP,
           icon_new: Constants.Devices_BP_Tool,
@@ -1074,7 +1080,7 @@ class CommonUtil {
     }
 
     if (PreferenceUtil.getStringValue(Constants.wsMon) != variable.strFalse) {
-      devicelist=DeviceData(
+      devicelist = DeviceData(
           title: Constants.STR_WEIGHING_SCALE,
           icon: Constants.Devices_WS,
           icon_new: Constants.Devices_WS_Tool,
@@ -1086,7 +1092,7 @@ class CommonUtil {
           color: [Colors.amber[700], Colors.amber[300]]);
     }
     if (PreferenceUtil.getStringValue(Constants.thMon) != variable.strFalse) {
-      devicelist=DeviceData(
+      devicelist = DeviceData(
           title: Constants.STR_THERMOMETER,
           icon: Constants.Devices_THM,
           icon_new: Constants.Devices_THM_Tool,
@@ -1378,8 +1384,38 @@ class CommonUtil {
   }
 
   void openWebViewNew(String title, String url, bool isLocal) {
-    Get.to(MyFhbWebView(
-            title: title, selectedUrl: url, isLocalAsset: isLocal));
+    Get.to(MyFhbWebView(title: title, selectedUrl: url, isLocalAsset: isLocal));
   }
 
+  void mSnackbar(BuildContext context, String message, String actionName) {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+        elevation: 5.0,
+        action: SnackBarAction(
+            label: actionName,
+            onPressed: () async {
+              MyProfileModel myProfile = await fetchUserProfileInfo();
+              if (myProfile?.result != null) {
+                Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
+                    arguments: AddFamilyUserInfoArguments(
+                        myProfileResult: myProfile?.result,
+                        fromClass: CommonConstants.user_update));
+              } else {
+                FlutterToast()
+                    .getToast('Unable to Fetch User Profile data', Colors.red);
+              }
+            }),
+        duration: const Duration(seconds: 10),
+      ),
+    );
+  }
+
+  Future<MyProfileModel> fetchUserProfileInfo() async {
+    var userid = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    MyProfileModel myProfile =
+        await AddFamilyUserInfoRepository().getMyProfileInfoNew(userid);
+    return myProfile;
+  }
 }

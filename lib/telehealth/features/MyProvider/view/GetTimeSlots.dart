@@ -239,37 +239,47 @@ class GetTimeSlots extends StatelessWidget {
                             rowPosition,
                             itemPosition);
                       } else {
-                        toast.getToast(noAddress, Colors.red);
+                        //toast.getToast(noAddress, Colors.red);
+                        CommonUtil().mSnackbar(context, noAddress, 'Add');
                       }
                     } else {
-                      toast.getToast(noAddress, Colors.red);
+                      //toast.getToast(noAddress, Colors.red);
+                      CommonUtil().mSnackbar(context, noAddress, 'Add');
                     }
                   }
                   else {
-                    toast.getToast(noWeight, Colors.red);
+                    //toast.getToast(noWeight, Colors.red);
+                    CommonUtil().mSnackbar(context, noWeight, 'Add');
                   }
                 }
                 else {
-                  toast.getToast(noHeight, Colors.red);
+                  //toast.getToast(noHeight, Colors.red);
+                  CommonUtil().mSnackbar(context, noHeight, 'Add');
                 }
               }
               else {
-                toast.getToast(noAdditionalInfo, Colors.red);
+                //toast.getToast(noAdditionalInfo, Colors.red);
+                CommonUtil().mSnackbar(context, noAdditionalInfo, 'Add');
               }
             } else {
-              toast.getToast(noDOB, Colors.red);
+              //toast.getToast(noDOB, Colors.red);
+              CommonUtil().mSnackbar(context, noDOB, 'Add');
             }
           } else {
-            toast.getToast(noGender, Colors.red);
+            CommonUtil().mSnackbar(context, noGender, 'Add');
+            //toast.getToast(noGender, Colors.red);
           }
         } else {
-          toast.getToast(noAddress, Colors.red);
+          //toast.getToast(noAddress, Colors.red);
+          CommonUtil().mSnackbar(context, noAddress, 'Add');
         }
       } else {
-        toast.getToast(noAddress, Colors.red);
+        //toast.getToast(noAddress, Colors.red);
+        CommonUtil().mSnackbar(context, noAddress, 'Add');
       }
     } else {
-      toast.getToast(noAddress, Colors.red);
+      //toast.getToast(noAddress, Colors.red);
+      CommonUtil().mSnackbar(context, noAddress, 'Add');
     }
   }
 
