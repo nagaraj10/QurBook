@@ -68,6 +68,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   @override
   void initState() {
     //finalList = CommonUtil().getDeviceList();
+    getProfileData();
     super.initState();
   }
 
@@ -78,10 +79,38 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     });
   }
 
+  Future<MyProfileModel> getMyProfile() async {
+    if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
+    } else {
+      myProfile = await new CommonUtil().getMyProfile();
+    }
+    return myProfile;
+  }
+
+  Widget getValuesFromSharedPrefernce(BuildContext context) {
+    return new FutureBuilder<MyProfileModel>(
+      future: getMyProfile(),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return new Center(
+            child: new CircularProgressIndicator(
+              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+            ),
+          );
+        } else if (snapshot.hasError) {
+          return new Text('Error: ${snapshot.error}');
+        } else {
+          return getBody(context);
+        }
+      },
+    );
+  }
+
   Widget build(BuildContext context) {
     //finalList = CommonUtil().getDeviceList();
-    getProfileData();
-    return getBody(context);
+    //getProfileData();
+    return getValuesFromSharedPrefernce(context);
   }
 
   Widget getBody(BuildContext context) {
