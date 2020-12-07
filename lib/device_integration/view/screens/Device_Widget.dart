@@ -423,7 +423,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                     );
                   },
                   child: Container(
-                    height: Responsive.width(32, context),
+                    height: Responsive.width(33, context),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(15),
                       color: hexToColor('#91268E'),
