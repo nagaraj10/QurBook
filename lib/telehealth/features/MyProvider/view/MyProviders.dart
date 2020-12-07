@@ -175,7 +175,6 @@ class _MyProvidersState extends State<MyProviders> {
   void callBackToRefresh() {
     myProvidersResponseList = null;
     (context as Element).markNeedsBuild();
-    //getDoctorProviderListNew();
   }
 
   Widget getDoctorsWidget(int i, List<DoctorIds> docs) {

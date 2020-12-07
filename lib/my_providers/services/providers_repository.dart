@@ -21,10 +21,6 @@ import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
 class ProvidersListRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  //String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-
-  //String userID = CommonConstants.NEW_USER_ID;
-
   Future<MyProvidersResponse> getMedicalPreferencesList({String userId}) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final response = await _helper.getMedicalPreferencesList(query.qr_user +
