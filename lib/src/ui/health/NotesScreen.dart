@@ -164,8 +164,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
                       ? Image.network(
                           /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                        : */
-                          Constants.BASE_URL +
+                        :
+                          Constants.BASE_URL +*/
                               mediaMetaInfoObj
                                   .metadata.healthRecordCategory.logo,
                           height: 25,

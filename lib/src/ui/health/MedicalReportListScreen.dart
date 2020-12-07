@@ -197,7 +197,7 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                       Container(
                 padding: EdgeInsets.all(10),
                 child: Image.network(
-                  Constants.BASE_URL + data.metadata.healthRecordCategory.logo,
+                  /*Constants.BASE_URL + */data.metadata.healthRecordCategory.logo,
                   height: 30,
                   width: 30,
                   color: Color(

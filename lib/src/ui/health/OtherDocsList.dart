@@ -190,9 +190,9 @@ class _OtherDocsState extends State<OtherDocsList> {
                 child: Image.network(
                   /* mediaMetaInfoObj.metaInfo.mediaTypeInfo.url != null
                       ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                      :*/
-                  Constants.BASE_URL +
-                      mediaMetaInfoObj.metadata.healthRecordCategory.logo,
+                      :
+                  Constants.BASE_URL +*/
+                  mediaMetaInfoObj.metadata.healthRecordCategory.logo,
                   height: 25,
                   width: 25,
                   color: Color(new CommonUtil().getMyPrimaryColor()),

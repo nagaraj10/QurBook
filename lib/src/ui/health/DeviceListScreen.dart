@@ -185,8 +185,8 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   child: Image.network(
                     /* data.metaInfo.mediaTypeInfo.url != null
                         ? data.metaInfo.mediaTypeInfo.url
-                        : */
-                    Constants.BASE_URL +
+                        :
+                    Constants.BASE_URL +*/
                         data.metadata.healthRecordCategory.logo,
                     height: 25,
                     width: 25,
