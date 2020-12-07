@@ -440,7 +440,8 @@ class _HealthOrganizationState extends State<HealthOrganization> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
             child: new CircularProgressIndicator(
-              backgroundColor: Colors.grey,
+                backgroundColor:
+                Color(new CommonUtil().getMyPrimaryColor())
             ),
           );
         } else if (snapshot.hasError) {

@@ -68,23 +68,22 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   @override
   void initState() {
     //finalList = CommonUtil().getDeviceList();
-    getProfileData();
+    //getProfileData();
     super.initState();
   }
 
-  getProfileData() async {
+  /*getProfileData() async {
     var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
       myProfile = value;
     });
-  }
+  }*/
 
   Future<MyProfileModel> getMyProfile() async {
-    if (PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN) != null) {
-      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
-    } else {
-      myProfile = await new CommonUtil().getMyProfile();
-    }
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    await addFamilyUserInfoRepository.getMyProfileInfoNew(userId).then((value) {
+      myProfile = value;
+    });
     return myProfile;
   }
 
@@ -93,9 +92,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       future: getMyProfile(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return new Center(
-            child: new CircularProgressIndicator(
-              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+          return SafeArea(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height / 1.3,
+              child: new Center(
+                child: new CircularProgressIndicator(backgroundColor:
+                Color(new CommonUtil().getMyPrimaryColor()))
+              ),
             ),
           );
         } else if (snapshot.hasError) {
@@ -133,9 +136,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             deviceValues = snapshot.data;
             return projectWidget(context);
           } else {
-            return new Center(
-              child: new CircularProgressIndicator(
-                backgroundColor: Colors.blueAccent,
+            return SizedBox(
+              height: MediaQuery.of(context).size.height / 1.3,
+              child: new Center(
+                child: new CircularProgressIndicator(backgroundColor:
+                Color(new CommonUtil().getMyPrimaryColor()))
               ),
             );
           }

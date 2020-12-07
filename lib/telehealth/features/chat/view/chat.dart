@@ -1069,7 +1069,8 @@ class ChatScreenState extends State<ChatScreen> {
       child: groupChatId == ''
           ? Center(
               child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(themeColor)))
+                  backgroundColor:
+                  Color(new CommonUtil().getMyPrimaryColor())))
           : StreamBuilder(
               stream: Firestore.instance
                   .collection(STR_MESSAGES)
