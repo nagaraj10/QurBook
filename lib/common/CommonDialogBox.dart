@@ -1685,7 +1685,7 @@ class CommonDialogBox {
               CommonConstants.strPulseRate;
           postDeviceValuesExtra[parameters.strvalue] = pulse.text;
           postDeviceValuesExtra[parameters.strunit] =
-              CommonConstants.strPulseUnit;
+              CommonConstants.strPulseValue;
 
           postDeviceData.add(postDeviceValuesExtra);
         } else if (deviceName == Constants.STR_BP_MONITOR) {
