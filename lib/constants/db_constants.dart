@@ -28,7 +28,7 @@ const String PRO_MGDL = 'mg/dL';
 const String PRO_SPO2 = '%spo2';
 const String PRO_PRBPM = 'PR bpm';
 const String PRO_F = 'F';
-const String PRO_KG = 'kg';
+const String PRO_KG = 'kgs';
 const String CC_WHR_CALUSE ="countryCode = ?";
 const String CT_APPOINTMENTS ="CREATE TABLE appointments(id TEXT PRIMARY KEY, hosname TEXT, docname TEXT, appdate TEXT, apptime TEXT, reason TEXT)";
 const String CT_REMINDERS ="CREATE TABLE reminders(id TEXT PRIMARY KEY, title TEXT, notes TEXT, date TEXT, time TEXT, interval TEXT)";
