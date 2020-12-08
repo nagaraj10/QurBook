@@ -187,7 +187,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                         ? data.metaInfo.mediaTypeInfo.url
                         :
                     Constants.BASE_URL +*/
-                        data.metadata.healthRecordCategory.logo,
+                    data.metadata.healthRecordType.logo,
                     height: 25,
                     width: 25,
                     color: Color(new CommonUtil().getMyPrimaryColor()),
