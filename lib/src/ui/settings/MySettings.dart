@@ -3,9 +3,14 @@ import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
+import 'file:///C:/Users/fmohamed/Documents/Flutter%20Projects/myFHB%20fresh/lib/src/model/CreateDeviceSelectionModel.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/viewModel/deviceDataHelper.dart';
@@ -24,188 +29,305 @@ class _MySettingsState extends State<MySettings> {
   DevicesViewModel _deviceModel;
   bool _isHKActive = false;
   bool _firstTym = true;
-  bool _isBPActive = false;
-  bool _isGLActive = false;
-  bool _isOxyActive = false;
-  bool _isTHActive = false;
-  bool _isWSActive = false;
+  bool _isBPActive = true;
+  bool _isGLActive = true;
+  bool _isOxyActive = true;
+  bool _isTHActive = true;
+  bool _isWSActive = true;
   bool _isHealthFirstTime = false;
 
   List<DeviceData> selectedList;
   DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
+  HealthReportListForUserRepository healthReportListForUserRepository = HealthReportListForUserRepository();
+  GetDeviceSelectionModel selectionResult;
+  CreateDeviceSelectionModel createDeviceSelectionModel;
+  UpdateDeviceModel updateDeviceModel;
+
+  var userMappingId = '';
+  bool isTouched = false;
+
   @override
   void initState() {
     selectedList = List();
     _deviceModel = new DevicesViewModel();
     super.initState();
+    getDeviceSelectionValues();
     PreferenceUtil.init();
-    setState(() {
-      _deviceDataHelper = DeviceDataHelper();
-      _isdeviceRecognition =
-          PreferenceUtil.getStringValue(Constants.allowDeviceRecognition) ==
-                  variable.strFalse
-              ? false
-              : true;
-      _isdigitRecognition =
-          PreferenceUtil.getStringValue(Constants.allowDigitRecognition) ==
-                  variable.strFalse
-              ? false
-              : true;
-      _isGFActive = PreferenceUtil.getStringValue(Constants.activateGF) ==
-              variable.strFalse
-          ? false
-          : true;
-      _isHKActive = PreferenceUtil.getStringValue(Constants.activateHK) ==
-              variable.strFalse
-          ? false
-          : true;
-      _isBPActive =
-          PreferenceUtil.getStringValue(Constants.bpMon) == variable.strFalse
-              ? false
-              : true;
-      _isGLActive =
-          PreferenceUtil.getStringValue(Constants.glMon) == variable.strFalse
-              ? false
-              : true;
-      _isOxyActive =
-          PreferenceUtil.getStringValue(Constants.oxyMon) == variable.strFalse
-              ? false
-              : true;
-      _isWSActive =
-          PreferenceUtil.getStringValue(Constants.wsMon) == variable.strFalse
-              ? false
-              : true;
-      _isTHActive =
-          PreferenceUtil.getStringValue(Constants.thMon) == variable.strFalse
-              ? false
-              : true;
-      _firstTym = PreferenceUtil.getStringValue(Constants.isFirstTym) ==
-              variable.strFalse
-          ? false
-          : true;
-      _isHealthFirstTime =
-          PreferenceUtil.getStringValue(Constants.isHealthFirstTime) ==
-                  variable.strFalse
-              ? false
-              : true;
-    });
+
+    _firstTym = PreferenceUtil.getStringValue(Constants.isFirstTym) ==
+        variable.strFalse
+        ? false
+        : true;
+    _isHealthFirstTime =
+    PreferenceUtil.getStringValue(Constants.isHealthFirstTime) ==
+        variable.strFalse
+        ? false
+        : true;
+
     if (_firstTym) {
       _firstTym = false;
       _isGFActive = false;
-      PreferenceUtil.saveString(Constants.activateGF, _firstTym.toString());
+      //PreferenceUtil.saveString(Constants.activateGF, _firstTym.toString());
       PreferenceUtil.saveString(Constants.isFirstTym, _firstTym.toString());
     }
     if (_isHealthFirstTime) {
       _isHKActive = false;
-      PreferenceUtil.saveString(Constants.activateHK, _isHKActive.toString());
+      //PreferenceUtil.saveString(Constants.activateHK, _isHKActive.toString());
     }
+  }
+
+  Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
+    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+      selectionResult = value;
+      if(selectionResult.isSuccess){
+        if(selectionResult.result!=null){
+          setValues(selectionResult);
+          userMappingId = selectionResult.result[0].id;
+        }else{
+          userMappingId = '';
+        }
+      }
+    });
+    return selectionResult;
+  }
+
+  Future<CreateDeviceSelectionModel> createDeviceSelection() async {
+    await healthReportListForUserRepository.createDeviceSelection(
+        _isdigitRecognition,_isdeviceRecognition,_isGFActive,
+        _isHKActive,_isBPActive,_isGLActive,_isOxyActive,_isTHActive,_isWSActive)
+        .then((value) {
+      createDeviceSelectionModel = value;
+      if(createDeviceSelectionModel.isSuccess){
+        closeDialog();
+      }else{
+        if(createDeviceSelectionModel.message==STR_USER_PROFILE_SETTING_ALREADY){
+          updateDeviceSelectionModel();
+        }
+      }
+    });
+    return createDeviceSelectionModel;
+  }
+
+  Future<UpdateDeviceModel> updateDeviceSelectionModel() async {
+    await healthReportListForUserRepository.updateDeviceModel(
+        userMappingId,_isdigitRecognition,_isdeviceRecognition,_isGFActive,
+        _isHKActive,_isBPActive,_isGLActive,_isOxyActive,_isTHActive,_isWSActive)
+        .then((value) {
+      updateDeviceModel = value;
+      if(updateDeviceModel.isSuccess){
+        closeDialog();
+      }
+    });
+    return updateDeviceModel;
+  }
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Are you sure?'),
+        content: Text('Do you want to update the changes'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => closeDialog(),
+            child: Text('No'),
+          ),
+          FlatButton(
+            onPressed: () => createDeviceSelection(),
+            child: Text('Yes'),
+          ),
+        ],
+      ),
+    ) ??
+        false;
+  }
+
+  closeDialog(){
+
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+
+  }
+
+  setValues(GetDeviceSelectionModel getDeviceSelectionModel){
+
+    setState(() {
+      _deviceDataHelper = DeviceDataHelper();
+      _isdeviceRecognition = getDeviceSelectionModel.result[0].profileSetting.allowDevice;
+      _isdigitRecognition = getDeviceSelectionModel.result[0].profileSetting.allowDigit;
+      _isGFActive = getDeviceSelectionModel.result[0].profileSetting.googleFit;
+      _isHKActive = getDeviceSelectionModel.result[0].profileSetting.healthFit;
+      _isBPActive = getDeviceSelectionModel.result[0].profileSetting.bpMonitor;
+      _isGLActive = getDeviceSelectionModel.result[0].profileSetting.glucoMeter;
+      _isOxyActive = getDeviceSelectionModel.result[0].profileSetting.pulseOximeter;
+      _isWSActive = getDeviceSelectionModel.result[0].profileSetting.weighScale;
+      _isTHActive = getDeviceSelectionModel.result[0].profileSetting.thermoMeter;
+
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(fhbColors.bgColorContainer),
-      appBar: AppBar(
-        title: Text(Constants.Settings),
-        centerTitle: false,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            size: 20,
+    return WillPopScope(
+      onWillPop: () {
+        if(isTouched){
+          _onWillPop();
+        }else{
+          Navigator.pop(context, false);
+        }
+      },
+      child: Scaffold(
+        backgroundColor: const Color(fhbColors.bgColorContainer),
+        appBar: AppBar(
+          title: Text(Constants.Settings),
+          centerTitle: false,
+          leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+            ),
+            onPressed: () {
+              isTouched?_onWillPop():Navigator.of(context).pop();
+            },
           ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
+          flexibleSpace: GradientAppBar(),
         ),
-        flexibleSpace: GradientAppBar(),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              padding: EdgeInsets.all(10),
-              children: <Widget>[
-                Container(
-                  color: Colors.white,
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                          leading: ImageIcon(
-                            AssetImage(variable.icon_digit_reco),
-                            //size: 30,
-                            color: Colors.black,
-                          ),
-                          title: Text(variable.strAllowDigit),
-                          subtitle: Text(
-                            variable.strScanDevices,
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          trailing: Transform.scale(
-                            scale: 0.8,
-                            child: Switch(
-                              value: _isdigitRecognition,
-                              activeColor:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                              onChanged: (bool newValue) {
-                                setState(() {
-                                  _isdigitRecognition = newValue;
-
-                                  PreferenceUtil.saveString(
-                                      Constants.allowDigitRecognition,
-                                      _isdigitRecognition.toString());
-                                });
-                              },
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.all(10),
+                children: <Widget>[
+                  Container(
+                    color: Colors.white,
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                            leading: ImageIcon(
+                              AssetImage(variable.icon_digit_reco),
+                              //size: 30,
+                              color: Colors.black,
                             ),
-                          )),
-                      Container(
-                        height: 1,
-                        color: Colors.grey[200],
-                      ),
-                      ListTile(
-                          leading: ImageIcon(
-                            AssetImage(variable.icon_device_recon),
-                            //size: 30,
-                            color: Colors.black,
-                          ),
-                          title: Text(variable.strAllowDevice),
-                          subtitle: Text(
-                            variable.strScanAuto,
-                            style: TextStyle(fontSize: 10),
-                          ),
-                          trailing: Transform.scale(
-                            scale: 0.8,
-                            child: Switch(
-                              value: _isdeviceRecognition,
-                              activeColor:
-                                  Color(new CommonUtil().getMyPrimaryColor()),
-                              onChanged: (bool newValue) {
-                                setState(() {
-                                  _isdeviceRecognition = newValue;
-
-                                  PreferenceUtil.saveString(
-                                      Constants.allowDeviceRecognition,
-                                      _isdeviceRecognition.toString());
-                                });
-                              },
+                            title: Text(variable.strAllowDigit),
+                            subtitle: Text(
+                              variable.strScanDevices,
+                              style: TextStyle(fontSize: 10),
                             ),
-                          )),
-                      Container(
-                        height: 1,
-                        color: Colors.grey[200],
-                      ),
-                      FutureBuilder(
-                          future: _handleGoogleFit(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return ListTile(
-                                leading: ImageIcon(
-                                  AssetImage(variable.icon_digit_googleFit),
-                                  //size: 30,
-                                  color: Colors.black,
+                            trailing: Transform.scale(
+                              scale: 0.8,
+                              child: Switch(
+                                value: _isdigitRecognition,
+                                activeColor:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                onChanged: (bool newValue) {
+                                  setState(() {
+                                    isTouched =true;
+                                    _isdigitRecognition = newValue;
+
+                                    /*PreferenceUtil.saveString(
+                                        Constants.allowDigitRecognition,
+                                        _isdigitRecognition.toString());*/
+                                  });
+                                },
+                              ),
+                            )),
+                        Container(
+                          height: 1,
+                          color: Colors.grey[200],
+                        ),
+                        ListTile(
+                            leading: ImageIcon(
+                              AssetImage(variable.icon_device_recon),
+                              //size: 30,
+                              color: Colors.black,
+                            ),
+                            title: Text(variable.strAllowDevice),
+                            subtitle: Text(
+                              variable.strScanAuto,
+                              style: TextStyle(fontSize: 10),
+                            ),
+                            trailing: Transform.scale(
+                              scale: 0.8,
+                              child: Switch(
+                                value: _isdeviceRecognition,
+                                activeColor:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                onChanged: (bool newValue) {
+                                  setState(() {
+                                    isTouched = true;
+                                    _isdeviceRecognition = newValue;
+
+                                    /*PreferenceUtil.saveString(
+                                        Constants.allowDeviceRecognition,
+                                        _isdeviceRecognition.toString());*/
+                                  });
+                                },
+                              ),
+                            )),
+                        Container(
+                          height: 1,
+                          color: Colors.grey[200],
+                        ),
+                        FutureBuilder(
+                            future: _handleGoogleFit(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                return ListTile(
+                                  leading: ImageIcon(
+                                    AssetImage(variable.icon_digit_googleFit),
+                                    //size: 30,
+                                    color: Colors.black,
+                                  ),
+                                  title: Text(variable.strGoogleFit),
+                                  subtitle: Text(
+                                    variable.strAllowGoogle,
+                                    style: TextStyle(fontSize: 10),
+                                  ),
+                                  trailing: Wrap(
+                                    children: <Widget>[
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: IconButton(
+                                          icon: Icon(Icons.sync),
+                                          onPressed: () {
+                                            _deviceDataHelper.syncGoogleFit();
+                                          },
+                                        ),
+                                      ),
+                                      Transform.scale(
+                                        scale: 0.8,
+                                        child: Switch(
+                                          value: _isGFActive,
+                                          activeColor: Color(new CommonUtil()
+                                              .getMyPrimaryColor()),
+                                          onChanged: (bool newValue) {
+                                            setState(() {
+                                              isTouched =true;
+                                              _isGFActive = newValue;
+                                            });
+                                          },
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }),
+                        Container(
+                          height: 1,
+                          color: Colors.grey[200],
+                        ),
+                        (Platform.isIOS)
+                            ? ListTile(
+                                leading: Icon(
+                                  Icons.favorite,
+                                  color: Colors.pink,
                                 ),
-                                title: Text(variable.strGoogleFit),
+                                title: Text(variable.strHealthKit),
                                 subtitle: Text(
-                                  variable.strAllowGoogle,
+                                  variable.strAllowHealth,
                                   style: TextStyle(fontSize: 10),
                                 ),
                                 trailing: Wrap(
@@ -215,214 +337,171 @@ class _MySettingsState extends State<MySettings> {
                                       child: IconButton(
                                         icon: Icon(Icons.sync),
                                         onPressed: () {
-                                          _deviceDataHelper.syncGoogleFit();
+                                          _deviceDataHelper.syncHealthKit();
                                         },
                                       ),
                                     ),
                                     Transform.scale(
                                       scale: 0.8,
                                       child: Switch(
-                                        value: _isGFActive,
-                                        activeColor: Color(new CommonUtil()
-                                            .getMyPrimaryColor()),
+                                        value: _isHKActive,
+                                        activeColor: Color(
+                                            new CommonUtil().getMyPrimaryColor()),
                                         onChanged: (bool newValue) {
+                                          isTouched =true;
+                                          if (_isHealthFirstTime) {
+                                            _isHealthFirstTime = false;
+                                            PreferenceUtil.saveString(
+                                                Constants.isHealthFirstTime,
+                                                _isHealthFirstTime.toString());
+
+                                            newValue == true
+                                                ? _deviceDataHelper
+                                                    .activateHealthKit()
+                                                : _deviceDataHelper
+                                                    .deactivateHealthKit();
+                                            
+                                          } else {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HealthApp()),
+                                            );
+                                          }
                                           setState(() {
-                                            _isGFActive = newValue;
+                                            _isHKActive = newValue;
+
+                                            /*PreferenceUtil.saveString(
+                                                Constants.activateHK,
+                                                _isHKActive.toString());*/
                                           });
                                         },
                                       ),
                                     )
                                   ],
-                                ),
-                              );
-                            } else {
-                              return Container();
-                            }
-                          }),
-                      Container(
-                        height: 1,
-                        color: Colors.grey[200],
-                      ),
-                      (Platform.isIOS)
-                          ? ListTile(
-                              leading: Icon(
-                                Icons.favorite,
-                                color: Colors.pink,
-                              ),
-                              title: Text(variable.strHealthKit),
-                              subtitle: Text(
-                                variable.strAllowHealth,
-                                style: TextStyle(fontSize: 10),
-                              ),
-                              trailing: Wrap(
-                                children: <Widget>[
-                                  Transform.scale(
-                                    scale: 0.8,
-                                    child: IconButton(
-                                      icon: Icon(Icons.sync),
-                                      onPressed: () {
-                                        _deviceDataHelper.syncHealthKit();
-                                      },
-                                    ),
-                                  ),
-                                  Transform.scale(
-                                    scale: 0.8,
-                                    child: Switch(
-                                      value: _isHKActive,
-                                      activeColor: Color(
-                                          new CommonUtil().getMyPrimaryColor()),
-                                      onChanged: (bool newValue) {
-                                        if (_isHealthFirstTime) {
-                                          _isHealthFirstTime = false;
-                                          PreferenceUtil.saveString(
-                                              Constants.isHealthFirstTime,
-                                              _isHealthFirstTime.toString());
-
-                                          newValue == true
-                                              ? _deviceDataHelper
-                                                  .activateHealthKit()
-                                              : _deviceDataHelper
-                                                  .deactivateHealthKit();
-                                          
-                                        } else {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    HealthApp()),
-                                          );
-                                        }
-                                        setState(() {
-                                          _isHKActive = newValue;
-
-                                          PreferenceUtil.saveString(
-                                              Constants.activateHK,
-                                              _isHKActive.toString());
-                                        });
-                                      },
-                                    ),
-                                  )
-                                ],
-                              ))
-                          : SizedBox.shrink(),
-                      Container(
-                        height: 1,
-                        color: Colors.grey[200],
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  Text(
-                    variable.strAddDevice,
-                    style: TextStyle(color: Colors.black, fontSize: 12),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  FutureBuilder<List<DeviceData>>(
-                    future: _deviceModel.getDevices(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        for (int i = 0; i <= snapshot.data.length; i++) {
-                          switch (i) {
-                            case 0:
-                              snapshot.data[i].isSelected = _isBPActive;
-                              break;
-                            case 1:
-                              snapshot.data[i].isSelected = _isGLActive;
-                              break;
-                            case 2:
-                              snapshot.data[i].isSelected = _isOxyActive;
-                              break;
-                            case 3:
-                              snapshot.data[i].isSelected = _isTHActive;
-                              break;
-                            case 4:
-                              snapshot.data[i].isSelected = _isWSActive;
-                              break;
-
-                            default:
-                          }
-                        }
-                      }
-                      return snapshot.hasData
-                          ? Container(
-                              height: 75,
-                              color: Colors.white,
-                              child: new ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                itemCount: snapshot.data.length,
-                                itemBuilder: (context, i) {
-                                  return DeviceCard(
-                                      deviceData: snapshot.data[i],
-                                      isSelected: (bool value) {
-                                        switch (i) {
-                                          case 0:
-                                            _isBPActive = value;
-                                            PreferenceUtil.saveString(
-                                                Constants.bpMon,
-                                                _isBPActive.toString());
-                                            break;
-                                          case 1:
-                                            _isGLActive = value;
-                                            PreferenceUtil.saveString(
-                                                Constants.glMon,
-                                                _isGLActive.toString());
-
-                                            break;
-                                          case 2:
-                                            _isOxyActive = value;
-                                            PreferenceUtil.saveString(
-                                                Constants.oxyMon,
-                                                _isOxyActive.toString());
-                                            break;
-                                          case 3:
-                                            _isTHActive = value;
-                                            PreferenceUtil.saveString(
-                                                Constants.thMon,
-                                                _isTHActive.toString());
-                                            break;
-                                          case 4:
-                                            _isWSActive = value;
-                                            PreferenceUtil.saveString(
-                                                Constants.wsMon,
-                                                _isWSActive.toString());
-                                            break;
-                                          default:
-                                        }
-                                        setState(() {
-                                          if (value) {
-                                            selectedList.add(snapshot.data[i]);
-                                          } else {
-                                            selectedList
-                                                .remove(snapshot.data[i]);
-                                          }
-                                        });
-                                      },
-                                      key: Key(
-                                          snapshot.data[i].status.toString()));
-                                },
-                              ),
-                            )
-                          : Center(
-                              child: CircularProgressIndicator(),
-                            );
-                    },
-                  ),
+                                ))
+                            : SizedBox.shrink(),
+                        Container(
+                          height: 1,
+                          color: Colors.grey[200],
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    Text(
+                      variable.strAddDevice,
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    FutureBuilder<List<DeviceData>>(
+                      future: _deviceModel.getDevices(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          for (int i = 0; i <= snapshot.data.length; i++) {
+                            switch (i) {
+                              case 0:
+                                snapshot.data[i].isSelected = _isBPActive;
+                                break;
+                              case 1:
+                                snapshot.data[i].isSelected = _isGLActive;
+                                break;
+                              case 2:
+                                snapshot.data[i].isSelected = _isOxyActive;
+                                break;
+                              case 3:
+                                snapshot.data[i].isSelected = _isTHActive;
+                                break;
+                              case 4:
+                                snapshot.data[i].isSelected = _isWSActive;
+                                break;
+
+                              default:
+                            }
+                          }
+                        }
+                        return snapshot.hasData
+                            ? Container(
+                                height: 75,
+                                color: Colors.white,
+                                child: new ListView.builder(
+                                  shrinkWrap: true,
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: snapshot.data.length,
+                                  itemBuilder: (context, i) {
+                                    return DeviceCard(
+                                        deviceData: snapshot.data[i],
+                                        isSelected: (bool value) {
+                                          isTouched = true;
+                                          switch (i) {
+                                            case 0:
+                                              _isBPActive = value;
+                                             /* PreferenceUtil.saveString(
+                                                  Constants.bpMon,
+                                                  _isBPActive.toString());*/
+                                              break;
+                                            case 1:
+                                              _isGLActive = value;
+                                              /*PreferenceUtil.saveString(
+                                                  Constants.glMon,
+                                                  _isGLActive.toString());*/
+
+                                              break;
+                                            case 2:
+                                              _isOxyActive = value;
+                                              /*PreferenceUtil.saveString(
+                                                  Constants.oxyMon,
+                                                  _isOxyActive.toString());*/
+                                              break;
+                                            case 3:
+                                              _isTHActive = value;
+                                              /*PreferenceUtil.saveString(
+                                                  Constants.thMon,
+                                                  _isTHActive.toString());*/
+                                              break;
+                                            case 4:
+                                              _isWSActive = value;
+                                              /*PreferenceUtil.saveString(
+                                                  Constants.wsMon,
+                                                  _isWSActive.toString());*/
+                                              break;
+                                            default:
+                                          }
+                                          setState(() {
+                                            if (value) {
+                                              selectedList.add(snapshot.data[i]);
+                                            } else {
+                                              selectedList
+                                                  .remove(snapshot.data[i]);
+                                            }
+                                          });
+                                        },
+                                        key: Key(
+                                            snapshot.data[i].status.toString()));
+                                  },
+                                ),
+                              )
+                            : Center(
+                                child: CircularProgressIndicator(),
+                              );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -439,7 +518,7 @@ class _MySettingsState extends State<MySettings> {
         _isGFActive = !await _deviceDataHelper.deactivateGoogleFit();
       }
     }
-    PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
+    //PreferenceUtil.saveString(Constants.activateGF, _isGFActive.toString());
     return ret;
   }
 }

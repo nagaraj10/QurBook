@@ -197,3 +197,7 @@ const String qr_health_org_id = 'healthOrganizationId';
 const String qr_shareFromUser = 'shareFromUser';
 const String qr_shareToProvider = 'shareToProvider';
 const String qr_metadata = 'metadata';
+
+const String qr_user_profile = 'user-profile-setting/';
+const String qr_my_profile = 'my-profile';
+const String qr_user_profile_no_slash = 'user-profile-setting';
