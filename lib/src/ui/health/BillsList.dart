@@ -189,8 +189,8 @@ class _BillsListState extends State<BillsList> {
               child: Image.network(
                 /* mediaMetaInfoObj.metadata.healthRecordType.url != null
                     ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
-                    : */
-                Constants.BASE_URL +
+                    :
+                Constants.BASE_URL +*/
                     mediaMetaInfoObj.metadata.healthRecordCategory.logo,
                 height: 25,
                 width: 25,

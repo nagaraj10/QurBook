@@ -197,8 +197,8 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                     Container(
               padding: EdgeInsets.all(10),
               child: Image.network(
-                Constants.BASE_URL +
-                    mediaMetaInfo.metadata.healthRecordCategory.logo,
+                /*Constants.BASE_URL +*/
+                mediaMetaInfo.metadata.healthRecordCategory.logo,
                 height: 30,
                 width: 30,
                 color: Color(
