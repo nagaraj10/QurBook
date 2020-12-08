@@ -249,7 +249,7 @@ class AppointmentsCommonWidget {
                   color: color,
                 ),
               ),
-              (count == null || count == 0 || count == '')
+              (count == null || count == 0 || count == ''||count=='0')
                   ? Container()
                   : BadgesBlue(
                       backColor: Colors.blue,
