@@ -1,4 +1,5 @@
 import 'dart:convert' as convert;
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -7,6 +8,7 @@ import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
 import 'package:myfhb/record_detail/model/UpdateMediaResponse.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
 import 'package:myfhb/src/model/Health/PostImageResponse.dart';
@@ -15,6 +17,8 @@ import 'package:myfhb/src/model/Health/MediaMetaInfo.dart';
 import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
+import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
+import 'file:///C:/Users/fmohamed/Documents/Flutter%20Projects/myFHB%20fresh/lib/src/model/CreateDeviceSelectionModel.dart';
 
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
@@ -227,5 +231,57 @@ class HealthReportListForUserRepository {
     var response = await _helper.updateHealthRecords(query.qr_health_record,
         convert.jsonEncode(jsonString), null, audioPath, healthResult.id);
     return HealthRecordSuccess.fromJson(response.data);
+  }
+
+  Future<GetDeviceSelectionModel> getDeviceSelection() async {
+    final response = await _helper.getDeviceSelection(
+        query.qr_user_profile + query.qr_user + query.qr_my_profile);
+    return GetDeviceSelectionModel.fromJson(response);
+  }
+
+  Future<CreateDeviceSelectionModel> createDeviceSelection(bool allowDigit,bool allowDevice,
+      bool googleFit,bool healthFit,
+      bool bpMonitor,
+      bool gluco, bool pulseOximeter, bool thermo, bool weighScale) async {
+    var body = jsonEncode({
+      'profileSetting': {
+        'allowDigit': allowDigit,
+        'allowDevice': allowDevice,
+        'googleFit': googleFit,
+        'healthFit': healthFit,
+        'bpMonitor': bpMonitor,
+        'glucoMeter': gluco,
+        'pulseOximeter': pulseOximeter,
+        'thermoMeter': thermo,
+        'weighScale': weighScale
+      }
+    });
+
+    final response =
+        await _helper.createDeviceSelection(query.qr_user_profile_no_slash,body);
+    return CreateDeviceSelectionModel.fromJson(response);
+  }
+
+  Future<UpdateDeviceModel> updateDeviceModel(userMappingId,bool allowDigit,bool allowDevice,
+      bool googleFit,bool healthFit,
+      bool bpMonitor,
+      bool gluco, bool pulseOximeter, bool thermo, bool weighScale) async {
+    var body = jsonEncode({
+      'id':userMappingId,
+      'profileSetting': {
+        'allowDigit': allowDigit,
+        'allowDevice': allowDevice,
+        'googleFit': googleFit,
+        'healthFit': healthFit,
+        'bpMonitor': bpMonitor,
+        'glucoMeter': gluco,
+        'pulseOximeter': pulseOximeter,
+        'thermoMeter': thermo,
+        'weighScale': weighScale
+      }
+    });
+    final response =
+    await _helper.updateDeviceSelection(query.qr_user_profile_no_slash,body);
+    return UpdateDeviceModel.fromJson(response);
   }
 }
