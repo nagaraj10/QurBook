@@ -17,7 +17,6 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 //         : null;
 //   }
 
-
 // }
 
 // class Response {
@@ -74,7 +73,7 @@ class AddFamilyOTPResponse {
   Result result;
   String message;
 
-  AddFamilyOTPResponse({this.isSuccess, this.result,this.message});
+  AddFamilyOTPResponse({this.isSuccess, this.result, this.message});
 
   AddFamilyOTPResponse.fromJson(Map<String, dynamic> json) {
     isSuccess = json['isSuccess'];
@@ -303,6 +302,8 @@ class ChildInfo {
   String createdOn;
   String lastModifiedBy;
   String lastModifiedOn;
+  String providerId;
+  AdditionalInfos additionalInfo;
   List<ContactInfo> contactInfo;
 
   ChildInfo(
@@ -333,7 +334,9 @@ class ChildInfo {
       this.createdOn,
       this.lastModifiedBy,
       this.lastModifiedOn,
-      this.contactInfo});
+      this.contactInfo,
+      this.additionalInfo,
+      this.providerId});
 
   ChildInfo.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -369,6 +372,9 @@ class ChildInfo {
         contactInfo.add(new ContactInfo.fromJson(v));
       });
     }
+    additionalInfo = json['additionalInfo'] != null
+        ? new AdditionalInfos.fromJson(json['additionalInfo'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -403,10 +409,28 @@ class ChildInfo {
     if (this.contactInfo != null) {
       data['contactInfo'] = this.contactInfo.map((v) => v.toJson()).toList();
     }
+    if (this.additionalInfo != null) {
+      data['additionalInfo'] = this.additionalInfo.toJson();
+    }
     return data;
   }
 }
 
+class AdditionalInfos {
+  String height;
+  String weight;
 
+  AdditionalInfos({this.height, this.weight});
 
+  AdditionalInfos.fromJson(Map<String, dynamic> json) {
+    height = json['height'];
+    weight = json['weight'];
+  }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['height'] = this.height;
+    data['weight'] = this.weight;
+    return data;
+  }
+}

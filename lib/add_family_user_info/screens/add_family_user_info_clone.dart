@@ -1267,6 +1267,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         dateOfBirthController.text = value.result.dateOfBirth != null
             ? new FHBUtils().getFormattedDateOnlyNew(value.result.dateOfBirth)
             : '';
+
+        if (value?.result?.additionalInfo != null) {
+          heightController.text = value?.result?.additionalInfo?.height != null
+              ? value?.result?.additionalInfo?.height
+              : '';
+          weightController.text = value?.result?.additionalInfo?.weight != null
+              ? value?.result?.additionalInfo?.weight
+              : '';
+        }
       });
     }
   }
