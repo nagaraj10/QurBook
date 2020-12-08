@@ -284,7 +284,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
               if (!snapshot.hasData) {
                 return Center(
                   child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(themeColor),
+                      backgroundColor:
+                      Color(new CommonUtil().getMyPrimaryColor())
                   ),
                 );
               } else {

@@ -178,8 +178,8 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
           } else if (snapshot.hasError) {
             return new Text('Error: ${snapshot.error}');
           } else {
-            return snapshot.data.sessionCounts != null
-                ? Container(
+            return snapshot.data.sessionCounts != null && snapshot.data.sessions != null
+                ? snapshot.data.sessions[0].slots!=null && snapshot.data.sessions[0].slots.isNotEmpty? Container(
               margin: EdgeInsets.only(left: 5, top: 12),
               child: GetTimeSlots(
                 dateSlotTimingsObj: snapshot.data,
@@ -197,6 +197,19 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
               ),
             )
                 : Column(
+              children: <Widget>[
+                SizedBoxWidget(
+                  height: 8,
+                ),
+                new Text(
+                  slotsAreNotAvailable,
+                  style: TextStyle(fontSize: 10.0),
+                ),
+                SizedBoxWidget(
+                  height: 8,
+                ),
+              ],
+            ):Column(
               children: <Widget>[
                 SizedBoxWidget(
                   height: 8,
