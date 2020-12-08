@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/authentication/service/authservice.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 //import 'package:myfhb/src/ui/MyRecords.dart';
@@ -17,6 +18,8 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../../../../src/ui/MyRecord.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'dart:convert' as convert;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class TelehealthProviders extends StatefulWidget {
   static _TelehealthProvidersState of(BuildContext context) =>
@@ -180,7 +183,12 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
         name: 'My Providers', imageIcon: 'assets/navicons/my_providers.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
       name: 'Sheela',
-      imageIcon: 'assets/maya/maya_us_main.png',
+      imageIcon: PreferenceUtil.getStringValue(
+                                        Constants.keyMayaAsset) !=
+                                    null
+                                ? PreferenceUtil.getStringValue(
+                                        Constants.keyMayaAsset) +
+                                    variable.strExtImg : 'assets/maya/maya_us_main.png',
     ));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
         name: 'Chat', imageIcon: 'assets/navicons/chat.png'));
