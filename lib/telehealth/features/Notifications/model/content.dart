@@ -10,7 +10,7 @@ class Content {
     variables = json['variables'] != null
         ? new Variables.fromJson(json['variables'])
         : null;
-    templateName = json['templateName'];
+    templateName = json['templateName'] != null? json['templateName']:null;
   }
 
   Map<String, dynamic> toJson() {
