@@ -25,9 +25,8 @@ class _CameraState extends State<Camera> {
   CameraController controller;
   bool isDetecting = false;
 
-
-  String stryolo= "YOLO";
-  String ssmobileNet= "SSDMobileNet";
+  String stryolo = "YOLO";
+  String ssmobileNet = "SSDMobileNet";
 
   @override
   void initState() {
@@ -37,7 +36,7 @@ class _CameraState extends State<Camera> {
     } else {
       controller = new CameraController(
         widget.cameras[0],
-        ResolutionPreset.medium,
+        ResolutionPreset.high,
       );
       controller.initialize().then((_) {
         if (!mounted) {
@@ -66,7 +65,7 @@ class _CameraState extends State<Camera> {
                   imageWidth: img.width,
                   numResults: 2,
                 ).then((recognitions) {
-                  
+
 
                   widget.setRecognitions(
                       recognitions, img.height, img.width, controller);
@@ -82,7 +81,7 @@ class _CameraState extends State<Camera> {
                   imageWidth: img.width,
                   numResults: 2,
                 ).then((recognitions) {
-                  
+
 
                   widget.setRecognitions(
                       recognitions, img.height, img.width, controller);
@@ -90,26 +89,46 @@ class _CameraState extends State<Camera> {
                   isDetecting = false;
                 });
               } else {
+//                Tflite.detectObjectOnFrame(
+//                  bytesList: img.planes.map((plane) {
+//                    return plane.bytes;
+//                  }).toList(),
+//                  model: widget.model == yolo ? stryolo : ssmobileNet,
+//                  imageHeight: img.height,
+//                  imageWidth: img.width,
+//                  imageMean: widget.model == yolo ? 0 : 127.5,
+//                  imageStd: widget.model == yolo ? 255.0 : 127.5,
+//                  numResultsPerClass: 1,
+//                  threshold: widget.model == yolo ? 0.2 : 0.4,
+//                ).then((recognitions) {
+//                  int endTime = new DateTime.now().millisecondsSinceEpoch;
+//
+//                  if (endTime - startTime > 3000) {
+//                    widget.setRecognitions(
+//                        recognitions, img.height, img.width, controller);
+//
+//
+//                  }
+//
+//                  isDetecting = false;
+//                });
                 Tflite.detectObjectOnFrame(
                   bytesList: img.planes.map((plane) {
                     return plane.bytes;
                   }).toList(),
-                  model: widget.model == yolo ? stryolo : ssmobileNet,
+                  model: "SSDMobileNet",
                   imageHeight: img.height,
                   imageWidth: img.width,
-                  imageMean: widget.model == yolo ? 0 : 127.5,
-                  imageStd: widget.model == yolo ? 255.0 : 127.5,
+                  imageMean: 127.5,
+                  imageStd: 127.5,
                   numResultsPerClass: 1,
-                  threshold: widget.model == yolo ? 0.2 : 0.4,
+                  threshold: 0.4,
                 ).then((recognitions) {
-                  int endTime = new DateTime.now().millisecondsSinceEpoch;
-                  
-                  if (endTime - startTime > 3000) {
-                    widget.setRecognitions(
-                        recognitions, img.height, img.width, controller);
-
-                  }
-
+                  /*
+              When setRecognitions is called here, the parameters are being passed on to the parent widget as callback. i.e. to the LiveFeed class
+               */
+                  widget.setRecognitions(
+                      recognitions, img.height, img.width, controller);
                   isDetecting = false;
                 });
               }
