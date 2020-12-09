@@ -7,9 +7,9 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Card.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
+import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
-import 'file:///C:/Users/fmohamed/Documents/Flutter%20Projects/myFHB%20fresh/lib/src/model/CreateDeviceSelectionModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -38,7 +38,8 @@ class _MySettingsState extends State<MySettings> {
 
   List<DeviceData> selectedList;
   DeviceDataHelper _deviceDataHelper = DeviceDataHelper();
-  HealthReportListForUserRepository healthReportListForUserRepository = HealthReportListForUserRepository();
+  HealthReportListForUserRepository healthReportListForUserRepository =
+      HealthReportListForUserRepository();
   GetDeviceSelectionModel selectionResult;
   CreateDeviceSelectionModel createDeviceSelectionModel;
   UpdateDeviceModel updateDeviceModel;
@@ -54,15 +55,15 @@ class _MySettingsState extends State<MySettings> {
     getDeviceSelectionValues();
     PreferenceUtil.init();
 
-    _firstTym = PreferenceUtil.getStringValue(Constants.isFirstTym) ==
-        variable.strFalse
-        ? false
-        : true;
+    _firstTym =
+        PreferenceUtil.getStringValue(Constants.isFirstTym) == variable.strFalse
+            ? false
+            : true;
     _isHealthFirstTime =
-    PreferenceUtil.getStringValue(Constants.isHealthFirstTime) ==
-        variable.strFalse
-        ? false
-        : true;
+        PreferenceUtil.getStringValue(Constants.isHealthFirstTime) ==
+                variable.strFalse
+            ? false
+            : true;
 
     if (_firstTym) {
       _firstTym = false;
@@ -79,11 +80,11 @@ class _MySettingsState extends State<MySettings> {
   Future<GetDeviceSelectionModel> getDeviceSelectionValues() async {
     await healthReportListForUserRepository.getDeviceSelection().then((value) {
       selectionResult = value;
-      if(selectionResult.isSuccess){
-        if(selectionResult.result!=null){
+      if (selectionResult.isSuccess) {
+        if (selectionResult.result != null) {
           setValues(selectionResult);
           userMappingId = selectionResult.result[0].id;
-        }else{
+        } else {
           userMappingId = '';
         }
       }
@@ -92,15 +93,24 @@ class _MySettingsState extends State<MySettings> {
   }
 
   Future<CreateDeviceSelectionModel> createDeviceSelection() async {
-    await healthReportListForUserRepository.createDeviceSelection(
-        _isdigitRecognition,_isdeviceRecognition,_isGFActive,
-        _isHKActive,_isBPActive,_isGLActive,_isOxyActive,_isTHActive,_isWSActive)
+    await healthReportListForUserRepository
+        .createDeviceSelection(
+            _isdigitRecognition,
+            _isdeviceRecognition,
+            _isGFActive,
+            _isHKActive,
+            _isBPActive,
+            _isGLActive,
+            _isOxyActive,
+            _isTHActive,
+            _isWSActive)
         .then((value) {
       createDeviceSelectionModel = value;
-      if(createDeviceSelectionModel.isSuccess){
+      if (createDeviceSelectionModel.isSuccess) {
         closeDialog();
-      }else{
-        if(createDeviceSelectionModel.message==STR_USER_PROFILE_SETTING_ALREADY){
+      } else {
+        if (createDeviceSelectionModel.message ==
+            STR_USER_PROFILE_SETTING_ALREADY) {
           updateDeviceSelectionModel();
         }
       }
@@ -109,12 +119,21 @@ class _MySettingsState extends State<MySettings> {
   }
 
   Future<UpdateDeviceModel> updateDeviceSelectionModel() async {
-    await healthReportListForUserRepository.updateDeviceModel(
-        userMappingId,_isdigitRecognition,_isdeviceRecognition,_isGFActive,
-        _isHKActive,_isBPActive,_isGLActive,_isOxyActive,_isTHActive,_isWSActive)
+    await healthReportListForUserRepository
+        .updateDeviceModel(
+            userMappingId,
+            _isdigitRecognition,
+            _isdeviceRecognition,
+            _isGFActive,
+            _isHKActive,
+            _isBPActive,
+            _isGLActive,
+            _isOxyActive,
+            _isTHActive,
+            _isWSActive)
         .then((value) {
       updateDeviceModel = value;
-      if(updateDeviceModel.isSuccess){
+      if (updateDeviceModel.isSuccess) {
         closeDialog();
       }
     });
@@ -123,46 +142,46 @@ class _MySettingsState extends State<MySettings> {
 
   Future<bool> _onWillPop() {
     return showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Are you sure?'),
-        content: Text('Do you want to update the changes'),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () => closeDialog(),
-            child: Text('No'),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: Text('Do you want to update the changes'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => closeDialog(),
+                child: Text('No'),
+              ),
+              FlatButton(
+                onPressed: () => createDeviceSelection(),
+                child: Text('Yes'),
+              ),
+            ],
           ),
-          FlatButton(
-            onPressed: () => createDeviceSelection(),
-            child: Text('Yes'),
-          ),
-        ],
-      ),
-    ) ??
+        ) ??
         false;
   }
 
-  closeDialog(){
-
+  closeDialog() {
     Navigator.of(context).pop();
     Navigator.of(context).pop();
-
   }
 
-  setValues(GetDeviceSelectionModel getDeviceSelectionModel){
-
+  setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
     setState(() {
       _deviceDataHelper = DeviceDataHelper();
-      _isdeviceRecognition = getDeviceSelectionModel.result[0].profileSetting.allowDevice;
-      _isdigitRecognition = getDeviceSelectionModel.result[0].profileSetting.allowDigit;
+      _isdeviceRecognition =
+          getDeviceSelectionModel.result[0].profileSetting.allowDevice;
+      _isdigitRecognition =
+          getDeviceSelectionModel.result[0].profileSetting.allowDigit;
       _isGFActive = getDeviceSelectionModel.result[0].profileSetting.googleFit;
       _isHKActive = getDeviceSelectionModel.result[0].profileSetting.healthFit;
       _isBPActive = getDeviceSelectionModel.result[0].profileSetting.bpMonitor;
       _isGLActive = getDeviceSelectionModel.result[0].profileSetting.glucoMeter;
-      _isOxyActive = getDeviceSelectionModel.result[0].profileSetting.pulseOximeter;
+      _isOxyActive =
+          getDeviceSelectionModel.result[0].profileSetting.pulseOximeter;
       _isWSActive = getDeviceSelectionModel.result[0].profileSetting.weighScale;
-      _isTHActive = getDeviceSelectionModel.result[0].profileSetting.thermoMeter;
-
+      _isTHActive =
+          getDeviceSelectionModel.result[0].profileSetting.thermoMeter;
     });
   }
 
@@ -170,9 +189,9 @@ class _MySettingsState extends State<MySettings> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if(isTouched){
+        if (isTouched) {
           _onWillPop();
-        }else{
+        } else {
           Navigator.pop(context, false);
         }
       },
@@ -187,7 +206,7 @@ class _MySettingsState extends State<MySettings> {
               size: 20,
             ),
             onPressed: () {
-              isTouched?_onWillPop():Navigator.of(context).pop();
+              isTouched ? _onWillPop() : Navigator.of(context).pop();
             },
           ),
           flexibleSpace: GradientAppBar(),
@@ -221,7 +240,7 @@ class _MySettingsState extends State<MySettings> {
                                     Color(new CommonUtil().getMyPrimaryColor()),
                                 onChanged: (bool newValue) {
                                   setState(() {
-                                    isTouched =true;
+                                    isTouched = true;
                                     _isdigitRecognition = newValue;
 
                                     /*PreferenceUtil.saveString(
@@ -302,7 +321,7 @@ class _MySettingsState extends State<MySettings> {
                                               .getMyPrimaryColor()),
                                           onChanged: (bool newValue) {
                                             setState(() {
-                                              isTouched =true;
+                                              isTouched = true;
                                               _isGFActive = newValue;
                                             });
                                           },
@@ -345,10 +364,10 @@ class _MySettingsState extends State<MySettings> {
                                       scale: 0.8,
                                       child: Switch(
                                         value: _isHKActive,
-                                        activeColor: Color(
-                                            new CommonUtil().getMyPrimaryColor()),
+                                        activeColor: Color(new CommonUtil()
+                                            .getMyPrimaryColor()),
                                         onChanged: (bool newValue) {
-                                          isTouched =true;
+                                          isTouched = true;
                                           if (_isHealthFirstTime) {
                                             _isHealthFirstTime = false;
                                             PreferenceUtil.saveString(
@@ -360,7 +379,6 @@ class _MySettingsState extends State<MySettings> {
                                                     .activateHealthKit()
                                                 : _deviceDataHelper
                                                     .deactivateHealthKit();
-                                            
                                           } else {
                                             Navigator.push(
                                               context,
@@ -446,7 +464,7 @@ class _MySettingsState extends State<MySettings> {
                                           switch (i) {
                                             case 0:
                                               _isBPActive = value;
-                                             /* PreferenceUtil.saveString(
+                                              /* PreferenceUtil.saveString(
                                                   Constants.bpMon,
                                                   _isBPActive.toString());*/
                                               break;
@@ -479,15 +497,16 @@ class _MySettingsState extends State<MySettings> {
                                           }
                                           setState(() {
                                             if (value) {
-                                              selectedList.add(snapshot.data[i]);
+                                              selectedList
+                                                  .add(snapshot.data[i]);
                                             } else {
                                               selectedList
                                                   .remove(snapshot.data[i]);
                                             }
                                           });
                                         },
-                                        key: Key(
-                                            snapshot.data[i].status.toString()));
+                                        key: Key(snapshot.data[i].status
+                                            .toString()));
                                   },
                                 ),
                               )

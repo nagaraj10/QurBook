@@ -8,6 +8,7 @@ import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
 import 'package:myfhb/record_detail/model/UpdateMediaResponse.dart';
+import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
 import 'package:myfhb/src/model/Health/MediaMasterIds.dart';
@@ -18,7 +19,6 @@ import 'package:myfhb/src/model/Health/UserHealthResponseList.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/src/model/Health/asgard/health_record_success.dart';
 import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
-import 'file:///C:/Users/fmohamed/Documents/Flutter%20Projects/myFHB%20fresh/lib/src/model/CreateDeviceSelectionModel.dart';
 
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 
@@ -239,10 +239,16 @@ class HealthReportListForUserRepository {
     return GetDeviceSelectionModel.fromJson(response);
   }
 
-  Future<CreateDeviceSelectionModel> createDeviceSelection(bool allowDigit,bool allowDevice,
-      bool googleFit,bool healthFit,
+  Future<CreateDeviceSelectionModel> createDeviceSelection(
+      bool allowDigit,
+      bool allowDevice,
+      bool googleFit,
+      bool healthFit,
       bool bpMonitor,
-      bool gluco, bool pulseOximeter, bool thermo, bool weighScale) async {
+      bool gluco,
+      bool pulseOximeter,
+      bool thermo,
+      bool weighScale) async {
     var body = jsonEncode({
       'profileSetting': {
         'allowDigit': allowDigit,
@@ -257,17 +263,24 @@ class HealthReportListForUserRepository {
       }
     });
 
-    final response =
-        await _helper.createDeviceSelection(query.qr_user_profile_no_slash,body);
+    final response = await _helper.createDeviceSelection(
+        query.qr_user_profile_no_slash, body);
     return CreateDeviceSelectionModel.fromJson(response);
   }
 
-  Future<UpdateDeviceModel> updateDeviceModel(userMappingId,bool allowDigit,bool allowDevice,
-      bool googleFit,bool healthFit,
+  Future<UpdateDeviceModel> updateDeviceModel(
+      userMappingId,
+      bool allowDigit,
+      bool allowDevice,
+      bool googleFit,
+      bool healthFit,
       bool bpMonitor,
-      bool gluco, bool pulseOximeter, bool thermo, bool weighScale) async {
+      bool gluco,
+      bool pulseOximeter,
+      bool thermo,
+      bool weighScale) async {
     var body = jsonEncode({
-      'id':userMappingId,
+      'id': userMappingId,
       'profileSetting': {
         'allowDigit': allowDigit,
         'allowDevice': allowDevice,
@@ -280,8 +293,8 @@ class HealthReportListForUserRepository {
         'weighScale': weighScale
       }
     });
-    final response =
-    await _helper.updateDeviceSelection(query.qr_user_profile_no_slash,body);
+    final response = await _helper.updateDeviceSelection(
+        query.qr_user_profile_no_slash, body);
     return UpdateDeviceModel.fromJson(response);
   }
 }
