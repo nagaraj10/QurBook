@@ -73,7 +73,6 @@ class TakePictureScreenForDevicesState
     super.initState();
     // To display the current output from the Camera,
     // create a CameraController.
-
     categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
     deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME) == null
         ? Constants.IS_CATEGORYNAME_DEVICES
@@ -121,8 +120,7 @@ class TakePictureScreenForDevicesState
   }
 
   loadModel() async {
-    String res;
-    res = await Tflite.loadModel(
+    await Tflite.loadModel(
         model: variable.strdflit, labels: variable.file_device);
   }
 
@@ -241,8 +239,8 @@ class TakePictureScreenForDevicesState
                                     child: CircularProgressIndicator(
                                         backgroundColor: Colors.white))
                               ]))
-                      : _recognitions.length == 0 ||
-                              _recognitions[0][Constants.keyDetectedClass] ==
+                      : _recognitions.length == 0
+                  || _recognitions[0][Constants.keyDetectedClass] ==
                                   variable.strOthers
                           ? Container(
                               height: 80,
@@ -551,7 +549,8 @@ class TakePictureScreenForDevicesState
       });
 
       _recognitions = recognitions;
-
+      _imageHeight = imageHeight;
+      _imageWidth = imageWidth;
       PreferenceUtil.saveString(Constants.KEY_DEVICENAME,
           deviceNames(_recognitions[0][Constants.keyDetectedClass]));
 
