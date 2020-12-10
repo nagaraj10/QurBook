@@ -318,8 +318,7 @@ class _MyFHBState extends State<MyFHB> {
     var nsSettingsForAndroid =
         new AndroidInitializationSettings(variable.strLauncher);
     var nsSettingsForIOS = new IOSInitializationSettings();
-    var platform =
-        new InitializationSettings(nsSettingsForAndroid, nsSettingsForIOS);
+    var platform = new InitializationSettings();
 
     Future notificationAction(String payload) async {
       Navigator.push(

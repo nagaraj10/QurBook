@@ -92,8 +92,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
     var initializationSettingsAndroid =
         new AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
     var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+    var initializationSettings = new InitializationSettings();
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
@@ -106,12 +105,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
       'your channel description',
       playSound: true,
       enableVibration: true,
-      importance: Importance.Max,
-      priority: Priority.High,
+      importance: Importance.max,
+      priority: Priority.high,
     );
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    var platformChannelSpecifics = new NotificationDetails();
 
     await flutterLocalNotificationsPlugin.show(0, message['title'].toString(),
         message['body'].toString(), platformChannelSpecifics,
@@ -242,7 +240,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
               );
             },
           ),
-          SizedBoxWidget(width: 10,),
+          SizedBoxWidget(
+            width: 10,
+          ),
         ],
       ),
       body: WillPopScope(
@@ -285,29 +285,30 @@ class HomeScreenState extends State<ChatHomeScreen> {
                 return Center(
                   child: CircularProgressIndicator(
                       backgroundColor:
-                      Color(new CommonUtil().getMyPrimaryColor())
-                  ),
+                          Color(new CommonUtil().getMyPrimaryColor())),
                 );
               } else {
-                return countChatListUsers(patientId, snapshot) > 0 ?
-                ListView.builder(
-                  padding: EdgeInsets.all(10.0),
-                  itemBuilder: (context, index) =>
-                      buildItem(context, snapshot.data.documents[index]),
-                  itemCount: snapshot.data.documents.length,
-                ): Container(
-                  child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
+                return countChatListUsers(patientId, snapshot) > 0
+                    ? ListView.builder(
+                        padding: EdgeInsets.all(10.0),
+                        itemBuilder: (context, index) =>
+                            buildItem(context, snapshot.data.documents[index]),
+                        itemCount: snapshot.data.documents.length,
+                      )
+                    : Container(
+                        child: Center(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
                             Text(
                               'No Messages',
-                              style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+                              style: TextStyle(
+                                  fontSize: 16, color: Colors.grey[800]),
                               textAlign: TextAlign.center,
                             ),
-                        ],
-                      )),
-                );
+                          ],
+                        )),
+                      );
               }
             },
           ),
@@ -337,7 +338,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
                             peerId: document.documentID,
                             peerAvatar: document[STR_PHOTO_URL],
                             peerName: document[STR_NICK_NAME],
-                            lastDate: getFormattedDateTime((document[STR_CREATED_AT] as Timestamp).toDate().toString()),
+                            lastDate: getFormattedDateTime(
+                                (document[STR_CREATED_AT] as Timestamp)
+                                    .toDate()
+                                    .toString()),
                           )));
             },
             child: Container(
@@ -438,7 +442,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
                         child: Text(
                           document[STR_CREATED_AT] != null
                               ? LAST_RECEIVED +
-                              getFormattedDateTime((document[STR_CREATED_AT] as Timestamp).toDate().toString())
+                                  getFormattedDateTime(
+                                      (document[STR_CREATED_AT] as Timestamp)
+                                          .toDate()
+                                          .toString())
                               : '',
                           style: TextStyle(
                               fontWeight: FontWeight.w300,
@@ -472,7 +479,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
     return formattedDate;
   }
 
-  int countChatListUsers(myID,snapshot) {
+  int countChatListUsers(myID, snapshot) {
     int resultInt = snapshot.data.documents.length;
     for (var data in snapshot.data.documents) {
       if (data[STR_ID] == myID) {
