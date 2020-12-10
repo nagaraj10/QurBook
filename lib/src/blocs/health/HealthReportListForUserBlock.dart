@@ -175,7 +175,7 @@ class HealthReportListForUserBlock implements BaseBloc {
   }
 
   Future<DigitRecogResponse> saveDeviceImage(
-      String fileName, String metaID, String jsonData) async {
+      List<String> fileName, String metaID, String jsonData) async {
     DigitRecogResponse digitRecogResponse;
     imageDataSink.add(ApiResponse.loading(variable.strSavingImg));
     try {

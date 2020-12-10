@@ -165,7 +165,7 @@ const String qr_category = 'category';
 
 //for asgard mediType
 const String qr_health_record_type = 'health-record-type';
-const String qr_health_record = 'health-records';
+const String qr_health_record = 'health-records/';
 const String qr_filter = 'filter';
 const String qr_delete_file = 'delete-file';
 
@@ -201,3 +201,5 @@ const String qr_metadata = 'metadata';
 const String qr_user_profile = 'user-profile-setting/';
 const String qr_my_profile = 'my-profile';
 const String qr_user_profile_no_slash = 'user-profile-setting';
+const String qr_save_health_rec = 'save-health-record';
+const String qr_digit_recog = 'digit-recognization/';

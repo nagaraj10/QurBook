@@ -18,11 +18,13 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/search_providers/models/search_arguments.dart';
 import 'package:myfhb/search_providers/screens/search_specific_list.dart';
+import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/CategoryData.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Health/DigitRecogResponse.dart';
 import 'package:myfhb/src/model/Media/MediaData.dart';
+import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -413,12 +415,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     switch (device) {
       case Constants.STR_GLUCOMETER:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse.response.data.deviceMeasurements != null) {
+          if (digitRecogResponse.result.deviceMeasurementsHead != null) {
             if (digitRecogResponse
-                    .response.data.deviceMeasurements.data[0].values !=
+                    .result.deviceMeasurementsHead.deviceMeasurements[0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
-                  .response.data.deviceMeasurements.data[0].values;
+                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
             }
           }
         }
@@ -449,12 +451,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_THERMOMETER:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse.response.data.deviceMeasurements != null) {
+          if (digitRecogResponse.result.deviceMeasurementsHead != null) {
             if (digitRecogResponse
-                    .response.data.deviceMeasurements.data[0].values !=
+                    .result.deviceMeasurementsHead.deviceMeasurements[0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
-                  .response.data.deviceMeasurements.data[0].values;
+                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
             }
           }
         }
@@ -484,12 +486,12 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_WEIGHING_SCALE:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse.response.data.deviceMeasurements != null) {
+          if (digitRecogResponse.result.deviceMeasurementsHead != null) {
             if (digitRecogResponse
-                    .response.data.deviceMeasurements.data[0].values !=
+                    .result.deviceMeasurementsHead.deviceMeasurements[0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
-                  .response.data.deviceMeasurements.data[0].values;
+                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
             }
           }
         }
@@ -519,14 +521,14 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_PULSE_OXIMETER:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse.response.data.deviceMeasurements != null) {
+          if (digitRecogResponse.result.deviceMeasurementsHead != null) {
             if (digitRecogResponse
-                    .response.data.deviceMeasurements.data[0].values !=
+                    .result.deviceMeasurementsHead.deviceMeasurements[0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
-                  .response.data.deviceMeasurements.data[0].values;
+                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
               pulse.text = digitRecogResponse
-                  .response.data.deviceMeasurements.data[1].values;
+                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
             }
           }
         }
@@ -557,16 +559,16 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         break;
       case Constants.STR_BP_MONITOR:
         if (digitRecogResponse != null) {
-          if (digitRecogResponse.response.data.deviceMeasurements != null) {
+          if (digitRecogResponse.result.deviceMeasurementsHead != null) {
             if (digitRecogResponse
-                    .response.data.deviceMeasurements.data[0].values !=
+                    .result.deviceMeasurementsHead.deviceMeasurements[0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
-                  .response.data.deviceMeasurements.data[0].values;
+                  .result.deviceMeasurementsHead.deviceMeasurements[0].values;
               diaStolicPressure.text = digitRecogResponse
-                  .response.data.deviceMeasurements.data[1].values;
+                  .result.deviceMeasurementsHead.deviceMeasurements[1].values;
               pulse.text = digitRecogResponse
-                  .response.data.deviceMeasurements.data[2].values;
+                  .result.deviceMeasurementsHead.deviceMeasurements[2].values;
             }
           }
         }
@@ -823,17 +825,27 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 
-  onPostDeviceImageData(String deviceName) {
+  onPostDeviceImageData(String deviceName)  async{
     Map<String, dynamic> postMainData = new Map();
     Map<String, dynamic> postMediaData = new Map();
-    String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+   // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
-    postMainData[parameters.struserId] = userID;
+    //postMainData[parameters.struserId] = userID;
 
-    postMediaData[parameters.strcategoryInfo] = categoryDataObj.toJson();
-    List<MediaResult> metaDataFromSharedPrefernce =
-        PreferenceUtil.getMediaType();
+    List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType();
 
+    categoryDataObj = new CommonUtil()
+        .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
+    postMediaData[parameters.strhealthRecordCategory] =
+        categoryDataObj.toJson();
+
+    //postMediaData[parameters.strHealthRecordCategory] = categoryDataObj.toJson();
+    MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+
+    MediaDataList mediaTypesResponse =
+        await _mediaTypeBlock.getMediTypesList();
+
+    List<MediaResult> metaDataFromSharedPrefernce = mediaTypesResponse.result;
     if (categoryName != Constants.STR_DEVICES) {
       mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularLabel(
           categoryID, metaDataFromSharedPrefernce, categoryName);
@@ -842,22 +854,24 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           deviceName, metaDataFromSharedPrefernce);
     }
 
-    postMediaData[parameters.strmediaTypeInfo] = mediaDataObj.toJson();
+    postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
 
     //    postMediaData["dateOfVisit"] = dateOfVisit.text;
     postMediaData[parameters.strmemoText] = '';
     postMediaData[parameters.strhasVoiceNotes] = false;
+    postMediaData[parameters.strdateOfVisit] = dateOfVisit.text;
     postMediaData[parameters.strisDraft] = false;
 
     postMediaData[parameters.strsourceName] = CommonConstants.strTridentValue;
     postMediaData[parameters.strmemoTextRaw] = parameters.strMemoRawTxtVal;
-    postMainData[parameters.strmetaInfo] = postMediaData;
+    postMediaData[parameters.strfileName] = fileName.text;
+    //postMainData[parameters.strmetaInfo] = postMediaData;
 
-    var params = json.encode(postMainData);
+    var params = json.encode(postMediaData);
 
-    for (int i = 0; i < widget.imagePath.length; i++) {
+   // for (int i = 0; i < widget.imagePath.length; i++) {
       _healthReportListForUserBlock
-          .saveDeviceImage(widget.imagePath[i], params.toString(), '')
+          .saveDeviceImage(widget.imagePath, params.toString(), '')
           .then((postImageResponse) {
         _scaffoldKey.currentState.hideCurrentSnackBar();
 
@@ -865,7 +879,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
           displayDevicesList(deviceName, postImageResponse);
         }
       });
-    }
+    //}
   }
 
   getWidgetForTitleAndSwithUser() {

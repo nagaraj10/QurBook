@@ -612,3 +612,6 @@ const String strSourceUserId = 'sourceUserId';
 
 const String errAssociateRecords =
     'Error while creating shared record details.';
+
+const String strMetaData = 'metadata';
+const String strMultipart = 'multipart/form-data';

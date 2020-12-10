@@ -79,15 +79,14 @@ class HealthReportListForUserRepository {
   }
 
   Future<DigitRecogResponse> postDevicesData(
-      String fileName, String metaID, String jsonData) async {
+      List<String> fileName, String metaID, String jsonData) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     var response = await _helper.saveImageAndGetDeviceInfo(
-        query.qr_ai + userID + query.qr_slash + query.qr_savehealth,
-        File(fileName),
+        query.qr_health_record + query.qr_digit_recog + query.qr_save_health_rec,
         fileName,
         metaID,
-        jsonData);
+        jsonData,userID);
     return DigitRecogResponse.fromJson(response);
   }
 

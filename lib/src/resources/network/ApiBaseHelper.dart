@@ -767,30 +767,45 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> saveImageAndGetDeviceInfo(String url, File file,
-      String filePath, String metaID, String jsonBody) async {
+  Future<dynamic> saveImageAndGetDeviceInfo(String url,
+      List<String> imagePaths, String payload, String jsonBody,String userId) async {
     var response;
     try {
       String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
 
+
       Dio dio = new Dio();
+      dio.options.headers['content-type'] = 'multipart/form-data';
+      dio.options.headers["authorization"] = authToken;
+      FormData formData;
 
-      dio.options.headers[variable.strContentType] = variable.strAcceptVal;
-      dio.options.headers[variable.strAuthorization] = authToken;
-      String fileNoun = file.path.split('/').last;
+      if (imagePaths != null && imagePaths.length > 0) {
+        formData = new FormData.fromMap({
+          'metadata': payload,
+          'userId': userId,
+        });
 
-      FormData formData = new FormData.fromMap({
-        parameters.strmediaMetaInfo: metaID,
-        parameters.strfile:
-            await MultipartFile.fromFile(file.path, filename: fileNoun)
-      });
-      response = await dio.post(_baseUrl + url, data: formData);
+        for (var image in imagePaths) {
+          File fileName = new File(image);
+          String fileNoun = fileName.path
+              .split('/')
+              .last;
+          formData.files.addAll([
+            MapEntry("fileName",
+                await MultipartFile.fromFile(
+                    fileName.path, filename: fileNoun)),
+          ]);
+        }
 
-      return response.data;
+        response = await dio.post(_baseUrl + url, data: formData);
+
+        return response.data;
+      }
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
   }
+
 
   Future<dynamic> verifyEmail(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);

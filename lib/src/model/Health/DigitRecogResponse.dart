@@ -1,57 +1,135 @@
-import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
-import 'package:myfhb/src/model/Health/Data.dart';
-
 class DigitRecogResponse {
-  int status;
-  bool success;
+  bool isSuccess;
   String message;
-  Response response;
+  Result result;
 
-  DigitRecogResponse({this.status, this.success, this.message, this.response});
+  DigitRecogResponse({this.isSuccess, this.message, this.result});
 
   DigitRecogResponse.fromJson(Map<String, dynamic> json) {
-     status = json[parameters.strStatus];
-    success = json[parameters.strSuccess];
-    message = json[parameters.strMessage];
-    response = json[parameters.strResponse] != null
-        ? new Response.fromJson(json[parameters.strResponse])
+    isSuccess = json['isSuccess'];
+    message = json['message'];
+    result =
+    json['result'] != null ? new Result.fromJson(json['result']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['isSuccess'] = this.isSuccess;
+    data['message'] = this.message;
+    if (this.result != null) {
+      data['result'] = this.result.toJson();
+    }
+    return data;
+  }
+}
+
+class Result {
+  DeviceMeasurementsHead deviceMeasurementsHead;
+  String healthRecordDocumentId;
+  String healthRecordMetaId;
+
+  Result(
+      {this.deviceMeasurementsHead,
+        this.healthRecordDocumentId,
+        this.healthRecordMetaId});
+
+  Result.fromJson(Map<String, dynamic> json) {
+    deviceMeasurementsHead = json['deviceMeasurements'] != null
+        ? new DeviceMeasurementsHead.fromJson(json['deviceMeasurements'])
         : null;
+    healthRecordDocumentId = json['healthRecordDocumentId'];
+    healthRecordMetaId = json['healthRecordMetaId'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-   data[parameters.strStatus] = this.status;
-    data[parameters.strSuccess] = this.success;
-    data[parameters.strMessage] = this.message;
-    if (this.response != null) {
-      data[parameters.strResponse] = this.response.toJson();
+    if (this.deviceMeasurementsHead != null) {
+      data['deviceMeasurements'] = this.deviceMeasurementsHead.toJson();
     }
-  
+    data['healthRecordDocumentId'] = this.healthRecordDocumentId;
+    data['healthRecordMetaId'] = this.healthRecordMetaId;
     return data;
   }
 }
 
-class Response {
-  int count;
-  Data data;
+class DeviceMeasurementsHead {
+  String deviceClass;
+  List<DeviceMeasurements> deviceMeasurements;
 
-  Response({this.count, this.data});
+  DeviceMeasurementsHead({this.deviceClass, this.deviceMeasurements});
 
-  Response.fromJson(Map<String, dynamic> json) {
-    count = json[parameters.strCount];
-    data = json[parameters.strData] != null ? new Data.fromJson(json[parameters.strData]) : null;
+  DeviceMeasurementsHead.fromJson(Map<String, dynamic> json) {
+    deviceClass = json['deviceClass'];
+    if (json['deviceMeasurements'] != null) {
+      deviceMeasurements = new List<DeviceMeasurements>();
+      json['deviceMeasurements'].forEach((v) {
+        deviceMeasurements.add(new DeviceMeasurements.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data[parameters.strCount] = this.count;
-    if (this.data != null) {
-      data[parameters.strData] = this.data.toJson();
+    data['deviceClass'] = this.deviceClass;
+    if (this.deviceMeasurements != null) {
+      data['deviceMeasurements'] =
+          this.deviceMeasurements.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
 
+class DeviceMeasurements {
+  Coordinates coordinates;
+  String parameter;
+  String unit;
+  String values;
 
+  DeviceMeasurements(
+      {this.coordinates, this.parameter, this.unit, this.values});
 
+  DeviceMeasurements.fromJson(Map<String, dynamic> json) {
+    coordinates = json['coordinates'] != null
+        ? new Coordinates.fromJson(json['coordinates'])
+        : null;
+    parameter = json['parameter'];
+    unit = json['unit'];
+    values = json['values'];
+  }
 
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.coordinates != null) {
+      data['coordinates'] = this.coordinates.toJson();
+    }
+    data['parameter'] = this.parameter;
+    data['unit'] = this.unit;
+    data['values'] = this.values;
+    return data;
+  }
+}
+
+class Coordinates {
+  int height;
+  int width;
+  int x;
+  int y;
+
+  Coordinates({this.height, this.width, this.x, this.y});
+
+  Coordinates.fromJson(Map<String, dynamic> json) {
+    height = json['height'];
+    width = json['width'];
+    x = json['x'];
+    y = json['y'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['height'] = this.height;
+    data['width'] = this.width;
+    data['x'] = this.x;
+    data['y'] = this.y;
+    return data;
+  }
+}
