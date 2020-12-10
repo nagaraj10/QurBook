@@ -7,10 +7,15 @@ class CallArguments {
   String doctorId;
   bool isAppExists;
 
+  String doctorPicture;
+  String meetingId;
+
   CallArguments(
       {this.channelName,
       this.userName,
       this.role,
       this.doctorId,
-      this.isAppExists});
+      this.isAppExists,
+      this.doctorPicture,
+      this.meetingId});
 }

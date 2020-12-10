@@ -94,7 +94,7 @@ const String strReceiptId = 'recipient_id';
 const String strEndOfConv = 'endOfConv';
 const String strSpeechImageURL = 'imageURL';
 const String strLanguage = 'lang';
-const String strSearchUrl = 'searchURL'; 
+const String strSearchUrl = 'searchURL';
 const String strButtons = 'buttons';
 
 //for category
@@ -290,14 +290,21 @@ const String appointmentCreatedMessage =
     'Created a new appointment successfully.';
 const String someWentWrong = 'Booking appointment failed.. Some went wrong!';
 const String checkSlots = 'Checking available slots..';
-const String selectSlotsMsg = 'Please select your time slot before you book an appointment';
+const String selectSlotsMsg =
+    'Please select your time slot before you book an appointment';
 const String noUrl = 'Something went wrong ..please try again..';
-const String noAddress = 'Please fill your address details in your profile before you book an appointment';
-const String noGender = 'Please fill your gender and address details in your profile before you book an appointment';
-const String noDOB = 'Please fill your date of birth in your profile before you book an appointment';
-const String noHeight = 'Please fill your height in your profile before you book an appointment';
-const String noWeight = 'Please fill your weight in your profile before you book an appointment';
-const String noAdditionalInfo = 'Please fill your height & weight in your profile before you book an appointment';
+const String noAddress =
+    'Please fill your address details in your profile before you book an appointment';
+const String noGender =
+    'Please fill your gender and address details in your profile before you book an appointment';
+const String noDOB =
+    'Please fill your date of birth in your profile before you book an appointment';
+const String noHeight =
+    'Please fill your height in your profile before you book an appointment';
+const String noWeight =
+    'Please fill your weight in your profile before you book an appointment';
+const String noAdditionalInfo =
+    'Please fill your height & weight in your profile before you book an appointment';
 
 //Payment
 const String PAYMENT_STATUS = 'payment_status';
@@ -492,6 +499,7 @@ const String strBookingID = "bookingID";
 const String strSharedMedicalRecordsId = "sharedMedicalRecordsId";
 const String strIsMedicalRecordsShared = "isMedicalRecordsShared";
 const String strDoctorPic = "doctorPic";
+const String doctorPicture = "doctorPicture";
 const String strDoctorName = "doctorName";
 const String strDoctorSessionId = "doctorSessionId";
 const String strPatientId = "patientId";
@@ -532,6 +540,14 @@ const String channel_name = 'channel NAME';
 const String channel_descrip = 'channel DESCRIPTION';
 const String launcher = '@mipmap/ic_launcher';
 const String data = 'data';
+const String call = 'call';
+const String doctorCancellation = 'DoctorCancellation';
+const String reschedule = 'Reschedule';
+const String cancel = 'Cancel';
+const String templateName = 'templateName';
+const String accept = 'Accept';
+const String decline = 'Decline';
+const String meetingId = 'meeting_id';
 const String notification = 'notification';
 const String token = 'Token';
 const String ongoing_channel = 'ongoing_ns.channel';

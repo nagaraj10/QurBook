@@ -24,6 +24,7 @@ import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/PdfViewURL.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
+import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -68,38 +69,38 @@ class ChatState extends State<Chat> {
       flexibleSpace: GradientAppBar(),
       automaticallyImplyLeading: false,
       title: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              child: Row(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(left: 2),
-                    child: GestureDetector(
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                      ),
-                      onTap: () {
-                        //Add code for tapping back
-                        Navigator.pop(context);
-                      },
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 2),
+                  child: GestureDetector(
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
                     ),
+                    onTap: () {
+                      //Add code for tapping back
+                      Navigator.pop(context);
+                    },
                   ),
-                  SizedBox(
-                    width: 5,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                AnimatedSwitcher(
+                  duration: Duration(milliseconds: 10),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.67,
+                    child: _patientDetailOrSearch(),
                   ),
-                  AnimatedSwitcher(
-                    duration: Duration(milliseconds: 10),
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 0.67,
-                      child: _patientDetailOrSearch(),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
+          ),
+        ],
       ),
       actions: [
         IconWidget(
@@ -113,7 +114,9 @@ class ChatState extends State<Chat> {
             );
           },
         ),
-        SizedBoxWidget(width: 10,),
+        SizedBoxWidget(
+          width: 10,
+        ),
       ],
     );
   }
@@ -170,8 +173,7 @@ class ChatState extends State<Chat> {
                     ),
                     Text(
                       widget.lastDate != null
-                          ? LAST_RECEIVED +
-                          widget.lastDate
+                          ? LAST_RECEIVED + widget.lastDate
                           : '',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -715,7 +717,8 @@ class ChatScreenState extends State<ChatScreen> {
                                         bottomRight: Radius.circular(25))),
                                 child: InkWell(
                                   onTap: () {
-                                    goToPDFViewBasedonURL(document[STR_CONTENT]);
+                                    goToPDFViewBasedonURL(
+                                        document[STR_CONTENT]);
                                   },
                                   child: Container(
                                     constraints: BoxConstraints(
@@ -772,7 +775,10 @@ class ChatScreenState extends State<ChatScreen> {
             isLastMessageLeft(index)
                 ? Container(
                     child: Text(
-                      getFormattedDateTime((document[STR_TIME_STAMP] as Timestamp).toDate().toString()),
+                      getFormattedDateTime(
+                          (document[STR_TIME_STAMP] as Timestamp)
+                              .toDate()
+                              .toString()),
                       style: TextStyle(
                           color: greyColor,
                           fontSize: 12.0,
@@ -791,7 +797,8 @@ class ChatScreenState extends State<ChatScreen> {
 
   goToPDFViewBasedonURL(String url) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => PDFViewURL(url: url),
+      builder: (context) =>
+          Platform.isIOS ? PDFiOSViewer(url: url) : PDFViewURL(url: url),
     ));
   }
 
@@ -1064,13 +1071,13 @@ class ChatScreenState extends State<ChatScreen> {
       ),
     );
   }
+
   Widget buildListMessage() {
     return Flexible(
       child: groupChatId == ''
           ? Center(
               child: CircularProgressIndicator(
-                  backgroundColor:
-                  Color(new CommonUtil().getMyPrimaryColor())))
+                  backgroundColor: Color(new CommonUtil().getMyPrimaryColor())))
           : StreamBuilder(
               stream: Firestore.instance
                   .collection(STR_MESSAGES)
@@ -1111,14 +1118,13 @@ class ChatScreenState extends State<ChatScreen> {
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
-        categoryPosition: position,
-        allowSelect: allowSelect,
-        isAudioSelect: isAudioSelect,
-        isNotesSelect: isNotesSelect,
-        selectedMedias: mediaIds,
-        isFromChat: true,
-          isAssociateOrChat:true
-      ),
+          categoryPosition: position,
+          allowSelect: allowSelect,
+          isAudioSelect: isAudioSelect,
+          isNotesSelect: isNotesSelect,
+          selectedMedias: mediaIds,
+          isFromChat: true,
+          isAssociateOrChat: true),
     ))
         .then((results) {
       if (results.containsKey(STR_META_ID)) {
@@ -1134,8 +1140,7 @@ class ChatScreenState extends State<ChatScreen> {
   getMediaURL(List<HealthRecordCollection> healthRecordCollection) {
     for (int i = 0; i < healthRecordCollection.length; i++) {
       String fileType = healthRecordCollection[i].fileType;
-      String fileURL =
-          healthRecordCollection[i].healthRecordUrl;
+      String fileURL = healthRecordCollection[i].healthRecordUrl;
       if ((fileType == STR_JPG) || (fileType == STR_PNG)) {
         onSendMessage(fileURL, 1);
       } else if ((fileType == STR_PDF)) {

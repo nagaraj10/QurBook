@@ -40,6 +40,7 @@ import 'package:myfhb/src/resources/network/ApiResponse.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/imageSlider.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -1161,8 +1162,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                     onPressed: () {
                                       Navigator.of(context)
                                           .push(MaterialPageRoute(
-                                        builder: (context) => PDFViewer(pdfFile,
-                                            widget.data.metadata.fileName),
+                                        builder: (context) => Platform.isIOS
+                                            ? PDFiOSViewer(
+                                                url: "",
+                                                path: pdfFile,
+                                                title: widget
+                                                    .data.metadata.fileName,
+                                              )
+                                            : PDFViewer(pdfFile,
+                                                widget.data.metadata.fileName),
                                       ));
                                     },
                                   )
@@ -1282,7 +1290,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Widget getValuesFromSharedPrefernce() {
     return new FutureBuilder<bool>(
-      future: downloadFile(audioMediaId, '.mp3'),
+      future: Platform.isIOS
+          ? downloadFileForiOS(audioMediaId, '.mp3')
+          : downloadFile(audioMediaId, '.mp3'),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           new CircularProgressIndicator(
@@ -1299,7 +1309,38 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   downloadMedia(String url, BuildContext context, String fileType) async {
     var path;
-    FHBUtils.createFolderInAppDocDirClone(variable.stAudioPath)
+    Platform.isIOS
+        ? await createFolderForiOSApp(url, fileType, path)
+        : await createFolderForAndroidApp(url, fileType, path);
+  }
+
+  Future createFolderForiOSApp(String url, String fileType, path) async {
+    FHBUtils.createFolderInAppDocDirForIOS(variable.stAudioPath)
+        .then((filePath) async {
+      final bytes = await _loadFileBytes(url,
+          onError: (Exception exception) =>
+              debugPrint('audio_provider.load => exception ${exception}'));
+      // if (fileType == '.mp3') {
+      //   path = '$filePath${widget.data.metadata.fileName}' + fileType;
+      // } else {
+      path = '$filePath${widget.data.metadata.fileName}';
+      // }
+      new File(path).writeAsBytes(bytes);
+      if (fileType == '.mp3') {
+        //await path.writeAsBytes(bytes);
+
+        containsAudio = true;
+        audioPath = path;
+        isAudioDownload = true;
+      } else {
+        pdfFile = "file://" + path;
+      }
+      setState(() {});
+    });
+  }
+
+  Future createFolderForAndroidApp(String url, String fileType, path) async {
+    FHBUtils.createFolderInAppDocDir(variable.stAudioPath)
         .then((filePath) async {
       final bytes = await _loadFileBytes(url,
           onError: (Exception exception) =>
@@ -1317,7 +1358,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         audioPath = path;
         isAudioDownload = true;
       } else {
-        pdfFile = path;
+        pdfFile = "file://" + path;
       }
       setState(() {});
     });
@@ -1344,7 +1385,39 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           audioPath = file.path;
           isAudioDownload = true;
         } else {
-          pdfFile = file.path;
+          pdfFile = "file://" + file.path;
+        }
+      });
+    });
+    return isAudioDownload;
+  }
+
+  Future<bool> downloadFileForiOS(
+      HealthRecordCollection audioMediaId, String fileType) async {
+    FHBUtils.createFolderInAppDocDirForIOS(variable.stAudioPath)
+        .then((filePath) async {
+      File file;
+
+      file = new File(
+          '$filePath${widget.data.metadata.fileName.replaceAll(' ', '')}');
+
+      var request = await http.get(
+        audioMediaId.healthRecordUrl,
+        headers: {HttpHeaders.authorizationHeader: authToken},
+      );
+      var bytes = await request.bodyBytes; //close();
+      await file.writeAsBytes(bytes);
+
+      setState(() {
+        if (fileType == '.mp3') {
+          //await path.writeAsBytes(bytes);
+
+          containsAudio = true;
+          audioPath = file.path;
+          isAudioDownload = true;
+        } else {
+          pdfFile = "file://" + file.path;
+          print(pdfFile);
         }
       });
     });
@@ -1372,7 +1445,9 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
     } else {
       _healthReportListForUserBlock = new HealthReportListForUserBlock();
     }
-    downloadFile(pdfFileMediaId, '.pdf');
+    Platform.isIOS
+        ? downloadFileForiOS(pdfFileMediaId, '.pdf')
+        : downloadFile(pdfFileMediaId, '.pdf');
   }
 
   getFileNameForPdf(String pdfFileName) {
