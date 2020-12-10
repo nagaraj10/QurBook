@@ -229,7 +229,7 @@ class PushNotificationsProvider {
     // initLocalNotification();
     // showLocalNotification();
 
-    initNotification();
+    //initNotification();
     showLocalNotificationNew(message);
   }
 
@@ -248,6 +248,7 @@ class PushNotificationsProvider {
           doctorId: doctorId);
       _pushStreamCOntroller.sink.add(callArguments);
     });
+    showLocalNotificationNew(message);
   }
 
   Future<dynamic> onResume(Map<String, dynamic> message) async {
@@ -263,6 +264,7 @@ class PushNotificationsProvider {
         userName: userName,
         doctorId: doctorId);
     _pushStreamCOntroller.sink.add(callArguments);
+    showLocalNotificationNew(message);
   }
 
   void dispose() {

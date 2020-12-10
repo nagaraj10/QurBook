@@ -262,7 +262,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
               InkWell(
                 onTap: () {
                   LaunchReview.launch(
-                      androidAppId: variable.strAppPackage, iOSAppId: "");
+                      androidAppId: variable.strAppPackage,
+                      iOSAppId: variable.iOSAppId);
                 },
                 child: ListTile(
                     title: Row(

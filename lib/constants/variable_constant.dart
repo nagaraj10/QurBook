@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 const String strAPP_NAME = 'MyFHB';
 const String strAppPackage = 'com.globalmantrainnovations.myfhb';
 const String strHealthRecordChannel = 'Health Record channel';
-
+const String iOSAppId = '1526444520';
 //For class add_family_otp
 //web service call
 const String strSrcName = 'sourceName';
