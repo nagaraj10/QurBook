@@ -331,7 +331,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
   _checkOtpResponse(ResendOtpModel response) {
     if (response.isSuccess) {
     } else {
-      toast.getToast(response.message, Colors.red);
+      if(response.message!=null){
+        toast.getToast(response.message, Colors.red);
+      }
     }
   }
 
