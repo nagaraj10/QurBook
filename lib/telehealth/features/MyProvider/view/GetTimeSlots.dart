@@ -88,9 +88,8 @@ class GetTimeSlots extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               onPressed: () {
                 if (isReshedule == true) {
-                  print(doctorsData.slotNumber);
-                  print(doctorsData.bookingId);
-                  print(selectedDate.toString().substring(0, 10));
+                  String docSesstionID = dateSlotTimingsObj
+      .sessions[rowPosition].doctorSessionId;
                   String selectedSlot = dateSlotTimingsObj
                       .sessions[rowPosition].slots[itemPosition].slotNumber
                       .toString();
@@ -99,7 +98,7 @@ class GetTimeSlots extends StatelessWidget {
                       [doctorsData],
                       selectedSlot,
                       selectedDate.toString().substring(0, 10),
-                      doctorsData.doctorSessionId);
+                      docSesstionID);
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
                     if (doctorsData == null) {
