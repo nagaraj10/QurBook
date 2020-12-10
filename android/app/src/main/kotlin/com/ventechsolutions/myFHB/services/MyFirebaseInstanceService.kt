@@ -172,7 +172,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     private fun createNotification4Ack(data:Map<String, String> = HashMap()){
         //createNotificationCancelAppointment(data)
-        if(data["templateName"]=="DoctorCancellation"){
+        if(data["templateName"]=="DoctorCancellation" || data["templateName"]=="DoctorRescheduling){
             createNotificationCancelAppointment(data)
         }else if(data["templateName"]=="GoFHBPatientOnboardingByDoctor" || data["templateName"]=="GoFHBPatientOnboardingByHospital"){
             docOnBoardNotification(data)
