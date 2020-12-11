@@ -2,7 +2,8 @@ import 'package:intl/intl.dart';
 
 const String lblNotifications = 'Notifications';
 const String lblNoNotification='Looks like there are no notifications';
-const String strCancelByDoctor='cancellation by doctor';
+const String strCancelByDoctor='DoctorCancellation';
+const String strRescheduleByDoctor='DoctorRescheduling';
 
 
 String notificationDate(String value) =>

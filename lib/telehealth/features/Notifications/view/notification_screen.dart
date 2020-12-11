@@ -9,6 +9,7 @@ import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
     as constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/telehealth/features/Notifications/model/payload.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as AppConstants;
 import 'package:myfhb/telehealth/features/Notifications/model/messageContent.dart';
@@ -116,9 +117,10 @@ class _NotificationScreen extends State<NotificationScreen> {
   }
 
   Widget notificationView({NotificationModel notification, int index}) {
-    if (notification?.result[index]?.messageDetails?.messageContent != null) {
+    if (notification?.result[index]?.messageDetails != null) {
+      Payload payload = notification?.result[index]?.messageDetails?.payload;
       MessageContent message =
-          notification.result[index].messageDetails.messageContent;
+          notification.result[index].messageDetails?.messageContent;
       return (message.messageBody == "" || message.messageTitle == "")
           ? Container()
           : Column(
@@ -206,9 +208,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                           ],
                         ),
                       ),
-                      message.messageTitle
-                              .toLowerCase()
-                              .contains(constants.strCancelByDoctor)
+                      (payload?.templateName ==
+                                  constants.strCancelByDoctor ||
+                              payload?.templateName ==
+                                  constants.strRescheduleByDoctor)
                           ? Padding(
                               padding: EdgeInsets.only(left: 20, right: 20),
                               child: Row(
