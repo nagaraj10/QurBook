@@ -1282,6 +1282,20 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getDoctorsFromHospital(String url) async {
+    var responseJson;
+    try {
+      print(_baseUrl + url);
+      final response = await http.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersAuthAccept());
+      responseJson = _returnResponse(response);
+      print(responseJson);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
   Future<dynamic> getUserProfilePic(String url) async {
     CommonResponse responseJson;
     try {

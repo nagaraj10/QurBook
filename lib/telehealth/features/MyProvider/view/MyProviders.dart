@@ -39,7 +39,6 @@ class MyProviders extends StatefulWidget {
 }
 
 class _MyProvidersState extends State<MyProviders> {
-  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
   MyProviderViewModel providerViewModel;
   int selectedPosition = 0;
   bool firstTym = false;
@@ -68,16 +67,6 @@ class _MyProvidersState extends State<MyProviders> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            flexibleSpace: GradientAppBar(),
-            leading: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: Icon(
-                Icons.arrow_back_ios, // add custom icons also
-              ),
-            ),
-            // you can put Icon as well, it accepts any widget.
-            title: getTitle()),
         body: Container(
             child: Column(
           children: [
@@ -119,36 +108,9 @@ class _MyProvidersState extends State<MyProviders> {
         ));
   }
 
-  Widget getTitle() {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(
-            STR_MY_PROVIDERS,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ),
-        IconWidget(
-          icon: Icons.notifications,
-          colors: Colors.white,
-          size: 22,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NotificationMain()),
-            );
-          },
-        ),
-        new SwitchProfile()
-            .buildActions(context, _keyLoader, callBackToRefresh),
-        // Icon(Icons.more_vert),
-      ],
-    );
-  }
 
-  Widget collapseListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
+
+  /*Widget collapseListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
       padding: EdgeInsets.all(10.0),
       child: ExpandableButton(
@@ -170,14 +132,11 @@ class _MyProvidersState extends State<MyProviders> {
         ),
       ),
     );
-  }
+  }*/
 
-  void callBackToRefresh() {
-    myProvidersResponseList = null;
-    (context as Element).markNeedsBuild();
-  }
 
-  Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
+
+  /*Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -276,7 +235,7 @@ class _MyProvidersState extends State<MyProviders> {
         ),
       ],
     );
-  }
+  }*/
 
   void getDataForProvider() async {
     if (firstTym == false) {

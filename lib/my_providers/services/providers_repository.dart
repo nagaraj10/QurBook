@@ -12,6 +12,7 @@ import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
@@ -118,5 +119,12 @@ class ProvidersListRepository {
     final response = await _helper
         .getHealthOrgApi(query.qr_provider_mapping + qr_doctor + doctorId);
     return HealthOrganizationModel.fromJson(response);
+  }
+
+  Future<DoctorListFromHospitalModel> getDoctorsFromHospital(
+      String healthOrgId) async {
+    final response = await _helper
+        .getDoctorsFromHospital(qr_doctor + ar_doctor_list +healthOrgId);
+    return DoctorListFromHospitalModel.fromJson(response);
   }
 }

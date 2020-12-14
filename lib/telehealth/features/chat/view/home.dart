@@ -92,7 +92,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
     var initializationSettingsAndroid =
         new AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
     var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings();
+    var initializationSettings = new InitializationSettings(initializationSettingsAndroid,initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
@@ -105,11 +105,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
       'your channel description',
       playSound: true,
       enableVibration: true,
-      importance: Importance.max,
-      priority: Priority.high,
+      importance: Importance.Max,
+      priority: Priority.High,
     );
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(androidPlatformChannelSpecifics,iOSPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(0, message['title'].toString(),
         message['body'].toString(), platformChannelSpecifics,
