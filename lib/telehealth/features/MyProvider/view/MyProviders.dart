@@ -91,6 +91,7 @@ class _MyProvidersState extends State<MyProviders> {
           ],
         )),
         floatingActionButton: FloatingActionButton(
+          heroTag: "btn2",
           onPressed: () {
             Navigator.pushNamed(context, router.rt_SearchProvider,
                 arguments: SearchArguments(

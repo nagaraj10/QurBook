@@ -111,4 +111,15 @@ class MyProviderViewModel extends ChangeNotifier {
       return doctorsFromHospital;
     } catch (e) {}
   }
+
+  List<Hospitals> getHospitalName({List<Hospitals> hospitalList,String query}){
+    List<Hospitals> dummySearchHospitalList=List();
+    dummySearchHospitalList = hospitalList
+        .where((element) =>
+    element.name
+        .toLowerCase()
+        .trim()
+        .contains(query.toLowerCase().trim())).toList();
+    return dummySearchHospitalList;
+  }
 }

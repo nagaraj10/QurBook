@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
@@ -116,7 +117,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                 Row(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(left: 10),
+                      padding: EdgeInsets.only(left: 20),
                       child: GestureDetector(
                         child: Icon(
                           Icons.arrow_back_ios,
@@ -129,18 +130,41 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                       ),
                     ),
                     SizedBox(
-                      width: 15,
+                      width: 2,
                     ),
-                    /*CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          doctors[index].user.profilePicThumbnailUrl != null
-                              ? doctors[index].user.profilePicThumbnailUrl
-                              : ''),
+                    CircleAvatar(
                       radius: 20,
-                    ),*/
-                    /*SizedBox(
-                      width: 15,
-                    ),*/
+                      child: ClipOval(
+                          child: hospitals != null
+                              ? hospitals[index] != null
+                              ? Container(
+                              height: 50,
+                              width: 50,
+                              color: Color(fhbColors.bgColorContainer),
+                              child: Center(
+                                child: Text(
+                                  hospitals[index].name != null
+                                      ? hospitals[index].name[0].toUpperCase()
+                                      : '',
+                                  style: TextStyle(
+                                      color:
+                                      Color(CommonUtil().getMyPrimaryColor())),
+                                ),
+                              ))
+                              : Container(
+                            height: 50,
+                            width: 50,
+                            color: Color(fhbColors.bgColorContainer),
+                          )
+                              : Container(
+                            height: 50,
+                            width: 50,
+                            color: Color(fhbColors.bgColorContainer),
+                          )),
+                    ),
+                    SizedBoxWidget(
+                      width: 10,
+                    ),
                     Container(
                         child: Expanded(
                       child: Column(
@@ -184,15 +208,18 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                     fontSize: 12,
                                     color: Colors.white),
                               ),*/
-                          commonWidgets.getCityHospital(hospitals[index])!=''?Text(
-                            commonWidgets.getCityHospital(hospitals[index]),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                            style: TextStyle(
-                                fontFamily: variable.font_poppins,
-                                fontSize: 12,
-                                color: Colors.white),
-                          ):Container(),
+                          commonWidgets.getCityHospital(hospitals[index]) != ''
+                              ? Text(
+                                  commonWidgets
+                                      .getCityHospital(hospitals[index]),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontFamily: variable.font_poppins,
+                                      fontSize: 12,
+                                      color: Colors.white),
+                                )
+                              : Container(),
                         ],
                       ),
                     ))
@@ -253,21 +280,22 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
           children: [
             getDoctorWidget(i, docs),
             commonWidgets.getSizedBox(20.0),
-            /*DoctorSessionTimeSlotsForHospitals(
-              date: _selectedValue.toString(),
-              doctorId: docs[i].doctor.id,
-              docs: docs[i],
-              isReshedule: false,
-              i: i,
-              healthOrganizationId: docs[i].healthOrganization.id,
-              healthOrganizationResult: docs,
-              doctorListPos: widget.index,
-              onChanged: (value){},
-              closePage: (value) {
-                widget.closePage(value);
-                Navigator.pop(context);
-              },
-            ),*/
+            DoctorSessionTimeSlot(
+                date: _selectedValue.toString(),
+                doctorId: docs[i].doctor.id,
+                isReshedule: false,
+                i: i,
+                doctorListIndex: i,
+                healthOrganizationId: docs[i].healthOrganization.id,
+                healthOrganizationResult: [],
+                resultFromHospitalList: docs,
+                doctorListPos: widget.index,
+                onChanged: (value) {},
+                closePage: (value) {
+                  widget.closePage(value);
+                  Navigator.pop(context);
+                },
+                isFromHospital: true),
           ],
         ),
       ),
@@ -294,7 +322,8 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
             new Positioned(
               bottom: 0.0,
               right: 2.0,
-              child: commonWidgets.getDoctorStatusWidgetNewForHos(docs[i].doctor, i),
+              child: commonWidgets.getDoctorStatusWidgetNewForHos(
+                  docs[i].doctor, i),
             )
           ],
         ),
@@ -352,6 +381,9 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                       ],
                     ),
                   ),
+                  SizedBoxWidget(
+                    width: 10,
+                  ),
                   docs[i].doctor.isTelehealthEnabled
                       ? commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
@@ -398,7 +430,8 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                 children: [
                   Expanded(
                       child: Text(
-                    '' + commonWidgets.getCityDoctorsModelForHos(docs[i].doctor),
+                    '' +
+                        commonWidgets.getCityDoctorsModelForHos(docs[i].doctor),
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,
                     style: TextStyle(
@@ -450,7 +483,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
 
   Widget getHospitalProviderList(String healthOrgId) {
     return new FutureBuilder<List<ResultFromHospital>>(
-      future: providerViewModel.getDoctorsFromHospital('01123c79-322f-4ed5-b505-7e77683b6a15'),
+      future: providerViewModel.getDoctorsFromHospital(healthOrgId),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
@@ -478,7 +511,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
           )
         : Container(
             child: Center(
-              child: Text(variable.strNoHospitaldata),
+              child: Text(variable.strNoDoctordata),
             ),
           );
   }

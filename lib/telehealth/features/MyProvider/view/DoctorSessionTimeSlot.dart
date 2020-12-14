@@ -6,6 +6,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
@@ -18,30 +19,36 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   final String date;
   final List<Doctors> docs;
   final int i;
+  final int doctorListIndex;
   Past doctorsData;
   bool isReshedule;
   final String healthOrganizationId;
   final List<HealthOrganizationResult> healthOrganizationResult;
+  final List<ResultFromHospital> resultFromHospitalList;
   final int doctorListPos;
   Function(String) closePage;
   bool isFromNotification;
   ValueChanged<String> onChanged;
   DateTime onUserChangedDate;
+  bool isFromHospital;
 
   DoctorSessionTimeSlot(
       {this.doctorId,
         this.date,
         this.docs,
         this.i,
+        this.doctorListIndex,
         this.isReshedule,
         this.doctorsData,
         this.healthOrganizationId,
         this.healthOrganizationResult,
+        this.resultFromHospitalList,
         this.doctorListPos,
         this.closePage,
         this.isFromNotification,
         this.onChanged,
-        this.onUserChangedDate});
+        this.onUserChangedDate,
+        this.isFromHospital});
 
   @override
   State<StatefulWidget> createState() {
@@ -185,15 +192,18 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                 dateSlotTimingsObj: snapshot.data,
                 docs: widget.docs,
                 j: widget.i,
+                doctorListIndex: widget.doctorListIndex,
                 selectedDate: _selectedValue,
                 isReshedule: widget.isReshedule,
                 doctorsData: widget.doctorsData,
                 healthOrganizationResult: widget.healthOrganizationResult,
+                resultFromHospitalList: widget.resultFromHospitalList,
                 doctorListPos: widget.doctorListPos,
                 closePage: (value) {
                   widget.closePage(value);
                 },
                 isFromNotification: widget.isFromNotification,
+                isFromHospital: widget.isFromHospital,
               ),
             )
                 : Column(

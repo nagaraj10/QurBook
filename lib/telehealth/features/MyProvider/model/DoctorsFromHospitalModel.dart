@@ -36,18 +36,20 @@ class ResultFromHospital {
   DoctorFromHos doctor;
   List<DoctorFeeCollection> doctorFeeCollection;
   HealthOrganization healthOrganization;
+
   //List<Null> doctorSessionCollection;
 
-  ResultFromHospital(
-      {this.id,
-        this.startDate,
-        this.endDate,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.doctor,
-        this.doctorFeeCollection,
-        this.healthOrganization,});
+  ResultFromHospital({
+    this.id,
+    this.startDate,
+    this.endDate,
+    this.isActive,
+    this.createdOn,
+    this.lastModifiedOn,
+    this.doctor,
+    this.doctorFeeCollection,
+    this.healthOrganization,
+  });
 
   ResultFromHospital.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -56,8 +58,9 @@ class ResultFromHospital {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
-    doctor =
-    json['doctor'] != null ? new DoctorFromHos.fromJson(json['doctor']) : null;
+    doctor = json['doctor'] != null
+        ? new DoctorFromHos.fromJson(json['doctor'])
+        : null;
     if (json['doctorFeeCollection'] != null) {
       doctorFeeCollection = new List<DoctorFeeCollection>();
       json['doctorFeeCollection'].forEach((v) {
@@ -107,17 +110,17 @@ class DoctorFromHos {
 
   DoctorFromHos(
       {this.id,
-        this.specialization,
-        this.isTelehealthEnabled,
-        this.isMciVerified,
-        this.isActive,
-        this.isWelcomeMailSent,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.user,
-        this.doctorLanguageCollection,
-        this.doctorProfessionalDetailCollection});
+      this.specialization,
+      this.isTelehealthEnabled,
+      this.isMciVerified,
+      this.isActive,
+      this.isWelcomeMailSent,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.user,
+      this.doctorLanguageCollection,
+      this.doctorProfessionalDetailCollection});
 
   DoctorFromHos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -129,7 +132,8 @@ class DoctorFromHos {
     createdOn = json['createdOn'];
     lastModifiedBy = json['lastModifiedBy'];
     lastModifiedOn = json['lastModifiedOn'];
-    user = json['user'] != null ? new UserResponse.fromJson(json['user']) : null;
+    user =
+        json['user'] != null ? new UserResponse.fromJson(json['user']) : null;
     if (json['doctorLanguageCollection'] != null) {
       doctorLanguageCollection = new List<DoctorLanguageCollection>();
       json['doctorLanguageCollection'].forEach((v) {
@@ -138,7 +142,7 @@ class DoctorFromHos {
     }
     if (json['doctorProfessionalDetailCollection'] != null) {
       doctorProfessionalDetailCollection =
-      new List<DoctorProfessionalDetailCollection>();
+          new List<DoctorProfessionalDetailCollection>();
       json['doctorProfessionalDetailCollection'].forEach((v) {
         doctorProfessionalDetailCollection
             .add(new DoctorProfessionalDetailCollection.fromJson(v));
@@ -202,39 +206,39 @@ class UserResponse {
   String lastModifiedBy;
   String lastModifiedOn;
   String providerId;
-  List<UserAddressCollection3> userAddressCollection3;
+  List<UserAddressCollectionForHospital> userAddressCollection3;
   List<UserContactCollection3> userContactCollection3;
 
   UserResponse(
       {this.id,
-        this.name,
-        this.userName,
-        this.firstName,
-        this.middleName,
-        this.lastName,
-        this.gender,
-        this.dateOfBirth,
-        this.bloodGroup,
-        this.countryCode,
-        this.profilePicThumbnailUrl,
-        this.isTempUser,
-        this.isVirtualUser,
-        this.isMigrated,
-        this.isClaimed,
-        this.isIeUser,
-        this.isEmailVerified,
-        this.isCpUser,
-        this.communicationPreferences,
-        this.medicalPreferences,
-        this.isSignedIn,
-        this.isActive,
-        this.createdBy,
-        this.createdOn,
-        this.lastModifiedBy,
-        this.lastModifiedOn,
-        this.providerId,
-        this.userAddressCollection3,
-        this.userContactCollection3});
+      this.name,
+      this.userName,
+      this.firstName,
+      this.middleName,
+      this.lastName,
+      this.gender,
+      this.dateOfBirth,
+      this.bloodGroup,
+      this.countryCode,
+      this.profilePicThumbnailUrl,
+      this.isTempUser,
+      this.isVirtualUser,
+      this.isMigrated,
+      this.isClaimed,
+      this.isIeUser,
+      this.isEmailVerified,
+      this.isCpUser,
+      this.communicationPreferences,
+      this.medicalPreferences,
+      this.isSignedIn,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedBy,
+      this.lastModifiedOn,
+      this.providerId,
+      this.userAddressCollection3,
+      this.userContactCollection3});
 
   UserResponse.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -265,9 +269,10 @@ class UserResponse {
     lastModifiedOn = json['lastModifiedOn'];
     providerId = json['providerId'];
     if (json['userAddressCollection3'] != null) {
-      userAddressCollection3 = new List<UserAddressCollection3>();
+      userAddressCollection3 = new List<UserAddressCollectionForHospital>();
       json['userAddressCollection3'].forEach((v) {
-        userAddressCollection3.add(new UserAddressCollection3.fromJson(v));
+        userAddressCollection3
+            .add(new UserAddressCollectionForHospital.fromJson(v));
       });
     }
     if (json['userContactCollection3'] != null) {
@@ -330,12 +335,12 @@ class UserContactCollection3 {
 
   UserContactCollection3(
       {this.id,
-        this.phoneNumber,
-        this.isPrimary,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.email});
+      this.phoneNumber,
+      this.isPrimary,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.email});
 
   UserContactCollection3.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -369,10 +374,10 @@ class DoctorLanguageCollection {
 
   DoctorLanguageCollection(
       {this.id,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.language});
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.language});
 
   DoctorLanguageCollection.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -410,14 +415,14 @@ class Language {
 
   Language(
       {this.id,
-        this.code,
-        this.name,
-        this.description,
-        this.sortOrder,
-        this.isActive,
-        this.createdBy,
-        this.createdOn,
-        this.lastModifiedOn});
+      this.code,
+      this.name,
+      this.description,
+      this.sortOrder,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedOn});
 
   Language.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -448,10 +453,13 @@ class Language {
 
 class DoctorProfessionalDetailCollection {
   String id;
+
   QualificationInfo qualificationInfo;
-  MedicalCouncilInfo medicalCouncilInfo;
+
+//MedicalCouncilInfo medicalCouncilInfo;
   Degree specialty;
-  List<ClinicName> clinicName;
+
+//List<ClinicName> clinicName;
   String aboutMe;
   bool isActive;
   String createdOn;
@@ -459,32 +467,32 @@ class DoctorProfessionalDetailCollection {
 
   DoctorProfessionalDetailCollection(
       {this.id,
-        this.qualificationInfo,
-        this.medicalCouncilInfo,
-        this.specialty,
-        this.clinicName,
-        this.aboutMe,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn});
+      this.qualificationInfo,
+//this.medicalCouncilInfo,
+      this.specialty,
+//this.clinicName,
+      this.aboutMe,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn});
 
   DoctorProfessionalDetailCollection.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     qualificationInfo = json['qualificationInfo'] != null
         ? new QualificationInfo.fromJson(json['qualificationInfo'])
         : null;
-    medicalCouncilInfo = json['medicalCouncilInfo'] != null
+/* medicalCouncilInfo = json['medicalCouncilInfo'] != null
         ? new MedicalCouncilInfo.fromJson(json['medicalCouncilInfo'])
-        : null;
+        : null;*/
     specialty = json['specialty'] != null
         ? new Degree.fromJson(json['specialty'])
         : null;
-    if (json['clinicName'] != null) {
+/*if (json['clinicName'] != null) {
       clinicName = new List<ClinicName>();
       json['clinicName'].forEach((v) {
         clinicName.add(new ClinicName.fromJson(v));
       });
-    }
+    }*/
     aboutMe = json['aboutMe'];
     isActive = json['isActive'];
     createdOn = json['createdOn'];
@@ -497,15 +505,15 @@ class DoctorProfessionalDetailCollection {
     if (this.qualificationInfo != null) {
       data['qualificationInfo'] = this.qualificationInfo.toJson();
     }
-    if (this.medicalCouncilInfo != null) {
+/*if (this.medicalCouncilInfo != null) {
       data['medicalCouncilInfo'] = this.medicalCouncilInfo.toJson();
-    }
+    }*/
     if (this.specialty != null) {
       data['specialty'] = this.specialty.toJson();
     }
-    if (this.clinicName != null) {
+/* if (this.clinicName != null) {
       data['clinicName'] = this.clinicName.map((v) => v.toJson()).toList();
-    }
+    }*/
     data['aboutMe'] = this.aboutMe;
     data['isActive'] = this.isActive;
     data['createdOn'] = this.createdOn;
@@ -618,15 +626,15 @@ class DoctorFeeCollection {
 
   DoctorFeeCollection(
       {this.id,
-        this.fee,
-        this.followupValue,
-        this.followupIn,
-        this.effectiveFromDate,
-        this.effectiveToDate,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.feeType});
+      this.fee,
+      this.followupValue,
+      this.followupIn,
+      this.effectiveFromDate,
+      this.effectiveToDate,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.feeType});
 
   DoctorFeeCollection.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -639,7 +647,7 @@ class DoctorFeeCollection {
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
     feeType =
-    json['feeType'] != null ? new FeeType.fromJson(json['feeType']) : null;
+        json['feeType'] != null ? new FeeType.fromJson(json['feeType']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -673,14 +681,14 @@ class FeeType {
 
   FeeType(
       {this.id,
-        this.code,
-        this.name,
-        this.description,
-        this.sortOrder,
-        this.isActive,
-        this.createdBy,
-        this.createdOn,
-        this.lastModifiedOn});
+      this.code,
+      this.name,
+      this.description,
+      this.sortOrder,
+      this.isActive,
+      this.createdBy,
+      this.createdOn,
+      this.lastModifiedOn});
 
   FeeType.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -719,11 +727,11 @@ class HealthOrganization {
 
   HealthOrganization(
       {this.id,
-        this.name,
-        this.isActive,
-        this.createdOn,
-        this.lastModifiedOn,
-        this.domainUrl});
+      this.name,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.domainUrl});
 
   HealthOrganization.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -746,7 +754,7 @@ class HealthOrganization {
   }
 }
 
-class UserAddressCollection3 {
+class UserAddressCollectionForHospital {
   String id;
   String addressLine1;
   String addressLine2;
@@ -758,9 +766,19 @@ class UserAddressCollection3 {
   City city;
   State state;
 
-  UserAddressCollection3({this.id, this.addressLine1, this.addressLine2, this.pincode, this.isPrimary, this.isActive, this.createdOn, this.lastModifiedOn, this.city, this.state});
+  UserAddressCollectionForHospital(
+      {this.id,
+      this.addressLine1,
+      this.addressLine2,
+      this.pincode,
+      this.isPrimary,
+      this.isActive,
+      this.createdOn,
+      this.lastModifiedOn,
+      this.city,
+      this.state});
 
-  UserAddressCollection3.fromJson(Map<String, dynamic> json) {
+  UserAddressCollectionForHospital.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     addressLine1 = json['addressLine1'];
     addressLine2 = json['addressLine2'];
