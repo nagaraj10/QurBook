@@ -35,7 +35,7 @@ class SearchWdigetState extends State<SearchWidget> {
                     controller: _searchQueryController,
                     autofocus: false,
                     decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(2),
+                      contentPadding: EdgeInsets.all(4),
                       hintText: variable.strSearch,
                       prefixIcon: Icon(
                         Icons.search,
@@ -59,7 +59,7 @@ class SearchWdigetState extends State<SearchWidget> {
                       border: InputBorder.none,
                       hintStyle: TextStyle(color: Colors.black45, fontSize: 12),
                     ),
-                    style: TextStyle(color: Colors.black54, fontSize: 16.0),
+                    style: TextStyle(color: Colors.black54, fontSize: 14.0),
                     onChanged: (editedValue) {
                       widget.onChanged(editedValue);
                     },

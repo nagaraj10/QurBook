@@ -12,6 +12,7 @@ import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/styles/styles.dart' as fhbStyles;
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/Slots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
@@ -129,6 +130,25 @@ class CommonWidgets {
   }
 
   String getCityDoctorsModel(Doctors doctors) {
+    String city;
+
+    if (doctors.user.userAddressCollection3.isNotEmpty) {
+      if (doctors.user.userAddressCollection3.length > 0) {
+        if (doctors.user.userAddressCollection3[0].city != null) {
+          city = doctors.user.userAddressCollection3[0].city.name;
+        } else {
+          city = '';
+        }
+      } else {
+        city = '';
+      }
+    } else {
+      city = '';
+    }
+    return city;
+  }
+
+  String getCityDoctorsModelForHos(DoctorFromHos doctors) {
     String city;
 
     if (doctors.user.userAddressCollection3.isNotEmpty) {
@@ -498,6 +518,21 @@ class CommonWidgets {
     );
   }
 
+  Widget getDoctorStatusWidgetNewForHos(DoctorFromHos docs, int position) {
+    return Container(
+      alignment: Alignment.bottomRight,
+      child: Container(
+        width: 10.0,
+        height: 10.0,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: getDoctorStatus('${docs.isActive}', position)
+          //color: getDoctorStatus('5'),
+        ),
+      ),
+    );
+  }
+
   BoxDecoration getCardDecoration() {
     return BoxDecoration(
       color: Colors.white,
@@ -545,6 +580,21 @@ class CommonWidgets {
   }
 
   getLanguagesNew(Doctors docs) {
+    List<Widget> languageWidget = new List();
+    if (docs.doctorLanguageCollection != null &&
+        docs.doctorLanguageCollection.length > 0) {
+      for (int i = 0; i < docs.doctorLanguageCollection.length; i++) {
+        languageWidget.add(getDoctorsAddress(
+            docs.doctorLanguageCollection[i].language.name + ','));
+      }
+    } else {
+      languageWidget.add(SizedBox());
+    }
+
+    return languageWidget;
+  }
+
+  getLanguagesNewForHos(DoctorFromHos docs) {
     List<Widget> languageWidget = new List();
     if (docs.doctorLanguageCollection != null &&
         docs.doctorLanguageCollection.length > 0) {
@@ -677,6 +727,124 @@ class CommonWidgets {
         });
   }
 
+  Widget showDoctorDetailViewNewForHos(DoctorFromHos docs, BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            content: Container(
+              width: MediaQuery.of(context).size.width - 20,
+              child: Stack(
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  /*Positioned(
+                    top: -1.0,
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        color: Colors.black,
+                        size: 20,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ),*/
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: getClipOvalImageNew(
+                                docs.user.profilePicThumbnailUrl,
+                                fhbStyles.detailClipImage),
+                          ),
+                          getSizeBoxWidth(10.0),
+                          Expanded(
+                            // flex: 4,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                getTextForDoctors('${docs.user.name}'),
+                                AutoSizeText(
+                                  (docs.doctorProfessionalDetailCollection !=
+                                      null &&
+                                      docs.doctorProfessionalDetailCollection
+                                          .length >
+                                          0)
+                                      ? docs
+                                      .doctorProfessionalDetailCollection[
+                                  0]
+                                      .specialty !=
+                                      null
+                                      ? docs
+                                      .doctorProfessionalDetailCollection[
+                                  0]
+                                      .specialty
+                                      .name !=
+                                      null
+                                      ? docs
+                                      .doctorProfessionalDetailCollection[
+                                  0]
+                                      .specialty
+                                      .name
+                                      : ''
+                                      : ''
+                                      : '',
+                                  maxLines: 1,
+                                  style: TextStyle(
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorUtils.lightgraycolor),
+                                ),
+                                getDoctorsAddress(
+                                    docs.user.userAddressCollection3[0].city !=
+                                        null
+                                        ? docs.user.userAddressCollection3[0]
+                                        .city.name
+                                        : ''),
+                                (docs.doctorLanguageCollection != null &&
+                                    docs.doctorLanguageCollection.length >
+                                        0)
+                                    ? getTextForDoctors('Can Speak:')
+                                    : SizedBox(),
+                                (docs.doctorLanguageCollection != null &&
+                                    docs.doctorLanguageCollection.length >
+                                        0)
+                                    ? Row(children: getLanguagesNewForHos(docs))
+                                    : SizedBox(),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      getSizedBox(15),
+                      getTextForDoctors('About: '),
+                      getTextAbout((docs.doctorProfessionalDetailCollection
+                          .isNotEmpty ??
+                          docs.doctorProfessionalDetailCollection.length >
+                              0 ??
+                          docs.doctorProfessionalDetailCollection[0]
+                              .aboutMe !=
+                              null)
+                          ? docs.doctorProfessionalDetailCollection[0].aboutMe
+                          : ''),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   String getMoneyWithForamt(String amount) {
     if (amount != null && amount != '') {
       var amountDouble = double.parse(amount);
@@ -791,6 +959,19 @@ class CommonWidgets {
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
               ? user.name
               : user.firstName!=null && user.lastName !=null? (user.firstName + user.lastName):'')
+          : '',
+      style: TextStyle(
+          fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
+      softWrap: true,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+  Widget setDoctornameForHos(UserResponse user) {
+    return Text(
+      user != null
+          ? toBeginningOfSentenceCase((user.name != null && user.name != '')
+          ? user.name
+          : user.firstName!=null && user.lastName !=null? (user.firstName + user.lastName):'')
           : '',
       style: TextStyle(
           fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),

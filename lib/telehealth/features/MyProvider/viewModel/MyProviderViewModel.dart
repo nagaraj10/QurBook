@@ -5,6 +5,7 @@ import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/AssociateRecordResponse.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DateSlots.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/DoctorBookMarkedSucessModel.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/GetAllPatientsModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationModel.dart';
@@ -19,6 +20,7 @@ class MyProviderViewModel extends ChangeNotifier {
   List<TelehealthProviderModel> teleHealthProviderModel = new List();
   AssociateSuccessResponse associateRecordResponse = AssociateSuccessResponse();
   List<HealthOrganizationResult> healthOrganizationResult = List();
+  List<ResultFromHospital> doctorsFromHospital = List();
 
   ProvidersListRepository _providersListRepository = ProvidersListRepository();
 
@@ -95,6 +97,18 @@ class MyProviderViewModel extends ChangeNotifier {
 
       healthOrganizationResult = healthOrganizationModel.result;
       return healthOrganizationResult;
+    } catch (e) {}
+  }
+
+  Future<List<ResultFromHospital>> getDoctorsFromHospital(
+      String healthOrgId) async {
+    try {
+      DoctorListFromHospitalModel doctorListFromHospitalModel =
+      await _providersListRepository
+          .getDoctorsFromHospital(healthOrgId);
+
+      doctorsFromHospital = doctorListFromHospitalModel.result;
+      return doctorsFromHospital;
     } catch (e) {}
   }
 }
