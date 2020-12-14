@@ -35,10 +35,8 @@ import 'healthOrganization/HealthOrganization.dart';
 
 class MyProvidersHospitals extends StatefulWidget {
   Function(String) closePage;
-
   @override
   _MyProvidersState createState() => _MyProvidersState();
-
   MyProvidersHospitals({this.closePage});
 }
 
@@ -111,6 +109,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          heroTag: "btn1",
           onPressed: () {
             Navigator.pushNamed(context, router.rt_SearchProvider,
                 arguments: SearchArguments(

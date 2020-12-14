@@ -14,6 +14,7 @@ import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/UserAddressCollection.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/DoctorsFromHospitalModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/getAvailableSlots/SlotsResultModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/HealthOrganizationResult.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
@@ -31,15 +32,18 @@ class GetTimeSlots extends StatelessWidget {
   SlotsResultModel dateSlotTimingsObj;
   final List<Doctors> docs;
   final int j;
+  final int doctorListIndex;
   Past doctorsData;
   final DateTime selectedDate;
   bool isReshedule;
   FlutterToast toast = new FlutterToast();
   List<String> bookingIds = [];
   final List<HealthOrganizationResult> healthOrganizationResult;
+  final List<ResultFromHospital> resultFromHospitalList;
   final int doctorListPos;
   Function(String) closePage;
   bool isFromNotification;
+  bool isFromHospital;
 
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
@@ -49,13 +53,16 @@ class GetTimeSlots extends StatelessWidget {
       {this.dateSlotTimingsObj,
       this.docs,
       this.j,
+      this.doctorListIndex,
       this.selectedDate,
       this.isReshedule,
       this.doctorsData,
       this.healthOrganizationResult,
+      this.resultFromHospitalList,
       this.doctorListPos,
       this.closePage,
-      this.isFromNotification});
+      this.isFromNotification,
+        this.isFromHospital});
 
   @override
   Widget build(BuildContext context) {
@@ -144,6 +151,7 @@ class GetTimeSlots extends StatelessWidget {
             followUpFee: followUpFee,
             isNewAppointment: isNewAppointment,
             i: j,
+            doctorListIndex: doctorListIndex,
             selectedDate: selectedDate,
             sessionData: dateSlotTimingsObj.sessions,
             rowPosition: rowPos,
@@ -151,10 +159,12 @@ class GetTimeSlots extends StatelessWidget {
             isFollowUp: isFollowUp,
             doctorsData: doctorsData,
             healthOrganizationResult: healthOrganizationResult,
+            resultFromHospitalList: resultFromHospitalList,
             doctorListPos: doctorListPos,
             closePage: (value) {
               closePage(value);
             },
+            isFromHospital: isFromHospital,
           ),
         ));
   }

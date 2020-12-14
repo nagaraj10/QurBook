@@ -93,6 +93,23 @@ class CommonWidgets {
     );
   }
 
+  Widget getDoctoSpecialistOnlyForHos(DoctorFromHos eachDoctorModel) {
+    return Text(
+      (eachDoctorModel.doctorProfessionalDetailCollection != null &&
+          eachDoctorModel.doctorProfessionalDetailCollection.length > 0)
+          ? eachDoctorModel.doctorProfessionalDetailCollection[0].specialty !=
+          null
+          ? toBeginningOfSentenceCase(eachDoctorModel
+          .doctorProfessionalDetailCollection[0].specialty.name)
+          : ''
+          : '',
+      style: TextStyle(
+          color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_doc_specialist),
+      softWrap: false,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
   Widget getDoctorsAddress(String address) {
     return Text(
       address != null ? toBeginningOfSentenceCase(address) : '',

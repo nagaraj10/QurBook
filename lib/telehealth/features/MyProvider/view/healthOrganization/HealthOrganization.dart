@@ -261,12 +261,14 @@ class _HealthOrganizationState extends State<HealthOrganization> {
               i: i,
               healthOrganizationId: docs[i].healthOrganization.id,
               healthOrganizationResult: docs,
+              resultFromHospitalList: [],
               doctorListPos: widget.index,
               onChanged: (value){},
               closePage: (value) {
                 widget.closePage(value);
                 Navigator.pop(context);
               },
+              isFromHospital: false,
             ),
           ],
         ),

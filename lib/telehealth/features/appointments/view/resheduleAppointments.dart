@@ -268,6 +268,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               doctorsData: widget.doc,
               healthOrganizationId: widget.doc.healthOrganization.id,
               healthOrganizationResult: docs,
+              resultFromHospitalList: [],
               doctorListPos: 0,
               closePage: (value) {
                 widget.closePage(value);
@@ -280,6 +281,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               },
               onUserChangedDate: onUserChangedDate,
               isFromNotification: widget.isFromNotification,
+              isFromHospital: false,
             ),
           ],
         ),
