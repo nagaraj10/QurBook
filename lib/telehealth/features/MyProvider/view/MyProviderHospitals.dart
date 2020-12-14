@@ -35,20 +35,45 @@ import 'healthOrganization/HealthOrganization.dart';
 
 class MyProvidersHospitals extends StatefulWidget {
   Function(String) closePage;
+
   @override
   _MyProvidersState createState() => _MyProvidersState();
+
   MyProvidersHospitals({this.closePage});
 }
 
 class _MyProvidersState extends State<MyProvidersHospitals> {
+  MyProviderViewModel providerViewModel = MyProviderViewModel();
   MyProvidersResponse myProvidersResponseList;
   CommonWidgets commonWidgets = new CommonWidgets();
+  bool isSearch = false;
   ProvidersBloc _providersBloc;
+  List<Hospitals> myProviderHospitalList = List();
+  List<Hospitals> initialHospitalList = List();
 
   @override
   void initState() {
     super.initState();
     _providersBloc = new ProvidersBloc();
+    getHospitalsList();
+  }
+
+  getHospitalsList() {
+    if (myProvidersResponseList != null ?? myProvidersResponseList.isSuccess) {
+      setState(() {
+        initialHospitalList = myProvidersResponseList.result.hospitals;
+      });
+    } else {
+      _providersBloc.getMedicalPreferencesList().then((value) {
+        if ((value.result != null &&
+            value?.result?.hospitals != null &&
+            value.result.hospitals.length > 0)) {
+          setState(() {
+            initialHospitalList = value.result.hospitals;
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -57,17 +82,45 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
         body: Container(
           child: Column(
             children: [
+              SearchWidget(
+                onChanged: (hospitalsName) {
+                  if (hospitalsName != '' && hospitalsName.length > 2) {
+                    setState(() {
+                      isSearch = true;
+                      myProviderHospitalList =
+                          providerViewModel.getHospitalName(
+                              hospitalList: initialHospitalList,
+                              query: hospitalsName);
+                    });
+                  } else {
+                    setState(() {
+                      isSearch = false;
+                    });
+                  }
+                },
+              ),
               Expanded(
                 child: myProvidersResponseList != null ??
-                    myProvidersResponseList.isSuccess
-                    ? hospitalList(myProvidersResponseList.result.hospitals)
+                        myProvidersResponseList.isSuccess
+                    ? hospitalList(isSearch
+                        ? myProviderHospitalList
+                        : myProvidersResponseList.result.hospitals)
                     : getDoctorProviderListNew(),
               )
             ],
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, router.rt_SearchProvider,
+                arguments: SearchArguments(
+                  searchWord: CommonConstants.hospitals,
+                  fromClass: router.cn_teleheathProvider,
+                )).then((value) {
+              getHospitalsList();
+              setState(() {});
+            });
+          },
           child: Icon(
             Icons.add,
             color: Color(new CommonUtil().getMyPrimaryColor()),
@@ -82,24 +135,23 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
             child: new CircularProgressIndicator(
-                backgroundColor:
-                Color(new CommonUtil().getMyPrimaryColor())
-            ),
+                backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
           );
         } else if (snapshot.hasError) {
           return new Text('Error: ${snapshot.error}');
         } else {
           final items = snapshot.data ??
               <MyProvidersResponseData>[]; // handle the case that data is null
-
           return (snapshot.data.result != null &&
-              snapshot.data.result.hospitals != null &&
-              snapshot.data.result.hospitals.length > 0)
-              ? hospitalList(snapshot.data.result.hospitals)
+                  snapshot.data.result.hospitals != null &&
+                  snapshot.data.result.hospitals.length > 0)
+              ? hospitalList(isSearch
+                  ? myProviderHospitalList
+                  : snapshot.data.result.hospitals)
               : Container(
-              child: Center(
-                child: Text(variable.strNoHospitaldata),
-              ));
+                  child: Center(
+                  child: Text(variable.strNoHospitaldata),
+                ));
         }
       },
     );
@@ -160,8 +212,8 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
                                       ? hospitals[i].name[0].toUpperCase()
                                       : '',
                                   style: TextStyle(
-                                      color:
-                                          Color(CommonUtil().getMyPrimaryColor())),
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor())),
                                 ),
                               ))
                           : Container(
@@ -261,8 +313,7 @@ class _MyProvidersState extends State<MyProvidersHospitals> {
     );
   }
 
-  navigateToDoctorList(
-      BuildContext context, List<Hospitals> docs, int i) {
+  navigateToDoctorList(BuildContext context, List<Hospitals> docs, int i) {
     Navigator.push(
         context,
         MaterialPageRoute(

@@ -587,8 +587,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   void passHospitalValue(
       HospitalsListResult hospitaData, BuildContext context) {
-    Navigator.of(context)
-        .pop({Constants.keyHospital: json.encode(hospitaData)});
+    Navigator.of(context).maybePop({Constants.keyHospital: json.encode(hospitaData)});
   }
 
   void passLaboratoryValue(LabListResult laboratoryData, BuildContext context) {
