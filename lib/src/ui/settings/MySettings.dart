@@ -169,19 +169,61 @@ class _MySettingsState extends State<MySettings> {
   setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
     setState(() {
       _deviceDataHelper = DeviceDataHelper();
-      _isdeviceRecognition =
-          getDeviceSelectionModel.result[0].profileSetting.allowDevice;
+      _isdeviceRecognition = getDeviceSelectionModel
+                      .result[0].profileSetting.allowDevice !=
+                  null &&
+              getDeviceSelectionModel.result[0].profileSetting.allowDevice != ''
+          ? getDeviceSelectionModel.result[0].profileSetting.allowDevice
+          : true;
       _isdigitRecognition =
-          getDeviceSelectionModel.result[0].profileSetting.allowDigit;
-      _isGFActive = getDeviceSelectionModel.result[0].profileSetting.googleFit;
-      _isHKActive = getDeviceSelectionModel.result[0].profileSetting.healthFit;
-      _isBPActive = getDeviceSelectionModel.result[0].profileSetting.bpMonitor;
-      _isGLActive = getDeviceSelectionModel.result[0].profileSetting.glucoMeter;
-      _isOxyActive =
-          getDeviceSelectionModel.result[0].profileSetting.pulseOximeter;
-      _isWSActive = getDeviceSelectionModel.result[0].profileSetting.weighScale;
-      _isTHActive =
-          getDeviceSelectionModel.result[0].profileSetting.thermoMeter;
+          getDeviceSelectionModel.result[0].profileSetting.allowDigit != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.allowDigit !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.allowDigit
+              : true;
+      _isGFActive =
+          getDeviceSelectionModel.result[0].profileSetting.googleFit != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.googleFit !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.googleFit
+              : false;
+      _isHKActive =
+          getDeviceSelectionModel.result[0].profileSetting.healthFit != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.healthFit !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.healthFit
+              : false;
+      _isBPActive =
+          getDeviceSelectionModel.result[0].profileSetting.bpMonitor != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.bpMonitor !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.bpMonitor
+              : true;
+      _isGLActive =
+          getDeviceSelectionModel.result[0].profileSetting.glucoMeter != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.glucoMeter !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.glucoMeter
+              : true;
+      _isOxyActive = getDeviceSelectionModel
+                      .result[0].profileSetting.pulseOximeter !=
+                  null &&
+              getDeviceSelectionModel.result[0].profileSetting.pulseOximeter !=
+                  ''
+          ? getDeviceSelectionModel.result[0].profileSetting.pulseOximeter
+          : true;
+      _isWSActive =
+          getDeviceSelectionModel.result[0].profileSetting.weighScale != null &&
+                  getDeviceSelectionModel.result[0].profileSetting.weighScale !=
+                      ''
+              ? getDeviceSelectionModel.result[0].profileSetting.weighScale
+              : true;
+      _isTHActive = getDeviceSelectionModel
+                      .result[0].profileSetting.thermoMeter !=
+                  null &&
+              getDeviceSelectionModel.result[0].profileSetting.thermoMeter != ''
+          ? getDeviceSelectionModel.result[0].profileSetting.thermoMeter
+          : true;
     });
   }
 
