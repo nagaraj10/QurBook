@@ -95,12 +95,32 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       selectionResult = value;
       if (selectionResult.isSuccess) {
         if (selectionResult.result != null) {
-          bpMonitor = selectionResult.result[0].profileSetting.bpMonitor;
-          glucoMeter = selectionResult.result[0].profileSetting.glucoMeter;
+          bpMonitor =
+              selectionResult.result[0].profileSetting.bpMonitor != null &&
+                      selectionResult.result[0].profileSetting.bpMonitor != ''
+                  ? selectionResult.result[0].profileSetting.bpMonitor
+                  : true;
+          glucoMeter =
+              selectionResult.result[0].profileSetting.glucoMeter != null &&
+                      selectionResult.result[0].profileSetting.glucoMeter != ''
+                  ? selectionResult.result[0].profileSetting.glucoMeter
+                  : true;
           pulseOximeter =
-              selectionResult.result[0].profileSetting.pulseOximeter;
-          thermoMeter = selectionResult.result[0].profileSetting.thermoMeter;
-          weighScale = selectionResult.result[0].profileSetting.weighScale;
+              selectionResult.result[0].profileSetting.pulseOximeter != null &&
+                      selectionResult.result[0].profileSetting.pulseOximeter !=
+                          ''
+                  ? selectionResult.result[0].profileSetting.pulseOximeter
+                  : true;
+          thermoMeter =
+              selectionResult.result[0].profileSetting.thermoMeter != null &&
+                      selectionResult.result[0].profileSetting.thermoMeter != ''
+                  ? selectionResult.result[0].profileSetting.thermoMeter
+                  : true;
+          weighScale =
+              selectionResult.result[0].profileSetting.weighScale != null &&
+                      selectionResult.result[0].profileSetting.weighScale != ''
+                  ? selectionResult.result[0].profileSetting.weighScale
+                  : true;
         }
       }
     });
