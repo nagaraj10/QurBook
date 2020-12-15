@@ -136,14 +136,14 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
             AutoDismissNotification().setAlarm(this,NS_ID,NS_TIMEOUT)
         }
-        Thread {
-            Thread.sleep(NS_TIMEOUT)
-            if(MyApp.isMissedNSShown){
-                createNotification4MissedCall(USER_NAME!!)
-            }else{
-                MyApp.isMissedNSShown=true
-            }
-        }.start()
+//        Thread {
+//            Thread.sleep(NS_TIMEOUT)
+//            if(MyApp.isMissedNSShown){
+//                createNotification4MissedCall(USER_NAME!!)
+//            }else{
+//                MyApp.isMissedNSShown=true
+//            }
+//        }.start()
     }
 
     private fun listenEvent(id:String,nsId:Int){
@@ -176,6 +176,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             createNotificationCancelAppointment(data)
         }else if(data["templateName"]=="GoFHBPatientOnboardingByDoctor" || data["templateName"]=="GoFHBPatientOnboardingByHospital"){
             docOnBoardNotification(data)
+        }else if(data["templateName"]=="MyFHBMissedCall"){
+            data[getString(R.string.pro_ns_body)]?.let { createNotification4MissedCall(it) }
         }else{
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
             val NS_ID = System.currentTimeMillis().toInt()
@@ -216,9 +218,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
     }
 
-    private fun createNotification4MissedCall(body: String){  
+    private fun createNotification4MissedCall(body: String){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
-        val NS_ID = 9092
+        val NS_ID = System.currentTimeMillis().toInt()
 
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)
@@ -231,8 +233,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         var notification = NotificationCompat.Builder(this, CHANNEL_MISS_CALL)
                 .setSmallIcon(android.R.drawable.stat_notify_missed_call)
                 .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
-                .setContentTitle(body)
-                .setContentText(getString(R.string.missed_call_alert_title))
+                .setContentTitle(getString(R.string.missed_call_alert_title))
+                .setContentText(body)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .setAutoCancel(false)
