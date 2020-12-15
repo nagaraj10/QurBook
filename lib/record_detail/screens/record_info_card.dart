@@ -486,6 +486,101 @@ class RecordInfoCard {
           ],
         ));
   }
+
+  Widget getCardForHospitalDocument(Metadata metaInfo, String createdDate) {
+    return Container(
+        padding: EdgeInsets.all(20),
+        color: Colors.white,
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(),
+                ),
+                Text(
+                  FHBUtils().getMonthDateYear(createdDate),
+                  textAlign: TextAlign.end,
+                  style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+                )
+              ],
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Colors.grey[200],
+                  backgroundImage:
+                      /*metaInfo.hospital != null
+                      ? metaInfo.hospital.logoThumbnail != null
+                          ? NetworkImage(Constants.BASE_URL +
+                              metaInfo.hospital.logoThumbnail)
+                          : null
+                      :*/
+                      null,
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        metaInfo.hospital != null
+                            ? metaInfo.hospital.healthOrganizationName != null
+                                ? Text(
+                                    toBeginningOfSentenceCase(metaInfo
+                                        .hospital.healthOrganizationName),
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14),
+                                    softWrap: false,
+                                    overflow: TextOverflow.ellipsis,
+                                  )
+                                : SizedBox(
+                                    height: 0,
+                                  )
+                            : SizedBox(
+                                height: 0,
+                              ),
+                        metaInfo.doctor != null
+                            ? Text(
+                                toBeginningOfSentenceCase(metaInfo.doctor.name),
+                                style: TextStyle(fontSize: 13),
+                              )
+                            : SizedBox(height: 0),
+                        Text(
+                          new FHBUtils().getFormattedDateString(createdDate),
+                          style: TextStyle(
+                              color: Colors.grey[400],
+                              fontWeight: FontWeight.w200,
+                              fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              alignment: Alignment.centerLeft,
+              child: metaInfo.memoText != null
+                  ? Text(
+                      toBeginningOfSentenceCase(metaInfo.memoText),
+                      textAlign: TextAlign.start,
+                      style: TextStyle(fontSize: 12),
+                    )
+                  : Text(''),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+          ],
+        ));
+  }
 }
 
 Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {

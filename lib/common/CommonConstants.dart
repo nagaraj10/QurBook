@@ -17,6 +17,7 @@ class CommonConstants {
   static const String categoryDescriptionVoiceRecord = 'Catcode010';
   static const String categoryDescriptionClaimsRecord = 'Catcode011';
   static const String categoryDescriptionNotes = 'Catcode013';
+  static const String categoryDescriptionHospitalDocument = 'Catcode014';
 
   static final String CAT_JSON_GLUCOMETER = "Catcode002_Typecode001";
   static final String CAT_JSON_BP_METER = "Catcode002_Typecode002";
