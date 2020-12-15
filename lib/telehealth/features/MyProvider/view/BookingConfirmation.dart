@@ -258,13 +258,18 @@ class BookingConfirmationState extends State<BookingConfirmation> {
       }
     }
 
-    /*if (_familyNames.length > 1) {
+    if (_familyNames.length > 0) {
       for (SharedByUsers sharedByUsers in _familyNames) {
-        if (sharedByUsers.id == selectedId) {
-          selectedUser = selectedUser;
+        if(sharedByUsers!=null){
+          if(sharedByUsers.child!=null){
+            if (sharedByUsers.child.id == selectedId) {
+              selectedUser = sharedByUsers;
+            }
+          }
         }
+
       }
-    }*/
+    }
 
     return SizedBoxWithChild(
       height: 30,
