@@ -502,6 +502,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
         return RecordInfoCard()
             .getCardForNotes(widget.data.metadata, widget.data.createdOn);
         break;
+      case CommonConstants.categoryDescriptionHospitalDocument:
+        return RecordInfoCard().getCardForHospitalDocument(
+            widget.data.metadata, widget.data.createdOn);
+        break;
 
       default:
         return RecordInfoCard().getCardForPrescription(

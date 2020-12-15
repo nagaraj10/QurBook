@@ -38,6 +38,7 @@ import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/src/ui/health/BillsList.dart';
 import 'package:myfhb/src/ui/health/DeviceListScreen.dart';
 import 'package:myfhb/src/ui/health/HealthReportListScreen.dart';
+import 'package:myfhb/src/ui/health/HospitalDocuments.dart';
 import 'package:myfhb/src/ui/health/IDDocsList.dart';
 import 'package:myfhb/src/ui/health/LabReportListScreen.dart';
 import 'package:myfhb/src/ui/health/MedicalReportListScreen.dart';
@@ -466,7 +467,9 @@ class _MyRecordsState extends State<MyRecords> {
               ),
             ),
           ),
-          SizedBoxWidget(width: 2,),
+          SizedBoxWidget(
+            width: 2,
+          ),
           IconWidget(
             icon: Icons.notifications,
             colors: Colors.white,
@@ -1307,6 +1310,22 @@ class _CustomTabsState extends State<CustomTabView>
             widget.allowSelectNotes,
             widget.allowSelectVoice,
             widget.showDetails));
+      } else if (dataObj.categoryDescription ==
+          CommonConstants.categoryDescriptionHospitalDocument) {
+        tabWidgetList.add(new HospitalDocuments(
+            completeData,
+            callBackToRefresh,
+            dataObj.categoryName,
+            dataObj.id,
+            getDataForParticularLabel,
+            addMediaRemoveMaster,
+            widget.allowSelect,
+            widget.selectedMedia,
+            widget.allowSelectNotes,
+            widget.allowSelectVoice,
+            widget.showDetails,
+            widget.isFromChat,
+            addHealthRecords));
       } else {
         tabWidgetList.add(new FHBBasicWidget().getContainerWithNoDataText());
       }
