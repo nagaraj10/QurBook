@@ -107,6 +107,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                               },
                               controller: numberController,
                               onSaved: (value) {},
+                              keyboardType: TextInputType.number,
                             ),
                           ),
                           SizedBox(height: 10),
