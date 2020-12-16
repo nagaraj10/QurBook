@@ -84,7 +84,8 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   sendToMaya(String msg) async {
     String uuidString = uuid;
-
+    String tzOffset = DateTime.now().timeZoneOffset.toString();
+    var splitedArr = tzOffset.split(':');
     Map<String, dynamic> reqJson = {};
     reqJson[parameters.strSender] = user_id;
     reqJson[parameters.strSenderName] = user_name;
@@ -93,6 +94,8 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.strSessionId] = uuidString;
     reqJson[parameters.strAuthtoken] = auth_token;
     reqJson[parameters.strLanguage] = Utils.getCurrentLanCode();
+    reqJson[parameters.strtimezone] =
+        splitedArr.length > 0 ? '${splitedArr[0]}:${splitedArr[1]}' : '';
 
     Service mService = Service();
     final response = await mService.sendMetaToMaya(reqJson);
