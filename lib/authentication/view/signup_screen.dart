@@ -165,8 +165,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               ),
                               validator: (value) {
                                 return AuthenticationValidator()
-                                    .phoneValidation(
-                                        value, patternPhoneNew, strPhoneCantEmpty);
+                                    .phoneValidation(value, patternPhoneNew,
+                                        strPhoneCantEmpty);
                               },
                               controller: mobileNoController,
                               onSaved: (value) {},
@@ -306,7 +306,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     if (_SignupKey.currentState.validate() && checkedValue) {
       _SignupKey.currentState.save();
       UserContactCollection3 user3 = UserContactCollection3();
-      user3.phoneNumber = '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
+      user3.phoneNumber =
+          '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
       user3.email = emailController.text.trim();
       user3.isPrimary = true;
       userCollection.add(user3);
@@ -339,7 +340,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
           context,
           MaterialPageRoute(
               builder: (context) => VerifyPatient(
-                    PhoneNumber: mobileNoController.text,
+                    PhoneNumber:
+                        '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}',
                     from: strFromSignUp,
                     userConfirm: false,
                   )));

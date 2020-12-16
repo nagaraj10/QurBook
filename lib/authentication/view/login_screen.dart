@@ -236,7 +236,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
           context,
           MaterialPageRoute(
               builder: (context) => VerifyPatient(
-                    PhoneNumber: numberController.text,
+                    PhoneNumber:
+                        '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${numberController.text}',
                     from: strFromLogin,
                     userConfirm: false,
                   )));
