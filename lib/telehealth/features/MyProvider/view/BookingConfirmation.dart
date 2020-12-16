@@ -1083,9 +1083,8 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   Expanded(
                       child: Row(
                     children: [
-                      commonWidgets.getTextForDoctors(widget.isFromHospital?
-                          '${widget.resultFromHospitalList[widget.doctorListIndex].doctor.user.name}':
-                          '${widget.docs[widget.doctorListPos].user.name}'),
+                      widget.isFromHospital?
+                      commonWidgets.setDoctornameForHos(widget.resultFromHospitalList[widget.doctorListIndex].doctor.user):commonWidgets.setDoctorname(widget.docs[widget.doctorListPos].user),
                       commonWidgets.getSizeBoxWidth(10.0),
                       commonWidgets.getIcon(
                           width: fhbStyles.imageWidth,
@@ -1115,11 +1114,10 @@ class BookingConfirmationState extends State<BookingConfirmation> {
               Row(children: [
                 Expanded(
                     child:
-                        widget.isFromHospital?widget.resultFromHospitalList[widget.doctorListIndex].doctor.specialization != null?commonWidgets.
-                        getDoctoSpecialistOnlyForHos(widget.resultFromHospitalList[widget.doctorListIndex].doctor):widget.docs[widget.doctorListPos].specialization != null
-                            ? commonWidgets.getDoctoSpecialistOnly(
-                                widget.docs[widget.doctorListPos])
-                            : SizedBox():SizedBox()),
+                        widget.isFromHospital?commonWidgets.
+                        getDoctoSpecialistOnlyForHos(widget.resultFromHospitalList[widget.doctorListIndex].doctor):
+                             commonWidgets.getDoctoSpecialistOnly(
+                                widget.docs[widget.doctorListPos])),
               ]),
               commonWidgets.getSizedBox(5.0),
               Row(

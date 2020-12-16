@@ -671,7 +671,7 @@ class CommonWidgets {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                getTextForDoctors('${docs.user.name}'),
+                                setDoctorname(docs.user),
                                 AutoSizeText(
                                   (docs.doctorProfessionalDetailCollection !=
                                               null &&
@@ -789,7 +789,7 @@ class CommonWidgets {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                getTextForDoctors('${docs.user.name}'),
+                                setDoctornameForHos(docs.user),
                                 AutoSizeText(
                                   (docs.doctorProfessionalDetailCollection !=
                                       null &&
@@ -983,6 +983,20 @@ class CommonWidgets {
       overflow: TextOverflow.ellipsis,
     );
   }
+  Widget setDoctornameForTabBar(User user) {
+    return Text(
+      user != null
+          ? toBeginningOfSentenceCase((user.name != null && user.name != '')
+          ? user.name
+          : user.firstName!=null && user.lastName !=null? (user.firstName + user.lastName):'')
+          : '',
+      style: TextStyle(
+          fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name,color: Colors.white),
+      softWrap: true,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
   Widget setDoctornameForHos(UserResponse user) {
     return Text(
       user != null
