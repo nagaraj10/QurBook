@@ -177,7 +177,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }else if(data["templateName"]=="GoFHBPatientOnboardingByDoctor" || data["templateName"]=="GoFHBPatientOnboardingByHospital"){
             docOnBoardNotification(data)
         }else if(data["templateName"]=="MyFHBMissedCall"){
-            data[getString(R.string.pro_ns_body)]?.let { createNotification4MissedCall(it) }
+            createNotification4MissedCall(data)
         }else{
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
             val NS_ID = System.currentTimeMillis().toInt()
@@ -218,7 +218,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         }
     }
 
-    private fun createNotification4MissedCall(body: String){
+    private fun createNotification4MissedCall(data:Map<String, String> = HashMap()){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = System.currentTimeMillis().toInt()
 
@@ -233,8 +233,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         var notification = NotificationCompat.Builder(this, CHANNEL_MISS_CALL)
                 .setSmallIcon(android.R.drawable.stat_notify_missed_call)
                 .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
-                .setContentTitle(getString(R.string.missed_call_alert_title))
-                .setContentText(body)
+                .setContentTitle(data[getString(R.string.pro_ns_title)])
+                .setContentText(data[getString(R.string.pro_ns_body)])
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .setAutoCancel(false)
