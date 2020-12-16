@@ -301,7 +301,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
             ],
           ),
         ),
-        Divider(),
+        /* Divider(),
         Theme(
           data: theme,
           child: ExpansionTile(
@@ -347,7 +347,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                   ),
                 ))
               ]),
-        ),
+        ), */
         Divider(),
         Theme(
           data: theme,
