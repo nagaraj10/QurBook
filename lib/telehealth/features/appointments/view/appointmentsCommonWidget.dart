@@ -186,7 +186,7 @@ class AppointmentsCommonWidget {
                 .push(MaterialPageRoute(
               builder: (context) => MyRecords(
                   categoryPosition: position,
-                  allowSelect: true,
+                  allowSelect: isUpcoming ? true : false,
                   isAudioSelect: false,
                   isNotesSelect: false,
                   selectedMedias: recordIds,
@@ -249,7 +249,7 @@ class AppointmentsCommonWidget {
                   color: color,
                 ),
               ),
-              (count == null || count == 0 || count == ''||count=='0')
+              (count == null || count == 0 || count == '' || count == '0')
                   ? Container()
                   : BadgesBlue(
                       backColor: Colors.blue,
