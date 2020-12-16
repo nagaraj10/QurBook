@@ -142,17 +142,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                              doctors[index].user.name != null
-                                  ? doctors[index].user.name
-                                  : '',
-                              textAlign: TextAlign.left,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                  fontFamily: variable.font_poppins,
-                                  fontSize: 16,
-                                  color: Colors.white)),
+                          commonWidgets.setDoctornameForTabBar(doctors[index].user),
                           Text(
                             (doctors[index].doctorProfessionalDetailCollection !=
                                         null &&
