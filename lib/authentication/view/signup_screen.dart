@@ -1,3 +1,5 @@
+import 'package:country_pickers/country.dart';
+import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +13,7 @@ import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/patientsignup_model.dart'
     as signuplModel;
+import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
@@ -34,6 +37,8 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
   List<UserContactCollection3> userCollection;
   AuthViewModel authViewModel;
   var checkedValue = true;
+  Country _selectedDialogCountry =
+      CountryPickerUtils.getCountryByPhoneCode(strinitialMobileLabel);
 
   @override
   void initState() {
@@ -133,8 +138,18 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                             TextFormField(
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
-                                hintText: strPhoneHint,
+                                hintText: strNewPhoneHint,
                                 labelText: strNumberHint,
+                                prefixIcon: Container(
+                                  constraints: BoxConstraints(
+                                      maxWidth: 100, minWidth: 50),
+                                  child: CountryCodePickerPage(
+                                      onValuePicked: (Country country) =>
+                                          setState(() =>
+                                              _selectedDialogCountry = country),
+                                      selectedDialogCountry:
+                                          _selectedDialogCountry),
+                                ),
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                     borderSide: BorderSide(
@@ -151,7 +166,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               validator: (value) {
                                 return AuthenticationValidator()
                                     .phoneValidation(
-                                        value, patternPhone, strPhoneCantEmpty);
+                                        value, patternPhoneNew, strPhoneCantEmpty);
                               },
                               controller: mobileNoController,
                               onSaved: (value) {},
@@ -291,7 +306,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     if (_SignupKey.currentState.validate() && checkedValue) {
       _SignupKey.currentState.save();
       UserContactCollection3 user3 = UserContactCollection3();
-      user3.phoneNumber = mobileNoController.text.trim();
+      user3.phoneNumber = '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
       user3.email = emailController.text.trim();
       user3.isPrimary = true;
       userCollection.add(user3);
@@ -366,7 +381,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     );
   }
 
-  Widget _signupTextFields(TextFormField textFormField) {
+  Widget _signupTextFields(Widget textFormField) {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 2), child: textFormField);
   }

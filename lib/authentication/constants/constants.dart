@@ -46,6 +46,7 @@ const String strEnterName = 'Please Enter Name';
 const String strLastNameHint = 'Last Name';
 const String strEnterLastNamee = 'Please Enter Last Name';
 const String strPhoneHint = '+12125551234';
+const String strNewPhoneHint = '2125551234';
 const String strNumberHint = 'Phone number';
 const String strDobHint = 'MM/DD/YYYY';
 const String strDobHintText = 'Date of Birth';
@@ -121,6 +122,7 @@ const String strKeyForgotPassword = 'forgot-password';
 const String strKeyConfirmForgotPassword = 'confirm-forgot-password';
 const String strKeyVerifyFamilyMemberEP = 'user-relationship/verify-otp';
 final Pattern patternPhone = r'^(?:[+0][19])?[0-9]{10,11}$';
+final Pattern patternPhoneNew = r'^(?:[+0][19])?[0-9]{10}$';
 final Pattern patternOtp = r'(^[0-9]{6}$)';
 final Pattern patternChar = r'^[a-zA-Z_ ]+$';
 final Pattern patternPassword =
@@ -149,3 +151,10 @@ const String strresendOtp = 'Resend Otp';
 //Strings used in ChangePassword
 const String strNewPassword = 'newPassword';
 const String strOldPassword = 'oldPassword';
+
+//labels for country code picker page
+const String strinitialMobileLabel = '91';
+const String strPlusSymbol='+';
+const String strSearchCountry='Search here...';
+const String strSearchCountryLabel='Search your phone code';
+const String strIndianPhoneCode='IN';

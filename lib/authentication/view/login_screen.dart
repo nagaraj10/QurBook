@@ -1,3 +1,5 @@
+import 'package:country_pickers/country.dart';
+import 'package:country_pickers/country_pickers.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -11,6 +13,7 @@ import 'package:myfhb/authentication/view/verifypatient_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/patientlogin_model.dart'
     as loginModel;
+import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart';
@@ -22,6 +25,8 @@ class PatientSignInScreen extends StatefulWidget {
 }
 
 class _PatientSignInScreenState extends State<PatientSignInScreen> {
+  Country _selectedDialogCountry =
+      CountryPickerUtils.getCountryByPhoneCode(strinitialMobileLabel);
   final numberController = TextEditingController();
   final passwordController = TextEditingController();
   var isLoading = false;
@@ -29,6 +34,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   bool _autoValidateBool = false;
   AuthViewModel authViewModel;
   FlutterToast toast = new FlutterToast();
+
   @override
   void initState() {
     // TODO: implement initState
@@ -70,24 +76,34 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                             TextFormField(
                               autovalidate: _autoValidateBool,
                               decoration: InputDecoration(
-                                hintText: strPhoneHint,
+                                prefixIcon: Container(
+                                  constraints: BoxConstraints(
+                                      maxWidth: 100, minWidth: 50),
+                                  child: CountryCodePickerPage(
+                                      onValuePicked: (Country country) =>
+                                          setState(() =>
+                                              _selectedDialogCountry = country),
+                                      selectedDialogCountry:
+                                          _selectedDialogCountry),
+                                ),
+                                hintText: strNewPhoneHint,
                                 labelText: strNumberHint,
                                 focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Color(CommonUtil().getMyPrimaryColor()),
-                                  )),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
+                                    )),
                                 border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                  borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
-                                  )
-                                ),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                    borderSide: BorderSide(
+                                      color: Color(0xff138fcf),
+                                    )),
                               ),
                               validator: (value) {
                                 return AuthenticationValidator()
-                                    .phoneValidation(
-                                        value, patternPhone, strPhoneCantEmpty);
+                                    .phoneValidation(value, patternPhoneNew,
+                                        strPhoneCantEmpty);
                               },
                               controller: numberController,
                               onSaved: (value) {},
@@ -104,7 +120,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                                 focusedBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10.0),
                                     borderSide: BorderSide(
-                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
                                     )),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
@@ -116,8 +133,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                               controller: passwordController,
                               validator: (value) {
                                 return AuthenticationValidator()
-                                    .loginPasswordValidation(value, patternPassword,
-                                        strPassCantEmpty);
+                                    .loginPasswordValidation(value,
+                                        patternPassword, strPassCantEmpty);
                               },
                             ),
                           ),
@@ -196,7 +213,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
     if (_loginKey.currentState.validate()) {
       _loginKey.currentState.save();
       PatientLogIn logInModel = new PatientLogIn(
-        userName: numberController.text,
+        userName:
+            '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${numberController.text}',
         password: passwordController.text,
         source: strSource,
       );
@@ -222,26 +240,24 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                     from: strFromLogin,
                     userConfirm: false,
                   )));
-    }
-    else {
-      if(response.message=='User is not confirmed.'){
+    } else {
+      if (response.message == 'User is not confirmed.') {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) => VerifyPatient(
-                  PhoneNumber: response.diagnostics.errorData.userName,
-                  from: strFromSignUp,
-                  userConfirm: true,
-                  userId: response.diagnostics.errorData.userId,
-                )));
-      }else{
+                      PhoneNumber: response.diagnostics.errorData.userName,
+                      from: strFromSignUp,
+                      userConfirm: true,
+                      userId: response.diagnostics.errorData.userId,
+                    )));
+      } else {
         toast.getToast(response.message, Colors.red);
       }
-
     }
   }
 
-  Widget _loginTextFields(TextFormField textFormField) {
+  Widget _loginTextFields(Widget textFormField) {
     return Container(
         margin: EdgeInsets.symmetric(vertical: 2), child: textFormField);
   }
@@ -278,8 +294,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
 //                  Color(0xff138fcf),
                   Color(new CommonUtil().getMyPrimaryColor()),
                   Color(new CommonUtil().getMyGredientColor())
-                ])
-        ),
+                ])),
         child: Text(
           strSignInText,
           style: TextStyle(fontSize: 16, color: Colors.white),
