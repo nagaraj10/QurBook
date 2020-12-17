@@ -68,7 +68,9 @@ class MainActivity : FlutterActivity() {
 
     private val smsBroadcastReceiver by lazy { SMSBroadcastReceiver() }
     private val SMS_CONSENT_REQUEST = 2  // Set to an unused request code
-
+    private var patId: String? = null
+    private var patName: String? = null
+    private var patPic: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -250,8 +252,11 @@ class MainActivity : FlutterActivity() {
         docSessionId= intent.getStringExtra(Constants.PROP_docSessionId)
         healthOrgId= intent.getStringExtra(Constants.PROP_healthOrgId)
         val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
+        patId = intent.getStringExtra(getString(R.string.pat_id))
+        patName = intent.getStringExtra(getString(R.string.pat_name))
+        patPic = intent.getStringExtra(getString(R.string.pat_pic))
         if(sharedValue!=null && username !=null && docId!=null && docPic !=null){
-            sharedValue="$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}"
+            sharedValue="$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}"
         }else if(sharedValue==Constants.PROP_RESCHEDULE){
             //todo redirect to telehealth page
             sharedValue="${Constants.PROP_RESCHEDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}"

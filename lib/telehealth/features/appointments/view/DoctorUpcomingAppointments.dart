@@ -263,7 +263,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     String doctorName = doc.doctor.user.name;
     String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
     chatViewModel.storePatientDetailsToFCM(
-        doctorId, doctorName, doctorPic, context);
+        doctorId, doctorName, doctorPic,'','','', context);
   }
 
   void navigateToProviderScreen(Past doc, isReshedule) async {

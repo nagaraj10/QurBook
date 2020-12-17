@@ -25,6 +25,10 @@ class CallMain extends StatelessWidget {
   String doctorId;
   String doctorPic;
 
+  String patientId;
+  String patientName;
+  String patientPicUrl;
+
   /// non-modifiable client role of the page
   ClientRole role;
   CallArguments arguments;
@@ -41,7 +45,10 @@ class CallMain extends StatelessWidget {
       this.isAppExists,
       this.doctorName,
       this.doctorId,
-      this.doctorPic});
+      this.doctorPic,
+      this.patientId,
+      this.patientName,
+      this.patientPicUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +106,7 @@ class CallMain extends StatelessWidget {
                                 (isMute, isVideoHide) {
                               _isMute = isMute;
                               _isVideoHide = isVideoHide;
-                            }, _isMute, _isVideoHide, doctorName, doctorPic),
+                            }, _isMute, _isVideoHide, doctorName, doctorPic,patientId,patientName,patientPicUrl),
                             SizedBox(
                               height: 48,
                             ),

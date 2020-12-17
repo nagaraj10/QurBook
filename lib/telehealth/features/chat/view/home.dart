@@ -342,6 +342,9 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                 (document[STR_CREATED_AT] as Timestamp)
                                     .toDate()
                                     .toString()),
+                        patientId: '',
+                        patientName: '',
+                        patientPicture: ''
                           )));
             },
             child: Container(
