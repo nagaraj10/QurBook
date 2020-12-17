@@ -145,6 +145,8 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
             AutoDismissNotification().setAlarm(this,NS_ID,NS_TIMEOUT)
         }
+
+        /*
         Thread {
             Thread.sleep(NS_TIMEOUT)
             if(MyApp.isMissedNSShown){
@@ -152,7 +154,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
             }else{
                 MyApp.isMissedNSShown=true
             }
-        }.start()
+        }.start()*/
     }
 
     private fun listenEvent(id:String,nsId:Int){
@@ -229,7 +231,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     private fun createNotification4MissedCall(data:Map<String, String> = HashMap()){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
-        val NS_ID = 9092
+        val NS_ID = System.currentTimeMillis().toInt()
 
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)
