@@ -1,3 +1,5 @@
+import 'package:country_pickers/country.dart';
+import 'package:country_pickers/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -9,6 +11,7 @@ import 'package:myfhb/authentication/view/login_screen.dart';
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/forgot_password_model.dart'
     as forgotPasswordModel;
+import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 
@@ -18,6 +21,8 @@ class ForgotPasswordScreen extends StatefulWidget {
 }
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  Country _selectedDialogCountry =
+      CountryPickerUtils.getCountryByPhoneCode(strinitialMobileLabel);
   final mobileController = TextEditingController();
   bool _autoValidateBool = false;
   FlutterToast toast = new FlutterToast();
@@ -89,6 +94,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           obscureText: isPassword,
           controller: controller,
           decoration: InputDecoration(
+              prefixIcon: Container(
+                constraints: BoxConstraints(maxWidth: 100, minWidth: 50),
+                child: CountryCodePickerPage(
+                    onValuePicked: (Country country) =>
+                        setState(() => _selectedDialogCountry = country),
+                    selectedDialogCountry: _selectedDialogCountry),
+              ),
               labelText: title,
               hintText: strPhoneHint,
               focusedBorder: OutlineInputBorder(
@@ -104,8 +116,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               )),
           validator: (value) {
             return AuthenticationValidator()
-                .phoneValidation(value, patternPhone, strPhoneCantEmpty);
+                .phoneValidation(value, patternPhoneNew, strPhoneCantEmpty);
           },
+          keyboardType: TextInputType.number,
         ));
   }
 
@@ -150,7 +163,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           _ForgetPassKey.currentState.save();
           PatientForgotPasswordModel logInModel =
               new PatientForgotPasswordModel(
-            userName: mobileController.text,
+            //userName: mobileController.text,
+            userName: '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileController.text}',
             source: strSource,
           );
           Map<String, dynamic> map = logInModel.toJson();
@@ -200,7 +214,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           context,
           MaterialPageRoute(
               builder: (context) => ChangePasswordScreen(
-                    userName: mobileController.text,
+                    //userName: mobileController.text,
+                    userName: '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileController.text}',
                   )));
     } else {
       toast.getToast(response.message, Colors.red);

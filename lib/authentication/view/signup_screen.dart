@@ -170,6 +170,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                               },
                               controller: mobileNoController,
                               onSaved: (value) {},
+                              keyboardType: TextInputType.number,
                             ),
                           ),
                           SizedBox(height: 10),
