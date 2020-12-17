@@ -50,7 +50,7 @@
     <string name="channel_call_alert_desc">This is channel is for Missed call Alert</string>
     <string name="channel1">Channel 1</string>
     <string name="channel_call">Incoming Call</string>
-    <string name="missed_call_alert_title">Missed Call</string>
+    <string name="missed_call_alert_title">Missed Call From</string>
     <string name="channel_ack">Acknowledgements</string>
     <string name="channel_cancel_apps">Cancel Appointments</string>
     <string name="channel_miss_ns">Missed Alert</string>
@@ -75,4 +75,7 @@
     <string name="ns_type_ack">ack</string>
     <string name="channel_onboard">doctor onboard</string>
     <string name="channel_onboard_desc">This channel belong to doctor onboard</string>
+    <string name="pat_id">patientId</string>
+    <string name="pat_name">patientName</string>
+    <string name="pat_pic">patientPicture</string>
 </resources>

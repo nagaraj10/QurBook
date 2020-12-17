@@ -75,6 +75,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val USER_NAME = data[getString(R.string.username)]
         val DOC_ID = data[getString(R.string.docId)]
         val DOC_PIC = data[getString(R.string.docPic)]
+        val PAT_ID = data[getString(R.string.pat_id)]
+        val PAT_NAME = data[getString(R.string.pat_name)]
+        val PAT_PIC = data[getString(R.string.pat_pic)]
         val NS_TIMEOUT = 30 * 1000L
         val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.helium)
 
@@ -91,6 +94,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         acceptIntent.putExtra(getString(R.string.username), "$USER_NAME")
         acceptIntent.putExtra(getString(R.string.docId), "$DOC_ID")
         acceptIntent.putExtra(getString(R.string.docPic), "$DOC_PIC")
+        acceptIntent.putExtra(getString(R.string.pat_id), "$PAT_ID")
+        acceptIntent.putExtra(getString(R.string.pat_name), "$PAT_NAME")
+        acceptIntent.putExtra(getString(R.string.pat_pic), "$PAT_PIC")
         val acceptPendingIntent = PendingIntent.getBroadcast(applicationContext, 0, acceptIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
         val fullScreenIntent = Intent(this, NotificationActivity::class.java)
@@ -99,6 +105,9 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .putExtra(getString(R.string.docPic), DOC_PIC)
                 .putExtra(getString(R.string.meetid), MEETING_ID)
                 .putExtra(getString(R.string.nsid), NS_ID)
+                .putExtra(getString(R.string.pat_id), PAT_ID)
+                .putExtra(getString(R.string.pat_name), PAT_NAME)
+                .putExtra(getString(R.string.pat_pic), PAT_PIC)
         val fullScreenPendingIntent = PendingIntent.getActivity(this, 0,
                 fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
@@ -136,14 +145,14 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O){
             AutoDismissNotification().setAlarm(this,NS_ID,NS_TIMEOUT)
         }
-//        Thread {
-//            Thread.sleep(NS_TIMEOUT)
-//            if(MyApp.isMissedNSShown){
-//                createNotification4MissedCall(USER_NAME!!)
-//            }else{
-//                MyApp.isMissedNSShown=true
-//            }
-//        }.start()
+        Thread {
+            Thread.sleep(NS_TIMEOUT)
+            if(MyApp.isMissedNSShown){
+                createNotification4MissedCall(USER_NAME!!)
+            }else{
+                MyApp.isMissedNSShown=true
+            }
+        }.start()
     }
 
     private fun listenEvent(id:String,nsId:Int){
@@ -220,7 +229,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     private fun createNotification4MissedCall(data:Map<String, String> = HashMap()){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
-        val NS_ID = System.currentTimeMillis().toInt()
+        val NS_ID = 9092
 
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)

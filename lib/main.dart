@@ -240,6 +240,7 @@ class _MyFHBState extends State<MyFHB> {
 
   void _updateTimer(msg) {
     var doctorPic = '';
+    var patientPic = '';
     _msgListener.value = _msg;
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
@@ -286,16 +287,25 @@ class _MyFHBState extends State<MyFHB> {
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
+          patientPic = passedValArr[7];
           if (doctorPic.isNotEmpty) {
             doctorPic = json.decode(doctorPic);
           } else {
             doctorPic = '';
+          }
+          if (patientPic.isNotEmpty) {
+            patientPic = json.decode(patientPic);
+          } else {
+            patientPic = '';
           }
         } catch (e) {}
         Get.to(CallMain(
           doctorName: passedValArr[1],
           doctorId: passedValArr[2],
           doctorPic: doctorPic,
+          patientId: passedValArr[5],
+          patientName: passedValArr[6],
+          patientPicUrl: patientPic,
           channelName: passedValArr[0],
           role: ClientRole.Broadcaster,
           isAppExists: true,
@@ -530,11 +540,17 @@ class _MyFHBState extends State<MyFHB> {
 
   Widget StartTheCall() {
     var docPic = navRoute.split('&')[3];
+    var patPic = navRoute.split('&')[7];
     try {
       if (docPic.isNotEmpty) {
         docPic = json.decode(navRoute.split('&')[3]);
       } else {
         docPic = '';
+      }
+      if (patPic.isNotEmpty) {
+        patPic = json.decode(navRoute.split('&')[7]);
+      } else {
+        patPic = '';
       }
     } catch (e) {}
     return CallMain(
@@ -544,7 +560,9 @@ class _MyFHBState extends State<MyFHB> {
       doctorName: navRoute.split('&')[1] ?? 'Test',
       doctorId: navRoute.split('&')[2] ?? 'Doctor',
       doctorPic: docPic,
-    );
+      patientId: navRoute.split('&')[5] ?? 'Patient',
+      patientName: navRoute.split('&')[6] ?? 'Test',
+      patientPicUrl: patPic);
   }
 
   void onBoardNSAcknowledge(dynamic data) {

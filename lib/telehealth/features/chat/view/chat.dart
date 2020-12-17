@@ -35,13 +35,19 @@ class Chat extends StatefulWidget {
   final String peerAvatar;
   final String peerName;
   final String lastDate;
+  final String patientId;
+  final String patientName;
+  final String patientPicture;
 
   Chat(
       {Key key,
       @required this.peerId,
       @required this.peerAvatar,
       @required this.peerName,
-      @required this.lastDate})
+      @required this.lastDate,
+      @required this.patientId,
+      @required this.patientName,
+      @required this.patientPicture})
       : super(key: key);
 
   @override
@@ -60,6 +66,9 @@ class ChatState extends State<Chat> {
         peerAvatar: widget.peerAvatar,
         peerName: widget.peerName,
         lastDate: widget.lastDate,
+        patientId: widget.patientId,
+        patientName: widget.patientName,
+        patientPicture: widget.patientPicture
       ),
     );
   }
@@ -235,13 +244,19 @@ class ChatScreen extends StatefulWidget {
   final String peerAvatar;
   final String peerName;
   final String lastDate;
+  final String patientId;
+  final String patientName;
+  final String patientPicture;
 
   ChatScreen(
       {Key key,
       @required this.peerId,
       @required this.peerAvatar,
       @required this.peerName,
-      @required this.lastDate})
+      @required this.lastDate,
+      @required this.patientId,
+      @required this.patientName,
+      @required this.patientPicture})
       : super(key: key);
 
   @override
@@ -249,7 +264,12 @@ class ChatScreen extends StatefulWidget {
       peerId: peerId,
       peerAvatar: peerAvatar,
       peerName: peerName,
-      lastDate: lastDate);
+      lastDate: lastDate,
+      patientId:  patientId,
+      patientName: patientName,
+      patientPicUrl: patientPicture
+
+  );
 }
 
 class ChatScreenState extends State<ChatScreen> {
@@ -258,7 +278,10 @@ class ChatScreenState extends State<ChatScreen> {
       @required this.peerId,
       @required this.peerAvatar,
       @required this.peerName,
-      @required this.lastDate});
+      @required this.lastDate,
+      @required this.patientId,
+      @required this.patientName,
+      @required this.patientPicUrl});
 
   String peerId;
   String peerAvatar;
@@ -274,9 +297,10 @@ class ChatScreenState extends State<ChatScreen> {
   bool isLoading;
   bool isShowSticker;
   String imageUrl;
-  String patientId = '';
-  String patientName = '';
-  String patientPicUrl = '';
+
+  String patientId;
+  String patientName;
+  String patientPicUrl;
 
   final TextEditingController textEditingController = TextEditingController();
   var chatEnterMessageController = TextEditingController();
@@ -297,17 +321,29 @@ class ChatScreenState extends State<ChatScreen> {
     isShowSticker = false;
     imageUrl = '';
 
+    patientId = widget.patientId;
+    patientName = widget.patientName;
+    patientPicUrl = widget.patientPicture;
+
     getPatientDetails();
   }
 
   getPatientDetails() async {
-    patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    MyProfileModel myProfile =
-        PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
-    patientName = myProfile.result != null
-        ? myProfile.result.firstName + ' ' + myProfile.result.lastName
-        : '';
-    patientPicUrl = getProfileURL();
+    if(patientId==null || patientId==''){
+      patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    }
+
+    if(patientName==null || patientName==''){
+      MyProfileModel myProfile =
+      PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      patientName = myProfile.result != null
+          ? myProfile.result.firstName + ' ' + myProfile.result.lastName
+          : '';
+    }
+
+    if(patientPicUrl==null || patientPicUrl==''){
+      patientPicUrl = getProfileURL();
+    }
 
     readLocal();
   }

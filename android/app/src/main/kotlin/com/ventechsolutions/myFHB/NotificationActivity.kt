@@ -24,6 +24,9 @@ class NotificationActivity : AppCompatActivity() {
     private lateinit var username:String
     private lateinit var docId:String
     private lateinit var docPic:String
+    private lateinit var patId:String
+    private lateinit var patName:String
+    private lateinit var patPic:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +44,9 @@ class NotificationActivity : AppCompatActivity() {
         username=intent.getStringExtra(getString(R.string.username))
         docId=intent.getStringExtra(getString(R.string.docId))
         docPic=intent.getStringExtra(getString(R.string.docPic))
+        patId=intent.getStringExtra(getString(R.string.pat_id))
+        patName=intent.getStringExtra(getString(R.string.pat_name))
+        patPic=intent.getStringExtra(getString(R.string.pat_pic))
         listenEvent(id=channelName)
         val handler = Handler()
         val r = object:Runnable {
@@ -106,6 +112,9 @@ class NotificationActivity : AppCompatActivity() {
         launchIntent?.putExtra(getString(R.string.username),username)
         launchIntent?.putExtra(getString(R.string.docId),docId)
         launchIntent?.putExtra(getString(R.string.docPic),docPic)
+        launchIntent?.putExtra(getString(R.string.pat_id),patId)
+        launchIntent?.putExtra(getString(R.string.pat_name),patName)
+        launchIntent?.putExtra(getString(R.string.pat_pic),patPic)
         startActivity(launchIntent)
         finish()
     }

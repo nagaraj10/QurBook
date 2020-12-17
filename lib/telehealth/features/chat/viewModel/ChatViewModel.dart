@@ -15,7 +15,8 @@ class ChatViewModel extends ChangeNotifier {
   SharedPreferences prefs;
 
   Future<void> storePatientDetailsToFCM(
-      String doctorId, String doctorName, String doctorPic,BuildContext context) async {
+      String doctorId, String doctorName, String doctorPic,
+      String patientId,String patientName,String patientPicUrl,BuildContext context) async {
     Firestore.instance.collection('users').document(doctorId).setData({
       NICK_NAME: doctorName != null ? doctorName : '',
       PHOTO_URL: doctorPic != null ? doctorPic : '',
@@ -24,16 +25,24 @@ class ChatViewModel extends ChangeNotifier {
       CHATTING_WITH: null
     });
 
-    storeDoctorDetailsToFCM(doctorId, doctorName, doctorPic,context);
+    storeDoctorDetailsToFCM(doctorId, doctorName, doctorPic,patientId,patientName,patientPicUrl,context);
   }
 
   Future<void> storeDoctorDetailsToFCM(
-      String doctorId, String doctorName, String doctorPic,BuildContext context) async {
+      String doctorId, String doctorName, String doctorPic,
+      String patientId,String patientName,String patientPicUrl,BuildContext context) async {
     prefs = await SharedPreferences.getInstance();
 
-    String patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-    String patientName = getPatientName();
-    String patientPicUrl = getProfileURL();
+    if(patientId==null || patientId==''){
+      patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    }
+    if(patientName==null || patientName==''){
+      patientName = getPatientName();
+    }
+    if(patientPicUrl==null || patientPicUrl==''){
+      patientPicUrl = getProfileURL();
+    }
+
 
     final QuerySnapshot result = await Firestore.instance
         .collection(USERS)
@@ -63,10 +72,10 @@ class ChatViewModel extends ChangeNotifier {
       await prefs.setString(ABOUT_ME, documents[0][ABOUT_ME]);
     }
 
-    goToChatPage(doctorId, doctorName, doctorPic,context);
+    goToChatPage(doctorId, doctorName, doctorPic,patientId,patientName,patientPicUrl,context);
   }
 
-  void goToChatPage(String doctorId, String doctorName, String doctorPic,BuildContext context) {
+  void goToChatPage(String doctorId, String doctorName, String doctorPic,String patientId,String patientName,String patientPicUrl,BuildContext context) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -74,6 +83,9 @@ class ChatViewModel extends ChangeNotifier {
               peerId: doctorId,
               peerAvatar: doctorPic != null ? doctorPic : '',
               peerName: doctorName,
+              patientId: patientId,
+              patientName: patientName,
+              patientPicture: patientPicUrl,
             )));
   }
 

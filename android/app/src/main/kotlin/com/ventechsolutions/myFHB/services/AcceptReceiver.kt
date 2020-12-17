@@ -20,6 +20,9 @@ class AcceptReceiver:BroadcastReceiver() {
         val username = p1?.getStringExtra(p0?.getString(R.string.username))
         val docId = p1?.getStringExtra(p0?.getString(R.string.docId))
         val docPic = p1?.getStringExtra(p0?.getString(R.string.docPic))
+        val patId = p1?.getStringExtra(p0?.getString(R.string.pat_id))
+        val patName = p1?.getStringExtra(p0?.getString(R.string.pat_name))
+        val patPic = p1?.getStringExtra(p0?.getString(R.string.pat_pic))
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         MyApp.isMissedNSShown=false
         MyApp().updateStatus(true)
@@ -37,6 +40,9 @@ class AcceptReceiver:BroadcastReceiver() {
         launchIntent?.putExtra(p0.getString(R.string.username),username)
         launchIntent?.putExtra(p0.getString(R.string.docId),docId)
         launchIntent?.putExtra(p0.getString(R.string.docPic),docPic)
+        launchIntent?.putExtra(p0.getString(R.string.pat_id),patId)
+        launchIntent?.putExtra(p0.getString(R.string.pat_name),patName)
+        launchIntent?.putExtra(p0.getString(R.string.pat_pic),patPic)
         p0.startActivity(launchIntent)
     }
 }

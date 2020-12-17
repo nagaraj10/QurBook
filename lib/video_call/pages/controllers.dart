@@ -20,6 +20,9 @@ class MyControllers extends StatefulWidget {
   String doctorId;
   String doctorName;
   String doctorPicUrl;
+  String patientId;
+  String patientName;
+  String patientPicUrl;
 
   MyControllers(
       this.callStatus,
@@ -30,7 +33,10 @@ class MyControllers extends StatefulWidget {
       this.muted,
       this._isHideMyVideo,
       this.doctorName,
-      this.doctorPicUrl);
+      this.doctorPicUrl,
+      this.patientId,
+      this.patientName,
+      this.patientPicUrl);
 
   @override
   _MyControllersState createState() => _MyControllersState();
@@ -80,7 +86,7 @@ class _MyControllersState extends State<MyControllers> {
           IconButton(
             onPressed: () {
               chatViewModel.storePatientDetailsToFCM(widget.doctorId,
-                  widget.doctorName, widget.doctorPicUrl, context);
+                  widget.doctorName, widget.doctorPicUrl,widget.patientId,widget.patientName,widget.patientPicUrl,context);
             },
             icon: Icon(
               Icons.chat_bubble_outline,
