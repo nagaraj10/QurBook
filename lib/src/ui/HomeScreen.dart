@@ -81,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
       Navigator.pushNamed(
         context,
         router.rt_UserAccounts,
-        arguments: UserAccountsArguments(selectedIndex: 0),
+        arguments: UserAccountsArguments(selectedIndex: 2),
       ).then((value) {
         _selectedIndex = 1;
         setState(() {});
@@ -195,7 +195,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     ImageIcon(
-                      AssetImage(variable.icon_profile),
+                      AssetImage(variable.icon_provider),
                       color: widget.selectedPageIndex == 3
                           ? Colors.white
                           : Colors.black,
@@ -207,7 +207,7 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                             width: 0,
                           )
                         : Text(
-                            variable.strProfile,
+                            variable.strMyProvider,
                             style: TextStyle(fontSize: 10),
                           )
                   ],

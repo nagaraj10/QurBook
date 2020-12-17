@@ -110,14 +110,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     BottomNavigationBarItem(
                         icon: InkWell(
                             onTap: () {
-                              moveToFamilyOrprovider(2);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChatHomeScreen()),
+                              );
                             },
                             child: ImageIcon(
-                              AssetImage(variable.icon_provider),
+                              AssetImage(variable.icon_chat),
                               color: Colors.black54,
                             )),
                         title: Text(
-                          variable.strMyProvider,
+                          variable.strChat,
                           style: TextStyle(color: Colors.black54),
                         )),
                     BottomNavigationBarItem(
@@ -144,23 +148,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     BottomNavigationBarItem(
                         icon: InkWell(
                             onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatHomeScreen()),
-                              );
-                            },
-                            child: ImageIcon(
-                              AssetImage(variable.icon_chat),
-                              color: Colors.black54,
-                            )),
-                        title: Text(
-                          variable.strChat,
-                          style: TextStyle(color: Colors.black54),
-                        )),
-                    BottomNavigationBarItem(
-                        icon: InkWell(
-                            onTap: () {
                               moveToNextScreen(1);
                             },
                             child: ImageIcon(
@@ -170,7 +157,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         title: Text(
                           variable.strMyRecords,
                           style: TextStyle(color: Colors.black54),
-                        ))
+                        )),
+                    /*BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              moveToFamilyOrprovider(2);
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_provider),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strMyProvider,
+                          style: TextStyle(color: Colors.black54),
+                        )),*/
+                    BottomNavigationBarItem(
+                        icon: InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                router.rt_UserAccounts,
+                                arguments:
+                                    UserAccountsArguments(selectedIndex: 0),
+                              ).then((value) {
+                                setState(() {});
+                              });
+                            },
+                            child: ImageIcon(
+                              AssetImage(variable.icon_profile),
+                              color: Colors.black54,
+                            )),
+                        title: Text(
+                          variable.strProfile,
+                          style: TextStyle(color: Colors.black54),
+                        )),
                   ]),
               body: SingleChildScrollView(
                 //height: MediaQuery.of(context).size.height - 200,
@@ -178,136 +198,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   create: (context) => DevicesViewModel(),
                   child: ShowDevicesNew(),
                 ),
-              )
-
-              /*
-            Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                Container(
-                  decoration: imageURIProfile != null
-                      ? BoxDecoration(
-                          image: DecorationImage(
-                              image: new FileImage(imageURIProfile),
-                              fit: BoxFit.cover))
-                      : BoxDecoration(color: Colors.white),
-                  child: Column(
-                    //mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 40, horizontal: 10),
-                          alignment: Alignment.topRight,
-                          child: (imageURIProfile != null)
-                              ? Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30),
-                                      gradient: LinearGradient(colors: [
-                                        Color(CommonUtil().getMyPrimaryColor()),
-                                        Color(CommonUtil().getMyGredientColor())
-                                      ])),
-                                  child: IconButton(
-                                      icon: Icon(
-                                        Icons.add_a_photo,
-                                        color: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        saveMediaDialog(context, false);
-                                      }))
-                              : SizedBox.shrink()),
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 20),
-                        child: Center(
-                          child: Container(
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  color: Colors.black.withOpacity(0.1),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(
-                                    top: 20,
-                                  ),
-                                  alignment: Alignment.topRight,
-                                  child: imageURIProfile != null
-                                      ? SizedBox.shrink()
-                                      : Center(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: <Widget>[
-                                              FHBBasicWidget.customShowCase(
-                                                  _coverImage,
-                                                  Constants.COVER_IMG_DESC,
-                                                  Container(
-                                                      height: 60,
-                                                      width: 60,
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(30),
-                                                          gradient:
-                                                              LinearGradient(
-                                                                  colors: [
-                                                                Color(CommonUtil()
-                                                                    .getMyPrimaryColor()),
-                                                                Color(CommonUtil()
-                                                                    .getMyGredientColor())
-                                                              ])),
-                                                      child: IconButton(
-                                                          icon: Icon(
-                                                            Icons.add_a_photo,
-                                                            color: Colors.white,
-                                                          ),
-                                                          onPressed: () {
-                                                            saveMediaDialog(
-                                                                context, false);
-                                                          })),
-                                                  Constants.COVER_IMG_TITLE),
-                                              Padding(
-                                                padding: EdgeInsets.only(
-                                                    top: 10,
-                                                    left: 40,
-                                                    right: 40),
-                                                child: Text(
-                                                  Constants.NO_DATA_DASHBOARD,
-                                                  textAlign: TextAlign.center,
-                                                  maxLines: 2,
-                                                  style: TextStyle(
-                                                      color: Color(CommonUtil()
-                                                          .getMyPrimaryColor()),
-                                                      fontSize: 13,
-                                                      fontFamily: variable
-                                                          .font_poppins),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height - 200,
-                  child: ChangeNotifierProvider(
-                    create: (context) => DevicesViewModel(),
-                    child: ShowDevicesNew(),
-                  ),
-                ),
-              ],
-            ),
-
-            */
-              );
+              ));
         },
       ),
     );
