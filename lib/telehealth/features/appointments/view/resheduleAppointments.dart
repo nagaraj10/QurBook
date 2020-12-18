@@ -33,9 +33,9 @@ class ResheduleAppointments extends StatefulWidget {
   bool isFromNotification;
   bool isReshedule;
   Function(String) closePage;
-
+  String notificationId;
   ResheduleAppointments(
-      {this.doc, this.isReshedule, this.closePage, this.isFromNotification});
+      {this.doc, this.isReshedule, this.closePage, this.isFromNotification,this.notificationId});
 
   @override
   _ResheduleAppointmentsState createState() => _ResheduleAppointmentsState();
@@ -282,6 +282,7 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               onUserChangedDate: onUserChangedDate,
               isFromNotification: widget.isFromNotification,
               isFromHospital: false,
+              notificationId: widget.notificationId,
             ),
           ],
         ),

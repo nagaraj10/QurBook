@@ -13,6 +13,7 @@ class NotificationResult {
   RecipientUser recipientUser;
   var scheduler;
   RecipientUser senderUser;
+  bool isActionDone;
 
   NotificationResult(
       {this.id,
@@ -24,7 +25,8 @@ class NotificationResult {
       this.recipientUserDetails,
       this.recipientUser,
       this.scheduler,
-      this.senderUser});
+      this.senderUser,
+      this.isActionDone});
 
   NotificationResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -32,9 +34,7 @@ class NotificationResult {
         ? new MessageDetails.fromJson(json['messageDetails'])
         : null;
     transportMedium = json['transportMedium'];
-    responseText = json['responseText'] != null
-        ? (json['responseText'])
-        : null;
+    responseText = json['responseText'] != null ? (json['responseText']) : null;
     deliveredDateTime = json['deliveredDateTime'];
     createdOn = json['createdOn'];
     recipientUserDetails = json['recipientUserDetails'];
@@ -45,6 +45,7 @@ class NotificationResult {
     senderUser = json['senderUser'] != null
         ? RecipientUser.fromJson(json['senderUser'])
         : null;
+    isActionDone = json['isActionDone'];
   }
 
   Map<String, dynamic> toJson() {
@@ -67,6 +68,7 @@ class NotificationResult {
     if (this.senderUser != null) {
       data['senderUser'] = this.senderUser.toJson();
     }
+    data['isActionDone'] = this.isActionDone;
     return data;
   }
 }
