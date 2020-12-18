@@ -185,9 +185,11 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         //createNotificationCancelAppointment(data)
         if(data["templateName"]=="DoctorCancellation" || data["templateName"]=="DoctorRescheduling"){
             createNotificationCancelAppointment(data)
-        }else if(data["templateName"]=="GoFHBPatientOnboardingByDoctor" || data["templateName"]=="GoFHBPatientOnboardingByHospital"){
-            docOnBoardNotification(data)
-        }else if(data["templateName"]=="MyFHBMissedCall"){
+        }
+//        else if(data["templateName"]=="GoFHBPatientOnboardingByDoctor" || data["templateName"]=="GoFHBPatientOnboardingByHospital"){
+//            docOnBoardNotification(data)
+//        }
+        else if(data["templateName"]=="MyFHBMissedCall"){
             createNotification4MissedCall(data)
         }else{
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
