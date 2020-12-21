@@ -90,7 +90,8 @@
             padding-left: 15px;
             padding-right: 15px;
         }
-        
+
+        #gsearchsimple,
         .card {
             padding: 15px;
             background: rgb(249, 252, 255);
@@ -119,6 +120,18 @@
             font-weight: 600;
             margin-bottom: 5px;
         }
+        #gsearchsimple {
+            border: 1px solid rgba(0,0,0,.4);
+            font-family: inherit;
+            position: sticky;
+            top: 0;
+            width: 100%;
+            transition: all .5s;
+        }
+        .false {
+            background-color: rgb(142, 43, 224);
+            color: white;
+        }
     </style>
 </head>
 
@@ -126,363 +139,380 @@
     <div class="wrapper">
         <div class="container">
             <h1 class="text-center">myFHB FAQ's</h1>
-            <h2>Login Page</h2>
-            <div class="card">
-                <p class="strong">Why am I required to give my personal info?</p>
-                <p>To access the myFHB app, we would need your user name, mobile number, email id, to make the login process more secure and your account safe.</p>
+            <input type="text" id="gsearchsimple" placeholder="Search FAQ...">
+            <div id="localSearchSimple"></div>
+            <div class="contsearch"><h2 class="gsearch">Login Page</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Why am I required to give my personal info?</p>
+                <p class="gsearch">To access the myFHB app, we would need your user name, mobile number, email id, to make the login process more secure and your account safe.</p>
             </div>
-            <div class="card">
-                <p class="strong">Why do I need more than a username and a password to sign in? </p>
-                <p>Your myFHB account is supported by two-factor authentication, which means an extra layer of security protects unauthorized access.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Why do I need more than a username and a password to sign in? </p>
+                <p class="gsearch">Your myFHB account is supported by two-factor authentication, which means an extra layer of security protects unauthorized access.</p>
             </div>
-            <div class="card">
-                <p class="strong">When does my Login Session expire?</p>
-                <p>Your session will expire when you select the &lsquo;logout&rsquo; option from the App&rsquo;s Settings menu.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">When does my Login Session expire?</p>
+                <p class="gsearch">Your session will expire when you select the &lsquo;logout&rsquo; option from the App&rsquo;s Settings menu.</p>
             </div>
-            <div class="card">
-                <p class="strong">Will I be able to log in when there is no connectivity?</p>
-                <p>No, you would require an internet connection to log in to the app.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will I be able to log in when there is no connectivity?</p>
+                <p class="gsearch">No, you would require an internet connection to log in to the app.</p>
             </div>
-            <div class="card">
-                <p class="strong">Will I be able to use the app offline?</p>
-                <p>Yes, you would be able to use the app offline but with limited functionalities.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will I be able to use the app offline?</p>
+                <p class="gsearch">Yes, you would be able to use the app offline but with limited functionalities.</p>
             </div>
-            <div class="card">
-                <p class="strong">Which country does the login support?</p>
-                <p>Our app supports all country codes.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Which country does the login support?</p>
+                <p class="gsearch">Our app supports all country codes.</p>
             </div>
-            <h2>Teleconsultation</h2>
-            <div class="card">
-                <p class="strong">What is Teleconsultation?</p>
-                <p>In simple words, it is remote healthcare consultation given by a certified physician to a patient over the internet through video calls and chats using smartphones and computers.</p>
+            <div class="contsearch"><h2 class="gsearch">Teleconsultation</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">What is Teleconsultation?</p>
+                <p class="gsearch">In simple words, it is remote healthcare consultation given by a certified physician to a patient over the internet through video calls and chats using smartphones and computers.</p>
             </div>
-            <div class="card">
-                <p class="strong">Will Teleconsultation give a similar experience as Clinic consultation?</p>
-                <p>All aspects of clinic consultations except for physical examination would be present in teleconsultation, with the added benefit of talking to your doctor from the comfort of your homes. All questions concerning the symptoms, illness,
+            <div class="card contsearch">
+                <p class="strong gsearch">Will Teleconsultation give a similar experience as Clinic consultation?</p>
+                <p class="gsearch">All aspects of clinic consultations except for physical examination would be present in teleconsultation, with the added benefit of talking to your doctor from the comfort of your homes. All questions concerning the symptoms, illness,
                     and treatment can be discussed, diagnosed, and prescribed in real-time.</p>
             </div>
-            <div class="card">
-                <p class="strong">How do I receive online consultation using the myFHB app?</p>
-                <p>Click the telehealth tab on the home screen. Select your doctor, Schedule an appointment, and you will be promptly notified of your appointment. Start receiving your teleconsultation at the scheduled time over video/audio call. Receive
+            <div class="card contsearch">
+                <p class="strong gsearch">How do I receive online consultation using the myFHB app?</p>
+                <p class="gsearch">Click the telehealth tab on the home screen. Select your doctor, Schedule an appointment, and you will be promptly notified of your appointment. Start receiving your teleconsultation at the scheduled time over video/audio call. Receive
                     prescriptions digitally. And enjoy post-consulting care.</p>
             </div>
-            <div class="card">
-                <p class="strong">Why should I choose myFHB? </p>
-                <p>For a start,</p>
-                <p>myFHB helps you receive teleconsultations only with the doctors you know and trust. After you receive a teleconsultation, there are no limitations on the number of days for post-consulting. Even if the doctor wishes to call you after a
+            <div class="card contsearch">
+                <p class="strong gsearch">Why should I choose myFHB? </p>
+                <p class="gsearch">For a start,</p>
+                <p class="gsearch">myFHB helps you receive teleconsultations only with the doctors you know and trust. After you receive a teleconsultation, there are no limitations on the number of days for post-consulting. Even if the doctor wishes to call you after a
                     teleconsultation, you will incur no extra charge. Sheela, your personal health assistant, captures your health vitals, and these health vitals will be securely shared with your doctors continuously, meaning you will receive proactive
                     care from your doctor.</p>
             </div>
-            <div class="card">
-                <p class="strong">On what basis should I choose Doctors in myFHB?</p>
-                <p>Choosing a doctor is always at the patient&rsquo;s discretion. QurHealth won&rsquo;t promote any doctors. But we recommend to always consult with doctors whom you know, whom you trust.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">On what basis should I choose Doctors in myFHB?</p>
+                <p class="gsearch">Choosing a doctor is always at the patient&rsquo;s discretion. QurHealth won&rsquo;t promote any doctors. But we recommend to always consult with doctors whom you know, whom you trust.</p>
             </div>
-            <div class="card">
-                <p class="strong">Does myFHB provide telemedicine? </p>
-                <p>No, as of now, myFHB focuses only on teleconsultation. While telemedicine refers to remote diagnosis and treatment of patients using technology, teleconsultation involves only doctors&rsquo; online consultation with patients.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Does myFHB provide telemedicine? </p>
+                <p class="gsearch">No, as of now, myFHB focuses only on teleconsultation. While telemedicine refers to remote diagnosis and treatment of patients using technology, teleconsultation involves only doctors&rsquo; online consultation with patients.</p>
             </div>
-            <div class="card">
-                <p class="strong">Is my teleconsultation private and secure?</p>
-                <p>Absolutely! myFHB is built on a robust and secure infrastructure. Your teleconsultation is completely secure, private, and compliant with dynamic healthcare regulations. Your digitized health records and device readings are stored in a
+            <div class="card contsearch">
+                <p class="strong gsearch">Is my teleconsultation private and secure?</p>
+                <p class="gsearch">Absolutely! myFHB is built on a robust and secure infrastructure. Your teleconsultation is completely secure, private, and compliant with dynamic healthcare regulations. Your digitized health records and device readings are stored in a
                     centralized digital repository exclusive for your family.</p>
             </div>
-            <div class="card">
-                <p class="strong">Are all consultations appointment-based?</p>
-                <p>Yes!</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Are all consultations appointment-based?</p>
+                <p class="gsearch">Yes!</p>
             </div>
-            <div class="card">
-                <p class="strong">Will the fee be refunded if the doctor cancels my teleconsultation appointment?</p>
-                <p>Yes, it will be refunded 100%.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will the fee be refunded if the doctor cancels my teleconsultation appointment?</p>
+                <p class="gsearch">Yes, it will be refunded 100%.</p>
             </div>
-            <div class="card">
-                <p class="strong">Will I be able to reschedule an appointment?</p>
-                <p>Yes, but you can only reschedule before the start of the appointment.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will I be able to reschedule an appointment?</p>
+                <p class="gsearch">Yes, but you can only reschedule before the start of the appointment.</p>
             </div>
-            <div class="card">
-                <p class="strong">Will there be a cancellation fee if I cancel the appointment?</p>
-                <p>We understand there are times where you had to cancel your appointment. But it also means you may be preventing another patient from getting that much-needed consultation. If you cancel an appointment, you may incur a cancellation fee.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will there be a cancellation fee if I cancel the appointment?</p>
+                <p class="gsearch">We understand there are times where you had to cancel your appointment. But it also means you may be preventing another patient from getting that much-needed consultation. If you cancel an appointment, you may incur a cancellation fee.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I have a record of my past appointment discussions with the doctor?</p>
-                <p>Yes, discussions made through chats can be accessed, but the platform will provide no audio/video recordings.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I have a record of my past appointment discussions with the doctor?</p>
+                <p class="gsearch">Yes, discussions made through chats can be accessed, but the platform will provide no audio/video recordings.</p>
             </div>
-            <h2>Homepage</h2>
-            <div class="card">
-                <p class="strong">Would I be able to add a family member, who does not own a phone?</p>
-                <p>Yes, choose the &lsquo;Same as Primary&rsquo; option in the &lsquo;Add Member&rsquo; tab, and you are good to go.</p>
+            <div class="contsearch"><h2 class="gsearch">Homepage</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Would I be able to add a family member, who does not own a phone?</p>
+                <p class="gsearch">Yes, choose the &lsquo;Same as Primary&rsquo; option in the &lsquo;Add Member&rsquo; tab, and you are good to go.</p>
             </div>
-            <div class="card">
-                <p class="strong">How do I move family records from one person to another?</p>
-                <p>Long press on the desired record. A &lsquo;Move to&rsquo; icon would appear. Select the icon to move the record to another family member. Alternatively, when you capture the record, there is an option to switch the record to a family member.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">How do I move family records from one person to another?</p>
+                <p class="gsearch">Long press on the desired record. A &lsquo;Move to&rsquo; icon would appear. Select the icon to move the record to another family member. Alternatively, when you capture the record, there is an option to switch the record to a family member.</p>
             </div>
-            <div class="card">
-                <p class="strong">How do I make a doctor as a &lsquo;My Preferred&rsquo; (Primary) doctor?</p>
-                <p>Under the &lsquo;Doctors List,&rsquo; you could see the doctor&rsquo;s names. Long press on the corresponding doctor's name. An alert will be displayed to &lsquo;confirm&rsquo; your action of changing/setting the preferred doctor. Upon
+            <div class="card contsearch">
+                <p class="strong gsearch">How do I make a doctor as a &lsquo;My Preferred&rsquo; (Primary) doctor?</p>
+                <p class="gsearch">Under the &lsquo;Doctors List,&rsquo; you could see the doctor&rsquo;s names. Long press on the corresponding doctor's name. An alert will be displayed to &lsquo;confirm&rsquo; your action of changing/setting the preferred doctor. Upon
                     confirmation, you will be able to set your preferred doctor.</p>
             </div>
-            <div class="card">
-                <p class="strong">How to search for my health records on the app?</p>
-                <p>You could use the search icon on the home screen to search and view your records.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">How to search for my health records on the app?</p>
+                <p class="gsearch">You could use the search icon on the home screen to search and view your records.</p>
             </div>
-            <div class="card">
-                <p class="strong">How do I search for any of my family members&rsquo; health records?</p>
-                <p>It is simple again. Select the family member whose records you would want to search. Use the search icon to retrieve their records.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">How do I search for any of my family members&rsquo; health records?</p>
+                <p class="gsearch">It is simple again. Select the family member whose records you would want to search. Use the search icon to retrieve their records.</p>
             </div>
-            <div class="card">
-                <p class="strong">My provider&rsquo;s name is not listed. How do I add my provider to the list?</p>
-                <p>If your provider is not listed under the approved list, you could add new providers by selecting the &lsquo;Add new&rsquo; option in the &gt; screen.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">My provider&rsquo;s name is not listed. How do I add my provider to the list?</p>
+                <p class="gsearch">If your provider is not listed under the approved list, you could add new providers by selecting the &lsquo;Add new&rsquo; option in the &gt; screen.</p>
             </div>
-            <div class="card">
-                <p class="strong">How do I recover deleted files?</p>
-                <p>We understand it could be frustrating to you, but do feel free to contact us. Our team will be happy to assist you in recovering the files if at all they are recoverable.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">How do I recover deleted files?</p>
+                <p class="gsearch">We understand it could be frustrating to you, but do feel free to contact us. Our team will be happy to assist you in recovering the files if at all they are recoverable.</p>
             </div>
-            <h2>Appointments</h2>
-            <div class="card">
-                <p class="strong">Can I make an appointment with Doctors?</p>
-                <p>Yes, you can schedule an appointment with the doctor of your choice and receive their consultation.</p>
+            <div class="contsearch"><h2 class="gsearch">Appointments</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I make an appointment with Doctors?</p>
+                <p class="gsearch">Yes, you can schedule an appointment with the doctor of your choice and receive their consultation.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I make appointments using a web browser?</p>
-                <p>As of now, you can make appointments using the myFHB app. If the hospital has integration with the FHB suite, you can book appointments even through the hospital website.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I make appointments using a web browser?</p>
+                <p class="gsearch">As of now, you can make appointments using the myFHB app. If the hospital has integration with the FHB suite, you can book appointments even through the hospital website.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I book appointments for my family members as well?</p>
-                <p>Yes. But first, you have to add your respective family members to your myFHB app. Click the &lsquo;My Provider&rsquo; icon on the home page. Go to the &lsquo;My Family&rsquo; tab. Provide your family member name, among other necessary
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I book appointments for my family members as well?</p>
+                <p class="gsearch">Yes. But first, you have to add your respective family members to your myFHB app. Click the &lsquo;My Provider&rsquo; icon on the home page. Go to the &lsquo;My Family&rsquo; tab. Provide your family member name, among other necessary
                     details. Then proceed with making a doctor appointment for the family member.</p>
             </div>
-            <div class="card">
-                <p class="strong">Do I get priority in appointments when using the myFHB app?</p>
-                <p>QurHealth does not prioritize appointments. But, one of the major advantages of myFHB is it eliminates wait-time. When you schedule an appointment, you get a specific time-slot with the doctor, so you don&rsquo;t have to wait or let others
+            <div class="card contsearch">
+                <p class="strong gsearch">Do I get priority in appointments when using the myFHB app?</p>
+                <p class="gsearch">QurHealth does not prioritize appointments. But, one of the major advantages of myFHB is it eliminates wait-time. When you schedule an appointment, you get a specific time-slot with the doctor, so you don&rsquo;t have to wait or let others
                     wait to receive care from the doctor.</p>
             </div>
-            <h2>Consulting Hospital Doctors</h2>
-            <div class="card">
-                <p class="strong">How to receive consultations from Big/Multispecialty Hospital doctors using myFHB?</p>
-                <p>Big/Multispecialty Hospitals that have signed up for QurHealth will have the FHB suite integrated into their hospital website. You can select a doctor on the hospital website, schedule an appointment, and start receiving care over the
+            <div class="contsearch"><h2 class="gsearch">Consulting Hospital Doctors</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">How to receive consultations from Big/Multispecialty Hospital doctors using myFHB?</p>
+                <p class="gsearch">Big/Multispecialty Hospitals that have signed up for QurHealth will have the FHB suite integrated into their hospital website. You can select a doctor on the hospital website, schedule an appointment, and start receiving care over the
                     myFHB app.
                 </p>
             </div>
-            <div class="card">
-                <p class="strong">Will my appointments be reflected in myFHB app when booking doctors directly from the hospital website?</p>
-                <p>Yes, they will be notified.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will my appointments be reflected in myFHB app when booking doctors directly from the hospital website?</p>
+                <p class="gsearch">Yes, they will be notified.</p>
             </div>
-            <h2>General/Settings</h2>
-            <div class="card">
-                <p class="strong">Who are you guys?</p>
-                <p>We are QurHealth, health tech division of Global Mantra Innovations, India (GMI). GMI is a subsidiary of Ventech Solutions, USA who manages the world&rsquo;s largest healthcare quality data center serving over 800,000+ providers in the
+            <div class="contsearch"><h2 class="gsearch">General/Settings</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Who are you guys?</p>
+                <p class="gsearch">We are QurHealth, health tech division of Global Mantra Innovations, India (GMI). GMI is a subsidiary of Ventech Solutions, USA who manages the world&rsquo;s largest healthcare quality data center serving over 800,000+ providers in the
                     US. At QurHealth, our vision is &ldquo;Saving Life Super Proactive.&rdquo; With myFHB, we aim to help begin your digital health journey and get proactive with health!</p>
             </div>
-            <div class="card">
-                <p class="strong">Do I have to pay for using myFHB?</p>
-                <p>myFHB is a free app, and there are no hidden charges for storing or accessing health records and invoking Sheela &ndash; personalized healthcare assistant. However, standard charges will apply for accessing the Teleconsultation feature
+            <div class="card contsearch">
+                <p class="strong gsearch">Do I have to pay for using myFHB?</p>
+                <p class="gsearch">myFHB is a free app, and there are no hidden charges for storing or accessing health records and invoking Sheela &ndash; personalized healthcare assistant. However, standard charges will apply for accessing the Teleconsultation feature
                     in the app.</p>
             </div>
-            <div class="card">
-                <p class="strong">What type of documents/records can I store in myFHB?</p>
-                <p>You can store prescriptions, device readings, medical reports, lab reports, bills, ID docs, and any health records. For your convenience, you can also have voice notes for documents/records.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">What type of documents/records can I store in myFHB?</p>
+                <p class="gsearch">You can store prescriptions, device readings, medical reports, lab reports, bills, ID docs, and any health records. For your convenience, you can also have voice notes for documents/records.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I share myFHB documents to users outside of my &lsquo;Approved Users&rsquo; list?</p>
-                <p>For security and privacy reasons, within myFHB, you would be able to share only with the &lsquo;Approved Users&rsquo; list. However, if you wish to share with other users, you could download the documents/records into your phone and share
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I share myFHB documents to users outside of my &lsquo;Approved Users&rsquo; list?</p>
+                <p class="gsearch">For security and privacy reasons, within myFHB, you would be able to share only with the &lsquo;Approved Users&rsquo; list. However, if you wish to share with other users, you could download the documents/records into your phone and share
                     it externally from local storage.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I set the Default Provider (hospital/doctor/clinic/lab/pharmacy) to my entire family?</p>
-                <p>No. Default/Preferred Provider has to be set individually for every family member.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I set the Default Provider (hospital/doctor/clinic/lab/pharmacy) to my entire family?</p>
+                <p class="gsearch">No. Default/Preferred Provider has to be set individually for every family member.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can my provider (hospital/doctor/clinic/lab/pharmacy) directly send my health records to myFHB?</p>
-                <p>Yes, we are continually working to integrate direct information sharing from providers to our patients. If you do not see your provider (who wants to share data with you) listed, please contact us, and we will be able to help you.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can my provider (hospital/doctor/clinic/lab/pharmacy) directly send my health records to myFHB?</p>
+                <p class="gsearch">Yes, we are continually working to integrate direct information sharing from providers to our patients. If you do not see your provider (who wants to share data with you) listed, please contact us, and we will be able to help you.</p>
             </div>
-            <div class="card">
-                <p class="strong">How long will myFHB store my family records?</p>
-                <p>myFHB will store all family health records for as long as you are associated with it. If the myFHB account remains dormant, records will be saved for up to 6 months from the last date of use.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">How long will myFHB store my family records?</p>
+                <p class="gsearch">myFHB will store all family health records for as long as you are associated with it. If the myFHB account remains dormant, records will be saved for up to 6 months from the last date of use.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I refer my friends and families to myFHB?</p>
-                <p>Of course, all you have to do is go to the myFHB profile in the play store, and you can see the menu icon at the top right. Tap it and click &lsquo;share&rsquo; in various social media apps such as Whatsapp, Gmail, Twitter, Facebook, etc.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I refer my friends and families to myFHB?</p>
+                <p class="gsearch">Of course, all you have to do is go to the myFHB profile in the play store, and you can see the menu icon at the top right. Tap it and click &lsquo;share&rsquo; in various social media apps such as Whatsapp, Gmail, Twitter, Facebook, etc.</p>
             </div>
-            <div class="card">
-                <p class="strong">Could someone outside of my family add me as a member of their myFHB account?</p>
-                <p>Yes, it is possible. They could do so by entering your phone number in their myFHB account. A verification OTP would be sent to your phone. If you share the OTP with them, they could add you as a member of their myFHB family.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Could someone outside of my family add me as a member of their myFHB account?</p>
+                <p class="gsearch">Yes, it is possible. They could do so by entering your phone number in their myFHB account. A verification OTP would be sent to your phone. If you share the OTP with them, they could add you as a member of their myFHB family.</p>
             </div>
-            <div class="card">
-                <p class="strong">Will I know who would view my health records within myFHB?</p>
-                <p>Absolutely! You will have complete control of who gets to view your health information. Any viewer could view your record only after sharing the OTP received on your phone with them.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will I know who would view my health records within myFHB?</p>
+                <p class="gsearch">Absolutely! You will have complete control of who gets to view your health information. Any viewer could view your record only after sharing the OTP received on your phone with them.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can someone request access to view myFHB records?</p>
-                <p>Yes, anybody who has your phone number can request to view your records, but you will have to share the OTP received on your phone with them, as a way of acknowledging and accepting to share your records with them.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can someone request access to view myFHB records?</p>
+                <p class="gsearch">Yes, anybody who has your phone number can request to view your records, but you will have to share the OTP received on your phone with them, as a way of acknowledging and accepting to share your records with them.</p>
             </div>
-            <div class="card">
-                <p class="strong">What wearables&rsquo; data can I integrate with myFHB?</p>
-                <p>The myFHB supports integration with Google Fit and Apple HealthKit wearables.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">What wearables&rsquo; data can I integrate with myFHB?</p>
+                <p class="gsearch">The myFHB supports integration with Google Fit and Apple HealthKit wearables.</p>
             </div>
-            <div class="card">
-                <p class="strong">Some details of the doctors/clinics/hospitals that you have listed are wrong. What do I do about it?</p>
-                <p>Please write to us at info@qurhealth.in. We will verify and improve the same.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Some details of the doctors/clinics/hospitals that you have listed are wrong. What do I do about it?</p>
+                <p class="gsearch">Please write to us at info@qurhealth.in. We will verify and improve the same.</p>
             </div>
-            <div class="card">
-                <p class="strong">Some doctors/clinics/hospitals in my area are not listed on myFHB.com? What do I do about it?</p>
-                <p>Please write to us at info@qurhealth.in. We will contact the care provider and ensure to add them to the QurHealth network.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Some doctors/clinics/hospitals in my area are not listed on myFHB.com? What do I do about it?</p>
+                <p class="gsearch">Please write to us at info@qurhealth.in. We will contact the care provider and ensure to add them to the QurHealth network.</p>
             </div>
-            <h2>Prescriptions</h2>
-            <div class="card">
-                <p class="strong">Will my written prescription be converted to text?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage.</p>
+            <div class="contsearch"><h2 class="gsearch">Prescriptions</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will my written prescription be converted to text?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage.</p>
             </div>
-            <div class="card">
-                <p class="strong">Will my documents be converted to readable text?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will my documents be converted to readable text?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I capture multiple pictures as part of a single document?</p>
-                <p>Of course, Yes. Do use the &lsquo;Multiple Capture&rsquo; option on the camera screen to capture multiple images of any record.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I capture multiple pictures as part of a single document?</p>
+                <p class="gsearch">Of course, Yes. Do use the &lsquo;Multiple Capture&rsquo; option on the camera screen to capture multiple images of any record.</p>
             </div>
-            <h2>Devices</h2>
-            <div class="card">
-                <p class="strong">What type of medical devices are supported on myFHB?</p>
-                <p>We currently support the following medical devices: Thermometer, Glucometer, Pulse Oximeter, BP monitor, and Weighing Scale.</p>
+            <div class="contsearch"><h2 class="gsearch">Devices</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">What type of medical devices are supported on myFHB?</p>
+                <p class="gsearch">We currently support the following medical devices: Thermometer, Glucometer, Pulse Oximeter, BP monitor, and Weighing Scale.</p>
             </div>
-            <div class="card">
-                <p class="strong">How long would it take for a device reading to be converted to a digital value?</p>
-                <p>Not more than 5 seconds!</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">How long would it take for a device reading to be converted to a digital value?</p>
+                <p class="gsearch">Not more than 5 seconds!</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I edit converted device readings?</p>
-                <p>Yes, you may edit the device readings. The digital values are an outcome of AI Machine Learning algorithms. You may change them if required.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I edit converted device readings?</p>
+                <p class="gsearch">Yes, you may edit the device readings. The digital values are an outcome of AI Machine Learning algorithms. You may change them if required.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I tag a preferred doctor or a hospital to a record?</p>
-                <p>Yes, you can tag a preferred doctor or a hospital to a record, but you should do it before you save the record.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I tag a preferred doctor or a hospital to a record?</p>
+                <p class="gsearch">Yes, you can tag a preferred doctor or a hospital to a record, but you should do it before you save the record.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I record my voice notes for any document?</p>
-                <p>Sure, you may add additional voice notes to a health record, before or even after you have saved them.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I record my voice notes for any document?</p>
+                <p class="gsearch">Sure, you may add additional voice notes to a health record, before or even after you have saved them.</p>
             </div>
-            <h2>Lab Reports</h2>
-            <div class="card">
-                <p class="strong">How do I request my lab report electronically from a lab?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
+            <div class="contsearch"><h2 class="gsearch">Lab Reports</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">How do I request my lab report electronically from a lab?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
             </div>
-            <div class="card">
-                <p class="strong">How do I know if a lab provider is integrated with myFHB or not?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">How do I know if a lab provider is integrated with myFHB or not?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
             </div>
-            <div class="card">
-                <p class="strong">Will the lab reports be converted to tabular data?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will the lab reports be converted to tabular data?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
             </div>
-            <div class="card">
-                <p class="strong">Will I be able to edit the converted data further?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will I be able to edit the converted data further?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
             </div>
-            <div class="card">
-                <p class="strong">Would myFHB track all the edits to the data for security and privacy?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Would myFHB track all the edits to the data for security and privacy?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
             </div>
-            <h2>Medical Reports</h2>
-            <div class="card">
-                <p class="strong">What type of medical reports can I store within myFHB?</p>
-                <p>Yes, any medical report that is already available in your device in the form of an image or could be captured with a camera is allowed to be a part of the "medical reports" category in myFHB.</p>
+            <div class="contsearch"><h2 class="gsearch">Medical Reports</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">What type of medical reports can I store within myFHB?</p>
+                <p class="gsearch">Yes, any medical report that is already available in your device in the form of an image or could be captured with a camera is allowed to be a part of the "medical reports" category in myFHB.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I store my x-ray Copies?</p>
-                <p>Yes, any medical report, including x-ray copies, that is already available in your device in the form of images or could be captured with a camera as an image, is allowed to be stored within the "medical reports" category in myFHB.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I store my x-ray Copies?</p>
+                <p class="gsearch">Yes, any medical report, including x-ray copies, that is already available in your device in the form of images or could be captured with a camera as an image, is allowed to be stored within the "medical reports" category in myFHB.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I store my MRI/CT Scan reports?</p>
-                <p>Yes, any medical report including MRI/CT scans, that is already available in your device in the form of images or could be captured as an image, is allowed to be stored within the &lsquo;medical reports&rsquo; category in myFHB.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I store my MRI/CT Scan reports?</p>
+                <p class="gsearch">Yes, any medical report including MRI/CT scans, that is already available in your device in the form of images or could be captured as an image, is allowed to be stored within the &lsquo;medical reports&rsquo; category in myFHB.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can the lab send my medical records to myFHB account?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can the lab send my medical records to myFHB account?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
             </div>
-            <h2>Bills</h2>
-            <div class="card">
-                <p class="strong">Why am I required to store my bills?</p>
-                <p>We provide you with an option to store your bills to be useful for future references.</p>
+            <div class="contsearch"><h2 class="gsearch">Bills</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Why am I required to store my bills?</p>
+                <p class="gsearch">We provide you with an option to store your bills to be useful for future references.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I send my bills to my insurance company for claims?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I send my bills to my insurance company for claims?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I reorder the same medicine from my bills?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I reorder the same medicine from my bills?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage</p>
             </div>
-            <div class="card">
-                <p class="strong">Will I be able to share my bills with users outside of myFHB?</p>
-                <p>Sure, you may download and share them externally from local storage.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Will I be able to share my bills with users outside of myFHB?</p>
+                <p class="gsearch">Sure, you may download and share them externally from local storage.</p>
             </div>
-            <h2>Others</h2>
-            <div class="card">
-                <p class="strong">Where can I save other documents?</p>
-                <p>You can choose the category &lsquo;Others&rsquo; to save these documents.</p>
+            <div class="contsearch"><h2 class="gsearch">Others</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Where can I save other documents?</p>
+                <p class="gsearch">You can choose the category &lsquo;Others&rsquo; to save these documents.</p>
             </div>
-            <h2>Feedbacks</h2>
-            <div class="card">
-                <p class="strong">Is my feedback necessary? Does it count?</p>
-                <p>Absolutely, Yes. We value your feedback and eagerly look forward to hearing from you. We carefully review every single user feedback and ensure we follow up with a response ASAP. Your feedback will certainly help us improve the myFHB app.</p>
+            <div class="contsearch"><h2 class="gsearch">Feedbacks</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Is my feedback necessary? Does it count?</p>
+                <p class="gsearch">Absolutely, Yes. We value your feedback and eagerly look forward to hearing from you. We carefully review every single user feedback and ensure we follow up with a response ASAP. Your feedback will certainly help us improve the myFHB app.</p>
             </div>
-            <h2>Voice Records</h2>
-            <div class="card">
-                <p class="strong">Can I do voice recordings?</p>
-                <p>Of course, you can. Click the mic icon on the homepage to record your voice notes.</p>
+            <div class="contsearch"><h2 class="gsearch">Voice Records</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I do voice recordings?</p>
+                <p class="gsearch">Of course, you can. Click the mic icon on the homepage to record your voice notes.</p>
             </div>
-            <div class="card">
-                <p class="strong">What kind of recordings can I do with myFHB?</p>
-                <p>Anything relevant to your health, you could record using the Voice Recording feature.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">What kind of recordings can I do with myFHB?</p>
+                <p class="gsearch">Anything relevant to your health, you could record using the Voice Recording feature.</p>
             </div>
-            <div class="card">
-                <p class="strong">What is the maximum record time for a single recording?</p>
-                <p>There are no limitations concerning time. However, the best practice is to keep it under 50 seconds.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">What is the maximum record time for a single recording?</p>
+                <p class="gsearch">There are no limitations concerning time. However, the best practice is to keep it under 50 seconds.</p>
             </div>
-            <h2>Dashboard</h2>
-            <div class="card">
-                <p class="strong">What features can I access from the myFHB dashboard?</p>
-                <p>You can view widgets in the dashboard, which shows all your latest device readings.</p>
+            <div class="contsearch"><h2 class="gsearch">Dashboard</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">What features can I access from the myFHB dashboard?</p>
+                <p class="gsearch">You can view widgets in the dashboard, which shows all your latest device readings.</p>
             </div>
-            <div class="card">
-                <p class="strong">How can I add a new widget to the myFHB dashboard?</p>
-                <p>Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">How can I add a new widget to the myFHB dashboard?</p>
+                <p class="gsearch">Thanks for showing interest, this is in the product roadmap and can be expected soon for consumers&rsquo; usage.</p>
             </div>
-            <h2>Sheela</h2>
-            <div class="card">
-                <p class="strong">Who is Sheela?</p>
-                <p>Sheela is your voice-based health assistant who will capture your health records, as you say.</p>
+            <div class="contsearch"><h2 class="gsearch">Sheela</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Who is Sheela?</p>
+                <p class="gsearch">Sheela is your voice-based health assistant who will capture your health records, as you say.</p>
             </div>
-            <div class="card">
-                <p class="strong">What data can Sheela capture?</p>
-                <p>Sheela can capture device data (Thermometer, Glucometer, Pulse Oximeter, BP monitor, and Weighing Scale) for you and your family members. She can show the recorded vitals in the form of visuals and present the min/max/average vitals values.
+            <div class="card contsearch">
+                <p class="strong gsearch">What data can Sheela capture?</p>
+                <p class="gsearch">Sheela can capture device data (Thermometer, Glucometer, Pulse Oximeter, BP monitor, and Weighing Scale) for you and your family members. She can show the recorded vitals in the form of visuals and present the min/max/average vitals values.
                     A lot more Sheela has in store, which will be available in upcoming myFHB versions.</p>
             </div>
-            <div class="card">
-                <p class="strong">How to change the Sheela icon?</p>
-                <p>You can customize the Sheela icon through the settings option in the menu.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">How to change the Sheela icon?</p>
+                <p class="gsearch">You can customize the Sheela icon through the settings option in the menu.</p>
             </div>
-            <div class="card">
-                <p class="strong">What languages does Sheela support?</p>
-                <p>For now, Sheela knows English. Soon she would be trained to listen and speak in other languages as well.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">What languages does Sheela support?</p>
+                <p class="gsearch">For now, Sheela knows English. Soon she would be trained to listen and speak in other languages as well.</p>
             </div>
-            <h2>App Settings</h2>
-            <div class="card">
-                <p class="strong">Can I turn off Digit Recognition?</p>
-                <p>Yes, you could use the app settings to turn off digit recognition. However, we recommend keeping it on.</p>
+            <div class="contsearch"><h2 class="gsearch">App Settings</h2></div>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I turn off Digit Recognition?</p>
+                <p class="gsearch">Yes, you could use the app settings to turn off digit recognition. However, we recommend keeping it on.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I turn off device Recognition?</p>
-                <p>Yes, you could use the app settings to turn off device recognition. However, we recommend keeping it on.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I turn off device Recognition?</p>
+                <p class="gsearch">Yes, you could use the app settings to turn off device recognition. However, we recommend keeping it on.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I turn on/off wearables from myFHB?</p>
-                <p>Yes, you can turn off HealthKit if you are using the iOS version of myFHB, and turn off Google Fit from your android version of myFHB.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I turn on/off wearables from myFHB?</p>
+                <p class="gsearch">Yes, you can turn off HealthKit if you are using the iOS version of myFHB, and turn off Google Fit from your android version of myFHB.</p>
             </div>
-            <div class="card">
-                <p class="strong">Can I customize my color palette?</p>
-                <p>Yes, please go to the settings&gt;themes.</p>
+            <div class="card contsearch">
+                <p class="strong gsearch">Can I customize my color palette?</p>
+                <p class="gsearch">Yes, please go to the settings&gt;themes.</p>
             </div>
         </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://www.jqueryscript.net/demo/filter-search-list-local/JsLocalSearch.js"></script>
+    <script>
+        $(function(){
+            $('#localSearchSimple').jsLocalSearch();
+        });
+        $('#localSearchSimple').jsLocalSearch({
+            "action": "Show",
+            "keyword_search": true,
+            "description_search": true,
+            "html_search": true,
+        });
+    </script>
+    
 </body>
 
 </html>
