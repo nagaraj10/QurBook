@@ -20,6 +20,7 @@ import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/He
 import 'package:myfhb/telehealth/features/MyProvider/view/BookingConfirmation.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/SessionList.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as AppointmentConstant;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
@@ -44,6 +45,7 @@ class GetTimeSlots extends StatelessWidget {
   Function(String) closePage;
   bool isFromNotification;
   bool isFromHospital;
+  String notificationId;
 
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
@@ -62,7 +64,8 @@ class GetTimeSlots extends StatelessWidget {
       this.doctorListPos,
       this.closePage,
       this.isFromNotification,
-        this.isFromHospital});
+      this.isFromHospital,
+      this.notificationId});
 
   @override
   Widget build(BuildContext context) {
@@ -95,17 +98,13 @@ class GetTimeSlots extends StatelessWidget {
               padding: EdgeInsets.all(8.0),
               onPressed: () {
                 if (isReshedule == true) {
-                  String docSesstionID = dateSlotTimingsObj
-      .sessions[rowPosition].doctorSessionId;
+                  String docSesstionID =
+                      dateSlotTimingsObj.sessions[rowPosition].doctorSessionId;
                   String selectedSlot = dateSlotTimingsObj
                       .sessions[rowPosition].slots[itemPosition].slotNumber
                       .toString();
-                  resheduleAppoitment(
-                      context,
-                      [doctorsData],
-                      selectedSlot,
-                      selectedDate.toString().substring(0, 10),
-                      docSesstionID);
+                  resheduleAppoitment(context, [doctorsData], selectedSlot,
+                      selectedDate.toString().substring(0, 10), docSesstionID);
                 } else {
                   if (rowPosition > -1 && itemPosition > -1) {
                     if (doctorsData == null) {
@@ -183,13 +182,21 @@ class GetTimeSlots extends StatelessWidget {
                     )),
             (Route<dynamic> route) => route.isFirst).then((value) {});
       } else {
-        Navigator.pop(context);
+        FetchNotificationService().updateNsActionStatus(notificationId).then((data) {
+          if (data['isSuccess']) {
+            Navigator.pop(context);
+          } else {
+            Navigator.pop(context);
+          }
+        });
+        
       }
       if (value == null) {
         toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
       } else if (value.isSuccess == true) {
         toast.getToast(
             AppointmentConstant.YOUR_RESHEDULE_SUCCESS, Colors.green);
+            //TODO call the ns action api
       } else if (value.message.contains(AppointmentConstant.NOT_AVAILABLE)) {
         toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
       } else {
@@ -235,11 +242,11 @@ class GetTimeSlots extends StatelessWidget {
               myProfile.result.gender.isNotEmpty) {
             if (myProfile.result.dateOfBirth != null &&
                 myProfile.result.dateOfBirth.isNotEmpty) {
-              if(myProfile.result.additionalInfo!=null){
-                if(myProfile.result.additionalInfo.height!=null &&
-                    myProfile.result.additionalInfo.height.isNotEmpty){
-                  if(myProfile.result.additionalInfo.weight!=null &&
-                      myProfile.result.additionalInfo.weight.isNotEmpty){
+              if (myProfile.result.additionalInfo != null) {
+                if (myProfile.result.additionalInfo.height != null &&
+                    myProfile.result.additionalInfo.height.isNotEmpty) {
+                  if (myProfile.result.additionalInfo.weight != null &&
+                      myProfile.result.additionalInfo.weight.isNotEmpty) {
                     if (myProfile.result.userAddressCollection3 != null) {
                       if (myProfile.result.userAddressCollection3.length > 0) {
                         patientAddressCheck(
@@ -255,18 +262,15 @@ class GetTimeSlots extends StatelessWidget {
                       //toast.getToast(noAddress, Colors.red);
                       CommonUtil().mSnackbar(context, noAddress, 'Add');
                     }
-                  }
-                  else {
+                  } else {
                     //toast.getToast(noWeight, Colors.red);
                     CommonUtil().mSnackbar(context, noWeight, 'Add');
                   }
-                }
-                else {
+                } else {
                   //toast.getToast(noHeight, Colors.red);
                   CommonUtil().mSnackbar(context, noHeight, 'Add');
                 }
-              }
-              else {
+              } else {
                 //toast.getToast(noAdditionalInfo, Colors.red);
                 CommonUtil().mSnackbar(context, noAdditionalInfo, 'Add');
               }

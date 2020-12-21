@@ -10,6 +10,7 @@ import 'package:myfhb/telehealth/features/Notifications/constants/notification_c
     as constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/telehealth/features/Notifications/model/payload.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as AppConstants;
 import 'package:myfhb/telehealth/features/Notifications/model/messageContent.dart';
@@ -208,8 +209,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                           ],
                         ),
                       ),
-                      (payload?.templateName ==
-                                  constants.strCancelByDoctor ||
+                      (payload?.templateName == constants.strCancelByDoctor ||
                               payload?.templateName ==
                                   constants.strRescheduleByDoctor)
                           ? Padding(
@@ -217,25 +217,36 @@ class _NotificationScreen extends State<NotificationScreen> {
                               child: Row(
                                 children: [
                                   OutlineButton(
-                                    onPressed: () {
-                                      _displayDialog(context, [
-                                        Past(
-                                            bookingId: notification
-                                                .result[index]
-                                                .messageDetails
-                                                .payload
-                                                .bookingId,
-                                            plannedStartDateTime: notification
-                                                .result[index]
-                                                .messageDetails
-                                                .payload
-                                                .plannedStartDateTime)
-                                      ]);
-                                    },
+                                    onPressed: !notification
+                                            ?.result[index]?.isActionDone
+                                        ? () {
+                                            _displayDialog(
+                                                context,
+                                                [
+                                                  Past(
+                                                      bookingId: notification
+                                                          .result[index]
+                                                          .messageDetails
+                                                          .payload
+                                                          .bookingId,
+                                                      plannedStartDateTime:
+                                                          notification
+                                                              .result[index]
+                                                              .messageDetails
+                                                              .payload
+                                                              .plannedStartDateTime)
+                                                ],
+                                                notification
+                                                    ?.result[index]?.id);
+                                          }
+                                        : null,
                                     child: TextWidget(
                                       text: AppConstants.Appointments_cancel,
-                                      colors: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      colors: !notification
+                                              ?.result[index]?.isActionDone
+                                          ? Color(
+                                              CommonUtil().getMyPrimaryColor())
+                                          : Colors.grey,
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w600,
                                       fontsize: 13,
@@ -245,46 +256,68 @@ class _NotificationScreen extends State<NotificationScreen> {
                                     width: 15,
                                   ),
                                   OutlineButton(
-                                    onPressed: () {
-                                      //Reschedule
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => ResheduleMain(
-                                                  isFromNotification: false,
-                                                  closePage: (value) {},
-                                                  isReshedule: true,
-                                                  doc: Past(
-                                                      doctor: Doctor(
-                                                          id: notification
-                                                              .result[index]
-                                                              .messageDetails
-                                                              .payload
-                                                              .doctorId),
-                                                      doctorSessionId:
-                                                          notification
-                                                              .result[index]
-                                                              .messageDetails
-                                                              .payload
-                                                              .doctorSessionId,
-                                                      healthOrganization: City(
-                                                          id: notification
-                                                              .result[index]
-                                                              .messageDetails
-                                                              .payload
-                                                              .healthOrganizationId),
-                                                      bookingId: notification
-                                                          .result[index]
-                                                          .messageDetails
-                                                          .payload
-                                                          .bookingId),
-                                                )),
-                                      );
-                                    },
+                                    onPressed: !notification
+                                            ?.result[index]?.isActionDone
+                                        ? () {
+                                            //Reschedule
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ResheduleMain(
+                                                        isFromNotification:
+                                                            false,
+                                                        closePage: (value) {},
+                                                        isReshedule: true,
+                                                        doc: Past(
+                                                            doctor: Doctor(
+                                                                id: notification
+                                                                    .result[
+                                                                        index]
+                                                                    .messageDetails
+                                                                    .payload
+                                                                    .doctorId),
+                                                            doctorSessionId:
+                                                                notification
+                                                                    .result[
+                                                                        index]
+                                                                    .messageDetails
+                                                                    .payload
+                                                                    .doctorSessionId,
+                                                            healthOrganization: City(
+                                                                id: notification
+                                                                    .result[
+                                                                        index]
+                                                                    .messageDetails
+                                                                    .payload
+                                                                    .healthOrganizationId),
+                                                            bookingId: notification
+                                                                .result[index]
+                                                                .messageDetails
+                                                                .payload
+                                                                .bookingId),
+                                                        notificationId:
+                                                            notification
+                                                                ?.result[index]
+                                                                ?.id,
+                                                      )),
+                                            ).then((value) {
+                                              Provider.of<
+                                                      FetchNotificationViewModel>(
+                                                  context,
+                                                  listen: false)
+                                                ..clearNotifications()
+                                                ..fetchNotifications();
+                                            });
+                                          }
+                                        : null,
                                     child: TextWidget(
                                       text: AppConstants.Appointments_reshedule,
-                                      colors: Color(
-                                          CommonUtil().getMyPrimaryColor()),
+                                      colors: !notification
+                                              ?.result[index]?.isActionDone
+                                          ? Color(
+                                              CommonUtil().getMyPrimaryColor())
+                                          : Colors.grey,
                                       overflow: TextOverflow.visible,
                                       fontWeight: FontWeight.w600,
                                       fontsize: 13,
@@ -308,7 +341,8 @@ class _NotificationScreen extends State<NotificationScreen> {
     }
   }
 
-  _displayDialog(BuildContext context, List<Past> appointments) async {
+  _displayDialog(
+      BuildContext context, List<Past> appointments, String id) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -376,8 +410,10 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       textColor: Colors.blue[800],
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
-                                        Navigator.pop(context,
-                                            getCancelAppoitment(appointments));
+                                        Navigator.pop(
+                                            context,
+                                            getCancelAppoitment(
+                                                appointments, id));
                                       },
                                       child: TextWidget(
                                           text: parameters.yes, fontsize: 12),
@@ -398,13 +434,24 @@ class _NotificationScreen extends State<NotificationScreen> {
         });
   }
 
-  getCancelAppoitment(List<Past> appointments) {
+  getCancelAppoitment(List<Past> appointments, String id) {
     cancelAppointment(appointments).then((value) {
       if (value == null) {
         toast.getToast(AppConstants.BOOKING_CANCEL, Colors.red);
       } else if (value.isSuccess == true) {
 //        widget.onChanged(AppConstants.callBack);
         toast.getToast(AppConstants.YOUR_BOOKING_SUCCESS, Colors.green);
+        //TODO call the ns action api
+        FetchNotificationService().updateNsActionStatus(id).then((data) {
+          if (data['isSuccess']) {
+            print('ns actions has been updated');
+          } else {
+            print('ns actions not being updated');
+          }
+          Provider.of<FetchNotificationViewModel>(context, listen: false)
+            ..clearNotifications()
+            ..fetchNotifications();
+        });
       } else {
         toast.getToast(AppConstants.BOOKING_CANCEL, Colors.red);
       }

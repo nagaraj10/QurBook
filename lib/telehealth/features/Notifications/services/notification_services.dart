@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:convert'as convert;
+import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/HeaderRequest.dart';
@@ -16,7 +16,6 @@ class FetchNotificationService {
   HeaderRequest headerRequest = new HeaderRequest();
 
   Future<NotificationModel> fetchNotificationList() async {
-
     return await http
         .get(
       _baseUrl + qr_notification_fetch + DateTime.now().toString(),
@@ -27,7 +26,7 @@ class FetchNotificationService {
       if (response.statusCode == 200) {
         var responseJson = convert.jsonDecode(response.body.toString());
         var resReturnCode =
-        NotificationModel.fromJson(jsonDecode(response.body));
+            NotificationModel.fromJson(jsonDecode(response.body));
         if (resReturnCode.isSuccess == true) {
           return NotificationModel.fromJson(responseJson);
         } else {
@@ -37,5 +36,18 @@ class FetchNotificationService {
         throw Exception(strFailed);
       }
     });
+  }
+
+  Future<dynamic> updateNsActionStatus(String id) async {
+    final response = await http.put(
+      _baseUrl + qr_notification_action + id,
+      headers: await headerRequest.getRequestHeadersAuthContent(),
+    );
+
+    if(response.statusCode==200){
+      return jsonDecode(response.body);
+    }else{
+      return null;
+    }
   }
 }
