@@ -19,7 +19,7 @@ class VoiceRecordList extends StatefulWidget {
   final String categoryId;
 
   final Function(String, String) getDataForParticularLabel;
-  final Function(String, bool) mediaSelected;
+  final Function(String, bool, HealthResult) mediaSelected;
 
   final String categoryDescription;
   final bool isNotesSelect;
@@ -110,8 +110,8 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
             mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
             setState(() {});
-            widget.mediaSelected(
-                mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
+            widget.mediaSelected(mediaMetaInfoObj.id,
+                mediaMetaInfoObj.isSelected, mediaMetaInfoObj);
           }
         },
         onTap: () {
@@ -125,7 +125,8 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
             mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
             // setState(() {});
-            widget.mediaSelected(mediaMetaInfoObj.id, condition);
+            widget.mediaSelected(
+                mediaMetaInfoObj.id, condition, mediaMetaInfoObj);
           } else {
             Navigator.push(
               context,
@@ -162,7 +163,7 @@ class _VoiceRecordListState extends State<VoiceRecordList> {
                           ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                           : */
                       /*Constants.BASE_URL +*/
-                          mediaMetaInfoObj.metadata.healthRecordCategory.logo,
+                      mediaMetaInfoObj.metadata.healthRecordCategory.logo,
                       height: 25,
                       width: 25,
                       color: Color(new CommonUtil().getMyPrimaryColor()),
