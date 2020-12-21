@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_absolute_path/flutter_absolute_path.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -67,6 +68,7 @@ class TakePictureScreenForDevicesState
   int _imageHeight = 0;
   int _imageWidth = 0;
   String _model = "";
+  FlutterToast toast = FlutterToast();
 
   @override
   void initState() {
@@ -239,8 +241,8 @@ class TakePictureScreenForDevicesState
                                     child: CircularProgressIndicator(
                                         backgroundColor: Colors.white))
                               ]))
-                      : _recognitions.length == 0
-                  || _recognitions[0][Constants.keyDetectedClass] ==
+                      : _recognitions.length == 0 ||
+                              _recognitions[0][Constants.keyDetectedClass] ==
                                   variable.strOthers
                           ? Container(
                               height: 80,
@@ -433,6 +435,9 @@ class TakePictureScreenForDevicesState
                                         // Take the Picture in a try / catch block. If anything goes wrong,
                                         // catch the error.
                                         try {
+                                          setState(() {
+                                            imagePaths.clear();
+                                          });
                                           // Ensure that the camera is initialized.
                                           await _initializeControllerFuture;
 
@@ -445,7 +450,6 @@ class TakePictureScreenForDevicesState
                                                 .path,
                                             'Prescription_${DateTime.now().minute}.jpg',
                                           );
-
                                           // Attempt to take a picture and log where it's been saved.
                                           await _controller.takePicture(path);
 
@@ -458,9 +462,14 @@ class TakePictureScreenForDevicesState
                                             // If the picture was taken, display it on a new screen.
                                             imagePaths.clear();
                                             imagePaths.add(path);
+                                            setState(() {});
                                             callDisplayPictureScreen(context);
                                           }
                                         } catch (e) {
+                                          (await getTemporaryDirectory()).delete(recursive: true);
+                                          toast.getToast(
+                                              'Something went wrong..Try again',
+                                              Colors.red);
                                           // If an error occurs, log the error to the console.
                                         }
                                       }
@@ -516,7 +525,7 @@ class TakePictureScreenForDevicesState
     ).then((value) {
       categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
 
-      if (value) {
+      if (value == true) {
         Navigator.of(context).pop(true);
       }
     });
@@ -551,8 +560,11 @@ class TakePictureScreenForDevicesState
       _recognitions = recognitions;
       _imageHeight = imageHeight;
       _imageWidth = imageWidth;
-      PreferenceUtil.saveString(Constants.KEY_DEVICENAME,
-          deviceNames(_recognitions[0][Constants.keyDetectedClass]));
+      PreferenceUtil.saveString(
+          Constants.KEY_DEVICENAME,
+          deviceNames(_recognitions.length == 0
+              ? ''
+              : _recognitions[0][Constants.keyDetectedClass]));
 
       _controller = control;
     });
