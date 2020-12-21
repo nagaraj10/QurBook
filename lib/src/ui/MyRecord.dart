@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -67,6 +68,7 @@ class MyRecords extends StatefulWidget {
   bool isAssociateOrChat;
   bool isFromBills;
   String userID;
+  bool fromAppointments;
 
   MyRecords(
       {this.categoryPosition,
@@ -79,7 +81,8 @@ class MyRecords extends StatefulWidget {
       this.selectedRecordIds,
       this.isAssociateOrChat,
       this.isFromBills,
-      this.userID});
+      this.userID,
+      this.fromAppointments});
 
   @override
   _MyRecordsState createState() => _MyRecordsState();
@@ -389,6 +392,7 @@ class _MyRecordsState extends State<MyRecords> {
       completeData: completeData,
       recordsState: this,
       userID: widget.userID ?? '',
+      fromAppointments: widget.fromAppointments ?? false,
     );
   }
 
@@ -597,6 +601,7 @@ class CustomTabView extends StatefulWidget {
   bool isAssociateOrChat;
   bool isFromBills;
   String userID;
+  bool fromAppointments;
   CustomTabView(
       {@required this.itemCount,
       this.tabBuilder,
@@ -622,7 +627,8 @@ class CustomTabView extends StatefulWidget {
       this.selectedRecordsId,
       this.isAssociateOrChat,
       this.isFromBills,
-      this.userID});
+      this.userID,
+      this.fromAppointments});
 
   @override
   _CustomTabsState createState() => _CustomTabsState();
@@ -656,6 +662,7 @@ class _CustomTabsState extends State<CustomTabView>
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
   bool containsAudio = false;
   String audioPath = '';
+  HealthResult selectedResult;
 
   @override
   void initState() {
@@ -837,8 +844,23 @@ class _CustomTabsState extends State<CustomTabView>
                       Navigator.of(context)
                           .pop({'metaId': widget.selectedRecordsId});
                     } else {
-                      Navigator.of(context)
-                          .pop({'metaId': widget.selectedMedia});
+                      if (widget.allowSelect) {
+                        if (widget.fromAppointments) {
+                          Navigator.of(context).pop(
+                              {'selectedResult': json.encode(selectedResult)});
+                        } else {
+                          Navigator.of(context)
+                              .pop({'metaId': widget.selectedMedia});
+                        }
+                      } else {
+                        if (widget.fromAppointments) {
+                          Navigator.of(context)
+                              .pop({'selectedResult': selectedResult});
+                        } else {
+                          Navigator.of(context)
+                              .pop({'metaId': widget.selectedMedia});
+                        }
+                      }
                     }
                   },
                   child: widget.isFromChat ? Text('Attach') : Text('Associate'),
@@ -1113,6 +1135,11 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   void addMediaRemoveMaster(String metaId, bool condition) {
+    commonMethodToAddOrRemove(metaId, condition, null);
+  }
+
+  void commonMethodToAddOrRemove(
+      String metaId, bool condition, HealthResult healthCategory) {
     if (widget.allowSelect) {
       if (condition) {
         if (!(widget.selectedMedia.contains(metaId))) {
@@ -1131,6 +1158,11 @@ class _CustomTabsState extends State<CustomTabView>
         } else {
           widget.selectedMedia.add(metaId);
           print(metaId + ' Added ************');
+          print(healthCategory.metadata.healthRecordType.id +
+              ' Added ************');
+          print(healthCategory.metadata.healthRecordCategory.id +
+              ' Added ************');
+          selectedResult = healthCategory;
         }
       } else {
         widget.selectedMedia.remove(metaId);
@@ -1140,6 +1172,11 @@ class _CustomTabsState extends State<CustomTabView>
 
     print(widget.selectedMedia);
     callBackToRefresh();
+  }
+
+  void addMediaRemoveMasterForNotesAndVoice(
+      String metaId, bool condition, HealthResult healthCategoryID) {
+    commonMethodToAddOrRemove(metaId, condition, healthCategoryID);
   }
 
   List<Widget> _getAllDataForTheTabs(List<CategoryResult> data,
@@ -1272,7 +1309,7 @@ class _CustomTabsState extends State<CustomTabView>
             dataObj.id,
             getDataForParticularLabel,
             CommonConstants.categoryDescriptionVoiceRecord,
-            addMediaRemoveMaster,
+            addMediaRemoveMasterForNotesAndVoice,
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,
@@ -1304,7 +1341,7 @@ class _CustomTabsState extends State<CustomTabView>
             dataObj.id,
             getDataForParticularLabel,
             CommonConstants.categoryDescriptionNotes,
-            addMediaRemoveMaster,
+            addMediaRemoveMasterForNotesAndVoice,
             widget.allowSelect,
             widget.selectedMedia,
             widget.allowSelectNotes,

@@ -1379,6 +1379,26 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> associateUpdateRecords(String url, String jsonString) async {
+    var responseJson;
+    Map<String, String> requestHeadersAuthContent = new Map();
+
+    requestHeadersAuthContent['Content-type'] = 'application/json';
+    requestHeadersAuthContent['authorization'] =
+    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+    try {
+      final response = await http.put(
+        _baseUrl + url,
+        body: jsonString,
+        headers: await headerRequest.getRequestHeadersAuthContent(),
+      );
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
 }
 
 abstract class InnerException {

@@ -22,7 +22,7 @@ class NotesScreenList extends StatefulWidget {
   final String categoryDescription;
 
   final Function(String, String) getDataForParticularLabel;
-  final Function(String, bool) mediaSelected;
+  final Function(String, bool, HealthResult) mediaSelected;
   final bool allowSelect;
   List<String> mediaMeta;
   final bool isNotesSelect;
@@ -112,8 +112,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
             mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
             setState(() {});
-            widget.mediaSelected(
-                mediaMetaInfoObj.id, mediaMetaInfoObj.isSelected);
+            widget.mediaSelected(mediaMetaInfoObj.id,
+                mediaMetaInfoObj.isSelected, mediaMetaInfoObj);
           }
         },
         onTap: () {
@@ -127,7 +127,8 @@ class _NotesScreenListState extends State<NotesScreenList> {
             mediaMetaInfoObj.isSelected = !mediaMetaInfoObj.isSelected;
 
             // setState(() {});
-            widget.mediaSelected(mediaMetaInfoObj.id, condition);
+            widget.mediaSelected(
+                mediaMetaInfoObj.id, condition, mediaMetaInfoObj);
           } else {
             Navigator.push(
               context,
@@ -166,8 +167,7 @@ class _NotesScreenListState extends State<NotesScreenList> {
                         ? mediaMetaInfoObj.metaInfo.mediaTypeInfo.url
                         :
                           Constants.BASE_URL +*/
-                              mediaMetaInfoObj
-                                  .metadata.healthRecordCategory.logo,
+                          mediaMetaInfoObj.metadata.healthRecordCategory.logo,
                           height: 25,
                           width: 25,
                           color: Color(new CommonUtil().getMyPrimaryColor()),

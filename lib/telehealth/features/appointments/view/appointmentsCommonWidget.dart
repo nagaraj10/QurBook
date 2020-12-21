@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -9,7 +11,9 @@ import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/src/model/Health/asgard/health_record_list.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_success_response.dart';
+import 'package:myfhb/telehealth/features/MyProvider/model/associaterecords/associate_update_success_response.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as Constants;
@@ -135,44 +139,90 @@ class AppointmentsCommonWidget {
             Constants.Appointments_notesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.Appointments_notes, () async {
-          if (notesCount != '' /* && isUpcoming*/) {
-            int position = getCategoryPosition(Constants.STR_NOTES);
+          int position = getCategoryPosition(Constants.STR_NOTES);
 
-            await Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => MyRecords(
-                categoryPosition: position,
-                allowSelect: false,
-                isAudioSelect: false,
-                isNotesSelect: true,
-                selectedMedias: notesId,
-                isFromChat: false,
-                showDetails: true,
-                isAssociateOrChat: isUpcoming ? false : false,
-              ),
-            ));
-          }
+          await Navigator.of(context)
+              .push(MaterialPageRoute(
+            builder: (context) => MyRecords(
+              categoryPosition: position,
+              allowSelect: false,
+              isAudioSelect: false,
+              isNotesSelect: true,
+              selectedMedias: notesId,
+              isFromChat: false,
+              showDetails: false,
+              isAssociateOrChat: isUpcoming ? true : false,
+              fromAppointments: true,
+            ),
+          ))
+              .then((results) {
+            try {
+              if (results.containsKey('selectedResult')) {
+                HealthResult metaIds = results['selectedResult'];
+
+                print(metaIds.toString());
+
+                print('*****************88 inside notesId Selected');
+                //metaIds = json.decode(results['selectedResult'].cast<HealthResult>());
+                //metaIds = json.decode(results['selectedResult']);
+
+                associateUpdateRecords(doc.id, metaIds).then((value) {
+                  if (value != null && value.isSuccess) {
+                    toast.getToast('Success', Colors.green);
+                    refresh();
+                  } else {
+                    //pr.hide();
+                    toast.getToast(parameters.errAssociateRecords, Colors.red);
+                  }
+                });
+              }
+            } catch (e) {}
+          });
         }, notesCount),
         SizedBoxWidget(width: 15.0),
         iconWithText(
             Constants.Appointments_voiceNotesImage,
             Color(new CommonUtil().getMyPrimaryColor()),
             Constants.STR_VOICE_NOTES, () async {
-          if (voiceNotesCount != '' /* && isUpcoming*/) {
-            int position = getCategoryPosition(Constants.STR_VOICERECORDS);
+          int position = getCategoryPosition(Constants.STR_VOICERECORDS);
 
-            await Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => MyRecords(
-                categoryPosition: position,
-                allowSelect: false,
-                isAudioSelect: true,
-                isNotesSelect: true,
-                selectedMedias: voiceIds,
-                isFromChat: false,
-                showDetails: true,
-                isAssociateOrChat: isUpcoming ? false : false,
-              ),
-            ));
-          }
+          await Navigator.of(context)
+              .push(MaterialPageRoute(
+            builder: (context) => MyRecords(
+              categoryPosition: position,
+              allowSelect: false,
+              isAudioSelect: true,
+              isNotesSelect: false,
+              selectedMedias: voiceIds,
+              isFromChat: false,
+              showDetails: false,
+              isAssociateOrChat: isUpcoming ? true : false,
+              fromAppointments: true,
+            ),
+          ))
+              .then((results) {
+            try {
+              if (results.containsKey('selectedResult')) {
+                HealthResult metaIds = results['selectedResult'];
+
+                print(metaIds.toString());
+
+                print('*****************88 inside notesId Selected');
+                //metaIds = json.decode(results['selectedResult'].cast<HealthResult>());
+                //metaIds = json.decode(results['selectedResult']);
+
+                associateUpdateRecords(doc.id, metaIds).then((value) {
+                  if (value != null && value.isSuccess) {
+                    toast.getToast('Success', Colors.green);
+                    refresh();
+                  } else {
+                    //pr.hide();
+                    toast.getToast(parameters.errAssociateRecords, Colors.red);
+                  }
+                });
+              }
+            } catch (e) {}
+          });
         }, voiceNotesCount),
         SizedBoxWidget(width: 15.0),
         iconWithText(
@@ -474,5 +524,14 @@ class AppointmentsCommonWidget {
             width: 50,
           ),
         ));
+  }
+
+  Future<AssociateUpdateSuccessResponse> associateUpdateRecords(
+      String bookingID, HealthResult healthResult) async {
+    MyProviderViewModel providerViewModel = new MyProviderViewModel();
+    AssociateUpdateSuccessResponse associateResponseList =
+        await providerViewModel.associateUpdateRecords(bookingID, healthResult);
+
+    return associateResponseList;
   }
 }
