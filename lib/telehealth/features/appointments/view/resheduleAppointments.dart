@@ -273,6 +273,9 @@ class _ResheduleAppointmentsState extends State<ResheduleAppointments> {
               closePage: (value) {
                 widget.closePage(value);
               },
+              refresh: (){
+                setState(() {});
+              },
               onChanged: (value) {
                 print(value);
                 setState(() {

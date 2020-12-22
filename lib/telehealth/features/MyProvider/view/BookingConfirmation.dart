@@ -58,6 +58,7 @@ class BookingConfirmation extends StatefulWidget {
   final List<ResultFromHospital> resultFromHospitalList;
   final int doctorListPos;
   Function(String) closePage;
+  Function() refresh;
   bool isFromHospital;
 
   BookingConfirmation(
@@ -76,6 +77,7 @@ class BookingConfirmation extends StatefulWidget {
       this.resultFromHospitalList,
       this.doctorListPos,
       this.closePage,
+      this.refresh,
         this.isFromHospital});
 
   @override
@@ -370,6 +372,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                         icon: Icons.mode_edit,
                         onTap: () {
                           Navigator.pop(context);
+                          widget.refresh();
                         }),
                     SizedBoxWidget(
                       width: 10.0,
@@ -446,275 +449,285 @@ class BookingConfirmationState extends State<BookingConfirmation> {
         messageTextStyle: TextStyle(
             color: Colors.black, fontSize: 14.0, fontWeight: FontWeight.w600));
 
-    return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: GradientAppBar(),
-        leading: GestureDetector(
-          onTap: () => Navigator.pop(context),
-          child: Icon(
-            Icons.arrow_back_ios, // add custom icons also
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pop(context);
+        widget.refresh();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          flexibleSpace: GradientAppBar(),
+          leading: GestureDetector(
+            onTap: () {
+              widget.refresh();
+              Navigator.pop(context);
+            },
+            child: Icon(
+              Icons.arrow_back_ios, // add custom icons also
+            ),
           ),
+          title: getTitle(parameters.confirmDetails),
         ),
-        title: getTitle(parameters.confirmDetails),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Container(
-              color: Colors.grey[100],
-              child: Card(
-                margin: EdgeInsets.all(12.0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12.0),
+        body: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                color: Colors.grey[100],
+                child: Card(
+                  margin: EdgeInsets.all(12.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                  ),
+                  elevation: 10.0,
+                  child: Container(
+                    margin: EdgeInsets.all(8.0),
+                    child: getDoctorsWidget(),
+                  ),
                 ),
-                elevation: 10.0,
-                child: Container(
-                  margin: EdgeInsets.all(8.0),
-                  child: getDoctorsWidget(),
+              ),
+              Container(
+                color: Colors.white,
+                child: Column(
+                  children: <Widget>[
+                    nameDateCard(),
+                    new Divider(
+                      color: Colors.grey[400],
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(8.0),
+                      margin: EdgeInsets.fromLTRB(18.0, 0.0, 18.0, 0.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Text(parameters.preConsultingDetails,
+                                  style: TextStyle(
+                                      fontSize: 10, color: Colors.grey)),
+                            ],
+                          ),
+                          SizedBoxWidget(
+                            height: 20,
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBoxWidget(
+                                width: 10,
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  new Stack(
+                                    overflow: Overflow.visible,
+                                    children: <Widget>[
+                                      SizedBoxWithChild(
+                                        height: 22.0,
+                                        width: 22.0,
+                                        child: IconButtonWidget(
+                                          iconPath: Constants.NOTES_ICON_LINK,
+                                          size: 18.0,
+                                          color: Colors.blue[800],
+                                          padding: new EdgeInsets.all(1.0),
+                                          onPressed: () {
+                                            FetchRecords(
+                                                getCategoryPosition(
+                                                    Constants.STR_NOTES),
+                                                false,
+                                                false,
+                                                true,
+                                                CommonUtil.notesId);
+                                          },
+                                        ),
+                                      ),
+                                      notesIdCount > 0
+                                          ? Positioned(
+                                              top: -5.0,
+                                              right: -5.0,
+                                              child: Icon(
+                                                Icons.check_circle,
+                                                color: Colors.green,
+                                                size: 15,
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                    ],
+                                  ),
+                                  SizedBoxWidget(height: 2.0),
+                                  TextWidget(
+                                      text: parameters.addNotes,
+                                      fontsize: 8.0,
+                                      colors: Colors.grey),
+                                ],
+                              ),
+                              SizedBoxWidget(
+                                width: 25,
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  new Stack(
+                                    overflow: Overflow.visible,
+                                    children: <Widget>[
+                                      SizedBoxWithChild(
+                                        height: 22.0,
+                                        width: 22.0,
+                                        child: IconButtonWidget(
+                                          iconPath: Constants.VOICE_ICON_LINK,
+                                          size: 18.0,
+                                          color: Colors.blue[800],
+                                          padding: new EdgeInsets.all(1.0),
+                                          onPressed: () {
+                                            FetchRecords(
+                                                getCategoryPosition(
+                                                    Constants.STR_VOICERECORDS),
+                                                false,
+                                                true,
+                                                false,
+                                                CommonUtil.voiceIds);
+                                          },
+                                        ),
+                                      ),
+                                      voiceIdCount > 0
+                                          ? Positioned(
+                                              top: -5.0,
+                                              right: -5.0,
+                                              child: Icon(
+                                                Icons.check_circle,
+                                                color: Colors.green,
+                                                size: 15,
+                                              ),
+                                            )
+                                          : SizedBox(),
+                                    ],
+                                  ),
+                                  SizedBoxWidget(height: 2.0),
+                                  TextWidget(
+                                      text: parameters.addVoice,
+                                      fontsize: 8.0,
+                                      colors: Colors.grey),
+                                ],
+                              ),
+                              SizedBoxWidget(
+                                width: 25,
+                              ),
+                              Column(
+                                children: <Widget>[
+                                  new Stack(
+                                    overflow: Overflow.visible,
+                                    children: <Widget>[
+                                      SizedBoxWithChild(
+                                        height: 22.0,
+                                        width: 22.0,
+                                        child: IconButtonWidget(
+                                          iconPath: Constants.RECORDS_ICON_LINK,
+                                          size: 18.0,
+                                          color: Colors.blue[800],
+                                          padding: new EdgeInsets.all(1.0),
+                                          onPressed: () {
+                                            FetchRecords(
+                                                getCategoryPosition(
+                                                    Constants.STR_PRESCRIPTION),
+                                                true,
+                                                false,
+                                                false,
+                                                CommonUtil.recordIds);
+                                          },
+                                        ),
+                                      ),
+                                      recordIdCount > 0
+                                          ? BadgesBlue(
+                                              badgeValue:
+                                                  recordIdCount.toString(),
+                                              backColor: Color(
+                                                  commonUtil.getMyPrimaryColor()))
+                                          : SizedBox(),
+                                    ],
+                                  ),
+                                  SizedBoxWidget(height: 2.0),
+                                  TextWidget(
+                                      text: parameters.records,
+                                      fontsize: 8.0,
+                                      colors: Colors.grey),
+                                ],
+                              ),
+                              SizedBoxWidget(
+                                width: 25,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBoxWidget(height: 15.0),
+                    new Divider(
+                      color: Colors.grey[400],
+                    ),
+                  ],
                 ),
               ),
-            ),
-            Container(
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  nameDateCard(),
-                  new Divider(
-                    color: Colors.grey[400],
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(8.0),
-                    margin: EdgeInsets.fromLTRB(18.0, 0.0, 18.0, 0.0),
-                    child: Column(
-                      children: <Widget>[
-                        Row(
-                          children: <Widget>[
-                            Text(parameters.preConsultingDetails,
-                                style: TextStyle(
-                                    fontSize: 10, color: Colors.grey)),
-                          ],
-                        ),
-                        SizedBoxWidget(
-                          height: 20,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBoxWidget(
-                              width: 10,
-                            ),
-                            Column(
-                              children: <Widget>[
-                                new Stack(
-                                  overflow: Overflow.visible,
-                                  children: <Widget>[
-                                    SizedBoxWithChild(
-                                      height: 22.0,
-                                      width: 22.0,
-                                      child: IconButtonWidget(
-                                        iconPath: Constants.NOTES_ICON_LINK,
-                                        size: 18.0,
-                                        color: Colors.blue[800],
-                                        padding: new EdgeInsets.all(1.0),
-                                        onPressed: () {
-                                          FetchRecords(
-                                              getCategoryPosition(
-                                                  Constants.STR_NOTES),
-                                              false,
-                                              false,
-                                              true,
-                                              CommonUtil.notesId);
-                                        },
-                                      ),
-                                    ),
-                                    notesIdCount > 0
-                                        ? Positioned(
-                                            top: -5.0,
-                                            right: -5.0,
-                                            child: Icon(
-                                              Icons.check_circle,
-                                              color: Colors.green,
-                                              size: 15,
-                                            ),
-                                          )
-                                        : SizedBox(),
-                                  ],
-                                ),
-                                SizedBoxWidget(height: 2.0),
-                                TextWidget(
-                                    text: parameters.addNotes,
-                                    fontsize: 8.0,
-                                    colors: Colors.grey),
-                              ],
-                            ),
-                            SizedBoxWidget(
-                              width: 25,
-                            ),
-                            Column(
-                              children: <Widget>[
-                                new Stack(
-                                  overflow: Overflow.visible,
-                                  children: <Widget>[
-                                    SizedBoxWithChild(
-                                      height: 22.0,
-                                      width: 22.0,
-                                      child: IconButtonWidget(
-                                        iconPath: Constants.VOICE_ICON_LINK,
-                                        size: 18.0,
-                                        color: Colors.blue[800],
-                                        padding: new EdgeInsets.all(1.0),
-                                        onPressed: () {
-                                          FetchRecords(
-                                              getCategoryPosition(
-                                                  Constants.STR_VOICERECORDS),
-                                              false,
-                                              true,
-                                              false,
-                                              CommonUtil.voiceIds);
-                                        },
-                                      ),
-                                    ),
-                                    voiceIdCount > 0
-                                        ? Positioned(
-                                            top: -5.0,
-                                            right: -5.0,
-                                            child: Icon(
-                                              Icons.check_circle,
-                                              color: Colors.green,
-                                              size: 15,
-                                            ),
-                                          )
-                                        : SizedBox(),
-                                  ],
-                                ),
-                                SizedBoxWidget(height: 2.0),
-                                TextWidget(
-                                    text: parameters.addVoice,
-                                    fontsize: 8.0,
-                                    colors: Colors.grey),
-                              ],
-                            ),
-                            SizedBoxWidget(
-                              width: 25,
-                            ),
-                            Column(
-                              children: <Widget>[
-                                new Stack(
-                                  overflow: Overflow.visible,
-                                  children: <Widget>[
-                                    SizedBoxWithChild(
-                                      height: 22.0,
-                                      width: 22.0,
-                                      child: IconButtonWidget(
-                                        iconPath: Constants.RECORDS_ICON_LINK,
-                                        size: 18.0,
-                                        color: Colors.blue[800],
-                                        padding: new EdgeInsets.all(1.0),
-                                        onPressed: () {
-                                          FetchRecords(
-                                              getCategoryPosition(
-                                                  Constants.STR_PRESCRIPTION),
-                                              true,
-                                              false,
-                                              false,
-                                              CommonUtil.recordIds);
-                                        },
-                                      ),
-                                    ),
-                                    recordIdCount > 0
-                                        ? BadgesBlue(
-                                            badgeValue:
-                                                recordIdCount.toString(),
-                                            backColor: Color(
-                                                commonUtil.getMyPrimaryColor()))
-                                        : SizedBox(),
-                                  ],
-                                ),
-                                SizedBoxWidget(height: 2.0),
-                                TextWidget(
-                                    text: parameters.records,
-                                    fontsize: 8.0,
-                                    colors: Colors.grey),
-                              ],
-                            ),
-                            SizedBoxWidget(
-                              width: 25,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBoxWidget(height: 15.0),
-                  new Divider(
-                    color: Colors.grey[400],
-                  ),
-                ],
+              SizedBoxWidget(height: 25.0),
+              Container(
+                child: Center(
+                  child: TextWidget(
+                      text: 'Pay INR ' +
+                          commonWidgets.getMoneyWithForamt(widget.isFollowUp
+                              ? getFollowUpFee()
+                              : widget.isFromHospital?getFeesFromHospital(widget.resultFromHospitalList[widget.doctorListIndex]):getFees(
+                                  widget.healthOrganizationResult[widget.i])),
+                      fontsize: 22.0,
+                      fontWeight: FontWeight.w500,
+                      colors: Colors.blue[800]),
+                ),
               ),
-            ),
-            SizedBoxWidget(height: 25.0),
-            Container(
-              child: Center(
-                child: TextWidget(
-                    text: 'Pay INR ' +
-                        commonWidgets.getMoneyWithForamt(widget.isFollowUp
-                            ? getFollowUpFee()
-                            : widget.isFromHospital?getFeesFromHospital(widget.resultFromHospitalList[widget.doctorListIndex]):getFees(
-                                widget.healthOrganizationResult[widget.i])),
-                    fontsize: 22.0,
-                    fontWeight: FontWeight.w500,
-                    colors: Colors.blue[800]),
-              ),
-            ),
-            SizedBoxWidget(height: 35.0),
-            Container(
-              padding: EdgeInsets.all(8.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  SizedBoxWithChild(
-                    width: 130,
-                    height: 40,
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                          side: BorderSide(color: Colors.grey)),
-                      color: Colors.transparent,
-                      textColor: Colors.grey,
-                      padding: EdgeInsets.all(8.0),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: TextWidget(text: Constants.Cancel, fontsize: 12),
+              SizedBoxWidget(height: 35.0),
+              Container(
+                padding: EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    SizedBoxWithChild(
+                      width: 130,
+                      height: 40,
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            side: BorderSide(color: Colors.grey)),
+                        color: Colors.transparent,
+                        textColor: Colors.grey,
+                        padding: EdgeInsets.all(8.0),
+                        onPressed: () {
+                          widget.refresh();
+                          Navigator.pop(context);
+                        },
+                        child: TextWidget(text: Constants.Cancel, fontsize: 12),
+                      ),
                     ),
-                  ),
-                  SizedBoxWithChild(
-                    width: 130,
-                    height: 40,
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                          side: BorderSide(color: Colors.blue[800])),
-                      color: Colors.transparent,
-                      textColor: Colors.blue[800],
-                      padding: EdgeInsets.all(8.0),
-                      onPressed: () {
-                        new FHBUtils().check().then((intenet) {
-                          if (intenet != null && intenet) {
-                            _displayDialog(context);
-                          } else {
-                            toast.getToast(
-                                Constants.STR_NO_CONNECTIVITY, Colors.black54);
-                          }
-                        });
-                      },
-                      child: TextWidget(text: payNow, fontsize: 12),
+                    SizedBoxWithChild(
+                      width: 130,
+                      height: 40,
+                      child: FlatButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            side: BorderSide(color: Colors.blue[800])),
+                        color: Colors.transparent,
+                        textColor: Colors.blue[800],
+                        padding: EdgeInsets.all(8.0),
+                        onPressed: () {
+                          new FHBUtils().check().then((intenet) {
+                            if (intenet != null && intenet) {
+                              _displayDialog(context);
+                            } else {
+                              toast.getToast(
+                                  Constants.STR_NO_CONNECTIVITY, Colors.black54);
+                            }
+                          });
+                        },
+                        child: TextWidget(text: payNow, fontsize: 12),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            )
-          ],
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -1011,6 +1024,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       widget.closePage(value);
                       Navigator.pop(context);
                     } else {
+                      widget.refresh();
                       Navigator.pop(context);
                     }
                   },

@@ -27,6 +27,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   final List<ResultFromHospital> resultFromHospitalList;
   final int doctorListPos;
   Function(String) closePage;
+  Function() refresh;
   bool isFromNotification;
   ValueChanged<String> onChanged;
   DateTime onUserChangedDate;
@@ -46,6 +47,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
       this.resultFromHospitalList,
       this.doctorListPos,
       this.closePage,
+      this.refresh,
       this.isFromNotification,
       this.onChanged,
       this.onUserChangedDate,
@@ -207,6 +209,9 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                           doctorListPos: widget.doctorListPos,
                           closePage: (value) {
                             widget.closePage(value);
+                          },
+                          isRefresh: (){
+                            widget.refresh();
                           },
                           isFromNotification: widget.isFromNotification,
                           isFromHospital: widget.isFromHospital,
