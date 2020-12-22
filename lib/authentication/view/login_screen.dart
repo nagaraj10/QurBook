@@ -1,5 +1,6 @@
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/country_pickers.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -15,9 +16,13 @@ import 'package:myfhb/authentication/model/patientlogin_model.dart'
     as loginModel;
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class PatientSignInScreen extends StatefulWidget {
   @override
@@ -34,6 +39,10 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   bool _autoValidateBool = false;
   AuthViewModel authViewModel;
   FlutterToast toast = new FlutterToast();
+  String decodesstring;
+  UserModel saveuser = UserModel();
+  String user_mobile_no;
+  String id_token_string;
 
   @override
   void initState() {
@@ -222,7 +231,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
       Map<String, dynamic> map = logInModel.toJson();
       loginModel.PatientLogIn response = await authViewModel.loginPatient(map);
       print(response.toString());
-      _checkResponse(response);
+      //_checkResponse(response);
+      _checkifItsGuest(response);
     } else {
       setState(() {
         _autoValidateBool = true;
@@ -303,5 +313,68 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
         ),
       ),
     );
+  }
+
+  void _checkifItsGuest(PatientLogIn response) async {
+    if (response.isSuccess) {
+      decodesstring =
+          await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+      saveuser.auth_token = decodesstring;
+      bool isSkipMFA = parseJwtPayLoad(decodesstring)[strToken][strIsSkipMFA];
+      print(isSkipMFA);
+      if (isSkipMFA) {
+        String userId = parseJwtPayLoad(decodesstring)[strToken][strUserId];
+        saveuser.userId = userId;
+        id_token_string = parseJwtPayLoad(decodesstring)[strToken]
+            [strProviderPayLoad][strIdToken];
+        var id_tokens = parseJwtPayLoad(id_token_string);
+        print(id_tokens);
+        user_mobile_no = id_tokens[strphonenumber];
+        print(id_tokens[strphonenumber]);
+        saveuser.family_name = id_tokens[strFamilyName];
+        print(id_tokens[strFamilyName]);
+        saveuser.phone_number = id_tokens[strphonenumber];
+        String ph = id_tokens[strphonenumber];
+        print(id_tokens[strphonenumber]);
+        saveuser.given_name = id_tokens[strGivenName];
+        print(id_tokens[strGivenName]);
+        saveuser.email = id_tokens[stremail];
+        print(id_tokens[stremail]);
+        PreferenceUtil.saveString(Constants.MOB_NUM, user_mobile_no)
+            .then((onValue) {});
+        PreferenceUtil.saveString(Constants.KEY_EMAIL, saveuser.email)
+            .then((onValue) {});
+        PreferenceUtil.saveString(Constants.KEY_AUTHTOKEN, decodesstring)
+            .then((onValue) {});
+        print(decodesstring);
+        PreferenceUtil.saveString(Constants.KEY_USERID_MAIN, userId)
+            .then((onValue) {});
+        PreferenceUtil.saveString(Constants.KEY_USERID, userId)
+            .then((onValue) {});
+        PreferenceUtil.save(strUserDetails, saveuser);
+        authToken = decodesstring;
+        FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+        final token = await _firebaseMessaging.getToken();
+        CommonUtil()
+            .sendDeviceToken(
+                userId, saveuser.email, user_mobile_no, token, true)
+            .then((value) {
+          if (value != null) {
+            Future.delayed(Duration(seconds: 3), () {
+              PageNavigator.goToPermanent(context, router.rt_Dashboard);
+            });
+          } else {
+            new FHBBasicWidget().showDialogWithTwoButtons(context, () {
+              PageNavigator.goToPermanent(context, router.rt_Dashboard);
+            }, value.message, strConfirmDialog);
+          }
+        });
+        // openHomeScreenOrProfile(userDetails, doctorId);
+      } else {
+        _checkResponse(response);
+      }
+    } else {
+      _checkResponse(response);
+    }
   }
 }
