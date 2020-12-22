@@ -243,7 +243,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
           verificationCode: OtpController.text,
           userName: widget.PhoneNumber,
           source: strSource,
-          userId: widget.userConfirm?widget.userId:await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
+          userId: widget.userConfirm
+              ? widget.userId
+              : await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN),
         );
         Map<String, dynamic> map = logInModel.toJson();
         OtpModel.PatientSignupOtp response =
@@ -321,7 +323,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
     ResendOtpModel logInModel = new ResendOtpModel(
       userName: widget.PhoneNumber,
       source: strSource,
-      userId: widget.userConfirm?widget.userId:await PreferenceUtil.getStringValue(strKeyConfirmUserToken),
+      userId: widget.userConfirm
+          ? widget.userId
+          : await PreferenceUtil.getStringValue(strKeyConfirmUserToken),
     );
     Map<String, dynamic> map = logInModel.toJson();
     ResendModel.ResendOtpModel response = await authViewModel.resendOtp(map);
@@ -331,7 +335,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
   _checkOtpResponse(ResendOtpModel response) {
     if (response.isSuccess) {
     } else {
-      if(response.message!=null){
+      if (response.message != null) {
         toast.getToast(response.message, Colors.red);
       }
     }
@@ -343,11 +347,10 @@ class _VerifyPatientState extends State<VerifyPatient> {
         await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     saveuser.auth_token = decodesstring;
     if (widget.from == strFromSignUp) {
-      if(widget.userConfirm){
+      if (widget.userConfirm) {
         userId = widget.userId;
-      }else{
-        userId =
-        await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
+      } else {
+        userId = await PreferenceUtil.getStringValue(Constants.KEY_USERID_MAIN);
       }
 
       saveuser.userId = userId;
@@ -366,21 +369,10 @@ class _VerifyPatientState extends State<VerifyPatient> {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
             PageNavigator.goToPermanent(context, router.rt_Dashboard);
-
-            /* Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => DashboardScreen()));*/
-            //Navigator.pop(context, 'code:${mURL}');
           });
         } else {
           new FHBBasicWidget().showDialogWithTwoButtons(context, () {
             PageNavigator.goToPermanent(context, router.rt_Dashboard);
-
-            /*  Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => DashboardScreen()));*/
           }, value.message, strConfirmDialog);
         }
       });
@@ -423,21 +415,10 @@ class _VerifyPatientState extends State<VerifyPatient> {
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
             PageNavigator.goToPermanent(context, router.rt_Dashboard);
-
-            /* Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => DashboardScreen()));*/
-            //Navigator.pop(context, 'code:${mURL}');
           });
         } else {
           new FHBBasicWidget().showDialogWithTwoButtons(context, () {
             PageNavigator.goToPermanent(context, router.rt_Dashboard);
-
-            /* Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (BuildContext context) => DashboardScreen()));*/
           }, value.message, strConfirmDialog);
         }
       });

@@ -77,8 +77,7 @@ const String strOtpCantEmpty = 'Please Enter Valid Otp';
 const String strValidOtp = 'Otp should have six characters';
 const String strPasswordMultiChecks =
     'Password should one special character, number, lowercase and uppercase alphabets';
-const String strConfirmPasswordText =
-    'New and confirm password should be same';
+const String strConfirmPasswordText = 'New and confirm password should be same';
 const String strPasswordCheck = 'Password should more than six characters';
 const String strNeedAcoount = 'Sign up with a new account';
 const String strFromLogin = 'AfterLogin';
@@ -154,7 +153,10 @@ const String strOldPassword = 'oldPassword';
 
 //labels for country code picker page
 const String strinitialMobileLabel = '91';
-const String strPlusSymbol='+';
-const String strSearchCountry='Search here...';
-const String strSearchCountryLabel='Search your phone code';
-const String strIndianPhoneCode='IN';
+const String strPlusSymbol = '+';
+const String strSearchCountry = 'Search here...';
+const String strSearchCountryLabel = 'Search your phone code';
+const String strIndianPhoneCode = 'IN';
+
+const String strContextId = 'contextId';
+const String strIsSkipMFA = 'isSkipMFA';
