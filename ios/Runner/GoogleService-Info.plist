@@ -34,5 +34,7 @@
 	<string>1:588661578434:ios:517489e9957ed41898f95b</string>
 	<key>DATABASE_URL</key>
 	<string>https://myfhbfitness.firebaseio.com</string>
+	<key>io.flutter.embedded_views_preview</key>
+	<true/>
 </dict>
 </plist>

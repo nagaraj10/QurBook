@@ -121,7 +121,9 @@ class ChatScreenViewModel extends ChangeNotifier {
             imageUrl: res.imageURL,
             timeStamp: date,
             buttons: res.buttons,
-            langCode: res.lang
+            langCode: res.lang,
+            searchURL: res.searchURL,
+            videoLinks: res.videoLinks
           );
           conversations.add(model);
            isLoading = true;

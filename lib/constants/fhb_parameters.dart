@@ -97,6 +97,7 @@ const String strLanguage = 'lang';
 const String strtimezone = 'timezone';
 const String strSearchUrl = 'searchURL';
 const String strButtons = 'buttons';
+const String strVideoLinks = 'videoLinks';
 
 //for category
 const String strCategoryName = 'categoryName';

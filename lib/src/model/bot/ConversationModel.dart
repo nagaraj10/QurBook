@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/bot/button_model.dart';
+import 'package:myfhb/src/model/bot/video_links.dart';
 
 class Conversation {
   bool isMayaSaid;
@@ -10,6 +11,8 @@ class Conversation {
   String timeStamp;
   String langCode;
   List<Buttons> buttons;
+  String searchURL;
+  List<VideoLinks> videoLinks;
   Conversation(
       {@required this.isMayaSaid,
       @required this.text,
@@ -17,7 +20,9 @@ class Conversation {
       @required this.name,
       this.timeStamp,
       this.buttons,
-      this.langCode
+      this.langCode,
+      this.searchURL,
+      this.videoLinks
       });
 
   Conversation.fromJson(Map<String, dynamic> json) {
@@ -33,6 +38,13 @@ class Conversation {
         buttons.add(new Buttons.fromJson(v));
       });
     }
+    searchURL = json[parameters.strSearchUrl];
+    if (json[parameters.strVideoLinks] != null) {
+      videoLinks = new List<VideoLinks>();
+      json[parameters.strVideoLinks].forEach((v) {
+        videoLinks.add(new VideoLinks.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -45,6 +57,10 @@ class Conversation {
     data[parameters.strLanguage] = this.langCode;
     if (this.buttons != null) {
       data[parameters.strButtons] = this.buttons.map((v) => v.toJson()).toList();
+    }
+    data[parameters.strSearchUrl] = this.searchURL;
+    if (this.videoLinks != null) {
+      data[parameters.strVideoLinks] = this.videoLinks.map((v) => v.toJson()).toList();
     }
     return data;
   }
