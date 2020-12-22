@@ -295,6 +295,9 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                   widget.closePage(value);
                   Navigator.pop(context);
                 },
+                refresh: (){
+                  setState(() {});
+                },
                 isFromHospital: true),
           ],
         ),

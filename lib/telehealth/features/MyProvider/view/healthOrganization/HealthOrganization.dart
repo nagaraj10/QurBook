@@ -258,6 +258,10 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                 widget.closePage(value);
                 Navigator.pop(context);
               },
+              refresh: (){
+                print('okok');
+                setState(() {});
+              },
               isFromHospital: false,
             ),
           ],

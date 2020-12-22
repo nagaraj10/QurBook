@@ -43,6 +43,7 @@ class GetTimeSlots extends StatelessWidget {
   final List<ResultFromHospital> resultFromHospitalList;
   final int doctorListPos;
   Function(String) closePage;
+  Function() isRefresh;
   bool isFromNotification;
   bool isFromHospital;
   String notificationId;
@@ -63,6 +64,7 @@ class GetTimeSlots extends StatelessWidget {
       this.resultFromHospitalList,
       this.doctorListPos,
       this.closePage,
+      this.isRefresh,
       this.isFromNotification,
       this.isFromHospital,
       this.notificationId});
@@ -162,6 +164,9 @@ class GetTimeSlots extends StatelessWidget {
             doctorListPos: doctorListPos,
             closePage: (value) {
               closePage(value);
+            },
+            refresh: (){
+              isRefresh();
             },
             isFromHospital: isFromHospital,
           ),
