@@ -1,5 +1,6 @@
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/bot/button_model.dart';
+import 'package:myfhb/src/model/bot/video_links.dart';
 
 class SpeechModelResponse {
   String recipientId;
@@ -9,10 +10,11 @@ class SpeechModelResponse {
   String searchURL;
   String lang;
   List<Buttons> buttons;
+  List<VideoLinks> videoLinks;
 
   SpeechModelResponse({
     this.recipientId, this.text,this.endOfConv,this.imageURL,
-    this.searchURL,this.lang,this.buttons
+    this.searchURL,this.lang,this.buttons,this.videoLinks
     });
 
   //setter
@@ -29,6 +31,12 @@ class SpeechModelResponse {
         buttons.add(new Buttons.fromJson(v));
       });
     }
+    if (json[parameters.strVideoLinks] != null) {
+      videoLinks = new List<VideoLinks>();
+      json[parameters.strVideoLinks].forEach((v) {
+        videoLinks.add(new VideoLinks.fromJson(v));
+      });
+    }
   }
 
   //getter
@@ -42,6 +50,9 @@ class SpeechModelResponse {
     data[parameters.strLanguage] = this.lang;
     if (this.buttons != null) {
       data[parameters.strButtons] = this.buttons.map((v) => v.toJson()).toList();
+    }
+    if (this.videoLinks != null) {
+      data[parameters.strVideoLinks] = this.videoLinks.map((v) => v.toJson()).toList();
     }
     return data;
   }
