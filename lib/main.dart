@@ -2,7 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io' show Platform;
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
+// import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:camera/camera.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
@@ -26,6 +27,7 @@ import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
@@ -87,26 +89,26 @@ Future<void> main() async {
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  AwesomeNotifications().initialize(
+//   AwesomeNotifications().initialize(
 
-      // set the icon to null if you want to use the default app icon
-      null,
-      [
-        NotificationChannel(
-          channelKey: 'basic_channel',
-          channelName: 'Basic notifications',
-          channelDescription: 'Notification channel for basic tests',
-          defaultColor: Color(0xFF9D50DD),
-          ledColor: Colors.white,
-        )
-      ]);
-  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    if (!isAllowed) {
-// Insert here your friendly dialog box before call the request method
-// This is very important to not harm the user experience
-      AwesomeNotifications().requestPermissionToSendNotifications();
-    }
-  });
+//       // set the icon to null if you want to use the default app icon
+//       null,
+//       [
+//         NotificationChannel(
+//           channelKey: 'basic_channel',
+//           channelName: 'Basic notifications',
+//           channelDescription: 'Notification channel for basic tests',
+//           defaultColor: Color(0xFF9D50DD),
+//           ledColor: Colors.white,
+//         )
+//       ]);
+//   AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+//     if (!isAllowed) {
+// // Insert here your friendly dialog box before call the request method
+// // This is very important to not harm the user experience
+//       AwesomeNotifications().requestPermissionToSendNotifications();
+//     }
+//   });
 
   runApp(
     MyFHB(),
@@ -173,7 +175,7 @@ class _MyFHBState extends State<MyFHB> {
   static const secure_platform = variable.security;
   static const nav_platform = const MethodChannel('navigation.channel');
   String navRoute = '';
-
+  bool isAlreadyLoaded = false;
   final Connectivity _connectivity = Connectivity();
   StreamSubscription<ConnectivityResult> _connectivitySubscription;
   bool _internetconnection = false;
@@ -198,15 +200,29 @@ class _MyFHBState extends State<MyFHB> {
     CommonUtil.askPermissionForCameraAndMic();
     getMyRoute();
     _enableTimer();
-
+    isAlreadyLoaded = true;
     if (Platform.isIOS) {
       // Push Notifications
       final provider = PushNotificationsProvider();
-      provider.initNotification();
-
+      provider.initLocalNotification();
       provider.pushController.listen((callarguments) {
         Get.key.currentState
             .pushNamed(routervariable.rt_CallMain, arguments: callarguments);
+      });
+      provider.pushNotificationController.listen((event) {
+        if (isAlreadyLoaded) {
+          if (event == parameters.doctorCancellation) {
+            Get.to(NotificationMain());
+          }
+        } else {
+          if (event == parameters.doctorCancellation) {
+            Get.to(SplashScreen(
+              nsRoute: parameters.doctorCancellation,
+            ));
+          } else if (event == "normal") {
+            Get.to(SplashScreen());
+          }
+        }
       });
     }
 
@@ -328,7 +344,8 @@ class _MyFHBState extends State<MyFHB> {
     var nsSettingsForAndroid =
         new AndroidInitializationSettings(variable.strLauncher);
     var nsSettingsForIOS = new IOSInitializationSettings();
-    var platform = new InitializationSettings(nsSettingsForAndroid,nsSettingsForIOS);
+    var platform = new InitializationSettings(
+        android: nsSettingsForAndroid, iOS: nsSettingsForIOS);
 
     Future notificationAction(String payload) async {
       Navigator.push(
@@ -437,7 +454,7 @@ class _MyFHBState extends State<MyFHB> {
     try {
       result = await _connectivity.checkConnectivity();
     } on PlatformException catch (e) {
-      print(e.toString());
+      //print(e.toString());
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -473,7 +490,7 @@ class _MyFHBState extends State<MyFHB> {
             wifiName = await _connectivity.getWifiName();
           }
         } on PlatformException catch (e) {
-          print(e.toString());
+          //print(e.toString());
           wifiName = failed_wifi;
         }
 
@@ -495,14 +512,14 @@ class _MyFHBState extends State<MyFHB> {
             wifiBSSID = await _connectivity.getWifiBSSID();
           }
         } on PlatformException catch (e) {
-          print(e.toString());
+          //print(e.toString());
           wifiBSSID = failed_wifi_bssid;
         }
 
         try {
           wifiIP = await _connectivity.getWifiIP();
         } on PlatformException catch (e) {
-          print(e.toString());
+          //print(e.toString());
           wifiIP = failed_wifi_ip;
         }
 
@@ -554,15 +571,15 @@ class _MyFHBState extends State<MyFHB> {
       }
     } catch (e) {}
     return CallMain(
-      isAppExists: false,
-      role: ClientRole.Broadcaster,
-      channelName: navRoute.split('&')[0],
-      doctorName: navRoute.split('&')[1] ?? 'Test',
-      doctorId: navRoute.split('&')[2] ?? 'Doctor',
-      doctorPic: docPic,
-      patientId: navRoute.split('&')[5] ?? 'Patient',
-      patientName: navRoute.split('&')[6] ?? 'Test',
-      patientPicUrl: patPic);
+        isAppExists: false,
+        role: ClientRole.Broadcaster,
+        channelName: navRoute.split('&')[0],
+        doctorName: navRoute.split('&')[1] ?? 'Test',
+        doctorId: navRoute.split('&')[2] ?? 'Doctor',
+        doctorPic: docPic,
+        patientId: navRoute.split('&')[5] ?? 'Patient',
+        patientName: navRoute.split('&')[6] ?? 'Test',
+        patientPicUrl: patPic);
   }
 
   void onBoardNSAcknowledge(dynamic data) {

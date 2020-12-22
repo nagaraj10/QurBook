@@ -333,10 +333,10 @@ class _AddReminderState extends State<AddReminder> {
         variable.strAppPackage,
         variable.strAPP_NAME,
         variable.strHealthRecordChannel,
-        importance: Importance.Max,
-        priority: Priority.High);
+        importance: Importance.max,
+        priority: Priority.high);
     var iosPlatformChannelSpecifies = new IOSNotificationDetails();
-    var platformChannelSpecifies = new NotificationDetails(androidPlatformChannelSpecifies,iosPlatformChannelSpecifies);
+    var platformChannelSpecifies = new NotificationDetails();
     var timeArray = model.time.split(':');
     var hour = int.parse(timeArray[0]);
     var mintues = int.parse(timeArray[1].substring(0, 2));
