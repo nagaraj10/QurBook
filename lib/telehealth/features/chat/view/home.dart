@@ -92,7 +92,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
     var initializationSettingsAndroid =
         new AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
     var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings(initializationSettingsAndroid,initializationSettingsIOS);
+    var initializationSettings = new InitializationSettings();
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
@@ -105,11 +105,11 @@ class HomeScreenState extends State<ChatHomeScreen> {
       'your channel description',
       playSound: true,
       enableVibration: true,
-      importance: Importance.Max,
-      priority: Priority.High,
+      importance: Importance.max,
+      priority: Priority.high,
     );
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails(androidPlatformChannelSpecifics,iOSPlatformChannelSpecifics);
+    var platformChannelSpecifics = new NotificationDetails();
 
     await flutterLocalNotificationsPlugin.show(0, message['title'].toString(),
         message['body'].toString(), platformChannelSpecifics,
@@ -335,17 +335,16 @@ class HomeScreenState extends State<ChatHomeScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => Chat(
-                            peerId: document.documentID,
-                            peerAvatar: document[STR_PHOTO_URL],
-                            peerName: document[STR_NICK_NAME],
-                            lastDate: getFormattedDateTime(
-                                (document[STR_CREATED_AT] as Timestamp)
-                                    .toDate()
-                                    .toString()),
-                        patientId: '',
-                        patientName: '',
-                        patientPicture: ''
-                          )));
+                          peerId: document.documentID,
+                          peerAvatar: document[STR_PHOTO_URL],
+                          peerName: document[STR_NICK_NAME],
+                          lastDate: getFormattedDateTime(
+                              (document[STR_CREATED_AT] as Timestamp)
+                                  .toDate()
+                                  .toString()),
+                          patientId: '',
+                          patientName: '',
+                          patientPicture: '')));
             },
             child: Container(
               child: Row(

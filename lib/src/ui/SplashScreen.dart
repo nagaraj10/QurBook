@@ -10,12 +10,13 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
-
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../utils/PageNavigator.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -88,6 +89,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     bookingId: widget.bookingID,
                     date: widget.appointmentDate),
               ));
+            } else if (widget.nsRoute == parameters.doctorCancellation) {
+              Get.to(NotificationMain());
             } else {
               PageNavigator.goToPermanent(context, router.rt_Dashboard);
             }
