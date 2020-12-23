@@ -122,28 +122,28 @@ class PushNotificationsProvider {
     }
   }
 
-  initLocalNotification() async {
-    // Local Notification
-    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
-    var android = new AndroidInitializationSettings(parameters.launcher);
-    var iOS = new IOSInitializationSettings(
-        onDidReceiveLocalNotification: onDidReceiveLocalNotificationIos);
-    var initSetttings = new InitializationSettings(android: android, iOS: iOS);
+  initNotification() async {
     await _firebaseMessaging.requestNotificationPermissions();
     final token = await _firebaseMessaging.getToken();
     print('${parameters.token} : $token');
+
+    // initLocalNotification();
+
     _firebaseMessaging.configure(
         onMessage: onMessage,
-        onBackgroundMessage: Platform.isIOS ? null : onBackgroundMessage,
+        onBackgroundMessage: onBackgroundMessage,
         onResume: onResume,
         onLaunch: onLaunch);
-    flutterLocalNotificationsPlugin.initialize(initSetttings,
-        onSelectNotification: onSelectNotification);
   }
 
-  Future onDidReceiveLocalNotificationIos(
-      int id, String title, String body, String payload) async {
-    print(title);
+  initLocalNotification() {
+    // Local Notification
+    flutterLocalNotificationsPlugin = new FlutterLocalNotificationsPlugin();
+    var android = new AndroidInitializationSettings(parameters.launcher);
+    var iOS = new IOSInitializationSettings();
+    var initSetttings = new InitializationSettings(android: android, iOS: iOS);
+    flutterLocalNotificationsPlugin.initialize(initSetttings,
+        onSelectNotification: onSelectNotification);
   }
 
   showLocalNotification() async {
@@ -223,6 +223,8 @@ class PushNotificationsProvider {
   // }
 
   Future onSelectNotification(String payload) {
+    // print(
+    //     "----------------------------------------------------------- called on selection");
     if (isCall) {
       updateStatus(parameters.accept.toLowerCase());
     } else if (isCancellation) {
@@ -267,25 +269,16 @@ class PushNotificationsProvider {
           channelName: channelName,
           userName: userName,
           doctorId: doctorId);
-      //_pushStreamCOntroller.sink.add(callArguments);
     }
 
-    // final userName = message[parameters.username];
-    // final channelName = message[parameters.meeting_id];
-    // final doctorId = message[parameters.doctorId];
-    // callArguments = CallArguments(
-    //     role: ClientRole.Broadcaster,
-    //     channelName: channelName,
-    //     userName: userName,
-    //     doctorId: doctorId);
-
-    //newInitLocalNotification();
+    initLocalNotification();
     showLocalNotification();
   }
 
   Future<dynamic> onMessage(Map<String, dynamic> message) async {
-    print("OnMessage New: $message");
-
+    // print("OnMessage New: $message");
+    // print(
+    // "----------------------------------------------------------- called on onMessage");
     // title = "new"; //message[parameters.notification][parameters.title];
     // body = "new"; // message[parameters.notification][parameters.body];
     //ringtone = message[parameters.aps][parameters.sound];
@@ -304,27 +297,32 @@ class PushNotificationsProvider {
   }
 
   Future<dynamic> onLaunch(Map<String, dynamic> message) async {
-    print("${parameters.onlaunch}: $message");
+    // print("${parameters.onlaunch}: $message");
 
-    // Future.delayed(const Duration(seconds: 5), () {
-    //   final userName = "new"; //message[parameters.username];
-    //   final channelName = "new"; //message[parameters.meeting_id];
-    //   final doctorId = "new"; //message[parameters.doctorId];
+    Future.delayed(const Duration(seconds: 5), () {
+      //   final userName = "new"; //message[parameters.username];
+      //   final channelName = "new"; //message[parameters.meeting_id];
+      //   final doctorId = "new"; //message[parameters.doctorId];
 
-    //   var callArguments = CallArguments(
-    //       role: ClientRole.Broadcaster,
-    //       channelName: channelName,
-    //       userName: userName,
-    //       doctorId: doctorId);
-    //   _pushStreamCOntroller.sink.add(callArguments);
-    // });
+      //   var callArguments = CallArguments(
+      //       role: ClientRole.Broadcaster,
+      //       channelName: channelName,
+      //       userName: userName,
+      //       doctorId: doctorId);
+      //   _pushStreamCOntroller.sink.add(callArguments);
+      setTitleAndBody(message);
+      if (isCall) {
+        updateStatus(parameters.accept.toLowerCase());
+      }
+    });
     // showLocalNotificationNew(message);
-    setTitleAndBody(message);
+    //setTitleAndBody(message);
   }
 
   Future<dynamic> onResume(Map<String, dynamic> message) async {
-    print("${parameters.onresume}: $message");
-
+    // print("${parameters.onresume}: $message");
+    // print(
+    // "----------------------------------------------------------- called on onResume");
     // final userName = "new"; //message[parameters.username];
     // final channelName = "new"; //message[parameters.meeting_id];
     // final doctorId = "new"; //message[parameters.doctorId];
@@ -337,6 +335,9 @@ class PushNotificationsProvider {
     // _pushStreamCOntroller.sink.add(callArguments);
     // showLocalNotificationNew(message);
     setTitleAndBody(message);
+    if (isCall) {
+      updateStatus(parameters.accept.toLowerCase());
+    }
   }
 
   void dispose() {
