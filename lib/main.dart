@@ -204,7 +204,7 @@ class _MyFHBState extends State<MyFHB> {
     if (Platform.isIOS) {
       // Push Notifications
       final provider = PushNotificationsProvider();
-      provider.initLocalNotification();
+      provider.initNotification();
       provider.pushController.listen((callarguments) {
         Get.key.currentState
             .pushNamed(routervariable.rt_CallMain, arguments: callarguments);
