@@ -220,6 +220,11 @@ class _NotificationScreen extends State<NotificationScreen> {
                                     onPressed: !notification
                                             ?.result[index]?.isActionDone
                                         ? () {
+                                            var body = {};
+                                            body['templateName'] =
+                                                payload?.templateName;
+                                            body['contextId'] =
+                                                payload?.bookingId;
                                             _displayDialog(
                                                 context,
                                                 [
@@ -236,8 +241,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                               .payload
                                                               .plannedStartDateTime)
                                                 ],
-                                                notification
-                                                    ?.result[index]?.id);
+                                                body);
                                           }
                                         : null,
                                     child: TextWidget(
@@ -260,6 +264,11 @@ class _NotificationScreen extends State<NotificationScreen> {
                                             ?.result[index]?.isActionDone
                                         ? () {
                                             //Reschedule
+                                            var body = {};
+                                            body['templateName'] =
+                                                payload?.templateName;
+                                            body['contextId'] =
+                                                payload?.bookingId;
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -296,10 +305,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                                                 .messageDetails
                                                                 .payload
                                                                 .bookingId),
-                                                        notificationId:
-                                                            notification
-                                                                ?.result[index]
-                                                                ?.id,
+                                                        body: body,
                                                       )),
                                             ).then((value) {
                                               Provider.of<
@@ -342,7 +348,7 @@ class _NotificationScreen extends State<NotificationScreen> {
   }
 
   _displayDialog(
-      BuildContext context, List<Past> appointments, String id) async {
+      BuildContext context, List<Past> appointments, dynamic body) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -413,7 +419,7 @@ class _NotificationScreen extends State<NotificationScreen> {
                                         Navigator.pop(
                                             context,
                                             getCancelAppoitment(
-                                                appointments, id));
+                                                appointments, body));
                                       },
                                       child: TextWidget(
                                           text: parameters.yes, fontsize: 12),
@@ -434,16 +440,15 @@ class _NotificationScreen extends State<NotificationScreen> {
         });
   }
 
-  getCancelAppoitment(List<Past> appointments, String id) {
+  getCancelAppoitment(List<Past> appointments, dynamic body) {
     cancelAppointment(appointments).then((value) {
       if (value == null) {
         toast.getToast(AppConstants.BOOKING_CANCEL, Colors.red);
       } else if (value.isSuccess == true) {
 //        widget.onChanged(AppConstants.callBack);
         toast.getToast(AppConstants.YOUR_BOOKING_SUCCESS, Colors.green);
-        //TODO call the ns action api
-        FetchNotificationService().updateNsActionStatus(id).then((data) {
-          if (data['isSuccess']) {
+        FetchNotificationService().updateNsActionStatus(body).then((data) {
+          if (data != null && data['isSuccess']) {
             print('ns actions has been updated');
           } else {
             print('ns actions not being updated');

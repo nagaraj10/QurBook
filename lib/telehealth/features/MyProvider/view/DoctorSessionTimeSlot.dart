@@ -32,7 +32,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
   ValueChanged<String> onChanged;
   DateTime onUserChangedDate;
   bool isFromHospital;
-  String notificationId;
+  dynamic body;
 
   DoctorSessionTimeSlot(
       {this.doctorId,
@@ -52,7 +52,7 @@ class DoctorSessionTimeSlot extends StatefulWidget {
       this.onChanged,
       this.onUserChangedDate,
       this.isFromHospital,
-      this.notificationId});
+      this.body});
 
   @override
   State<StatefulWidget> createState() {
@@ -215,7 +215,7 @@ class DoctorSessionTimeSlotState extends State<DoctorSessionTimeSlot> {
                           },
                           isFromNotification: widget.isFromNotification,
                           isFromHospital: widget.isFromHospital,
-                          notificationId: widget.notificationId,
+                          body: widget.body,
                         ),
                       )
                     : Column(

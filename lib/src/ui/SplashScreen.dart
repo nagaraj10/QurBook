@@ -26,6 +26,7 @@ class SplashScreen extends StatefulWidget {
   final String appointmentDate;
   final String doctorSessionId;
   final String healthOrganizationId;
+  final String templateName;
 
   SplashScreen(
       {this.nsRoute,
@@ -33,7 +34,8 @@ class SplashScreen extends StatefulWidget {
       this.doctorID,
       this.appointmentDate,
       this.doctorSessionId,
-      this.healthOrganizationId});
+      this.healthOrganizationId,
+      this.templateName});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -67,18 +69,25 @@ class _SplashScreenState extends State<SplashScreen> {
             PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
         if (authToken != null) {
           if (deviceIfo) {
-            if (widget.nsRoute == 'reschedule') {
-              Get.to(ResheduleMain(
-                isFromNotification: true,
-                isReshedule: true,
-                doc: Past(
+            if (widget.nsRoute == 'DoctorRescheduling') {
+              var body = {};
+              body['templateName'] = widget.templateName;
+              body['contextId'] = widget.bookingID;
+              Get.to(
+                ResheduleMain(
+                  isFromNotification: true,
+                  isReshedule: true,
+                  doc: Past(
                     //! this is has to be correct
                     doctorSessionId: widget.doctorSessionId,
                     bookingId: widget.bookingID,
                     doctor: doc.Doctor(id: widget.doctorID),
-                    healthOrganization: City(id: widget.healthOrganizationId)),
-              ));
-            } else if (widget.nsRoute == 'cancel_appointment') {
+                    healthOrganization: City(id: widget.healthOrganizationId),
+                  ),
+                  body: body,
+                ),
+              );
+            } else if (widget.nsRoute == 'DoctorCancellation') {
               //cancel appointments route
 
               Get.offAll(TelehealthProviders(
@@ -87,7 +96,8 @@ class _SplashScreenState extends State<SplashScreen> {
                     dialogType: 'CANCEL',
                     isCancelDialogShouldShow: true,
                     bookingId: widget.bookingID,
-                    date: widget.appointmentDate),
+                    date: widget.appointmentDate,
+                    templateName: widget.templateName),
               ));
             } else if (widget.nsRoute == parameters.doctorCancellation) {
               Get.to(NotificationMain());

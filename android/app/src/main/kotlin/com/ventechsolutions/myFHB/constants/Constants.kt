@@ -48,4 +48,7 @@ object Constants {
     val PROP_ACCEPT ="accept"
     val PROP_DECLINE ="decline"
     val PROP_PROVIDER_REQID ="providerRequestId"
+    val PROP_DOC_CANCELLATION ="DoctorCancellation"
+    val PROP_DOC_RESCHDULE ="DoctorRescheduling"
+    val PROP_TEMP_NAME ="templateName"
 }

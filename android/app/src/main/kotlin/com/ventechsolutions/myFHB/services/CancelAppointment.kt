@@ -19,6 +19,7 @@ class CancelAppointment:BroadcastReceiver() {
         val value = p1?.getStringExtra(Intent.EXTRA_TEXT)
         val date = p1?.getStringExtra(Constants.PROP_PlannedStartTime)
         val bookingId = p1?.getStringExtra(Constants.PROP_BookingId)
+        val templateName = p1?.getStringExtra(Constants.PROP_TEMP_NAME)
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
         val pm: PackageManager = p0.packageManager
@@ -28,6 +29,7 @@ class CancelAppointment:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROP_PlannedStartTime,date)
         launchIntent?.putExtra(Constants.PROP_BookingId,bookingId)
         launchIntent?.putExtra(Intent.EXTRA_TEXT,value)
+        launchIntent?.putExtra(Constants.PROP_TEMP_NAME,templateName)
         p0.startActivity(launchIntent)
     }
 }

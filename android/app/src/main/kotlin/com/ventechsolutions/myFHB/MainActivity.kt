@@ -41,6 +41,7 @@ class MainActivity : FlutterActivity() {
     private val STREAM = Constants.CN_EVE_STREAM
     private var sharedValue: String? = null
     private var username: String? = null
+    private var templateName: String? = null
     private var bookingId: String? = null
     private var appDate: String? = null
     private var docSessionId: String? = null
@@ -251,18 +252,19 @@ class MainActivity : FlutterActivity() {
         appDate= intent.getStringExtra(Constants.PROP_PlannedStartTime)
         docSessionId= intent.getStringExtra(Constants.PROP_docSessionId)
         healthOrgId= intent.getStringExtra(Constants.PROP_healthOrgId)
+        templateName= intent.getStringExtra(Constants.PROP_TEMP_NAME)
         val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
         patId = intent.getStringExtra(getString(R.string.pat_id))
         patName = intent.getStringExtra(getString(R.string.pat_name))
         patPic = intent.getStringExtra(getString(R.string.pat_pic))
         if(sharedValue!=null && username !=null && docId!=null && docPic !=null){
             sharedValue="$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}"
-        }else if(sharedValue==Constants.PROP_RESCHEDULE){
+        }else if(sharedValue==Constants.PROP_DOC_RESCHDULE){
             //todo redirect to telehealth page
-            sharedValue="${Constants.PROP_RESCHEDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}"
-        }else if(sharedValue==Constants.PROP_CANCEL_APPS){
+            sharedValue="${Constants.PROP_DOC_RESCHDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}&${templateName}"
+        }else if(sharedValue==Constants.PROP_DOC_CANCELLATION){
             //todo redirect to telehealth page
-            sharedValue="${Constants.PROP_CANCEL_APPS}&${bookingId!!}&${appDate}"
+            sharedValue="${Constants.PROP_DOC_CANCELLATION}&${bookingId!!}&${appDate}&${templateName}"
         }else if(providerReqId != null && providerReqId != ""){
             if(sharedValue==Constants.PROP_ACCEPT){
                 sharedValue="$sharedValue&${providerReqId}&${"accepted"}"
