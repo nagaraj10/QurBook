@@ -147,7 +147,7 @@ class AppointmentsCommonWidget {
               categoryPosition: position,
               allowSelect: false,
               isAudioSelect: false,
-              isNotesSelect: true,
+              isNotesSelect: isUpcoming ? true : false,
               selectedMedias: notesId,
               isFromChat: false,
               showDetails: false,
@@ -191,7 +191,7 @@ class AppointmentsCommonWidget {
             builder: (context) => MyRecords(
               categoryPosition: position,
               allowSelect: false,
-              isAudioSelect: true,
+              isAudioSelect: isUpcoming ? true : false,
               isNotesSelect: false,
               selectedMedias: voiceIds,
               isFromChat: false,

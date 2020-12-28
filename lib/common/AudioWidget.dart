@@ -9,8 +9,6 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
-
-
 enum t_MEDIA {
   FILE,
   BUFFER,
@@ -45,8 +43,6 @@ class AudioWidgetState extends State<AudioWidget> {
 
   bool isPlaying = false;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -63,6 +59,8 @@ class AudioWidgetState extends State<AudioWidget> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+
+    flutterSound.stopPlayer();
   }
 
   @override
@@ -87,13 +85,13 @@ class AudioWidgetState extends State<AudioWidget> {
                   onPressed: isPlaying
                       ? onPausePlayerPressed()
                       : flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
-                      ? onPausePlayerPressed()
-                      : onStartPlayerPressed(),
+                          ? onPausePlayerPressed()
+                          : onStartPlayerPressed(),
                   padding: EdgeInsets.all(4.0),
                   child: onStartPlayerPressed() != null
                       ? Icon(
-                    Icons.play_arrow,
-                  )
+                          Icons.play_arrow,
+                        )
                       : Icon(Icons.pause),
                 ),
               ),
@@ -118,12 +116,12 @@ class AudioWidgetState extends State<AudioWidget> {
             flex: 2,
             child: Center(
                 child: Text(
-                  this._playerTxt,
-                  style: TextStyle(
-                    fontSize: 12.0,
-                    color: Colors.black,
-                  ),
-                )),
+              this._playerTxt,
+              style: TextStyle(
+                fontSize: 12.0,
+                color: Colors.black,
+              ),
+            )),
           ),
           Expanded(
               flex: 1,
@@ -160,7 +158,7 @@ class AudioWidgetState extends State<AudioWidget> {
       if (_path[_codec.index] == null) return null;
     }
     return (flutterSound.audioState == t_AUDIO_STATE.IS_STOPPED ||
-        flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED)
+            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED)
         ? startPlayer
         : null;
   }
@@ -171,9 +169,10 @@ class AudioWidgetState extends State<AudioWidget> {
     try {
       String path = widget.audioFile;
       if (_media == t_MEDIA.ASSET) {
-        Uint8List buffer = (await rootBundle.load(variable.assetSample[_codec.index]))
-            .buffer
-            .asUint8List();
+        Uint8List buffer =
+            (await rootBundle.load(variable.assetSample[_codec.index]))
+                .buffer
+                .asUint8List();
         path = await flutterSound.startPlayerFromBuffer(
           buffer,
           codec: _codec,
@@ -206,15 +205,14 @@ class AudioWidgetState extends State<AudioWidget> {
           DateTime date = new DateTime.fromMillisecondsSinceEpoch(
               e.currentPosition.toInt(),
               isUtc: true);
-          String txt = DateFormat(variable.strDatems, variable.strenUs).format(date);
+          String txt =
+              DateFormat(variable.strDatems, variable.strenUs).format(date);
           this.setState(() {
             this._playerTxt = txt.substring(0, 5);
           });
         }
       });
-    } catch (err) {
-
-    }
+    } catch (err) {}
 
     setState(() {});
   }
@@ -239,7 +237,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
   onPausePlayerPressed() {
     return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
-        flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
+            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
         ? pausePlayer
         : startPlayer;
   }
@@ -249,12 +247,10 @@ class AudioWidgetState extends State<AudioWidget> {
     try {
       if (flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED) {
         result = await flutterSound.resumePlayer();
-
       } else {
         result = await flutterSound.pausePlayer();
       }
-    } catch (err) {
-    }
+    } catch (err) {}
     if (result == variable.st_pausedplayer) {
       isPlaying = false;
     } else {
@@ -265,7 +261,7 @@ class AudioWidgetState extends State<AudioWidget> {
 
   onStopPlayerPressed() {
     return flutterSound.audioState == t_AUDIO_STATE.IS_PLAYING ||
-        flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
+            flutterSound.audioState == t_AUDIO_STATE.IS_PAUSED
         ? stopPlayer
         : null;
   }
@@ -279,8 +275,7 @@ class AudioWidgetState extends State<AudioWidget> {
         _playerSubscription = null;
       }
       sliderCurrentPosition = 0.0;
-    } catch (err) {
-    }
+    } catch (err) {}
     this.setState(() {});
   }
 }
