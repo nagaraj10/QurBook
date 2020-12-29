@@ -87,8 +87,9 @@ class _NotificationScreen extends State<NotificationScreen> {
           ),
         );
       case LoadingStatus.completed:
-        return (notificationData.notifications != null)
-            ? notificationData.notifications?.result != null
+        return (notificationData != null)
+          ?(notificationData.notifications != null)
+            ? (notificationData.notifications?.result != null) && (notificationData.notifications?.result.length>0)
                 ? ListView.builder(
                     itemCount: notificationData.notifications.result.length,
                     shrinkWrap: true,
@@ -100,7 +101,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                           index: index);
                     })
                 : emptyNotification()
-            : emptyNotification();
+            : emptyNotification()
+        : emptyNotification();
       case LoadingStatus.empty:
       default:
         return emptyNotification();
