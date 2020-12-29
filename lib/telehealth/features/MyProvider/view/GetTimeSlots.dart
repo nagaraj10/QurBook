@@ -187,14 +187,19 @@ class GetTimeSlots extends StatelessWidget {
                     )),
             (Route<dynamic> route) => route.isFirst).then((value) {});
       } else {
-        FetchNotificationService().updateNsActionStatus(notificationId).then((data) {
-          if (data['isSuccess']) {
-            Navigator.pop(context);
-          } else {
-            Navigator.pop(context);
-          }
-        });
-        
+        if (notificationId != null && notificationId != '') {
+          FetchNotificationService()
+              .updateNsActionStatus(notificationId)
+              .then((data) {
+            if (data['isSuccess']) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pop(context);
+            }
+          });
+        } else {
+          Navigator.pop(context);
+        }
       }
       if (value == null) {
         toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
