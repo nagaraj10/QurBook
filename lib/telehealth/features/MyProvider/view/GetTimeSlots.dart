@@ -46,7 +46,7 @@ class GetTimeSlots extends StatelessWidget {
   Function() isRefresh;
   bool isFromNotification;
   bool isFromHospital;
-  String notificationId;
+  dynamic body;
 
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
@@ -67,7 +67,7 @@ class GetTimeSlots extends StatelessWidget {
       this.isRefresh,
       this.isFromNotification,
       this.isFromHospital,
-      this.notificationId});
+      this.body});
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +165,7 @@ class GetTimeSlots extends StatelessWidget {
             closePage: (value) {
               closePage(value);
             },
-            refresh: (){
+            refresh: () {
               isRefresh();
             },
             isFromHospital: isFromHospital,
@@ -179,18 +179,28 @@ class GetTimeSlots extends StatelessWidget {
             context, appointments, slotNumber, resheduledDate, doctorSessionId)
         .then((value) {
       if (isFromNotification == true) {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TelehealthProviders(
-                      arguments: HomeScreenArguments(selectedIndex: 0),
-                    )),
-            (Route<dynamic> route) => route.isFirst).then((value) {});
+        if (body != null && body != '') {
+          FetchNotificationService().updateNsActionStatus(body).then((data) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => TelehealthProviders(
+                          arguments: HomeScreenArguments(selectedIndex: 0),
+                        )),
+                (Route<dynamic> route) => route.isFirst).then((value) {});
+          });
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => TelehealthProviders(
+                        arguments: HomeScreenArguments(selectedIndex: 0),
+                      )),
+              (Route<dynamic> route) => route.isFirst).then((value) {});
+        }
       } else {
-        if (notificationId != null && notificationId != '') {
-          FetchNotificationService()
-              .updateNsActionStatus(notificationId)
-              .then((data) {
+        if (body != null && body != '') {
+          FetchNotificationService().updateNsActionStatus(body).then((data) {
             if (data['isSuccess']) {
               Navigator.pop(context);
             } else {
@@ -206,7 +216,7 @@ class GetTimeSlots extends StatelessWidget {
       } else if (value.isSuccess == true) {
         toast.getToast(
             AppointmentConstant.YOUR_RESHEDULE_SUCCESS, Colors.green);
-            //TODO call the ns action api
+        //TODO call the ns action api
       } else if (value.message.contains(AppointmentConstant.NOT_AVAILABLE)) {
         toast.getToast(AppointmentConstant.SLOT_NOT_AVAILABLE, Colors.red);
       } else {

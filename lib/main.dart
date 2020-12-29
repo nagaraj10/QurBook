@@ -27,6 +27,7 @@ import 'package:myfhb/src/ui/SplashScreen.dart';
 import 'package:myfhb/src/ui/bot/viewmodel/chatscreen_vm.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
@@ -265,7 +266,7 @@ class _MyFHBState extends State<MyFHB> {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(selectedIndex: 0),
         ));
-      } else if (passedValArr[0] == 'reschedule') {
+      } else if (passedValArr[0] == 'DoctorRescheduling') {
         /* Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
             selectedIndex: 1,
@@ -275,31 +276,35 @@ class _MyFHBState extends State<MyFHB> {
           healthOrganizationId: passedValArr[4] ?? ''
           ),
         )); */
-
+        var body = {};
+        body['templateName'] = passedValArr[5]??'';
+        body['contextId'] = passedValArr[2] ?? '';
         Get.to(ResheduleMain(
           isFromNotification: true,
           isReshedule: true,
           doc: Past(
-              //! this is has to be correct
-              doctorSessionId: passedValArr[3],
-              bookingId: passedValArr[2],
-              doctor: doc.Doctor(id: passedValArr[1]),
-              healthOrganization: City(id: passedValArr[4])),
+            //! this is has to be correct
+            doctorSessionId: passedValArr[3],
+            bookingId: passedValArr[2],
+            doctor: doc.Doctor(id: passedValArr[1]),
+            healthOrganization: City(id: passedValArr[4]),
+          ),
+          body: body,
         ));
-      } else if (passedValArr[0] == 'cancel_appointment') {
+      } else if (passedValArr[0] == 'DoctorCancellation') {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
               selectedIndex: 0,
               dialogType: 'CANCEL',
               isCancelDialogShouldShow: true,
               bookingId: passedValArr[1] ?? '',
-              date: passedValArr[2] ?? ''),
+              date: passedValArr[2] ?? '',
+              templateName: passedValArr[3]??''),
         ));
       } else if (passedValArr[0] == 'accept' || passedValArr[0] == 'decline') {
         var jsonInput = {};
         jsonInput['providerRequestId'] = passedValArr[1];
         jsonInput['action'] = passedValArr[2];
-        onBoardNSAcknowledge(jsonInput);
       } else if (passedValArr[4] == 'call') {
         try {
           doctorPic = passedValArr[3];
@@ -398,26 +403,31 @@ class _MyFHBState extends State<MyFHB> {
     if (navRoute.isEmpty) {
       return SplashScreen();
     } else {
-      if (navRoute.split('&')[0] == 'reschedule') {
+      if (navRoute.split('&')[0] == 'DoctorRescheduling') {
         return SplashScreen(
-          nsRoute: 'reschedule',
+          nsRoute: 'DoctorRescheduling',
           doctorID: navRoute.split('&')[1],
           bookingID: navRoute.split('&')[2],
           doctorSessionId: navRoute.split('&')[3],
           healthOrganizationId: navRoute.split('&')[4],
+          templateName:navRoute.split('&')[5]
         );
-      } else if (navRoute.split('&')[0] == 'cancel_appointment') {
+      } else if (navRoute.split('&')[0] == 'DoctorCancellation') {
         return SplashScreen(
-          nsRoute: 'cancel_appointment',
+          nsRoute: 'DoctorCancellation',
           bookingID: navRoute.split('&')[1],
           appointmentDate: navRoute.split('&')[2],
+          templateName: navRoute.split('&')[3],
         );
       } else if (navRoute.split('&')[0] == 'accept' ||
           navRoute.split('&')[0] == 'decline') {
         var jsonInput = {};
         jsonInput['providerRequestId'] = navRoute.split('&')[1];
         jsonInput['action'] = navRoute.split('&')[2];
-        onBoardNSAcknowledge(jsonInput);
+        // var body = {
+        //   "templateName": 'GoFHBDoctorOnboardingByHospital',
+        //   "contextId": parsedData[1]
+        // };
         return SplashScreen();
       } else {
         return StartTheCall();
@@ -582,12 +592,13 @@ class _MyFHBState extends State<MyFHB> {
         patientPicUrl: patPic);
   }
 
-  void onBoardNSAcknowledge(dynamic data) {
+  void onBoardNSAcknowledge(dynamic data, dynamic body) {
     var jsonString = jsonEncode(data);
     FlutterToast toast = new FlutterToast();
     authService.addDoctorAsProvider(jsonString).then((response) {
       if (response['isSuccess']) {
         toast.getToast(response['message'], Colors.green);
+        FetchNotificationService().updateNsActionStatus(body).then((data) {});
       } else {
         toast.getToast(response['diagnostics']['message'], Colors.red);
       }

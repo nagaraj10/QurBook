@@ -183,7 +183,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     private fun createNotification4Ack(data:Map<String, String> = HashMap()){
         //createNotificationCancelAppointment(data)
-        if(data["templateName"]=="DoctorCancellation" || data["templateName"]=="DoctorRescheduling"){
+        if(data[Constants.PROP_TEMP_NAME]==Constants.PROP_DOC_CANCELLATION || data[Constants.PROP_TEMP_NAME]==Constants.PROP_DOC_RESCHDULE){
             createNotificationCancelAppointment(data)
         }
 //        else if(data["templateName"]=="GoFHBPatientOnboardingByDoctor" || data["templateName"]=="GoFHBPatientOnboardingByHospital"){
@@ -262,6 +262,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val NS_ID = System.currentTimeMillis().toInt()
         val MEETING_ID = data[getString(R.string.meetid)]
         val DOC_ID = data[getString(R.string.docId)]
+        val TEMP_NAME = data[Constants.PROP_TEMP_NAME]
         val ack_sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)
@@ -275,19 +276,21 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
         val cancelAppointmentIntent = Intent(applicationContext,CancelAppointment::class.java)
         cancelAppointmentIntent.putExtra(getString(R.string.nsid), NS_ID)
-        cancelAppointmentIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_CANCEL_APPS)
+        cancelAppointmentIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_DOC_CANCELLATION)
         cancelAppointmentIntent.putExtra(Constants.PROP_BookingId, data[Constants.PROP_BookingId])
         cancelAppointmentIntent.putExtra(Constants.PROP_PlannedStartTime, data[Constants.PROP_PlannedStartTime])
+        cancelAppointmentIntent.putExtra(Constants.PROP_TEMP_NAME, TEMP_NAME)
         val cancelAppointmentPendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, cancelAppointmentIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
 
         val rescheduleIntent = Intent(applicationContext, RescheduleAppointment::class.java)
         rescheduleIntent.putExtra(getString(R.string.nsid), NS_ID)
-        rescheduleIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_RESCHEDULE)
+        rescheduleIntent.putExtra(Intent.EXTRA_TEXT, Constants.PROP_DOC_RESCHDULE)
         rescheduleIntent.putExtra(Constants.PROP_docSessionId, data[Constants.PROP_docSessionId])
         rescheduleIntent.putExtra(Constants.PROP_BookingId, data[Constants.PROP_BookingId])
         rescheduleIntent.putExtra(Constants.PROP_healthOrgId, data[Constants.PROP_healthOrgId])
         rescheduleIntent.putExtra(Constants.PROP_docId, data[Constants.PROP_docId])
+        rescheduleIntent.putExtra(Constants.PROP_TEMP_NAME, TEMP_NAME)
         val reschedulePendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, rescheduleIntent, PendingIntent.FLAG_CANCEL_CURRENT)
 
 

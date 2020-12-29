@@ -21,6 +21,7 @@ class RescheduleAppointment:BroadcastReceiver() {
         val docSessionId = p1?.getStringExtra(Constants.PROP_docSessionId)
         val healthOrgId = p1?.getStringExtra(Constants.PROP_healthOrgId)
         val bookingId = p1?.getStringExtra(Constants.PROP_BookingId)
+        val templateName = p1?.getStringExtra(Constants.PROP_TEMP_NAME)
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(p0!!)
         nsManager.cancel(notificationId!! as Int)
         val pm: PackageManager = p0.packageManager
@@ -32,6 +33,7 @@ class RescheduleAppointment:BroadcastReceiver() {
         launchIntent?.putExtra(Constants.PROP_docSessionId,docSessionId)
         launchIntent?.putExtra(Constants.PROP_healthOrgId,healthOrgId)
         launchIntent?.putExtra(Constants.PROP_BookingId,bookingId)
+        launchIntent?.putExtra(Constants.PROP_TEMP_NAME,templateName)
         p0.startActivity(launchIntent)
     }
 }

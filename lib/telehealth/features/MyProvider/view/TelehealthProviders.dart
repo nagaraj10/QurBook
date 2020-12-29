@@ -7,6 +7,7 @@ import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/ui/bot/SuperMaya.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/model/BottomNavigationArguments.dart';
 import 'package:myfhb/telehealth/features/BottomNavigationMenu/view/BottomNavigation.dart';
+import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
     as AppConstants;
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
@@ -76,10 +77,10 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
 
   @override
   Widget build(BuildContext context) {
-    if  (_selectedIndex==0 && _isCancelDialogShouldShown) {
+    if (_selectedIndex == 0 && _isCancelDialogShouldShown) {
       Future.delayed(Duration(seconds: 5), () {
-         //* show cancel app. dialog
-          showCanelAppointmentPromptToUser(context);
+        //* show cancel app. dialog
+        showCanelAppointmentPromptToUser(context);
       });
     }
     return Scaffold(
@@ -141,6 +142,15 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                         if (cancelAppointment.isSuccess == true) {
                           toast.getToast(
                               AppConstants.YOUR_BOOKING_SUCCESS, Colors.green);
+                          var body = {};
+                          body['templateName'] = widget?.arguments?.templateName;
+                          body['contextId'] = _bookingId;
+                          FetchNotificationService()
+                              .updateNsActionStatus(body)
+                              .then((data) {
+                            if (data != null && data['isSuccess']) {
+                            } else {}
+                          });
                         } else {
                           toast.getToast(
                               AppConstants.BOOKING_CANCEL, Colors.red);
@@ -183,12 +193,10 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
         name: 'My Providers', imageIcon: 'assets/navicons/my_providers.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
       name: 'Sheela',
-      imageIcon: PreferenceUtil.getStringValue(
-                                        Constants.keyMayaAsset) !=
-                                    null
-                                ? PreferenceUtil.getStringValue(
-                                        Constants.keyMayaAsset) +
-                                    variable.strExtImg : 'assets/maya/maya_us_main.png',
+      imageIcon: PreferenceUtil.getStringValue(Constants.keyMayaAsset) != null
+          ? PreferenceUtil.getStringValue(Constants.keyMayaAsset) +
+              variable.strExtImg
+          : 'assets/maya/maya_us_main.png',
     ));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
         name: 'Chat', imageIcon: 'assets/navicons/chat.png'));

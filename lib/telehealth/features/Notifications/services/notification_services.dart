@@ -38,10 +38,11 @@ class FetchNotificationService {
     });
   }
 
-  Future<dynamic> updateNsActionStatus(String id) async {
+  Future<dynamic> updateNsActionStatus(dynamic body) async {
     final response = await http.put(
-      _baseUrl + qr_notification_action + id,
+      _baseUrl + qr_notification_action,
       headers: await headerRequest.getRequestHeadersAuthContent(),
+      body: json.encode(body)
     );
 
     if(response.statusCode==200){
