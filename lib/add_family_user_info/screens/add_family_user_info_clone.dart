@@ -1779,7 +1779,12 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                         var image = await ImagePicker.pickImage(
                             source: ImageSource.gallery);
                         if (image != null) {
-                          imageURI = image as File;
+                          if (Platform.isIOS) {
+                            imageURI = File(image.path);
+                          } else {
+                            imageURI = image as File;
+                          }
+
                           if (widget.arguments.fromClass ==
                               CommonConstants.user_update) {
                             await PreferenceUtil.saveString(
@@ -1795,12 +1800,14 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     GestureDetector(
                       child: Text(variable.Camera),
                       onTap: () async {
-                        Navigator.pop(context);
-
                         var image = await ImagePicker.pickImage(
                             source: ImageSource.camera);
                         if (image != null) {
-                          imageURI = image as File;
+                          if (Platform.isIOS) {
+                            imageURI = File(image.path);
+                          } else {
+                            imageURI = image as File;
+                          }
                           Navigator.pop(context);
                           if (widget.arguments.fromClass ==
                               CommonConstants.user_update) {

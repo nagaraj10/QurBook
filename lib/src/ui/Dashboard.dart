@@ -264,7 +264,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       context,
       router.rt_UserAccounts,
       arguments: UserAccountsArguments(selectedIndex: position),
-    );
+    ).then((value) {
+      setState(() {});
+    });
 
     /* Navigator.of(context).push(
       MaterialPageRoute(
