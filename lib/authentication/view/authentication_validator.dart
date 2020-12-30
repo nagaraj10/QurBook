@@ -56,6 +56,8 @@ class AuthenticationValidator {
       return strEmailCantEmpty;
     } else if (!regexEmail.hasMatch(email)) {
       return strEmailValidText;
+    } else if('@'.allMatches(email).length > 1){
+      return strEmailValidText;
     }
     return null;
   }
