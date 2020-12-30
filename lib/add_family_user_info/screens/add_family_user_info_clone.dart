@@ -926,8 +926,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   bool doValidation() {
     bool isValid = false;
 
-    bool emailValid =
-        RegExp(variable.EMAIL_REGEXP).hasMatch(emailController.text);
+    bool emailValid = '@'.allMatches(emailController.text.trim()).length > 1
+        ? false
+        : RegExp(variable.EMAIL_REGEXP).hasMatch(emailController.text);
 
     if (firstNameController.text == '') {
       isValid = false;
