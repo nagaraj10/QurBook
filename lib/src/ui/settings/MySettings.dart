@@ -25,7 +25,7 @@ class MySettings extends StatefulWidget {
 class _MySettingsState extends State<MySettings> {
   bool _isdigitRecognition = true;
   bool _isdeviceRecognition = true;
-  bool _isGFActive = false;
+  bool _isGFActive;
   DevicesViewModel _deviceModel;
   bool _isHKActive = false;
   bool _firstTym = true;
