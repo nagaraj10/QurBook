@@ -88,6 +88,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   bool ispdfPresent = false;
 
   HealthRecordCollection audioMediaId;
+  HealthRecordCollection pdfId;
 
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
   String authToken;
@@ -121,6 +122,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           .getMediaMasterIDForPdfTypeStr(widget.data.healthRecordCollection);
       if (getMediaMasterIDForPdfTypeStr != null) {
         ispdfPresent = true;
+        pdfId = getMediaMasterIDForPdfTypeStr;
         getPdfFileData(getMediaMasterIDForPdfTypeStr);
       } else {
         ispdfPresent = false;
@@ -411,11 +413,15 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
     if (ispdfPresent) {
       print('audioPath' + pdfFile);
-      await ImageGallerySaver.saveFile(pdfFile).then((res) {
-        setState(() {
-          downloadStatus = true;
+      if (Platform.isIOS) {
+        CommonUtil.downloadFile(pdfId.healthRecordUrl, pdfId.fileType);
+      } else {
+        await ImageGallerySaver.saveFile(pdfFile).then((res) {
+          setState(() {
+            downloadStatus = true;
+          });
         });
-      });
+      }
     } else {
       if (imagesPathMain.length > 1) {
         DownloadMultipleImages(imagesPathMain).downloadFilesFromServer(contxt);
