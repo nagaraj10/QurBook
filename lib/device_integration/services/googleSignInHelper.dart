@@ -20,7 +20,7 @@ class GoogleSignInHelper {
     return signedIn;
   }
 
-  Future<bool> signInSilently() async{
+  Future<bool> signInSilently() async {
     try {
       GoogleSignInAccount user = await _googleSignIn.signInSilently();
       m_currentUser = user;
@@ -44,6 +44,7 @@ class GoogleSignInHelper {
         return true;
       }
     } catch (error) {
+      print(error.toString());
       return false;
     }
   }
@@ -99,4 +100,3 @@ class GoogleSignInHelper {
     return responseJson;
   }
 }
-
