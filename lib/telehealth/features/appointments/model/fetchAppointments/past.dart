@@ -3,6 +3,7 @@ import 'package:myfhb/telehealth/features/appointments/constants/appointments_pa
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/booked.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart';
+import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/feeDetails.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/healthRecord.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/status.dart';
 
@@ -31,6 +32,7 @@ class Past {
     this.healthRecord,
     this.doctorFollowUpFee,
     this.healthOrganization,
+    this.feeDetails,
     this.doctor,
   });
 
@@ -57,6 +59,7 @@ class Past {
   HealthRecord healthRecord;
   String doctorFollowUpFee;
   Doctor doctor;
+  FeeDetails feeDetails;
   City healthOrganization;
   bool isFollowUpTaken;
 
@@ -93,6 +96,9 @@ class Past {
     healthRecord = json[parameters.strHealthRecord] == null
         ? null
         : HealthRecord.fromJson(json[parameters.strHealthRecord]);
+    feeDetails = json[parameters.strFeeDetails] != null
+        ? new FeeDetails.fromJson(json[parameters.strFeeDetails])
+        : null;
     doctorFollowUpFee = json[parameters.strDoctorFollowUpFee] == null
         ? null
         : json[parameters.strDoctorFollowUpFee];
@@ -134,6 +140,9 @@ class Past {
     data[parameters.strHealthRecord] = healthRecord.toJson();
     data[parameters.strDoctorFollowUpFee] =
         doctorFollowUpFee == null ? null : doctorFollowUpFee;
+    if (this.feeDetails != null) {
+      data[parameters.strFeeDetails] = this.feeDetails.toJson();
+    }
     data[parameters.strdoctor] = doctor.toJson();
     data[parameters.strHealthOrganization] = this.healthOrganization.toJson();
     return data;

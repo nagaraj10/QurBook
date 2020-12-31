@@ -129,17 +129,21 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                                                             .specialty
                                                             .name !=
                                                         null
-                                              ? widget
-                                                  .doc
-                                                  .doctor
-                                                  .doctorProfessionalDetailCollection[0]
-                                                  .specialty
-                                                  .name
+                                                    ? widget
+                                                        .doc
+                                                        .doctor
+                                                        .doctorProfessionalDetailCollection[
+                                                            0]
+                                                        .specialty
+                                                        .name
                                                     : ''
                                                 : ''
-                                            : ''),style: TextStyle(fontSize: fhbStyles.fnt_doc_specialist),
+                                            : ''),
+                                        style: TextStyle(
+                                            fontSize:
+                                                fhbStyles.fnt_doc_specialist),
                                         maxLines: 2,
-                                        overflow:TextOverflow.ellipsis,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                               widget.doc.doctor.specialization == null
@@ -263,7 +267,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     String doctorName = doc.doctor.user.name;
     String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
     chatViewModel.storePatientDetailsToFCM(
-        doctorId, doctorName, doctorPic,'','','', context);
+        doctorId, doctorName, doctorPic, '', '', '', context);
   }
 
   void navigateToProviderScreen(Past doc, isReshedule) async {
@@ -301,13 +305,42 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
                           padding: EdgeInsets.all(8.0),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               TextWidget(
                                   text: parameters
                                       .cancellationAppointmentConfirmation,
-                                  fontsize: 14,
+                                  fontsize: 13,
                                   fontWeight: FontWeight.w500,
                                   colors: Colors.grey[600]),
+                              widget.doc?.feeDetails == null
+                                  ? Container()
+                                  : widget.doc?.feeDetails
+                                              ?.doctorCancellationCharge ==
+                                          null
+                                      ? Container()
+                                      : RichText(
+                                          text: TextSpan(
+                                              text:
+                                                  Constants.CANCELLATION_CHARGE,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontFamily: Constants.poppins,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black),
+                                              children: <InlineSpan>[
+                                              TextSpan(
+                                                  text:
+                                                      ' ${Constants.inrLabel} ${widget.doc.feeDetails.doctorCancellationCharge}',
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontFamily:
+                                                          Constants.poppins,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Color(CommonUtil()
+                                                          .getMyPrimaryColor())))
+                                            ])),
                               SizedBoxWidget(
                                 height: 10,
                               ),
