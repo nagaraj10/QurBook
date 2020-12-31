@@ -144,3 +144,8 @@ const String strTransaction_id='transaction_id';
 const String strCreator_name='creator_name';
 const String strHealthOrganization='healthOrganization';
 const String strCreated_at='created_at';
+const String strFeeDetails='feeDetails';
+const String strPaidAmount='paidAmount';
+const String strDoctorCancellationCharges='doctorCancellationCharge';
+const String strFinalRefundAmount='finalRefundAmount';
+

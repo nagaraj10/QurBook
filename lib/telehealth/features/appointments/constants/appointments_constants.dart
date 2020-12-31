@@ -43,6 +43,8 @@ const String SLOT_NOT_AVAILABLE = "Slot is not available.. Please try again!";
 const String strFailed = 'Failed to Invoke: ';
 const String resheduled='rescheduled';
 const String NOT_AVAILABLE='not available';
+const String CANCELLATION_CHARGE='Cancellation Charges:';
+const String inrLabel='INR';
 
 //Custom Icon
 const String Appointments_notesImage = 'assets/icons/notes.png';
@@ -74,3 +76,6 @@ const String qr_appointment_fetch = 'appointment?patientId=';
 
 // conditions
 const String PATDNA='PATDNA';
+
+//FontFamily
+const String poppins='Poppins';
