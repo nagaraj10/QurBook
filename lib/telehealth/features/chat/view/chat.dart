@@ -55,181 +55,18 @@ class Chat extends StatefulWidget {
 }
 
 class ChatState extends State<Chat> {
-  var isSearchVisible = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _patientChatBar(),
       body: ChatScreen(
-        peerId: widget.peerId,
-        peerAvatar: widget.peerAvatar,
-        peerName: widget.peerName,
-        lastDate: widget.lastDate,
-        patientId: widget.patientId,
-        patientName: widget.patientName,
-        patientPicture: widget.patientPicture
-      ),
+          peerId: widget.peerId,
+          peerAvatar: widget.peerAvatar,
+          peerName: widget.peerName,
+          lastDate: widget.lastDate,
+          patientId: widget.patientId,
+          patientName: widget.patientName,
+          patientPicture: widget.patientPicture),
     );
-  }
-
-  Widget _patientChatBar() {
-    return AppBar(
-      flexibleSpace: GradientAppBar(),
-      automaticallyImplyLeading: false,
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(left: 2),
-                  child: GestureDetector(
-                    child: Icon(
-                      Icons.arrow_back_ios,
-                      color: Colors.white,
-                    ),
-                    onTap: () {
-                      //Add code for tapping back
-                      Navigator.pop(context);
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                AnimatedSwitcher(
-                  duration: Duration(milliseconds: 10),
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.67,
-                    child: _patientDetailOrSearch(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        IconWidget(
-          icon: Icons.notifications,
-          colors: Colors.white,
-          size: 24,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NotificationMain()),
-            );
-          },
-        ),
-        SizedBoxWidget(
-          width: 10,
-        ),
-      ],
-    );
-  }
-
-  Widget _patientDetailOrSearch() {
-    var resultWidget = null;
-    setState(() {
-      if (isSearchVisible) {
-        resultWidget = AnimatedSwitcher(
-          duration: Duration(milliseconds: 10),
-          child: Container(
-            height: 45,
-            child: TextField(
-              decoration: InputDecoration(
-                  suffixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(10.0),
-                    ),
-                  ),
-                  filled: true,
-                  hintStyle: new TextStyle(color: Colors.grey[800]),
-                  fillColor: Colors.white70),
-            ),
-          ),
-        );
-      } else {
-        resultWidget = AnimatedSwitcher(
-          duration: Duration(milliseconds: 10),
-          child: Row(
-            children: <Widget>[
-              CircleAvatar(
-                backgroundImage: NetworkImage(widget.peerAvatar),
-                radius: 18,
-              ),
-              SizedBox(
-                width: 15,
-              ),
-              Container(
-                  child: Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(widget.peerName,
-                        textAlign: TextAlign.left,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: TextStyle(
-                            fontFamily: variable.font_poppins,
-                            fontSize: 16,
-                            color: Colors.white)),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      widget.lastDate != null
-                          ? LAST_RECEIVED + widget.lastDate
-                          : '',
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                      style: TextStyle(
-                          fontFamily: variable.font_poppins,
-                          fontSize: 8,
-                          color: Colors.white),
-                    ),
-                  ],
-                ),
-              ))
-            ],
-          ),
-        );
-      }
-    });
-    return resultWidget;
-  }
-
-  Widget moreOptionsPopup() => PopupMenuButton(
-      icon: Icon(
-        Icons.more_vert,
-        color: Colors.white,
-      ),
-      color: Colors.white,
-      padding: EdgeInsets.only(left: 1, right: 2),
-      itemBuilder: (context) => [
-            PopupMenuItem(
-                child: GestureDetector(
-              child: Text('$popUpChoiceOne'),
-              onTap: () {
-                isSearchVisible = true;
-                showSearch();
-              },
-            )),
-            PopupMenuItem(
-                child: GestureDetector(child: Text('$popUpChoiceTwo'))),
-            PopupMenuItem(
-                child: GestureDetector(child: Text('$popUpCHoiceThree')))
-          ]);
-
-  void showSearch() {
-    setState(() {
-      if (isSearchVisible) {
-        _patientDetailOrSearch();
-      }
-    });
   }
 
   String getFormattedNewDateTime(int timeStamp) {
@@ -265,11 +102,9 @@ class ChatScreen extends StatefulWidget {
       peerAvatar: peerAvatar,
       peerName: peerName,
       lastDate: lastDate,
-      patientId:  patientId,
+      patientId: patientId,
       patientName: patientName,
-      patientPicUrl: patientPicture
-
-  );
+      patientPicUrl: patientPicture);
 }
 
 class ChatScreenState extends State<ChatScreen> {
@@ -310,6 +145,13 @@ class ChatScreenState extends State<ChatScreen> {
   List<String> recordIds = new List();
   FlutterToast toast = new FlutterToast();
 
+  var isSearchVisible = false;
+
+  List<String> wordsList = [];
+  List<String> filteredWordsList = [];
+  String textFieldValue = '';
+  int commonIndex=0;
+
   @override
   void initState() {
     super.initState();
@@ -329,19 +171,19 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   getPatientDetails() async {
-    if(patientId==null || patientId==''){
+    if (patientId == null || patientId == '') {
       patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     }
 
-    if(patientName==null || patientName==''){
+    if (patientName == null || patientName == '') {
       MyProfileModel myProfile =
-      PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       patientName = myProfile.result != null
           ? myProfile.result.firstName + ' ' + myProfile.result.lastName
           : '';
     }
 
-    if(patientPicUrl==null || patientPicUrl==''){
+    if (patientPicUrl == null || patientPicUrl == '') {
       patientPicUrl = getProfileURL();
     }
 
@@ -454,6 +296,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
+
   void addChatList(String content) {
     Firestore.instance
         .collection(STR_CHAT_LIST)
@@ -483,6 +326,42 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
+    List<TextSpan> textSpanList = [];
+
+    if (document[STR_TYPE] == 0) {
+      String tempData = document[STR_CONTENT];
+      //setState(() {
+      wordsList = tempData.split(',');
+      filteredWordsList = wordsList;
+      //});
+
+      String word = document[STR_CONTENT];
+      List<String> tempList =
+          word.length > 1 && word.indexOf(textFieldValue) != -1
+              ? word.split(textFieldValue)
+              : [word, ''];
+      int i = 0;
+      tempList.forEach((item) {
+        if (word.indexOf(textFieldValue) != -1 && i < tempList.length - 1) {
+          commonIndex = index;
+          textSpanList = [
+            ...textSpanList,
+            TextSpan(text: '${item}'),
+            TextSpan(
+              text: '${textFieldValue}',
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  background: Paint()..color = Colors.yellow),
+            ),
+          ];
+        } else {
+          //
+          textSpanList = [...textSpanList, TextSpan(text: '${item}')];
+        }
+        i++;
+      });
+    }
+
     if (document[STR_ID_FROM] == patientId) {
       return Row(
         children: <Widget>[
@@ -508,10 +387,16 @@ class ChatScreenState extends State<ChatScreen> {
                         bottomRight: Radius.circular(25),
                       ),
                     ),
-                    child: Text(
+                    /*child: Text(
                       document[STR_CONTENT],
                       style: TextStyle(
                           color: Color(CommonUtil().getMyPrimaryColor())),
+                    ),*/
+                    child: RichText(
+                      text: TextSpan(
+                          style: TextStyle(
+                              color: Color(CommonUtil().getMyPrimaryColor())),
+                          children: textSpanList),
                     ),
                   ),
                 )
@@ -684,9 +569,10 @@ class ChatScreenState extends State<ChatScreen> {
                               bottomRight: Radius.circular(25),
                             ),
                           ),
-                          child: Text(
-                            document[STR_CONTENT],
-                            style: TextStyle(color: Colors.white),
+                          child: RichText(
+                            text: TextSpan(
+                                style: TextStyle(color: Colors.white),
+                                children: textSpanList),
                           ),
                         ),
                       )
@@ -866,7 +752,7 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<bool> onBackPress() {
+  /*Future<bool> onBackPress() {
     if (isShowSticker) {
       setState(() {
         isShowSticker = false;
@@ -880,12 +766,248 @@ class ChatScreenState extends State<ChatScreen> {
     }
 
     return Future.value(false);
+  }*/
+
+  Widget _patientChatBar() {
+    return AppBar(
+      flexibleSpace: GradientAppBar(),
+      automaticallyImplyLeading: false,
+      title: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.only(left: 2),
+                  child: GestureDetector(
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    ),
+                    onTap: () {
+                      //Add code for tapping back
+                      Navigator.pop(context);
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 3,
+                ),
+                AnimatedSwitcher(
+                  duration: Duration(milliseconds: 10),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.55,
+                    child: _patientDetailOrSearch(),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        /*IconWidget(
+          icon: Icons.search,
+          colors: Colors.white,
+          size: 24,
+          onTap: () {
+            isSearchVisible = true;
+            showSearch();
+          },
+        ),
+        SizedBoxWidget(
+          width: 15,
+        ),*/
+        IconWidget(
+          icon: Icons.notifications,
+          colors: Colors.white,
+          size: 24,
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => NotificationMain()),
+            );
+          },
+        ),
+        SizedBoxWidget(
+          width: 5,
+        ),
+        moreOptionsPopup(),
+      ],
+    );
+  }
+
+  Widget moreOptionsPopup() => PopupMenuButton(
+      icon: Icon(
+        Icons.more_vert,
+        color: Colors.white,
+      ),
+      color: Colors.white,
+      padding: EdgeInsets.only(left: 1, right: 2),
+      onSelected: (newValue) {
+        if (newValue == 0) {
+          isSearchVisible = true;
+          showSearch();
+        }
+      },
+      itemBuilder: (context) => [
+            PopupMenuItem(
+              value: 0,
+              child: Text('$popUpChoiceOne'),
+            ),
+            /* PopupMenuItem(
+            child: GestureDetector(child: Text('$popUpChoiceTwo'))),
+        PopupMenuItem(
+            child: GestureDetector(child: Text('$popUpCHoiceThree')))*/
+          ]);
+
+  void showSearch() {
+    setState(() {
+      if (isSearchVisible) {
+        _patientDetailOrSearch();
+      }
+    });
+  }
+
+  void _onSearch(value) {
+    setState(() {
+      filteredWordsList =
+          wordsList.where((item) => item.contains('$value')).toList();
+      textFieldValue = value;
+    });
+  }
+
+  Widget _patientDetailOrSearch() {
+    var resultWidget = null;
+    setState(() {
+      if (isSearchVisible) {
+        resultWidget = AnimatedSwitcher(
+          duration: Duration(milliseconds: 10),
+          child: Container(
+            height: 45,
+            child: TextField(
+              decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      filteredWordsList = [];
+                      wordsList = [];
+                      textFieldValue = '';
+                      isSearchVisible = false;
+                      showSearch();
+                    },
+                    icon: Icon(Icons.clear, size: 20),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(10.0),
+                    ),
+                  ),
+                  filled: true,
+                  hintStyle: new TextStyle(color: Colors.grey[800]),
+                  fillColor: Colors.white70),
+              onChanged: _onSearch,
+            ),
+          ),
+        );
+      } else {
+        resultWidget = AnimatedSwitcher(
+          duration: Duration(milliseconds: 10),
+          child: Row(
+            children: <Widget>[
+              CircleAvatar(
+                backgroundImage: NetworkImage(widget.peerAvatar),
+                radius: 18,
+              ),
+              SizedBox(
+                width: 15,
+              ),
+              Container(
+                  child: Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(widget.peerName,
+                        textAlign: TextAlign.left,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: TextStyle(
+                            fontFamily: variable.font_poppins,
+                            fontSize: 16,
+                            color: Colors.white)),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      widget.lastDate != null
+                          ? LAST_RECEIVED + widget.lastDate
+                          : '',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontFamily: variable.font_poppins,
+                          fontSize: 8,
+                          color: Colors.white),
+                    ),
+                  ],
+                ),
+              ))
+            ],
+          ),
+        );
+      }
+    });
+    return resultWidget;
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      child: Stack(
+    return Scaffold(
+      appBar: _patientChatBar(),
+      /*floatingActionButton: isSearchVisible?Padding(
+        // padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.only(
+          top: 250.0,
+        ),
+        child: Column(
+          children: <Widget>[
+            // SpeedDial
+            new Theme(
+              data: new ThemeData(
+                accentColor: Colors.transparent,
+              ),
+              child: Container(
+                height: MediaQuery.of(context).size.width * 0.1,
+                width: MediaQuery.of(context).size.width * 0.1,
+                child: new FloatingActionButton(
+                  heroTag: null,
+                  onPressed: () async {
+                  },
+                  child: Icon(Icons.arrow_upward),
+                ),
+              ),
+            ),
+            SizedBoxWidget(height: 5,),
+            new Theme(
+              data: new ThemeData(
+                accentColor: Colors.transparent,
+              ),
+              child: Container(
+                height: MediaQuery.of(context).size.width * 0.1,
+                width: MediaQuery.of(context).size.width * 0.1,
+                child: new FloatingActionButton(
+                  heroTag: null,
+                  onPressed: () async {
+                    //listScrollController.animateTo(200*commonIndex,duration:Duration( ))
+                  },
+                  child: Icon(Icons.arrow_downward),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ):Container(),*/
+      body: Stack(
         children: <Widget>[
           Container(
             color: Colors.grey[300],
@@ -910,7 +1032,7 @@ class ChatScreenState extends State<ChatScreen> {
           buildLoading()
         ],
       ),
-      onWillPop: onBackPress,
+      //onWillPop: onBackPress,
     );
   }
 
