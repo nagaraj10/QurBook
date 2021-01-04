@@ -1916,6 +1916,9 @@ class CommonDialogBox {
       } else if (fileName.text == '') {
         validationConditon = false;
         validationMsg = CommonConstants.strFileEmpty;
+      } else if (memoController.text.length > 50) {
+        validationConditon = false;
+        validationMsg = CommonConstants.strMemoCrossedLimit;
       } else {
         validationConditon = true;
       }
