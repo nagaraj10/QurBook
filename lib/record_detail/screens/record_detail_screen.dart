@@ -853,6 +853,31 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               new TextEditingController(text: fileName));
 
           break;
+        case Constants.STR_VOICERECORDS:
+          String fileName = widget.data.metadata.fileName;
+
+          new CommonDialogBox().getDialogBoxForBillsAndOthers(
+              context,
+              containsAudio,
+              audioPath,
+              (containsAudio, audioPath) {
+                setState(() {
+                  audioPath = audioPath;
+                  containsAudio = containsAudio;
+                });
+              },
+              new List(),
+              (containsAudio, audioPath) {
+                audioPath = audioPath;
+                containsAudio = containsAudio;
+
+                setState(() {});
+              },
+              widget.data,
+              true,
+              new TextEditingController(text: fileName));
+
+          break;
 
         case Constants.STR_NOTES:
           String fileName = widget.data.metadata.fileName;
