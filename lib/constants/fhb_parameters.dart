@@ -98,6 +98,7 @@ const String strtimezone = 'timezone';
 const String strSearchUrl = 'searchURL';
 const String strButtons = 'buttons';
 const String strVideoLinks = 'videoLinks';
+const String strPlatforType = 'device_type';
 
 //for category
 const String strCategoryName = 'categoryName';

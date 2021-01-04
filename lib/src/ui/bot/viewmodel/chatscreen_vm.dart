@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart';
@@ -96,6 +97,8 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.strLanguage] = Utils.getCurrentLanCode();
     reqJson[parameters.strtimezone] =
         splitedArr.length > 0 ? '${splitedArr[0]}:${splitedArr[1]}' : '';
+
+    reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios'; 
 
     Service mService = Service();
     final response = await mService.sendMetaToMaya(reqJson);
