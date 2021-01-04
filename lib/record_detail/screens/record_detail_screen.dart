@@ -6,6 +6,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
@@ -95,6 +96,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   var pdfFile;
   List<HealthRecordCollection> mediMasterId = new List();
+  FlutterToast toast = new FlutterToast();
 
   @override
   void initState() {
@@ -254,14 +256,23 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                   _familyListBloc = new FamilyListBloc();
                                 }
                                 _familyListBloc
-                                    .getFamilyMembersInfo()
+                                    .getFamilyMembersListNew()
                                     .then((familyMembersList) {
                                   Navigator.of(_keyLoader.currentContext,
                                           rootNavigator: true)
                                       .pop();
-
-                                  getDialogBoxWithFamilyMember(
-                                      familyMembersList.result);
+                                  if (familyMembersList != null &&
+                                      familyMembersList.result != null &&
+                                      familyMembersList
+                                              .result.sharedByUsers.length >
+                                          0) {
+                                    getDialogBoxWithFamilyMember(
+                                        familyMembersList.result);
+                                  } else {
+                                    toast.getToast(
+                                        Constants.NO_DATA_FAMIY_CLONE,
+                                        Colors.black54);
+                                  }
                                 });
                               }),
                           IconButton(

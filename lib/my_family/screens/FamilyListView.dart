@@ -65,12 +65,14 @@ class FamilyListView {
     LinkedData linkedData =
         new LinkedData(roleName: variable.Self, nickName: variable.Self);
 
-    sharedByMeList.insert(
-        0,
-        new SharedByUsers(
-            id: myProfile.result.id,
-            nickName: 'Self',
-            relationship: RelationsShipModel(name: 'Self')));
+    try {
+      sharedByMeList.insert(
+          0,
+          new SharedByUsers(
+              id: myProfile.result.id,
+              nickName: 'Self',
+              relationship: RelationsShipModel(name: 'Self')));
+    } catch (e) {}
 
     /* if (sharedByMeList == null) {
       sharedByMeList = new List();
@@ -179,26 +181,26 @@ class FamilyListView {
                                               width: 50,
                                               fit: BoxFit.cover,
                                             )
-                                          :
-                                      Container(
-                                          height: 50,
-                                          width: 50,
-                                          child: Center(
-                                            child: Text(
-                                              sharedByMe[index].nickName != null
-                                                  ? sharedByMe[index]
-                                                      .nickName[0]
-                                                      .toUpperCase()
-                                                  : '',
-                                              style: TextStyle(
-                                                  color: Color(CommonUtil()
-                                                      .getMyPrimaryColor()),
-                                                  fontSize: 22),
-                                            ),
-                                          ),
-                                          color: const Color(
-                                              fhbColors.bgColorContainer),
-                                        )),
+                                          : Container(
+                                              height: 50,
+                                              width: 50,
+                                              child: Center(
+                                                child: Text(
+                                                  sharedByMe[index].nickName !=
+                                                          null
+                                                      ? sharedByMe[index]
+                                                          .nickName[0]
+                                                          .toUpperCase()
+                                                      : '',
+                                                  style: TextStyle(
+                                                      color: Color(CommonUtil()
+                                                          .getMyPrimaryColor()),
+                                                      fontSize: 22),
+                                                ),
+                                              ),
+                                              color: const Color(
+                                                  fhbColors.bgColorContainer),
+                                            )),
                               SizedBox(width: 20),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
