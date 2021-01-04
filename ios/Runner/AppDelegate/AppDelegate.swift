@@ -166,7 +166,7 @@ import AVFoundation
                         self.stopRecording()
                     }
                 } else {
-                    self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { (timer) in
+                    self.detectionTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: false, block: { (timer) in
                         //                    isFinal = true
                         Loading.sharedInstance.hideLoader()
                         
