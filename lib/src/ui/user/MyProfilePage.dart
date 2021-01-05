@@ -78,7 +78,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
     return FutureBuilder<MyProfileModel>(
       future: addFamilyUserInfoRepository.getMyProfileInfoNew(userid),
       builder: (BuildContext context, AsyncSnapshot<MyProfileModel> snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.hasData) {
           //* its done with fetching the data from remote
           if (snapshot.hasData && snapshot.data != null) {
             return getProfileWidget(snapshot.data.result);
