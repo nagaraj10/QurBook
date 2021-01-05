@@ -338,7 +338,8 @@ class CommonUtil {
         for (HealthRecordCollection mediaMasterIds
             in data.healthRecordCollection) {
           if (mediaMasterIds.fileType == ".jpg" ||
-              mediaMasterIds.fileType == ".png")
+              mediaMasterIds.fileType == ".png" ||
+              mediaMasterIds.fileType == ".jpeg")
             mediaMasterIdsList.add(mediaMasterIds);
         }
       }
