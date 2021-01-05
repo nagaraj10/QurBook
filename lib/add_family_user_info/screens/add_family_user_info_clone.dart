@@ -1798,7 +1798,6 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 
                           if (widget.arguments.fromClass ==
                               CommonConstants.user_update) {
-                            print(imageURI.path);
                             await PreferenceUtil.saveString(
                                 Constants.KEY_PROFILE_IMAGE, imageURI.path);
                           }
