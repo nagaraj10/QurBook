@@ -10,6 +10,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -26,6 +27,8 @@ import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:open_file/open_file.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -150,7 +153,7 @@ class ChatScreenState extends State<ChatScreen> {
   List<String> wordsList = [];
   List<String> filteredWordsList = [];
   String textFieldValue = '';
-  int commonIndex=0;
+  int commonIndex = 0;
 
   @override
   void initState() {
@@ -296,7 +299,6 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-
   void addChatList(String content) {
     Firestore.instance
         .collection(STR_CHAT_LIST)
@@ -323,6 +325,83 @@ class ChatScreenState extends State<ChatScreen> {
       STR_CREATED_AT: FieldValue.serverTimestamp(),
       STR_LAST_MESSAGE: content
     });
+  }
+
+  openDownloadAlert(String fileUrl,BuildContext contxt,bool isPdf,String type) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(
+            'Are you sure want to download?',
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                saveImageToGallery(fileUrl,contxt,isPdf,type);
+                Navigator.pop(context);
+              },
+              child: Text('Download'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void saveImageToGallery(String fileUrl, BuildContext contxt,
+      bool isPdfPresent, String fileType) async {
+    //check the storage permission for both android and ios!
+    //request gallery permission
+    String albumName = 'myfhb';
+    bool downloadStatus = false;
+    PermissionStatus storagePermission = Platform.isAndroid
+        ? await Permission.storage.status
+        : await Permission.photos.status;
+    if (storagePermission.isUndetermined || storagePermission.isRestricted) {
+      Platform.isAndroid
+          ? await Permission.storage.request()
+          : await Permission.photos.request();
+    }
+
+    String _currentImage;
+    Scaffold.of(contxt).showSnackBar(SnackBar(
+      content: const Text(variable.strDownloadStart),
+      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+    ));
+
+    if (isPdfPresent) {
+      if (Platform.isIOS) {
+        CommonUtil.downloadFile(fileUrl,fileType);
+      } else {
+        await ImageGallerySaver.saveFile(fileUrl).then((res) {
+          setState(() {
+            downloadStatus = true;
+          });
+        });
+      }
+    } else {
+      _currentImage = fileUrl;
+      try {
+        CommonUtil.downloadFile(_currentImage,fileType).then((filePath) async {
+          if (Platform.isAndroid) {
+            Scaffold.of(contxt).showSnackBar(SnackBar(
+              content: const Text(variable.strFileDownloaded),
+              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+              action: SnackBarAction(
+                label: 'Open',
+                onPressed: () async {
+                  await OpenFile.open(filePath.path);
+                },
+              ),
+            ));
+          }
+        });
+      } catch (e) {
+        print('$e exception thrown');
+      }
+    }
   }
 
   Widget buildItem(int index, DocumentSnapshot document) {
@@ -448,13 +527,16 @@ class ChatScreenState extends State<ChatScreen> {
                                   builder: (context) =>
                                       FullPhoto(url: document[STR_CONTENT])));
                         },
+                        onLongPress: () {
+                          openDownloadAlert(document[STR_CONTENT],context,false,'.jpg');
+                        },
                         padding: EdgeInsets.all(0),
                       ),
                       margin: EdgeInsets.only(
                           bottom: isLastMessageRight(index) ? 20.0 : 10.0,
                           right: 10.0),
                     )
-                  // Sticker
+                  // Pdf
                   : document[STR_TYPE] == 2
                       ? Card(
                           color: Colors.transparent,
@@ -466,6 +548,9 @@ class ChatScreenState extends State<ChatScreen> {
                           child: InkWell(
                             onTap: () {
                               goToPDFViewBasedonURL(document[STR_CONTENT]);
+                            },
+                            onLongPress: (){
+                              openDownloadAlert(document[STR_CONTENT],context,false,'.pdf');
                             },
                             child: Container(
                               constraints: BoxConstraints(
@@ -625,6 +710,9 @@ class ChatScreenState extends State<ChatScreen> {
                                         builder: (context) => FullPhoto(
                                             url: document[STR_CONTENT])));
                               },
+                              onLongPress: (){
+                                openDownloadAlert(document[STR_CONTENT],context,false,'.jpg');
+                              },
                               padding: EdgeInsets.all(0),
                             ),
                             margin: EdgeInsets.only(left: 10.0),
@@ -641,6 +729,9 @@ class ChatScreenState extends State<ChatScreen> {
                                   onTap: () {
                                     goToPDFViewBasedonURL(
                                         document[STR_CONTENT]);
+                                  },
+                                  onLongPress: (){
+                                    openDownloadAlert(document[STR_CONTENT],context,false,'.pdf');
                                   },
                                   child: Container(
                                     constraints: BoxConstraints(
