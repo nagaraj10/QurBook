@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,9 @@ import 'package:myfhb/my_family/models/FamilyMembersRes.dart' as contactObj;
 
 class AddFamilyUserInfoScreen extends StatefulWidget {
   AddFamilyUserInfoArguments arguments;
+
   AddFamilyUserInfoScreen({this.arguments});
+
   @override
   AddFamilyUserInfoScreenState createState() => AddFamilyUserInfoScreenState();
 }
@@ -1534,7 +1537,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
     CommonResponse response =
         await _addFamilyUserInfoRepository.updateUserProfilePic(userId, image);
     if (response.isSuccess) {
-      await new CommonUtil().getUserProfileData();
+      if (!Platform.isIOS) {
+        imageCache.clear();
+        imageCache.clearLiveImages();
+      }
       FlutterToast().getToast('${response.message}', Colors.green);
     } else {
       FlutterToast().getToast('${response.message}', Colors.red);
@@ -1552,15 +1558,19 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
             if (snapshot?.data?.isSuccess != null &&
                 snapshot?.data?.result != null) {
               if (snapshot.data.isSuccess) {
-                return Image.network(
-                  snapshot.data.result,
+                return Image(
+                  image: NetworkImage(
+                    snapshot.data.result,
+                    headers: {
+                      HttpHeaders.authorizationHeader:
+                          PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                    },
+                  ),
+                  // ignore: always_specify_types
+                  key: ValueKey(Random().nextInt(100)),
                   fit: BoxFit.cover,
                   width: 60,
                   height: 60,
-                  headers: {
-                    HttpHeaders.authorizationHeader:
-                        PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
-                  },
                 );
               } else {
                 return Center(
@@ -1621,7 +1631,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
         future: _addFamilyUserInfoRepository
             .getUserProfilePic(widget.arguments.myProfileResult.id),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
             if (snapshot?.data?.isSuccess != null &&
                 snapshot?.data?.result != null) {
               if (snapshot.data.isSuccess) {
@@ -1825,7 +1835,11 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
       },
     ).then((value) {
       setState(() {});
-      setMyProfilePic(userId, imageURI);
+      if (imageURI != null) {
+        setMyProfilePic(userId, imageURI).then((value) async {
+          await CommonUtil().getUserProfileData();
+        });
+      }
     });
   }
 
