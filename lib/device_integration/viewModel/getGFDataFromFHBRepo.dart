@@ -17,9 +17,10 @@ class GetGFDataFromFHBRepo {
 
   Future<dynamic> getBPData() async {
     body.clear();
-    var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day-20, currentdate.hour, currentdate.minute);
+    final now = DateTime.now();
+    var currentdate = DateTime(now.year, now.month, now.day + 1);
+    var startT = new DateTime(now.year, now.month,
+        now.day-20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
@@ -34,9 +35,10 @@ class GetGFDataFromFHBRepo {
 
   Future<dynamic> getHeartRateData() async {
     body.clear();
-    var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day - 20, currentdate.hour, currentdate.minute);
+    final now = DateTime.now();
+    var currentdate = DateTime(now.year, now.month, now.day + 1);
+    var startT = new DateTime(now.year, now.month,
+        now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
@@ -51,9 +53,10 @@ class GetGFDataFromFHBRepo {
 
   Future<dynamic> getOxygenSaturationData() async {
     body.clear();
-    var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day - 20, currentdate.hour, currentdate.minute);
+    final now = DateTime.now();
+    var currentdate = DateTime(now.year, now.month, now.day + 1);
+    var startT = new DateTime(now.year, now.month,
+        now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
@@ -68,9 +71,10 @@ class GetGFDataFromFHBRepo {
 
   Future<dynamic> getWeightData() async {
     body.clear();
-    var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day - 20, currentdate.hour, currentdate.minute);
+    final now = DateTime.now();
+    var currentdate = DateTime(now.year, now.month, now.day + 1);
+    var startT = new DateTime(now.year, now.month,
+        now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
@@ -85,9 +89,10 @@ class GetGFDataFromFHBRepo {
 
   Future<dynamic> getBloodGlucoseData() async {
     body.clear();
-    var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day - 20, currentdate.hour, currentdate.minute);
+    final now = DateTime.now();
+    var currentdate = DateTime(now.year, now.month, now.day + 1);
+    var startT = new DateTime(now.year, now.month,
+        now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();
@@ -102,9 +107,10 @@ class GetGFDataFromFHBRepo {
 
   Future<dynamic> getBodyTemperatureData() async {
     body.clear();
-    var currentdate = DateTime.now();
-    var startT = new DateTime(currentdate.year, currentdate.month,
-        currentdate.day - 20, currentdate.hour, currentdate.minute);
+    final now = DateTime.now();
+    var currentdate = DateTime(now.year, now.month, now.day + 1);
+    var startT = new DateTime(now.year, now.month,
+        now.day - 20, now.hour, now.minute);
 
     body[strStartTimeStamp] = startT.toIso8601String();
     body[strEndTimeStamp] = currentdate.toIso8601String();

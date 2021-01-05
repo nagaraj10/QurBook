@@ -26,6 +26,7 @@ import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -139,7 +140,9 @@ class ChatScreenState extends State<ChatScreen> {
 
   final TextEditingController textEditingController = TextEditingController();
   var chatEnterMessageController = TextEditingController();
-  final ScrollController listScrollController = ScrollController();
+
+  /*final ScrollController listScrollController = ScrollController();*/
+  final ItemScrollController listScrollController = ItemScrollController();
   final FocusNode focusNode = FocusNode();
   var healthRecordList;
   List<String> recordIds = new List();
@@ -150,7 +153,10 @@ class ChatScreenState extends State<ChatScreen> {
   List<String> wordsList = [];
   List<String> filteredWordsList = [];
   String textFieldValue = '';
-  int commonIndex=0;
+  String textFieldValueClone = '';
+  bool firstTime = true;
+  int commonIndex = 0;
+  List<int> indexList = [];
 
   @override
   void initState() {
@@ -287,15 +293,14 @@ class ChatScreenState extends State<ChatScreen> {
           },
         );
       });
-      listScrollController.animateTo(0.0,
-          duration: Duration(milliseconds: 300), curve: Curves.easeOut);
+      /*listScrollController.animateTo(0.0,
+          duration: Duration(milliseconds: 300), curve: Curves.easeOut);*/
 
       addChatList(content);
     } else {
       Fluttertoast.showToast(msg: NOTHING_SEND);
     }
   }
-
 
   void addChatList(String content) {
     Firestore.instance
@@ -343,7 +348,10 @@ class ChatScreenState extends State<ChatScreen> {
       int i = 0;
       tempList.forEach((item) {
         if (word.indexOf(textFieldValue) != -1 && i < tempList.length - 1) {
-          commonIndex = index;
+          if (textFieldValue != '' && textFieldValue != null && firstTime) {
+            textFieldValueClone = textFieldValue;
+            indexList.add(index);
+          }
           textSpanList = [
             ...textSpanList,
             TextSpan(text: '${item}'),
@@ -360,6 +368,8 @@ class ChatScreenState extends State<ChatScreen> {
         }
         i++;
       });
+      //firstTime = false;
+      //commonIndex=indexList.length-1;
     }
 
     if (document[STR_ID_FROM] == patientId) {
@@ -871,7 +881,15 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   void _onSearch(value) {
+    if (indexList.length > 0 &&
+        value.length > 0 &&
+        textFieldValueClone != value) {
+      indexList.clear();
+      indexList = [];
+      commonIndex = 0;
+    }
     setState(() {
+      firstTime = true;
       filteredWordsList =
           wordsList.where((item) => item.contains('$value')).toList();
       textFieldValue = value;
@@ -894,6 +912,10 @@ class ChatScreenState extends State<ChatScreen> {
                       wordsList = [];
                       textFieldValue = '';
                       isSearchVisible = false;
+                      firstTime = true;
+                      indexList.clear();
+                      indexList = [];
+                      commonIndex = 0;
                       showSearch();
                     },
                     icon: Icon(Icons.clear, size: 20),
@@ -964,49 +986,70 @@ class ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _patientChatBar(),
-      /*floatingActionButton: isSearchVisible?Padding(
-        // padding: const EdgeInsets.all(8.0),
-        padding: const EdgeInsets.only(
-          top: 250.0,
-        ),
-        child: Column(
-          children: <Widget>[
-            // SpeedDial
-            new Theme(
-              data: new ThemeData(
-                accentColor: Colors.transparent,
+      floatingActionButton: isSearchVisible
+          ? Padding(
+              // padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(
+                top: 250.0,
               ),
-              child: Container(
-                height: MediaQuery.of(context).size.width * 0.1,
-                width: MediaQuery.of(context).size.width * 0.1,
-                child: new FloatingActionButton(
-                  heroTag: null,
-                  onPressed: () async {
-                  },
-                  child: Icon(Icons.arrow_upward),
-                ),
+              child: Column(
+                children: <Widget>[
+                  // SpeedDial
+                  new Theme(
+                    data: new ThemeData(
+                      accentColor: Colors.transparent,
+                    ),
+                    child: Container(
+                      height: MediaQuery.of(context).size.width * 0.1,
+                      width: MediaQuery.of(context).size.width * 0.1,
+                      child: new FloatingActionButton(
+                        heroTag: null,
+                        onPressed: () async {
+                          firstTime = false;
+                          if (commonIndex < indexList.length - 1) {
+                            commonIndex = commonIndex + 1;
+                            listScrollController.scrollTo(
+                                index: indexList[commonIndex],
+                                duration: Duration(milliseconds: 100));
+                          } else {
+                            toast.getToast('No more data', Colors.red);
+                          }
+                        },
+                        child: Icon(Icons.arrow_upward),
+                      ),
+                    ),
+                  ),
+                  SizedBoxWidget(
+                    height: 5,
+                  ),
+                  new Theme(
+                    data: new ThemeData(
+                      accentColor: Colors.transparent,
+                    ),
+                    child: Container(
+                      height: MediaQuery.of(context).size.width * 0.1,
+                      width: MediaQuery.of(context).size.width * 0.1,
+                      child: new FloatingActionButton(
+                        heroTag: null,
+                        onPressed: () async {
+                          firstTime = false;
+                          if (commonIndex > 0) {
+                            commonIndex = commonIndex - 1;
+                            listScrollController.scrollTo(
+                                index: indexList[commonIndex],
+                                duration: Duration(milliseconds: 100));
+                          } else {
+                            toast.getToast('No more data', Colors.red);
+                          }
+                        },
+                        child: Icon(Icons.arrow_downward),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            SizedBoxWidget(height: 5,),
-            new Theme(
-              data: new ThemeData(
-                accentColor: Colors.transparent,
-              ),
-              child: Container(
-                height: MediaQuery.of(context).size.width * 0.1,
-                width: MediaQuery.of(context).size.width * 0.1,
-                child: new FloatingActionButton(
-                  heroTag: null,
-                  onPressed: () async {
-                    //listScrollController.animateTo(200*commonIndex,duration:Duration( ))
-                  },
-                  child: Icon(Icons.arrow_downward),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ):Container(),*/
+            )
+          : Container(),
       body: Stack(
         children: <Widget>[
           Container(
@@ -1252,13 +1295,13 @@ class ChatScreenState extends State<ChatScreen> {
                               AlwaysStoppedAnimation<Color>(themeColor)));
                 } else {
                   listMessage = snapshot.data.documents;
-                  return ListView.builder(
+                  return ScrollablePositionedList.builder(
                     padding: EdgeInsets.all(10.0),
                     itemBuilder: (context, index) =>
                         buildItem(index, snapshot.data.documents[index]),
                     itemCount: snapshot.data.documents.length,
                     reverse: true,
-                    controller: listScrollController,
+                    itemScrollController: listScrollController,
                   );
                 }
               },
