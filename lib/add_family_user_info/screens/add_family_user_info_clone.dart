@@ -552,6 +552,10 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               onSuggestionSelected: (suggestion) {
                 cntrlr_addr_city.text = suggestion.name;
                 cityVal = suggestion;
+                if(cityVal!=null && cityVal?.state!=null){
+                  cntrlr_addr_state.text=suggestion.state.name;
+                  stateVal=suggestion.state;
+                }
                 //stateVal = suggestion.state;
               },
               validator: (value) {
