@@ -605,13 +605,13 @@ Widget getDeviceReadings(List<DeviceReadings> deviceReadings) {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     Text(
-                      deviceReadings[i].value,
+                      deviceReadings[i].value.toString(),
                       style: TextStyle(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,
                           fontSize: 16),
                     ),
-                    Text(deviceReadings[i].unit,
+                    Text(deviceReadings[i].unit.toString(),
                         style: TextStyle(color: Colors.black54, fontSize: 12)),
                   ],
                 ),

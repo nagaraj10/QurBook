@@ -496,8 +496,8 @@ class Laboratory {
 
 class DeviceReadings {
   String parameter;
-  String value;
-  String unit;
+  dynamic value;
+  dynamic unit;
 
   DeviceReadings({this.parameter, this.value, this.unit});
 
