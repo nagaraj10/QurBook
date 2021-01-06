@@ -35,30 +35,32 @@ class PDFViewer extends StatelessWidget {
               child: PdfDocumentLoader(
             filePath: pdfData,
             documentBuilder: (context, pdfDocument, pageCount) => LayoutBuilder(
-                builder: (context, constraints) => ListView.builder(
-                    controller: controller,
-                    itemCount: pageCount,
-                    itemBuilder: (context, index) => Container(
-                        margin: EdgeInsets.all(margin),
-                        padding: EdgeInsets.all(padding),
-                        color: Colors.black12,
-                        child: PdfPageView(
-                            pageNumber: index + 1,
-                            calculateSize:
-                                (pageWidth, pageHeight, aspectRatio) => Size(
-                                    constraints.maxWidth - wmargin,
-                                    (constraints.maxWidth - wmargin) /
-                                        aspectRatio),
-                            customizer: (context, page, size) => Stack(
-                                  alignment: Alignment.bottomCenter,
-                                  children: <Widget>[
-                                    page != null ? page : 0,
-                                    Text('${index + 1}',
-                                        style: TextStyle(
-                                            fontSize:
-                                                50)) // adding page number on the bottom of rendered page
-                                  ],
-                                ))))),
+              builder: (context, constraints) => ListView.builder(
+                controller: controller,
+                itemCount: pageCount,
+                itemBuilder: (context, index) => Container(
+                  margin: EdgeInsets.all(margin),
+                  padding: EdgeInsets.all(padding),
+                  color: Colors.black12,
+                  child: PdfPageView(
+                    pageNumber: index + 1,
+                    calculateSize: (pageWidth, pageHeight, aspectRatio) => Size(
+                        constraints.maxWidth - wmargin,
+                        (constraints.maxWidth - wmargin) / aspectRatio),
+                    customizer: (context, page, size) => Stack(
+                      alignment: Alignment.bottomCenter,
+                      children: <Widget>[
+                        page != null ? page : 0,
+                        Text(
+                          '',
+                          style: TextStyle(fontSize: 2),
+                        ) // adding page number on the bottom of rendered page
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ))),
     );
   }
