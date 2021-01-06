@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -19,6 +20,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/model/Health/asgard/health_record_collection.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/ui/MyRecord.dart';
+import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/PdfViewURL.dart';
@@ -39,6 +41,7 @@ class Chat extends StatefulWidget {
   final String patientId;
   final String patientName;
   final String patientPicture;
+  final bool isFromVideoCall;
 
   Chat(
       {Key key,
@@ -48,7 +51,10 @@ class Chat extends StatefulWidget {
       @required this.lastDate,
       @required this.patientId,
       @required this.patientName,
-      @required this.patientPicture})
+      @required this.patientPicture,
+      @required this.isFromVideoCall
+
+      })
       : super(key: key);
 
   @override
@@ -66,7 +72,10 @@ class ChatState extends State<Chat> {
           lastDate: widget.lastDate,
           patientId: widget.patientId,
           patientName: widget.patientName,
-          patientPicture: widget.patientPicture),
+          patientPicture: widget.patientPicture,
+        isFromVideoCall: widget.isFromVideoCall
+
+      ),
     );
   }
 
@@ -85,6 +94,7 @@ class ChatScreen extends StatefulWidget {
   final String patientId;
   final String patientName;
   final String patientPicture;
+  final bool isFromVideoCall;
 
   ChatScreen(
       {Key key,
@@ -94,7 +104,10 @@ class ChatScreen extends StatefulWidget {
       @required this.lastDate,
       @required this.patientId,
       @required this.patientName,
-      @required this.patientPicture})
+      @required this.patientPicture,
+      @required this.isFromVideoCall
+
+      })
       : super(key: key);
 
   @override
@@ -105,7 +118,11 @@ class ChatScreen extends StatefulWidget {
       lastDate: lastDate,
       patientId: patientId,
       patientName: patientName,
-      patientPicUrl: patientPicture);
+      patientPicUrl: patientPicture,
+    isFromVideoCall: isFromVideoCall
+
+
+  );
 }
 
 class ChatScreenState extends State<ChatScreen> {
@@ -117,7 +134,10 @@ class ChatScreenState extends State<ChatScreen> {
       @required this.lastDate,
       @required this.patientId,
       @required this.patientName,
-      @required this.patientPicUrl});
+      @required this.patientPicUrl,
+      @required this.isFromVideoCall
+
+      });
 
   String peerId;
   String peerAvatar;
@@ -137,6 +157,7 @@ class ChatScreenState extends State<ChatScreen> {
   String patientId;
   String patientName;
   String patientPicUrl;
+  bool isFromVideoCall;
 
   final TextEditingController textEditingController = TextEditingController();
   var chatEnterMessageController = TextEditingController();
@@ -158,6 +179,9 @@ class ChatScreenState extends State<ChatScreen> {
   int commonIndex = 0;
   List<int> indexList = [];
 
+  FlutterSound flutterSound = FlutterSound();
+  bool isPlaying = false;
+
   @override
   void initState() {
     super.initState();
@@ -172,6 +196,7 @@ class ChatScreenState extends State<ChatScreen> {
     patientId = widget.patientId;
     patientName = widget.patientName;
     patientPicUrl = widget.patientPicture;
+    isFromVideoCall = widget.isFromVideoCall;
 
     getPatientDetails();
   }
@@ -229,7 +254,7 @@ class ChatScreenState extends State<ChatScreen> {
     setState(() {});
   }
 
-  Future getImage() async {
+  /*Future getImage() async {
     PickedFile pickedfile;
     ImagePicker imagepicker = new ImagePicker();
     pickedfile = await imagepicker.getImage(source: ImageSource.gallery);
@@ -240,7 +265,7 @@ class ChatScreenState extends State<ChatScreen> {
       });
       uploadFile();
     }
-  }
+  }*/
 
   void getSticker() {
     // Hide keyboard when sticker appear
@@ -250,23 +275,46 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
-  Future uploadFile() async {
+  Future uploadFile(String path) async {
+    File file = File(path);
     String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference reference = FirebaseStorage.instance.ref().child(fileName);
-    StorageUploadTask uploadTask = reference.putFile(imageFile);
+    StorageReference reference =
+        FirebaseStorage.instance.ref().child(fileName + '.m4a');
+    StorageUploadTask uploadTask = reference.putFile(file);
     StorageTaskSnapshot storageTaskSnapshot = await uploadTask.onComplete;
     storageTaskSnapshot.ref.getDownloadURL().then((downloadUrl) {
       imageUrl = downloadUrl;
-      imageUrl = downloadUrl;
       setState(() {
         isLoading = false;
-        onSendMessage(imageUrl, 1);
+        onSendMessage(imageUrl, 3);
       });
     }, onError: (err) {
       setState(() {
         isLoading = false;
       });
       Fluttertoast.showToast(msg: NOT_FILE_IMAGE);
+    });
+  }
+
+  Future<dynamic> flutterStopPlayer(url) async {
+    await flutterSound.stopPlayer().then((value) {
+      flutterPlaySound(url);
+    });
+  }
+
+  flutterPlaySound(url) async {
+    await flutterSound.startPlayer(url);
+
+    flutterSound.onPlayerStateChanged.listen((e) {
+      if (e == null) {
+        setState(() {
+          this.isPlaying = false;
+        });
+      } else {
+        setState(() {
+          this.isPlaying = false;
+        });
+      }
     });
   }
 
@@ -513,17 +561,50 @@ class ChatScreenState extends State<ChatScreen> {
                             ),
                           ),
                         )
-                      : Container(
-                          child: Image.asset(
-                            'images/${document[STR_CONTENT]}.gif',
-                            width: 100.0,
-                            height: 100.0,
-                            fit: BoxFit.cover,
-                          ),
-                          margin: EdgeInsets.only(
-                              bottom: isLastMessageRight(index) ? 20.0 : 10.0,
-                              right: 10.0),
-                        ),
+                      // voice card
+                      : document[STR_TYPE] == 3
+                          ? Padding(
+                              padding: const EdgeInsets.all(4.0),
+                              child: Material(
+                                borderRadius: BorderRadius.circular(10.0),
+                                elevation: 2.0,
+                                child: Container(
+                                  padding: EdgeInsets.all(10.0),
+                                  width: MediaQuery.of(context).size.width / 3,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: <Widget>[
+                                      CircleAvatar(
+                                          child: Text(
+                                              patientName.substring(0, 1))),
+                                      IconButton(
+                                        icon: Icon(Icons.play_circle_filled),
+                                        onPressed: () {
+                                          isPlaying
+                                              ? flutterStopPlayer(
+                                                  document[STR_CONTENT])
+                                              : flutterPlaySound(
+                                                  document[STR_CONTENT]);
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              child: Image.asset(
+                                'images/${document[STR_CONTENT]}.gif',
+                                width: 100.0,
+                                height: 100.0,
+                                fit: BoxFit.cover,
+                              ),
+                              margin: EdgeInsets.only(
+                                  bottom:
+                                      isLastMessageRight(index) ? 20.0 : 10.0,
+                                  right: 10.0),
+                            ),
         ],
         mainAxisAlignment: MainAxisAlignment.end,
       );
@@ -689,18 +770,55 @@ class ChatScreenState extends State<ChatScreen> {
                                   ),
                                 ),
                               )
-                            : Container(
-                                child: Image.asset(
-                                  'images/${document[STR_CONTENT]}.gif',
-                                  width: 100.0,
-                                  height: 100.0,
-                                  fit: BoxFit.cover,
-                                ),
-                                margin: EdgeInsets.only(
-                                    bottom:
-                                        isLastMessageRight(index) ? 20.0 : 10.0,
-                                    right: 10.0),
-                              ),
+                            : document[STR_TYPE] == 3
+                                ? Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                      color: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
+                                      elevation: 2.0,
+                                      child: Container(
+                                        padding: EdgeInsets.all(10.0),
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                3,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: <Widget>[
+                                            CircleAvatar(
+                                                child: Text(
+                                                    peerName.substring(0, 1))),
+                                            IconButton(
+                                              icon: Icon(
+                                                  Icons.play_circle_filled),
+                                              onPressed: () {
+                                                isPlaying
+                                                    ? flutterStopPlayer(
+                                                        document[STR_CONTENT])
+                                                    : flutterPlaySound(
+                                                        document[STR_CONTENT]);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    child: Image.asset(
+                                      'images/${document[STR_CONTENT]}.gif',
+                                      width: 100.0,
+                                      height: 100.0,
+                                      fit: BoxFit.cover,
+                                    ),
+                                    margin: EdgeInsets.only(
+                                        bottom: isLastMessageRight(index)
+                                            ? 20.0
+                                            : 10.0,
+                                        right: 10.0),
+                                  ),
               ],
             ),
             // Time
@@ -1204,6 +1322,7 @@ class ChatScreenState extends State<ChatScreen> {
         child: Row(
           children: <Widget>[
             Flexible(
+              flex: 4,
               child: Container(
                 height: 58,
                 child: Stack(
@@ -1218,7 +1337,7 @@ class ChatScreenState extends State<ChatScreen> {
                       controller: textEditingController,
                       decoration: InputDecoration(
                         hintText: "$chatTextFieldHintText",
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
                         filled: true,
                         fillColor: Colors.white70,
                         enabledBorder: OutlineInputBorder(
@@ -1239,7 +1358,7 @@ class ChatScreenState extends State<ChatScreen> {
                       child: FlatButton(
                           onPressed: () {
                             recordIds.clear();
-                            FetchRecords(0, true, false, false, recordIds);
+                            FetchRecords(0, true, true, false, recordIds);
                           },
                           child: new Icon(
                             Icons.attach_file,
@@ -1251,22 +1370,54 @@ class ChatScreenState extends State<ChatScreen> {
                 ),
               ),
             ),
-            new Container(
-              child: RawMaterialButton(
-                onPressed: () {
-                  onSendMessage(textEditingController.text, 0);
-                },
-                elevation: 2.0,
-                fillColor: Colors.white,
-                child: Icon(Icons.send,
-                    size: 25.0, color: Color(CommonUtil().getMyPrimaryColor())),
-                padding: EdgeInsets.all(12.0),
-                shape: CircleBorder(),
+            Flexible(
+              flex: 1,
+              child: new Container(
+                child: RawMaterialButton(
+                  onPressed: () {
+                    onSendMessage(textEditingController.text, 0);
+                  },
+                  elevation: 2.0,
+                  fillColor: Colors.white,
+                  child: Icon(Icons.send,
+                      size: 25.0,
+                      color: Color(CommonUtil().getMyPrimaryColor())),
+                  padding: EdgeInsets.all(12.0),
+                  shape: CircleBorder(),
+                ),
               ),
-              // child: new IconButton(
-              //   icon: new Icon(Icons.send),
-              //   onPressed: () {},
-            )
+            ),
+            !isFromVideoCall?Flexible(
+              flex: 1,
+              child: new Container(
+                child: RawMaterialButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(
+                      builder: (context) => AudioRecordScreen(
+                        fromVoice: false,
+                      ),
+                    ))
+                        .then((results) {
+                      String audioPath = results[Constants.keyAudioFile];
+                      if (audioPath != null && audioPath != '') {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        uploadFile(audioPath);
+                      }
+                    });
+                  },
+                  elevation: 2.0,
+                  fillColor: Colors.white,
+                  child: Icon(Icons.mic,
+                      size: 25.0,
+                      color: Color(CommonUtil().getMyPrimaryColor())),
+                  padding: EdgeInsets.all(12.0),
+                  shape: CircleBorder(),
+                ),
+              ),
+            ):Container()
           ],
         ),
       ),
@@ -1311,11 +1462,6 @@ class ChatScreenState extends State<ChatScreen> {
 
   void FetchRecords(int position, bool allowSelect, bool isAudioSelect,
       bool isNotesSelect, List<String> mediaIds) async {
-    print(allowSelect);
-    print(isAudioSelect);
-    print(isNotesSelect);
-    print(position);
-
     await Navigator.of(context)
         .push(MaterialPageRoute(
       builder: (context) => MyRecords(
@@ -1328,12 +1474,14 @@ class ChatScreenState extends State<ChatScreen> {
           isAssociateOrChat: true),
     ))
         .then((results) {
-      if (results.containsKey(STR_META_ID)) {
-        healthRecordList = results[STR_META_ID] as List;
-        if (healthRecordList != null) {
-          getMediaURL(healthRecordList);
+      if (results != null) {
+        if (results.containsKey(STR_META_ID)) {
+          healthRecordList = results[STR_META_ID] as List;
+          if (healthRecordList != null) {
+            getMediaURL(healthRecordList);
+          }
+          setState(() {});
         }
-        setState(() {});
       }
     });
   }
@@ -1342,10 +1490,14 @@ class ChatScreenState extends State<ChatScreen> {
     for (int i = 0; i < healthRecordCollection.length; i++) {
       String fileType = healthRecordCollection[i].fileType;
       String fileURL = healthRecordCollection[i].healthRecordUrl;
-      if ((fileType == STR_JPG) || (fileType == STR_PNG)) {
+      if ((fileType == STR_JPG) ||
+          (fileType == STR_PNG) ||
+          (fileType == STR_JPEG)) {
         onSendMessage(fileURL, 1);
       } else if ((fileType == STR_PDF)) {
         onSendMessage(fileURL, 2);
+      } else if ((fileType == STR_AAC)) {
+        onSendMessage(fileURL, 3);
       }
     }
   }

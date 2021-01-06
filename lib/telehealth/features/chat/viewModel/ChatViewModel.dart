@@ -16,7 +16,8 @@ class ChatViewModel extends ChangeNotifier {
 
   Future<void> storePatientDetailsToFCM(
       String doctorId, String doctorName, String doctorPic,
-      String patientId,String patientName,String patientPicUrl,BuildContext context) async {
+      String patientId,String patientName,String patientPicUrl,
+      BuildContext context,bool isFromVideoCall) async {
     Firestore.instance.collection('users').document(doctorId).setData({
       NICK_NAME: doctorName != null ? doctorName : '',
       PHOTO_URL: doctorPic != null ? doctorPic : '',
@@ -25,12 +26,12 @@ class ChatViewModel extends ChangeNotifier {
       CHATTING_WITH: null
     });
 
-    storeDoctorDetailsToFCM(doctorId, doctorName, doctorPic,patientId,patientName,patientPicUrl,context);
+    storeDoctorDetailsToFCM(doctorId, doctorName, doctorPic,patientId,patientName,patientPicUrl,context,isFromVideoCall);
   }
 
   Future<void> storeDoctorDetailsToFCM(
       String doctorId, String doctorName, String doctorPic,
-      String patientId,String patientName,String patientPicUrl,BuildContext context) async {
+      String patientId,String patientName,String patientPicUrl,BuildContext context,bool isFromVideoCall) async {
     prefs = await SharedPreferences.getInstance();
 
     if(patientId==null || patientId==''){
@@ -72,10 +73,10 @@ class ChatViewModel extends ChangeNotifier {
       await prefs.setString(ABOUT_ME, documents[0][ABOUT_ME]);
     }
 
-    goToChatPage(doctorId, doctorName, doctorPic,patientId,patientName,patientPicUrl,context);
+    goToChatPage(doctorId, doctorName, doctorPic,patientId,patientName,patientPicUrl,context,isFromVideoCall);
   }
 
-  void goToChatPage(String doctorId, String doctorName, String doctorPic,String patientId,String patientName,String patientPicUrl,BuildContext context) {
+  void goToChatPage(String doctorId, String doctorName, String doctorPic,String patientId,String patientName,String patientPicUrl,BuildContext context,bool isFromVideoCall) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -86,6 +87,7 @@ class ChatViewModel extends ChangeNotifier {
               patientId: patientId,
               patientName: patientName,
               patientPicture: patientPicUrl,
+              isFromVideoCall: isFromVideoCall,
             )));
   }
 
