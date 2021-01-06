@@ -184,7 +184,7 @@ const String font_roboto = 'Roboto';
 const String strBookmarkRecord = 'bookmark record';
 
 //for feedback
-const String strChat = 'Chat';
+const String strChat = 'Chats';
 const String strFeedBack = 'Feedback';
 const String strFeedbackExp =
     'We would like to hear from you on your experience with MyFHB';

@@ -314,7 +314,7 @@ const String EXIT_APP = "Exit app";
 const String EXIT_APP_TO_EXIT = "Are you sure to exit app?";
 const String CANCEL = "CANCEL";
 const String YES = "YES";
-const String CHAT = "Chat";
+const String CHAT = "Chats";
 
 const String KEY_FAMILYMEMBERNEW = 'familymembernew';
 const String CONSULTING = 'CONSULTING';

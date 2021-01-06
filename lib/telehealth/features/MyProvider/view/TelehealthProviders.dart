@@ -199,7 +199,7 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
           : 'assets/maya/maya_us_main.png',
     ));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-        name: 'Chat', imageIcon: 'assets/navicons/chat.png'));
+        name: 'Chats', imageIcon: 'assets/navicons/chat.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
         name: 'My Records', imageIcon: 'assets/navicons/records.png'));
   }
