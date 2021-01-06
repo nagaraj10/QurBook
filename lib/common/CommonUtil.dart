@@ -107,8 +107,10 @@ class CommonUtil {
           if (categoryDescription ==
               CommonConstants.categoryDescriptionDevice) {
             if (mediaMetaInfo.metadata.deviceReadings != null &&
-                mediaMetaInfo.metadata.deviceReadings.length > 0 &&
-                mediaMetaInfo.metadata.fileName != null) {
+                mediaMetaInfo.metadata.deviceReadings.length > 0)
+            // &&
+            // mediaMetaInfo.metadata.fileName != null)
+            {
               mediaMetaInfoObj.add(mediaMetaInfo);
             }
           } else {

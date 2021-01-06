@@ -334,7 +334,7 @@ class RecordInfoCard {
                     height: 0,
                   ),
             Text(
-              metaInfo.memoText,
+              metaInfo.memoText != null ? metaInfo.memoText : '',
               style: TextStyle(fontSize: 13),
             ),
             SizedBox(

@@ -184,7 +184,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                                 Constants.STR_VOICE_NOTES ||
                                             ispdfPresent == true)
                                         ? getCarousalImage(null)
-                                        : getDocumentImageWidgetClone())),
+                                        : widget?.data?.metadata?.sourceName ==
+                                                'SHEELA'
+                                            ? getCarousalImage(null)
+                                            : getDocumentImageWidgetClone())),
                         Expanded(
                           flex: 1,
                           child: Padding(
@@ -192,25 +195,31 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                IconButton(
-                                  onPressed: () {
-                                    if (mediMasterId.length > 0)
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ImageSlider(
-                                                    imageList: mediMasterId,
-                                                  )));
-                                  },
-                                  icon: Icon(
-                                    Icons.fullscreen,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Text(
-                                  '$index /$length',
-                                  style: TextStyle(color: Colors.white),
-                                )
+                                widget?.data?.metadata?.sourceName == 'SHEELA'
+                                    ? SizedBox()
+                                    : IconButton(
+                                        onPressed: () {
+                                          if (mediMasterId.length > 0)
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ImageSlider(
+                                                          imageList:
+                                                              mediMasterId,
+                                                        )));
+                                        },
+                                        icon: Icon(
+                                          Icons.fullscreen,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                widget?.data?.metadata?.sourceName == 'SHEELA'
+                                    ? SizedBox()
+                                    : Text(
+                                        '$index /$length',
+                                        style: TextStyle(color: Colors.white),
+                                      )
                               ],
                             ),
                           ),
@@ -1137,6 +1146,10 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       index = _current + 1;
       _current = 0;
       length = imagesPath.length;
+    } else if (widget?.data?.metadata?.sourceName == 'SHEELA') {
+      index = _current + 1;
+      _current = 0;
+      length = 1;
     }
     return Container(
       child: Column(
@@ -1215,14 +1228,30 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                                 ],
                               )),
                             )
-                      : Container(
-                          child: Icon(
-                            Icons.mic,
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                          ),
-                        )
-              : Container(
-                  child: Icon(Icons.mic, size: 60, color: Colors.white)),
+                      : widget?.data?.metadata?.sourceName == 'SHEELA'
+                          ? Container(
+                              child: Image.asset(
+                                'assets/maya/maya_us.png',
+                                height: 100.0,
+                                width: 100.0,
+                              ),
+                            )
+                          : Container(
+                              child: Icon(
+                                Icons.mic,
+                                color:
+                                    Color(new CommonUtil().getMyPrimaryColor()),
+                              ),
+                            )
+              : widget?.data?.metadata?.sourceName == 'SHEELA'
+                  ? Container(
+                      child: Image.asset(
+                      'assets/maya/maya_us.png',
+                      height: 100,
+                      width: 100,
+                    ))
+                  : Container(
+                      child: Icon(Icons.mic, size: 60, color: Colors.white)),
         ],
       ),
     );
