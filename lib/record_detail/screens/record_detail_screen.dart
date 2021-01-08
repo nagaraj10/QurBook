@@ -769,7 +769,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               context,
               new TextEditingController(
                   text: hospitalData != null
-                      ? hospitalData[variable.strName]
+                      ? hospitalData[variable.strHealthOrganizationName]
                       : ''),
               new TextEditingController(
                   text:
