@@ -132,7 +132,7 @@ const String strCallLab = 'laboratories/';
 //ForIcons
 
 const String icon_fhb = 'assets/launcher/myfhb.png';
-const String icon_splash_logo = 'assets/launcher/splash_logo.png';
+const String icon_splash_logo = 'assets/launcher/myfhb.png';
 const String icon_attach = 'assets/icons/attach.png';
 const String icon_maya = 'assets/maya/maya_us.png';
 const String icon_wifi = 'assets/icons/wifi.png';
