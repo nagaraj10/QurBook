@@ -63,6 +63,22 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
+        doctorsModel.sort((a, b) => (a?.user?.name ?? '')
+            .toLowerCase()
+            .trim()
+            .compareTo((b?.user?.name ?? '').toLowerCase().trim()));
+        doctorsModel.sort((a, b) => (a.isDefault
+            ? (a?.user?.name ?? '')
+            .toString()
+            .toLowerCase().trim()
+            .compareTo((b?.user?.name ?? '').toString().toLowerCase().trim())
+            : 0)
+            .compareTo(b.isDefault
+            ? (a?.user?.name ?? '')
+            .toString()
+            .toLowerCase().trim()
+            .compareTo((b?.user?.name ?? '').toString().toLowerCase().trim())
+            : 0));
         Doctors eachDoctorModel = doctorsModel[index];
         String specialization =
             eachDoctorModel.doctorProfessionalDetailCollection != null
