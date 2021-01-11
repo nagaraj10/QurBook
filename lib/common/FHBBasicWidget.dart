@@ -73,6 +73,17 @@ class FHBBasicWidget {
         ));
   }
 
+  Widget getTextFieldWithNoCallbacksForMemo(
+      BuildContext context, TextEditingController searchController) {
+    return Container(
+        width: MediaQuery.of(context).size.width - 60,
+        child: TextField(
+          maxLength: 500,
+          autofocus: false,
+          controller: searchController,
+        ));
+  }
+
   Widget getTextForAlertDialog(BuildContext context, String hintText) {
     return Container(
         width: MediaQuery.of(context).size.width - 60,
