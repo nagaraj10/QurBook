@@ -2077,7 +2077,8 @@ class CommonDialogBox {
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
+            fhbBasicWidget.getTextFieldWithNoCallbacksForMemo(
+                context, memoController),
             SizedBox(
               height: 15,
             ),
@@ -2322,7 +2323,7 @@ class CommonDialogBox {
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
-            fhbBasicWidget.getRichTextFieldWithNoCallbacks(
+            fhbBasicWidget.getTextFieldWithNoCallbacksForMemo(
                 context, memoController),
             SizedBox(
               height: 15,
