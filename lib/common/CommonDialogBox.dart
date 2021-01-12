@@ -216,7 +216,7 @@ class CommonDialogBox {
                     ),
                     fhbBasicWidget.getTextForAlertDialog(
                         context, CommonConstants.strMemo),
-                    fhbBasicWidget.getTextFieldWithNoCallbacks(
+                    fhbBasicWidget.getTextFieldWithNoCallbacksForMemo(
                         context, memoController),
                     SizedBox(
                       height: 15,
@@ -1916,7 +1916,7 @@ class CommonDialogBox {
       } else if (fileName.text == '') {
         validationConditon = false;
         validationMsg = CommonConstants.strFileEmpty;
-      } else if (memoController.text.length > 50) {
+      } else if (memoController.text.length > 500) {
         validationConditon = false;
         validationMsg = CommonConstants.strMemoCrossedLimit;
       } else {
@@ -2077,7 +2077,8 @@ class CommonDialogBox {
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
-            fhbBasicWidget.getTextFieldWithNoCallbacks(context, memoController),
+            fhbBasicWidget.getTextFieldWithNoCallbacksForMemo(
+                context, memoController),
             SizedBox(
               height: 15,
             ),
@@ -2322,7 +2323,7 @@ class CommonDialogBox {
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
-            fhbBasicWidget.getRichTextFieldWithNoCallbacks(
+            fhbBasicWidget.getTextFieldWithNoCallbacksForMemo(
                 context, memoController),
             SizedBox(
               height: 15,

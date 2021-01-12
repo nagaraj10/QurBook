@@ -126,7 +126,7 @@ class CommonConstants {
   static String strIDEmpty = 'Please Select ID';
   static String strMemoEmpty = 'Please Enter Memo';
   static String strMemoCrossedLimit =
-      'Memo length has crossed the limit of 50 characters';
+      'Memo length has crossed the limit of 500 characters';
 
   static String strSugarLevelEmpty = 'Please Enter Sugar Level';
 
