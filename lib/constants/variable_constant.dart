@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 const String strAPP_NAME = 'MyFHB';
-const String strAppPackage = 'com.globalmantrainnovations.myfhb';
+const String strAppPackage =
+    'com.ventechsolutions.myFHB'; //'com.globalmantrainnovations.myfhb';
 const String strHealthRecordChannel = 'Health Record channel';
 const String iOSAppId = '1526444520';
 //For class add_family_otp
