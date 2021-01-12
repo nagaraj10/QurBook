@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data' show Uint8List;
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:intl/date_symbol_data_local.dart';
 import 'dart:async';
@@ -49,6 +50,8 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
   t_MEDIA _media = t_MEDIA.FILE;
   t_CODEC _codec = t_CODEC.CODEC_AAC;
 
+  FlutterToast toast = new FlutterToast();
+
   @override
   void initState() {
     super.initState();
@@ -84,6 +87,12 @@ class _AudioRecordScreenState extends State<AudioRecordScreen> {
         this.setState(() {
           this._recorderTxt = txt.substring(0, 5);
         });
+
+        if (e.currentPosition.toInt() >= 180000) {
+          stopRecorder();
+          toast.getToast('Maximum duration to record is 3 min', Colors.red);
+          this.setState(() {});
+        }
       });
       _dbPeakSubscription =
           flutterSound.onRecorderDbPeakChanged.listen((value) {
