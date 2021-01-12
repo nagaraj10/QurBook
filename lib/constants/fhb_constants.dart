@@ -309,7 +309,7 @@ const String data_connected = "Mobile data connected";
 const String no_internet_conn = "No internet connection";
 const String failed_get_conn = "Failed to get connectivity.";
 const String failed_get_connectivity = "Failed to get internet connectivity.";
-const String NOT_FILE_IMAGE = "This file is not an image";
+const String NOT_FILE_IMAGE = "Something went wrong";
 const String EXIT_APP = "Exit app";
 const String EXIT_APP_TO_EXIT = "Are you sure to exit app?";
 const String CANCEL = "CANCEL";
@@ -351,8 +351,10 @@ const String STR_HTTPS = 'https';
 const String STR_FILE = 'File';
 
 const String STR_JPG = '.jpg';
+const String STR_JPEG = '.jpeg';
 const String STR_PNG = '.png';
 const String STR_PDF = '.pdf';
+const String STR_AAC = '.aac';
 
 const String STR_MY_PROVIDERS = 'My Providers';
 const String STR_MY_VERIFIED = 'Verified';

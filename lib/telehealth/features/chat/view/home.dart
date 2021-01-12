@@ -344,7 +344,10 @@ class HomeScreenState extends State<ChatHomeScreen> {
                                   .toString()),
                           patientId: '',
                           patientName: '',
-                          patientPicture: '')));
+                          patientPicture: '',
+                        isFromVideoCall: false,
+
+                      )));
             },
             child: Container(
               child: Row(

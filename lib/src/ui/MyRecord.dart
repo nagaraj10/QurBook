@@ -241,7 +241,6 @@ class _MyRecordsState extends State<MyRecords> {
 
     // categoryDataList = new CommonUtil().getAllCategoryList(data);
     completeData = new CommonUtil().getMediaTypeInfo(data);
-    print('getWidgetForSearchedMedia');
     PreferenceUtil.saveCompleteData(Constants.KEY_SEARCHED_LIST, completeData);
     PreferenceUtil.saveCategoryList(
         Constants.KEY_SEARCHED_CATEGORY, categoryDataList);
@@ -669,7 +668,6 @@ class _CustomTabsState extends State<CustomTabView>
     if (widget.fromSearch) {
       _currentPosition = 0;
     } else {
-      print(widget.initPosition);
       _currentPosition = widget.initPosition ?? 0;
     }
 
@@ -777,7 +775,6 @@ class _CustomTabsState extends State<CustomTabView>
   }
 
   Widget getAllTabsToDisplayInBodyClone(List<CategoryResult> data) {
-    print(widget.showDetails.toString() + ' ******************');
     rebuildAllBlocks();
     if (widget.selectedMedia == null) {
       widget.selectedMedia = new List();
@@ -1110,27 +1107,22 @@ class _CustomTabsState extends State<CustomTabView>
     if (widget.isFromChat) {
       if (condition) {
         if (!(widget.selectedRecordsId.contains(metaId))) {
-          print(metaId + ' Added ************');
         }
       } else {
         widget.selectedRecordsId.remove(metaId);
-        print(metaId + ' removed **************');
       }
       if (condition) {
         if (!(widget.selectedMedia.contains(metaId))) {
           widget.selectedMedia.add(metaId);
           widget.selectedRecordsId.addAll(healthRecords);
 
-          print(metaId + ' Added ************');
         }
       } else {
         widget.selectedMedia.remove(metaId);
         widget.selectedRecordsId.remove(healthRecords);
 
-        print(metaId + ' removed **************');
       }
     }
-    print(widget.selectedMedia);
     callBackToRefresh();
   }
 
@@ -1141,15 +1133,30 @@ class _CustomTabsState extends State<CustomTabView>
   void commonMethodToAddOrRemove(
       String metaId, bool condition, HealthResult healthCategory) {
     if (widget.allowSelect) {
-      if (condition) {
-        if (!(widget.selectedMedia.contains(metaId))) {
-          widget.selectedMedia.add(metaId);
-          print(metaId + ' Added ************');
+      if(widget.isFromChat){
+
+        if (condition) {
+          if (!(widget.selectedMedia.contains(metaId))) {
+            widget.selectedMedia.add(metaId);
+            widget.selectedRecordsId.addAll(healthCategory.healthRecordCollection);
+
+          }
+        } else {
+          widget.selectedMedia.remove(metaId);
+          widget.selectedRecordsId.remove(healthCategory.healthRecordCollection);
+
         }
-      } else {
-        widget.selectedMedia.remove(metaId);
-        print(metaId + ' removed **************');
+
+      }else{
+        if (condition) {
+          if (!(widget.selectedMedia.contains(metaId))) {
+            widget.selectedMedia.add(metaId);
+          }
+        } else {
+          widget.selectedMedia.remove(metaId);
+        }
       }
+
     } else if (widget.allowSelectNotes || widget.allowSelectVoice) {
       if (condition) {
         if (widget.selectedMedia.length > 0) {
@@ -1157,20 +1164,13 @@ class _CustomTabsState extends State<CustomTabView>
               .showInSnackBar(Constants.STR_ONLY_ONE, widget.scaffold_state);
         } else {
           widget.selectedMedia.add(metaId);
-          print(metaId + ' Added ************');
-          print(healthCategory.metadata.healthRecordType.id +
-              ' Added ************');
-          print(healthCategory.metadata.healthRecordCategory.id +
-              ' Added ************');
           selectedResult = healthCategory;
         }
       } else {
         widget.selectedMedia.remove(metaId);
-        print(metaId + ' removed **************');
       }
     }
 
-    print(widget.selectedMedia);
     callBackToRefresh();
   }
 

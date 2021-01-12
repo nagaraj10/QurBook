@@ -86,7 +86,7 @@ class _MyControllersState extends State<MyControllers> {
           IconButton(
             onPressed: () {
               chatViewModel.storePatientDetailsToFCM(widget.doctorId,
-                  widget.doctorName, widget.doctorPicUrl,widget.patientId,widget.patientName,widget.patientPicUrl,context);
+                  widget.doctorName, widget.doctorPicUrl,widget.patientId,widget.patientName,widget.patientPicUrl,context,true);
             },
             icon: Icon(
               Icons.chat_bubble_outline,
