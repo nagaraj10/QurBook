@@ -11,6 +11,7 @@ import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:gmiwidgetspackage/widgets/sized_box.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
@@ -29,8 +30,9 @@ import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
+import 'package:open_file/open_file.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../common/CommonUtil.dart';
 
 class Chat extends StatefulWidget {
@@ -52,9 +54,7 @@ class Chat extends StatefulWidget {
       @required this.patientId,
       @required this.patientName,
       @required this.patientPicture,
-      @required this.isFromVideoCall
-
-      })
+      @required this.isFromVideoCall})
       : super(key: key);
 
   @override
@@ -73,9 +73,7 @@ class ChatState extends State<Chat> {
           patientId: widget.patientId,
           patientName: widget.patientName,
           patientPicture: widget.patientPicture,
-        isFromVideoCall: widget.isFromVideoCall
-
-      ),
+          isFromVideoCall: widget.isFromVideoCall),
     );
   }
 
@@ -105,9 +103,7 @@ class ChatScreen extends StatefulWidget {
       @required this.patientId,
       @required this.patientName,
       @required this.patientPicture,
-      @required this.isFromVideoCall
-
-      })
+      @required this.isFromVideoCall})
       : super(key: key);
 
   @override
@@ -119,10 +115,7 @@ class ChatScreen extends StatefulWidget {
       patientId: patientId,
       patientName: patientName,
       patientPicUrl: patientPicture,
-    isFromVideoCall: isFromVideoCall
-
-
-  );
+      isFromVideoCall: isFromVideoCall);
 }
 
 class ChatScreenState extends State<ChatScreen> {
@@ -135,9 +128,7 @@ class ChatScreenState extends State<ChatScreen> {
       @required this.patientId,
       @required this.patientName,
       @required this.patientPicUrl,
-      @required this.isFromVideoCall
-
-      });
+      @required this.isFromVideoCall});
 
   String peerId;
   String peerAvatar;
@@ -378,6 +369,84 @@ class ChatScreenState extends State<ChatScreen> {
     });
   }
 
+  openDownloadAlert(
+      String fileUrl, BuildContext contxt, bool isPdf, String type) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(
+            'Are you sure want to download?',
+            style: TextStyle(fontSize: 16),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                saveImageToGallery(fileUrl, contxt, isPdf, type);
+                Navigator.pop(context);
+              },
+              child: Text('Download'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void saveImageToGallery(String fileUrl, BuildContext contxt,
+      bool isPdfPresent, String fileType) async {
+    //check the storage permission for both android and ios!
+    //request gallery permission
+    String albumName = 'myfhb';
+    bool downloadStatus = false;
+    PermissionStatus storagePermission = Platform.isAndroid
+        ? await Permission.storage.status
+        : await Permission.photos.status;
+    if (storagePermission.isUndetermined || storagePermission.isRestricted) {
+      Platform.isAndroid
+          ? await Permission.storage.request()
+          : await Permission.photos.request();
+    }
+
+    String _currentImage;
+    Scaffold.of(contxt).showSnackBar(SnackBar(
+      content: const Text(variable.strDownloadStart),
+      backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+    ));
+
+    if (isPdfPresent) {
+      if (Platform.isIOS) {
+        CommonUtil.downloadFile(fileUrl, fileType);
+      } else {
+        await ImageGallerySaver.saveFile(fileUrl).then((res) {
+          setState(() {
+            downloadStatus = true;
+          });
+        });
+      }
+    } else {
+      _currentImage = fileUrl;
+      try {
+        CommonUtil.downloadFile(_currentImage, fileType).then((filePath) async {
+          if (Platform.isAndroid) {
+            Scaffold.of(contxt).showSnackBar(SnackBar(
+              content: const Text(variable.strFileDownloaded),
+              backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
+              action: SnackBarAction(
+                label: 'Open',
+                onPressed: () async {
+                  await OpenFile.open(filePath.path);
+                },
+              ),
+            ));
+          }
+        });
+      } catch (e) {
+        print('$e exception thrown');
+      }
+    }
+  }
+
   Widget buildItem(int index, DocumentSnapshot document) {
     List<TextSpan> textSpanList = [];
 
@@ -506,13 +575,17 @@ class ChatScreenState extends State<ChatScreen> {
                                   builder: (context) =>
                                       FullPhoto(url: document[STR_CONTENT])));
                         },
+                        onLongPress: () {
+                          openDownloadAlert(
+                              document[STR_CONTENT], context, false, '.jpg');
+                        },
                         padding: EdgeInsets.all(0),
                       ),
                       margin: EdgeInsets.only(
                           bottom: isLastMessageRight(index) ? 20.0 : 10.0,
                           right: 10.0),
                     )
-                  // Sticker
+                  // Pdf
                   : document[STR_TYPE] == 2
                       ? Card(
                           color: Colors.transparent,
@@ -524,6 +597,10 @@ class ChatScreenState extends State<ChatScreen> {
                           child: InkWell(
                             onTap: () {
                               goToPDFViewBasedonURL(document[STR_CONTENT]);
+                            },
+                            onLongPress: () {
+                              openDownloadAlert(document[STR_CONTENT], context,
+                                  false, '.pdf');
                             },
                             child: Container(
                               constraints: BoxConstraints(
@@ -716,6 +793,10 @@ class ChatScreenState extends State<ChatScreen> {
                                         builder: (context) => FullPhoto(
                                             url: document[STR_CONTENT])));
                               },
+                              onLongPress: () {
+                                openDownloadAlert(document[STR_CONTENT],
+                                    context, false, '.jpg');
+                              },
                               padding: EdgeInsets.all(0),
                             ),
                             margin: EdgeInsets.only(left: 10.0),
@@ -732,6 +813,10 @@ class ChatScreenState extends State<ChatScreen> {
                                   onTap: () {
                                     goToPDFViewBasedonURL(
                                         document[STR_CONTENT]);
+                                  },
+                                  onLongPress: () {
+                                    openDownloadAlert(document[STR_CONTENT],
+                                        context, false, '.pdf');
                                   },
                                   child: Container(
                                     constraints: BoxConstraints(
@@ -1387,37 +1472,39 @@ class ChatScreenState extends State<ChatScreen> {
                 ),
               ),
             ),
-            !isFromVideoCall?Flexible(
-              flex: 1,
-              child: new Container(
-                child: RawMaterialButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(
-                      builder: (context) => AudioRecordScreen(
-                        fromVoice: false,
+            !isFromVideoCall
+                ? Flexible(
+                    flex: 1,
+                    child: new Container(
+                      child: RawMaterialButton(
+                        onPressed: () {
+                          Navigator.of(context)
+                              .push(MaterialPageRoute(
+                            builder: (context) => AudioRecordScreen(
+                              fromVoice: false,
+                            ),
+                          ))
+                              .then((results) {
+                            String audioPath = results[Constants.keyAudioFile];
+                            if (audioPath != null && audioPath != '') {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              uploadFile(audioPath);
+                            }
+                          });
+                        },
+                        elevation: 2.0,
+                        fillColor: Colors.white,
+                        child: Icon(Icons.mic,
+                            size: 25.0,
+                            color: Color(CommonUtil().getMyPrimaryColor())),
+                        padding: EdgeInsets.all(12.0),
+                        shape: CircleBorder(),
                       ),
-                    ))
-                        .then((results) {
-                      String audioPath = results[Constants.keyAudioFile];
-                      if (audioPath != null && audioPath != '') {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        uploadFile(audioPath);
-                      }
-                    });
-                  },
-                  elevation: 2.0,
-                  fillColor: Colors.white,
-                  child: Icon(Icons.mic,
-                      size: 25.0,
-                      color: Color(CommonUtil().getMyPrimaryColor())),
-                  padding: EdgeInsets.all(12.0),
-                  shape: CircleBorder(),
-                ),
-              ),
-            ):Container()
+                    ),
+                  )
+                : Container()
           ],
         ),
       ),
