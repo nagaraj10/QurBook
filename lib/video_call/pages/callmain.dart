@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -11,6 +12,7 @@ import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:myfhb/video_call/pages/call.dart';
 import 'package:myfhb/video_call/pages/controllers.dart';
 import 'package:myfhb/video_call/pages/customappbar.dart';
+import 'package:myfhb/video_call/pages/prescription_module.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:provider/provider.dart';
@@ -115,6 +117,8 @@ class CallMain extends StatelessWidget {
                   );
                 },
               ),
+              SizedBoxWidget(height: 20,),
+              PrescriptionModule(),
             ],
           ),
         ),
