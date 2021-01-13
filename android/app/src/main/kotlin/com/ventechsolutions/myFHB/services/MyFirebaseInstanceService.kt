@@ -113,6 +113,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)
+            val isChannelExists = manager.getNotificationChannel(CHANNEL_INCOMING)
+            if(isChannelExists != null){
+                manager.deleteNotificationChannel(CHANNEL_INCOMING)
+            }
             val channelCall = NotificationChannel(CHANNEL_INCOMING, getString(R.string.channel_call), NotificationManager.IMPORTANCE_HIGH)
             channelCall.description = getString(R.string.channel_incoming_desc)
             val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -200,6 +204,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
             if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
                 val manager = getSystemService(NotificationManager::class.java)
+                val isChannelExists = manager.getNotificationChannel(CHANNEL_ACK)
+                if(isChannelExists != null){
+                    manager.deleteNotificationChannel(CHANNEL_ACK)
+                }
                 val channelAck = NotificationChannel(CHANNEL_ACK, getString(R.string.channel_ack), NotificationManager.IMPORTANCE_DEFAULT)
                 channelAck.description = getString(R.string.channel_ack_desc)
                 val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -234,11 +242,18 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
     private fun createNotification4MissedCall(data:Map<String, String> = HashMap()){
         val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
         val NS_ID = System.currentTimeMillis().toInt()
-
+        val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)
+            val isChannelExists = manager.getNotificationChannel(CHANNEL_MISS_CALL)
+            if(isChannelExists != null){
+                manager.deleteNotificationChannel(CHANNEL_MISS_CALL)
+            }
             val channelCallAlert = NotificationChannel(CHANNEL_MISS_CALL, getString(R.string.channel_miss_ns), NotificationManager.IMPORTANCE_DEFAULT)
             channelCallAlert.description = getString(R.string.channel_call_alert_desc)
+            val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelCallAlert.setSound(_sound,attributes)
             manager.createNotificationChannel(channelCallAlert)
         }
 
@@ -251,6 +266,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_REMINDER)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)]))
+                .setSound(_sound)
                 .setAutoCancel(false)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .build()
@@ -266,6 +282,10 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         val ack_sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
         if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
             val manager = getSystemService(NotificationManager::class.java)
+            val isChannelExists = manager.getNotificationChannel(CHANNEL_CANCEL_APP)
+            if(isChannelExists != null){
+                manager.deleteNotificationChannel(CHANNEL_CANCEL_APP)
+            }
             val channelCancelApps = NotificationChannel(CHANNEL_CANCEL_APP, getString(R.string.channel_cancel_apps), NotificationManager.IMPORTANCE_HIGH)
             channelCancelApps.description = getString(R.string.channel_cancel_apps_desc)
             val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
