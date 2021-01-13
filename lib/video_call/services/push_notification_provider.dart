@@ -147,7 +147,7 @@ class PushNotificationsProvider {
   }
 
   showLocalNotification() async {
-    var android = new AndroidNotificationDetails(
+    var android = AndroidNotificationDetails(
       parameters.channel_id,
       parameters.channel_name,
       parameters.channel_descrip,
@@ -155,8 +155,9 @@ class PushNotificationsProvider {
       importance: Importance.max,
     );
 
-    var iOS = new IOSNotificationDetails(sound: ringtone);
-    var platform = new NotificationDetails(android: android, iOS: iOS);
+    var iOS = IOSNotificationDetails(
+        sound: isCall ? 'RingToneFinal.aiff' : 'NotificationFinal.aiff');
+    var platform = NotificationDetails(android: android, iOS: iOS);
     await flutterLocalNotificationsPlugin.show(0, title, body, platform,
         payload: parameters.custom_sound);
   }
