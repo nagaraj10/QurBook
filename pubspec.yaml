@@ -148,6 +148,8 @@ flutter:
     - assets/
     - assets/devices/
     - secrets.json
+    - NotificationFinal.aiff
+    - RingToneFinal.aiff
     - assets/payment/failure.png
     - assets/payment/success_tick.png
     - assets/launcher/myfhb.png

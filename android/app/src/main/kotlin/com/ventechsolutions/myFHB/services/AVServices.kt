@@ -4,7 +4,10 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.ContentResolver
 import android.content.Intent
+import android.media.AudioAttributes
+import android.net.Uri
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
@@ -15,17 +18,27 @@ import com.ventechsolutions.myFHB.constants.Constants
 
 class AVServices : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+        val CHANNEL_AV = "AVServicesChannel"
         val input = intent.getStringExtra(getString(R.string.arg_name))
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT)
+        val _sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            val manager = getSystemService(NotificationManager::class.java)
+            val isChannelExists = manager.getNotificationChannel(CHANNEL_AV)
+            if(isChannelExists != null){
+                manager.deleteNotificationChannel(CHANNEL_AV)
+            }
             val serviceChannel = NotificationChannel(
-                    applicationContext.getString(R.string.avs_cha_id),
+                    CHANNEL_AV,
                     getString(R.string.avs_cha_name),
                     NotificationManager.IMPORTANCE_DEFAULT
             )
-            val manager = getSystemService(NotificationManager::class.java)
+            val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            serviceChannel.setSound(_sound,attributes)
             manager.createNotificationChannel(serviceChannel)
         }
         val notification = NotificationCompat.Builder(this, applicationContext.getString(R.string.avs_cha_id))
@@ -33,6 +46,7 @@ class AVServices : Service() {
                 .setContentText(input)
                 .setSmallIcon(R.mipmap.app_ns_icon)
                 .setContentIntent(pendingIntent)
+                .setSound(_sound)
                 .setTicker(Constants.TICKER)
                 .setUsesChronometer(true)
                 .build()
