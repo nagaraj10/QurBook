@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
@@ -174,6 +175,70 @@ class _CallPageState extends State<CallPage> {
         final info = 'firstRemoteVideo: $uid ${width}x $height';
         _infoStrings.add(info);
       });
+    };
+
+    AgoraRtcEngine.onLocalVideoStateChanged =
+        (LocalVideoStreamState localVideoStreamState,
+            LocalVideoStreamError localVideoStreamError) {
+      if (localVideoStreamState == LocalVideoStreamState.Stopped) {
+        //FlutterToast().getToast('your video has been stopped', Colors.red);
+
+      } else if (localVideoStreamState == LocalVideoStreamState.Failed) {
+        //FlutterToast().getToast('The local video fails to start.', Colors.red);
+      } else if (localVideoStreamState == LocalVideoStreamState.Capturing) {
+        // FlutterToast().getToast(
+        //     'The local video capturer starts successfully.', Colors.green);
+      } else if (localVideoStreamState == LocalVideoStreamState.Encoding) {
+        // FlutterToast().getToast(
+        //     'The first local video frame encodes successfully.', Colors.green);
+
+      }
+
+      if (localVideoStreamError == LocalVideoStreamError.OK) {
+        //FlutterToast().getToast('The local video is normal.', Colors.green);
+      } else if (localVideoStreamError ==
+          LocalVideoStreamError.CaptureFailure) {
+        // FlutterToast().getToast(
+        //     'The local video capture fails. Check whether the capturer is working properly.',
+        //     Colors.red);
+
+      } else if (localVideoStreamError ==
+          LocalVideoStreamError.DeviceNoPermission) {
+        // FlutterToast().getToast(
+        //     'No permission to use the local video device.', Colors.red);
+
+      } else if (localVideoStreamError == LocalVideoStreamError.DeviceBusy) {
+        // FlutterToast()
+        //     .getToast('The local video capturer is in use.', Colors.red);
+
+      } else if (localVideoStreamError == LocalVideoStreamError.EncodeFailure) {
+        //FlutterToast().getToast('The local video encoding fails.', Colors.red);
+      } else if (localVideoStreamError == LocalVideoStreamError.Failure) {
+        // FlutterToast().getToast(
+        //     'No specified reason for the local video failure.', Colors.red);
+      }
+    };
+
+    AgoraRtcEngine.onRemoteVideoStateChanged = (uid, state, reason, elapsed) {
+      // if (state == 'REMOTE_VIDEO_STATE_STARTING') {
+      //   FlutterToast().getToast('Remote Video call is started', Colors.green);
+      // } else if (state == 'REMOTE_VIDEO_STATE_FAILED') {
+      //   FlutterToast().getToast('Remote Video call state Failed', Colors.red);
+      // } else if (state == 'REMOTE_VIDEO_STATE_FROZEN') {
+      //   FlutterToast().getToast('Remote Video call state is Frozen', Colors.red);
+      //   print('Remote Video call state is Frozen');
+      // } else if (state == 'REMOTE_VIDEO_STATE_STOPPED') {
+      //   FlutterToast().getToast('Remote Video call is Stopped', Colors.red);
+      //   print('Remote Video call is Stopped');
+      // }
+
+      if (reason == 0) {
+        //FlutterToast().getToast('Remote User Went to OFFLINE', Colors.yellow);
+      } else if (reason == 6) {
+        FlutterToast().getToast('Video is resumed', Colors.green);
+      } else if (reason == 5) {
+        FlutterToast().getToast('Video is paused', Colors.red);
+      }
     };
   }
 
