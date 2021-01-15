@@ -20,6 +20,7 @@ import 'package:myfhb/telehealth/features/chat/constants/const.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 
 import '../../../../common/CommonUtil.dart';
@@ -42,6 +43,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
 
   String patientId = '';
   String patientName = '';
+
+  ChatViewModel chatViewModel = ChatViewModel();
 
   @override
   void initState() {
@@ -292,7 +295,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                     ? ListView.builder(
                         padding: EdgeInsets.all(10.0),
                         itemBuilder: (context, index) =>
-                            buildItem(context, snapshot.data.documents[index]),
+                            buildItem(context, snapshot.data.documents[index],snapshot,index),
                         itemCount: snapshot.data.documents.length,
                       )
                     : Container(
@@ -322,7 +325,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
     );
   }
 
-  Widget buildItem(BuildContext context, DocumentSnapshot document) {
+  Widget buildItem(BuildContext context, DocumentSnapshot document,chatListSnapshot,int index) {
     String lastMessage = document[STR_LAST_MESSAGE];
     if (document[STR_ID] == patientId) {
       return Container();
@@ -335,19 +338,18 @@ class HomeScreenState extends State<ChatHomeScreen> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => Chat(
-                          peerId: document.documentID,
-                          peerAvatar: document[STR_PHOTO_URL],
-                          peerName: document[STR_NICK_NAME],
-                          lastDate: getFormattedDateTime(
-                              (document[STR_CREATED_AT] as Timestamp)
-                                  .toDate()
-                                  .toString()),
-                          patientId: '',
-                          patientName: '',
-                          patientPicture: '',
-                        isFromVideoCall: false,
-
-                      )));
+                            peerId: document.documentID,
+                            peerAvatar: document[STR_PHOTO_URL],
+                            peerName: document[STR_NICK_NAME],
+                            lastDate: getFormattedDateTime(
+                                (document[STR_CREATED_AT] as Timestamp)
+                                    .toDate()
+                                    .toString()),
+                            patientId: '',
+                            patientName: '',
+                            patientPicture: '',
+                            isFromVideoCall: false,
+                          )));
             },
             child: Container(
               child: Row(
@@ -356,114 +358,210 @@ class HomeScreenState extends State<ChatHomeScreen> {
                   Container(
                     width: MediaQuery.of(context).size.width * 0.12,
                     height: MediaQuery.of(context).size.width * 0.12,
-                    child: ClipOval(
-                      child: document[STR_PHOTO_URL] != null
-                          ? CachedNetworkImage(
-                              placeholder: (context, url) => Container(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 1.0,
-                                  valueColor:
-                                      AlwaysStoppedAnimation<Color>(themeColor),
-                                ),
-                                width: 50.0,
-                                height: 50.0,
-                                padding: EdgeInsets.all(15.0),
-                              ),
-                              imageUrl: document[STR_PHOTO_URL],
-                              width: 50.0,
-                              height: 50.0,
-                              fit: BoxFit.cover,
-                            )
-                          : Icon(
-                              Icons.account_circle,
-                              size: 50.0,
-                              color: greyColor,
-                            ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ClipOval(
+                            child: document[STR_PHOTO_URL] != null
+                                ? CachedNetworkImage(
+                                    placeholder: (context, url) => Container(
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 1.0,
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                                themeColor),
+                                      ),
+                                      width: 50.0,
+                                      height: 50.0,
+                                      padding: EdgeInsets.all(15.0),
+                                    ),
+                                    imageUrl: document[STR_PHOTO_URL],
+                                    width: 50.0,
+                                    height: 50.0,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Icon(
+                                    Icons.account_circle,
+                                    size: 50.0,
+                                    color: greyColor,
+                                  ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.055,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Text(
-                          toBeginningOfSentenceCase(document[STR_NICK_NAME]),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 15,
-                              fontFamily: variable.font_poppins),
-                        ),
-                      ),
-                      SizedBox(
-                        height: 1,
-                      ),
-                      Container(
-                        constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.5),
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: lastMessage != null
-                            ? lastMessage.contains(STR_HTTPS)
-                                ? Row(
-                                    children: [
-                                      Icon(
-                                        Icons.photo,
-                                        size: 14,
-                                        color: Colors.black54,
-                                      ),
-                                      SizedBoxWidget(
-                                        width: 3,
-                                      ),
-                                      Text(
-                                        STR_FILE,
+                  Container(
+                    child: Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: Text(
+                              toBeginningOfSentenceCase(
+                                  document[STR_NICK_NAME]),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 15,
+                                  fontFamily: variable.font_poppins),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 1,
+                          ),
+                          Container(
+                            constraints: BoxConstraints(
+                                maxWidth:
+                                    MediaQuery.of(context).size.width * 0.5),
+                            padding: const EdgeInsets.only(bottom: 4),
+                            child: lastMessage != null
+                                ? lastMessage.contains(STR_HTTPS)
+                                    ? Row(
+                                        children: [
+                                          Icon(
+                                            Icons.photo,
+                                            size: 14,
+                                            color: Colors.black54,
+                                          ),
+                                          SizedBoxWidget(
+                                            width: 3,
+                                          ),
+                                          Text(
+                                            STR_FILE,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(
+                                                color: Colors.grey[600],
+                                                fontSize: 12,
+                                                fontFamily:
+                                                    variable.font_poppins),
+                                          )
+                                        ],
+                                      )
+                                    : Text(
+                                        lastMessage,
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
+                                            fontWeight: FontWeight.bold,
                                             color: Colors.grey[600],
                                             fontSize: 12,
                                             fontFamily: variable.font_poppins),
                                       )
-                                    ],
-                                  )
-                                : Text(
-                                    lastMessage,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.grey[600],
-                                        fontSize: 12,
-                                        fontFamily: variable.font_poppins),
-                                  )
-                            : '',
+                                : '',
+                          ),
+                          SizedBox(
+                            height: 1,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: Text(
+                              document[STR_CREATED_AT] != null
+                                  ? LAST_RECEIVED +
+                                      getFormattedDateTime(
+                                          (document[STR_CREATED_AT]
+                                                  as Timestamp)
+                                              .toDate()
+                                              .toString())
+                                  : '',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  color: Colors.grey[600],
+                                  fontSize: 10,
+                                  fontFamily: variable.font_poppins),
+                            ),
+                          ),
+                        ],
                       ),
-                      SizedBox(
-                        height: 1,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Text(
-                          document[STR_CREATED_AT] != null
-                              ? LAST_RECEIVED +
-                                  getFormattedDateTime(
-                                      (document[STR_CREATED_AT] as Timestamp)
-                                          .toDate()
-                                          .toString())
-                              : '',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey[600],
-                              fontSize: 10,
-                              fontFamily: variable.font_poppins),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.035,
                   ),
+                  Container(
+                    child: Column(
+                      children: [
+                        Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 8, 4, 4),
+                            child: (chatListSnapshot.hasData &&
+                                    chatListSnapshot.data.documents.length > 0)
+                                ? StreamBuilder<QuerySnapshot>(
+                                    stream: Firestore.instance
+                                        .collection('messages')
+                                        .document(chatViewModel.createGroupId(
+                                            patientId,
+                                            chatListSnapshot
+                                                .data.documents[index]['id']))
+                                        .collection(chatViewModel.createGroupId(
+                                            patientId,
+                                            chatListSnapshot
+                                                .data.documents[index]['id']))
+                                        .where('idTo', isEqualTo: patientId)
+                                        .where('isread', isEqualTo: false)
+                                        .snapshots(),
+                                    builder: (context, notReadMSGSnapshot) {
+                                      return Container(
+                                        width: 60,
+                                        height: 50,
+                                        child: Column(
+                                          children: <Widget>[
+                                            Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 5, 0, 0),
+                                                child: CircleAvatar(
+                                                  radius: 10,
+                                                  child: Text(
+                                                    (chatListSnapshot.hasData &&
+                                                            chatListSnapshot
+                                                                    .data
+                                                                    .documents
+                                                                    .length >
+                                                                0)
+                                                        ? ((notReadMSGSnapshot
+                                                                    .hasData &&
+                                                                notReadMSGSnapshot
+                                                                        .data
+                                                                        .documents
+                                                                        .length >
+                                                                    0)
+                                                            ? '${notReadMSGSnapshot.data.documents.length}'
+                                                            : '')
+                                                        : '',
+                                                    style:
+                                                        TextStyle(fontSize: 10),
+                                                  ),
+                                                  backgroundColor:
+                                                      (notReadMSGSnapshot
+                                                                  .hasData &&
+                                                              notReadMSGSnapshot
+                                                                      .data
+                                                                      .documents
+                                                                      .length >
+                                                                  0 &&
+                                                              notReadMSGSnapshot
+                                                                  .hasData &&
+                                                              notReadMSGSnapshot
+                                                                      .data
+                                                                      .documents
+                                                                      .length >
+                                                                  0)
+                                                          ? Color(CommonUtil()
+                                                              .getMyPrimaryColor())
+                                                          : Colors.transparent,
+                                                  foregroundColor: Colors.white,
+                                                )),
+                                          ],
+                                        ),
+                                      );
+                                    })
+                                : Text(''))
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

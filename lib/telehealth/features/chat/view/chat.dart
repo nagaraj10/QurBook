@@ -328,7 +328,8 @@ class ChatScreenState extends State<ChatScreen> {
             STR_ID_TO: peerId,
             STR_TIME_STAMP: FieldValue.serverTimestamp(),
             STR_CONTENT: content,
-            STR_TYPE: type
+            STR_TYPE: type,
+            STR_IS_READ: false
           },
         );
       });
@@ -1533,6 +1534,15 @@ class ChatScreenState extends State<ChatScreen> {
                               AlwaysStoppedAnimation<Color>(themeColor)));
                 } else {
                   listMessage = snapshot.data.documents;
+                  for (var data in snapshot.data.documents) {
+                    if(data[STR_ID_TO] == patientId && data[STR_IS_READ] == false) {
+                      if (data.reference != null) {
+                        Firestore.instance.runTransaction((Transaction myTransaction) async {
+                          await myTransaction.update(data.reference, {STR_IS_READ: true});
+                        });
+                      }
+                    }
+                  }
                   return ScrollablePositionedList.builder(
                     padding: EdgeInsets.all(10.0),
                     itemBuilder: (context, index) =>

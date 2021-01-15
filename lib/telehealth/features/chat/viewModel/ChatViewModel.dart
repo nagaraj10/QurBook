@@ -111,4 +111,55 @@ class ChatViewModel extends ChangeNotifier {
     return patientPicURL;
   }
 
+  Future<int> getUnreadMSGCount([String patientId]) async{
+    try {
+      int unReadMSGCount = 0;
+      String targetID = '';
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      patientId == null ? targetID = (prefs.get('userId') ?? 'NoId') : targetID = patientId;
+//      if (targetID != 'NoId') {
+      final QuerySnapshot chatListResult =
+      await Firestore.instance.collection('chat_list').document(targetID).collection('user_list').getDocuments();
+      final List<DocumentSnapshot> chatListDocuments = chatListResult.documents;
+      for(var data in chatListDocuments) {
+        String groupId = createGroupId(patientId,data['id']);
+        print('checkGroup'+groupId);
+        final QuerySnapshot unReadMSGDocument = await Firestore.instance.collection('messages').
+        document(groupId).
+        collection(groupId).
+        where('idTo', isEqualTo: targetID).
+        where('isread', isEqualTo: false).
+        getDocuments();
+
+        final List<DocumentSnapshot> unReadMSGDocuments = unReadMSGDocument.documents;
+        unReadMSGCount = unReadMSGCount + unReadMSGDocuments.length;
+      }
+      print('unread MSG count is $unReadMSGCount');
+//      }
+      if (patientId == null) {
+        //FlutterAppBadger.updateBadgeCount(unReadMSGCount);
+        return null;
+      }else {
+        return unReadMSGCount;
+      }
+
+    }catch(e) {
+      print(e.message);
+    }
+  }
+
+  String createGroupId(String patientId,String peerId) {
+
+    String groupId='';
+
+    if (patientId.hashCode <= peerId.hashCode) {
+      groupId = '$patientId-$peerId';
+    } else {
+      groupId = '$peerId-$patientId';
+    }
+
+    return groupId;
+  }
+
 }
