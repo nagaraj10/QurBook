@@ -482,8 +482,9 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
 
   int pickPosition(String categoryName) {
     int position = 0;
-    List<CategoryResult> categoryDataList = getCategoryList();
-    for (int i = 0; i < categoryDataList.length; i++) {
+    List<CategoryResult> categoryDataList = List();
+    categoryDataList=getCategoryList();
+    for (int i = 0; i < (categoryDataList==null?0:categoryDataList.length); i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;
