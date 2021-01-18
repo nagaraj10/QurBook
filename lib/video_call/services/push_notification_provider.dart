@@ -154,9 +154,10 @@ class PushNotificationsProvider {
       priority: Priority.high,
       importance: Importance.max,
     );
-
-    var iOS = IOSNotificationDetails(
-        sound: isCall ? 'RingToneFinal.aiff' : 'NotificationFinal.aiff');
+    if (ringtone == null) {
+      ringtone = 'ringtone.aiff';
+    }
+    var iOS = IOSNotificationDetails(sound: ringtone);
     var platform = NotificationDetails(android: android, iOS: iOS);
     await flutterLocalNotificationsPlugin.show(0, title, body, platform,
         payload: parameters.custom_sound);
@@ -243,14 +244,17 @@ class PushNotificationsProvider {
     if (message[parameters.notification] != null) {
       title = message[parameters.notification][parameters.title];
       body = message[parameters.notification][parameters.body];
+      ringtone = message[parameters.notification][parameters.sound];
     } else if (message[parameters.aps] != null) {
       final aps = message[parameters.aps];
       final alert = aps[parameters.alert];
       title = alert[parameters.title];
       body = alert[parameters.body];
+      ringtone = aps[parameters.sound];
     } else {
       title = message[parameters.title];
       body = message[parameters.body];
+      ringtone = message[parameters.sound];
     }
 
     if (title == null) {
