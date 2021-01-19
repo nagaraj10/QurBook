@@ -24,10 +24,13 @@ import 'package:myfhb/src/ui/MyRecord.dart';
 import 'package:myfhb/src/ui/audio/audio_record_screen.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/chat/constants/const.dart';
+import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/PdfViewURL.dart';
 import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 import 'package:myfhb/telehealth/features/chat/view/loading.dart';
 import 'package:myfhb/telehealth/features/chat/view/pdfiosViewer.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:open_file/open_file.dart';
@@ -172,6 +175,16 @@ class ChatScreenState extends State<ChatScreen> {
 
   FlutterSound flutterSound = FlutterSound();
   bool isPlaying = false;
+  ChatViewModel chatViewModel = new ChatViewModel();
+
+  String textValue = '';
+  AppointmentResult appointmentResult;
+
+  String bookingId = '-';
+  String lastAppointmentDate = '';
+  String nextAppointmentDate = '';
+  String doctorDeviceToken = '';
+  String patientDeviceToken = '';
 
   @override
   void initState() {
@@ -192,6 +205,12 @@ class ChatScreenState extends State<ChatScreen> {
     getPatientDetails();
   }
 
+  @override
+  void dispose() {
+    chatViewModel.setCurrentChatRoomID('none');
+    super.dispose();
+  }
+
   getPatientDetails() async {
     if (patientId == null || patientId == '') {
       patientId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -210,6 +229,8 @@ class ChatScreenState extends State<ChatScreen> {
     }
 
     readLocal();
+
+    parseData();
   }
 
   String getProfileURL() {
@@ -237,12 +258,48 @@ class ChatScreenState extends State<ChatScreen> {
     } else {
       groupChatId = '$peerId-$patientId';
     }
-    Firestore.instance
+    chatViewModel.setCurrentChatRoomID(groupChatId);
+    /*Firestore.instance
         .collection('users')
         .document(id == "" ? patientId : id)
-        .updateData({'chattingWith': peerId});
+        .updateData({'chattingWith': peerId});*/
 
     setState(() {});
+  }
+
+  parseData() async {
+    await chatViewModel
+        .fetchAppointmentDetail(widget.peerId,patientId)
+        .then((value) {
+      appointmentResult = value;
+      if (appointmentResult != null) {
+        setState(() {
+          if (appointmentResult.upcoming != null) {
+            bookingId = appointmentResult.upcoming.bookingId;
+          } else {
+            if (appointmentResult.past != null) {
+              bookingId = appointmentResult.past.bookingId;
+            } else {
+              bookingId = '-';
+            }
+          }
+
+          lastAppointmentDate = appointmentResult.past != null
+              ? appointmentResult.past.plannedStartDateTime
+              : '';
+          nextAppointmentDate = appointmentResult.upcoming != null
+              ? appointmentResult.upcoming.plannedStartDateTime
+              : '';
+          doctorDeviceToken = appointmentResult.deviceToken != null?
+              appointmentResult.deviceToken.doctor.payload[0].deviceTokenId
+              : '';
+          patientDeviceToken = appointmentResult.deviceToken != null ?
+              appointmentResult.deviceToken.patient.payload[0].deviceTokenId
+              : '';
+
+        });
+      }
+    });
   }
 
   /*Future getImage() async {
@@ -312,6 +369,8 @@ class ChatScreenState extends State<ChatScreen> {
   void onSendMessage(String content, int type) {
     // type: 0 = text, 1 = image, 2 = sticker
     if (content.trim() != '') {
+      textValue = textEditingController.text;
+
       textEditingController.clear();
 
       var documentReference = Firestore.instance
@@ -336,13 +395,13 @@ class ChatScreenState extends State<ChatScreen> {
       /*listScrollController.animateTo(0.0,
           duration: Duration(milliseconds: 300), curve: Curves.easeOut);*/
 
-      addChatList(content);
+      addChatList(content, type);
     } else {
       Fluttertoast.showToast(msg: NOTHING_SEND);
     }
   }
 
-  void addChatList(String content) {
+  void addChatList(String content, int type) {
     Firestore.instance
         .collection(STR_CHAT_LIST)
         .document(patientId)
@@ -368,6 +427,26 @@ class ChatScreenState extends State<ChatScreen> {
       STR_CREATED_AT: FieldValue.serverTimestamp(),
       STR_LAST_MESSAGE: content
     });
+
+    if(doctorDeviceToken!=null&&doctorDeviceToken!=''){
+      _pushNotification(type, peerName);
+    }
+  }
+
+  Future<void> _pushNotification(int type, String peerName) async {
+    try {
+      //int unReadMSGCount = await FirebaseController.instanace.getUnreadMSGCount(widget.selectedUserID);
+      await NotificationController.instance.sendNotificationMessageToPeerUser(
+          type,
+          textValue,
+          'Dear Doctor, you have a chat message from ' + peerName,
+          groupChatId,
+          doctorDeviceToken);
+      textValue = '';
+    } catch (e) {
+      print(e.message);
+    }
+    //_resetTextFieldAndLoading();
   }
 
   openDownloadAlert(
@@ -1535,10 +1614,13 @@ class ChatScreenState extends State<ChatScreen> {
                 } else {
                   listMessage = snapshot.data.documents;
                   for (var data in snapshot.data.documents) {
-                    if(data[STR_ID_TO] == patientId && data[STR_IS_READ] == false) {
+                    if (data[STR_ID_TO] == patientId &&
+                        data[STR_IS_READ] == false) {
                       if (data.reference != null) {
-                        Firestore.instance.runTransaction((Transaction myTransaction) async {
-                          await myTransaction.update(data.reference, {STR_IS_READ: true});
+                        Firestore.instance
+                            .runTransaction((Transaction myTransaction) async {
+                          await myTransaction
+                              .update(data.reference, {STR_IS_READ: true});
                         });
                       }
                     }

@@ -38,6 +38,7 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
+        //Log.d(TAG, "From: " + remoteMessage.from)
         // Check if message contains a data payload.
         if (remoteMessage.data.isNotEmpty()) {
             createNotification(data = remoteMessage.data)
@@ -195,7 +196,13 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
 //        }
         else if(data["templateName"]=="MyFHBMissedCall"){
             createNotification4MissedCall(data)
-        }else{
+        }
+
+        else if(data["templateName"]=="chat"){
+            createNotification4Chat(data)
+        }
+
+        else{
             val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
             val NS_ID = System.currentTimeMillis().toInt()
             val MEETING_ID = data[getString(R.string.meetid)]
@@ -379,4 +386,48 @@ class MyFirebaseInstanceService : FirebaseMessagingService() {
         //notification.flags=Notification.FLAG_INSISTENT
         nsManager.notify(NS_ID,notification)
     }
+
+    private fun createNotification4Chat(data:Map<String, String> = HashMap()){
+        val nsManager: NotificationManagerCompat = NotificationManagerCompat.from(this)
+        val NS_ID = System.currentTimeMillis().toInt()
+        val MEETING_ID = data[getString(R.string.meetid)]
+        val USER_NAME = data[getString(R.string.username)]
+        val ack_sound: Uri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + packageName + "/" + R.raw.msg_tone)
+
+        if (Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+            val manager = getSystemService(NotificationManager::class.java)
+            val isChannelExists = manager.getNotificationChannel(CHANNEL_ACK)
+            if(isChannelExists != null){
+                manager.deleteNotificationChannel(CHANNEL_ACK)
+            }
+            val channelAck = NotificationChannel(CHANNEL_ACK, getString(R.string.channel_ack), NotificationManager.IMPORTANCE_DEFAULT)
+            channelAck.description = getString(R.string.channel_ack_desc)
+            val attributes = AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION).build()
+            channelAck.setSound(ack_sound,attributes)
+            manager.createNotificationChannel(channelAck)
+        }
+
+        val onTapNS = Intent(applicationContext, OnTapNotification::class.java)
+        onTapNS.putExtra(getString(R.string.nsid), NS_ID)
+        onTapNS.putExtra(getString(R.string.meetid), "chat")
+        onTapNS.putExtra(getString(R.string.username), "$USER_NAME")
+        val onTapPendingIntent = PendingIntent.getBroadcast(applicationContext, NS_ID, onTapNS, PendingIntent.FLAG_CANCEL_CURRENT)
+
+
+        var notification = NotificationCompat.Builder(this, CHANNEL_ACK)
+                .setSmallIcon(R.mipmap.app_ns_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(applicationContext.resources,R.mipmap.ic_launcher))
+                .setContentTitle(data[getString(R.string.pro_ns_title)])
+                .setContentText(data[getString(R.string.pro_ns_body)])
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setContentIntent(onTapPendingIntent)
+                .setStyle(NotificationCompat.BigTextStyle().bigText(data[getString(R.string.pro_ns_body)]))
+                .setSound(ack_sound)
+                .setAutoCancel(true)
+                .build()
+        nsManager.notify(NS_ID,notification)
+    }
+
 }

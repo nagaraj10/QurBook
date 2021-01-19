@@ -49,8 +49,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
   @override
   void initState() {
     super.initState();
-    registerNotification();
-    configLocalNotification();
+    //registerNotification();
+    //configLocalNotification();
   }
 
   Future<String> getPatientDetails() async {
@@ -82,6 +82,8 @@ class HomeScreenState extends State<ChatHomeScreen> {
     });
 
     firebaseMessaging.getToken().then((token) {
+      print('FCMToken: '+token);
+
       Firestore.instance
           .collection(STR_USERS)
           .document(patientId)
@@ -95,7 +97,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
     var initializationSettingsAndroid =
         new AndroidInitializationSettings(STR_MIP_MAP_LAUNCHER);
     var initializationSettingsIOS = new IOSInitializationSettings();
-    var initializationSettings = new InitializationSettings();
+    var initializationSettings = new InitializationSettings(android: initializationSettingsAndroid,iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
@@ -112,7 +114,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
       priority: Priority.high,
     );
     var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
-    var platformChannelSpecifics = new NotificationDetails();
+    var platformChannelSpecifics = new NotificationDetails(android: androidPlatformChannelSpecifics,iOS: iOSPlatformChannelSpecifics);
 
     await flutterLocalNotificationsPlugin.show(0, message['title'].toString(),
         message['body'].toString(), platformChannelSpecifics,

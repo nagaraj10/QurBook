@@ -3,8 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
+import 'package:myfhb/my_providers/services/providers_repository.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
+import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
 import 'package:myfhb/telehealth/features/chat/view/chat.dart';
 import 'package:path/path.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,7 +14,11 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class ChatViewModel extends ChangeNotifier {
 
+  ProvidersListRepository _providersListRepository = ProvidersListRepository();
+
   SharedPreferences prefs;
+
+  AppointmentResult appointments;
 
   Future<void> storePatientDetailsToFCM(
       String doctorId, String doctorName, String doctorPic,
@@ -160,6 +166,20 @@ class ChatViewModel extends ChangeNotifier {
     }
 
     return groupId;
+  }
+
+  void setCurrentChatRoomID(value) async { // To know where I am in chat room. Avoid local notification.
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('currentChatRoom', value);
+  }
+
+  Future<AppointmentResult> fetchAppointmentDetail(String doctorId,String patientId) async {
+    try {
+      AppointmentDetailModel appointmentModel =
+      await _providersListRepository.getAppointmentDetail(doctorId,patientId);
+      appointments = appointmentModel.result;
+      return appointments;
+    } catch (e) {}
   }
 
 }

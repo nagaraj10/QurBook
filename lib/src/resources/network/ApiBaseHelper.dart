@@ -1399,6 +1399,18 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  Future<dynamic> getAppointmentDetail(String url) async {
+    var responseJson;
+    try {
+      final response = await http.get(_baseUrl + url,
+          headers: await headerRequest.getRequestHeaderWithStar());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
+
 }
 
 abstract class InnerException {
