@@ -38,6 +38,7 @@ class PushNotificationsProvider {
   String title;
   String body;
   String ringtone;
+  String templateName;
   final _pushNotificationStreamController =
       StreamController<String>.broadcast();
   Stream<String> get pushNotificationController =>
@@ -231,6 +232,8 @@ class PushNotificationsProvider {
       updateStatus(parameters.accept.toLowerCase());
     } else if (isCancellation) {
       _pushNotificationStreamController.add(parameters.doctorCancellation);
+    } else if (templateName != null && templateName == parameters.chat) {
+      _pushNotificationStreamController.add(parameters.chat);
     } else {
       _pushNotificationStreamController.add("normal");
     }
@@ -245,16 +248,19 @@ class PushNotificationsProvider {
       title = message[parameters.notification][parameters.title];
       body = message[parameters.notification][parameters.body];
       ringtone = message[parameters.notification][parameters.sound];
+      templateName = message[parameters.notification][parameters.templateName];
     } else if (message[parameters.aps] != null) {
       final aps = message[parameters.aps];
       final alert = aps[parameters.alert];
       title = alert[parameters.title];
       body = alert[parameters.body];
       ringtone = aps[parameters.sound];
+      templateName = aps[parameters.templateName];
     } else {
       title = message[parameters.title];
       body = message[parameters.body];
       ringtone = message[parameters.sound];
+      templateName = message[parameters.templateName];
     }
 
     if (title == null) {
@@ -281,7 +287,7 @@ class PushNotificationsProvider {
   }
 
   Future<dynamic> onMessage(Map<String, dynamic> message) async {
-    // print("OnMessage New: $message");
+    print("OnMessage New: $message");
     // print(
     // "----------------------------------------------------------- called on onMessage");
     // title = "new"; //message[parameters.notification][parameters.title];
