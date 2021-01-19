@@ -108,6 +108,7 @@ class _CallPageState extends State<CallPage> {
 
   /// Add agora event handlers
   void _addAgoraEventHandlers() {
+    var user_id;
     AgoraRtcEngine.onError = (dynamic code) {
       setState(() {
         final info = 'onError: $code';
@@ -135,6 +136,7 @@ class _CallPageState extends State<CallPage> {
 
     AgoraRtcEngine.onUserJoined = (int uid, int elapsed) {
       setState(() {
+        user_id = uid;
         final info = 'userJoined: $uid';
         _infoStrings.add(info);
         _users.add(uid);
@@ -147,11 +149,29 @@ class _CallPageState extends State<CallPage> {
       });
     };
 
+    // AgoraRtcEngine.onUserOffline = (int uid, int reason) {
+    //   setState(() {
+    //     final info = 'userOffline: $uid';
+    //     _infoStrings.add(info);
+    //     _users.remove(uid);
+    //     if (Platform.isIOS) {
+    //       Navigator.pop(context);
+    //     } else {
+    //       if (widget.isAppExists) {
+    //         Navigator.pop(context);
+    //       } else {
+    //         Navigator.of(context).pushNamedAndRemoveUntil(
+    //             '/splashscreen', (Route<dynamic> route) => false);
+    //       }
+    //     }
+    //   });
+    // };
+
     AgoraRtcEngine.onUserOffline = (int uid, int reason) {
-      setState(() {
-        final info = 'userOffline: $uid';
-        _infoStrings.add(info);
-        _users.remove(uid);
+      if (reason == 1) {
+        noResponseDialog(context);
+        //print('user is OFFLINE');
+      } else {
         if (Platform.isIOS) {
           Navigator.pop(context);
         } else {
@@ -162,7 +182,7 @@ class _CallPageState extends State<CallPage> {
                 '/splashscreen', (Route<dynamic> route) => false);
           }
         }
-      });
+      }
     };
 
     AgoraRtcEngine.onFirstRemoteVideoFrame = (
@@ -238,6 +258,161 @@ class _CallPageState extends State<CallPage> {
         FlutterToast().getToast('Video is resumed', Colors.green);
       } else if (reason == 5) {
         FlutterToast().getToast('Video is paused', Colors.red);
+      }
+    };
+
+    AgoraRtcEngine.onLocalAudioStateChanged = (error,state){
+      if(state==1){
+        //FlutterToast().getToast('Your on UnMute', Colors.red);
+      }else{
+        //FlutterToast().getToast('Your on Mute', Colors.green);
+      }
+    };
+
+    AgoraRtcEngine.onRemoteAudioStateChanged = (uid, state, reason, elapsed) {
+
+      if(state==0){
+        //FlutterToast().getToast('Doctor is on Mute', Colors.red);
+      }else if(reason==5){
+      FlutterToast().getToast('Doctor is on Mute', Colors.red);
+      }else if(reason==6){
+        FlutterToast().getToast('Doctor is on UnMute', Colors.green);
+      }
+      //uid is ID of the user whose audio state changes.
+      /* if (reason == 1) {
+        //print('REMOTE_AUDIO_REASON_NETWORK_CONGESTION- Network congestion.');
+      } else if (reason == 3) {
+        FlutterToast().getToast('Your on Mute', Colors.red);
+        // print(
+        //     'REMOTE_AUDIO_REASON_LOCAL_MUTED- The local user stops receiving the remote audio stream or disables the audio module.');
+      } else if (reason == 4) {
+        FlutterToast().getToast('Your on UnMute', Colors.red);
+        // print(
+        //     'REMOTE_AUDIO_REASON_LOCAL_UNMUTED- The local user resumes receiving the remote audio stream or enables the audio module.');
+      } else if (reason == 5) {
+        //FlutterToast().getToast('Doctor is on Mute', Colors.red);
+        FlutterToast().getToast('Your on Mute', Colors.red);
+
+        // print(
+        //     'REMOTE_AUDIO_REASON_REMOTE_MUTED- The remote user stops sending the audio stream or disables the audio module.');
+      } else if (reason == 6) {
+        //FlutterToast().getToast('Doctor is on UnMute', Colors.red);
+        FlutterToast().getToast('Your on UnMute', Colors.red);
+        // print(
+        //     'REMOTE_AUDIO_REASON_REMOTE_UNMUTED- The remote user resumes sending the audio stream or enables the audio module.');
+      } else if (reason == 7) {
+        print(
+            'REMOTE_AUDIO_REASON_REMOTE_OFFLINE- The remote user leaves the channel.');
+      } */
+    };
+
+    AgoraRtcEngine.onNetworkTypeChanged = (networkType) {
+      if (networkType == 1) {
+        print('network type is LAN');
+      } else if (networkType == 2) {
+        print('network type is Mobile2G');
+      } else if (networkType == 3) {
+        print('network type is Mobile3G');
+      } else if (networkType == 4) {
+        print('network type is Mobile4G');
+      } else if (networkType == 6) {
+        print('network type is unknown');
+      } else if (networkType == 2) {
+        print('network type is Mobile2G');
+      } else {
+        print('network type is WIFI');
+      }
+    };
+
+    if (user_id != null && user_id != '') {
+      AgoraRtcEngine.getUserInfoByUid(user_id).then((value) {
+        //print('connected user info ${value?.userAccount}');
+      });
+    }
+
+    AgoraRtcEngine.onRejoinChannelSuccess = (channel, uid, elapsedTime) {
+      print('After rejoining channel successfully');
+      //print('channel $channel &uid $uid &elapsedTime $elapsedTime');
+    };
+
+    //Local user call status
+    AgoraRtcEngine.onConnectionStateChanged = (nwState, reason) {
+      if (nwState == 1) {
+        FlutterToast().getToast('Disconnected', Colors.red);
+        //print('call was disconnected');
+      } else if (nwState == 2) {
+        FlutterToast().getToast('Connecting..', Colors.green);
+        //print('call is connecting');
+      } else if (nwState == 3) {
+        FlutterToast().getToast('Connected', Colors.green);
+      } else if (nwState == 4) {
+        FlutterToast().getToast('Reconnecting..', Colors.red);
+        //print('call is reconnecting');
+      } else if (nwState == 5) {
+        FlutterToast().getToast('Connection Failed', Colors.red);
+        //print('call is connection failed');
+      }
+    };
+
+    AgoraRtcEngine.onNetworkQuality = (uid, tx, rx) {
+      //uplink quality speed of local network state
+      if (tx == 1) {
+        print('The quality is excellent QUALITY_EXCELLENT');
+      } else if (tx == 2) {
+        print(
+            'The quality is quite good, but the bitrate may be slightly lower than excellent. QUALITY_GOOD');
+      } else if (tx == 3) {
+        print(
+            'Users can feel the communication slightly impaired. QUALITY_POOR');
+      } else if (tx == 4) {
+        // FlutterToast().getToast(
+        //     'Poor Network. Please check you Internet connection', Colors.red);
+        //print('Users can communicate not very smoothly. QUALITY_BAD');
+      } else if (tx == 5) {
+        // FlutterToast().getToast(
+        //     'Poor Network. Please check you Internet connection', Colors.red);
+        // print(
+        //     'The quality is so bad that users can barely communicate. QUALITY_VBAD');
+      } else if (tx == 6) {
+        // FlutterToast()
+        //     .getToast('Disconnected due to Network Failure!', Colors.red);
+
+        // print(
+        //     'The network is disconnected and users cannot communicate at all. QUALITY_DOWN');
+      } else if (tx == 8) {
+        print('The SDK is detecting the network quality. QUALITY_DETECTING');
+      } else if (tx == 0) {
+        print('The quality is unknown. QUALITY_UNKNOWN');
+      }
+
+      //downlink quality speed of local network state
+      if (rx == 1) {
+        print('The quality is excellent QUALITY_EXCELLENT');
+      } else if (rx == 2) {
+        print(
+            'The quality is quite good, but the bitrate may be slightly lower than excellent. QUALITY_GOOD');
+      } else if (rx == 3) {
+        print(
+            'Users can feel the communication slightly impaired. QUALITY_POOR');
+      } else if (tx == 4) {
+        // FlutterToast().getToast(
+        //     'Poor Network. Please check you Internet connection', Colors.red);
+        //print('Users can communicate not very smoothly. QUALITY_BAD');
+      } else if (tx == 5) {
+        // FlutterToast().getToast(
+        //     'Poor Network. Please check you Internet connection', Colors.red);
+        // print(
+        //     'The quality is so bad that users can barely communicate. QUALITY_VBAD');
+      } else if (tx == 6) {
+        // FlutterToast()
+        //     .getToast('Disconnected due to Network Failure!', Colors.red);
+
+        // print(
+        //     'The network is disconnected and users cannot communicate at all. QUALITY_DOWN');
+      } else if (rx == 8) {
+        print('The SDK is detecting the network quality. QUALITY_DETECTING');
+      } else if (rx == 0) {
+        print('The quality is unknown. QUALITY_UNKNOWN');
       }
     };
   }
@@ -368,5 +543,36 @@ class _CallPageState extends State<CallPage> {
   @override
   Widget build(BuildContext context) {
     return _viewRows();
+  }
+
+  noResponseDialog(BuildContext mContext) {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            content: Text(
+              'Disconnected due to Network Failure!',
+              style: TextStyle(fontSize: 14),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  if (Platform.isIOS) {
+                    Navigator.pop(mContext);
+                  } else {
+                    if (widget.isAppExists) {
+                      Navigator.pop(mContext);
+                    } else {
+                      Navigator.of(mContext).pushNamedAndRemoveUntil(
+                          '/splashscreen', (Route<dynamic> route) => false);
+                    }
+                  }
+                },
+                child: Text('ok', style: TextStyle(color: Color(0xff138fcf))),
+              ),
+            ],
+          );
+        });
   }
 }
