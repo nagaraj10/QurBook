@@ -429,7 +429,7 @@ class ChatScreenState extends State<ChatScreen> {
     });
 
     if(doctorDeviceToken!=null&&doctorDeviceToken!=''){
-      _pushNotification(type, peerName);
+      _pushNotification(type, patientName);
     }
   }
 

@@ -222,6 +222,8 @@ class _MyFHBState extends State<MyFHB> {
         if (isAlreadyLoaded) {
           if (event == parameters.doctorCancellation) {
             Get.to(NotificationMain());
+          } else if (event == parameters.chat) {
+            Get.to(ChatHomeScreen());
           }
         } else {
           if (event == parameters.doctorCancellation) {
@@ -230,6 +232,10 @@ class _MyFHBState extends State<MyFHB> {
             ));
           } else if (event == "normal") {
             Get.to(SplashScreen());
+          } else if (event == parameters.chat) {
+            Get.to(SplashScreen(
+              nsRoute: parameters.chat,
+            ));
           }
         }
       });
@@ -274,10 +280,9 @@ class _MyFHBState extends State<MyFHB> {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(selectedIndex: 0),
         ));
-      }else if (c_msg == 'chat') {
+      } else if (c_msg == 'chat') {
         Get.to(ChatHomeScreen());
-      }
-      else if (passedValArr[0] == 'DoctorRescheduling') {
+      } else if (passedValArr[0] == 'DoctorRescheduling') {
         /* Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
             selectedIndex: 1,
@@ -288,7 +293,7 @@ class _MyFHBState extends State<MyFHB> {
           ),
         )); */
         var body = {};
-        body['templateName'] = passedValArr[5]??'';
+        body['templateName'] = passedValArr[5] ?? '';
         body['contextId'] = passedValArr[2] ?? '';
         Get.to(ResheduleMain(
           isFromNotification: true,
@@ -310,7 +315,7 @@ class _MyFHBState extends State<MyFHB> {
               isCancelDialogShouldShow: true,
               bookingId: passedValArr[1] ?? '',
               date: passedValArr[2] ?? '',
-              templateName: passedValArr[3]??''),
+              templateName: passedValArr[3] ?? ''),
         ));
       } else if (passedValArr[0] == 'accept' || passedValArr[0] == 'decline') {
         var jsonInput = {};
@@ -415,18 +420,15 @@ class _MyFHBState extends State<MyFHB> {
       return SplashScreen();
     } else {
       if (navRoute == 'chat') {
+        return SplashScreen(nsRoute: 'chat');
+      } else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
         return SplashScreen(
-            nsRoute: 'chat'
-        );
-      }else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
-        return SplashScreen(
-          nsRoute: 'DoctorRescheduling',
-          doctorID: navRoute.split('&')[1],
-          bookingID: navRoute.split('&')[2],
-          doctorSessionId: navRoute.split('&')[3],
-          healthOrganizationId: navRoute.split('&')[4],
-          templateName:navRoute.split('&')[5]
-        );
+            nsRoute: 'DoctorRescheduling',
+            doctorID: navRoute.split('&')[1],
+            bookingID: navRoute.split('&')[2],
+            doctorSessionId: navRoute.split('&')[3],
+            healthOrganizationId: navRoute.split('&')[4],
+            templateName: navRoute.split('&')[5]);
       } else if (navRoute.split('&')[0] == 'DoctorCancellation') {
         return SplashScreen(
           nsRoute: 'DoctorCancellation',

@@ -160,7 +160,7 @@ class NotificationController {
             'click_action': 'FLUTTER_NOTIFICATION_CLICK',
             'id': '1',
             'status': 'done',
-            "sound" : "default",
+            "sound" : Platform.isIOS?'ringtone.aiff':'default',
             'chatroomid': chatID,
             'meeting_id': meetingId,
             'type': 'ack',

@@ -551,6 +551,7 @@ const String doctorRescheduling = 'DoctorRescheduling';
 const String reschedule = 'Reschedule';
 const String cancel = 'Cancel';
 const String templateName = 'templateName';
+
 const String accept = 'Accept';
 const String decline = 'Decline';
 const String meetingId = 'meeting_id';
@@ -591,6 +592,7 @@ const String DISPLAY_NAME = 'display_name';
 const String PROFILE_IMAGE = 'profile_image';
 const String ABOUT_ME = 'aboutMe';
 const String USERS = 'users';
+const String chat = 'chat';
 
 //appointment
 const String strIsFollowUp_C = 'isFollowUp';
