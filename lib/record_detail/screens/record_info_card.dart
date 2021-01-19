@@ -53,13 +53,16 @@ class RecordInfoCard {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        metaInfo.doctor.name != null
+                        metaInfo.doctor != null
                             ? Text(
                                 toBeginningOfSentenceCase(
                                     metaInfo.doctor != null
-                                        ? metaInfo.doctor.name != null
+                                        ? (metaInfo.doctor.name != null &&
+                                                metaInfo.doctor.name != '')
                                             ? metaInfo.doctor.name
-                                            : ''
+                                            : metaInfo.doctor.firstName +
+                                                ' ' +
+                                                metaInfo.doctor.lastName
                                         : ''),
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 14),
@@ -169,7 +172,16 @@ class RecordInfoCard {
                               ),
                         metaInfo.doctor != null
                             ? Text(
-                                toBeginningOfSentenceCase(metaInfo.doctor.name),
+                                toBeginningOfSentenceCase(
+                                    toBeginningOfSentenceCase(
+                                        metaInfo.doctor != null
+                                            ? (metaInfo.doctor.name != null &&
+                                                    metaInfo.doctor.name != '')
+                                                ? metaInfo.doctor.name
+                                                : metaInfo.doctor.firstName +
+                                                    ' ' +
+                                                    metaInfo.doctor.lastName
+                                            : '')),
                                 style: TextStyle(fontSize: 13),
                               )
                             : SizedBox(height: 0),
@@ -262,7 +274,16 @@ class RecordInfoCard {
                               ),
                         metaInfo.doctor != null
                             ? Text(
-                                toBeginningOfSentenceCase(metaInfo.doctor.name),
+                                toBeginningOfSentenceCase(
+                                    toBeginningOfSentenceCase(
+                                        metaInfo.doctor != null
+                                            ? (metaInfo.doctor.name != null &&
+                                                    metaInfo.doctor.name != '')
+                                                ? metaInfo.doctor.name
+                                                : metaInfo.doctor.firstName +
+                                                    ' ' +
+                                                    metaInfo.doctor.lastName
+                                            : '')),
                                 style: TextStyle(fontSize: 13),
                               )
                             : SizedBox(height: 0),

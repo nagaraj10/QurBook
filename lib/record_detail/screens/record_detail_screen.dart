@@ -564,17 +564,6 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
           widget.data.metadata.hasVoiceNotes = false;
 
           setState(() {});
-          /*for (HealthResult healthResult in value.result) {
-            if (widget.data.id == healthResult.id) {
-              widget.data.healthRecordCollection =  healthResult.healthRecordCollection;
-              PreferenceUtil.saveCompleteData(
-                  Constants.KEY_COMPLETE_DATA, value);
-
-              Scaffold.of(context).showSnackBar(SnackBar(
-                content: Text(deleteRecordResponse.message),
-              ));
-            }
-          }*/
         });
       } else {}
     });
@@ -624,7 +613,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void deleteAudioFile() {
-    audioPath = null;
+    audioPath = '';
     containsAudio = false;
     setState(() {});
   }
@@ -657,7 +646,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
   }
 
   void openAlertDialogBasedOnRecordDetails() {
-    categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+    categoryName = widget.data.metadata.healthRecordCategory.categoryName;
 
     if (widget.data.metadata.doctor != null)
       doctorsData = widget.data.metadata.doctor.toJson();
@@ -686,8 +675,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                       ? hospitalData[variable.strHealthOrganizationName]
                       : ''),
               new TextEditingController(
-                  text:
-                      doctorsData != null ? doctorsData[variable.strName] : ''),
+                  text: doctorsData != null
+                      ? doctorsData[variable.strName] != '' &&
+                              doctorsData[variable.strName] != null
+                          ? doctorsData[variable.strName]
+                          : doctorsData[variable.strFirstName] +
+                              ' ' +
+                              doctorsData[variable.strLastName]
+                      : ''),
               new TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
@@ -743,8 +738,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                       ? labData[variable.strHealthOrganizationName]
                       : ''),
               new TextEditingController(
-                  text:
-                      doctorsData != null ? doctorsData[variable.strName] : ''),
+                  text: doctorsData != null
+                      ? doctorsData[variable.strName] != '' &&
+                              doctorsData[variable.strName] != null
+                          ? doctorsData[variable.strName]
+                          : doctorsData[variable.strFirstName] +
+                              ' ' +
+                              doctorsData[variable.strLastName]
+                      : ''),
               new TextEditingController(text: date),
               containsAudio,
               audioPath, (containsAudio, audioPath) {
@@ -772,8 +773,14 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                       ? hospitalData[variable.strName]
                       : ''),
               new TextEditingController(
-                  text:
-                      doctorsData != null ? doctorsData[variable.strName] : ''),
+                  text: doctorsData != null
+                      ? doctorsData[variable.strName] != '' &&
+                              doctorsData[variable.strName] != null
+                          ? doctorsData[variable.strName]
+                          : doctorsData[variable.strFirstName] +
+                              ' ' +
+                              doctorsData[variable.strLastName]
+                      : ''),
               new TextEditingController(
                   text: widget.data.metadata.dateOfVisit != null
                       ? widget.data.metadata.dateOfVisit
@@ -904,8 +911,8 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
           new CommonDialogBox().getDialogBoxForNotes(
               context,
-              false,
-              null,
+              containsAudio,
+              audioPath,
               (containsAudio, audioPath) {
                 setState(() {
                   audioPath = audioPath;

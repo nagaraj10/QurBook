@@ -24,7 +24,7 @@ class MedicalReportListScreen extends StatefulWidget {
   final Function(String, String) getDataForParticularLabel;
   final Function(String, bool) mediaSelected;
   final Function(String, List<HealthRecordCollection>, bool)
-  healthRecordSelected;
+      healthRecordSelected;
   final bool allowSelect;
   List<String> mediaMeta;
   final bool isNotesSelect;
@@ -43,7 +43,8 @@ class MedicalReportListScreen extends StatefulWidget {
       this.mediaMeta,
       this.isNotesSelect,
       this.isAudioSelect,
-      this.showDetails,this.allowAttach,
+      this.showDetails,
+      this.allowAttach,
       this.healthRecordSelected);
 
   @override
@@ -131,13 +132,10 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                 condition = true;
               }
               data.isSelected = !data.isSelected;
-              if (data != null &&
-                  data.healthRecordCollection.length > 0) {
-                mediMasterId =
-                    new CommonUtil().getMetaMasterIdListNew(data);
+              if (data != null && data.healthRecordCollection.length > 0) {
+                mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
                 if (mediMasterId.length > 0) {
-                  widget.healthRecordSelected(
-                      data.id, mediMasterId, condition);
+                  widget.healthRecordSelected(data.id, mediMasterId, condition);
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
@@ -154,7 +152,6 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
               // setState(() {});
               widget.mediaSelected(data.id, condition);
             }
-
           } else {
             Navigator.push(
               context,
@@ -197,7 +194,8 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                       Container(
                 padding: EdgeInsets.all(10),
                 child: Image.network(
-                  /*Constants.BASE_URL + */data.metadata.healthRecordCategory.logo,
+                  /*Constants.BASE_URL + */ data
+                      .metadata.healthRecordCategory.logo,
                   height: 30,
                   width: 30,
                   color: Color(
@@ -234,9 +232,12 @@ class _MedicalReportListScreenState extends State<MedicalReportListScreen> {
                     Text(
                       data.metadata.doctor != null
                           ? toBeginningOfSentenceCase(
-                              data.metadata.doctor.name != null
+                              (data.metadata.doctor.name != null &&
+                                      data.metadata.doctor.name != '')
                                   ? data.metadata.doctor.name
-                                  : '')
+                                  : data.metadata.doctor.firstName +
+                                      ' ' +
+                                      data.metadata.doctor.lastName)
                           : '',
                       style: TextStyle(color: Colors.grey),
                     ),

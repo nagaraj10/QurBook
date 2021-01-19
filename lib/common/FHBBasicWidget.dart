@@ -527,7 +527,8 @@ class FHBBasicWidget {
             disabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(width: 5)),
             hintStyle: TextStyle(fontSize: 13),
-            //hintText: MESSAGE_HINT,
+            hintText:
+                'Provide details on existing illness, allergies, history of the disease and medication taken',
             border: OutlineInputBorder(
                 borderSide: BorderSide(width: 5),
                 borderRadius: BorderRadius.circular(7))),
