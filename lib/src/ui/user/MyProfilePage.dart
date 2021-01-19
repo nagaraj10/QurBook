@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_family_otp/models/add_family_otp_response.dart';
 import 'package:myfhb/add_family_user_info/bloc/add_family_user_info_bloc.dart';
@@ -33,7 +34,7 @@ class _MyProfilePageState extends State<MyProfilePage> {
   var gender = TextEditingController();
   var bloodGroupController = TextEditingController();
   var bloodRangeController = TextEditingController();
-
+  File imageURIProfile, profileImage;
   var dob = TextEditingController();
 
   var heightController = TextEditingController();
@@ -205,13 +206,44 @@ class _MyProfilePageState extends State<MyProfilePage> {
         }
       }
     }
+    try {
+      String profileImageFile =
+          PreferenceUtil.getStringValue(Constants.KEY_PROFILE_IMAGE);
+      if (profileImageFile != null) {
+        profileImage = File(profileImageFile);
+      }
+    } catch (e) {}
 
     return Container(
         color: Colors.white,
         padding: EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  decoration: ShapeDecoration(
+                    shape: CircleBorder(
+                        side: BorderSide(
+                            width: 1.5,
+                            color:
+                                Color(new CommonUtil().getMyPrimaryColor()))),
+                  ),
+                  child: ClipOval(
+                    child: profileImage != null
+                        ? Image.file(
+                            profileImage,
+                            fit: BoxFit.cover,
+                          )
+                        : FHBBasicWidget().getProfilePicWidgeUsingUrl(
+                            data.profilePicThumbnailUrl),
+                  ),
+                ),
+              ),
               Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(

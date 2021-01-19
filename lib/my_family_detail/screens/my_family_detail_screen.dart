@@ -125,9 +125,9 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
         return true;
       },
       child: Scaffold(
-        extendBodyBehindAppBar: true,
+//        extendBodyBehindAppBar: true,
         appBar: AppBar(
-            backgroundColor: Colors.transparent,
+            backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
             elevation: 0.0,
             title: Text(
               CommonConstants.my_family_title,
@@ -336,64 +336,104 @@ class MyFamilyDetailScreenState extends State<MyFamilyDetailScreen> {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
-          Container(
-              color: Color(CommonUtil().getMyPrimaryColor()),
-              height: expandedHeight,
-              child: Stack(
-                fit: StackFit.expand,
-                overflow: Overflow.visible,
-                children: [
-                  profilebanner != null
-                      ? Image.file(File(profilebanner),
-                          fit: BoxFit.cover, width: 100, height: 100)
-                      : Container(
-                          color: Colors.black.withOpacity(0.2),
+          SizedBox(height: 30,),
+          InkWell(
+              onTap: () {},
+              child: Opacity(
+                  opacity: 1,
+                  child: ClipOval(
+                    child: sharedbyme
+                        .child.profilePicThumbnailUrl !=
+                        null
+                        ? Image.network(
+                      sharedbyme.child.profilePicThumbnailUrl,
+                      fit: BoxFit.cover,
+                      width: 100,
+                      height: 100,
+                      headers: {
+                        HttpHeaders.authorizationHeader:
+                        PreferenceUtil.getStringValue(
+                            Constants.KEY_AUTHTOKEN)
+                      },
+                    )
+                        : Container(
+                      width: 100,
+                      height: 100,
+                      color: Color(new CommonUtil()
+                          .getMyPrimaryColor()),
+                      child: Center(
+                        child: Text(
+                          sharedbyme.child.firstName != null
+                              ? sharedbyme.child.firstName[0]
+                              .toUpperCase()
+                              : '',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 60.0,
+                            fontWeight: FontWeight.w200,
+                          ),
                         ),
-                  Positioned(
-                      top: expandedHeight - 50,
-                      left: 24, //MediaQuery.of(context).size.width / 4,
-                      child: InkWell(
-                          onTap: () {},
-                          child: Opacity(
-                              opacity: 1,
-                              child: ClipOval(
-                                child: sharedbyme
-                                            .child.profilePicThumbnailUrl !=
-                                        null
-                                    ? Image.network(
-                                        sharedbyme.child.profilePicThumbnailUrl,
-                                        fit: BoxFit.cover,
-                                        width: 100,
-                                        height: 100,
-                                        headers: {
-                                          HttpHeaders.authorizationHeader:
-                                              PreferenceUtil.getStringValue(
-                                                  Constants.KEY_AUTHTOKEN)
-                                        },
-                                      )
-                                    : Container(
-                                        width: 100,
-                                        height: 100,
-                                        color: Color(new CommonUtil()
-                                            .getMyPrimaryColor()),
-                                        child: Center(
-                                          child: Text(
-                                            sharedbyme.child.firstName != null
-                                                ? sharedbyme.child.firstName[0]
-                                                    .toUpperCase()
-                                                : '',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 60.0,
-                                              fontWeight: FontWeight.w200,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                              )))),
-                ],
-              )),
-          SizedBox(height: 50),
+                      ),
+                    ),
+                  ))),
+//          Container(
+//              color: Color(CommonUtil().getMyPrimaryColor()),
+//              height: expandedHeight,
+//              child: Stack(
+//                fit: StackFit.expand,
+//                overflow: Overflow.visible,
+//                children: [
+//                  profilebanner != null
+//                      ? Image.file(File(profilebanner),
+//                          fit: BoxFit.cover, width: 100, height: 100)
+//                      : Container(
+//                          color: Colors.black.withOpacity(0.2),
+//                        ),
+//                  Positioned(
+//                      top: expandedHeight - 50,
+//                      left: 24, //MediaQuery.of(context).size.width / 4,
+//                      child: InkWell(
+//                          onTap: () {},
+//                          child: Opacity(
+//                              opacity: 1,
+//                              child: ClipOval(
+//                                child: sharedbyme
+//                                            .child.profilePicThumbnailUrl !=
+//                                        null
+//                                    ? Image.network(
+//                                        sharedbyme.child.profilePicThumbnailUrl,
+//                                        fit: BoxFit.cover,
+//                                        width: 100,
+//                                        height: 100,
+//                                        headers: {
+//                                          HttpHeaders.authorizationHeader:
+//                                              PreferenceUtil.getStringValue(
+//                                                  Constants.KEY_AUTHTOKEN)
+//                                        },
+//                                      )
+//                                    : Container(
+//                                        width: 100,
+//                                        height: 100,
+//                                        color: Color(new CommonUtil()
+//                                            .getMyPrimaryColor()),
+//                                        child: Center(
+//                                          child: Text(
+//                                            sharedbyme.child.firstName != null
+//                                                ? sharedbyme.child.firstName[0]
+//                                                    .toUpperCase()
+//                                                : '',
+//                                            style: TextStyle(
+//                                              color: Colors.white,
+//                                              fontSize: 60.0,
+//                                              fontWeight: FontWeight.w200,
+//                                            ),
+//                                          ),
+//                                        ),
+//                                      ),
+//                              )))),
+//                ],
+//              )),
+          SizedBox(height: 30),
           _showMobileNoTextField(),
           _showFirstNameTextField(),
           _showMiddleNameTextField(),
