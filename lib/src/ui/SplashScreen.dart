@@ -17,6 +17,7 @@ import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/d
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import '../utils/PageNavigator.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -87,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   body: body,
                 ),
               );
-            } else if (widget.nsRoute == 'DoctorCancellation') {
+            }else if (widget.nsRoute == 'DoctorCancellation') {
               //cancel appointments route
 
               Get.offAll(TelehealthProviders(
@@ -101,6 +102,10 @@ class _SplashScreenState extends State<SplashScreen> {
               ));
             } else if (widget.nsRoute == parameters.doctorCancellation) {
               Get.to(NotificationMain());
+            }else if (widget.nsRoute == 'chat') {
+              Get.to(
+                ChatHomeScreen(),
+              );
             } else {
               PageNavigator.goToPermanent(context, router.rt_Dashboard);
             }

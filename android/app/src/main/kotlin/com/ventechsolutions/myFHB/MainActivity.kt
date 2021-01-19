@@ -257,7 +257,9 @@ class MainActivity : FlutterActivity() {
         patId = intent.getStringExtra(getString(R.string.pat_id))
         patName = intent.getStringExtra(getString(R.string.pat_name))
         patPic = intent.getStringExtra(getString(R.string.pat_pic))
-        if(sharedValue!=null && username !=null && docId!=null && docPic !=null){
+        if(sharedValue!=null && sharedValue =="chat"){
+            sharedValue="$sharedValue"
+        }else if(sharedValue!=null && username !=null && docId!=null && docPic !=null){
             sharedValue="$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}"
         }else if(sharedValue==Constants.PROP_DOC_RESCHDULE){
             //todo redirect to telehealth page

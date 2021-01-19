@@ -209,3 +209,7 @@ const String qr_str_id = 'id';
 const String qr_healthRecordMetaData = 'healthRecordMetaData';
 const String qr_healthRecordType = 'healthRecordType';
 const String qr_update_appointment_records = '/update-appointment-records';
+
+const String appointmentSlash = 'appointment/';
+const String patientIdEqualTo = 'chat-screen-details?patientId=';
+const String doctorIdEqualTo = '&doctorId=';

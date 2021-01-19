@@ -32,11 +32,15 @@ import 'package:myfhb/telehealth/features/Notifications/view/notification_main.d
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/doctor.dart'
     as doc;
 import 'package:myfhb/telehealth/features/appointments/view/resheduleMain.dart';
+import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/notificationController.dart';
 import 'package:myfhb/video_call/pages/callmain.dart';
 import 'package:myfhb/video_call/services/push_notification_provider.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:myfhb/video_call/utils/hideprovider.dart';
 import 'package:provider/provider.dart' as provider;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'common/CommonConstants.dart';
 import 'common/CommonUtil.dart';
@@ -193,10 +197,14 @@ class _MyFHBState extends State<MyFHB> {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
   var globalContext;
   AuthService authService = AuthService();
+  ChatViewModel chatViewModel = new ChatViewModel();
   @override
   void initState() {
     // TODO: implement initState
 
+    /*NotificationController.instance.takeFCMTokenWhenAppLaunch();
+    NotificationController.instance.initLocalNotification();*/
+    chatViewModel.setCurrentChatRoomID('none');
     super.initState();
     CommonUtil.askPermissionForCameraAndMic();
     getMyRoute();
@@ -266,7 +274,10 @@ class _MyFHBState extends State<MyFHB> {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(selectedIndex: 0),
         ));
-      } else if (passedValArr[0] == 'DoctorRescheduling') {
+      }else if (c_msg == 'chat') {
+        Get.to(ChatHomeScreen());
+      }
+      else if (passedValArr[0] == 'DoctorRescheduling') {
         /* Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(
             selectedIndex: 1,
@@ -403,7 +414,11 @@ class _MyFHBState extends State<MyFHB> {
     if (navRoute.isEmpty) {
       return SplashScreen();
     } else {
-      if (navRoute.split('&')[0] == 'DoctorRescheduling') {
+      if (navRoute == 'chat') {
+        return SplashScreen(
+            nsRoute: 'chat'
+        );
+      }else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
         return SplashScreen(
           nsRoute: 'DoctorRescheduling',
           doctorID: navRoute.split('&')[1],

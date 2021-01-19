@@ -20,9 +20,11 @@ import 'package:myfhb/telehealth/features/MyProvider/model/healthOrganization/He
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/DoctorIds.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/provider_model/TelehealthProviderModel.dart';
 import 'package:myfhb/telehealth/features/appointments/model/historyModel.dart';
+import 'package:myfhb/telehealth/features/chat/model/AppointmentDetailModel.dart';
 
 class ProvidersListRepository {
   ApiBaseHelper _helper = ApiBaseHelper();
+  AppointmentResult appointments;
 
   Future<MyProvidersResponse> getMedicalPreferencesList({String userId}) async {
     String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
@@ -152,5 +154,12 @@ class ProvidersListRepository {
     final response = await _helper
         .getDoctorsFromHospital(qr_doctor + ar_doctor_list + healthOrgId);
     return DoctorListFromHospitalModel.fromJson(response);
+  }
+
+  Future<AppointmentDetailModel> getAppointmentDetail(
+      String doctorId,String patientId) async {
+    final response = await _helper
+        .getAppointmentDetail(appointmentSlash+patientIdEqualTo+patientId+doctorIdEqualTo+doctorId);
+    return AppointmentDetailModel.fromJson(response);
   }
 }
