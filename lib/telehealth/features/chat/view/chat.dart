@@ -439,7 +439,7 @@ class ChatScreenState extends State<ChatScreen> {
       await NotificationController.instance.sendNotificationMessageToPeerUser(
           type,
           textValue,
-          'Dear Doctor, you have a chat message from ' + peerName,
+          pushMessageText + peerName,
           groupChatId,
           doctorDeviceToken);
       textValue = '';
