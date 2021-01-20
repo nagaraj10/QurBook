@@ -18,6 +18,7 @@ import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
@@ -43,7 +44,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   UserModel saveuser = UserModel();
   String user_mobile_no;
   String id_token_string;
-
+  Map<String, dynamic> dataForResendOtp;
   @override
   void initState() {
     // TODO: implement initState
@@ -230,7 +231,8 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
       );
       Map<String, dynamic> map = logInModel.toJson();
       loginModel.PatientLogIn response = await authViewModel.loginPatient(map);
-      print(response.toString());
+      //print(response.toString());
+      dataForResendOtp = map;
       //_checkResponse(response);
       _checkifItsGuest(response);
     } else {
@@ -241,7 +243,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
   }
 
   _checkResponse(PatientLogIn response) {
-    print(response.toJson().toString());
+    //print(response.toJson().toString());
     if (response.isSuccess) {
       Navigator.push(
           context,
@@ -251,6 +253,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
                         '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${numberController.text}',
                     from: strFromLogin,
                     userConfirm: false,
+                    dataForResendOtp: dataForResendOtp,
                   )));
     } else {
       if (response.message == 'User is not confirmed.') {
