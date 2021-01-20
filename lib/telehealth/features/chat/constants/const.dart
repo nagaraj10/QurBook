@@ -9,6 +9,7 @@ const popUpChoiceOne = 'Search';
 const popUpChoiceTwo = 'Health Records';
 const popUpCHoiceThree = 'Device Readings';
 const chatTextFieldHintText = 'Type your message here';
+const pushMessageText = 'New message from ';
 
 const String STR_IS_READ = 'isread';
 
