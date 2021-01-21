@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 
 class BottomBarWidget extends StatelessWidget {
   String name;
@@ -25,7 +29,7 @@ class BottomBarWidget extends StatelessWidget {
                     height: 25,
                     width: 25,
                   )
-                : ImageIcon(
+                : name == 'Chats'?getChatIcon(icon):ImageIcon(
                     AssetImage(icon),
                     size: 20,
                     color: selectedPageIndex == pageIndex
@@ -43,5 +47,47 @@ class BottomBarWidget extends StatelessWidget {
                   )
           ],
         ));
+  }
+
+  Widget getChatIcon(String icon) {
+    int count = 0;
+    String targetID = PreferenceUtil.getStringValue(KEY_USERID);
+    return StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance
+            .collection(STR_CHAT_LIST)
+            .document(targetID)
+            .collection(STR_USER_LIST)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            count = 0;
+            snapshot.data.documents.toList().forEach((element) {
+              count = count + element.data[STR_IS_READ_COUNT];
+            });
+            return BadgeIcon(
+                icon: GestureDetector(
+                  child: ImageIcon(
+                    AssetImage(icon),
+                    size: 20,
+                    color: selectedPageIndex == pageIndex
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                ),
+                badgeCount: count);
+          } else {
+            return BadgeIcon(
+                icon: GestureDetector(
+                  child: ImageIcon(
+                    AssetImage(icon),
+                    size: 20,
+                    color: selectedPageIndex == pageIndex
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                ),
+                badgeCount: 0);
+          }
+        });
   }
 }
