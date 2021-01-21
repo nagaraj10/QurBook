@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
@@ -61,7 +62,7 @@ class _MyControllersState extends State<MyControllers> {
   /// Toolbar layout
   Widget _toolbar({CallStatus callStatus, HideProvider hideProvider}) {
     if (widget.role == ClientRole.Audience) return Container();
-    return Container(
+    /* return Container(
       color: Colors.black.withOpacity(0.5),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -109,6 +110,86 @@ class _MyControllersState extends State<MyControllers> {
             ),
           ),
         ],
+      ),
+    ); */
+
+    return Container(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(CommonUtil().getMyPrimaryColor()).withOpacity(0.3),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+        ),
+        //color:Colors.red,
+        child: Container(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(
+                  onPressed: _onToggleVideo,
+                  // icon: Icon(
+                  // widget._isHideMyVideo ? Icons.videocam_off : Icons.videocam,
+                  //   color: Colors.white,
+                  //   size: 20.0,
+                  // ),
+                  icon: widget._isHideMyVideo
+                      ? Image.asset(
+                          'assets/icons/ic_vc_off_white.png') //? video call off icon
+                      : Image.asset('assets/icons/ic_vc_white.png'),
+                  //color: Colors.white,
+                  //iconSize: 15.0,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(
+                  onPressed: _onToggleMute,
+                  icon: widget.muted
+                      ? Image.asset(
+                          'assets/icons/ic_mic_mute_white.png')
+                      : Image.asset(
+                          'assets/icons/ic_mic_unmute_white.png'),
+                  //color: Colors.white,
+                  //iconSize: 13.0,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: IconButton(
+                  onPressed: () {
+                   chatViewModel.storePatientDetailsToFCM(widget.doctorId,
+                  widget.doctorName, widget.doctorPicUrl,widget.patientId,widget.patientName,widget.patientPicUrl,context,true);
+                  },
+                  icon: Image.asset('assets/icons/ic_chat.png'),
+                  //iconSize: 33,
+                ),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Container(
+                padding: EdgeInsets.only(top: 8, bottom: 8),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(8),bottomRight: Radius.circular(8)),
+                ),
+                //color: Colors.red,
+                child: IconButton(
+                  onPressed: () {
+                    _onCallEnd(context);
+                  },
+                  icon: Image.asset('assets/icons/ic_hangup.png'),
+                  color: Colors.white,
+                  iconSize: 33,
+                  //padding: const EdgeInsets.only(left: 13,right: 13),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

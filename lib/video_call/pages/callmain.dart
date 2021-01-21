@@ -110,7 +110,7 @@ class CallMain extends StatelessWidget {
                               _isVideoHide = isVideoHide;
                             }, _isMute, _isVideoHide, doctorName, doctorPic,patientId,patientName,patientPicUrl),
                             SizedBox(
-                              height: 48,
+                              height: 20,
                             ),
                           ],
                         )),

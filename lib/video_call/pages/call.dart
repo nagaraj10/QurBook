@@ -2,17 +2,20 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:screen/screen.dart';
-
+import 'package:myfhb/constants/router_variable.dart' as router;
 import '../utils/settings.dart';
 
 class CallPage extends StatefulWidget {
@@ -39,6 +42,11 @@ class _CallPageState extends State<CallPage> {
 
   ///create method channel for on going NS for call
   static const platform = const MethodChannel(parameters.ongoing_channel);
+  final Connectivity _connectivity = Connectivity();
+  StreamSubscription<ConnectivityResult> _connectivitySubscription;
+  bool _internetconnection = false;
+  var _connectionStatus = '';
+  bool isCustomViewShown = false;
 
   @override
   void dispose() {
@@ -65,6 +73,107 @@ class _CallPageState extends State<CallPage> {
     // initialize agora sdk
     initialize();
     Screen.keepOn(true);
+    _connectivitySubscription =
+        _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    switch (result) {
+      case ConnectivityResult.wifi:
+        String wifiName, wifiBSSID, wifiIP;
+
+        try {
+          if (!kIsWeb && Platform.isIOS) {
+            LocationAuthorizationStatus status =
+                await _connectivity.getLocationServiceAuthorization();
+            if (status == LocationAuthorizationStatus.notDetermined) {
+              status =
+                  await _connectivity.requestLocationServiceAuthorization();
+            }
+            if (status == LocationAuthorizationStatus.authorizedAlways ||
+                status == LocationAuthorizationStatus.authorizedWhenInUse) {
+              wifiName = await _connectivity.getWifiName();
+            } else {
+              wifiName = await _connectivity.getWifiName();
+            }
+          } else {
+            wifiName = await _connectivity.getWifiName();
+          }
+        } on PlatformException catch (e) {
+          //print(e.toString());
+          wifiName = failed_wifi;
+        }
+
+        try {
+          if (!kIsWeb && Platform.isIOS) {
+            LocationAuthorizationStatus status =
+                await _connectivity.getLocationServiceAuthorization();
+            if (status == LocationAuthorizationStatus.notDetermined) {
+              status =
+                  await _connectivity.requestLocationServiceAuthorization();
+            }
+            if (status == LocationAuthorizationStatus.authorizedAlways ||
+                status == LocationAuthorizationStatus.authorizedWhenInUse) {
+              wifiBSSID = await _connectivity.getWifiBSSID();
+            } else {
+              wifiBSSID = await _connectivity.getWifiBSSID();
+            }
+          } else {
+            wifiBSSID = await _connectivity.getWifiBSSID();
+          }
+        } on PlatformException catch (e) {
+          //print(e.toString());
+          wifiBSSID = failed_wifi_bssid;
+        }
+
+        try {
+          wifiIP = await _connectivity.getWifiIP();
+        } on PlatformException catch (e) {
+          //print(e.toString());
+          wifiIP = failed_wifi_ip;
+        }
+
+        setState(() {
+          _internetconnection = true;
+          _connectionStatus = '$result\n'
+              'Wifi Name: $wifiName\n'
+              'Wifi BSSID: $wifiBSSID\n'
+              'Wifi IP: $wifiIP\n';
+          // toast.getToast(wifi_connected, Colors.green);
+          isCustomViewShown = false;
+        });
+        break;
+      case ConnectivityResult.mobile:
+        setState(() {
+          _internetconnection = true;
+          //toast.getToast(data_connected, Colors.green);
+          isCustomViewShown = false;
+        });
+        break;
+      case ConnectivityResult.none:
+        setState(() {
+          _internetconnection = false;
+          _connectionStatus = no_internet_conn;
+          //toast.getToast(no_internet_conn, Colors.red);
+          Future.delayed(Duration(seconds: 20), () {
+            if (_internetconnection) {
+              //do nothing
+            } else {
+              noResponseDialog(
+                  context, 'Disconnected due to your Network Drop!');
+            }
+          });
+          isCustomViewShown = true;
+        });
+        break;
+      default:
+        setState(() {
+          _internetconnection = false;
+          _connectionStatus = failed_get_conn;
+          //toast.getToast(failed_get_connectivity, Colors.red);
+        });
+        break;
+    }
   }
 
   cancelOnGoingNS() async {
@@ -131,6 +240,7 @@ class _CallPageState extends State<CallPage> {
       setState(() {
         _infoStrings.add('onLeaveChannel');
         _users.clear();
+        //FlutterToast().getToast('Call Ended', Colors.red);
       });
     };
 
@@ -168,21 +278,29 @@ class _CallPageState extends State<CallPage> {
     // };
 
     AgoraRtcEngine.onUserOffline = (int uid, int reason) {
-      if (reason == 1) {
-        noResponseDialog(context);
-        //print('user is OFFLINE');
-      } else {
-        if (Platform.isIOS) {
-          Navigator.pop(context);
+      setState(() {
+        if (reason == 1) {
+          noResponseDialog(context, 'Disconnected due to Network Failure!');
+          //print('user is OFFLINE');
         } else {
-          if (widget.isAppExists) {
-            Navigator.pop(context);
-          } else {
+          if (Platform.isIOS) {
             Navigator.of(context).pushNamedAndRemoveUntil(
-                '/splashscreen', (Route<dynamic> route) => false);
+                router.rt_TelehealthProvider, (Route<dynamic> route) => false,
+                arguments: HomeScreenArguments(selectedIndex: 0));
+            // Navigator.pop(context);
+          } else {
+            if (widget.isAppExists) {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  router.rt_TelehealthProvider, (Route<dynamic> route) => false,
+                  arguments: HomeScreenArguments(selectedIndex: 0));
+              //Navigator.pop(context);
+            } else {
+              Navigator.of(context).pushNamedAndRemoveUntil(
+                  '/splashscreen', (Route<dynamic> route) => false);
+            }
           }
         }
-      }
+      });
     };
 
     AgoraRtcEngine.onFirstRemoteVideoFrame = (
@@ -261,21 +379,20 @@ class _CallPageState extends State<CallPage> {
       }
     };
 
-    AgoraRtcEngine.onLocalAudioStateChanged = (error,state){
-      if(state==1){
+    AgoraRtcEngine.onLocalAudioStateChanged = (error, state) {
+      if (state == 1) {
         //FlutterToast().getToast('Your on UnMute', Colors.red);
-      }else{
+      } else {
         //FlutterToast().getToast('Your on Mute', Colors.green);
       }
     };
 
     AgoraRtcEngine.onRemoteAudioStateChanged = (uid, state, reason, elapsed) {
-
-      if(state==0){
+      if (state == 0) {
         //FlutterToast().getToast('Doctor is on Mute', Colors.red);
-      }else if(reason==5){
-      FlutterToast().getToast('Doctor is on Mute', Colors.red);
-      }else if(reason==6){
+      } else if (reason == 5) {
+        FlutterToast().getToast('Doctor is on Mute', Colors.red);
+      } else if (reason == 6) {
         FlutterToast().getToast('Doctor is on UnMute', Colors.green);
       }
       //uid is ID of the user whose audio state changes.
@@ -346,7 +463,7 @@ class _CallPageState extends State<CallPage> {
       } else if (nwState == 3) {
         FlutterToast().getToast('Connected', Colors.green);
       } else if (nwState == 4) {
-        FlutterToast().getToast('Reconnecting..', Colors.red);
+        FlutterToast().getToast('Trying to Reconnect..', Colors.red);
         //print('call is reconnecting');
       } else if (nwState == 5) {
         FlutterToast().getToast('Connection Failed', Colors.red);
@@ -415,6 +532,18 @@ class _CallPageState extends State<CallPage> {
         print('The quality is unknown. QUALITY_UNKNOWN');
       }
     };
+
+    AgoraRtcEngine.onRemoteVideoStats = (stats) {
+      if (stats.receivedBitrate == 0 && !isCustomViewShown) {
+        isCustomViewShown = true;
+        setState(() {});
+      } else if (stats.receivedBitrate > 100 && isCustomViewShown) {
+        isCustomViewShown = false;
+        setState(() {});
+      } else {
+        //do nothing
+      }
+    };
   }
 
   /// Helper function to get list of native views
@@ -479,13 +608,15 @@ class _CallPageState extends State<CallPage> {
       alignment: Alignment.bottomRight,
       children: [
         Container(child: attendees[1]),
-        SizedBox(
-          width: 150,
-          height: 200,
-          child: Container(
-              margin: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-              child: attendees[0]),
-        ),
+        Container(
+            decoration: BoxDecoration(
+              //color: Color(CommonUtil.primaryColor).withOpacity(0.3),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            height: 125,
+            width: 125,
+            margin: EdgeInsets.symmetric(vertical: 120, horizontal: 10),
+            child: attendees[0]),
       ],
     );
   }
@@ -542,37 +673,90 @@ class _CallPageState extends State<CallPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _viewRows();
+    return isCustomViewShown ? tryingToConnect() : _viewRows();
   }
 
-  noResponseDialog(BuildContext mContext) {
+  noResponseDialog(BuildContext mContext, String message) {
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) {
           return AlertDialog(
-            content: Text(
-              'Disconnected due to Network Failure!',
-              style: TextStyle(fontSize: 14),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  message,
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
             ),
             actions: <Widget>[
               FlatButton(
                 onPressed: () {
+                  // if (Platform.isIOS) {
+                  //   Navigator.pop(mContext);
+                  // } else {
+                  //   if (widget.isAppExists) {
+                  //     Navigator.pop(mContext);
+                  //   } else {
+                  //     Navigator.of(mContext).pushNamedAndRemoveUntil(
+                  //         '/splashscreen', (Route<dynamic> route) => false);
+                  //   }
+                  // }
+
                   if (Platform.isIOS) {
-                    Navigator.pop(mContext);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                        router.rt_TelehealthProvider,
+                        (Route<dynamic> route) => false,
+                        arguments: HomeScreenArguments(selectedIndex: 0));
+                    // Navigator.pop(context);
                   } else {
                     if (widget.isAppExists) {
-                      Navigator.pop(mContext);
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          router.rt_TelehealthProvider,
+                          (Route<dynamic> route) => false,
+                          arguments: HomeScreenArguments(selectedIndex: 0));
+                      //Navigator.pop(context);
                     } else {
-                      Navigator.of(mContext).pushNamedAndRemoveUntil(
+                      Navigator.of(context).pushNamedAndRemoveUntil(
                           '/splashscreen', (Route<dynamic> route) => false);
                     }
                   }
                 },
-                child: Text('ok', style: TextStyle(color: Color(0xff138fcf))),
+                child: Text('Ok',
+                    style: TextStyle(color: Color(0xff138fcf), fontSize: 18)),
               ),
             ],
           );
         });
+  }
+
+  Widget tryingToConnect() {
+    return Container(
+      color: Colors.black.withOpacity(0.3),
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+        child: Column(
+          //mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 30,
+              width: 30,
+              child: CircularProgressIndicator(),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Text(
+              'Trying to Reconnect..',
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
