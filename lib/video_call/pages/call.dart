@@ -48,6 +48,7 @@ class _CallPageState extends State<CallPage> {
   bool _internetconnection = false;
   var _connectionStatus = '';
   bool isCustomViewShown = false;
+  int videoPauseResumeState = 0;
 
   @override
   void dispose() {
@@ -59,6 +60,7 @@ class _CallPageState extends State<CallPage> {
     cancelOnGoingNS();
     super.dispose();
     Screen.keepOn(false);
+    videoPauseResumeState = 0;
   }
 
   @override
@@ -369,8 +371,12 @@ class _CallPageState extends State<CallPage> {
         //FlutterToast().getToast('Remote User Went to OFFLINE', Colors.yellow);
       } else if (reason == 6) {
         FlutterToast().getToast('Video is resumed', Colors.green);
+        videoPauseResumeState = 1;
       } else if (reason == 5) {
         FlutterToast().getToast('Video is paused', Colors.red);
+        videoPauseResumeState = 2;
+      } else {
+        videoPauseResumeState = 0;
       }
     };
 
@@ -529,14 +535,18 @@ class _CallPageState extends State<CallPage> {
     };
 
     AgoraRtcEngine.onRemoteVideoStats = (stats) {
-      if (stats.receivedBitrate == 0 && !isCustomViewShown) {
-        isCustomViewShown = true;
-        setState(() {});
-      } else if (stats.receivedBitrate > 100 && isCustomViewShown) {
-        isCustomViewShown = false;
-        setState(() {});
+      if (videoPauseResumeState != 0) {
+        // dont show try to reconnect view
       } else {
-        //do nothing
+        if (stats.receivedBitrate == 0 && !isCustomViewShown) {
+          isCustomViewShown = true;
+          setState(() {});
+        } else if (stats.receivedBitrate > 100 && isCustomViewShown) {
+          isCustomViewShown = false;
+          setState(() {});
+        } else {
+          //do nothing
+        }
       }
     };
   }
