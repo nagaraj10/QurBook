@@ -18,6 +18,7 @@ import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
@@ -467,6 +468,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     color: Colors.black54,
                   ),
                 ),
+                badgeColor: ColorUtils.countColor,
                 badgeCount: count);
           } else {
             return BadgeIcon(
@@ -476,6 +478,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     color: Colors.black54,
                   ),
                 ),
+                badgeColor: ColorUtils.countColor,
                 badgeCount: 0);
           }
         });

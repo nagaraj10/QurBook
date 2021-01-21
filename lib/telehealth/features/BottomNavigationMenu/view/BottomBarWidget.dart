@@ -6,6 +6,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 
 class BottomBarWidget extends StatelessWidget {
@@ -74,6 +75,7 @@ class BottomBarWidget extends StatelessWidget {
                         : Colors.black,
                   ),
                 ),
+                badgeColor: ColorUtils.countColor,
                 badgeCount: count);
           } else {
             return BadgeIcon(
