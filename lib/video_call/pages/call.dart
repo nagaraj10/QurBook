@@ -17,6 +17,7 @@ import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:screen/screen.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import '../utils/settings.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -284,16 +285,10 @@ class _CallPageState extends State<CallPage> {
           //print('user is OFFLINE');
         } else {
           if (Platform.isIOS) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                router.rt_TelehealthProvider, (Route<dynamic> route) => false,
-                arguments: HomeScreenArguments(selectedIndex: 0));
-            // Navigator.pop(context);
+            PageNavigator.goToPermanent(context, router.rt_Dashboard);
           } else {
             if (widget.isAppExists) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  router.rt_TelehealthProvider, (Route<dynamic> route) => false,
-                  arguments: HomeScreenArguments(selectedIndex: 0));
-              //Navigator.pop(context);
+              PageNavigator.goToPermanent(context, router.rt_Dashboard);
             } else {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/splashscreen', (Route<dynamic> route) => false);
@@ -706,18 +701,10 @@ class _CallPageState extends State<CallPage> {
                   // }
 
                   if (Platform.isIOS) {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        router.rt_TelehealthProvider,
-                        (Route<dynamic> route) => false,
-                        arguments: HomeScreenArguments(selectedIndex: 0));
-                    // Navigator.pop(context);
+                    PageNavigator.goToPermanent(context, router.rt_Dashboard);
                   } else {
                     if (widget.isAppExists) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          router.rt_TelehealthProvider,
-                          (Route<dynamic> route) => false,
-                          arguments: HomeScreenArguments(selectedIndex: 0));
-                      //Navigator.pop(context);
+                      PageNavigator.goToPermanent(context, router.rt_Dashboard);
                     } else {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           '/splashscreen', (Route<dynamic> route) => false);
