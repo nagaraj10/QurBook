@@ -32,6 +32,8 @@ import 'package:myfhb/authentication/model/resend_otp_model.dart'
     as ResendModel;
 import 'package:myfhb/src/ui/Dashboard.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/authentication/model/patientlogin_model.dart'
+    as loginModel;
 
 class VerifyPatient extends StatefulWidget {
   VerifyPatient(
@@ -43,7 +45,8 @@ class VerifyPatient extends StatefulWidget {
       this.isPrimaryNoSelected,
       this.relationship,
       this.userConfirm,
-      this.userId});
+      this.userId,
+      this.dataForResendOtp});
 
   final String PhoneNumber;
   final String from;
@@ -54,7 +57,7 @@ class VerifyPatient extends StatefulWidget {
   final bool isPrimaryNoSelected;
   final bool userConfirm;
   final String userId;
-
+  Map<String, dynamic> dataForResendOtp;
   @override
   _VerifyPatientState createState() => _VerifyPatientState();
 }
@@ -83,6 +86,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
   String token2;
   FlutterToast toast = new FlutterToast();
   var from;
+  int numberOfTimesResendTapped = 0;
+  bool enableResendButton = true;
+  bool disableResendButton = false;
 
   @override
   void initState() {
@@ -148,6 +154,9 @@ class _VerifyPatientState extends State<VerifyPatient> {
                               )
                             : Container(),
                       ),
+                      widget.dataForResendOtp != null
+                          ? _getResendForSignIN()
+                          : Container(),
                       SizedBox(height: 10),
                       _resetButton(),
                       SizedBox(height: height * .015),
@@ -160,6 +169,78 @@ class _VerifyPatientState extends State<VerifyPatient> {
         ),
       ),
     );
+  }
+
+  Widget _getResendForSignIN() {
+    return enableResendButton
+        ? InkWell(
+            onTap: () {
+              _startTimer();
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              alignment: Alignment.bottomRight,
+              child: Text(
+                strresendOtp,
+                style: TextStyle(
+                    color: Color(0xff138fcf),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600),
+              ),
+            ))
+        : Container(
+            padding: EdgeInsets.symmetric(vertical: 5),
+            alignment: Alignment.bottomRight,
+            child: Text(
+              strresendOtp,
+              style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600),
+            ),
+          );
+  }
+
+  _loginOTPSent(loginModel.PatientLogIn response) {
+    if (response.isSuccess) {
+    } else {
+      if (response.message != null) {
+        toast.getToast(response.message, Colors.red);
+      }
+    }
+  }
+
+  _updateResendButton() {
+    setState(() {
+      enableResendButton = !enableResendButton;
+    });
+  }
+
+  _updateResendButtonAfterBufferTime({bool resetCount = false}) {
+    if (resetCount) numberOfTimesResendTapped = 0;
+    disableResendButton = !disableResendButton;
+    _updateResendButton();
+  }
+
+  _startTimer() async {
+    numberOfTimesResendTapped++;
+    if (numberOfTimesResendTapped < 3) {
+      _updateResendButton();
+      Future.delayed(Duration(minutes: 1), () {
+        _updateResendButton();
+      });
+      loginModel.PatientLogIn response =
+          await authViewModel.loginPatient(widget.dataForResendOtp);
+      _loginOTPSent(response);
+    } else if (numberOfTimesResendTapped == 3) {
+      _updateResendButtonAfterBufferTime();
+      Future.delayed(const Duration(minutes: 15), () {
+        _updateResendButtonAfterBufferTime(resetCount: true);
+      });
+      loginModel.PatientLogIn response =
+          await authViewModel.loginPatient(widget.dataForResendOtp);
+      _loginOTPSent(response);
+    }
   }
 
   Widget _resetTextFields(
