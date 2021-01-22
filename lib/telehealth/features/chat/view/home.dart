@@ -284,6 +284,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
                 .collection(STR_CHAT_LIST)
                 .document(patientId)
                 .collection(STR_USER_LIST)
+                .orderBy(STR_CREATED_AT, descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {

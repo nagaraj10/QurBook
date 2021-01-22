@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myfhb/common/CommonConstants.dart';
@@ -7,6 +8,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/device_integration/view/screens/Device_Widget.dart';
@@ -16,7 +18,10 @@ import 'package:myfhb/src/model/Authentication/UserModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
+import 'package:myfhb/telehealth/features/chat/viewModel/ChatViewModel.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:showcaseview/showcase_widget.dart';
@@ -45,9 +50,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool noInternet = true;
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
+  ChatViewModel chatViewModel = new ChatViewModel();
+
   @override
   void initState() {
     super.initState();
+
+    chatViewModel.getUnreadMSGCount(PreferenceUtil.getStringValue(Constants.KEY_USERID));
 
     /*
     var isFirstTime =
@@ -107,19 +116,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         variable.strTelehealth,
                         style: TextStyle(color: Colors.black54),
                       )),
-                  BottomNavigationBarItem(
+                  /*BottomNavigationBarItem(
                       icon: InkWell(
-                          // onTap: () {
-                          //   Navigator.push(
-                          //     context,
-                          //     MaterialPageRoute(
-                          //         builder: (context) => ChatHomeScreen()),
-                          //   );
-                          // },
+                        // onTap: () {
+                        //   Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => ChatHomeScreen()),
+                        //   );
+                        // },
                           child: ImageIcon(
-                        AssetImage(variable.icon_chat),
-                        color: Colors.black54,
-                      )),
+                            AssetImage(variable.icon_chat),
+                            color: Colors.black54,
+                          )),
+                      title: Text(
+                        variable.strChat,
+                        style: TextStyle(color: Colors.black54),
+                      )),*/
+                  BottomNavigationBarItem(
+                      icon: GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatHomeScreen()),
+                          );
+                        },
+                        child: getChatIcon(),
+                      ),
                       title: Text(
                         variable.strChat,
                         style: TextStyle(color: Colors.black54),
@@ -421,4 +445,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
     await Permission.microphone.request();
     await Permission.camera.request();
   }
+
+  Widget getChatIcon() {
+    int count = 0;
+    String targetID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    return StreamBuilder<QuerySnapshot>(
+        stream: Firestore.instance
+            .collection(STR_CHAT_LIST)
+            .document(targetID)
+            .collection(STR_USER_LIST)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            count = 0;
+            snapshot.data.documents.toList().forEach((element) {
+              count = count + element.data[STR_IS_READ_COUNT];
+            });
+            return BadgeIcon(
+                icon: GestureDetector(
+                  child: ImageIcon(
+                    AssetImage(variable.icon_chat),
+                    color: Colors.black54,
+                  ),
+                ),
+                badgeColor: ColorUtils.countColor,
+                badgeCount: count);
+          } else {
+            return BadgeIcon(
+                icon: GestureDetector(
+                  child: ImageIcon(
+                    AssetImage(variable.icon_chat),
+                    color: Colors.black54,
+                  ),
+                ),
+                badgeColor: ColorUtils.countColor,
+                badgeCount: 0);
+          }
+        });
+  }
+
+      String createGroupId(String patientId, String peerId) {
+        String groupId = '';
+
+        if (patientId.hashCode <= peerId.hashCode) {
+          groupId = '$patientId-$peerId';
+        } else {
+          groupId = '$peerId-$patientId';
+        }
+
+        return groupId;
+      }
 }

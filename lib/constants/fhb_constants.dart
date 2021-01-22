@@ -342,6 +342,7 @@ const String STR_PHOTO_URL = 'photoUrl';
 const String STR_ID = 'id';
 const String STR_CREATED_AT = 'createdAt';
 const String STR_LAST_MESSAGE = 'lastMessage';
+const String STR_IS_READ_COUNT = 'isReadCount';
 const String STR_USERS = 'users';
 const String STR_CHATTING_WITH = 'chattingWith';
 const String STR_META_ID = 'metaId';

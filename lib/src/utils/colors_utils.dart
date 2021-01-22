@@ -11,6 +11,7 @@ class ColorUtils {
   static Color darkbluecolor = HexColor("252A3D");
   static Color myFamilyGreyColor = HexColor("8f8f8f");
   static Color lightPrimaryColor = HexColor("9e76ed");
+  static Color countColor = HexColor("F19B10");
 }
 
 class HexColor extends Color {

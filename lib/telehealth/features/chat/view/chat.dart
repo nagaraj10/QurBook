@@ -203,12 +203,36 @@ class ChatScreenState extends State<ChatScreen> {
     isFromVideoCall = widget.isFromVideoCall;
 
     getPatientDetails();
+
+    updateReadCount();
   }
 
   @override
   void dispose() {
     chatViewModel.setCurrentChatRoomID('none');
     super.dispose();
+  }
+
+  updateReadCount() async {
+    try {
+      final snapShot = await Firestore.instance
+              .collection(STR_CHAT_LIST)
+              .document(patientId)
+              .collection(STR_USER_LIST)
+              .document(peerId).get();
+      if (snapShot.data!=null) {
+              await Firestore.instance
+                  .collection(STR_CHAT_LIST)
+                  .document(patientId)
+                  .collection(STR_USER_LIST)
+                  .document(peerId)
+                  .updateData({
+                STR_IS_READ_COUNT: 0
+              });
+          }
+    } catch (e) {
+
+    }
   }
 
   getPatientDetails() async {
@@ -401,32 +425,57 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  void addChatList(String content, int type) {
-    Firestore.instance
-        .collection(STR_CHAT_LIST)
-        .document(patientId)
-        .collection(STR_USER_LIST)
-        .document(peerId)
-        .setData({
-      STR_NICK_NAME: peerName != null ? peerName : '',
-      STR_PHOTO_URL: peerAvatar != null ? peerAvatar : '',
-      STR_ID: peerId,
-      STR_CREATED_AT: FieldValue.serverTimestamp(),
-      STR_LAST_MESSAGE: content
+    getReadCount() async {
+    int count = 0;
+    try {
+      final snapShot = await Firestore.instance
+          .collection(STR_CHAT_LIST)
+          .document(peerId)
+          .collection(STR_USER_LIST)
+          .document(patientId).get();
+
+      if(snapShot.data!=null){
+        count = snapShot.data[STR_IS_READ_COUNT];
+      }
+    } catch (ex) {
+      count = 0;
+    }
+    return count;
+  }
+
+
+  void addChatList(String content, int type) async{
+
+      await Firestore.instance
+          .collection(STR_CHAT_LIST)
+          .document(patientId)
+          .collection(STR_USER_LIST)
+          .document(peerId)
+          .setData({
+        STR_NICK_NAME: peerName != null ? peerName : '',
+        STR_PHOTO_URL: peerAvatar != null ? peerAvatar : '',
+        STR_ID: peerId,
+        STR_CREATED_AT: FieldValue.serverTimestamp(),
+        STR_LAST_MESSAGE: content,
+        STR_IS_READ_COUNT: 0
     });
 
-    Firestore.instance
-        .collection(STR_CHAT_LIST)
-        .document(peerId)
-        .collection(STR_USER_LIST)
-        .document(patientId)
-        .setData({
-      STR_NICK_NAME: patientName != null ? patientName : '',
-      STR_PHOTO_URL: patientPicUrl != null ? patientPicUrl : '',
-      STR_ID: patientId,
-      STR_CREATED_AT: FieldValue.serverTimestamp(),
-      STR_LAST_MESSAGE: content
-    });
+      await getReadCount().then((value) async{
+        await Firestore.instance
+            .collection(STR_CHAT_LIST)
+            .document(peerId)
+            .collection(STR_USER_LIST)
+            .document(patientId)
+            .setData({
+          STR_NICK_NAME: patientName != null ? patientName : '',
+          STR_PHOTO_URL: patientPicUrl != null ? patientPicUrl : '',
+          STR_ID: patientId,
+          STR_CREATED_AT: FieldValue.serverTimestamp(),
+          STR_LAST_MESSAGE: content,
+          STR_IS_READ_COUNT: value!=0?value+1:1
+        });
+      });
+
 
     if(doctorDeviceToken!=null&&doctorDeviceToken!=''){
       _pushNotification(type, patientName);
