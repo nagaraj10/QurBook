@@ -10,6 +10,7 @@ import 'package:myfhb/device_integration/view/screens/Clipper.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
+import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
 
@@ -121,6 +122,24 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                       selectionResult.result[0].profileSetting.weighScale != ''
                   ? selectionResult.result[0].profileSetting.weighScale
                   : true;
+            if (selectionResult.result[0].profileSetting != null) {
+              if (selectionResult.result[0].profileSetting.preColor != null &&
+                  selectionResult.result[0].profileSetting.preColor != null) {
+                PreferenceUtil.saveTheme(Constants.keyPriColor,
+                    selectionResult.result[0].profileSetting.preColor);
+                PreferenceUtil.saveTheme(Constants.keyGreyColor,
+                    selectionResult.result[0].profileSetting.greColor);
+                //HomeScreen.of(context).refresh();
+                //setState(() {});
+              } else {
+                PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5e1fe0);
+                PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff753aec);
+              }
+            }else{
+              PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5e1fe0);
+              PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff753aec);
+            }
+
         }
       }
     });
