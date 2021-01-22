@@ -46,6 +46,22 @@ class _MyProvidersLabsList extends State<MyProvidersLabsList>{
   Widget buildPlayersList() {
     return ListView.separated(
       itemBuilder: (BuildContext context, index) {
+        widget.labsModel.sort((a, b) => (a?.name ?? '')
+            .toLowerCase()
+            .trim()
+            .compareTo((b?.name ?? '').toLowerCase().trim()));
+        widget.labsModel.sort((a, b) => (a.isDefault
+            ? (a?.name ?? '')
+            .toString()
+            .toLowerCase().trim()
+            .compareTo((b?.name ?? '').toString().toLowerCase().trim())
+            : 0)
+            .compareTo(b.isDefault
+            ? (a?.name ?? '')
+            .toString()
+            .toLowerCase().trim()
+            .compareTo((b?.name ?? '').toString().toLowerCase().trim())
+            : 0));
         Hospitals eachLabModel = widget.labsModel[index];
         return InkWell(
             onTap: () {
