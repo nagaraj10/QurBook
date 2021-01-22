@@ -17,6 +17,7 @@ import 'package:myfhb/video_call/model/CallArguments.dart';
 import 'package:screen/screen.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import '../utils/settings.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
 
 class CallPage extends StatefulWidget {
   /// non-modifiable channel name of the page
@@ -47,6 +48,7 @@ class _CallPageState extends State<CallPage> {
   bool _internetconnection = false;
   var _connectionStatus = '';
   bool isCustomViewShown = false;
+  int videoPauseResumeState = 0;
 
   @override
   void dispose() {
@@ -58,6 +60,7 @@ class _CallPageState extends State<CallPage> {
     cancelOnGoingNS();
     super.dispose();
     Screen.keepOn(false);
+    videoPauseResumeState = 0;
   }
 
   @override
@@ -284,16 +287,10 @@ class _CallPageState extends State<CallPage> {
           //print('user is OFFLINE');
         } else {
           if (Platform.isIOS) {
-            Navigator.of(context).pushNamedAndRemoveUntil(
-                router.rt_TelehealthProvider, (Route<dynamic> route) => false,
-                arguments: HomeScreenArguments(selectedIndex: 0));
-            // Navigator.pop(context);
+            PageNavigator.goToPermanent(context, router.rt_Dashboard);
           } else {
             if (widget.isAppExists) {
-              Navigator.of(context).pushNamedAndRemoveUntil(
-                  router.rt_TelehealthProvider, (Route<dynamic> route) => false,
-                  arguments: HomeScreenArguments(selectedIndex: 0));
-              //Navigator.pop(context);
+              PageNavigator.goToPermanent(context, router.rt_Dashboard);
             } else {
               Navigator.of(context).pushNamedAndRemoveUntil(
                   '/splashscreen', (Route<dynamic> route) => false);
@@ -374,8 +371,12 @@ class _CallPageState extends State<CallPage> {
         //FlutterToast().getToast('Remote User Went to OFFLINE', Colors.yellow);
       } else if (reason == 6) {
         FlutterToast().getToast('Video is resumed', Colors.green);
+        videoPauseResumeState = 1;
       } else if (reason == 5) {
         FlutterToast().getToast('Video is paused', Colors.red);
+        videoPauseResumeState = 2;
+      } else {
+        videoPauseResumeState = 0;
       }
     };
 
@@ -534,14 +535,18 @@ class _CallPageState extends State<CallPage> {
     };
 
     AgoraRtcEngine.onRemoteVideoStats = (stats) {
-      if (stats.receivedBitrate == 0 && !isCustomViewShown) {
-        isCustomViewShown = true;
-        setState(() {});
-      } else if (stats.receivedBitrate > 100 && isCustomViewShown) {
-        isCustomViewShown = false;
-        setState(() {});
+      if (videoPauseResumeState != 0) {
+        // dont show try to reconnect view
       } else {
-        //do nothing
+        if (stats.receivedBitrate == 0 && !isCustomViewShown) {
+          isCustomViewShown = true;
+          setState(() {});
+        } else if (stats.receivedBitrate > 100 && isCustomViewShown) {
+          isCustomViewShown = false;
+          setState(() {});
+        } else {
+          //do nothing
+        }
       }
     };
   }
@@ -706,18 +711,10 @@ class _CallPageState extends State<CallPage> {
                   // }
 
                   if (Platform.isIOS) {
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        router.rt_TelehealthProvider,
-                        (Route<dynamic> route) => false,
-                        arguments: HomeScreenArguments(selectedIndex: 0));
-                    // Navigator.pop(context);
+                    PageNavigator.goToPermanent(context, router.rt_Dashboard);
                   } else {
                     if (widget.isAppExists) {
-                      Navigator.of(context).pushNamedAndRemoveUntil(
-                          router.rt_TelehealthProvider,
-                          (Route<dynamic> route) => false,
-                          arguments: HomeScreenArguments(selectedIndex: 0));
-                      //Navigator.pop(context);
+                      PageNavigator.goToPermanent(context, router.rt_Dashboard);
                     } else {
                       Navigator.of(context).pushNamedAndRemoveUntil(
                           '/splashscreen', (Route<dynamic> route) => false);
