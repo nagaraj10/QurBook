@@ -792,7 +792,18 @@ class _CustomTabsState extends State<CustomTabView>
         decoration: BoxDecoration(
             color: Color(new CommonUtil().getMyPrimaryColor()),
             borderRadius: BorderRadius.circular(30)),
-        child: Column(
+        child: (widget.categoryData!=null && widget.categoryData[controller.index].categoryName ==
+            Constants.STR_NOTES)
+            ? IconButton(
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            onCameraClicked();
+          },
+        )
+            : Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             FHBBasicWidget.customShowCase(
@@ -1373,6 +1384,7 @@ class _CustomTabsState extends State<CustomTabView>
 
   onPositionChange() {
     if (!controller.indexIsChanging) {
+      setState(() {});
       _currentPosition = controller.index;
       if (widget.onPositionChange is ValueChanged<int>) {
         widget.onPositionChange(_currentPosition);
