@@ -158,6 +158,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               leading: IconButton(
                 icon: Icon(
                   Icons.arrow_back_ios,
+                  color: Colors.black,
                 ),
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -167,56 +168,84 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           key: scaffold_state,
           body: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Stack(
-                  alignment: Alignment.bottomLeft,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(bottom: circleRadius / 2.0),
-                      child: Container(
-                        color: Color(new CommonUtil().getMyPrimaryColor()),
-                        height: 160.0,
-                        child: Stack(
-                            fit: StackFit.expand,
-                            overflow: Overflow.visible,
-                            children: [
-                              Container(
-                                color: Colors.black.withOpacity(0.2),
+                SizedBox(height: 80,),
+                Padding(
+                    padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+                    child: Container(
+                      width: 100,
+                      height: 100,
+                      decoration: ShapeDecoration(
+                          shape: CircleBorder(),
+                          color:
+                          Color(new CommonUtil().getMyPrimaryColor())),
+                      child: Padding(
+                        padding: EdgeInsets.all(circleBorderWidth),
+                        child: InkWell(
+                          child: ClipOval(
+                              child: (imageURI != null && imageURI != '')
+                                  ? Image.file(
+                                imageURI,
+                                fit: BoxFit.cover,
+                                width: 60,
+                                height: 60,
                               )
-                            ]),
+                                  : showProfileImageNew()),
+                          onTap: () {
+                            saveMediaDialog(context);
+                          },
+                        ),
                       ),
-                    ),
-                    Padding(
-                        padding: EdgeInsets.only(left: 10),
-                        child: Container(
-                          width: circleRadius,
-                          height: circleRadius,
-                          decoration: ShapeDecoration(
-                              shape: CircleBorder(),
-                              color:
-                                  Color(new CommonUtil().getMyPrimaryColor())),
-                          child: Padding(
-                            padding: EdgeInsets.all(circleBorderWidth),
-                            child: InkWell(
-                              child: ClipOval(
-                                  child: (imageURI != null && imageURI != '')
-                                      ? Image.file(
-                                          imageURI,
-                                          fit: BoxFit.cover,
-                                          width: 60,
-                                          height: 60,
-                                        )
-                                      : showProfileImageNew()),
-                              onTap: () {
-                                saveMediaDialog(context);
-                              },
-                            ),
-                          ),
-                        )),
-                  ],
-                ),
+                    )),
+//                Stack(
+//                  alignment: Alignment.bottomLeft,
+//                  children: <Widget>[
+//                    Padding(
+//                      padding: EdgeInsets.only(bottom: circleRadius / 2.0),
+//                      child: Container(
+//                        color: Color(new CommonUtil().getMyPrimaryColor()),
+//                        height: 160.0,
+//                        child: Stack(
+//                            fit: StackFit.expand,
+//                            overflow: Overflow.visible,
+//                            children: [
+//                              Container(
+//                                color: Colors.black.withOpacity(0.2),
+//                              )
+//                            ]),
+//                      ),
+//                    ),
+//                    Padding(
+//                        padding: EdgeInsets.only(left: 10),
+//                        child: Container(
+//                          width: circleRadius,
+//                          height: circleRadius,
+//                          decoration: ShapeDecoration(
+//                              shape: CircleBorder(),
+//                              color:
+//                                  Color(new CommonUtil().getMyPrimaryColor())),
+//                          child: Padding(
+//                            padding: EdgeInsets.all(circleBorderWidth),
+//                            child: InkWell(
+//                              child: ClipOval(
+//                                  child: (imageURI != null && imageURI != '')
+//                                      ? Image.file(
+//                                          imageURI,
+//                                          fit: BoxFit.cover,
+//                                          width: 60,
+//                                          height: 60,
+//                                        )
+//                                      : showProfileImageNew()),
+//                              onTap: () {
+//                                saveMediaDialog(context);
+//                              },
+//                            ),
+//                          ),
+//                        )),
+//                  ],
+//                ),
                 _showCommonEditText(
                     mobileNoController,
                     mobileNoFocus,
