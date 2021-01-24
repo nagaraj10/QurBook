@@ -8,7 +8,9 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
 import 'package:myfhb/telehealth/features/appointments/model/fetchAppointments/city.dart';
@@ -45,11 +47,16 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
+  HealthReportListForUserRepository healthReportListForUserRepository =
+      HealthReportListForUserRepository();
+  GetDeviceSelectionModel selectionResult;
+
   @override
   void initState() {
     super.initState();
 
     PreferenceUtil.init();
+
     Future.delayed(const Duration(seconds: 3), () {
       var isFirstTime = PreferenceUtil.isKeyValid(Constants.KEY_INTRO_SLIDER);
 
@@ -88,7 +95,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   body: body,
                 ),
               );
-            }else if (widget.nsRoute == 'DoctorCancellation') {
+            } else if (widget.nsRoute == 'DoctorCancellation') {
               //cancel appointments route
 
               Get.offAll(TelehealthProviders(
@@ -102,7 +109,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ));
             } else if (widget.nsRoute == parameters.doctorCancellation) {
               Get.to(NotificationMain());
-            }else if (widget.nsRoute == 'chat') {
+            } else if (widget.nsRoute == 'chat') {
               Get.to(
                 ChatHomeScreen(),
               );

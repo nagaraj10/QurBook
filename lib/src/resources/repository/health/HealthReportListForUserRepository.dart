@@ -296,4 +296,35 @@ class HealthReportListForUserRepository {
         query.qr_user_profile_no_slash, body);
     return UpdateDeviceModel.fromJson(response);
   }
+
+  Future<CreateDeviceSelectionModel> createAppColorSelection(
+      int priColor,
+      int greColor) async {
+    var body = jsonEncode({
+      'profileSetting': {
+        'priColor': priColor,
+        'greColor': greColor
+      }
+    });
+
+    final response = await _helper.createDeviceSelection(
+        query.qr_user_profile_no_slash, body);
+    return CreateDeviceSelectionModel.fromJson(response);
+  }
+
+  Future<UpdateDeviceModel> updateAppColorModel(
+      userMappingId,
+      int priColor,
+      int greColor) async {
+    var body = jsonEncode({
+      'id': userMappingId,
+      'profileSetting': {
+        'priColor': priColor,
+        'greColor': greColor
+      }
+    });
+    final response = await _helper.updateDeviceSelection(
+        query.qr_user_profile_no_slash, body);
+    return UpdateDeviceModel.fromJson(response);
+  }
 }

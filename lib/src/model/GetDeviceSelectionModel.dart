@@ -75,6 +75,8 @@ class ProfileSetting {
   bool allowDevice;
   bool thermoMeter;
   bool pulseOximeter;
+  int preColor;
+  int greColor;
 
   ProfileSetting(
       {this.bpMonitor,
@@ -85,7 +87,11 @@ class ProfileSetting {
         this.weighScale,
         this.allowDevice,
         this.thermoMeter,
-        this.pulseOximeter});
+        this.pulseOximeter,
+        this.preColor,
+        this.greColor
+
+      });
 
   ProfileSetting.fromJson(Map<String, dynamic> json) {
     bpMonitor = json['bpMonitor'];
@@ -97,6 +103,8 @@ class ProfileSetting {
     allowDevice = json['allowDevice'];
     thermoMeter = json['thermoMeter'];
     pulseOximeter = json['pulseOximeter'];
+    preColor = json['priColor'];
+    greColor = json['greColor'];
   }
 
   Map<String, dynamic> toJson() {
@@ -110,6 +118,8 @@ class ProfileSetting {
     data['allowDevice'] = this.allowDevice;
     data['thermoMeter'] = this.thermoMeter;
     data['pulseOximeter'] = this.pulseOximeter;
+    data['priColor'] = this.preColor;
+    data['greColor'] = this.greColor;
     return data;
   }
 }

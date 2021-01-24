@@ -9,12 +9,17 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/myfhb_weview/myfhb_webview.dart';
 import 'package:myfhb/src/model/Authentication/SignOutResponse.dart';
+import 'package:myfhb/src/model/CreateDeviceSelectionModel.dart';
+import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/model/UpdatedDeviceModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
+import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
@@ -32,15 +37,26 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   MyProfileModel myProfile;
   File profileImage;
 
+  HealthReportListForUserRepository healthReportListForUserRepository =
+  HealthReportListForUserRepository();
+  GetDeviceSelectionModel selectionResult;
+  CreateDeviceSelectionModel createDeviceSelectionModel;
+  UpdateDeviceModel updateDeviceModel;
+
+  int preColor = 0xff5e1fe0;
+  int greColor = 0xff753aec;
+  var userMappingId = '';
+
   String selectedMaya =
       PreferenceUtil.getStringValue(Constants.keyMayaAsset) != null
           ? PreferenceUtil.getStringValue(Constants.keyMayaAsset)
           : variable.icon_mayaMain;
 
-  int selectedPrimaryColor =
+  /*int selectedPrimaryColor =
       PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
           ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-          : 0xff5e1fe0;
+          : 0xff5e1fe0;*/
+  int selectedPrimaryColor = 0xff5e1fe0;
 
   int selectedGradientColor =
       PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
@@ -50,6 +66,8 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   @override
   void initState() {
     //getProfileImage();
+    getAppColorValues();
+
   }
 
   getProfileImage() async {
@@ -369,6 +387,9 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
                               PreferenceUtil.saveTheme(Constants.keyGreyColor,
                                   variable.myGradient[index]);
                               selectedPrimaryColor = variable.myThemes[index];
+
+                              createAppColorSelection(variable.myThemes[index],variable.myGradient[index]);
+
                               HomeScreen.of(context).refresh();
                               setState(() {});
                             },
@@ -399,6 +420,67 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       ],
     );
   }
+
+  Future<GetDeviceSelectionModel> getAppColorValues() async {
+    await healthReportListForUserRepository.getDeviceSelection().then((value) {
+      selectionResult = value;
+      if (selectionResult.isSuccess) {
+        if (selectionResult.result != null) {
+          setValues(selectionResult);
+          userMappingId = selectionResult.result[0].id;
+        } else {
+          userMappingId = '';
+        }
+      }
+    });
+    return selectionResult;
+  }
+
+  setValues(GetDeviceSelectionModel getDeviceSelectionModel) {
+    setState(() {
+
+      preColor = getDeviceSelectionModel.result[0].profileSetting.preColor;
+      greColor = getDeviceSelectionModel.result[0].profileSetting.greColor;
+
+      selectedPrimaryColor = preColor;
+
+    });
+  }
+
+  Future<CreateDeviceSelectionModel> createAppColorSelection(int priColor,int greColor) async {
+    await healthReportListForUserRepository
+        .createAppColorSelection(
+        priColor,
+        greColor)
+        .then((value) {
+      createDeviceSelectionModel = value;
+      if (createDeviceSelectionModel.isSuccess) {
+
+      } else {
+        if (createDeviceSelectionModel.message ==
+            STR_USER_PROFILE_SETTING_ALREADY) {
+          updateDeviceSelectionModel(priColor,greColor);
+        }
+      }
+    });
+    return createDeviceSelectionModel;
+  }
+
+  Future<UpdateDeviceModel> updateDeviceSelectionModel(int priColor,int greColor) async {
+    await healthReportListForUserRepository
+        .updateAppColorModel(
+        userMappingId,
+        priColor,
+        greColor)
+        .then((value) {
+      updateDeviceModel = value;
+      if (updateDeviceModel.isSuccess) {
+       // app color updated
+      }
+    });
+    return updateDeviceModel;
+  }
+
 
   Widget getValuesFromSharedPrefernce() {
     return new FutureBuilder<MyProfileModel>(

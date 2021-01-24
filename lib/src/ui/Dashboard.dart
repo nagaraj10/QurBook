@@ -50,13 +50,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   bool noInternet = true;
   GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
 
-  ChatViewModel chatViewModel = new ChatViewModel();
+  //ChatViewModel chatViewModel = new ChatViewModel();
 
   @override
   void initState() {
     super.initState();
 
-    chatViewModel.getUnreadMSGCount(PreferenceUtil.getStringValue(Constants.KEY_USERID));
+    //chatViewModel.getUnreadMSGCount(PreferenceUtil.getStringValue(Constants.KEY_USERID));
 
     /*
     var isFirstTime =
