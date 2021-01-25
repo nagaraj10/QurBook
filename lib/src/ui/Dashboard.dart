@@ -459,7 +459,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (snapshot.hasData) {
             count = 0;
             snapshot.data.documents.toList().forEach((element) {
-              count = count + element.data[STR_IS_READ_COUNT];
+              if(element.data[STR_IS_READ_COUNT]!=null && element.data[STR_IS_READ_COUNT]!=''){
+                count = count + element.data[STR_IS_READ_COUNT];
+              }
             });
             return BadgeIcon(
                 icon: GestureDetector(
