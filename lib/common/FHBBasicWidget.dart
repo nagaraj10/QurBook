@@ -534,11 +534,13 @@ class FHBBasicWidget {
     return Container(
       height: MediaQuery.of(context).size.height / 5,
       child: TextField(
+        autofocus: false,
         decoration: InputDecoration(
             disabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(width: 5)),
             hintStyle: TextStyle(fontSize: 13),
-            //hintText: MESSAGE_HINT,
+            hintText:
+                'Provide details on existing illness, allergies, history of the disease and medication taken',
             border: OutlineInputBorder(
                 borderSide: BorderSide(width: 5),
                 borderRadius: BorderRadius.circular(7))),

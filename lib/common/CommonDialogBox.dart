@@ -98,6 +98,8 @@ class CommonDialogBox {
       TextEditingController fileNameClone) {
     try {
       modeOfSave = modeOfSaveClone;
+      audioPathMain = audioPath;
+      containsAudioMain = containsAudio;
 
       if (mediaMetaInfo != null) {
         doctorsData = mediaMetaInfo.metadata.doctor != null
@@ -135,7 +137,7 @@ class CommonDialogBox {
     }
 
     imagePathMain.addAll(imagePath);
-    setFileName(fileNameClone.text);
+    setFileName(fileNameClone.text, mediaMetaInfo);
     StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
       return new AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -287,7 +289,8 @@ class CommonDialogBox {
       TextEditingController fileNameClone) {
     try {
       modeOfSave = modeOfSaveClone;
-
+      audioPathMain = audioPath;
+      containsAudioMain = containsAudio;
       if (mediaMetaInfo != null) {
         mediaMetaInfo = mediaMetaInfo != null ? mediaMetaInfo : null;
 
@@ -316,7 +319,7 @@ class CommonDialogBox {
     }
 
     imagePathMain.addAll(imagePath);
-    setFileName(fileNameClone.text);
+    setFileName(fileNameClone.text, mediaMetaInfo);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfo.metadata.memoText != null
           ? mediaMetaInfo.metadata.memoText
@@ -474,6 +477,8 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
+    audioPathMain = audioPath;
+    containsAudioMain = containsAudio;
     imagePathMain.addAll(imagePath);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
@@ -483,7 +488,7 @@ class CommonDialogBox {
       memoController.text = '';
     }
 
-    setFileName(fileNameClone.text);
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
       return new AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -581,13 +586,15 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
+    audioPathMain = audioPath;
+    containsAudioMain = containsAudio;
     imagePathMain.addAll(imagePath);
     dateOfVisit.text = dateOfVisitClone.text;
     if (idType != '' && idType != null) {
       selectedID = idType;
     }
 
-    setFileName(fileNameClone.text);
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
@@ -764,12 +771,13 @@ class CommonDialogBox {
     }
 
     modeOfSave = modeOfSaveClone;
-
+    audioPathMain = audioPath;
+    containsAudioMain = containsAudio;
     deviceName = deviceNameClone;
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
     isSelected = isSelectedClone;
-    setFileName(fileNameClone.text);
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
@@ -927,11 +935,12 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
-
+    audioPathMain = audioPath;
+    containsAudioMain = containsAudio;
     deviceName = deviceNameClone;
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
-    setFileName(fileNameClone.text);
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
@@ -1030,10 +1039,17 @@ class CommonDialogBox {
         context: context, builder: (BuildContext context) => dialog);
   }
 
-  void setFileName(String fileNameClone) {
-    categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-    deviceName = PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
-    categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
+  void setFileName(String fileNameClone, HealthResult healthResult,
+      {String voiceRecord}) {
+    try {
+      categoryName = healthResult.metadata.healthRecordCategory.categoryName;
+      deviceName = healthResult.metadata.healthRecordType.name;
+      categoryID = healthResult.metadata.healthRecordCategory.id;
+    } catch (e) {
+      categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+      deviceName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+      categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
+    }
 
     if (modeOfSave) {
       fileName.text = fileNameClone;
@@ -1074,11 +1090,12 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
-
+    audioPathMain = audioPath;
+    containsAudioMain = containsAudio;
     deviceName = deviceNameClone;
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
-    setFileName(fileNameClone.text);
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
 
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
@@ -1200,13 +1217,14 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
-
+    audioPathMain = audioPath;
+    containsAudioMain = containsAudio;
     deviceName = deviceNameClone;
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
     pulse.text = pulseClone.text;
 
-    setFileName(fileNameClone.text);
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
@@ -1340,13 +1358,14 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
-
+    audioPathMain = audioPath;
+    containsAudioMain = containsAudio;
     deviceName = deviceNameClone;
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
     pulse.text = pulseClone.text;
     diaStolicPressure.text = diastolicPressureClone.text;
-    setFileName(fileNameClone.text);
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
@@ -1526,8 +1545,18 @@ class CommonDialogBox {
         if (results.containsKey(Constants.keyDoctor)) {
           doctorsData = json.decode(results[Constants.keyDoctor]);
 
-          doctorsName.text = doctorsData[parameters.strName];
-          doctor.text = doctorsData[parameters.strName];
+          if (doctorsData[parameters.strName] != '' &&
+              doctorsData[parameters.strName] != null) {
+            doctorsName.text = doctorsData[parameters.strName];
+            doctor.text = doctorsData[parameters.strName];
+          } else {
+            doctorsName.text = doctorsData[parameters.strFirstName] +
+                ' ' +
+                doctorsData[parameters.strLastName];
+            doctor.text = doctorsData[parameters.strFirstName] +
+                ' ' +
+                doctorsData[parameters.strLastName];
+          }
         } else if (results.containsKey(Constants.keyHospital)) {
           hospitalData = json.decode(results[Constants.keyHospital]);
 
@@ -1740,11 +1769,12 @@ class CommonDialogBox {
       print(params);
 
       if (modeOfSave) {
+        audioPathMain = '';
         _healthReportListForUserBlock
             .updateHealthRecords(
                 params.toString(), imagePath, audioPathMain, metaInfoId)
             .then((value) {
-          if (value.isSuccess) {
+          if (value.isSuccess && value != null) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
               PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value);
@@ -2058,7 +2088,10 @@ class CommonDialogBox {
     modeOfSave = modeOfSaveClone;
     containsAudioMain = containsAudio;
     audioPathMain = audioPath;
-    setFileName(fileNameClone.text);
+    categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+    deviceName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+    categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
+    setFileName(fileNameClone.text, null);
     StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
       return new AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -2281,6 +2314,9 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
+    containsAudioMain = containsAudio;
+    audioPathMain = audioPath;
+
     if (imagePath != null) imagePathMain.addAll(imagePath);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
@@ -2290,7 +2326,7 @@ class CommonDialogBox {
       memoController.text = '';
     }
 
-    setFileName(fileNameClone.text);
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     categoryName = Constants.STR_NOTES;
     StatefulBuilder dialog = new StatefulBuilder(builder: (context, setState) {
       return new AlertDialog(

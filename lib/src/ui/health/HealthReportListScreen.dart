@@ -30,7 +30,7 @@ class HealthReportListScreen extends StatefulWidget {
   final Function(String, String) getDataForParticularLabel;
   final Function(String, bool) mediaSelected;
   final Function(String, List<HealthRecordCollection>, bool)
-  healthRecordSelected;
+      healthRecordSelected;
   final bool allowSelect;
   final bool isNotesSelect;
   final bool isAudioSelect;
@@ -49,8 +49,9 @@ class HealthReportListScreen extends StatefulWidget {
       this.mediaMeta,
       this.isNotesSelect,
       this.isAudioSelect,
-      this.showDetails,this.allowAttach,
-  this.healthRecordSelected);
+      this.showDetails,
+      this.allowAttach,
+      this.healthRecordSelected);
 
   @override
   _HealthReportListScreenState createState() => _HealthReportListScreenState();
@@ -137,7 +138,6 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
           },
           onTap: () {
             if (widget.allowSelect && widget.showDetails == false) {
-
               if (widget.allowAttach) {
                 bool condition;
                 if (widget.mediaMeta.contains(mediaMetaInfoObj.id)) {
@@ -168,7 +168,6 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
 
                 widget.mediaSelected(mediaMetaInfoObj.id, condition);
               }
-
             } else {
               Navigator.push(
                 context,
@@ -213,12 +212,18 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        toBeginningOfSentenceCase(
-                            mediaMetaInfoObj.metadata.doctor != null
-                                ? mediaMetaInfoObj.metadata.doctor.name != null
-                                    ? mediaMetaInfoObj.metadata.doctor.name
-                                    : ''
-                                : ''),
+                        toBeginningOfSentenceCase(mediaMetaInfoObj
+                                    .metadata.doctor !=
+                                null
+                            ? (mediaMetaInfoObj.metadata.doctor.name != null &&
+                                    mediaMetaInfoObj.metadata.doctor.name != '')
+                                ? mediaMetaInfoObj.metadata.doctor.name
+                                : mediaMetaInfoObj.metadata.doctor.firstName +
+                                    ' ' +
+                                    mediaMetaInfoObj.metadata.doctor.lastName
+                            : mediaMetaInfoObj.metadata.doctor.firstName +
+                                ' ' +
+                                mediaMetaInfoObj.metadata.doctor.lastName),
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontWeight: FontWeight.w500),

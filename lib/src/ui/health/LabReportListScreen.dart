@@ -233,10 +233,13 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
                   ),
                   Text(
                     mediaMetaInfo.metadata.doctor != null
-                        ? mediaMetaInfo.metadata.doctor.name != null
+                        ? (mediaMetaInfo.metadata.doctor.name != null &&
+                                mediaMetaInfo.metadata.doctor.name != '')
                             ? toBeginningOfSentenceCase(
                                 mediaMetaInfo.metadata.doctor.name)
-                            : ''
+                            : mediaMetaInfo.metadata.doctor.firstName +
+                                ' ' +
+                                mediaMetaInfo.metadata.doctor.lastName
                         : '',
                     softWrap: false,
                     overflow: TextOverflow.ellipsis,
