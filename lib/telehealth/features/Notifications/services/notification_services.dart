@@ -51,4 +51,19 @@ class FetchNotificationService {
       return null;
     }
   }
+
+  Future<dynamic> updateNsOnTapAction(dynamic body) async {
+
+    final response = await http.put(
+      _baseUrl + qr_notification_action_ontap,
+      headers: await headerRequest.getRequestHeadersAuthContent(),
+      body: json.encode(body)
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      return null;
+    }
+  }
 }

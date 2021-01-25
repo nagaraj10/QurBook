@@ -82,6 +82,8 @@ class CommonUtil {
   static String BASE_URL_FROM_RES = "";
   static String BASEURL_DEVICE_READINGS = '';
 
+  static const secondaryGrey = 0xFF545454;
+
   CategoryResult categoryDataObjClone = new CategoryResult();
 
   static List<String> recordIds = new List();
