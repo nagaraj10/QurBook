@@ -523,6 +523,7 @@ class FHBBasicWidget {
     return Container(
       height: MediaQuery.of(context).size.height / 5,
       child: TextField(
+        autofocus: false,
         decoration: InputDecoration(
             disabledBorder:
                 OutlineInputBorder(borderSide: BorderSide(width: 5)),

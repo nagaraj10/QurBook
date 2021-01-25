@@ -1769,11 +1769,12 @@ class CommonDialogBox {
       print(params);
 
       if (modeOfSave) {
+        audioPathMain = '';
         _healthReportListForUserBlock
             .updateHealthRecords(
                 params.toString(), imagePath, audioPathMain, metaInfoId)
             .then((value) {
-          if (value.isSuccess) {
+          if (value.isSuccess && value != null) {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
               PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value);
