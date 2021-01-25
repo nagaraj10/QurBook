@@ -429,7 +429,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                       (data[i].name != null && data[i].name != '')
                           ? data[i].name
                           : data[i].firstName + ' ' + data[i].lastName,
-                      data[i].addressLine1,
+                      getDoctorsAddress(data[i]),
                       data[i].doctorId,
                       data[i].profilePicThumbnailUrl,
                       data[i],
@@ -521,7 +521,6 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       DoctorsListResult data,
       HospitalsListResult hospitalData,
       LabListResult labData) {
-    print(name);
     return GestureDetector(
         child: Padding(
             padding:
@@ -560,7 +559,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                                     ? hospitalData.healthOrganizationName
                                     : labData.healthOrganizationName,
                             address,
-                            id),
+                            id,
+                            data),
                       ))
                 ]))),
         onTap: () {
@@ -587,14 +587,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
   void passHospitalValue(
       HospitalsListResult hospitaData, BuildContext context) {
-    Navigator.of(context).maybePop({Constants.keyHospital: json.encode(hospitaData)});
+    Navigator.of(context)
+        .maybePop({Constants.keyHospital: json.encode(hospitaData)});
   }
 
   void passLaboratoryValue(LabListResult laboratoryData, BuildContext context) {
     Navigator.of(context).pop({Constants.keyLab: json.encode(laboratoryData)});
   }
 
-  getDataToView(String name, String address, String id) {
+  getDataToView(
+      String name, String address, String id, DoctorsListResult data) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -618,6 +620,19 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
         ),
+        widget.arguments.searchWord == CommonConstants.doctors
+            ? (data.specialization != null && data.specialization != '')
+                ? Text(
+                    data.specialization != null ? data.specialization : '',
+                    style: TextStyle(
+                        fontSize: 13.0,
+                        fontWeight: FontWeight.w400,
+                        color: ColorUtils.lightgraycolor),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  )
+                : SizedBox(height: 10)
+            : SizedBox(height: 10),
       ],
     );
   }
@@ -751,5 +766,16 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     LabListResult jsonDecodeForDoctor = results[Constants.keyLab];
 
     passLaboratoryValue(jsonDecodeForDoctor, context);
+  }
+
+  String getDoctorsAddress(DoctorsListResult data) {
+    String address = '';
+    if (data.addressLine1 != '' && data.addressLine1 != null) {
+      address = data.addressLine1;
+    }
+    if (data.addressLine2 != '' && data.addressLine2 != null) {
+      address = address + '\n' + data.addressLine2;
+    }
+    return address;
   }
 }
