@@ -180,15 +180,13 @@ class EachDeviceValues extends StatelessWidget {
                               getFormattedDateTime(
                                   translist[index].startDateTime),
                               '${translist[index].bloodGlucoseLevel}',
-                              translist[index].mealContext == null
-                                  ? 'Not Provided'
+                              translist[index].mealContext == null || translist[index].mealContext==''
+                                  ? 'Random'
                                   : '${translist[index].mealContext}',
-                              translist[index].mealType == null
-                                  ? 'Not Provided'
-                                  : '${translist[index].mealType}',
+                              '',
                               'Blood Glucose',
-                              'Meal Context',
                               'Meal Type',
+                              '',
                               getFormattedTime(translist[index].startDateTime),
                               translist[index].bgUnit);
                         },

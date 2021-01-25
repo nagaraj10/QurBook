@@ -169,6 +169,32 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     );
   }
 
+  Widget getMealType(){
+
+    if(deviceValues.bloodGlucose.entities.isNotEmpty){
+      if(deviceMealContext!= ''){
+        return Text(
+          deviceMealContext.toString(),
+          style: TextStyle(
+              color: Colors.white, fontSize: 12),
+        );
+      }else{
+        return Text(
+          'Random',
+          style: TextStyle(
+              color: Colors.white, fontSize: 12),
+        );
+      }
+
+    }else{
+      return Text(
+        '-',
+        style: TextStyle(
+            color: Colors.white, fontSize: 12),
+      );
+    }
+  }
+
   Widget getValuesFromSharedPrefernce(BuildContext context) {
     return new FutureBuilder<MyProfileModel>(
       future: getMyProfile(),
@@ -268,10 +294,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       deviceMealType = deviceValues.bloodGlucose.entities[0].mealType != null
           ? deviceValues.bloodGlucose.entities[0].mealType.name.toString()
           : '';
-    } else {
+    }
+    else {
       dateForGulcose = 'Record not available';
       devicevalue1ForGulcose = '';
-      deviceMealContext = '';
+      //deviceMealContext = '';
       deviceMealType = '';
     }
     if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
@@ -616,18 +643,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Meal Context',
+                                    'Meal Type',
                                     style: TextStyle(
                                         color: Colors.white70, fontSize: 10),
                                   ),
-                                  Text(
-                                    deviceMealContext != ''
-                                        ? deviceMealContext.toString()
-                                        : '-',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 12),
-                                  ),
-                                  SizedBoxWidget(
+                                  getMealType(),
+                                  /*SizedBoxWidget(
                                     height: 2,
                                   ),
                                   Text(
@@ -641,7 +662,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         : '-',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 12),
-                                  ),
+                                  ),*/
                                 ],
                               ),
                               Column(

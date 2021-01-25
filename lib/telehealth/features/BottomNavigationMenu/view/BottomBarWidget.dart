@@ -17,6 +17,7 @@ class BottomBarWidget extends StatelessWidget {
 
   BottomBarWidget(
       {this.name, this.icon, this.pageIndex, this.selectedPageIndex});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,13 +31,15 @@ class BottomBarWidget extends StatelessWidget {
                     height: 25,
                     width: 25,
                   )
-                : name == 'Chats'?getChatIcon(icon):ImageIcon(
-                    AssetImage(icon),
-                    size: 20,
-                    color: selectedPageIndex == pageIndex
-                        ? Colors.white
-                        : Colors.black,
-                  ),
+                : name == 'Chats'
+                    ? getChatIcon(icon)
+                    : ImageIcon(
+                        AssetImage(icon),
+                        size: 20,
+                        color: selectedPageIndex == pageIndex
+                            ? Colors.white
+                            : Colors.black,
+                      ),
             selectedPageIndex == pageIndex
                 ? Container(
                     height: 0,
@@ -63,7 +66,11 @@ class BottomBarWidget extends StatelessWidget {
           if (snapshot.hasData) {
             count = 0;
             snapshot.data.documents.toList().forEach((element) {
-              count = count + element.data[STR_IS_READ_COUNT];
+              if (element.data[STR_IS_READ_COUNT] != null &&
+                  element.data[STR_IS_READ_COUNT] != '') {
+                count = count + element.data[STR_IS_READ_COUNT];
+              }
+
             });
             return BadgeIcon(
                 icon: GestureDetector(
