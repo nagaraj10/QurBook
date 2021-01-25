@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myfhb/telehealth/features/chat/view/full_photo.dart';
 
 import '../../../model/bot/ConversationModel.dart';
 
@@ -18,14 +19,23 @@ class MayaConvUI extends StatelessWidget {
               ),
         ),
         c?.imageUrl != null
-            ? Padding(
-                child: Image.network(
-                  c?.imageUrl,
-                  height: (MediaQuery.of(context).size.width * .6) - 5,
-                  width: (MediaQuery.of(context).size.width * .6) - 5,
-                  fit: BoxFit.cover,
+            ? InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              FullPhotoScreen(url: c?.imageUrl)));
+                },
+                child: Padding(
+                  child: Image.network(
+                    c?.imageUrl,
+                    height: (MediaQuery.of(context).size.width * .6) - 5,
+                    width: (MediaQuery.of(context).size.width * .6) - 5,
+                    fit: BoxFit.cover,
+                  ),
+                  padding: EdgeInsets.only(left: 5,right: 5),
                 ),
-                padding: EdgeInsets.all(10),
               )
             : SizedBox(
                 height: 0,
