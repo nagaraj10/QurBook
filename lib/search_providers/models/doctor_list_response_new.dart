@@ -34,8 +34,11 @@ class DoctorsListResult {
   String firstName;
   String lastName;
   String specialization;
+  String city;
+  String state;
   String doctorReferenceId;
   String addressLine1;
+  String specialty;
   String addressLine2;
   String profilePicThumbnailUrl;
   bool isTelehealthEnabled;
@@ -48,8 +51,11 @@ class DoctorsListResult {
       this.firstName,
       this.lastName,
       this.specialization,
+      this.city,
+      this.state,
       this.doctorReferenceId,
       this.addressLine1,
+      this.specialty,
       this.addressLine2,
       this.profilePicThumbnailUrl,
       this.isTelehealthEnabled,
@@ -62,8 +68,11 @@ class DoctorsListResult {
     firstName = json['firstName'];
     lastName = json['lastName'];
     specialization = json['specialization'];
+    city = json['city'];
+    state = json['state'];
     doctorReferenceId = json['doctorReferenceId'];
     addressLine1 = json['addressLine1'];
+    specialty = json['specialty'];
     addressLine2 = json['addressLine2'];
     profilePicThumbnailUrl = json['profilePicThumbnailUrl'];
     isTelehealthEnabled = json['isTelehealthEnabled'];
@@ -78,8 +87,11 @@ class DoctorsListResult {
     data['firstName'] = this.firstName;
     data['lastName'] = this.lastName;
     data['specialization'] = this.specialization;
+    data['city'] = this.city;
+    data['state'] = this.state;
     data['doctorReferenceId'] = this.doctorReferenceId;
     data['addressLine1'] = this.addressLine1;
+    data['specialty'] = this.specialty;
     data['addressLine2'] = this.addressLine2;
     data['profilePicThumbnailUrl'] = this.profilePicThumbnailUrl;
     data['isTelehealthEnabled'] = this.isTelehealthEnabled;
