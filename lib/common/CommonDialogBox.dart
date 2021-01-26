@@ -769,15 +769,14 @@ class CommonDialogBox {
         metaInfoId = mediaMetaInfoClone.id;
       }
     }
-
     modeOfSave = modeOfSaveClone;
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     audioPathMain = audioPath;
     containsAudioMain = containsAudio;
     deviceName = deviceNameClone;
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
     isSelected = isSelectedClone;
-    setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
@@ -935,12 +934,12 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     audioPathMain = audioPath;
     containsAudioMain = containsAudio;
     deviceName = deviceNameClone;
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
-    setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
@@ -1040,15 +1039,18 @@ class CommonDialogBox {
   }
 
   void setFileName(String fileNameClone, HealthResult healthResult,
-      {String voiceRecord}) {
+      {String voiceRecord}) async {
     try {
       categoryName = healthResult.metadata.healthRecordCategory.categoryName;
       deviceName = healthResult.metadata.healthRecordType.name;
       categoryID = healthResult.metadata.healthRecordCategory.id;
     } catch (e) {
-      categoryName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-      deviceName = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
-      categoryID = PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
+      categoryName =
+          await PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME);
+      deviceName =
+          await PreferenceUtil.getStringValue(Constants.KEY_DEVICENAME);
+      categoryID =
+          await PreferenceUtil.getStringValue(Constants.KEY_CATEGORYID);
     }
 
     if (modeOfSave) {
@@ -1090,12 +1092,12 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     audioPathMain = audioPath;
     containsAudioMain = containsAudio;
     deviceName = deviceNameClone;
     imagePathMain.addAll(imagePath);
     deviceController.text = deviceControllerClone.text;
-    setFileName(fileNameClone.text, mediaMetaInfoClone);
 
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
@@ -1217,6 +1219,7 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     audioPathMain = audioPath;
     containsAudioMain = containsAudio;
     deviceName = deviceNameClone;
@@ -1224,7 +1227,6 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
     pulse.text = pulseClone.text;
 
-    setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
@@ -1358,6 +1360,7 @@ class CommonDialogBox {
       }
     }
     modeOfSave = modeOfSaveClone;
+    setFileName(fileNameClone.text, mediaMetaInfoClone);
     audioPathMain = audioPath;
     containsAudioMain = containsAudio;
     deviceName = deviceNameClone;
@@ -1365,7 +1368,6 @@ class CommonDialogBox {
     deviceController.text = deviceControllerClone.text;
     pulse.text = pulseClone.text;
     diaStolicPressure.text = diastolicPressureClone.text;
-    setFileName(fileNameClone.text, mediaMetaInfoClone);
     if (modeOfSave) {
       loadMemoText(mediaMetaInfoClone.metadata.memoText != null
           ? mediaMetaInfoClone.metadata.memoText
@@ -2359,7 +2361,7 @@ class CommonDialogBox {
             ),
             fhbBasicWidget.getTextForAlertDialog(
                 context, CommonConstants.strMemo),
-            fhbBasicWidget.getTextFieldWithNoCallbacksForMemo(
+            fhbBasicWidget.getRichTextFieldWithNoCallbacks(
                 context, memoController),
             SizedBox(
               height: 15,
