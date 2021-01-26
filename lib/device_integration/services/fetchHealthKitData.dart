@@ -8,9 +8,20 @@ import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class FetchHealthKitData {
   String _userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+
+  HealthFactory Health = HealthFactory();
+  List<HealthDataType> types = [
+    HealthDataType.STEPS,
+    HealthDataType.WEIGHT,
+    HealthDataType.HEIGHT,
+    HealthDataType.BLOOD_GLUCOSE,
+    HealthDataType.DISTANCE_WALKING_RUNNING,
+    HealthDataType.BODY_TEMPERATURE,
+  ];
+
   Future<bool> activateHealthKit() async {
     try {
-      bool ret = await Health.requestAuthorization();
+      bool ret = await Health.requestAuthorization(types);
       return ret;
     } catch (e) {
       throw "HealthKit activation failed with error $e";
@@ -18,7 +29,7 @@ class FetchHealthKitData {
   }
 
   Future<String> getWeightData(DateTime startDate, DateTime endDate) async {
-    if (await Health.requestAuthorization()) {
+    if (await Health.requestAuthorization(types)) {
       try {
         Map<String, dynamic> healthRecord = new Map();
 
@@ -27,8 +38,9 @@ class FetchHealthKitData {
 
         healthRecord[strUser] = userData;
 
-        List<HealthDataPoint> healthData = await Health.getHealthDataFromType(
-            startDate, endDate, HealthDataType.WEIGHT);
+        List<HealthDataPoint> healthData = await Health.getHealthDataFromTypes(
+            startDate, endDate, [HealthDataType.WEIGHT]);
+        healthData = HealthFactory.removeDuplicates(healthData);
         if (healthData.isNotEmpty) {
           healthRecord[strsyncStartDate] = startDate.toIso8601String();
           healthRecord[strsyncEndDate] = endDate.toIso8601String();
@@ -59,11 +71,11 @@ class FetchHealthKitData {
   }
 
   Future<String> getHeartRateData(var startDate, var endDate) async {
-    if (await Health.requestAuthorization()) {
+    if (await Health.requestAuthorization(types)) {
       try {
-        List<HealthDataPoint> healthData = await Health.getHealthDataFromType(
-            startDate, endDate, HealthDataType.HEART_RATE);
-        healthData = Health.removeDuplicates(healthData);
+        List<HealthDataPoint> healthData = await Health.getHealthDataFromTypes(
+            startDate, endDate, [HealthDataType.HEART_RATE]);
+        healthData = HealthFactory.removeDuplicates(healthData);
         Map<String, dynamic> healthRecord = new Map();
 
         Map<String, dynamic> userData = new Map();
@@ -100,15 +112,16 @@ class FetchHealthKitData {
   }
 
   Future<String> getBloodPressureData(var startDate, var endDate) async {
-    if (await Health.requestAuthorization()) {
+    if (await Health.requestAuthorization(types)) {
       try {
-        List<HealthDataPoint> systolicData = await Health.getHealthDataFromType(
-            startDate, endDate, HealthDataType.BLOOD_PRESSURE_SYSTOLIC);
+        List<HealthDataPoint> systolicData =
+            await Health.getHealthDataFromTypes(
+                startDate, endDate, [HealthDataType.BLOOD_PRESSURE_SYSTOLIC]);
         List<HealthDataPoint> diastolicData =
-            await Health.getHealthDataFromType(
-                startDate, endDate, HealthDataType.BLOOD_PRESSURE_DIASTOLIC);
-        systolicData = Health.removeDuplicates(systolicData);
-        diastolicData = Health.removeDuplicates(diastolicData);
+            await Health.getHealthDataFromTypes(
+                startDate, endDate, [HealthDataType.BLOOD_PRESSURE_DIASTOLIC]);
+        systolicData = HealthFactory.removeDuplicates(systolicData);
+        diastolicData = HealthFactory.removeDuplicates(diastolicData);
 
         Map<String, dynamic> healthRecord = new Map();
 
@@ -148,12 +161,12 @@ class FetchHealthKitData {
   }
 
   Future<String> getBloodGlucoseData(var startDate, var endDate) async {
-    if (await Health.requestAuthorization()) {
+    if (await Health.requestAuthorization(types)) {
       try {
         /// Fetch BloodGlucose data
-        List<HealthDataPoint> healthData = await Health.getHealthDataFromType(
-            startDate, endDate, HealthDataType.BLOOD_GLUCOSE);
-        healthData = Health.removeDuplicates(healthData);
+        List<HealthDataPoint> healthData = await Health.getHealthDataFromTypes(
+            startDate, endDate, [HealthDataType.BLOOD_GLUCOSE]);
+        healthData = HealthFactory.removeDuplicates(healthData);
 
         //healthData.forEach((list) => print("list for GLuecose: $list \n \n"));
         Map<String, dynamic> healthRecord = new Map();
@@ -191,58 +204,58 @@ class FetchHealthKitData {
     }
   }
 
-  Future<String> getBloodOxygenData(var startDate, var endDate) async {
-    if (await Health.requestAuthorization()) {
-      //print("Blood_Oxygen Summary");
-      try {
-        /// Fetch BloodOxygen data
-        List<HealthDataPoint> healthData = await Health.getHealthDataFromType(
-            startDate, endDate, HealthDataType.BLOOD_OXYGEN);
+  // Future<String> getBloodOxygenData(var startDate, var endDate) async {
+  //   if (await Health.requestAuthorization(types) {
+  //     //print("Blood_Oxygen Summary");
+  //     try {
+  //       /// Fetch BloodOxygen data
+  //       List<HealthDataPoint> healthData = await Health.getHealthDataFromTypes(
+  //           startDate, endDate, [HealthDataType.BLOOD_OXYGEN]);
 
-        healthData = Health.removeDuplicates(healthData);
+  //       // healthData = Health.removeDuplicates(healthData);
 
-        // healthData.forEach((list) => print("list for GLuecose: $list \n \n"));
-        Map<String, dynamic> healthRecord = new Map();
+  //       // healthData.forEach((list) => print("list for GLuecose: $list \n \n"));
+  //       Map<String, dynamic> healthRecord = new Map();
 
-        Map<String, dynamic> userData = new Map();
-        userData[strId] = _userID;
+  //       Map<String, dynamic> userData = new Map();
+  //       userData[strId] = _userID;
 
-        healthRecord[strUser] = userData;
+  //       healthRecord[strUser] = userData;
 
-        if (healthData.isNotEmpty) {
-          healthRecord[strsyncStartDate] = startDate.toIso8601String();
-          healthRecord[strsyncEndDate] = endDate.toIso8601String();
-          healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
-          healthRecord[strdevicesourceName] = strsourceHK;
-          healthRecord[strdeviceType] = strOxymeter;
-          healthRecord[strdeviceDataType] = strOxgenSaturation;
-          List<dynamic> dataSet = [];
-          healthData.forEach((healthData) {
-            Map<String, dynamic> rawData = new Map();
-            rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
-            rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
-            rawData[strParamOxygen] = healthData.value * 100;
+  //       if (healthData.isNotEmpty) {
+  //         healthRecord[strsyncStartDate] = startDate.toIso8601String();
+  //         healthRecord[strsyncEndDate] = endDate.toIso8601String();
+  //         healthRecord[strlastSyncDateTime] = endDate.toIso8601String();
+  //         healthRecord[strdevicesourceName] = strsourceHK;
+  //         healthRecord[strdeviceType] = strOxymeter;
+  //         healthRecord[strdeviceDataType] = strOxgenSaturation;
+  //         List<dynamic> dataSet = [];
+  //         healthData.forEach((healthData) {
+  //           Map<String, dynamic> rawData = new Map();
+  //           rawData[strStartTimeStamp] = healthData.dateFrom.toIso8601String();
+  //           rawData[strEndTimeStamp] = healthData.dateTo.toIso8601String();
+  //           rawData[strParamOxygen] = healthData.value * 100;
 
-            dataSet.add(rawData);
-          });
-          healthRecord[strRawData] = dataSet;
-          String params = json.encode(healthRecord);
-          return params;
-        }
-      } catch (exception) {
-        throw "Unable to fetch Oxygen data from HealthKit $exception";
-      }
-    }
-  }
+  //           dataSet.add(rawData);
+  //         });
+  //         healthRecord[strRawData] = dataSet;
+  //         String params = json.encode(healthRecord);
+  //         return params;
+  //       }
+  //     } catch (exception) {
+  //       throw "Unable to fetch Oxygen data from HealthKit $exception";
+  //     }
+  //   }
+  // }
 
   Future<String> getBodyTemperature(var startDate, var endDate) async {
-    if (await Health.requestAuthorization()) {
+    if (await Health.requestAuthorization(types)) {
       //print("Body_Temperature Summary");
       try {
         /// Fetch BodyTemperature data
-        List<HealthDataPoint> healthData = await Health.getHealthDataFromType(
-            startDate, endDate, HealthDataType.BODY_TEMPERATURE);
-        healthData = Health.removeDuplicates(healthData);
+        List<HealthDataPoint> healthData = await Health.getHealthDataFromTypes(
+            startDate, endDate, [HealthDataType.BODY_TEMPERATURE]);
+        healthData = HealthFactory.removeDuplicates(healthData);
 
         //healthData.forEach((list) => print("list for GLuecose: $list \n \n"));
         Map<String, dynamic> healthRecord = new Map();
