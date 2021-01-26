@@ -416,8 +416,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       case Constants.STR_GLUCOMETER:
         if (digitRecogResponse != null) {
           if (digitRecogResponse.result.deviceMeasurementsHead != null) {
-            if (digitRecogResponse
-                    .result.deviceMeasurementsHead.deviceMeasurements[0].values !=
+            if (digitRecogResponse.result.deviceMeasurementsHead
+                    .deviceMeasurements[0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
                   .result.deviceMeasurementsHead.deviceMeasurements[0].values;
@@ -427,7 +427,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
         new CommonDialogBox().getDialogBoxForGlucometer(
             context,
-            device,
+            Constants.STR_GLUCOMETER,
             containsAudio,
             audioPath,
             (containsAudio, audioPath) {
@@ -452,8 +452,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       case Constants.STR_THERMOMETER:
         if (digitRecogResponse != null) {
           if (digitRecogResponse.result.deviceMeasurementsHead != null) {
-            if (digitRecogResponse
-                    .result.deviceMeasurementsHead.deviceMeasurements[0].values !=
+            if (digitRecogResponse.result.deviceMeasurementsHead
+                    .deviceMeasurements[0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
                   .result.deviceMeasurementsHead.deviceMeasurements[0].values;
@@ -463,7 +463,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
         new CommonDialogBox().getDialogBoxForTemperature(
             context,
-            device,
+            Constants.STR_THERMOMETER,
             containsAudio,
             audioPath,
             (containsAudio, audioPath) {
@@ -487,8 +487,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       case Constants.STR_WEIGHING_SCALE:
         if (digitRecogResponse != null) {
           if (digitRecogResponse.result.deviceMeasurementsHead != null) {
-            if (digitRecogResponse
-                    .result.deviceMeasurementsHead.deviceMeasurements[0].values !=
+            if (digitRecogResponse.result.deviceMeasurementsHead
+                    .deviceMeasurements[0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
                   .result.deviceMeasurementsHead.deviceMeasurements[0].values;
@@ -498,7 +498,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
         new CommonDialogBox().getDialogBoxForWeightingScale(
             context,
-            device,
+            Constants.STR_WEIGHING_SCALE,
             containsAudio,
             audioPath,
             (containsAudio, audioPath) {
@@ -522,8 +522,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       case Constants.STR_PULSE_OXIMETER:
         if (digitRecogResponse != null) {
           if (digitRecogResponse.result.deviceMeasurementsHead != null) {
-            if (digitRecogResponse
-                    .result.deviceMeasurementsHead.deviceMeasurements[0].values !=
+            if (digitRecogResponse.result.deviceMeasurementsHead
+                    .deviceMeasurements[0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
                   .result.deviceMeasurementsHead.deviceMeasurements[0].values;
@@ -535,7 +535,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
         new CommonDialogBox().getDialogBoxForPulseOxidometer(
             context,
-            device,
+            Constants.STR_PULSE_OXIMETER,
             containsAudio,
             audioPath,
             (containsAudio, audioPath) {
@@ -560,8 +560,8 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
       case Constants.STR_BP_MONITOR:
         if (digitRecogResponse != null) {
           if (digitRecogResponse.result.deviceMeasurementsHead != null) {
-            if (digitRecogResponse
-                    .result.deviceMeasurementsHead.deviceMeasurements[0].values !=
+            if (digitRecogResponse.result.deviceMeasurementsHead
+                    .deviceMeasurements[0].values !=
                 variable.strImgNtClear) {
               deviceController.text = digitRecogResponse
                   .result.deviceMeasurementsHead.deviceMeasurements[0].values;
@@ -575,7 +575,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
         new CommonDialogBox().getDialogBoxForBPMonitor(
             context,
-            device,
+            Constants.STR_BP_MONITOR,
             containsAudio,
             audioPath,
             (containsAudio, audioPath) {
@@ -825,10 +825,10 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
         duration: Duration(milliseconds: 300), curve: Curves.decelerate);
   }
 
-  onPostDeviceImageData(String deviceName)  async{
+  onPostDeviceImageData(String deviceName) async {
     Map<String, dynamic> postMainData = new Map();
     Map<String, dynamic> postMediaData = new Map();
-   // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+    // String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
 
     //postMainData[parameters.struserId] = userID;
 
@@ -842,8 +842,7 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
     //postMediaData[parameters.strHealthRecordCategory] = categoryDataObj.toJson();
     MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
 
-    MediaDataList mediaTypesResponse =
-        await _mediaTypeBlock.getMediTypesList();
+    MediaDataList mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
 
     List<MediaResult> metaDataFromSharedPrefernce = mediaTypesResponse.result;
     if (categoryName != Constants.STR_DEVICES) {
@@ -869,16 +868,16 @@ class DisplayPictureScreenState extends State<DisplayPictureScreen> {
 
     var params = json.encode(postMediaData);
 
-   // for (int i = 0; i < widget.imagePath.length; i++) {
-      _healthReportListForUserBlock
-          .saveDeviceImage(widget.imagePath, params.toString(), '')
-          .then((postImageResponse) {
-        _scaffoldKey.currentState.hideCurrentSnackBar();
+    // for (int i = 0; i < widget.imagePath.length; i++) {
+    _healthReportListForUserBlock
+        .saveDeviceImage(widget.imagePath, params.toString(), '')
+        .then((postImageResponse) {
+      _scaffoldKey.currentState.hideCurrentSnackBar();
 
-        if (skipTapped == false) {
-          displayDevicesList(deviceName, postImageResponse);
-        }
-      });
+      if (skipTapped == false) {
+        displayDevicesList(deviceName, postImageResponse);
+      }
+    });
     //}
   }
 
