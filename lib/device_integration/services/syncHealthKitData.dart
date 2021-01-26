@@ -5,7 +5,6 @@ import 'package:myfhb/device_integration/model/myFHBResponseModel.dart';
 import 'dart:convert' show json;
 import 'package:myfhb/device_integration/model/LastSyncResponse.dart';
 
-
 class SyncHealthKitData {
   FetchHealthKitData _hkHelper;
   DeviceHealthRecord _deviceHealthRecord;
@@ -66,12 +65,12 @@ class SyncHealthKitData {
         response = await postHealthKitData(bpParams);
       }
       response = '';
-      String bloodOxygenParams =
-          await _hkHelper.getBloodOxygenData(startDate, endDate);
-      if (bloodOxygenParams != null) {
-        response = await postHealthKitData(bloodOxygenParams);
-      }
-      response = '';
+      // String bloodOxygenParams =
+      //     await _hkHelper.getBloodOxygenData(startDate, endDate);
+      // if (bloodOxygenParams != null) {
+      //   response = await postHealthKitData(bloodOxygenParams);
+      // }
+      // response = '';
 
       String bodyTemperatureParams =
           await _hkHelper.getBodyTemperature(startDate, endDate);
