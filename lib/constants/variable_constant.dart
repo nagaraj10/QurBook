@@ -42,6 +42,8 @@ const String strFirstName = 'firstName';
 const String strMiddleName = 'middleName';
 const String strLastName = 'lastName';
 const String strRelation = 'relation';
+const String strDisableTeleconsulting =
+    "Provider that you selected hasn't enrolled for teleconsulting service, we will onboard your doctor shortly";
 
 //for the class add_family_user_info
 const String strFetchRoles = 'Fetching Custom Roles';
