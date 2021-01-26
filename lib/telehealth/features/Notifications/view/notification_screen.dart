@@ -9,6 +9,8 @@ import 'package:myfhb/telehealth/features/MyProvider/view/MyProvidersMain.dart';
 import 'package:myfhb/telehealth/features/Notifications/constants/notification_constants.dart'
     as constants;
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/telehealth/features/Notifications/model/notificationResult.dart';
+import 'package:myfhb/telehealth/features/Notifications/model/notification_ontap_req.dart';
 import 'package:myfhb/telehealth/features/Notifications/model/payload.dart';
 import 'package:myfhb/telehealth/features/Notifications/services/notification_services.dart';
 import 'package:myfhb/telehealth/features/appointments/constants/appointments_constants.dart'
@@ -57,7 +59,7 @@ class _NotificationScreen extends State<NotificationScreen> {
   Widget notificationAppBar() {
     return AppBar(
       flexibleSpace: GradientAppBar(),
-      centerTitle: true,
+      //centerTitle: true,
       leading: IconWidget(
         icon: Icons.arrow_back_ios,
         colors: Colors.white,
@@ -88,21 +90,22 @@ class _NotificationScreen extends State<NotificationScreen> {
         );
       case LoadingStatus.completed:
         return (notificationData != null)
-          ?(notificationData.notifications != null)
-            ? (notificationData.notifications?.result != null) && (notificationData.notifications?.result.length>0)
-                ? ListView.builder(
-                    itemCount: notificationData.notifications.result.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      notificationData.notifications.result
-                          .sort((a, b) => b.createdOn.compareTo(a.createdOn));
-                      return notificationView(
-                          notification: notificationData.notifications,
-                          index: index);
-                    })
+            ? (notificationData.notifications != null)
+                ? (notificationData.notifications?.result != null) &&
+                        (notificationData.notifications?.result.length > 0)
+                    ? ListView.builder(
+                        itemCount: notificationData.notifications.result.length,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) {
+                          notificationData.notifications.result.sort(
+                              (a, b) => b.createdOn.compareTo(a.createdOn));
+                          return notificationView(
+                              notification: notificationData.notifications,
+                              index: index);
+                        })
+                    : emptyNotification()
                 : emptyNotification()
-            : emptyNotification()
-        : emptyNotification();
+            : emptyNotification();
       case LoadingStatus.empty:
       default:
         return emptyNotification();
@@ -126,231 +129,491 @@ class _NotificationScreen extends State<NotificationScreen> {
           notification.result[index].messageDetails?.messageContent;
       return (message.messageBody == "" || message.messageTitle == "")
           ? Container()
-          : Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(top: 5, bottom: 5),
-                  child: Column(
-                    children: [
-                      ListTile(
-                        onTap: () {
-//                          if (message.messageBody
-//                              .toLowerCase()
-//                              .contains('book appointments')) {
-//                            Navigator.push(
-//                              context,
-//                              MaterialPageRoute(
-//                                  builder: (context) => MyProvidersMain()),
-//                            );
-//                          } else if (message.messageBody
-//                                  .toLowerCase()
-//                                  .contains("unread messages") ||
-//                              message.messageTitle
-//                                  .toLowerCase()
-//                                  .contains('connection lost')) {
-//                            Navigator.push(
-//                              context,
-//                              MaterialPageRoute(
-//                                  builder: (context) => ChatHomeScreen()),
-//                            );
-//                          } else if (message.messageTitle
-//                                  .toLowerCase()
-//                                  .contains('appointment reminder') ||
-//                              message.messageTitle
-//                                  .toLowerCase()
-//                                  .contains('confirmation') ||
-//                              message.messageTitle
-//                                  .toLowerCase()
-//                                  .contains('rescheduled') ||
-//                              message.messageTitle
-//                                  .toLowerCase()
-//                                  .contains('missed call')) {
-//                            Navigator.push(
-//                              context,
-//                              MaterialPageRoute(
-//                                  builder: (context) => AppointmentsMain()),
-//                            );
-//                          }
-                        },
-                        title: TextWidget(
-                          text: message.messageTitle,
-                          colors: Colors.black,
-                          overflow: TextOverflow.visible,
-                          fontWeight: FontWeight.w600,
-                          fontsize: 13,
-                          softwrap: true,
-                        ),
-                        subtitle: TextWidget(
-                          text: message.messageBody,
-                          colors: Colors.grey,
-                          overflow: TextOverflow.visible,
-                          fontWeight: FontWeight.w500,
-                          fontsize: 12,
-                          softwrap: true,
-                        ),
-                        trailing: Column(
-                          children: <Widget>[
-                            TextWidget(
-                              text: constants.notificationDate(
-                                  notification.result[index].createdOn),
-                              colors: Colors.black,
-                              overflow: TextOverflow.visible,
-                              fontWeight: FontWeight.w500,
-                              fontsize: 10,
-                              softwrap: true,
+          : InkWell(
+              splashColor: Color(CommonUtil.secondaryGrey),
+              onTap: (notification?.result[index]?.isUnread != null &&
+                      notification?.result[index]?.isUnread)
+                  ? () {
+                      NotificationOntapRequest req = NotificationOntapRequest();
+                      req.logIds = [notification?.result[index]?.id];
+                      final body = req.toJson();
+                      FetchNotificationService()
+                          .updateNsOnTapAction(body)
+                          .then((data) {
+                        if (data != null && data['isSuccess']) {
+                        } else {}
+                        Provider.of<FetchNotificationViewModel>(context,
+                            listen: false)
+                          ..clearNotifications()
+                          ..fetchNotifications();
+                      });
+                    }
+                  : null,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5, bottom: 5),
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              flex: 3,
+                              child: Container(
+                                padding: EdgeInsets.only(top: 5, left: 10),
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    TextWidget(
+                                      text: message.messageTitle,
+                                      colors: (notification?.result[index]
+                                                      ?.isUnread ==
+                                                  null ||
+                                              !notification
+                                                  ?.result[index]?.isUnread)
+                                          ? Colors.black
+                                          : Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                      overflow: TextOverflow.visible,
+                                      fontWeight: FontWeight.w600,
+                                      fontsize: 13,
+                                      softwrap: true,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    TextWidget(
+                                      text: message.messageBody,
+                                      colors: Color(CommonUtil.secondaryGrey),
+                                      overflow: TextOverflow.visible,
+                                      fontWeight: FontWeight.w500,
+                                      fontsize: 12,
+                                      softwrap: true,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    (payload?.templateName ==
+                                                constants.strCancelByDoctor ||
+                                            payload?.templateName ==
+                                                constants.strRescheduleByDoctor)
+                                        ? Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 0, right: 0),
+                                            child: Row(
+                                              children: [
+                                                OutlineButton(
+                                                  onPressed:
+                                                      !notification
+                                                              ?.result[index]
+                                                              ?.isActionDone
+                                                          ? () {
+                                                              //Reschedule
+                                                              var body = {};
+                                                              body['templateName'] =
+                                                                  payload
+                                                                      ?.templateName;
+                                                              body['contextId'] =
+                                                                  payload
+                                                                      ?.bookingId;
+                                                              Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder:
+                                                                        (context) =>
+                                                                            ResheduleMain(
+                                                                              isFromNotification: false,
+                                                                              closePage: (value) {},
+                                                                              isReshedule: true,
+                                                                              doc: Past(doctor: Doctor(id: notification.result[index].messageDetails.payload.doctorId), doctorSessionId: notification.result[index].messageDetails.payload.doctorSessionId, healthOrganization: City(id: notification.result[index].messageDetails.payload.healthOrganizationId), bookingId: notification.result[index].messageDetails.payload.bookingId),
+                                                                              body: body,
+                                                                            )),
+                                                              ).then((value) {
+                                                                if (notification
+                                                                            ?.result[
+                                                                                index]
+                                                                            ?.isUnread !=
+                                                                        null &&
+                                                                    notification
+                                                                        ?.result[
+                                                                            index]
+                                                                        ?.isUnread) {
+                                                                  NotificationOntapRequest
+                                                                      req =
+                                                                      NotificationOntapRequest();
+                                                                  req.logIds = [
+                                                                    notification
+                                                                        ?.result[
+                                                                            index]
+                                                                        ?.id
+                                                                  ];
+                                                                  final body = req
+                                                                      .toJson();
+                                                                  FetchNotificationService()
+                                                                      .updateNsOnTapAction(
+                                                                          body)
+                                                                      .then(
+                                                                          (data) {
+                                                                    if (data !=
+                                                                            null &&
+                                                                        data[
+                                                                            'isSuccess']) {
+                                                                      Provider.of<
+                                                                              FetchNotificationViewModel>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                        ..clearNotifications()
+                                                                        ..fetchNotifications();
+                                                                    } else {
+                                                                      Provider.of<
+                                                                              FetchNotificationViewModel>(
+                                                                          context,
+                                                                          listen:
+                                                                              false)
+                                                                        ..clearNotifications()
+                                                                        ..fetchNotifications();
+                                                                    }
+                                                                  });
+                                                                }
+                                                              });
+                                                            }
+                                                          : null,
+                                                  borderSide: !notification
+                                                          ?.result[index]
+                                                          ?.isActionDone
+                                                      ? BorderSide(
+                                                          color: Color(CommonUtil()
+                                                              .getMyPrimaryColor()))
+                                                      : BorderSide(
+                                                          color: Colors.grey),
+                                                  child: TextWidget(
+                                                    text: AppConstants
+                                                        .Appointments_reshedule,
+                                                    colors: !notification
+                                                            ?.result[index]
+                                                            ?.isActionDone
+                                                        ? Color(CommonUtil()
+                                                            .getMyPrimaryColor())
+                                                        : Colors.grey,
+                                                    overflow:
+                                                        TextOverflow.visible,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontsize: 13,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 15,
+                                                ),
+                                                OutlineButton(
+                                                  onPressed:
+                                                      !notification
+                                                              ?.result[index]
+                                                              ?.isActionDone
+                                                          ? () {
+                                                              var body = {};
+                                                              body['templateName'] =
+                                                                  payload
+                                                                      ?.templateName;
+                                                              body['contextId'] =
+                                                                  payload
+                                                                      ?.bookingId;
+                                                              _displayDialog(
+                                                                  context,
+                                                                  [
+                                                                    Past(
+                                                                        bookingId: notification
+                                                                            .result[
+                                                                                index]
+                                                                            .messageDetails
+                                                                            .payload
+                                                                            .bookingId,
+                                                                        plannedStartDateTime: notification
+                                                                            .result[index]
+                                                                            .messageDetails
+                                                                            .payload
+                                                                            .plannedStartDateTime)
+                                                                  ],
+                                                                  body,
+                                                                  notification
+                                                                          .result[
+                                                                      index]);
+                                                            }
+                                                          : null,
+                                                  borderSide: !notification
+                                                          ?.result[index]
+                                                          ?.isActionDone
+                                                      ? BorderSide(
+                                                          color: Color(CommonUtil
+                                                              .secondaryGrey))
+                                                      : BorderSide(
+                                                          color: Colors.grey),
+                                                  child: TextWidget(
+                                                    text: AppConstants
+                                                        .Appointments_cancel,
+                                                    colors: !notification
+                                                            ?.result[index]
+                                                            ?.isActionDone
+                                                        ? Color(CommonUtil()
+                                                            .getMyPrimaryColor())
+                                                        : Colors.grey,
+                                                    overflow:
+                                                        TextOverflow.visible,
+                                                    fontWeight: FontWeight.w600,
+                                                    fontsize: 13,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          )
+                                        : Container()
+                                  ],
+                                ),
+                              ),
                             ),
-                            TextWidget(
-                              text: constants.notificationTime(
-                                  notification.result[index].createdOn),
-                              colors: Color(CommonUtil().getMyPrimaryColor()),
-                              overflow: TextOverflow.visible,
-                              fontWeight: FontWeight.w600,
-                              fontsize: 10,
-                              softwrap: true,
+                            Expanded(
+                              flex: 1,
+                              child: Container(
+                                padding: EdgeInsets.only(top: 5),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    TextWidget(
+                                      text: constants.notificationDate(
+                                          notification
+                                              ?.result[index]?.createdOn),
+                                      colors: Colors.black,
+                                      overflow: TextOverflow.visible,
+                                      fontWeight: FontWeight.w500,
+                                      fontsize: 10,
+                                      softwrap: true,
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    TextWidget(
+                                      text: constants.notificationTime(
+                                          notification
+                                              ?.result[index]?.createdOn),
+                                      colors: (notification?.result[index]
+                                                      ?.isUnread ==
+                                                  null ||
+                                              !notification
+                                                  ?.result[index]?.isUnread)
+                                          ? Colors.black
+                                          : Color(
+                                              CommonUtil().getMyPrimaryColor()),
+                                      //colors: Color(CommonUtil.primaryColor),
+                                      overflow: TextOverflow.visible,
+                                      fontWeight: FontWeight.w600,
+                                      fontsize: 10,
+                                      softwrap: true,
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      (payload?.templateName == constants.strCancelByDoctor ||
-                              payload?.templateName ==
-                                  constants.strRescheduleByDoctor)
-                          ? Padding(
-                              padding: EdgeInsets.only(left: 20, right: 20),
-                              child: Row(
-                                children: [
-                                  OutlineButton(
-                                    onPressed: !notification
-                                            ?.result[index]?.isActionDone
-                                        ? () {
-                                            var body = {};
-                                            body['templateName'] =
-                                                payload?.templateName;
-                                            body['contextId'] =
-                                                payload?.bookingId;
-                                            _displayDialog(
-                                                context,
-                                                [
-                                                  Past(
-                                                      bookingId: notification
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 0.2,
+                    color: Colors.black,
+                  )
+                ],
+              ),
+            );
+      /* : Column(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(top: 5, bottom: 5),
+              child: Column(
+                children: [
+                  ListTile(
+                    onTap: () {},
+                    title: TextWidget(
+                      text: message.messageTitle,
+                      colors: Colors.black,
+                      overflow: TextOverflow.visible,
+                      fontWeight: FontWeight.w600,
+                      fontsize: 13,
+                      softwrap: true,
+                    ),
+                    subtitle: TextWidget(
+                      text: message.messageBody,
+                      colors: Colors.grey,
+                      overflow: TextOverflow.visible,
+                      fontWeight: FontWeight.w500,
+                      fontsize: 12,
+                      softwrap: true,
+                    ),
+                    trailing: Column(
+                      children: <Widget>[
+                        TextWidget(
+                          text: constants.notificationDate(
+                              notification.result[index].createdOn),
+                          colors: Colors.black,
+                          overflow: TextOverflow.visible,
+                          fontWeight: FontWeight.w500,
+                          fontsize: 10,
+                          softwrap: true,
+                        ),
+                        TextWidget(
+                          text: constants.notificationTime(
+                              notification.result[index].createdOn),
+                          colors: Color(CommonUtil().getMyPrimaryColor()),
+                          overflow: TextOverflow.visible,
+                          fontWeight: FontWeight.w600,
+                          fontsize: 10,
+                          softwrap: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  (payload?.templateName == constants.strCancelByDoctor ||
+                          payload?.templateName ==
+                              constants.strRescheduleByDoctor)
+                      ? Padding(
+                          padding: EdgeInsets.only(left: 20, right: 20),
+                          child: Row(
+                            children: [
+                              OutlineButton(
+                                onPressed: !notification
+                                        ?.result[index]?.isActionDone
+                                    ? () {
+                                        var body = {};
+                                        body['templateName'] =
+                                            payload?.templateName;
+                                        body['contextId'] =
+                                            payload?.bookingId;
+                                        _displayDialog(
+                                            context,
+                                            [
+                                              Past(
+                                                  bookingId: notification
+                                                      .result[index]
+                                                      .messageDetails
+                                                      .payload
+                                                      .bookingId,
+                                                  plannedStartDateTime:
+                                                      notification
                                                           .result[index]
                                                           .messageDetails
                                                           .payload
-                                                          .bookingId,
-                                                      plannedStartDateTime:
-                                                          notification
-                                                              .result[index]
-                                                              .messageDetails
-                                                              .payload
-                                                              .plannedStartDateTime)
-                                                ],
-                                                body);
-                                          }
-                                        : null,
-                                    child: TextWidget(
-                                      text: AppConstants.Appointments_cancel,
-                                      colors: !notification
-                                              ?.result[index]?.isActionDone
-                                          ? Color(
-                                              CommonUtil().getMyPrimaryColor())
-                                          : Colors.grey,
-                                      overflow: TextOverflow.visible,
-                                      fontWeight: FontWeight.w600,
-                                      fontsize: 13,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 15,
-                                  ),
-                                  OutlineButton(
-                                    onPressed: !notification
-                                            ?.result[index]?.isActionDone
-                                        ? () {
-                                            //Reschedule
-                                            var body = {};
-                                            body['templateName'] =
-                                                payload?.templateName;
-                                            body['contextId'] =
-                                                payload?.bookingId;
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ResheduleMain(
-                                                        isFromNotification:
-                                                            false,
-                                                        closePage: (value) {},
-                                                        isReshedule: true,
-                                                        doc: Past(
-                                                            doctor: Doctor(
-                                                                id: notification
-                                                                    .result[
-                                                                        index]
-                                                                    .messageDetails
-                                                                    .payload
-                                                                    .doctorId),
-                                                            doctorSessionId:
-                                                                notification
-                                                                    .result[
-                                                                        index]
-                                                                    .messageDetails
-                                                                    .payload
-                                                                    .doctorSessionId,
-                                                            healthOrganization: City(
-                                                                id: notification
-                                                                    .result[
-                                                                        index]
-                                                                    .messageDetails
-                                                                    .payload
-                                                                    .healthOrganizationId),
-                                                            bookingId: notification
-                                                                .result[index]
+                                                          .plannedStartDateTime)
+                                            ],
+                                            body);
+                                      }
+                                    : null,
+                                child: TextWidget(
+                                  text: AppConstants.Appointments_cancel,
+                                  colors: !notification
+                                          ?.result[index]?.isActionDone
+                                      ? Color(
+                                          CommonUtil().getMyPrimaryColor())
+                                      : Colors.grey,
+                                  overflow: TextOverflow.visible,
+                                  fontWeight: FontWeight.w600,
+                                  fontsize: 13,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 15,
+                              ),
+                              OutlineButton(
+                                onPressed: !notification
+                                        ?.result[index]?.isActionDone
+                                    ? () {
+                                        //Reschedule
+                                        var body = {};
+                                        body['templateName'] =
+                                            payload?.templateName;
+                                        body['contextId'] =
+                                            payload?.bookingId;
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ResheduleMain(
+                                                    isFromNotification:
+                                                        false,
+                                                    closePage: (value) {},
+                                                    isReshedule: true,
+                                                    doc: Past(
+                                                        doctor: Doctor(
+                                                            id: notification
+                                                                .result[
+                                                                    index]
                                                                 .messageDetails
                                                                 .payload
-                                                                .bookingId),
-                                                        body: body,
-                                                      )),
-                                            ).then((value) {
-                                              Provider.of<
-                                                      FetchNotificationViewModel>(
-                                                  context,
-                                                  listen: false)
-                                                ..clearNotifications()
-                                                ..fetchNotifications();
-                                            });
-                                          }
-                                        : null,
-                                    child: TextWidget(
-                                      text: AppConstants.Appointments_reshedule,
-                                      colors: !notification
-                                              ?.result[index]?.isActionDone
-                                          ? Color(
-                                              CommonUtil().getMyPrimaryColor())
-                                          : Colors.grey,
-                                      overflow: TextOverflow.visible,
-                                      fontWeight: FontWeight.w600,
-                                      fontsize: 13,
-                                    ),
-                                  )
-                                ],
-                              ),
-                            )
-                          : Container()
-                    ],
-                  ),
-                ),
-                Container(
-                  height: 0.2,
-                  color: Colors.black,
-                )
-              ],
-            );
+                                                                .doctorId),
+                                                        doctorSessionId:
+                                                            notification
+                                                                .result[
+                                                                    index]
+                                                                .messageDetails
+                                                                .payload
+                                                                .doctorSessionId,
+                                                        healthOrganization: City(
+                                                            id: notification
+                                                                .result[
+                                                                    index]
+                                                                .messageDetails
+                                                                .payload
+                                                                .healthOrganizationId),
+                                                        bookingId: notification
+                                                            .result[index]
+                                                            .messageDetails
+                                                            .payload
+                                                            .bookingId),
+                                                    body: body,
+                                                  )),
+                                        ).then((value) {
+                                          Provider.of<
+                                                  FetchNotificationViewModel>(
+                                              context,
+                                              listen: false)
+                                            ..clearNotifications()
+                                            ..fetchNotifications();
+                                        });
+                                      }
+                                    : null,
+                                child: TextWidget(
+                                  text: AppConstants.Appointments_reshedule,
+                                  colors: !notification
+                                          ?.result[index]?.isActionDone
+                                      ? Color(
+                                          CommonUtil().getMyPrimaryColor())
+                                      : Colors.grey,
+                                  overflow: TextOverflow.visible,
+                                  fontWeight: FontWeight.w600,
+                                  fontsize: 13,
+                                ),
+                              )
+                            ],
+                          ),
+                        )
+                      : Container()
+                ],
+              ),
+            ),
+            Container(
+              height: 0.2,
+              color: Colors.black,
+            )
+          ],
+        ); */
     } else {
       return Container();
     }
   }
 
-  _displayDialog(
-      BuildContext context, List<Past> appointments, dynamic body) async {
+  _displayDialog(BuildContext context, List<Past> appointments, dynamic body,
+      NotificationResult notification) async {
     return showDialog(
         context: context,
         builder: (context) {
@@ -420,8 +683,8 @@ class _NotificationScreen extends State<NotificationScreen> {
                                       onPressed: () {
                                         Navigator.pop(
                                             context,
-                                            getCancelAppoitment(
-                                                appointments, body));
+                                            getCancelAppoitment(appointments,
+                                                body, notification));
                                       },
                                       child: TextWidget(
                                           text: parameters.yes, fontsize: 12),
@@ -442,7 +705,8 @@ class _NotificationScreen extends State<NotificationScreen> {
         });
   }
 
-  getCancelAppoitment(List<Past> appointments, dynamic body) {
+  getCancelAppoitment(
+      List<Past> appointments, dynamic body, NotificationResult notification) {
     cancelAppointment(appointments).then((value) {
       if (value == null) {
         toast.getToast(AppConstants.BOOKING_CANCEL, Colors.red);
@@ -451,13 +715,29 @@ class _NotificationScreen extends State<NotificationScreen> {
         toast.getToast(AppConstants.YOUR_BOOKING_SUCCESS, Colors.green);
         FetchNotificationService().updateNsActionStatus(body).then((data) {
           if (data != null && data['isSuccess']) {
-            print('ns actions has been updated');
+            if (notification.isUnread != null && notification.isUnread) {
+              NotificationOntapRequest req = NotificationOntapRequest();
+              req.logIds = [notification.id];
+              final body = req.toJson();
+              FetchNotificationService().updateNsOnTapAction(body).then((data) {
+                if (data != null && data['isSuccess']) {
+                  Provider.of<FetchNotificationViewModel>(context,
+                      listen: false)
+                    ..clearNotifications()
+                    ..fetchNotifications();
+                } else {
+                  Provider.of<FetchNotificationViewModel>(context,
+                      listen: false)
+                    ..clearNotifications()
+                    ..fetchNotifications();
+                }
+              });
+            }
           } else {
-            print('ns actions not being updated');
+            Provider.of<FetchNotificationViewModel>(context, listen: false)
+              ..clearNotifications()
+              ..fetchNotifications();
           }
-          Provider.of<FetchNotificationViewModel>(context, listen: false)
-            ..clearNotifications()
-            ..fetchNotifications();
         });
       } else {
         toast.getToast(AppConstants.BOOKING_CANCEL, Colors.red);

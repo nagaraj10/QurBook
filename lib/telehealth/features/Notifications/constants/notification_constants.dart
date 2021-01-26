@@ -16,3 +16,4 @@ const String qr_notification_fetch =
     'notification-log/user/notifications-list?medium=Push&fromDate=&toDate=';
 
     const String qr_notification_action= 'notification-log/actions';
+    const String qr_notification_action_ontap = 'notification-log/on-tap';

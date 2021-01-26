@@ -14,6 +14,7 @@ class NotificationResult {
   var scheduler;
   RecipientUser senderUser;
   bool isActionDone;
+  bool isUnread;
 
   NotificationResult(
       {this.id,
@@ -26,7 +27,8 @@ class NotificationResult {
       this.recipientUser,
       this.scheduler,
       this.senderUser,
-      this.isActionDone});
+      this.isActionDone,
+      this.isUnread});
 
   NotificationResult.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -46,6 +48,7 @@ class NotificationResult {
         ? RecipientUser.fromJson(json['senderUser'])
         : null;
     isActionDone = json['isActionDone'];
+    isUnread = json['isUnread'];
   }
 
   Map<String, dynamic> toJson() {
@@ -69,6 +72,7 @@ class NotificationResult {
       data['senderUser'] = this.senderUser.toJson();
     }
     data['isActionDone'] = this.isActionDone;
+    data['isUnread'] = this.isUnread;
     return data;
   }
 }
