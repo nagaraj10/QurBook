@@ -289,8 +289,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForGulcose)}";
       devicevalue1ForGulcose =
           deviceValues.bloodGlucose.entities[0].bloodGlucoseLevel.toString();
-      deviceMealContext =
-          deviceValues.bloodGlucose.entities[0].mealContext.name.toString();
+
+      if(deviceValues.bloodGlucose.entities[0].mealContext!=null){
+        deviceMealContext =
+            deviceValues.bloodGlucose.entities[0].mealContext.name.toString();
+      }else{
+        deviceMealContext = 'Random';
+      }
+
       deviceMealType = deviceValues.bloodGlucose.entities[0].mealType != null
           ? deviceValues.bloodGlucose.entities[0].mealType.name.toString()
           : '';

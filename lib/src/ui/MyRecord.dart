@@ -473,17 +473,7 @@ class _MyRecordsState extends State<MyRecords> {
           SizedBoxWidget(
             width: 2,
           ),
-          IconWidget(
-            icon: Icons.notifications,
-            colors: Colors.white,
-            size: 24,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationMain()),
-              );
-            },
-          ),
+          new CommonUtil().getNotificationIcon(context),
           new SwitchProfile()
               .buildActions(context, _keyLoader, callBackToRefresh),
         ],

@@ -234,17 +234,7 @@ class HomeScreenState extends State<ChatHomeScreen> {
         ),
         centerTitle: true,
         actions: [
-          IconWidget(
-            icon: Icons.notifications,
-            colors: Colors.white,
-            size: 24,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationMain()),
-              );
-            },
-          ),
+          Center(child: new CommonUtil().getNotificationIcon(context)),
           SizedBoxWidget(
             width: 10,
           ),

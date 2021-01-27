@@ -1171,17 +1171,7 @@ class ChatScreenState extends State<ChatScreen> {
                     SizedBoxWithChild(
                       height: 24,
                       width: 24,
-                      child: IconWidget(
-                        icon: Icons.notifications,
-                        colors: Colors.white,
-                        size: 24,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => NotificationMain()),
-                          );
-                        },
-                      ),
+                      child: new CommonUtil().getNotificationIcon(context),
                     ),
                     moreOptionsPopup()
                   ],

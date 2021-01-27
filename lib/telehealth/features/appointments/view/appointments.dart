@@ -307,17 +307,7 @@ class _AppointmentsState extends State<Appointments> {
             softwrap: true,
           ),
         ),
-        IconWidget(
-          icon: Icons.notifications,
-          colors: Colors.white,
-          size: 22,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NotificationMain()),
-            );
-          },
-        ),
+        new CommonUtil().getNotificationIcon(context),
         SwitchProfile().buildActions(context, _key, callBackToRefresh),
         // IconWidget(
         //   icon: Icons.more_vert,
