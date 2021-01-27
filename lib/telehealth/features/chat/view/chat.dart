@@ -314,12 +314,12 @@ class ChatScreenState extends State<ChatScreen> {
           nextAppointmentDate = appointmentResult.upcoming != null
               ? appointmentResult.upcoming.plannedStartDateTime
               : '';
-          doctorDeviceToken = appointmentResult.deviceToken != null?
-          appointmentResult.deviceToken.doctor.payload[0].deviceTokenId
-              : '';
-          patientDeviceToken = appointmentResult.deviceToken != null ?
-          appointmentResult.deviceToken.patient.payload[0].deviceTokenId
-              : '';
+          doctorDeviceToken = appointmentResult.deviceToken != null ? appointmentResult.deviceToken.doctor.payload.isNotEmpty
+              ? appointmentResult.deviceToken.doctor.payload[0].deviceTokenId
+              : '':'';
+          patientDeviceToken = appointmentResult.deviceToken != null? appointmentResult.deviceToken.patient.payload.isNotEmpty
+              ? appointmentResult.deviceToken.patient.payload[0].deviceTokenId
+              : '':'';
 
         });
       }
