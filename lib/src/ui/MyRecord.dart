@@ -782,53 +782,54 @@ class _CustomTabsState extends State<CustomTabView>
         decoration: BoxDecoration(
             color: Color(new CommonUtil().getMyPrimaryColor()),
             borderRadius: BorderRadius.circular(30)),
-        child: (widget.categoryData!=null && widget.categoryData[controller.index].categoryName ==
-            Constants.STR_NOTES)
+        child: (widget.categoryData != null &&
+                widget.categoryData[controller.index].categoryName ==
+                    Constants.STR_NOTES)
             ? IconButton(
-          icon: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            onCameraClicked();
-          },
-        )
+                icon: Icon(
+                  Icons.add,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  onCameraClicked();
+                },
+              )
             : Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            FHBBasicWidget.customShowCase(
-                widget.cameraKey,
-                Constants.CAMERA_DESC,
-                IconButton(
-                  icon: Icon(
-                    Icons.camera_alt,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  FHBBasicWidget.customShowCase(
+                      widget.cameraKey,
+                      Constants.CAMERA_DESC,
+                      IconButton(
+                        icon: Icon(
+                          Icons.camera_alt,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          onCameraClicked();
+                        },
+                      ),
+                      Constants.CAMERA_TITLE),
+                  Container(
+                    width: 20,
+                    height: 1,
                     color: Colors.white,
                   ),
-                  onPressed: () {
-                    onCameraClicked();
-                  },
-                ),
-                Constants.CAMERA_TITLE),
-            Container(
-              width: 20,
-              height: 1,
-              color: Colors.white,
-            ),
-            FHBBasicWidget.customShowCase(
-                widget.voiceKey,
-                Constants.VOICE_DESC,
-                IconButton(
-                  icon: Icon(
-                    Icons.mic,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    onVoiceRecordClicked();
-                  },
-                ),
-                Constants.VOICE_TITLE),
-          ],
-        ),
+                  FHBBasicWidget.customShowCase(
+                      widget.voiceKey,
+                      Constants.VOICE_DESC,
+                      IconButton(
+                        icon: Icon(
+                          Icons.mic,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          onVoiceRecordClicked();
+                        },
+                      ),
+                      Constants.VOICE_TITLE),
+                ],
+              ),
       ),
       Align(
           alignment: Alignment.bottomCenter,
@@ -1107,8 +1108,7 @@ class _CustomTabsState extends State<CustomTabView>
       List<HealthRecordCollection> healthRecords, bool condition) {
     if (widget.isFromChat) {
       if (condition) {
-        if (!(widget.selectedRecordsId.contains(metaId))) {
-        }
+        if (!(widget.selectedRecordsId.contains(metaId))) {}
       } else {
         widget.selectedRecordsId.remove(metaId);
       }
@@ -1116,12 +1116,10 @@ class _CustomTabsState extends State<CustomTabView>
         if (!(widget.selectedMedia.contains(metaId))) {
           widget.selectedMedia.add(metaId);
           widget.selectedRecordsId.addAll(healthRecords);
-
         }
       } else {
         widget.selectedMedia.remove(metaId);
         widget.selectedRecordsId.remove(healthRecords);
-
       }
     }
     callBackToRefresh();
@@ -1134,21 +1132,19 @@ class _CustomTabsState extends State<CustomTabView>
   void commonMethodToAddOrRemove(
       String metaId, bool condition, HealthResult healthCategory) {
     if (widget.allowSelect) {
-      if(widget.isFromChat){
-
+      if (widget.isFromChat) {
         if (condition) {
           if (!(widget.selectedMedia.contains(metaId))) {
             widget.selectedMedia.add(metaId);
-            widget.selectedRecordsId.addAll(healthCategory.healthRecordCollection);
-
+            widget.selectedRecordsId
+                .addAll(healthCategory.healthRecordCollection);
           }
         } else {
           widget.selectedMedia.remove(metaId);
-          widget.selectedRecordsId.remove(healthCategory.healthRecordCollection);
-
+          widget.selectedRecordsId
+              .remove(healthCategory.healthRecordCollection);
         }
-
-      }else{
+      } else {
         if (condition) {
           if (!(widget.selectedMedia.contains(metaId))) {
             widget.selectedMedia.add(metaId);
@@ -1157,7 +1153,6 @@ class _CustomTabsState extends State<CustomTabView>
           widget.selectedMedia.remove(metaId);
         }
       }
-
     } else if (widget.allowSelectNotes || widget.allowSelectVoice) {
       if (condition) {
         if (widget.selectedMedia.length > 0) {
