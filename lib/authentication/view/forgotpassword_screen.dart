@@ -1,5 +1,7 @@
 import 'package:country_pickers/country.dart';
 import 'package:country_pickers/utils/utils.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/asset_image.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
@@ -72,6 +74,27 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       SizedBox(height: 10),
                       _resetbutton(),
                       SizedBox(height: height * .015),
+                      Text(strsupportEmail,style: TextStyle(fontSize: 13),),
+                      // RichText(
+                      //   softWrap: true,
+                      //   text: TextSpan(
+                      //     text:
+                      //         'If OTP is not received within 5mins, please contact to support at ',
+                      //     style: TextStyle(color: Colors.black, fontSize: 15),
+                      //     children: [
+                      //       TextSpan(
+                      //           text: 'docsupport@qurhealth.in',
+                      //           style: TextStyle(
+                      //               color: Colors.blue,
+                      //               fontSize: 15,
+                      //               fontWeight: FontWeight.w500),
+                      //           recognizer: TapGestureRecognizer()
+                      //             ..onTap = () {
+                                    
+                      //             }),
+                      //     ],
+                      //   ),
+                      // ),
                       // _gotosignintap(),
                     ],
                   ),
@@ -164,7 +187,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           PatientForgotPasswordModel logInModel =
               new PatientForgotPasswordModel(
             //userName: mobileController.text,
-            userName: '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileController.text}',
+            userName:
+                '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileController.text}',
             source: strSource,
           );
           Map<String, dynamic> map = logInModel.toJson();
@@ -215,7 +239,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           MaterialPageRoute(
               builder: (context) => ChangePasswordScreen(
                     //userName: mobileController.text,
-                    userName: '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileController.text}',
+                    userName:
+                        '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileController.text}',
                   )));
     } else {
       toast.getToast(response.message, Colors.red);

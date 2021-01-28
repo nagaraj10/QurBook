@@ -1,4 +1,6 @@
 //Strings used in PatientLogin
+import 'package:url_launcher/url_launcher.dart';
+
 const String struserName = 'userName';
 const String strpassword = 'password';
 const String strsource = 'source';
@@ -160,3 +162,19 @@ const String strIndianPhoneCode = 'IN';
 
 const String strContextId = 'contextId';
 const String strIsSkipMFA = 'isSkipMFA';
+const String strsupportEmail = 'If OTP is not received within 5mins, please contact to support at docsupport@qurhealth.in';
+
+void openEmail({String sub='App Feedback',String body=''}) async {
+  final Uri params = Uri(
+    scheme: 'mailto',
+    path: 'docsupport@qurhealth.in',
+    query:'subject=$sub&body=$body', //add subject and body here
+  );
+
+  var url = params.toString();
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
