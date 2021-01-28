@@ -113,7 +113,16 @@ class _SplashScreenState extends State<SplashScreen> {
               Get.to(
                 ChatHomeScreen(),
               );
-            } else {
+            } else if (widget.nsRoute == 'appointmentList') {
+              //cancel appointments route
+              Get.offAll(TelehealthProviders(
+                arguments: HomeScreenArguments(
+                    selectedIndex: 0,
+                    bookingId: widget.bookingID,
+                    date: widget.appointmentDate,
+                    templateName: widget.templateName),
+              ));
+            }else {
               PageNavigator.goToPermanent(context, router.rt_Dashboard);
             }
           } else {

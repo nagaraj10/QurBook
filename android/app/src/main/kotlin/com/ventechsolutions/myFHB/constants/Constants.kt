@@ -51,4 +51,6 @@ object Constants {
     val PROP_DOC_CANCELLATION ="DoctorCancellation"
     val PROP_DOC_RESCHDULE ="DoctorRescheduling"
     val PROP_TEMP_NAME ="templateName"
+    val PROP_REDIRECT_TO ="redirectTo"
+    val PROP_DATA ="data"
 }

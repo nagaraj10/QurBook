@@ -19,6 +19,8 @@ import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:gmiwidgetspackage/widgets/text_widget.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
+import 'package:myfhb/src/utils/PageNavigator.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class Appointments extends StatefulWidget {
   @override
@@ -286,7 +288,8 @@ class _AppointmentsState extends State<Appointments> {
               colors: Colors.white,
               size: 20,
               onTap: () {
-                Navigator.pop(context);
+                //Navigator.pop(context);
+                PageNavigator.goToPermanent(context, router.rt_Dashboard);
               },
             ),
           ],
