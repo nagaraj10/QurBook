@@ -767,12 +767,11 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> saveImageAndGetDeviceInfo(String url,
-      List<String> imagePaths, String payload, String jsonBody,String userId) async {
+  Future<dynamic> saveImageAndGetDeviceInfo(String url, List<String> imagePaths,
+      String payload, String jsonBody, String userId) async {
     var response;
     try {
       String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
-
 
       Dio dio = new Dio();
       dio.options.headers['content-type'] = 'multipart/form-data';
@@ -787,13 +786,12 @@ class ApiBaseHelper {
 
         for (var image in imagePaths) {
           File fileName = new File(image);
-          String fileNoun = fileName.path
-              .split('/')
-              .last;
+          String fileNoun = fileName.path.split('/').last;
           formData.files.addAll([
-            MapEntry("fileName",
-                await MultipartFile.fromFile(
-                    fileName.path, filename: fileNoun)),
+            MapEntry(
+                "fileName",
+                await MultipartFile.fromFile(fileName.path,
+                    filename: fileNoun)),
           ]);
         }
 
@@ -805,7 +803,6 @@ class ApiBaseHelper {
       throw FetchDataException(variable.strNoInternet);
     }
   }
-
 
   Future<dynamic> verifyEmail(String url) async {
     String authToken = PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
@@ -1353,7 +1350,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> createDeviceSelection(String url,String jsonBody) async {
+  Future<dynamic> createDeviceSelection(String url, String jsonBody) async {
     var responseJson;
     try {
       final response = await http.post(_baseUrl + url,
@@ -1366,7 +1363,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  Future<dynamic> updateDeviceSelection(String url,String jsonBody) async {
+  Future<dynamic> updateDeviceSelection(String url, String jsonBody) async {
     var responseJson;
     try {
       final response = await http.put(_baseUrl + url,
@@ -1385,7 +1382,7 @@ class ApiBaseHelper {
 
     requestHeadersAuthContent['Content-type'] = 'application/json';
     requestHeadersAuthContent['authorization'] =
-    await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
+        await PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN);
     try {
       final response = await http.put(
         _baseUrl + url,
@@ -1410,7 +1407,6 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
-
 }
 
 abstract class InnerException {
