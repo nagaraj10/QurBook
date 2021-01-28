@@ -66,18 +66,17 @@ class _WebViewExampleState extends State<PaymentPage> {
           ].toSet(),
           navigationDelegate: (NavigationRequest request) {
             String finalUrl = request.url.toString();
-            print(finalUrl);
-
             if (finalUrl.contains(CHECK_URL)) {
+              String paymentOrderId='';
+              String paymentRequestId='';
               Uri uri = Uri.parse(finalUrl);
               String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
+              paymentOrderId = uri.queryParameters[PAYMENT_ID];
+              paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
               if (paymentStatus != null && paymentStatus == CREDIT) {
-                String paymentOrderId = uri.queryParameters[PAYMENT_ID];
-                String paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
-
                 updatePayment(paymentId, paymentOrderId, paymentRequestId);
               } else {
-                callResultPage(false, '');
+                updatePayment(paymentId, paymentOrderId, paymentRequestId);
               }
             }
             return NavigationDecision.navigate;

@@ -1816,12 +1816,39 @@ class ChatScreenState extends State<ChatScreen> {
       if ((fileType == STR_JPG) ||
           (fileType == STR_PNG) ||
           (fileType == STR_JPEG)) {
-        onSendMessage(fileURL, 1);
+        getAlertForFileSend(fileURL, 1);
       } else if ((fileType == STR_PDF)) {
-        onSendMessage(fileURL, 2);
+        getAlertForFileSend(fileURL, 2);
       } else if ((fileType == STR_AAC)) {
-        onSendMessage(fileURL, 3);
+        getAlertForFileSend(fileURL, 3);
       }
     }
   }
+
+  getAlertForFileSend(String content, int type) {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text('Send to Dr. '+peerName),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () => closeDialog(),
+            child: Text('Cancel'),
+          ),
+          FlatButton(
+            onPressed: () {
+              closeDialog();
+              onSendMessage(content, type);
+            },
+            child: Text('Send'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  closeDialog() {
+    Navigator.of(context).pop();
+  }
+
 }
