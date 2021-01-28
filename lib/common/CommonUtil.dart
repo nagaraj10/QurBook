@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_downloader/image_downloader.dart';
@@ -64,6 +66,9 @@ import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/network/ApiBaseHelper.dart';
 import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/src/utils/colors_utils.dart';
+import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
+import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -1424,5 +1429,83 @@ class CommonUtil {
     MyProfileModel myProfile =
         await AddFamilyUserInfoRepository().getMyProfileInfoNew(userid);
     return myProfile;
+  }
+
+  Widget getNotificationIcon(BuildContext context) {
+    try {
+      int count = 0;
+      String targetID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      return StreamBuilder<DocumentSnapshot>(
+          stream: Firestore.instance
+              .collection('unreadNotifications')
+          .document(targetID)
+          .get().asStream(),
+          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasData) {
+                count = 0;
+                if(snapshot.data.data!=null){
+                  if(snapshot.data['count']!=null && snapshot.data['count']!=''){
+                    count = snapshot.data['count'];
+                  }else{
+                    count = 0;
+                  }
+                }else{
+                  count = 0;
+                }
+
+              return BadgeIcon(
+                  icon: GestureDetector(
+                    child: IconWidget(
+                      icon: Icons.notifications,
+                      colors: Colors.white,
+                      size: 22,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => NotificationMain()),
+                        );
+                      },
+                    ),
+                  ),
+                  badgeColor: ColorUtils.countColor,
+                  badgeCount: count);
+            }
+            else {
+              return BadgeIcon(
+                  icon: GestureDetector(
+                    child: IconWidget(
+                      icon: Icons.notifications,
+                      colors: Colors.white,
+                      size: 22,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => NotificationMain()),
+                        );
+                      },
+                    ),
+                  ),
+                  badgeColor: ColorUtils.countColor,
+                  badgeCount: 0);
+            }
+          });
+    } catch (e) {
+      return BadgeIcon(
+          icon: GestureDetector(
+            child: IconWidget(
+              icon: Icons.notifications,
+              colors: Colors.white,
+              size: 22,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NotificationMain()),
+                );
+              },
+            ),
+          ),
+          badgeColor: ColorUtils.countColor,
+          badgeCount: 0);
+    }
   }
 }

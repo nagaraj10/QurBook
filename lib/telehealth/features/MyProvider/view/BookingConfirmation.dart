@@ -1040,17 +1040,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
             style: TextStyle(fontSize: 18),
           ),
         ),
-        IconWidget(
-          icon: Icons.notifications,
-          colors: Colors.white,
-          size: 24,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NotificationMain()),
-            );
-          },
-        ),
+        new CommonUtil().getNotificationIcon(context),
         //new SwitchProfile().buildActions(context, _key, callBackToRefresh),
       ],
     );

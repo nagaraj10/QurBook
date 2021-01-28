@@ -1,11 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/SwitchProfile.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProviderHospitals.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/MyProviders.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
 import 'package:myfhb/telehealth/features/Notifications/view/notification_main.dart';
+import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
 
@@ -96,17 +102,7 @@ class _TabBarDemoState extends State<MyProvidersMain>
             ),
           ),
         ),
-        IconWidget(
-          icon: Icons.notifications,
-          colors: Colors.white,
-          size: 22,
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => NotificationMain()),
-            );
-          },
-        ),
+        new CommonUtil().getNotificationIcon(context),
         new SwitchProfile()
             .buildActions(context, _keyLoader, callBackToRefresh),
         // Icon(Icons.more_vert),
