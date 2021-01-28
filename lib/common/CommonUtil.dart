@@ -1438,8 +1438,8 @@ class CommonUtil {
       return StreamBuilder<DocumentSnapshot>(
           stream: Firestore.instance
               .collection('unreadNotifications')
-          .document(targetID)
-          .get().asStream(),
+              .document(targetID)
+              .snapshots(),
           builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasData) {
                 count = 0;
