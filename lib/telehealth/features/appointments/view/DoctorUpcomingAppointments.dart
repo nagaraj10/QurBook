@@ -60,6 +60,8 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     // TODO: implement initState
     cancelAppointmentViewModel =
         Provider.of<CancelAppointmentViewModel>(context, listen: false);
+    getCategoryList();
+    commonWidget.getCategoryList();
     super.initState();
   }
 
@@ -267,7 +269,7 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
     String doctorName = doc.doctor.user.name;
     String doctorPic = doc.doctor.user.profilePicThumbnailUrl;
     chatViewModel.storePatientDetailsToFCM(
-        doctorId, doctorName, doctorPic, '', '', '', context,false);
+        doctorId, doctorName, doctorPic, '', '', '', context, false);
   }
 
   void navigateToProviderScreen(Past doc, isReshedule) async {
@@ -483,8 +485,10 @@ class DoctorUpcomingAppointmentState extends State<DoctorUpcomingAppointments> {
   int pickPosition(String categoryName) {
     int position = 0;
     List<CategoryResult> categoryDataList = List();
-    categoryDataList=getCategoryList();
-    for (int i = 0; i < (categoryDataList==null?0:categoryDataList.length); i++) {
+    categoryDataList = getCategoryList();
+    for (int i = 0;
+        i < (categoryDataList == null ? 0 : categoryDataList.length);
+        i++) {
       if (categoryName == categoryDataList[i].categoryName) {
         print(categoryName + ' ****' + categoryDataList[i].categoryName);
         position = i;
