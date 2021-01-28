@@ -96,12 +96,12 @@ class CommonWidgets {
   Widget getDoctoSpecialistOnlyForHos(DoctorFromHos eachDoctorModel) {
     return Text(
       (eachDoctorModel.doctorProfessionalDetailCollection != null &&
-          eachDoctorModel.doctorProfessionalDetailCollection.length > 0)
+              eachDoctorModel.doctorProfessionalDetailCollection.length > 0)
           ? eachDoctorModel.doctorProfessionalDetailCollection[0].specialty !=
-          null
-          ? toBeginningOfSentenceCase(eachDoctorModel
-          .doctorProfessionalDetailCollection[0].specialty.name)
-          : ''
+                  null
+              ? toBeginningOfSentenceCase(eachDoctorModel
+                  .doctorProfessionalDetailCollection[0].specialty.name)
+              : ''
           : '',
       style: TextStyle(
           color: Color(0xFF8C8C8C), fontSize: fhbStyles.fnt_doc_specialist),
@@ -544,8 +544,8 @@ class CommonWidgets {
         decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: getDoctorStatus('${docs.isActive}', position)
-          //color: getDoctorStatus('5'),
-        ),
+            //color: getDoctorStatus('5'),
+            ),
       ),
     );
   }
@@ -565,15 +565,16 @@ class CommonWidgets {
   }
 
   Color getDoctorStatus(String s, int position) {
-    print('getDoctorStatus $s');
-    switch (s) {
-      case 'true':
-        return Colors.green;
-      case 'false':
-        return Colors.red;
-      default:
-        return null;
-    }
+    return Colors.transparent;
+    // print('getDoctorStatus $s');
+    // switch (s) {
+    //   case 'true':
+    //     return Colors.green;
+    //   case 'false':
+    //     return Colors.red;
+    //   default:
+    //     return null;
+    // }
   }
 
   removeLastThreeDigits(String string) {
@@ -744,13 +745,14 @@ class CommonWidgets {
         });
   }
 
-  Widget showDoctorDetailViewNewForHos(DoctorFromHos docs, BuildContext context) {
+  Widget showDoctorDetailViewNewForHos(
+      DoctorFromHos docs, BuildContext context) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             content: Container(
               width: MediaQuery.of(context).size.width - 20,
               child: Stack(
@@ -792,28 +794,28 @@ class CommonWidgets {
                                 setDoctornameForHos(docs.user),
                                 AutoSizeText(
                                   (docs.doctorProfessionalDetailCollection !=
-                                      null &&
-                                      docs.doctorProfessionalDetailCollection
-                                          .length >
-                                          0)
+                                              null &&
+                                          docs.doctorProfessionalDetailCollection
+                                                  .length >
+                                              0)
                                       ? docs
-                                      .doctorProfessionalDetailCollection[
-                                  0]
-                                      .specialty !=
-                                      null
-                                      ? docs
-                                      .doctorProfessionalDetailCollection[
-                                  0]
-                                      .specialty
-                                      .name !=
-                                      null
-                                      ? docs
-                                      .doctorProfessionalDetailCollection[
-                                  0]
-                                      .specialty
-                                      .name
-                                      : ''
-                                      : ''
+                                                  .doctorProfessionalDetailCollection[
+                                                      0]
+                                                  .specialty !=
+                                              null
+                                          ? docs
+                                                      .doctorProfessionalDetailCollection[
+                                                          0]
+                                                      .specialty
+                                                      .name !=
+                                                  null
+                                              ? docs
+                                                  .doctorProfessionalDetailCollection[
+                                                      0]
+                                                  .specialty
+                                                  .name
+                                              : ''
+                                          : ''
                                       : '',
                                   maxLines: 1,
                                   style: TextStyle(
@@ -823,18 +825,18 @@ class CommonWidgets {
                                 ),
                                 getDoctorsAddress(
                                     docs.user.userAddressCollection3[0].city !=
-                                        null
+                                            null
                                         ? docs.user.userAddressCollection3[0]
-                                        .city.name
+                                            .city.name
                                         : ''),
                                 (docs.doctorLanguageCollection != null &&
-                                    docs.doctorLanguageCollection.length >
-                                        0)
+                                        docs.doctorLanguageCollection.length >
+                                            0)
                                     ? getTextForDoctors('Can Speak:')
                                     : SizedBox(),
                                 (docs.doctorLanguageCollection != null &&
-                                    docs.doctorLanguageCollection.length >
-                                        0)
+                                        docs.doctorLanguageCollection.length >
+                                            0)
                                     ? Row(children: getLanguagesNewForHos(docs))
                                     : SizedBox(),
                               ],
@@ -845,12 +847,12 @@ class CommonWidgets {
                       getSizedBox(15),
                       getTextForDoctors('About: '),
                       getTextAbout((docs.doctorProfessionalDetailCollection
-                          .isNotEmpty ??
-                          docs.doctorProfessionalDetailCollection.length >
-                              0 ??
-                          docs.doctorProfessionalDetailCollection[0]
-                              .aboutMe !=
-                              null)
+                                  .isNotEmpty ??
+                              docs.doctorProfessionalDetailCollection.length >
+                                  0 ??
+                              docs.doctorProfessionalDetailCollection[0]
+                                      .aboutMe !=
+                                  null)
                           ? docs.doctorProfessionalDetailCollection[0].aboutMe
                           : ''),
                     ],
@@ -975,7 +977,9 @@ class CommonWidgets {
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
               ? user.name
-              : user.firstName!=null && user.lastName !=null? (user.firstName + user.lastName):'')
+              : user.firstName != null && user.lastName != null
+                  ? (user.firstName + user.lastName)
+                  : '')
           : '',
       style: TextStyle(
           fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
@@ -983,15 +987,20 @@ class CommonWidgets {
       overflow: TextOverflow.ellipsis,
     );
   }
+
   Widget setDoctornameForTabBar(User user) {
     return Text(
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
-          ? user.name
-          : user.firstName!=null && user.lastName !=null? (user.firstName + user.lastName):'')
+              ? user.name
+              : user.firstName != null && user.lastName != null
+                  ? (user.firstName + user.lastName)
+                  : '')
           : '',
       style: TextStyle(
-          fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name,color: Colors.white),
+          fontWeight: FontWeight.w400,
+          fontSize: fhbStyles.fnt_doc_name,
+          color: Colors.white),
       softWrap: true,
       overflow: TextOverflow.ellipsis,
     );
@@ -1001,8 +1010,10 @@ class CommonWidgets {
     return Text(
       user != null
           ? toBeginningOfSentenceCase((user.name != null && user.name != '')
-          ? user.name
-          : user.firstName!=null && user.lastName !=null? (user.firstName + user.lastName):'')
+              ? user.name
+              : user.firstName != null && user.lastName != null
+                  ? (user.firstName + user.lastName)
+                  : '')
           : '',
       style: TextStyle(
           fontWeight: FontWeight.w400, fontSize: fhbStyles.fnt_doc_name),
