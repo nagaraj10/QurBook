@@ -69,7 +69,7 @@ class Upcoming {
   bool isActive;
   String createdOn;
   String lastModifiedOn;
-  Null sharedHealthRecordMetadata;
+  //Null sharedHealthRecordMetadata;
 
   Upcoming(
       {this.id,
@@ -87,8 +87,9 @@ class Upcoming {
         this.isFollowup,
         this.isActive,
         this.createdOn,
-        this.lastModifiedOn,
-        this.sharedHealthRecordMetadata});
+        this.lastModifiedOn
+        //this.sharedHealthRecordMetadata
+      });
 
   Upcoming.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -107,7 +108,7 @@ class Upcoming {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
-    sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'];
+    //sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'];
   }
 
   Map<String, dynamic> toJson() {
@@ -128,7 +129,7 @@ class Upcoming {
     data['isActive'] = this.isActive;
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
-    data['sharedHealthRecordMetadata'] = this.sharedHealthRecordMetadata;
+    //data['sharedHealthRecordMetadata'] = this.sharedHealthRecordMetadata;
     return data;
   }
 }
@@ -150,7 +151,7 @@ class Past {
   bool isActive;
   String createdOn;
   String lastModifiedOn;
-  SharedHealthRecordMetadata sharedHealthRecordMetadata;
+  //SharedHealthRecordMetadata sharedHealthRecordMetadata;
 
   Past(
       {this.id,
@@ -168,8 +169,9 @@ class Past {
         this.isFollowup,
         this.isActive,
         this.createdOn,
-        this.lastModifiedOn,
-        this.sharedHealthRecordMetadata});
+        this.lastModifiedOn
+        //this.sharedHealthRecordMetadata
+      });
 
   Past.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -188,10 +190,10 @@ class Past {
     isActive = json['isActive'];
     createdOn = json['createdOn'];
     lastModifiedOn = json['lastModifiedOn'];
-    sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'] != null
+    /*sharedHealthRecordMetadata = json['sharedHealthRecordMetadata'] != null
         ? new SharedHealthRecordMetadata.fromJson(
         json['sharedHealthRecordMetadata'])
-        : null;
+        : null;*/
   }
 
   Map<String, dynamic> toJson() {
@@ -212,10 +214,10 @@ class Past {
     data['isActive'] = this.isActive;
     data['createdOn'] = this.createdOn;
     data['lastModifiedOn'] = this.lastModifiedOn;
-    if (this.sharedHealthRecordMetadata != null) {
+    /*if (this.sharedHealthRecordMetadata != null) {
       data['sharedHealthRecordMetadata'] =
           this.sharedHealthRecordMetadata.toJson();
-    }
+    }*/
     return data;
   }
 }
