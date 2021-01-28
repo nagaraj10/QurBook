@@ -16,7 +16,7 @@
 
     <application
         android:name=".MyApp"
-        android:label="qurbook"
+        android:label="QurBook"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true"
         tools:targetApi="m"
