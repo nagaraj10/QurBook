@@ -180,7 +180,8 @@ class EachDeviceValues extends StatelessWidget {
                               getFormattedDateTime(
                                   translist[index].startDateTime),
                               '${translist[index].bloodGlucoseLevel}',
-                              translist[index].mealContext == null || translist[index].mealContext==''
+                              translist[index].mealContext == null ||
+                                      translist[index].mealContext == ''
                                   ? 'Random'
                                   : '${translist[index].mealContext}',
                               '',
@@ -472,10 +473,10 @@ Widget buildRowForBp(
               ),
               Column(
                 children: [
-                    Center(
-                      child: Text(time,
-                          style: TextStyle(color: Colors.grey, fontSize: 9)),
-                    ),
+                  Center(
+                    child: Text(time,
+                        style: TextStyle(color: Colors.grey, fontSize: 9)),
+                  ),
                   SizedBox(
                     height: 2.0,
                   ),
@@ -549,9 +550,10 @@ Widget buildRowForBp(
                               Text(
                                 value2,
                                 style: TextStyle(
-                                    color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                    fontSize: 13,fontWeight: FontWeight.w500),
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500),
                               ),
                               SizedBoxWidget(
                                 width: 2,
@@ -644,11 +646,10 @@ Widget buildRowForGulcose(
                 ),
                 Column(
                   children: [
-                      Center(
-                        child: Text(time,
-                            style:
-                                TextStyle(color: Colors.grey, fontSize: 9)),
-                      ),
+                    Center(
+                      child: Text(time,
+                          style: TextStyle(color: Colors.grey, fontSize: 9)),
+                    ),
                     SizedBox(
                       height: 2.0,
                     ),
@@ -676,19 +677,23 @@ Widget buildRowForGulcose(
                         Text(
                           value1 == '' ? '' : value1,
                           style: TextStyle(
-                              color: Color(new CommonUtil().getMyPrimaryColor()),
-                              fontSize: 13,fontWeight: FontWeight.w500),
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500),
                         ),
-                        SizedBoxWidget(width: 2,),
+                        SizedBoxWidget(
+                          width: 2,
+                        ),
                         Text(
                           value1 == '' ? '' : unit,
                           style: TextStyle(
-                              color: Color(new CommonUtil().getMyPrimaryColor()),
+                              color:
+                                  Color(new CommonUtil().getMyPrimaryColor()),
                               fontSize: 9),
                         ),
                       ],
                     )
-
                   ],
                 ),
                 SizedBox(
@@ -852,16 +857,19 @@ Widget buildRowForOxygen(
                               Text(
                                 value1 == '' ? '' : value1,
                                 style: TextStyle(
-                                    color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                    fontSize: 13,fontWeight: FontWeight.w500),
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w500),
                               ),
-                              SizedBoxWidget(width: 5,),
+                              SizedBoxWidget(
+                                width: 5,
+                              ),
                               Text(
-                                unit!=''?unit:'',
+                                unit != '' ? unit : '',
                                 style: TextStyle(
-                                    color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
+                                    color: Color(
+                                        new CommonUtil().getMyPrimaryColor()),
                                     fontSize: 12),
                               ),
                             ],
