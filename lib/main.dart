@@ -276,9 +276,13 @@ class _MyFHBState extends State<MyFHB> {
     final String c_msg = msg as String;
     if (c_msg.isNotEmpty || c_msg != null) {
       var passedValArr = c_msg.split('&');
-      if (c_msg == 'ack') {
+      if (passedValArr[0] == 'ack') {
         Get.to(TelehealthProviders(
           arguments: HomeScreenArguments(selectedIndex: 0),
+        ));
+      } else if (passedValArr[1] == 'appointmentList') {
+        Get.to(SplashScreen(
+          nsRoute: 'appointmentList',
         ));
       } else if (c_msg == 'chat') {
         Get.to(ChatHomeScreen());
@@ -419,8 +423,13 @@ class _MyFHBState extends State<MyFHB> {
     if (navRoute.isEmpty) {
       return SplashScreen();
     } else {
+      var parsedData = navRoute.split('&');
       if (navRoute == 'chat') {
         return SplashScreen(nsRoute: 'chat');
+      } else if (parsedData[1] == 'appointmentList') {
+        return SplashScreen(
+          nsRoute: 'appointmentList',
+        );
       } else if (navRoute.split('&')[0] == 'DoctorRescheduling') {
         return SplashScreen(
             nsRoute: 'DoctorRescheduling',

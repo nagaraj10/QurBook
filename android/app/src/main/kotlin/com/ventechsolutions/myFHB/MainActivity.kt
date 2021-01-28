@@ -254,6 +254,8 @@ class MainActivity : FlutterActivity() {
         healthOrgId= intent.getStringExtra(Constants.PROP_healthOrgId)
         templateName= intent.getStringExtra(Constants.PROP_TEMP_NAME)
         val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
+        val redirect_to = intent.getStringExtra(Constants.PROP_REDIRECT_TO)
+        val data = intent.getStringExtra(Constants.PROP_DATA)
         patId = intent.getStringExtra(getString(R.string.pat_id))
         patName = intent.getStringExtra(getString(R.string.pat_name))
         patPic = intent.getStringExtra(getString(R.string.pat_pic))
@@ -274,7 +276,12 @@ class MainActivity : FlutterActivity() {
                 sharedValue="$sharedValue&${providerReqId}&${"rejected"}"
             }
         }else{
-            sharedValue=Constants.PROP_ACK
+            if(data != null){
+                sharedValue="${Constants.PROP_ACK}&${redirect_to!!}&${data!!}"
+            }else{
+                sharedValue="${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+            }
+
         }
         if (::mEventChannel.isInitialized){mEventChannel.success(sharedValue)}
     }
