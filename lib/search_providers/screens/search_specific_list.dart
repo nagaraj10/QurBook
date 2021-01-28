@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
 import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
 import 'package:myfhb/common/CommonConstants.dart';
@@ -621,9 +622,10 @@ class SearchSpecificListState extends State<SearchSpecificList> {
           overflow: TextOverflow.ellipsis,
         ),
         widget.arguments.searchWord == CommonConstants.doctors
-            ? (data.specialization != null && data.specialization != '')
+            ? (data.specialty != null && data.specialty != '')
                 ? Text(
-                    data.specialization != null ? data.specialization : '',
+                    toBeginningOfSentenceCase(
+                        data.specialty != null ? data.specialty : ''),
                     style: TextStyle(
                         fontSize: 13.0,
                         fontWeight: FontWeight.w400,
@@ -771,11 +773,18 @@ class SearchSpecificListState extends State<SearchSpecificList> {
   String getDoctorsAddress(DoctorsListResult data) {
     String address = '';
     if (data.addressLine1 != '' && data.addressLine1 != null) {
-      address = data.addressLine1;
+      address = toBeginningOfSentenceCase(data.addressLine1);
     }
     if (data.addressLine2 != '' && data.addressLine2 != null) {
-      address = address + '\n' + data.addressLine2;
+      address = address + ',' + toBeginningOfSentenceCase(data.addressLine2);
     }
+    if (data.city != '' && data.city != null) {
+      address = address + '\n' + toBeginningOfSentenceCase(data.city);
+    }
+    if (data.state != '' && data.state != null) {
+      address = address + ',' + toBeginningOfSentenceCase(data.state);
+    }
+
     return address;
   }
 }
