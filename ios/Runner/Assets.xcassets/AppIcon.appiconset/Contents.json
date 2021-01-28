@@ -43,13 +43,13 @@
       "size" : "40x40"
     },
     {
-      "filename" : "myFHB-1.jpg",
+      "filename" : "QurBook-57x57.jpg",
       "idiom" : "iphone",
       "scale" : "1x",
       "size" : "57x57"
     },
     {
-      "filename" : "myFHB-2.jpg",
+      "filename" : "QurBook-114x114.jpg",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "57x57"
@@ -67,7 +67,7 @@
       "size" : "60x60"
     },
     {
-      "filename" : "myFHB.jpg",
+      "filename" : "QurBook-1024x1024.jpg",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
