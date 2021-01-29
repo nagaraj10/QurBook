@@ -19,7 +19,9 @@ class ChatScreen extends StatefulWidget {
   //List<Conversation> conversation;
   final bool isSheelaAskForLang;
   final String langCode;
-  ChatScreen({@required this.isSheelaAskForLang,this.langCode});
+  final String sheelaInputs;
+  ChatScreen(
+      {@required this.isSheelaAskForLang, this.langCode, this.sheelaInputs});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -44,9 +46,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
     getMyViewModel().clearMyConversation();
-    widget.isSheelaAskForLang 
-    ? getMyViewModel().askUserForLanguage() 
-    : getMyViewModel().startMayaAutomatically();
+    if (widget.sheelaInputs != null && widget.sheelaInputs != '') {
+      getMyViewModel(sheelaInputs: widget.sheelaInputs);
+    } else {
+      widget.isSheelaAskForLang
+          ? getMyViewModel().askUserForLanguage()
+          : getMyViewModel().startMayaAutomatically();
+    }
   }
 
   @override
@@ -56,12 +62,23 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   stopTTSEngine() async {
-    await variable.tts_platform.invokeMethod(variable.strtts,
-        {parameters.strMessage: "", parameters.strIsClose: true,parameters.strLanguage:Utils.getCurrentLanCode()});
+    await variable.tts_platform.invokeMethod(variable.strtts, {
+      parameters.strMessage: "",
+      parameters.strIsClose: true,
+      parameters.strLanguage: Utils.getCurrentLanCode()
+    });
   }
 
-  dynamic getMyViewModel() {
+  // dynamic getMyViewModel() {
+  //   return Provider.of<ChatScreenViewModel>(context, listen: false);
+  // }
+
+  dynamic getMyViewModel({String sheelaInputs}) {
+    if (sheelaInputs != null && sheelaInputs != ''){
+      return Provider.of<ChatScreenViewModel>(context, listen: false).startSheelaFromDashboard(sheelaInputs);
+    }else{
     return Provider.of<ChatScreenViewModel>(context, listen: false);
+    }
   }
 
   @override
