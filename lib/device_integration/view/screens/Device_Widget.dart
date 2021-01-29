@@ -122,24 +122,23 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                       selectionResult.result[0].profileSetting.weighScale != ''
                   ? selectionResult.result[0].profileSetting.weighScale
                   : true;
-            if (selectionResult.result[0].profileSetting != null) {
-              if (selectionResult.result[0].profileSetting.preColor != null &&
-                  selectionResult.result[0].profileSetting.preColor != null) {
-                PreferenceUtil.saveTheme(Constants.keyPriColor,
-                    selectionResult.result[0].profileSetting.preColor);
-                PreferenceUtil.saveTheme(Constants.keyGreyColor,
-                    selectionResult.result[0].profileSetting.greColor);
-                //HomeScreen.of(context).refresh();
-                //setState(() {});
-              } else {
-                PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5e1fe0);
-                PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff753aec);
-              }
-            }else{
+          if (selectionResult.result[0].profileSetting != null) {
+            if (selectionResult.result[0].profileSetting.preColor != null &&
+                selectionResult.result[0].profileSetting.preColor != null) {
+              PreferenceUtil.saveTheme(Constants.keyPriColor,
+                  selectionResult.result[0].profileSetting.preColor);
+              PreferenceUtil.saveTheme(Constants.keyGreyColor,
+                  selectionResult.result[0].profileSetting.greColor);
+              //HomeScreen.of(context).refresh();
+              //setState(() {});
+            } else {
               PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5e1fe0);
               PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff753aec);
             }
-
+          } else {
+            PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5e1fe0);
+            PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff753aec);
+          }
         }
       }
     });
@@ -147,21 +146,21 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   }
 
   Widget getDeviceVisibleValues(BuildContext context) {
-    return new FutureBuilder<GetDeviceSelectionModel>(
+    return FutureBuilder<GetDeviceSelectionModel>(
       future: getDeviceSelectionValues(),
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
               height: MediaQuery.of(context).size.height / 1.3,
-              child: new Center(
-                  child: new CircularProgressIndicator(
+              child: Center(
+                  child: CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()))),
+                          Color(CommonUtil().getMyPrimaryColor()))),
             ),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return Text('Error: ${snapshot.error}');
         } else {
           return getValuesFromSharedPrefernce(context);
         }
@@ -169,28 +168,23 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     );
   }
 
-  Widget getMealType(){
-
-    if(deviceValues.bloodGlucose.entities.isNotEmpty){
-      if(deviceMealContext!= ''){
+  Widget getMealType() {
+    if (deviceValues.bloodGlucose.entities.isNotEmpty) {
+      if (deviceMealContext != '') {
         return Text(
           deviceMealContext.toString(),
-          style: TextStyle(
-              color: Colors.white, fontSize: 12),
+          style: TextStyle(color: Colors.white, fontSize: 12),
         );
-      }else{
+      } else {
         return Text(
           'Random',
-          style: TextStyle(
-              color: Colors.white, fontSize: 12),
+          style: TextStyle(color: Colors.white, fontSize: 12),
         );
       }
-
-    }else{
+    } else {
       return Text(
         '-',
-        style: TextStyle(
-            color: Colors.white, fontSize: 12),
+        style: TextStyle(color: Colors.white, fontSize: 12),
       );
     }
   }
@@ -290,18 +284,17 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue1ForGulcose =
           deviceValues.bloodGlucose.entities[0].bloodGlucoseLevel.toString();
 
-      if(deviceValues.bloodGlucose.entities[0].mealContext!=null){
+      if (deviceValues.bloodGlucose.entities[0].mealContext != null) {
         deviceMealContext =
             deviceValues.bloodGlucose.entities[0].mealContext.name.toString();
-      }else{
+      } else {
         deviceMealContext = 'Random';
       }
 
       deviceMealType = deviceValues.bloodGlucose.entities[0].mealType != null
           ? deviceValues.bloodGlucose.entities[0].mealType.name.toString()
           : '';
-    }
-    else {
+    } else {
       dateForGulcose = 'Record not available';
       devicevalue1ForGulcose = '';
       //deviceMealContext = '';
@@ -538,11 +531,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           builder: (context) => ChangeNotifierProvider(
                                 create: (context) => DevicesViewModel(),
                                 child: EachDeviceValues(
+                                  sheelaRequestString:
+                                      variable.requestSheelaForglucose,
                                   device_name: strGlusoceLevel,
                                   device_icon: Devices_GL_Tool,
                                 ),
                               )),
-                    );
+                    ).then((value) {
+                      setState(() {});
+                    });
                   },
                   child: Container(
                     height: Responsive.width(33, context),
@@ -745,11 +742,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                 builder: (context) => ChangeNotifierProvider(
                                       create: (context) => DevicesViewModel(),
                                       child: EachDeviceValues(
+                                        sheelaRequestString: variable
+                                            .requestSheelaFortemperature,
                                         device_name: strTemperature,
                                         device_icon: Devices_THM_Tool,
                                       ),
                                     )),
-                          );
+                          ).then((value) {
+                            setState(() {});
+                          });
                         },
                         child: Container(
                           width: Responsive.width(46, context),
@@ -903,11 +904,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                 builder: (context) => ChangeNotifierProvider(
                                       create: (context) => DevicesViewModel(),
                                       child: EachDeviceValues(
+                                        sheelaRequestString:
+                                            variable.requestSheelaForbp,
                                         device_name: strDataTypeBP,
                                         device_icon: Devices_BP_Tool,
                                       ),
                                     )),
-                          );
+                          ).then((value) {
+                            setState(() {});
+                          });
                         },
                         child: Container(
                           width: Responsive.width(46, context),
@@ -1085,11 +1090,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                 builder: (context) => ChangeNotifierProvider(
                                       create: (context) => DevicesViewModel(),
                                       child: EachDeviceValues(
+                                        sheelaRequestString:
+                                            variable.requestSheelaForpo,
                                         device_name: strOxgenSaturation,
                                         device_icon: Devices_OxY_Tool,
                                       ),
                                     )),
-                          );
+                          ).then((value) {
+                            setState(() {});
+                          });
                         },
                         child: Container(
                           width: Responsive.width(46, context),
@@ -1239,11 +1248,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                 builder: (context) => ChangeNotifierProvider(
                                       create: (context) => DevicesViewModel(),
                                       child: EachDeviceValues(
+                                        sheelaRequestString:
+                                            variable.requestSheelaForweight,
                                         device_name: strWeight,
                                         device_icon: Devices_WS_Tool,
                                       ),
                                     )),
-                          );
+                          ).then((value) {
+                            setState(() {});
+                          });
                         },
                         child: Container(
                           width: Responsive.width(46, context),

@@ -445,7 +445,11 @@ const String _wordsFromMaya = 'waiting for maya to speak';
 const String strhiMaya = 'Hi Sheela G';
 const String strtts = 'textToSpeech';
 const String strtapToSpeak = 'Tap to Speak';
-
+const String requestSheelaForbp = 'record my bp';
+const String requestSheelaFortemperature = 'record my temperature';
+const String requestSheelaForglucose = 'record my glucose';
+const String requestSheelaForpo = 'record my po';
+const String requestSheelaForweight = 'record my weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strdevice = 'device';
 

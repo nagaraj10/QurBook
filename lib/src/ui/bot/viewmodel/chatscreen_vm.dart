@@ -18,16 +18,13 @@ import '../../../model/bot/SpeechModelResponse.dart';
 import '../../../utils/FHBUtils.dart';
 
 class ChatScreenViewModel extends ChangeNotifier {
-
   static MyProfileModel prof =
       PreferenceUtil.getProfileData(constants.KEY_PROFILE_MAIN);
   List<Conversation> conversations = new List();
   static var uuid = Uuid().v1();
   var user_id = PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
-  var user_name = prof.result != null
-      ? prof.result.firstName +
-          prof.result.lastName
-      : '';
+  var user_name =
+      prof.result != null ? prof.result.firstName + prof.result.lastName : '';
   var auth_token = PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
   var isMayaSpeaks = -1;
   var isEndOfConv = false;
@@ -53,14 +50,39 @@ class ChatScreenViewModel extends ChangeNotifier {
       isMayaSaid: false,
       text: variable.strhiMaya,
       name: prof.result != null
-          ? prof.result.firstName +
-              prof.result.lastName
+          ? prof.result.firstName + prof.result.lastName
           : '',
       timeStamp: date,
     );
 
     conversations.add(model);
     notifyListeners();
+  }
+
+  startSheelaFromDashboard(String inputs) async {
+    Future.delayed(Duration(seconds: 1), () {
+      if (inputs != null && inputs != '') {
+        sendToMaya(inputs);
+      } else {
+        FlutterToast()
+            .getToast('Invalid inputs for sheela from dashboard', Colors.red);
+      }
+    });
+    if (inputs != null && inputs != '') {
+      var date =
+          new FHBUtils().getFormattedDateString(DateTime.now().toString());
+      Conversation model = new Conversation(
+        isMayaSaid: false,
+        text: inputs,
+        name: prof.result != null
+            ? prof.result.firstName + prof.result.lastName
+            : '',
+        timeStamp: date,
+      );
+
+      conversations.add(model);
+      notifyListeners();
+    }
   }
 
   askUserForLanguage() {
@@ -73,8 +95,7 @@ class ChatScreenViewModel extends ChangeNotifier {
       isMayaSaid: false,
       text: variable.strhiMaya,
       name: prof.result != null
-          ? prof.result.firstName +
-              prof.result.lastName
+          ? prof.result.firstName + prof.result.lastName
           : '',
       timeStamp: date,
     );
@@ -98,7 +119,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     reqJson[parameters.strtimezone] =
         splitedArr.length > 0 ? '${splitedArr[0]}:${splitedArr[1]}' : '';
 
-    reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios'; 
+    reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios';
 
     Service mService = Service();
     final response = await mService.sendMetaToMaya(reqJson);
@@ -115,21 +136,19 @@ class ChatScreenViewModel extends ChangeNotifier {
           var date =
               new FHBUtils().getFormattedDateString(DateTime.now().toString());
           Conversation model = new Conversation(
-            isMayaSaid: true,
-            text: res.text,
-            name: prof.result != null
-                ? prof.result.firstName +
-                    prof.result.lastName
-                : '',
-            imageUrl: res.imageURL,
-            timeStamp: date,
-            buttons: res.buttons,
-            langCode: res.lang,
-            searchURL: res.searchURL,
-            videoLinks: res.videoLinks
-          );
+              isMayaSaid: true,
+              text: res.text,
+              name: prof.result != null
+                  ? prof.result.firstName + prof.result.lastName
+                  : '',
+              imageUrl: res.imageURL,
+              timeStamp: date,
+              buttons: res.buttons,
+              langCode: res.lang,
+              searchURL: res.searchURL,
+              videoLinks: res.videoLinks);
           conversations.add(model);
-           isLoading = true;
+          isLoading = true;
           notifyListeners();
           Future.delayed(Duration(seconds: 4), () {
             isLoading = false;
@@ -139,7 +158,7 @@ class ChatScreenViewModel extends ChangeNotifier {
               variable.tts_platform.invokeMethod(variable.strtts, {
                 parameters.strMessage: res.text,
                 parameters.strIsClose: false,
-                parameters.strLanguage:res.lang
+                parameters.strLanguage: res.lang
               }).then((res) {
                 if (res == 1) {
                   isMayaSpeaks = 1;
@@ -155,18 +174,17 @@ class ChatScreenViewModel extends ChangeNotifier {
           return jsonResponse;
         }
       }
-    }else{
-      FlutterToast().getToast('There is some issue with sheela,\n Please try after some time', Colors.black54);
+    } else {
+      FlutterToast().getToast(
+          'There is some issue with sheela,\n Please try after some time',
+          Colors.black54);
     }
   }
 
   Future<void> gettingReposnseFromNative() async {
     try {
-      await variable.voice_platform
-          .invokeMethod(variable.strspeakAssistant,{
-            'langcode':Utils.getCurrentLanCode()
-          }) 
-          .then((response) {
+      await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
+          {'langcode': Utils.getCurrentLanCode()}).then((response) {
         sendToMaya(response);
         var date =
             new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -174,8 +192,7 @@ class ChatScreenViewModel extends ChangeNotifier {
           isMayaSaid: false,
           text: response,
           name: prof.result != null
-              ? prof.result.firstName +
-                  prof.result.lastName
+              ? prof.result.firstName + prof.result.lastName
               : '',
           timeStamp: date,
         );
