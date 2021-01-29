@@ -83,8 +83,11 @@ class _SuperMayaState extends State<SuperMaya> {
                   elevation: 0,
                   title: Text('Sheela'),
                   actions: [
-                    Center(child: new CommonUtil().getNotificationIcon(context)),
-                    SizedBoxWidget(width: 10,),
+                    Center(
+                        child: new CommonUtil().getNotificationIcon(context)),
+                    SizedBoxWidget(
+                      width: 10,
+                    ),
                   ],
                   centerTitle: true,
                 ),
@@ -142,7 +145,10 @@ class _SuperMayaState extends State<SuperMaya> {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) {
-                                          return ChatScreen(isSheelaAskForLang: false,langCode: sheela_lang,);
+                                          return ChatScreen(
+                                            isSheelaAskForLang: false,
+                                            langCode: sheela_lang,
+                                          );
                                         },
                                       ),
                                     );
@@ -150,19 +156,13 @@ class _SuperMayaState extends State<SuperMaya> {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) {
-                                          return ChatScreen(isSheelaAskForLang: true,);
+                                          return ChatScreen(
+                                            isSheelaAskForLang: true,
+                                          );
                                         },
                                       ),
                                     );
                                   }
-
-                                  // Navigator.of(context).push(
-                                  //     MaterialPageRoute(
-                                  //       builder: (context) {
-                                  //         return ChatScreen(sheelaInputs: 'record my bp',);
-                                  //       },
-                                  //     ),
-                                  //   );
 
                                   /* requestPermission(_micpermission)
                                       .then((status) {

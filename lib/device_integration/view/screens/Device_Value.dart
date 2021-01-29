@@ -4,6 +4,8 @@ import 'package:gmiwidgetspackage/widgets/sized_box.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/ui/bot/view/ChatScreen.dart';
 import 'package:provider/provider.dart';
 
 import 'package:myfhb/constants/fhb_parameters.dart';
@@ -18,12 +20,19 @@ import 'package:myfhb/device_integration/model/TemperatureValues.dart';
 import 'package:myfhb/device_integration/model/WeightValues.dart';
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 
-class EachDeviceValues extends StatelessWidget {
-  EachDeviceValues({this.device_name, this.device_icon});
+class EachDeviceValues extends StatefulWidget {
+  EachDeviceValues(
+      {this.device_name, this.device_icon, this.sheelaRequestString});
 
   final String device_name;
   final String device_icon;
+  final String sheelaRequestString;
 
+  @override
+  _EachDeviceValuesState createState() => _EachDeviceValuesState();
+}
+
+class _EachDeviceValuesState extends State<EachDeviceValues> {
   @override
   Widget build(BuildContext context) {
     DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
@@ -34,8 +43,8 @@ class EachDeviceValues extends StatelessWidget {
           style: TextStyle(fontSize: 18),
         ),
         actions: <Widget>[
-          new Image.asset(
-            device_icon,
+          Image.asset(
+            widget.device_icon,
             height: 40.0,
             width: 40.0,
           ),
@@ -58,6 +67,23 @@ class EachDeviceValues extends StatelessWidget {
           ],
         ),
       ),
+      floatingActionButton: IconButton(
+        icon: Image.asset(icon_mayaMain),
+        iconSize: 60,
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return ChatScreen(
+                  sheelaInputs: widget.sheelaRequestString,
+                );
+              },
+            ),
+          ).then((value) {
+            setState(() {});
+          });
+        },
+      ),
     );
   }
 
@@ -75,7 +101,7 @@ class EachDeviceValues extends StatelessWidget {
 
   Widget getValues(BuildContext context, DevicesViewModel devicesViewModel) {
     var todayDate = getFormattedDateTime(DateTime.now().toString());
-    switch (device_name) {
+    switch (widget.device_name) {
       case strDataTypeBP:
         {
           return FutureBuilder<List<BPResult>>(
@@ -412,7 +438,7 @@ class EachDeviceValues extends StatelessWidget {
   }
 
   getStringValue() {
-    switch (device_name) {
+    switch (widget.device_name) {
       case strDataTypeBP:
         {
           return strBPTitle;
