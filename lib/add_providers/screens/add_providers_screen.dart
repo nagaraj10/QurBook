@@ -148,7 +148,9 @@ class AddProvidersState extends State<AddProviders> {
     _hospitalListBlock = new HospitalListBlock();
     _labsListBlock = new LabsListBlock();
     providerViewModel = new MyProviderViewModel();
-    teleHealthAlertShown = widget.arguments.data.isTelehealthEnabled;
+    if(widget?.arguments?.data?.isTelehealthEnabled!=null) {
+      teleHealthAlertShown = widget.arguments.data.isTelehealthEnabled;
+    }
     buildUI();
   }
 
