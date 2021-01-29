@@ -203,9 +203,12 @@ class _VerifyPatientState extends State<VerifyPatient> {
 
   _loginOTPSent(loginModel.PatientLogIn response) {
     if (response.isSuccess) {
+      toast.getToast('OTP sent successfully', Colors.green);
     } else {
       if (response.message != null) {
         toast.getToast(response.message, Colors.red);
+      }else{
+        toast.getToast('Something went wrong.Please try again', Colors.red);
       }
     }
   }
