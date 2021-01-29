@@ -454,29 +454,19 @@ class ApiBaseHelper {
 
       case 403:
         var responseJson = convert.jsonDecode(response.body.toString());
-
         if (responseJson[parameters.strMessage] ==
             Constants.STR_OTPMISMATCHEDFOREMAIL) {
           return responseJson;
-        } else {
-          // SnackbarToLogout();
-        }
+        } else {}
         break;
-
       case 404:
         var responseJson = convert.jsonDecode(response.body.toString());
-
         return responseJson;
-
         break;
-
       case 500:
         var responseJson = convert.jsonDecode(response.body.toString());
-
         return responseJson;
-
         break;
-
       default:
         throw FetchDataException(
             variable.strErrComm + '${response.statusCode}');
