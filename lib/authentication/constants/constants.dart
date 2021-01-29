@@ -31,9 +31,9 @@ const String strFromVerifyFamilyMember = 'VerifyFamilyMember';
 //Strings used in VerifyPatient
 const String strSource = "myFHBMobile";
 const String strVerify = 'Verify';
-const String strOtp = 'Otp';
-const String strOtpHint = 'Otp Here';
-const String strOtpText = 'Enter Otp below which we sent to your mobile number';
+const String strOtp = 'OTP';
+const String strOtpHint = 'OTP Here';
+const String strOtpText = 'Enter OTP below which we sent to your mobile number';
 
 //Strings used in VerifyPatient
 const String strAccount = 'Already have an account ?';
@@ -147,7 +147,7 @@ const String strGivenName = 'given_name';
 const String strUser = "user";
 const String strFirebaseToken = 'Firebase Token from Login Page';
 const String strNetworkIssue = 'Please Check Network Connection';
-const String strresendOtp = 'Resend Otp';
+const String strresendOtp = 'Resend OTP';
 
 //Strings used in ChangePassword
 const String strNewPassword = 'newPassword';
