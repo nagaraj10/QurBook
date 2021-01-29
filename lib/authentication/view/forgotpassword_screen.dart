@@ -16,6 +16,7 @@ import 'package:myfhb/authentication/model/forgot_password_model.dart'
 import 'package:myfhb/authentication/widgets/country_code_picker.dart';
 import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   @override
@@ -184,6 +185,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         FocusScope.of(context).unfocus();
         if (_ForgetPassKey.currentState.validate()) {
           _ForgetPassKey.currentState.save();
+          LoaderClass.showLoadingDialog(context);
           PatientForgotPasswordModel logInModel =
               new PatientForgotPasswordModel(
             //userName: mobileController.text,
@@ -232,6 +234,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   _checkResponse(PatientForgotPasswordModel response) {
+    LoaderClass.hideLoadingDialog(context);
     if (response.isSuccess) {
       toast.getToast(response.message, Colors.lightBlue);
       Navigator.push(

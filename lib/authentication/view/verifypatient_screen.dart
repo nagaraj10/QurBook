@@ -31,6 +31,7 @@ import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/authentication/model/resend_otp_model.dart'
     as ResendModel;
 import 'package:myfhb/src/ui/Dashboard.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/authentication/model/patientlogin_model.dart'
     as loginModel;
@@ -318,7 +319,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
     FocusScope.of(context).unfocus();
     if (_OtpKey.currentState.validate()) {
       _OtpKey.currentState.save();
-
+      LoaderClass.showLoadingDialog(context);
       if (from == strFromSignUp) {
         PatientSignupOtp logInModel = new PatientSignupOtp(
           verificationCode: OtpController.text,
@@ -343,6 +344,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
           //? this might be change
           toast.getToast('User added successfully', Colors.green);
           //Navigator.pop(context);
+          LoaderClass.hideLoadingDialog(context);
           Navigator.pushNamed(context, router.rt_AddFamilyUserInfo,
                   arguments: AddFamilyUserInfoArguments(
                       fromClass: CommonConstants.add_family,
@@ -359,6 +361,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
         } else {
           //something went wrong.
           //Navigator.pop(context);
+          LoaderClass.hideLoadingDialog(context);
           toast.getToast(response.message, Colors.red);
           Navigator.pop(context);
           // setState(() {
@@ -396,6 +399,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
     if (response.isSuccess) {
       _getPatientDetails();
     } else {
+      LoaderClass.hideLoadingDialog(context);
       toast.getToast(response.message, Colors.red);
     }
   }
@@ -447,11 +451,14 @@ class _VerifyPatientState extends State<VerifyPatient> {
       CommonUtil()
           .sendDeviceToken(userId, '', user_mobile_no, token, true)
           .then((value) {
+
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
+            LoaderClass.hideLoadingDialog(context);
             PageNavigator.goToPermanent(context, router.rt_Dashboard);
           });
         } else {
+          LoaderClass.hideLoadingDialog(context);
           new FHBBasicWidget().showDialogWithTwoButtons(context, () {
             PageNavigator.goToPermanent(context, router.rt_Dashboard);
           }, value.message, strConfirmDialog);
@@ -493,11 +500,14 @@ class _VerifyPatientState extends State<VerifyPatient> {
       CommonUtil()
           .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
           .then((value) {
+
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
+            LoaderClass.hideLoadingDialog(context);
             PageNavigator.goToPermanent(context, router.rt_Dashboard);
           });
         } else {
+          LoaderClass.hideLoadingDialog(context);
           new FHBBasicWidget().showDialogWithTwoButtons(context, () {
             PageNavigator.goToPermanent(context, router.rt_Dashboard);
           }, value.message, strConfirmDialog);

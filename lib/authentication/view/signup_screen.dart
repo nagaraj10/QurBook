@@ -18,6 +18,7 @@ import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/src/ui/loader_class.dart';
 
 class PatientSignUpScreen extends StatefulWidget {
   @override
@@ -306,6 +307,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
     userCollection = new List();
     if (_SignupKey.currentState.validate() && checkedValue) {
       _SignupKey.currentState.save();
+      LoaderClass.showLoadingDialog(context);
       UserContactCollection3 user3 = UserContactCollection3();
       user3.phoneNumber =
           '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${mobileNoController.text.trim()}';
@@ -336,6 +338,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
 
   _checkResponse(PatientSignUp response) {
     print(response.toJson().toString());
+    LoaderClass.hideLoadingDialog(context);
     if (response.isSuccess) {
       Navigator.push(
           context,

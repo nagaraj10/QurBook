@@ -9,6 +9,7 @@ import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
 import 'package:myfhb/authentication/model/confirm_password_model.dart'
     as confirmPasswordModel;
 import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   ChangePasswordScreen({this.userName});
@@ -210,6 +211,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     FocusScope.of(context).unfocus();
     if (_ChangePasswordKey.currentState.validate()) {
       _ChangePasswordKey.currentState.save();
+      LoaderClass.showLoadingDialog(context);
       PatientConfirmPasswordModel logInModel = new PatientConfirmPasswordModel(
         verificationCode: CodeController.text,
         userName: widget.userName,
@@ -229,6 +231,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   _checkResponse(PatientConfirmPasswordModel response) {
+    LoaderClass.hideLoadingDialog(context);
     if (response.isSuccess) {
       toast.getToast(response.message, Colors.lightBlue);
       Navigator.pushAndRemoveUntil(

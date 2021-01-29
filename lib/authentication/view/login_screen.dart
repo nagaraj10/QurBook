@@ -22,6 +22,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/constants/variable_constant.dart';
 import 'package:myfhb/src/model/Authentication/UserModel.dart';
+import 'package:myfhb/src/ui/loader_class.dart';
 import 'package:myfhb/src/utils/PageNavigator.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
@@ -223,6 +224,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
     FocusScope.of(context).unfocus();
     if (_loginKey.currentState.validate()) {
       _loginKey.currentState.save();
+      LoaderClass.showLoadingDialog(context);
       PatientLogIn logInModel = new PatientLogIn(
         userName:
             '${strPlusSymbol}${_selectedDialogCountry.phoneCode}${numberController.text}',
@@ -362,6 +364,7 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
             .sendDeviceToken(
                 userId, saveuser.email, user_mobile_no, token, true)
             .then((value) {
+          LoaderClass.hideLoadingDialog(context);
           if (value != null) {
             Future.delayed(Duration(seconds: 3), () {
               PageNavigator.goToPermanent(context, router.rt_Dashboard);
@@ -374,9 +377,11 @@ class _PatientSignInScreenState extends State<PatientSignInScreen> {
         });
         // openHomeScreenOrProfile(userDetails, doctorId);
       } else {
+        LoaderClass.hideLoadingDialog(context);
         _checkResponse(response);
       }
     } else {
+      LoaderClass.hideLoadingDialog(context);
       _checkResponse(response);
     }
   }
