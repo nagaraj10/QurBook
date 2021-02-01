@@ -10,11 +10,13 @@ import 'package:myfhb/common/FHBBasicWidget.dart';
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/customized_checkbox.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
 import 'package:myfhb/src/model/Media/media_data_list.dart';
 import 'package:myfhb/src/model/Media/media_result.dart';
+import 'package:myfhb/src/ui/bot/view/ChatScreen.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:myfhb/constants/variable_constant.dart' as variable;
@@ -24,8 +26,8 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 
 class Devicedashboard extends StatefulWidget {
-  String deviceName;
-  Devicedashboard({this.deviceName});
+  DeviceDashboardArguments arguments;
+  Devicedashboard({this.arguments});
   @override
   _DevicedashboardScreenState createState() => _DevicedashboardScreenState();
 }
@@ -57,84 +59,100 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    deviceName = widget.deviceName;
+    deviceName = widget.arguments.deviceName;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: scaffold_state,
-        appBar: AppBar(
-          elevation: 0,
-          automaticallyImplyLeading: false,
-          flexibleSpace: GradientAppBar(),
-          leading: IconWidget(
-            icon: Icons.arrow_back_ios,
-            colors: Colors.white,
-            size: 20,
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          titleSpacing: 0,
-          title: Text(deviceName),
+      key: scaffold_state,
+      appBar: AppBar(
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        flexibleSpace: GradientAppBar(),
+        leading: IconWidget(
+          icon: Icons.arrow_back_ios,
+          colors: Colors.white,
+          size: 20,
+          onTap: () {
+            Navigator.pop(context);
+          },
         ),
-        body: Column(
-          children: [
-            getCardBasedOnDevices(deviceName),
-            SizedBox(
-              height: 20,
-            ),
-            new Container(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    MaterialButton(
-                      onPressed: () {},
-                      child: Text('',
-                          style: TextStyle(
-                              fontSize: 22.0, fontWeight: FontWeight.w400),
-                          textAlign: TextAlign.center),
-                    ),
-                    OutlineButton(
-                      onPressed: () {
-                        new FHBUtils().check().then((intenet) {
-                          if (intenet != null && intenet) {
-                            createDeviceRecords(deviceName);
-                          } else {
-                            new FHBBasicWidget().showInSnackBar(
-                                Constants.STR_NO_CONNECTIVITY, scaffold_state);
-                          }
-                        });
-                      },
-                      child: Text('OK'),
-                      textColor: Color(CommonUtil().getMyPrimaryColor()),
-                      color: Colors.transparent,
-                      borderSide: BorderSide(
-                          color: Color(CommonUtil().getMyPrimaryColor())),
-                      shape: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                    //submitButton(_otpVerifyBloc)
-                    MaterialButton(
-                      onPressed: () {
-                        //matchOtp();
-                      },
-                      child: Text('',
-                          style: TextStyle(
-                              fontSize: 22.0, fontWeight: FontWeight.w400),
-                          textAlign: TextAlign.center),
-                    ),
-                  ],
-                ),
+        titleSpacing: 0,
+        title: Text(deviceName),
+      ),
+      body: Column(
+        children: [
+          getCardBasedOnDevices(deviceName),
+          SizedBox(
+            height: 20,
+          ),
+          new Container(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                  left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  MaterialButton(
+                    onPressed: () {},
+                    child: Text('',
+                        style: TextStyle(
+                            fontSize: 22.0, fontWeight: FontWeight.w400),
+                        textAlign: TextAlign.center),
+                  ),
+                  OutlineButton(
+                    onPressed: () {
+                      new FHBUtils().check().then((intenet) {
+                        if (intenet != null && intenet) {
+                          createDeviceRecords(deviceName);
+                        } else {
+                          new FHBBasicWidget().showInSnackBar(
+                              Constants.STR_NO_CONNECTIVITY, scaffold_state);
+                        }
+                      });
+                    },
+                    child: Text('OK'),
+                    textColor: Color(CommonUtil().getMyPrimaryColor()),
+                    color: Colors.transparent,
+                    borderSide: BorderSide(
+                        color: Color(CommonUtil().getMyPrimaryColor())),
+                    shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
+                  //submitButton(_otpVerifyBloc)
+                  MaterialButton(
+                    onPressed: () {
+                      //matchOtp();
+                    },
+                    child: Text('',
+                        style: TextStyle(
+                            fontSize: 22.0, fontWeight: FontWeight.w400),
+                        textAlign: TextAlign.center),
+                  ),
+                ],
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+      floatingActionButton: IconButton(
+        icon: Image.asset(variable.icon_mayaMain),
+        iconSize: 60,
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) {
+                return ChatScreen(
+                  sheelaInputs: '',
+                );
+              },
+            ),
+          ).then((value) {});
+        },
+      ),
+    );
   }
 
   Widget getCardForBPMonitor(String deviceName) {
