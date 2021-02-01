@@ -101,10 +101,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
-      AddFamilyUserInfoRepository();
+  AddFamilyUserInfoRepository();
 
   HealthReportListForUserRepository healthReportListForUserRepository =
-      HealthReportListForUserRepository();
+  HealthReportListForUserRepository();
   GetDeviceSelectionModel selectionResult;
 
   final GlobalKey<State> _key = new GlobalKey<State>();
@@ -130,31 +130,31 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       if (selectionResult.isSuccess) {
         if (selectionResult.result != null) {
           bpMonitor =
-              selectionResult.result[0].profileSetting.bpMonitor != null &&
-                      selectionResult.result[0].profileSetting.bpMonitor != ''
-                  ? selectionResult.result[0].profileSetting.bpMonitor
-                  : true;
+          selectionResult.result[0].profileSetting.bpMonitor != null &&
+              selectionResult.result[0].profileSetting.bpMonitor != ''
+              ? selectionResult.result[0].profileSetting.bpMonitor
+              : true;
           glucoMeter =
-              selectionResult.result[0].profileSetting.glucoMeter != null &&
-                      selectionResult.result[0].profileSetting.glucoMeter != ''
-                  ? selectionResult.result[0].profileSetting.glucoMeter
-                  : true;
+          selectionResult.result[0].profileSetting.glucoMeter != null &&
+              selectionResult.result[0].profileSetting.glucoMeter != ''
+              ? selectionResult.result[0].profileSetting.glucoMeter
+              : true;
           pulseOximeter =
-              selectionResult.result[0].profileSetting.pulseOximeter != null &&
-                      selectionResult.result[0].profileSetting.pulseOximeter !=
-                          ''
-                  ? selectionResult.result[0].profileSetting.pulseOximeter
-                  : true;
+          selectionResult.result[0].profileSetting.pulseOximeter != null &&
+              selectionResult.result[0].profileSetting.pulseOximeter !=
+                  ''
+              ? selectionResult.result[0].profileSetting.pulseOximeter
+              : true;
           thermoMeter =
-              selectionResult.result[0].profileSetting.thermoMeter != null &&
-                      selectionResult.result[0].profileSetting.thermoMeter != ''
-                  ? selectionResult.result[0].profileSetting.thermoMeter
-                  : true;
+          selectionResult.result[0].profileSetting.thermoMeter != null &&
+              selectionResult.result[0].profileSetting.thermoMeter != ''
+              ? selectionResult.result[0].profileSetting.thermoMeter
+              : true;
           weighScale =
-              selectionResult.result[0].profileSetting.weighScale != null &&
-                      selectionResult.result[0].profileSetting.weighScale != ''
-                  ? selectionResult.result[0].profileSetting.weighScale
-                  : true;
+          selectionResult.result[0].profileSetting.weighScale != null &&
+              selectionResult.result[0].profileSetting.weighScale != ''
+              ? selectionResult.result[0].profileSetting.weighScale
+              : true;
           if (selectionResult.result[0].profileSetting != null) {
             if (selectionResult.result[0].profileSetting.preColor != null &&
                 selectionResult.result[0].profileSetting.preColor != null) {
@@ -189,7 +189,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               child: Center(
                   child: CircularProgressIndicator(
                       backgroundColor:
-                          Color(CommonUtil().getMyPrimaryColor()))),
+                      Color(CommonUtil().getMyPrimaryColor()))),
             ),
           );
         } else if (snapshot.hasError) {
@@ -253,7 +253,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               child: new Center(
                   child: new CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()))),
+                      Color(new CommonUtil().getMyPrimaryColor()))),
             ),
           );
         } else if (snapshot.hasError) {
@@ -294,7 +294,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               child: new Center(
                   child: new CircularProgressIndicator(
                       backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()))),
+                      Color(new CommonUtil().getMyPrimaryColor()))),
             );
           }
         });
@@ -314,9 +314,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       dateTimeStampForBp = deviceValues.bloodPressure.entities[0].startDateTime;
       //deviceValues.bloodPressure.entities[0].lastsyncdatetime;
       dateForBp =
-          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForBp)}";
+      "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForBp)}";
       timeForBp =
-          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForBp)}";
+      "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForBp)}";
 
       devicevalue1ForBp =
           deviceValues.bloodPressure.entities[0].systolic.toString();
@@ -329,12 +329,21 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             .toString();
       }
 
-      averageForSys = deviceValues
-          .bloodPressure.entities[0].averageAsOfNow.systolicAverage
-          .toString();
-      averageForDia = deviceValues
-          .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
-          .toString();
+      try {
+        averageForSys = deviceValues
+            .bloodPressure.entities[0].averageAsOfNow.systolicAverage !=
+            null
+            ? deviceValues
+            .bloodPressure.entities[0].averageAsOfNow.systolicAverage
+            .toString()
+            : '';
+        averageForDia = deviceValues
+            .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
+            .toString();
+      } catch (e) {
+        averageForSys = '';
+        averageForDia = '';
+      }
     } else {
       dateForBp = '';
       devicevalue1ForBp = '';
@@ -347,9 +356,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       dateTimeStampForGulcose =
           deviceValues.bloodGlucose.entities[0].startDateTime;
       dateForGulcose =
-          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForGulcose)}";
+      "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForGulcose)}";
       timeForGulcose =
-          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForGulcose)}";
+      "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForGulcose)}";
       devicevalue1ForGulcose =
           deviceValues.bloodGlucose.entities[0].bloodGlucoseLevel.toString();
 
@@ -370,12 +379,17 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             .toString();
       }
 
-      averageForFasting = deviceValues
-          .bloodGlucose.entities[0].averageAsOfNow.fastingAverage
-          .toString();
-      averageForPP = deviceValues
-          .bloodGlucose.entities[0].averageAsOfNow.ppAverage
-          .toString();
+      try {
+        averageForFasting = deviceValues
+            .bloodGlucose.entities[0].averageAsOfNow.fastingAverage
+            .toString();
+        averageForPP = deviceValues
+            .bloodGlucose.entities[0].averageAsOfNow.ppAverage
+            .toString();
+      } catch (e) {
+        averageForFasting = '';
+        averageForPP = '';
+      }
     } else {
       dateForGulcose = '';
       devicevalue1ForGulcose = '';
@@ -389,9 +403,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       dateTimeStampForOs =
           deviceValues.oxygenSaturation.entities[0].startDateTime;
       dateForOs =
-          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForOs)}";
+      "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForOs)}";
       timeForOs =
-          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForOs)}";
+      "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForOs)}";
       devicevalue1ForOs =
           deviceValues.oxygenSaturation.entities[0].oxygenSaturation.toString();
       if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord !=
@@ -401,9 +415,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             .toString();
       }
 
-      averageForSPO2 = deviceValues
-          .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage
-          .toString();
+      try {
+        averageForSPO2 = deviceValues
+            .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage
+            .toString();
+      } catch (e) {
+        averageForSPO2 = '';
+      }
     } else {
       dateForOs = '';
       devicevalue1ForOs = '';
@@ -414,9 +432,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       dateTimeStampForTemp =
           deviceValues.bodyTemperature.entities[0].startDateTime;
       dateForTemp =
-          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForTemp)}";
+      "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForTemp)}";
       timeForTemp =
-          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForTemp)}";
+      "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForTemp)}";
       devicevalue1ForTemp =
           deviceValues.bodyTemperature.entities[0].temperature.toString();
 
@@ -426,9 +444,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             .toString();
       }
 
-      averageForTemp = deviceValues
-          .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage
-          .toString();
+      try {
+        averageForTemp = deviceValues
+            .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage
+            .toString();
+      } catch (e) {
+        averageForTemp = '';
+      }
     } else {
       dateForTemp = '';
       devicevalue1ForTemp = '';
@@ -439,9 +461,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       dateTimeStampForWeight =
           deviceValues.bodyWeight.entities[0].startDateTime;
       dateForWeight =
-          "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}";
+      "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStampForWeight)}";
       timeForWeight =
-          "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForWeight)}";
+      "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStampForWeight)}";
       devicevalue1ForWeight =
           deviceValues.bodyWeight.entities[0].weight.toString();
 
@@ -451,9 +473,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             .toString();
       }
 
-      averageForWeigh = deviceValues
-          .bodyWeight.entities[0].averageAsOfNow.weightAverage
-          .toString();
+      try {
+        averageForWeigh = deviceValues
+            .bodyWeight.entities[0].averageAsOfNow.weightAverage
+            .toString();
+      } catch (e) {
+        averageForWeigh = '';
+      }
     } else {
       dateForWeight = '';
       devicevalue1ForWeight = '';
@@ -465,12 +491,17 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       pulseBp = deviceValues.heartRate.entities[0].bpm;
       prbPMOxi = deviceValues.heartRate.entities[0].bpm;
 
-      averageForPul = deviceValues
-          .heartRate.entities[0].averageAsOfNow.pulseAverage
-          .toString();
-      averageForPRBpm = deviceValues
-          .heartRate.entities[0].averageAsOfNow.pulseAverage
-          .toString();
+      try {
+        averageForPul = deviceValues
+            .heartRate.entities[0].averageAsOfNow.pulseAverage
+            .toString();
+        averageForPRBpm = deviceValues
+            .heartRate.entities[0].averageAsOfNow.pulseAverage
+            .toString();
+      } catch (e) {
+        averageForPul = '';
+        averageForPRBpm = '';
+      }
     } else {
       dateForBp = '';
       averageForPul = '';
@@ -591,9 +622,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               backgroundColor: Colors.transparent,
               backgroundImage: NetworkImage(
                   myProfile != null && myProfile.toString().isNotEmpty ??
-                          myProfile.result != null ??
-                          myProfile.result.profilePicThumbnailUrl != null &&
-                              myProfile.result.profilePicThumbnailUrl.isNotEmpty
+                      myProfile.result != null ??
+                      myProfile.result.profilePicThumbnailUrl != null &&
+                          myProfile.result.profilePicThumbnailUrl.isNotEmpty
                       ? myProfile.result.profilePicThumbnailUrl
                       : ''),
             ),
@@ -603,22 +634,22 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           ),
           Container(
               child: Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  myProfile != null ?? myProfile.result.firstName != null
-                      ? 'Hey ' +
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      myProfile != null ?? myProfile.result.firstName != null
+                          ? 'Hey ' +
                           toBeginningOfSentenceCase(myProfile.result.firstName)
-                      : ' Hey User',
-                  style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400),
+                          : ' Hey User',
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ))
+              ))
         ],
       ),
     );
@@ -658,13 +689,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                     colors: <Color>[
-                  Color(new CommonUtil().getMyPrimaryColor()),
-                  Color(new CommonUtil().getMyGredientColor())
-                ],
+                      Color(new CommonUtil().getMyPrimaryColor()),
+                      Color(new CommonUtil().getMyGredientColor())
+                    ],
                     stops: [
-                  0.3,
-                  1.0
-                ])),
+                      0.3,
+                      1.0
+                    ])),
             child: SafeArea(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -678,13 +709,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                               begin: Alignment.centerLeft,
                               end: Alignment.centerRight,
                               colors: <Color>[
-                            Color(new CommonUtil().getMyPrimaryColor()),
-                            Color(new CommonUtil().getMyGredientColor())
-                          ],
+                                Color(new CommonUtil().getMyPrimaryColor()),
+                                Color(new CommonUtil().getMyGredientColor())
+                              ],
                               stops: [
-                            0.3,
-                            1.0
-                          ])),
+                                0.3,
+                                1.0
+                              ])),
                       child: SafeArea(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -761,14 +792,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => ChangeNotifierProvider(
-                                  create: (context) => DevicesViewModel(),
-                                  child: EachDeviceValues(
-                                    sheelaRequestString:
-                                        variable.requestSheelaForbp,
-                                    device_name: strDataTypeBP,
-                                    device_icon: Devices_BP_Tool,
-                                  ),
-                                )),
+                              create: (context) => DevicesViewModel(),
+                              child: EachDeviceValues(
+                                sheelaRequestString:
+                                variable.requestSheelaForbp,
+                                device_name: strDataTypeBP,
+                                device_icon: Devices_BP_Tool,
+                              ),
+                            )),
                       );
                     },
                     child: Container(
@@ -793,11 +824,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                       children: [
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               dateForBp != null &&
-                                                      dateForBp != ''
+                                                  dateForBp != ''
                                                   ? dateForBp + ', '
                                                   : '',
                                               style: TextStyle(
@@ -833,7 +864,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 15,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                      FontWeight.w500,
                                                       color: hexToColor(
                                                           '#059192')),
                                                 ),
@@ -857,7 +888,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         SizedBoxWidget(height: 10),
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Column(
                                               children: [
@@ -866,7 +897,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.w400,
+                                                      FontWeight.w400,
                                                       color: hexToColor(
                                                           '#39c5c2')),
                                                 ),
@@ -877,7 +908,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                      FontWeight.w500,
                                                       color: hexToColor(
                                                           '#059192')),
                                                 ),
@@ -891,7 +922,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.w400,
+                                                      FontWeight.w400,
                                                       color: hexToColor(
                                                           '#39c5c2')),
                                                 ),
@@ -902,7 +933,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                      FontWeight.w500,
                                                       color: hexToColor(
                                                           '#059192')),
                                                 ),
@@ -916,7 +947,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.w400,
+                                                      FontWeight.w400,
                                                       color: hexToColor(
                                                           '#39c5c2')),
                                                 ),
@@ -927,7 +958,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                      FontWeight.w500,
                                                       color: hexToColor(
                                                           '#059192')),
                                                 ),
@@ -950,7 +981,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         ),
                                         Row(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                           children: [
                                             Column(
                                               children: [
@@ -959,7 +990,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 10,
                                                       fontWeight:
-                                                          FontWeight.w400,
+                                                      FontWeight.w400,
                                                       color: hexToColor(
                                                           '#afafaf')),
                                                 ),
@@ -970,7 +1001,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                      FontWeight.w500,
                                                       color: hexToColor(
                                                           '#afafaf')),
                                                 ),
@@ -984,7 +1015,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 10,
                                                       fontWeight:
-                                                          FontWeight.w400,
+                                                      FontWeight.w400,
                                                       color: hexToColor(
                                                           '#afafaf')),
                                                 ),
@@ -995,7 +1026,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                      FontWeight.w500,
                                                       color: hexToColor(
                                                           '#afafaf')),
                                                 ),
@@ -1009,7 +1040,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 10,
                                                       fontWeight:
-                                                          FontWeight.w400,
+                                                      FontWeight.w400,
                                                       color: hexToColor(
                                                           '#afafaf')),
                                                 ),
@@ -1020,7 +1051,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
-                                                          FontWeight.w500,
+                                                      FontWeight.w500,
                                                       color: hexToColor(
                                                           '#afafaf')),
                                                 ),
@@ -1033,14 +1064,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   ),
                                   Column(
                                     mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                     children: [
                                       sourceForBp != '' && sourceForBp != null
                                           ? Column(
-                                              children: [
-                                                TypeIcon(sourceForBp),
-                                              ],
-                                            )
+                                        children: [
+                                          TypeIcon(sourceForBp),
+                                        ],
+                                      )
                                           : SizedBox(),
                                       MaterialButton(
                                         height: 25.0,
@@ -1101,14 +1132,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ChangeNotifierProvider(
-                                        create: (context) => DevicesViewModel(),
-                                        child: EachDeviceValues(
-                                          sheelaRequestString:
-                                              variable.requestSheelaForglucose,
-                                          device_name: strGlusoceLevel,
-                                          device_icon: Devices_GL_Tool,
-                                        ),
-                                      )),
+                                    create: (context) => DevicesViewModel(),
+                                    child: EachDeviceValues(
+                                      sheelaRequestString:
+                                      variable.requestSheelaForglucose,
+                                      device_name: strGlusoceLevel,
+                                      device_icon: Devices_GL_Tool,
+                                    ),
+                                  )),
                             );
                           },
                           child: Container(
@@ -1134,21 +1165,21 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Row(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Text(
                                                         dateForGulcose !=
-                                                                    null &&
-                                                                dateForGulcose !=
-                                                                    ''
+                                                            null &&
+                                                            dateForGulcose !=
+                                                                ''
                                                             ? dateForGulcose +
-                                                                ', '
+                                                            ', '
                                                             : '',
                                                         style: TextStyle(
                                                             fontSize: 8,
                                                             color:
-                                                                Colors.black),
+                                                            Colors.black),
                                                       ),
                                                       Text(
                                                         timeForGulcose != null
@@ -1157,7 +1188,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         style: TextStyle(
                                                             fontSize: 8,
                                                             color:
-                                                                Colors.black),
+                                                            Colors.black),
                                                       ),
                                                     ],
                                                   ),
@@ -1165,12 +1196,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               ),
                                             ),
                                             sourceForGluco != '' &&
-                                                    sourceForGluco != null
+                                                sourceForGluco != null
                                                 ? Column(
-                                                    children: [
-                                                      TypeIcon(sourceForGluco),
-                                                    ],
-                                                  )
+                                              children: [
+                                                TypeIcon(sourceForGluco),
+                                              ],
+                                            )
                                                 : SizedBox()
                                           ],
                                         ),
@@ -1190,7 +1221,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
@@ -1199,7 +1230,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         style: TextStyle(
                                                             fontSize: 15,
                                                             fontWeight:
-                                                                FontWeight.w500,
+                                                            FontWeight.w500,
                                                             color: hexToColor(
                                                                 '#b70a80')),
                                                       )
@@ -1223,7 +1254,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
                                                     child: Text(''),
@@ -1234,7 +1265,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       style: TextStyle(
                                                           fontSize: 8,
                                                           fontWeight:
-                                                              FontWeight.w400,
+                                                          FontWeight.w400,
                                                           color: hexToColor(
                                                               '#afafaf')),
                                                     ),
@@ -1244,7 +1275,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                               children: [
                                                 Container(
                                                   child: Text('mg/dL',
@@ -1257,12 +1288,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   child: Text(
                                                       value1ForGulcose != ''
                                                           ? value1ForGulcose
-                                                              .toString()
+                                                          .toString()
                                                           : '-',
                                                       style: TextStyle(
                                                           fontSize: 18,
                                                           fontWeight:
-                                                              FontWeight.w500,
+                                                          FontWeight.w500,
                                                           color: hexToColor(
                                                               '#b70a80'))),
                                                 ),
@@ -1277,31 +1308,31 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Container(
                                                         child: Text('Fasting',
                                                             style: TextStyle(
                                                                 fontSize: 10,
                                                                 fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
+                                                                FontWeight
+                                                                    .w400,
                                                                 color: hexToColor(
                                                                     '#afafaf'))),
                                                       ),
                                                       Container(
                                                         child: Text(
                                                           averageForFasting !=
-                                                                  ''
+                                                              ''
                                                               ? averageForFasting
-                                                                  .toString()
+                                                              .toString()
                                                               : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
+                                                              FontWeight
+                                                                  .w400,
                                                               color: hexToColor(
                                                                   '#afafaf')),
                                                         ),
@@ -1311,16 +1342,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   SizedBoxWidget(width: 15),
                                                   Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Container(
                                                         child: Text('PP',
                                                             style: TextStyle(
                                                                 fontSize: 10,
                                                                 fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
+                                                                FontWeight
+                                                                    .w400,
                                                                 color: hexToColor(
                                                                     '#afafaf'))),
                                                       ),
@@ -1328,13 +1359,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         child: Text(
                                                           averageForPP != ''
                                                               ? averageForPP
-                                                                  .toString()
+                                                              .toString()
                                                               : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
+                                                              FontWeight
+                                                                  .w400,
                                                               color: hexToColor(
                                                                   '#afafaf')),
                                                         ),
@@ -1346,7 +1377,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
+                                              CrossAxisAlignment.end,
                                               children: [
                                                 MaterialButton(
                                                   height: 25.0,
@@ -1392,14 +1423,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ChangeNotifierProvider(
-                                        create: (context) => DevicesViewModel(),
-                                        child: EachDeviceValues(
-                                          sheelaRequestString: variable
-                                              .requestSheelaFortemperature,
-                                          device_name: strTemperature,
-                                          device_icon: Devices_THM_Tool,
-                                        ),
-                                      )),
+                                    create: (context) => DevicesViewModel(),
+                                    child: EachDeviceValues(
+                                      sheelaRequestString: variable
+                                          .requestSheelaFortemperature,
+                                      device_name: strTemperature,
+                                      device_icon: Devices_THM_Tool,
+                                    ),
+                                  )),
                             );
                           },
                           child: Container(
@@ -1425,19 +1456,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Row(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Text(
                                                         dateForTemp != null &&
-                                                                dateForTemp !=
-                                                                    ''
+                                                            dateForTemp !=
+                                                                ''
                                                             ? dateForTemp + ', '
                                                             : '',
                                                         style: TextStyle(
                                                             fontSize: 8,
                                                             color:
-                                                                Colors.black),
+                                                            Colors.black),
                                                       ),
                                                       Text(
                                                         timeForTemp != null
@@ -1446,7 +1477,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         style: TextStyle(
                                                             fontSize: 8,
                                                             color:
-                                                                Colors.black),
+                                                            Colors.black),
                                                       ),
                                                     ],
                                                   ),
@@ -1454,12 +1485,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               ),
                                             ),
                                             sourceForThermo != '' &&
-                                                    sourceForThermo != null
+                                                sourceForThermo != null
                                                 ? Column(
-                                                    children: [
-                                                      TypeIcon(sourceForThermo),
-                                                    ],
-                                                  )
+                                              children: [
+                                                TypeIcon(sourceForThermo),
+                                              ],
+                                            )
                                                 : SizedBox()
                                           ],
                                         ),
@@ -1479,7 +1510,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
@@ -1488,7 +1519,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         style: TextStyle(
                                                             fontSize: 15,
                                                             fontWeight:
-                                                                FontWeight.w500,
+                                                            FontWeight.w500,
                                                             color: hexToColor(
                                                                 '#d95523')),
                                                       )
@@ -1499,7 +1530,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     style: TextStyle(
                                                         fontSize: 8,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         color: Colors.black),
                                                   )
                                                 ],
@@ -1519,7 +1550,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
                                                     child: Text(''),
@@ -1530,7 +1561,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       style: TextStyle(
                                                           fontSize: 8,
                                                           fontWeight:
-                                                              FontWeight.w400,
+                                                          FontWeight.w400,
                                                           color: hexToColor(
                                                               '#afafaf')),
                                                     ),
@@ -1540,7 +1571,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                               children: [
                                                 Container(
                                                   child: Text('Temp',
@@ -1553,13 +1584,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   child: Text(
                                                       value1ForTemp != ''
                                                           ? value1ForTemp
-                                                                  .toString() +
-                                                              'F'
+                                                          .toString() +
+                                                          'F'
                                                           : '-',
                                                       style: TextStyle(
                                                           fontSize: 18,
                                                           fontWeight:
-                                                              FontWeight.w500,
+                                                          FontWeight.w500,
                                                           color: hexToColor(
                                                               '#d95523'))),
                                                 ),
@@ -1574,16 +1605,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Container(
                                                         child: Text('Temp',
                                                             style: TextStyle(
                                                                 fontSize: 10,
                                                                 fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
+                                                                FontWeight
+                                                                    .w400,
                                                                 color: hexToColor(
                                                                     '#afafaf'))),
                                                       ),
@@ -1591,13 +1622,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         child: Text(
                                                           averageForTemp != ''
                                                               ? averageForTemp
-                                                                  .toString()
+                                                              .toString()
                                                               : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
+                                                              FontWeight
+                                                                  .w400,
                                                               color: hexToColor(
                                                                   '#afafaf')),
                                                         ),
@@ -1609,7 +1640,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
+                                              CrossAxisAlignment.end,
                                               children: [
                                                 MaterialButton(
                                                   height: 25.0,
@@ -1655,14 +1686,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ChangeNotifierProvider(
-                                        create: (context) => DevicesViewModel(),
-                                        child: EachDeviceValues(
-                                          sheelaRequestString:
-                                              variable.requestSheelaForpo,
-                                          device_name: strOxgenSaturation,
-                                          device_icon: Devices_OxY_Tool,
-                                        ),
-                                      )),
+                                    create: (context) => DevicesViewModel(),
+                                    child: EachDeviceValues(
+                                      sheelaRequestString:
+                                      variable.requestSheelaForpo,
+                                      device_name: strOxgenSaturation,
+                                      device_icon: Devices_OxY_Tool,
+                                    ),
+                                  )),
                             );
                           },
                           child: Container(
@@ -1688,18 +1719,18 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Row(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Text(
                                                         dateForOs != null &&
-                                                                dateForOs != ''
+                                                            dateForOs != ''
                                                             ? dateForOs + ', '
                                                             : '',
                                                         style: TextStyle(
                                                             fontSize: 8,
                                                             color:
-                                                                Colors.black),
+                                                            Colors.black),
                                                       ),
                                                       Text(
                                                         timeForOs != null
@@ -1708,7 +1739,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         style: TextStyle(
                                                             fontSize: 8,
                                                             color:
-                                                                Colors.black),
+                                                            Colors.black),
                                                       ),
                                                     ],
                                                   ),
@@ -1716,12 +1747,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               ),
                                             ),
                                             sourceForPulse != '' &&
-                                                    sourceForPulse != null
+                                                sourceForPulse != null
                                                 ? Column(
-                                                    children: [
-                                                      TypeIcon(sourceForPulse),
-                                                    ],
-                                                  )
+                                              children: [
+                                                TypeIcon(sourceForPulse),
+                                              ],
+                                            )
                                                 : SizedBox()
                                           ],
                                         ),
@@ -1741,7 +1772,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
@@ -1750,7 +1781,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         style: TextStyle(
                                                             fontSize: 15,
                                                             fontWeight:
-                                                                FontWeight.w500,
+                                                            FontWeight.w500,
                                                             color: hexToColor(
                                                                 '#8600bd')),
                                                       )
@@ -1761,7 +1792,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     style: TextStyle(
                                                         fontSize: 8,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         color: Colors.black),
                                                   )
                                                 ],
@@ -1781,7 +1812,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
                                                     child: Text(''),
@@ -1792,7 +1823,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       style: TextStyle(
                                                           fontSize: 8,
                                                           fontWeight:
-                                                              FontWeight.w400,
+                                                          FontWeight.w400,
                                                           color: hexToColor(
                                                               '#afafaf')),
                                                     ),
@@ -1802,7 +1833,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                               children: [
                                                 Container(
                                                   child: Text('SPO2',
@@ -1815,12 +1846,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   child: Text(
                                                       value1ForOs != ''
                                                           ? value1ForOs
-                                                              .toString()
+                                                          .toString()
                                                           : '-',
                                                       style: TextStyle(
                                                           fontSize: 18,
                                                           fontWeight:
-                                                              FontWeight.w500,
+                                                          FontWeight.w500,
                                                           color: hexToColor(
                                                               '#8600bd'))),
                                                 ),
@@ -1829,7 +1860,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             SizedBoxWidget(width: 5),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                               children: [
                                                 Container(
                                                   child: Text('PRBpm',
@@ -1846,7 +1877,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       style: TextStyle(
                                                           fontSize: 18,
                                                           fontWeight:
-                                                              FontWeight.w500,
+                                                          FontWeight.w500,
                                                           color: hexToColor(
                                                               '#8600bd'))),
                                                 ),
@@ -1861,16 +1892,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Container(
                                                         child: Text('SPO2',
                                                             style: TextStyle(
                                                                 fontSize: 10,
                                                                 fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
+                                                                FontWeight
+                                                                    .w400,
                                                                 color: hexToColor(
                                                                     '#afafaf'))),
                                                       ),
@@ -1878,13 +1909,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         child: Text(
                                                           averageForSPO2 != ''
                                                               ? averageForSPO2
-                                                                  .toString()
+                                                              .toString()
                                                               : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
+                                                              FontWeight
+                                                                  .w400,
                                                               color: hexToColor(
                                                                   '#afafaf')),
                                                         ),
@@ -1894,16 +1925,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   SizedBoxWidget(width: 15),
                                                   Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Container(
                                                         child: Text('PRBpm',
                                                             style: TextStyle(
                                                                 fontSize: 10,
                                                                 fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
+                                                                FontWeight
+                                                                    .w400,
                                                                 color: hexToColor(
                                                                     '#afafaf'))),
                                                       ),
@@ -1911,13 +1942,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         child: Text(
                                                           averageForPRBpm != ''
                                                               ? averageForPRBpm
-                                                                  .toString()
+                                                              .toString()
                                                               : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
+                                                              FontWeight
+                                                                  .w400,
                                                               color: hexToColor(
                                                                   '#afafaf')),
                                                         ),
@@ -1929,7 +1960,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
+                                              CrossAxisAlignment.end,
                                               children: [
                                                 MaterialButton(
                                                   height: 25.0,
@@ -1975,14 +2006,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => ChangeNotifierProvider(
-                                        create: (context) => DevicesViewModel(),
-                                        child: EachDeviceValues(
-                                          sheelaRequestString:
-                                              variable.requestSheelaForweight,
-                                          device_name: strWeight,
-                                          device_icon: Devices_WS_Tool,
-                                        ),
-                                      )),
+                                    create: (context) => DevicesViewModel(),
+                                    child: EachDeviceValues(
+                                      sheelaRequestString:
+                                      variable.requestSheelaForweight,
+                                      device_name: strWeight,
+                                      device_icon: Devices_WS_Tool,
+                                    ),
+                                  )),
                             );
                           },
                           child: Container(
@@ -2008,20 +2039,20 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Row(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Text(
                                                         dateForWeight != null &&
-                                                                dateForWeight !=
-                                                                    ''
+                                                            dateForWeight !=
+                                                                ''
                                                             ? dateForWeight +
-                                                                ', '
+                                                            ', '
                                                             : '',
                                                         style: TextStyle(
                                                             fontSize: 8,
                                                             color:
-                                                                Colors.black),
+                                                            Colors.black),
                                                       ),
                                                       Text(
                                                         timeForWeight != null
@@ -2030,7 +2061,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         style: TextStyle(
                                                             fontSize: 8,
                                                             color:
-                                                                Colors.black),
+                                                            Colors.black),
                                                       ),
                                                     ],
                                                   ),
@@ -2038,12 +2069,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               ),
                                             ),
                                             sourceForWeigh != '' &&
-                                                    sourceForWeigh != null
+                                                sourceForWeigh != null
                                                 ? Column(
-                                                    children: [
-                                                      TypeIcon(sourceForWeigh),
-                                                    ],
-                                                  )
+                                              children: [
+                                                TypeIcon(sourceForWeigh),
+                                              ],
+                                            )
                                                 : SizedBox()
                                           ],
                                         ),
@@ -2063,7 +2094,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
@@ -2072,7 +2103,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         style: TextStyle(
                                                             fontSize: 15,
                                                             fontWeight:
-                                                                FontWeight.w500,
+                                                            FontWeight.w500,
                                                             color: hexToColor(
                                                                 '#1abadd')),
                                                       )
@@ -2083,7 +2114,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     style: TextStyle(
                                                         fontSize: 8,
                                                         fontWeight:
-                                                            FontWeight.w400,
+                                                        FontWeight.w400,
                                                         color: Colors.black),
                                                   )
                                                 ],
@@ -2103,7 +2134,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                                 children: [
                                                   Container(
                                                     child: Text(''),
@@ -2114,7 +2145,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       style: TextStyle(
                                                           fontSize: 8,
                                                           fontWeight:
-                                                              FontWeight.w400,
+                                                          FontWeight.w400,
                                                           color: hexToColor(
                                                               '#afafaf')),
                                                     ),
@@ -2124,7 +2155,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
+                                              CrossAxisAlignment.center,
                                               children: [
                                                 Container(
                                                   child: Text('Kg',
@@ -2137,12 +2168,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   child: Text(
                                                       value1ForWeight != ''
                                                           ? value1ForWeight
-                                                              .toString()
+                                                          .toString()
                                                           : '-',
                                                       style: TextStyle(
                                                           fontSize: 18,
                                                           fontWeight:
-                                                              FontWeight.w500,
+                                                          FontWeight.w500,
                                                           color: hexToColor(
                                                               '#1abadd'))),
                                                 ),
@@ -2157,16 +2188,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 children: [
                                                   Column(
                                                     crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
+                                                    CrossAxisAlignment
+                                                        .start,
                                                     children: [
                                                       Container(
                                                         child: Text('Kg',
                                                             style: TextStyle(
                                                                 fontSize: 10,
                                                                 fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
+                                                                FontWeight
+                                                                    .w400,
                                                                 color: hexToColor(
                                                                     '#afafaf'))),
                                                       ),
@@ -2174,13 +2205,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         child: Text(
                                                           averageForWeigh != ''
                                                               ? averageForWeigh
-                                                                  .toString()
+                                                              .toString()
                                                               : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
+                                                              FontWeight
+                                                                  .w400,
                                                               color: hexToColor(
                                                                   '#afafaf')),
                                                         ),
@@ -2192,7 +2223,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                             ),
                                             Column(
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
+                                              CrossAxisAlignment.end,
                                               children: [
                                                 MaterialButton(
                                                   height: 25.0,
