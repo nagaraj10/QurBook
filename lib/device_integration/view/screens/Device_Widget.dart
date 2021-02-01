@@ -562,7 +562,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       value1ForTemp,
       String value2ForBp) {
     return Container(
-      height: MediaQuery.of(context).size.height,
+      //height: MediaQuery.of(context).size.height,
       color: Colors.grey[200],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -679,6 +679,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             builder: (context) => ChangeNotifierProvider(
                                   create: (context) => DevicesViewModel(),
                                   child: EachDeviceValues(
+                                    sheelaRequestString:
+                                        variable.requestSheelaForbp,
                                     device_name: strDataTypeBP,
                                     device_icon: Devices_BP_Tool,
                                   ),
@@ -1009,6 +1011,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   builder: (context) => ChangeNotifierProvider(
                                         create: (context) => DevicesViewModel(),
                                         child: EachDeviceValues(
+                                          sheelaRequestString:
+                                              variable.requestSheelaForglucose,
                                           device_name: strGlusoceLevel,
                                           device_icon: Devices_GL_Tool,
                                         ),
@@ -1291,6 +1295,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   builder: (context) => ChangeNotifierProvider(
                                         create: (context) => DevicesViewModel(),
                                         child: EachDeviceValues(
+                                          sheelaRequestString: variable
+                                              .requestSheelaFortemperature,
                                           device_name: strTemperature,
                                           device_icon: Devices_THM_Tool,
                                         ),
@@ -1549,6 +1555,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   builder: (context) => ChangeNotifierProvider(
                                         create: (context) => DevicesViewModel(),
                                         child: EachDeviceValues(
+                                          sheelaRequestString:
+                                              variable.requestSheelaForpo,
                                           device_name: strOxgenSaturation,
                                           device_icon: Devices_OxY_Tool,
                                         ),
@@ -1858,6 +1866,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   builder: (context) => ChangeNotifierProvider(
                                         create: (context) => DevicesViewModel(),
                                         child: EachDeviceValues(
+                                          sheelaRequestString:
+                                              variable.requestSheelaForweight,
                                           device_name: strWeight,
                                           device_icon: Devices_WS_Tool,
                                         ),
