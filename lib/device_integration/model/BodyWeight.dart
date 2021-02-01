@@ -29,6 +29,7 @@ class BodyWeightEntity {
     this.endDateTime,
     this.weight,
     this.weightUnit,
+    this.deviceHealthRecord
   });
 
   String id;
@@ -36,6 +37,7 @@ class BodyWeightEntity {
   DateTime endDateTime;
   String weight;
   RefrenceValueMeta weightUnit;
+  DeviceHealthRecord deviceHealthRecord;
 
   factory BodyWeightEntity.fromJson(Map<String, dynamic> json) =>
       BodyWeightEntity(
@@ -44,6 +46,9 @@ class BodyWeightEntity {
         endDateTime: DateTime.parse(json[param.strsyncEndDate]),
         weight: json[param.strParamWeight],
         weightUnit: RefrenceValueMeta.fromJson(json[param.strParamWeightUnit]),
+          deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
+              ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
+              : null
       );
 
   Map<String, dynamic> toJson() => {
@@ -52,5 +57,42 @@ class BodyWeightEntity {
         param.strsyncEndDate: endDateTime.toIso8601String(),
         param.strParamWeight: weight,
         param.strParamWeightUnit: weightUnit.toJson(),
+        param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
       };
+}
+
+class DeviceHealthRecord {
+  SourceType sourceType;
+
+  DeviceHealthRecord({this.sourceType});
+
+  DeviceHealthRecord.fromJson(Map<String, dynamic> json) {
+    sourceType = json['sourceType'] != null
+        ? new SourceType.fromJson(json['sourceType'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.sourceType != null) {
+      data['sourceType'] = this.sourceType.toJson();
+    }
+    return data;
+  }
+}
+
+class SourceType {
+  String code;
+
+  SourceType({this.code});
+
+  SourceType.fromJson(Map<String, dynamic> json) {
+    code = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.code;
+    return data;
+  }
 }

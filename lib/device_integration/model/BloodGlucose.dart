@@ -31,6 +31,7 @@ class BloodGlucoseEntity {
     this.bgUnit,
     this.mealContext,
     this.mealType,
+    this.deviceHealthRecord
   });
 
   //String id;
@@ -40,6 +41,7 @@ class BloodGlucoseEntity {
   RefrenceValueMeta bgUnit;
   RefrenceValueMeta mealContext;
   RefrenceValueMeta mealType;
+  DeviceHealthRecord deviceHealthRecord;
 
   factory BloodGlucoseEntity.fromJson(Map<String, dynamic> json) =>
       BloodGlucoseEntity(
@@ -54,6 +56,9 @@ class BloodGlucoseEntity {
         mealType: (json[param.strParamBGMealType] == null)
             ? null
             : RefrenceValueMeta.fromJson(json[param.strParamBGMealType]),
+        deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
+            ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
+            : null
       );
 
   Map<String, dynamic> toJson() => {
@@ -62,7 +67,44 @@ class BloodGlucoseEntity {
         param.strsyncEndDate: endDateTime.toIso8601String(),
         param.strParamBGLevel: bloodGlucoseLevel,
         param.strParamBGUnit: bgUnit.toJson(),
-        param.strParamBGMealContext : mealContext.toJson(),
-        param.strParamBGMealType : mealType.toJson(),
+        param.strParamBGMealContext: mealContext.toJson(),
+        param.strParamBGMealType: mealType.toJson(),
+        param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
       };
+}
+
+class DeviceHealthRecord {
+  SourceType sourceType;
+
+  DeviceHealthRecord({this.sourceType});
+
+  DeviceHealthRecord.fromJson(Map<String, dynamic> json) {
+    sourceType = json['sourceType'] != null
+        ? new SourceType.fromJson(json['sourceType'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    if (this.sourceType != null) {
+      data['sourceType'] = this.sourceType.toJson();
+    }
+    return data;
+  }
+}
+
+class SourceType {
+  String code;
+
+  SourceType({this.code});
+
+  SourceType.fromJson(Map<String, dynamic> json) {
+    code = json['name'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['name'] = this.code;
+    return data;
+  }
 }
