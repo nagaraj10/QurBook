@@ -31,7 +31,8 @@ class BloodGlucoseEntity {
     this.bgUnit,
     this.mealContext,
     this.mealType,
-    this.deviceHealthRecord
+    this.deviceHealthRecord,
+    this.averageAsOfNow
   });
 
   //String id;
@@ -42,6 +43,7 @@ class BloodGlucoseEntity {
   RefrenceValueMeta mealContext;
   RefrenceValueMeta mealType;
   DeviceHealthRecord deviceHealthRecord;
+  AverageAsOfNow averageAsOfNow;
 
   factory BloodGlucoseEntity.fromJson(Map<String, dynamic> json) =>
       BloodGlucoseEntity(
@@ -58,7 +60,10 @@ class BloodGlucoseEntity {
             : RefrenceValueMeta.fromJson(json[param.strParamBGMealType]),
         deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
             ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
-            : null
+            : null,
+        averageAsOfNow: json['averageAsOfNow'] != null
+            ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
+            : null,
       );
 
   Map<String, dynamic> toJson() => {
@@ -70,6 +75,7 @@ class BloodGlucoseEntity {
         param.strParamBGMealContext: mealContext.toJson(),
         param.strParamBGMealType: mealType.toJson(),
         param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
+        param.strParamAverageAsOfNow:averageAsOfNow.toJson(),
       };
 }
 
@@ -89,6 +95,25 @@ class DeviceHealthRecord {
     if (this.sourceType != null) {
       data['sourceType'] = this.sourceType.toJson();
     }
+    return data;
+  }
+}
+
+class AverageAsOfNow {
+  var ppAverage;
+  var fastingAverage;
+
+  AverageAsOfNow({this.ppAverage, this.fastingAverage});
+
+  AverageAsOfNow.fromJson(Map<String, dynamic> json) {
+    ppAverage = json['ppAverage'];
+    fastingAverage = json['fastingAverage'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ppAverage'] = this.ppAverage;
+    data['fastingAverage'] = this.fastingAverage;
     return data;
   }
 }

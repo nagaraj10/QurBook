@@ -26,7 +26,8 @@ class OxygenSaturationEntity {
         this.startDateTime,
         this.endDateTime,
         this.oxygenSaturation,
-        this.deviceHealthRecord
+        this.deviceHealthRecord,
+        this.averageAsOfNow
     });
 
     //String id;
@@ -34,6 +35,7 @@ class OxygenSaturationEntity {
     DateTime endDateTime;
     int oxygenSaturation;
     DeviceHealthRecord deviceHealthRecord;
+    AverageAsOfNow averageAsOfNow;
 
     factory OxygenSaturationEntity.fromJson(Map<String, dynamic> json) => OxygenSaturationEntity(
         //id: json["id"],
@@ -42,6 +44,9 @@ class OxygenSaturationEntity {
         oxygenSaturation: json[param.strParamOxygen],
         deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
             ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
+            : null,
+        averageAsOfNow: json['averageAsOfNow'] != null
+            ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
             : null
     );
 
@@ -51,6 +56,7 @@ class OxygenSaturationEntity {
         param.strsyncEndDate: endDateTime.toIso8601String(),
         param.strParamOxygen: oxygenSaturation,
         param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
+        param.strParamAverageAsOfNow:averageAsOfNow.toJson()
     };
 }
 
@@ -71,6 +77,22 @@ class DeviceHealthRecord {
         if (this.sourceType != null) {
             data['sourceType'] = this.sourceType.toJson();
         }
+        return data;
+    }
+}
+
+class AverageAsOfNow {
+    var oxygenLevelAverage;
+
+    AverageAsOfNow({this.oxygenLevelAverage});
+
+    AverageAsOfNow.fromJson(Map<String, dynamic> json) {
+        oxygenLevelAverage = json['oxygenLevelAverage'];
+    }
+
+    Map<String, dynamic> toJson() {
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['oxygenLevelAverage'] = this.oxygenLevelAverage;
         return data;
     }
 }

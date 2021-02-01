@@ -27,7 +27,8 @@ class HeartRateEntity {
     this.startDateTime,
     this.endDateTime,
     this.bpm,
-    this.deviceHealthRecord
+    this.deviceHealthRecord,
+    this.averageAsOfNow
   });
 
   //String id;
@@ -35,6 +36,7 @@ class HeartRateEntity {
   DateTime endDateTime;
   int bpm;
   DeviceHealthRecord deviceHealthRecord;
+  AverageAsOfNow averageAsOfNow;
 
   factory HeartRateEntity.fromJson(Map<String, dynamic> json) =>
       HeartRateEntity(
@@ -44,7 +46,10 @@ class HeartRateEntity {
         bpm: json[param.strParamHeartRate],
           deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
               ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
-              : null
+              : null,
+        averageAsOfNow: json['averageAsOfNow'] != null
+            ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
+            : null
       );
 
   Map<String, dynamic> toJson() => {
@@ -53,6 +58,7 @@ class HeartRateEntity {
         param.strsyncEndDate: endDateTime.toIso8601String(),
         param.strParamHeartRate: bpm,
         param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
+        param.strParamAverageAsOfNow:averageAsOfNow.toJson(),
       };
 }
 
@@ -72,6 +78,22 @@ class DeviceHealthRecord {
     if (this.sourceType != null) {
       data['sourceType'] = this.sourceType.toJson();
     }
+    return data;
+  }
+}
+
+class AverageAsOfNow {
+  var pulseAverage;
+
+  AverageAsOfNow({this.pulseAverage});
+
+  AverageAsOfNow.fromJson(Map<String, dynamic> json) {
+    pulseAverage = json['pulseAverage'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['pulseAverage'] = this.pulseAverage;
     return data;
   }
 }

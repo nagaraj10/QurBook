@@ -28,7 +28,8 @@ class BloodPressureEntity {
     this.endDateTime,
     this.systolic,
     this.diastolic,
-    this.deviceHealthRecord
+    this.deviceHealthRecord,
+    this.averageAsOfNow
   });
 
   // String id;
@@ -37,6 +38,7 @@ class BloodPressureEntity {
   int systolic;
   int diastolic;
   DeviceHealthRecord deviceHealthRecord;
+  AverageAsOfNow averageAsOfNow;
 
   factory BloodPressureEntity.fromJson(Map<String, dynamic> json) =>
       BloodPressureEntity(
@@ -47,7 +49,11 @@ class BloodPressureEntity {
         diastolic: json[param.strParamDiastolic],
         deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
             ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
-            : null
+            : null,
+        averageAsOfNow: json['averageAsOfNow'] != null
+            ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
+            : null,
+
       );
 
   Map<String, dynamic> toJson() => {
@@ -57,6 +63,8 @@ class BloodPressureEntity {
         param.strParamSystolic: systolic,
         param.strParamDiastolic: diastolic,
         param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
+        param.strParamAverageAsOfNow:averageAsOfNow.toJson(),
+
       };
 }
 
@@ -76,6 +84,25 @@ class DeviceHealthRecord {
     if (this.sourceType != null) {
       data['sourceType'] = this.sourceType.toJson();
     }
+    return data;
+  }
+}
+
+class AverageAsOfNow {
+  var systolicAverage;
+  var diastolicAverage;
+
+  AverageAsOfNow({this.systolicAverage, this.diastolicAverage});
+
+  AverageAsOfNow.fromJson(Map<String, dynamic> json) {
+    systolicAverage = json['systolicAverage'];
+    diastolicAverage = json['diastolicAverage'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['systolicAverage'] = this.systolicAverage;
+    data['diastolicAverage'] = this.diastolicAverage;
     return data;
   }
 }

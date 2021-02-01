@@ -82,6 +82,23 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   bool thermoMeter = true;
   bool weighScale = true;
 
+  var averageForSys;
+  var averageForDia;
+  var averageForPul;
+
+  var pulseBp;
+  var prbPMOxi;
+
+  var averageForFasting;
+  var averageForPP;
+
+  var averageForTemp;
+
+  var averageForSPO2;
+  var averageForPRBpm;
+
+  var averageForWeigh;
+
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
       AddFamilyUserInfoRepository();
@@ -188,13 +205,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
       if (deviceMealContext != '') {
         return Text(
-          deviceMealContext.toString(),
+          getMealText(deviceMealContext.toString()),
           style: TextStyle(
               color: Colors.black, fontSize: 8, fontWeight: FontWeight.w400),
         );
       } else {
         return Text(
-          'Random',
+          '-',
           style: TextStyle(
               color: Colors.black, fontSize: 8, fontWeight: FontWeight.w400),
         );
@@ -206,6 +223,23 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             color: Colors.black, fontSize: 8, fontWeight: FontWeight.w400),
       );
     }
+  }
+
+  getMealText(String mealText) {
+    if (mealText != null) {
+      if (mealText == 'After Meal') {
+        mealText = 'PP';
+      } else if (mealText == 'Before Meal') {
+        mealText = 'Fasting';
+      } else if (mealText == 'Random') {
+        mealText = 'Random';
+      } else {
+        mealText = '';
+      }
+    } else {
+      mealText = '';
+    }
+    return mealText;
   }
 
   Widget getValuesFromSharedPrefernce(BuildContext context) {
@@ -294,11 +328,20 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             .bloodPressure.entities[0].deviceHealthRecord.sourceType.code
             .toString();
       }
+
+      averageForSys = deviceValues
+          .bloodPressure.entities[0].averageAsOfNow.systolicAverage
+          .toString();
+      averageForDia = deviceValues
+          .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
+          .toString();
     } else {
       dateForBp = '';
       devicevalue1ForBp = '';
       devicevalue2ForBp = '';
       sourceForBp = '';
+      averageForSys = '';
+      averageForDia = '';
     }
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
       dateTimeStampForGulcose =
@@ -326,12 +369,21 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             .bloodGlucose.entities[0].deviceHealthRecord.sourceType.code
             .toString();
       }
+
+      averageForFasting = deviceValues
+          .bloodGlucose.entities[0].averageAsOfNow.fastingAverage
+          .toString();
+      averageForPP = deviceValues
+          .bloodGlucose.entities[0].averageAsOfNow.ppAverage
+          .toString();
     } else {
       dateForGulcose = '';
       devicevalue1ForGulcose = '';
       //deviceMealContext = '';
       deviceMealType = '';
       sourceForGluco = '';
+      averageForFasting = '';
+      averageForPP = '';
     }
     if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
       dateTimeStampForOs =
@@ -348,10 +400,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             .oxygenSaturation.entities[0].deviceHealthRecord.sourceType.code
             .toString();
       }
+
+      averageForSPO2 = deviceValues
+          .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage
+          .toString();
     } else {
       dateForOs = '';
       devicevalue1ForOs = '';
       sourceForPulse = '';
+      averageForSPO2 = '';
     }
     if (deviceValues.bodyTemperature.entities.isNotEmpty) {
       dateTimeStampForTemp =
@@ -368,10 +425,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             .bodyTemperature.entities[0].deviceHealthRecord.sourceType.code
             .toString();
       }
+
+      averageForTemp = deviceValues
+          .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage
+          .toString();
     } else {
       dateForTemp = '';
       devicevalue1ForTemp = '';
       sourceForThermo = '';
+      averageForTemp = '';
     }
     if (deviceValues.bodyWeight.entities.isNotEmpty) {
       dateTimeStampForWeight =
@@ -388,11 +450,33 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             .bodyWeight.entities[0].deviceHealthRecord.sourceType.code
             .toString();
       }
+
+      averageForWeigh = deviceValues
+          .bodyWeight.entities[0].averageAsOfNow.weightAverage
+          .toString();
     } else {
       dateForWeight = '';
       devicevalue1ForWeight = '';
       sourceForWeigh = '';
+      averageForWeigh = '';
     }
+
+    if (deviceValues.heartRate.entities.isNotEmpty) {
+      pulseBp = deviceValues.heartRate.entities[0].bpm;
+      prbPMOxi = deviceValues.heartRate.entities[0].bpm;
+
+      averageForPul = deviceValues
+          .heartRate.entities[0].averageAsOfNow.pulseAverage
+          .toString();
+      averageForPRBpm = deviceValues
+          .heartRate.entities[0].averageAsOfNow.pulseAverage
+          .toString();
+    } else {
+      dateForBp = '';
+      averageForPul = '';
+      averageForPRBpm = '';
+    }
+
     return getDeviceData(
         context,
         dateForBp,
@@ -835,7 +919,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           '#39c5c2')),
                                                 ),
                                                 Text(
-                                                  '67',
+                                                  pulseBp != ''
+                                                      ? pulseBp.toString()
+                                                      : '-',
                                                   style: TextStyle(
                                                       fontSize: 18,
                                                       fontWeight:
@@ -876,7 +962,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           '#afafaf')),
                                                 ),
                                                 Text(
-                                                  '130',
+                                                  averageForSys != ''
+                                                      ? averageForSys.toString()
+                                                      : '-',
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -899,7 +987,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           '#afafaf')),
                                                 ),
                                                 Text(
-                                                  '90',
+                                                  averageForDia != ''
+                                                      ? averageForDia.toString()
+                                                      : '-',
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -922,7 +1012,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           '#afafaf')),
                                                 ),
                                                 Text(
-                                                  '67',
+                                                  averageForPul != ''
+                                                      ? averageForPul.toString()
+                                                      : '-',
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       fontWeight:
@@ -1196,7 +1288,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                          '130',
+                                                          averageForFasting !=
+                                                                  ''
+                                                              ? averageForFasting
+                                                                  .toString()
+                                                              : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
@@ -1226,7 +1322,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                          '90',
+                                                          averageForPP != ''
+                                                              ? averageForPP
+                                                                  .toString()
+                                                              : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
@@ -1484,7 +1583,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                          '100.2',
+                                                          averageForTemp != ''
+                                                              ? averageForTemp
+                                                                  .toString()
+                                                              : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
@@ -1729,7 +1831,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               '#8600bd'))),
                                                 ),
                                                 Container(
-                                                  child: Text('75',
+                                                  child: Text(
+                                                      prbPMOxi != ''
+                                                          ? prbPMOxi.toString()
+                                                          : '-',
                                                       style: TextStyle(
                                                           fontSize: 18,
                                                           fontWeight:
@@ -1763,7 +1868,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                          '94',
+                                                          averageForSPO2 != ''
+                                                              ? averageForSPO2
+                                                                  .toString()
+                                                              : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
@@ -1793,7 +1901,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                          '72',
+                                                          averageForPRBpm != ''
+                                                              ? averageForPRBpm
+                                                                  .toString()
+                                                              : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
@@ -2051,7 +2162,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                          '100.2',
+                                                          averageForWeigh != ''
+                                                              ? averageForWeigh
+                                                                  .toString()
+                                                              : '-',
                                                           style: TextStyle(
                                                               fontSize: 12,
                                                               fontWeight:
