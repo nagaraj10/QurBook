@@ -11,6 +11,7 @@ import 'package:myfhb/common/SwitchProfile.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/device_integration/view/screens/Clipper.dart';
+import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -28,6 +29,7 @@ import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class ShowDevicesNew extends StatefulWidget {
   @override
@@ -949,7 +951,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                       MaterialButton(
                                         height: 25.0,
                                         minWidth: 45.0,
-                                        onPressed: () {},
+                                        onPressed: () {
+                                          navigateToDeviceDashboardScreen(
+                                              Constants.STR_BP_MONITOR);
+                                        },
                                         color: hexToColor('#059192'),
                                         textColor: Colors.white,
                                         child: Icon(
@@ -1243,7 +1248,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 MaterialButton(
                                                   height: 25.0,
                                                   minWidth: 45.0,
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    navigateToDeviceDashboardScreen(
+                                                        Constants
+                                                            .STR_GLUCOMETER);
+                                                  },
                                                   color: hexToColor('#b70a80'),
                                                   textColor: Colors.white,
                                                   child: Icon(
@@ -1497,7 +1506,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 MaterialButton(
                                                   height: 25.0,
                                                   minWidth: 45.0,
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    navigateToDeviceDashboardScreen(
+                                                        Constants
+                                                            .STR_THERMOMETER);
+                                                  },
                                                   color: hexToColor('#d95523'),
                                                   textColor: Colors.white,
                                                   child: Icon(
@@ -1802,7 +1815,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 MaterialButton(
                                                   height: 25.0,
                                                   minWidth: 45.0,
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    navigateToDeviceDashboardScreen(
+                                                        Constants
+                                                            .STR_PULSE_OXIMETER);
+                                                  },
                                                   color: hexToColor('#8600bd'),
                                                   textColor: Colors.white,
                                                   child: Icon(
@@ -2056,7 +2073,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 MaterialButton(
                                                   height: 25.0,
                                                   minWidth: 45.0,
-                                                  onPressed: () {},
+                                                  onPressed: () {
+                                                    navigateToDeviceDashboardScreen(
+                                                        Constants
+                                                            .STR_WEIGHING_SCALE);
+                                                  },
                                                   color: hexToColor('#1abadd'),
                                                   textColor: Colors.white,
                                                   child: Icon(
@@ -2124,6 +2145,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   Color hexToColor(String hexString, {String alphaChannel = 'FF'}) {
     return Color(int.parse(hexString.replaceFirst('#', '0x$alphaChannel')));
+  }
+
+  void navigateToDeviceDashboardScreen(String deviceName) {
+    Navigator.pushNamed(
+      context,
+      router.rt_deviceDashboard,
+      arguments: DeviceDashboardArguments(deviceName: deviceName),
+    ).then((value) {});
   }
 }
 

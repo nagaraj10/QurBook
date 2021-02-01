@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/add_family_user_info/screens/add_family_user_info_clone.dart';
 import 'package:myfhb/constants/router_variable.dart' as router;
 import 'package:myfhb/device_integration/viewModel/Device_model.dart';
+import 'package:myfhb/devices/device_dashboard.dart';
+import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/my_family_detail_view/screens/my_family_detail_view.dart';
 import 'package:myfhb/my_providers/screens/my_provider.dart';
@@ -42,6 +44,8 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_Dashboard: (BuildContext context) => DashboardScreen(),
     router.rt_HomeScreen: (BuildContext context) =>
         HomeScreen(arguments: ModalRoute.of(context).settings.arguments),
+    router.rt_deviceDashboard: (BuildContext context) =>
+        Devicedashboard(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_UserAccounts: (BuildContext context) =>
         UserAccounts(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_AppSettings: (BuildContext context) => ChangeNotifierProvider(

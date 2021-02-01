@@ -32,7 +32,8 @@ const String rt_Splash = '/splashscreen';
 const String rt_WebCognito = '/webcognito';
 const String rt_CallMain = '/callmain';
 const String rt_myApp = '/myApp';
-const String rt_ShowDevice='/showDevice';
+const String rt_ShowDevice = '/showDevice';
+const String rt_deviceDashboard = '/deviceDashboard';
 
 const String cn_AddProvider = 'add_providers';
 
