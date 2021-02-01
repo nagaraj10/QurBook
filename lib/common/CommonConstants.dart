@@ -40,6 +40,12 @@ class CommonConstants {
   static String appVersion = 'default app version';
   static String serach_specific_list = 'Search Specific List';
 
+  static const String STR_BP_MONITOR = 'Blood Pressure';
+  static const String STR_GLUCOMETER = 'Glucometer';
+  static const String STR_THERMOMETER = 'Thermometer';
+  static const String STR_PULSE_OXIDOMETER = 'Pulse Oximeter';
+  static const String STR_WEIGHING_SCALE = 'Weighing Scale';
+
   /**
    * KeyWords tp save prefernce values,error dipslay
    */
@@ -128,14 +134,15 @@ class CommonConstants {
   static String strMemoCrossedLimit =
       'Memo length has crossed the limit of 500 characters';
 
-  static String strSugarLevelEmpty = 'Please Enter Sugar Level';
+  static String strSugarLevelEmpty = 'Please enter sugar level';
+  static String strSugarFasting = 'Please select fasting';
 
-  static String strSystolicsEmpty = 'Please Enter Systolic Pressure';
-  static String strDiastolicEmpty = 'Please Enter Diastolic Pressure';
-  static String strPulseEmpty = 'Please Enter Pulse Value';
+  static String strSystolicsEmpty = 'Please enter systolic pressure';
+  static String strDiastolicEmpty = 'Please enter diastolic pressure';
+  static String strPulseEmpty = 'Please enter pulse value';
 
-  static String strtemperatureEmpty = 'Please Enter Temperature Value';
-  static String strWeightEmpty = 'Please Enter Weight ';
+  static String strtemperatureEmpty = 'Please enter temperature value';
+  static String strWeightEmpty = 'Please enter weight ';
 
   static String strOxugenSaturationEmpty =
       'Please Enter Oxygen Saturation Value';
@@ -248,6 +255,24 @@ class CommonConstants {
   static const String strQueryString = '?';
   static const String strGetProfilePic = 'section=profilePicture';
   static const String strUserQuery = 'user/';
+
+  /**
+   * Color for devices
+   */
+  static var bpDarkColor = 0xff059192;
+  static var bplightColor = 0xff39c5c2;
+
+  static var GlucoDarkColor = 0xffb70a80;
+  static var GlucolightColor = 0xffb70a80;
+
+  static var ThermoDarkColor = 0xffd95523;
+  static var ThermolightColor = 0xffed7142;
+
+  static var pulseDarkColor = 0xff8600bd;
+  static var pulselightColor = 0xffb000f8;
+
+  static var weightDarkColor = 0xff1abadd;
+  static var weightlightColor = 0xff3ed4f5;
 
   factory CommonConstants() => _instance;
 

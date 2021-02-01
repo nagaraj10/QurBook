@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
-const String strAPP_NAME = 'MyFHB';
+const String strAPP_NAME = 'QurBook';
 const String strAppPackage =
     'com.ventechsolutions.myFHB'; //'com.globalmantrainnovations.myfhb';
 const String strHealthRecordChannel = 'Health Record channel';

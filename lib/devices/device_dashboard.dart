@@ -1,0 +1,1070 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
+import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonConstants.dart';
+import 'package:myfhb/common/CommonUtil.dart';
+import 'package:myfhb/common/FHBBasicWidget.dart';
+import 'package:myfhb/common/PreferenceUtil.dart';
+import 'package:myfhb/common/customized_checkbox.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
+import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
+import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
+import 'package:myfhb/src/model/Category/catergory_result.dart';
+import 'package:myfhb/src/model/Media/media_data_list.dart';
+import 'package:myfhb/src/model/Media/media_result.dart';
+import 'package:myfhb/src/utils/FHBUtils.dart';
+import 'package:myfhb/widgets/GradientAppBar.dart';
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/colors/fhb_colors.dart' as fhbColors;
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
+import 'package:myfhb/constants/variable_constant.dart' as variable;
+
+class Devicedashboard extends StatefulWidget {
+  String deviceName;
+  Devicedashboard({this.deviceName});
+  @override
+  _DevicedashboardScreenState createState() => _DevicedashboardScreenState();
+}
+
+class _DevicedashboardScreenState extends State<Devicedashboard> {
+  GlobalKey<ScaffoldState> scaffold_state = new GlobalKey<ScaffoldState>();
+  TextEditingController deviceController = new TextEditingController(text: '');
+  TextEditingController pulse = new TextEditingController(text: '');
+  TextEditingController memoController = new TextEditingController(text: '');
+  TextEditingController diaStolicPressure = new TextEditingController(text: '');
+
+  String validationMsg;
+  final GlobalKey<State> _keyLoader = new GlobalKey<State>();
+  CategoryResult categoryDataObj = new CategoryResult();
+  MediaResult mediaDataObj = new MediaResult();
+  String categoryName = Constants.STR_DEVICES;
+  String categoryID = '14c3f2a1-70d3-49dd-a922-6bee255eed26';
+  HealthReportListForUserBlock _healthReportListForUserBlock =
+      new HealthReportListForUserBlock();
+
+  List<String> imagePathMain = new List();
+  FlutterToast toast = new FlutterToast();
+  var commonConstants = new CommonConstants();
+  bool _value;
+  List<bool> isSelected = new List(2);
+
+  String deviceName = Constants.STR_WEIGHING_SCALE;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    deviceName = widget.deviceName;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        key: scaffold_state,
+        appBar: AppBar(
+          elevation: 0,
+          automaticallyImplyLeading: false,
+          flexibleSpace: GradientAppBar(),
+          leading: IconWidget(
+            icon: Icons.arrow_back_ios,
+            colors: Colors.white,
+            size: 20,
+            onTap: () {
+              Navigator.pop(context);
+            },
+          ),
+          titleSpacing: 0,
+          title: Text(deviceName),
+        ),
+        body: Column(
+          children: [
+            getCardBasedOnDevices(deviceName),
+            SizedBox(
+              height: 20,
+            ),
+            new Container(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    MaterialButton(
+                      onPressed: () {},
+                      child: Text('',
+                          style: TextStyle(
+                              fontSize: 22.0, fontWeight: FontWeight.w400),
+                          textAlign: TextAlign.center),
+                    ),
+                    OutlineButton(
+                      onPressed: () {
+                        new FHBUtils().check().then((intenet) {
+                          if (intenet != null && intenet) {
+                            createDeviceRecords(deviceName);
+                          } else {
+                            new FHBBasicWidget().showInSnackBar(
+                                Constants.STR_NO_CONNECTIVITY, scaffold_state);
+                          }
+                        });
+                      },
+                      child: Text('OK'),
+                      textColor: Color(CommonUtil().getMyPrimaryColor()),
+                      color: Colors.transparent,
+                      borderSide: BorderSide(
+                          color: Color(CommonUtil().getMyPrimaryColor())),
+                      shape: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    //submitButton(_otpVerifyBloc)
+                    MaterialButton(
+                      onPressed: () {
+                        //matchOtp();
+                      },
+                      child: Text('',
+                          style: TextStyle(
+                              fontSize: 22.0, fontWeight: FontWeight.w400),
+                          textAlign: TextAlign.center),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget getCardForBPMonitor(String deviceName) {
+    return Container(
+        //height: 70,
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(left: 15, right: 15, top: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(fhbColors.cardShadowColor),
+              blurRadius: 16, // has the effect of softening the shadow
+              spreadRadius: 0, // has the effect of extending the shadow
+            )
+          ],
+        ),
+        child: Row(
+          children: [
+            Column(
+              children: [
+                Image.asset(
+                  Devices_BP,
+                  height: 30.0,
+                  width: 30.0,
+                  color: Color(CommonConstants.bpDarkColor),
+                ),
+                Text(
+                  CommonConstants.STR_BP_MONITOR,
+                  style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                      color: Color(CommonConstants.bpDarkColor)),
+                  softWrap: true,
+                ),
+              ],
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Sys',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: Color(CommonConstants.bplightColor)),
+                              softWrap: true,
+                            ),
+                            Container(
+                              child: TextFormField(
+                                  textAlign: TextAlign.center,
+                                  controller: deviceController,
+                                  style: TextStyle(
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.w500,
+                                      color:
+                                          Color(CommonConstants.bpDarkColor)),
+                                  decoration: InputDecoration(
+                                      border: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(
+                                                CommonConstants.bpDarkColor),
+                                            width: 0.5),
+                                      ),
+                                      hintText: '0',
+                                      hintStyle: TextStyle(
+                                          color: Colors.grey, fontSize: 13),
+                                      contentPadding: EdgeInsets.zero),
+                                  cursorColor:
+                                      Color(CommonConstants.bpDarkColor),
+                                  keyboardType: TextInputType.number,
+                                  cursorWidth: 0.5,
+                                  onSaved: (input) => setState(() {})),
+                            ),
+                          ],
+                        ),
+                      ),
+                      flex: 1),
+                  Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Dia',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: Color(CommonConstants.bplightColor)),
+                            softWrap: true,
+                          ),
+                          Container(
+                            constraints: BoxConstraints(maxWidth: 100),
+                            child: TextFormField(
+                                controller: diaStolicPressure,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.w500,
+                                    color: Color(CommonConstants.bpDarkColor)),
+                                decoration: InputDecoration(
+                                    border: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5),
+                                    ),
+                                    hintText: '0',
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey, fontSize: 13),
+                                    contentPadding: EdgeInsets.zero),
+                                cursorColor: Color(CommonConstants.bpDarkColor),
+                                keyboardType: TextInputType.number,
+                                cursorWidth: 0.5,
+                                onSaved: (input) => setState(() {})),
+                          ),
+                        ],
+                      ),
+                      flex: 1),
+                  Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              'Pul',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                  color: Color(CommonConstants.bplightColor)),
+                              softWrap: true,
+                            ),
+                            Container(
+                              constraints: BoxConstraints(maxWidth: 100),
+                              child: TextFormField(
+                                  textAlign: TextAlign.center,
+                                  controller: pulse,
+                                  style: TextStyle(
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.w500,
+                                      color:
+                                          Color(CommonConstants.bpDarkColor)),
+                                  decoration: InputDecoration(
+                                      border: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Color(
+                                                CommonConstants.bpDarkColor),
+                                            width: 0.5),
+                                      ),
+                                      hintText: '0',
+                                      hintStyle: TextStyle(
+                                          color: Colors.grey, fontSize: 13),
+                                      contentPadding: EdgeInsets.zero),
+                                  cursorColor:
+                                      Color(CommonConstants.bpDarkColor),
+                                  keyboardType: TextInputType.number,
+                                  cursorWidth: 0.5,
+                                  onSaved: (input) => setState(() {})),
+                            ),
+                          ],
+                        ),
+                      ),
+                      flex: 1),
+                  SizedBox(
+                    width: 15,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget getCardBasedOnDevices(String deviceName) {
+    switch (deviceName) {
+      case CommonConstants.STR_BP_MONITOR:
+        return getCardForBPMonitor(deviceName);
+        break;
+      case CommonConstants.STR_THERMOMETER:
+        return getCardForThermometer(deviceName);
+        break;
+      case CommonConstants.STR_PULSE_OXIDOMETER:
+        return getCardForPulseOxidometer(deviceName);
+        break;
+      case CommonConstants.STR_WEIGHING_SCALE:
+        return getCardForWeighingScale(deviceName);
+        break;
+      case CommonConstants.STR_GLUCOMETER:
+        return getCardForGlucometer(deviceName);
+        break;
+      default:
+        return getCardForBPMonitor(deviceName);
+        break;
+    }
+  }
+
+  void createDeviceRecords(String deviceName) async {
+    if (doValidation(deviceName)) {
+      CommonUtil.showLoadingDialog(context, _keyLoader, variable.Please_Wait);
+
+      Map<String, dynamic> postMainData = new Map();
+      Map<String, dynamic> postMediaData = new Map();
+
+      String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType();
+
+      categoryDataObj = new CommonUtil()
+          .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
+      postMediaData[parameters.strhealthRecordCategory] =
+          categoryDataObj.toJson();
+      MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+
+      MediaDataList mediaTypesResponse =
+          await _mediaTypeBlock.getMediTypesList();
+
+      List<MediaResult> metaDataFromSharedPrefernce = mediaTypesResponse.result;
+      mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularDevice(
+          deviceName, metaDataFromSharedPrefernce);
+
+      postMediaData[parameters.strhealthRecordType] = mediaDataObj.toJson();
+
+      postMediaData[parameters.strmemoText] = memoController.text;
+      postMediaData[parameters.strhasVoiceNotes] = false;
+      postMediaData[parameters.strisDraft] = false;
+
+      postMediaData[parameters.strSourceName] = CommonConstants.strTridentValue;
+      postMediaData[parameters.strmemoTextRaw] = memoController.text;
+      var commonConstants = new CommonConstants();
+
+      if (categoryName == CommonConstants.strDevice) {
+        List<Map<String, dynamic>> postDeviceData = new List();
+        Map<String, dynamic> postDeviceValues = new Map();
+        Map<String, dynamic> postDeviceValuesExtra = new Map();
+        Map<String, dynamic> postDeviceValuesExtraClone = new Map();
+
+        if (deviceName == Constants.STR_GLUCOMETER) {
+          postDeviceValues[parameters.strParameters] =
+              CommonConstants.strSugarLevel;
+          postDeviceValues[parameters.strvalue] = deviceController.text;
+          postDeviceValues[parameters.strunit] =
+              CommonConstants.strGlucometerValue;
+          postDeviceData.add(postDeviceValues);
+          postDeviceValuesExtra[parameters.strParameters] =
+              CommonConstants.strTimeIntake;
+          postDeviceValuesExtra[parameters.strvalue] = '';
+          if (isSelected[0] == true) {
+            postDeviceValuesExtra[parameters.strunit] = variable.strBefore;
+          } else if (isSelected[1] == true) {
+            postDeviceValuesExtra[parameters.strunit] = variable.strAfter;
+          }
+
+          postDeviceData.add(postDeviceValuesExtra);
+        } else if (deviceName == Constants.STR_THERMOMETER) {
+          postDeviceValues[parameters.strParameters] =
+              CommonConstants.strTemperature;
+          postDeviceValues[parameters.strvalue] = deviceController.text;
+          postDeviceValues[parameters.strunit] =
+              CommonConstants.strTemperatureValue;
+          postDeviceData.add(postDeviceValues);
+        } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
+          postDeviceValues[parameters.strParameters] =
+              CommonConstants.strWeightParam;
+          postDeviceValues[parameters.strvalue] = deviceController.text;
+          postDeviceValues[parameters.strunit] = CommonConstants.strWeightUnit;
+          postDeviceData.add(postDeviceValues);
+        } else if (deviceName == Constants.STR_PULSE_OXIMETER) {
+          postDeviceValues[parameters.strParameters] =
+              CommonConstants.strOxygenParams;
+          postDeviceValues[parameters.strvalue] = deviceController.text;
+          postDeviceValues[parameters.strunit] = CommonConstants.strOxygenUnits;
+          postDeviceData.add(postDeviceValues);
+
+          postDeviceValuesExtra[parameters.strParameters] =
+              CommonConstants.strPulseRate;
+          postDeviceValuesExtra[parameters.strvalue] = pulse.text;
+          postDeviceValuesExtra[parameters.strunit] =
+              CommonConstants.strPulseValue;
+
+          postDeviceData.add(postDeviceValuesExtra);
+        } else if (deviceName == Constants.STR_BP_MONITOR) {
+          postDeviceValues[parameters.strParameters] =
+              CommonConstants.strBPParams;
+          postDeviceValues[parameters.strvalue] = deviceController.text;
+
+          postDeviceValues[parameters.strunit] = CommonConstants.strBPUNits;
+          postDeviceData.add(postDeviceValues);
+
+          postDeviceValuesExtra[parameters.strParameters] =
+              CommonConstants.strDiastolicParams;
+          postDeviceValuesExtra[parameters.strvalue] = diaStolicPressure.text;
+          postDeviceValuesExtra[parameters.strunit] =
+              CommonConstants.strBPUNits;
+
+          postDeviceData.add(postDeviceValuesExtra);
+
+          postDeviceValuesExtraClone[parameters.strParameters] =
+              CommonConstants.strPulseRate;
+          postDeviceValuesExtraClone[parameters.strvalue] = pulse.text;
+          postDeviceValuesExtraClone[parameters.strunit] =
+              CommonConstants.strPulseUnit;
+
+          postDeviceData.add(postDeviceValuesExtraClone);
+        }
+        postMediaData[parameters.strdeviceReadings] = postDeviceData;
+        postMediaData[parameters.strfileName] = '';
+        DateTime dateTime = DateTime.now();
+
+        postMediaData[parameters.strdateOfVisit] =
+            new FHBUtils().getFormattedDateOnly(dateTime.toString());
+
+        postMainData[parameters.strmetaInfo] = postMediaData;
+
+        var params = json.encode(postMediaData);
+        print(params);
+
+        _healthReportListForUserBlock
+            .createHealtRecords(params.toString(), imagePathMain, '')
+            .then((value) {
+          if (value != null && value.isSuccess) {
+            _healthReportListForUserBlock.getHelthReportLists().then((value) {
+              Navigator.of(_keyLoader.currentContext, rootNavigator: true)
+                  .pop();
+
+              PreferenceUtil.saveCompleteData(
+                  Constants.KEY_COMPLETE_DATA, value);
+
+              setState(() {
+                deviceController.text = '';
+                pulse.text = '';
+                diaStolicPressure.text = '';
+                isSelected[0] = null;
+                isSelected[1] = null;
+              });
+            });
+          } else {
+            Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
+            toast.getToast(Constants.ERR_MSG_RECORD_CREATE, Colors.red);
+          }
+        });
+      }
+    } else {
+      showDialog(
+          context: context,
+          child: new AlertDialog(
+            title: new Text(variable.strAPP_NAME),
+            content: new Text(validationMsg),
+          ));
+    }
+  }
+
+  bool doValidation(String deviceName) {
+    bool validationConditon = false;
+    if (categoryName == Constants.STR_DEVICES) {
+      if (deviceName == Constants.STR_GLUCOMETER) {
+        if (deviceController.text == '' || deviceController.text == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strSugarLevelEmpty;
+        } else if (isSelected[0] == null && isSelected[1] == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strSugarFasting;
+        } else {
+          validationConditon = true;
+        }
+      } else if (deviceName == Constants.STR_BP_MONITOR) {
+        if (deviceController.text == '' || deviceController.text == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strSystolicsEmpty;
+        } else if (diaStolicPressure.text == '' ||
+            diaStolicPressure.text == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strDiastolicEmpty;
+        } else if (pulse.text == '' || pulse.text == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strPulseEmpty;
+        } else {
+          validationConditon = true;
+        }
+      } else if (deviceName == Constants.STR_THERMOMETER) {
+        if (deviceController.text == '' || deviceController.text == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strtemperatureEmpty;
+        } else {
+          validationConditon = true;
+        }
+      } else if (deviceName == Constants.STR_WEIGHING_SCALE) {
+        if (deviceController.text == '' || deviceController.text == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strWeightEmpty;
+        } else {
+          validationConditon = true;
+        }
+      } else if (deviceName == Constants.STR_PULSE_OXIMETER) {
+        if (deviceController.text == '' || deviceController.text == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strOxugenSaturationEmpty;
+        } else if (pulse.text == '' || pulse.text == null) {
+          validationConditon = false;
+          validationMsg = CommonConstants.strPulseEmpty;
+        } else {
+          validationConditon = true;
+        }
+      }
+    }
+
+    return validationConditon;
+  }
+
+  Widget getCardForThermometer(String deviceName) {
+    return Container(
+        //height: 70,
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(left: 15, right: 15, top: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(fhbColors.cardShadowColor),
+              blurRadius: 16, // has the effect of softening the shadow
+              spreadRadius: 0, // has the effect of extending the shadow
+            )
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  Image.asset(
+                    Devices_THM,
+                    height: 40.0,
+                    width: 40.0,
+                    color: Color(CommonConstants.ThermoDarkColor),
+                  ),
+                  Text(
+                    CommonConstants.STR_THERMOMETER,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Color(CommonConstants.ThermoDarkColor)),
+                    softWrap: true,
+                  ),
+                ],
+              ),
+              flex: 1,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Temp',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Color(CommonConstants.ThermolightColor)),
+                        softWrap: true,
+                      ),
+                      Container(
+                        width: 50,
+                        constraints: BoxConstraints(maxWidth: 100),
+                        child: TextFormField(
+                            controller: deviceController,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w500,
+                                color: Color(CommonConstants.ThermoDarkColor)),
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(
+                                          CommonConstants.ThermoDarkColor),
+                                      width: 0.5),
+                                ),
+                                hintText: '0',
+                                hintStyle:
+                                    TextStyle(color: Colors.grey, fontSize: 13),
+                                contentPadding: EdgeInsets.zero),
+                            cursorColor: Color(CommonConstants.ThermoDarkColor),
+                            keyboardType: TextInputType.number,
+                            cursorWidth: 0.5,
+                            onSaved: (input) => setState(() {})),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        '',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Color(CommonUtil().getMyPrimaryColor())),
+                        softWrap: true,
+                      ),
+                      Container(
+                        width: 50,
+                        constraints: BoxConstraints(maxWidth: 100),
+                        child: Text(
+                          'F',
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                              color: Color(CommonConstants.ThermoDarkColor)),
+                          softWrap: true,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget getCardForWeighingScale(String deviceName) {
+    return Container(
+        //height: 70,
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(left: 15, right: 15, top: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(fhbColors.cardShadowColor),
+              blurRadius: 16, // has the effect of softening the shadow
+              spreadRadius: 0, // has the effect of extending the shadow
+            )
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  Image.asset(
+                    Devices_WS,
+                    height: 30.0,
+                    width: 30.0,
+                    color: Color(CommonConstants.weightDarkColor),
+                  ),
+                  Text(
+                    CommonConstants.STR_WEIGHING_SCALE,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Color(CommonConstants.weightDarkColor)),
+                    softWrap: true,
+                  ),
+                ],
+              ),
+              flex: 1,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        'Kg',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Color(CommonConstants.weightlightColor)),
+                        softWrap: true,
+                      ),
+                      Container(
+                        width: 50,
+                        constraints: BoxConstraints(maxWidth: 100),
+                        child: TextFormField(
+                            controller: deviceController,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w500,
+                                color: Color(CommonConstants.weightDarkColor)),
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Color(
+                                          CommonConstants.weightDarkColor),
+                                      width: 0.5),
+                                ),
+                                hintText: '0',
+                                hintStyle:
+                                    TextStyle(color: Colors.grey, fontSize: 13),
+                                contentPadding: EdgeInsets.zero),
+                            cursorColor: Color(CommonConstants.weightDarkColor),
+                            keyboardType: TextInputType.number,
+                            cursorWidth: 0.5,
+                            onSaved: (input) => setState(() {})),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget getCardForPulseOxidometer(String deviceName) {
+    return Container(
+        //height: 70,
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(left: 15, right: 15, top: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(fhbColors.cardShadowColor),
+              blurRadius: 16, // has the effect of softening the shadow
+              spreadRadius: 0, // has the effect of extending the shadow
+            )
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  Image.asset(
+                    Devices_OxY,
+                    height: 30.0,
+                    width: 30.0,
+                    color: Color(CommonConstants.pulseDarkColor),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    deviceName,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Color(CommonConstants.pulseDarkColor)),
+                    softWrap: true,
+                  ),
+                ],
+              ),
+              flex: 1,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'SPO2',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: Color(CommonConstants.pulselightColor)),
+                            softWrap: true,
+                          ),
+                          Container(
+                            width: 50,
+                            constraints: BoxConstraints(maxWidth: 100),
+                            child: TextFormField(
+                                controller: deviceController,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        Color(CommonConstants.pulseDarkColor)),
+                                decoration: InputDecoration(
+                                    border: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.black, width: 0.5),
+                                    ),
+                                    hintText: '0',
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey, fontSize: 13),
+                                    contentPadding: EdgeInsets.zero),
+                                cursorColor:
+                                    Color(CommonConstants.pulseDarkColor),
+                                keyboardType: TextInputType.number,
+                                cursorWidth: 0.5,
+                                onSaved: (input) => setState(() {})),
+                          ),
+                        ],
+                      )),
+                  Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'PRBpm',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: Color(CommonConstants.pulselightColor)),
+                            softWrap: true,
+                          ),
+                          Container(
+                            width: 50,
+                            constraints: BoxConstraints(maxWidth: 100),
+                            child: TextFormField(
+                                controller: pulse,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 13.0,
+                                    fontWeight: FontWeight.w500,
+                                    color:
+                                        Color(CommonConstants.pulseDarkColor)),
+                                decoration: InputDecoration(
+                                    border: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Color(
+                                              CommonConstants.pulseDarkColor),
+                                          width: 0.5),
+                                    ),
+                                    hintText: '0',
+                                    hintStyle: TextStyle(
+                                        color: Colors.grey, fontSize: 13),
+                                    contentPadding: EdgeInsets.zero),
+                                cursorColor:
+                                    Color(CommonConstants.pulseDarkColor),
+                                keyboardType: TextInputType.number,
+                                cursorWidth: 0.5,
+                                onSaved: (input) => setState(() {})),
+                          ),
+                        ],
+                      ))
+                ],
+              ),
+            ),
+          ],
+        ));
+  }
+
+  Widget getCardForGlucometer(String deviceName) {
+    return Container(
+        //height: 70,
+        padding: EdgeInsets.all(10.0),
+        margin: EdgeInsets.only(left: 15, right: 15, top: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(fhbColors.cardShadowColor),
+              blurRadius: 16, // has the effect of softening the shadow
+              spreadRadius: 0, // has the effect of extending the shadow
+            )
+          ],
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                children: [
+                  Image.asset(
+                    Devices_GL,
+                    height: 40.0,
+                    width: 40.0,
+                    color: Color(CommonConstants.GlucoDarkColor),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    deviceName,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        color: Color(CommonConstants.GlucoDarkColor)),
+                    softWrap: true,
+                  ),
+                ],
+              ),
+              flex: 1,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+                flex: 1,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      'mg/dl',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 12,
+                          color: Color(CommonConstants.GlucolightColor)),
+                      softWrap: true,
+                    ),
+                    Container(
+                      width: 50,
+                      constraints: BoxConstraints(maxWidth: 100),
+                      child: TextFormField(
+                          controller: deviceController,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 15.0,
+                              fontWeight: FontWeight.w800,
+                              color: Color(CommonConstants.GlucoDarkColor)),
+                          decoration: InputDecoration(
+                              border: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color:
+                                        Color(CommonConstants.GlucoDarkColor),
+                                    width: 0.5),
+                              ),
+                              hintText: '0',
+                              hintStyle: TextStyle(
+                                  color: Color(CommonConstants.GlucolightColor),
+                                  fontSize: 13),
+                              contentPadding: EdgeInsets.zero),
+                          cursorColor: Color(CommonConstants.GlucoDarkColor),
+                          keyboardType: TextInputType.number,
+                          cursorWidth: 0.5,
+                          onSaved: (input) => setState(() {})),
+                    ),
+                  ],
+                )),
+            SizedBox(
+              width: 5,
+            ),
+            Expanded(
+              flex: 1,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'Fasting',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: Colors.grey),
+                            softWrap: true,
+                          ),
+                          Container(
+                              width: 50,
+                              constraints: BoxConstraints(maxWidth: 100),
+                              child: MyCheckbox(
+                                  value: isSelected[0],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isSelected[0] = value;
+                                      isSelected[1] = null;
+                                    });
+                                  })),
+                        ],
+                      )),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Expanded(
+                      flex: 1,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            'PP',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                color: Colors.grey),
+                            softWrap: true,
+                          ),
+                          Container(
+                              width: 50,
+                              constraints: BoxConstraints(maxWidth: 100),
+                              child: MyCheckbox(
+                                  value: isSelected[1],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      isSelected[1] = value;
+                                      isSelected[0] = null;
+                                    });
+                                  })),
+                        ],
+                      ))
+                ],
+              ),
+            ),
+          ],
+        ));
+  }
+}
