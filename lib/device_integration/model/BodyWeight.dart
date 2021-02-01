@@ -9,6 +9,7 @@ class BodyWeight {
 
   bool isSuccess;
   List<BodyWeightEntity> entities;
+  AverageAsOfNow averageAsOfNow;
 
   factory BodyWeight.fromJson(Map<String, dynamic> json) => BodyWeight(
         isSuccess: json[param.is_Success],
@@ -29,7 +30,8 @@ class BodyWeightEntity {
     this.endDateTime,
     this.weight,
     this.weightUnit,
-    this.deviceHealthRecord
+    this.deviceHealthRecord,
+    this.averageAsOfNow
   });
 
   String id;
@@ -38,6 +40,7 @@ class BodyWeightEntity {
   String weight;
   RefrenceValueMeta weightUnit;
   DeviceHealthRecord deviceHealthRecord;
+  AverageAsOfNow averageAsOfNow;
 
   factory BodyWeightEntity.fromJson(Map<String, dynamic> json) =>
       BodyWeightEntity(
@@ -48,7 +51,10 @@ class BodyWeightEntity {
         weightUnit: RefrenceValueMeta.fromJson(json[param.strParamWeightUnit]),
           deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
               ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
-              : null
+              : null,
+        averageAsOfNow: json['averageAsOfNow'] != null
+            ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
+            : null
       );
 
   Map<String, dynamic> toJson() => {
@@ -58,6 +64,7 @@ class BodyWeightEntity {
         param.strParamWeight: weight,
         param.strParamWeightUnit: weightUnit.toJson(),
         param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
+        param.strParamAverageAsOfNow:averageAsOfNow.toJson()
       };
 }
 
@@ -77,6 +84,22 @@ class DeviceHealthRecord {
     if (this.sourceType != null) {
       data['sourceType'] = this.sourceType.toJson();
     }
+    return data;
+  }
+}
+
+class AverageAsOfNow {
+  var weightAverage;
+
+  AverageAsOfNow({this.weightAverage});
+
+  AverageAsOfNow.fromJson(Map<String, dynamic> json) {
+    weightAverage = json['weightAverage'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['weightAverage'] = this.weightAverage;
     return data;
   }
 }

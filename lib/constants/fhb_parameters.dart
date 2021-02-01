@@ -373,6 +373,7 @@ const String strDataTypeBP = "Blood Pressure";
 const String strParamSystolic = 'systolic';
 const String strParamDiastolic = "diastolic";
 const String strParamDeviceHealthRecord = "deviceHealthRecord";
+const String strParamAverageAsOfNow = "averageAsOfNow";
 //Glucose
 const String strGlucometer = "Glucometer";
 const String strGlusoceLevel = "Blood Glucose";

@@ -28,7 +28,8 @@ class BodyTemperatureEntity {
         this.endDateTime,
         this.temperature,
         this.temperatureUnit,
-        this.deviceHealthRecord
+        this.deviceHealthRecord,
+        this.averageAsOfNow
     });
 
     // String id;
@@ -37,6 +38,7 @@ class BodyTemperatureEntity {
     String temperature;
     RefrenceValueMeta temperatureUnit;
     DeviceHealthRecord deviceHealthRecord;
+    AverageAsOfNow averageAsOfNow;
 
     factory BodyTemperatureEntity.fromJson(Map<String, dynamic> json) => BodyTemperatureEntity(
         // id: json["id"],
@@ -46,7 +48,10 @@ class BodyTemperatureEntity {
         temperatureUnit: RefrenceValueMeta.fromJson(json[param.strParamTempUnit]),
         deviceHealthRecord: json[param.strParamDeviceHealthRecord] != null
     ? new DeviceHealthRecord.fromJson(json[param.strParamDeviceHealthRecord])
-        : null
+        : null,
+        averageAsOfNow: json['averageAsOfNow'] != null
+            ? new AverageAsOfNow.fromJson(json['averageAsOfNow'])
+            : null,
     );
 
     Map<String, dynamic> toJson() => {
@@ -56,6 +61,7 @@ class BodyTemperatureEntity {
         param.strParamTemp : temperature,
         param.strParamTempUnit : temperatureUnit.toJson(),
         param.strParamDeviceHealthRecord:deviceHealthRecord.toJson(),
+        param.strParamAverageAsOfNow:averageAsOfNow.toJson(),
     };
 }
 
@@ -75,6 +81,22 @@ class DeviceHealthRecord {
         if (this.sourceType != null) {
             data['sourceType'] = this.sourceType.toJson();
         }
+        return data;
+    }
+}
+
+class AverageAsOfNow {
+    var temperatureAverage;
+
+    AverageAsOfNow({this.temperatureAverage});
+
+    AverageAsOfNow.fromJson(Map<String, dynamic> json) {
+        temperatureAverage = json['temperatureAverage'];
+    }
+
+    Map<String, dynamic> toJson() {
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['temperatureAverage'] = this.temperatureAverage;
         return data;
     }
 }
