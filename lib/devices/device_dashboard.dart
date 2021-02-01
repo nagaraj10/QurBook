@@ -145,14 +145,33 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
             MaterialPageRoute(
               builder: (context) {
                 return ChatScreen(
-                  sheelaInputs: '',
+                  sheelaInputs: getDeviceForString(),
                 );
               },
             ),
-          ).then((value) {});
+          );
         },
       ),
     );
+  }
+
+  String getDeviceForString() {
+    switch (widget.arguments.deviceName) {
+      case STR_GLUCOMETER:
+        return variable.requestSheelaForglucose;
+        break;
+      case STR_THERMOMETER:
+        return variable.requestSheelaFortemperature;
+      case STR_BP_MONITOR:
+        return variable.requestSheelaForbp;
+      case STR_WEIGHING_SCALE:
+        return variable.requestSheelaForweight;
+      case STR_PULSE_OXIMETER:
+        return variable.requestSheelaForpo;
+      default:
+        return variable.requestSheelaForglucose;
+        break;
+    }
   }
 
   Widget getCardForBPMonitor(String deviceName) {
