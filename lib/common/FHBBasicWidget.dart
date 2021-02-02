@@ -551,4 +551,88 @@ class FHBBasicWidget {
       ),
     );
   }
+
+  Widget getErrorMsgForUnitEntered(
+      BuildContext context,
+      String hintTextValue,
+      String suffixTextValue,
+      TextEditingController controllerValue,
+      Function(String) onTextChanged,
+      String error,
+      String unitsTosearch,
+      String deviceName) {
+    var commonConstants = new CommonConstants();
+
+    UnitsMesurements unitsMesurements;
+    commonConstants
+        .getValuesForUnit(unitsTosearch)
+        .then((unitsMesurementsClone) {
+      unitsMesurements = unitsMesurementsClone;
+    });
+
+    String errorValue = error;
+    return Container(
+        width: MediaQuery.of(context).size.width - 60,
+        child: TextField(
+          autofocus: false,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 13.0,
+              fontWeight: FontWeight.w500,
+              color: getColorBasedOnDevice(deviceName)),
+          onTap: () {},
+          controller: controllerValue,
+          decoration: InputDecoration(
+              border: UnderlineInputBorder(
+                borderSide: BorderSide(
+                    color: getColorBasedOnDevice(deviceName), width: 0.5),
+              ),
+              hintText: '0',
+              hintStyle: TextStyle(color: Colors.grey, fontSize: 13),
+              contentPadding: EdgeInsets.zero),
+          cursorColor: getColorBasedOnDevice(deviceName),
+          keyboardType: TextInputType.number,
+          cursorWidth: 0.5,
+          onChanged: (value) {
+            var number = int.parse(value);
+            if (number < unitsMesurements.minValue ||
+                number > unitsMesurements.maxValue) {
+              errorValue = CommonConstants.strErrorStringForDevices +
+                  ' ' +
+                  unitsMesurements.minValue.toString() +
+                  variable.strAnd +
+                  unitsMesurements.maxValue.toString();
+
+              onTextChanged(errorValue);
+            } else {
+              onTextChanged('');
+            }
+          },
+        ));
+  }
+
+  getColorBasedOnDevice(String deviceName) {
+    switch (deviceName) {
+      case Constants.STR_BP_MONITOR:
+        return Color(CommonConstants.bpDarkColor);
+        break;
+      case Constants.STR_GLUCOMETER:
+        return Color(CommonConstants.GlucoDarkColor);
+        break;
+      case Constants.STR_WEIGHING_SCALE:
+        return Color(CommonConstants.weightDarkColor);
+        break;
+
+      case Constants.STR_THERMOMETER:
+        return Color(CommonConstants.ThermoDarkColor);
+        break;
+
+      case Constants.STR_PULSE_OXIMETER:
+        return Color(CommonConstants.pulseDarkColor);
+        break;
+      default:
+        return Color(CommonConstants.pulseDarkColor);
+        break;
+    }
+  }
 }

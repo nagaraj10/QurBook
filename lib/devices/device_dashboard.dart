@@ -55,6 +55,11 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   List<bool> isSelected = new List(2);
 
   String deviceName = Constants.STR_WEIGHING_SCALE;
+
+  String errorMsg = '';
+  FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
+  bool onOkClicked = false;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -64,46 +69,64 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffold_state,
-      appBar: AppBar(
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        flexibleSpace: GradientAppBar(),
-        leading: IconWidget(
-          icon: Icons.arrow_back_ios,
-          colors: Colors.white,
-          size: 20,
-          onTap: () {
-            Navigator.pop(context);
-          },
-        ),
-        titleSpacing: 0,
-        title: Text(deviceName),
-      ),
-      body: Column(
-        children: [
-          getCardBasedOnDevices(deviceName),
-          SizedBox(
-            height: 20,
+    return WillPopScope(
+        onWillPop: _onBackPressed,
+        child: Scaffold(
+          key: scaffold_state,
+          appBar: AppBar(
+            elevation: 0,
+            automaticallyImplyLeading: false,
+            flexibleSpace: GradientAppBar(),
+            leading: IconWidget(
+              icon: Icons.arrow_back_ios,
+              colors: Colors.white,
+              size: 20,
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            titleSpacing: 0,
+            title: Text(deviceName),
           ),
-          new Container(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  MaterialButton(
-                    onPressed: () {},
-                    child: Text('',
-                        style: TextStyle(
-                            fontSize: 22.0, fontWeight: FontWeight.w400),
-                        textAlign: TextAlign.center),
-                  ),
-                  OutlineButton(
-                    onPressed: () {
+          body: Column(
+            children: [
+              getCardBasedOnDevices(deviceName),
+              SizedBox(
+                height: 20,
+              ),
+              Text(errorMsg),
+              new Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 8.0, top: 4.0, right: 8.0, bottom: 0.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      MaterialButton(
+                        onPressed: () {},
+                        child: Text('',
+                            style: TextStyle(
+                                fontSize: 22.0, fontWeight: FontWeight.w400),
+                            textAlign: TextAlign.center),
+                      ),
+                      OutlineButton(
+                        onPressed: onOkClicked
+                            ? () {}
+                            : () async {
+                                onOkClicked = true;
+
+                                new FHBUtils().check().then((intenet) {
+                                  if (intenet != null && intenet) {
+                                    createDeviceRecords(deviceName);
+                                  } else {
+                                    onOkClicked = false;
+                                    new FHBBasicWidget().showInSnackBar(
+                                        Constants.STR_NO_CONNECTIVITY,
+                                        scaffold_state);
+                                  }
+                                });
+                              } /*() {
                       new FHBUtils().check().then((intenet) {
                         if (intenet != null && intenet) {
                           createDeviceRecords(deviceName);
@@ -112,47 +135,71 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                               Constants.STR_NO_CONNECTIVITY, scaffold_state);
                         }
                       });
-                    },
-                    child: Text('OK'),
-                    textColor: Color(CommonUtil().getMyPrimaryColor()),
-                    color: Colors.transparent,
-                    borderSide: BorderSide(
-                        color: Color(CommonUtil().getMyPrimaryColor())),
-                    shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                    }*/
+                        ,
+                        child: Text('OK'),
+                        textColor: Color(CommonUtil().getMyPrimaryColor()),
+                        color: Colors.transparent,
+                        borderSide: BorderSide(
+                            color: Color(CommonUtil().getMyPrimaryColor())),
+                        shape: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                      //submitButton(_otpVerifyBloc)
+                      MaterialButton(
+                        onPressed: () {
+                          //matchOtp();
+                        },
+                        child: Text('',
+                            style: TextStyle(
+                                fontSize: 22.0, fontWeight: FontWeight.w400),
+                            textAlign: TextAlign.center),
+                      ),
+                    ],
                   ),
-                  //submitButton(_otpVerifyBloc)
-                  MaterialButton(
-                    onPressed: () {
-                      //matchOtp();
-                    },
-                    child: Text('',
-                        style: TextStyle(
-                            fontSize: 22.0, fontWeight: FontWeight.w400),
-                        textAlign: TextAlign.center),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
-      floatingActionButton: IconButton(
-        icon: Image.asset(variable.icon_mayaMain),
-        iconSize: 60,
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) {
-                return ChatScreen(
-                  sheelaInputs: getDeviceForString(),
-                );
-              },
-            ),
-          );
-        },
-      ),
-    );
+          floatingActionButton: IconButton(
+            icon: Image.asset(variable.icon_mayaMain),
+            iconSize: 60,
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ChatScreen(
+                      sheelaInputs: getDeviceForString(),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ));
+  }
+
+  Future<bool> _onBackPressed() {
+    onOkClicked = false;
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              new GestureDetector(
+                onTap: () => Navigator.of(context).pop(false),
+                child: Text("NO"),
+              ),
+              SizedBox(height: 16),
+              new GestureDetector(
+                onTap: () => Navigator.of(context).pop(true),
+                child: Text("YES"),
+              ),
+            ],
+          ),
+        ) ??
+        false;
   }
 
   String getDeviceForString() {
@@ -190,169 +237,204 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
             )
           ],
         ),
-        child: Row(
+        child: Column(
           children: [
-            Column(
+            Row(
               children: [
-                Image.asset(
-                  Devices_BP,
-                  height: 30.0,
-                  width: 30.0,
-                  color: Color(CommonConstants.bpDarkColor),
+                Column(
+                  children: [
+                    Image.asset(
+                      Devices_BP,
+                      height: 30.0,
+                      width: 30.0,
+                      color: Color(CommonConstants.bpDarkColor),
+                    ),
+                    Text(
+                      CommonConstants.STR_BP_MONITOR,
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          color: Color(CommonConstants.bpDarkColor)),
+                      softWrap: true,
+                    ),
+                  ],
                 ),
-                Text(
-                  CommonConstants.STR_BP_MONITOR,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                      color: Color(CommonConstants.bpDarkColor)),
-                  softWrap: true,
+                SizedBox(
+                  width: 5,
+                ),
+                Expanded(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Text(
+                                  'Sys',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      color:
+                                          Color(CommonConstants.bplightColor)),
+                                  softWrap: true,
+                                ),
+                                /*Container(
+                                  child: TextFormField(
+                                      textAlign: TextAlign.center,
+                                      controller: deviceController,
+                                      style: TextStyle(
+                                          fontSize: 13.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(
+                                              CommonConstants.bpDarkColor)),
+                                      decoration: InputDecoration(
+                                          border: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color(CommonConstants
+                                                    .bpDarkColor),
+                                                width: 0.5),
+                                          ),
+                                          hintText: '0',
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey, fontSize: 13),
+                                          contentPadding: EdgeInsets.zero),
+                                      cursorColor:
+                                          Color(CommonConstants.bpDarkColor),
+                                      keyboardType: TextInputType.number,
+                                      cursorWidth: 0.5,
+                                      onSaved: (input) => setState(() {})),
+                                )*/
+                                fhbBasicWidget.getErrorMsgForUnitEntered(
+                                    context,
+                                    CommonConstants.strSystolicPressure,
+                                    commonConstants.bpDPUNIT,
+                                    deviceController, (errorValue) {
+                                  setState(() {
+                                    errorMsg = errorValue;
+                                  });
+                                }, errorMsg, variable.strbpunit, deviceName)
+                              ],
+                            ),
+                          ),
+                          flex: 1),
+                      Expanded(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Dia',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12,
+                                    color: Color(CommonConstants.bplightColor)),
+                                softWrap: true,
+                              ),
+                              /*Container(
+                                constraints: BoxConstraints(maxWidth: 100),
+                                child: TextFormField(
+                                    controller: diaStolicPressure,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.w500,
+                                        color:
+                                            Color(CommonConstants.bpDarkColor)),
+                                    decoration: InputDecoration(
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(
+                                              color: Colors.black, width: 0.5),
+                                        ),
+                                        hintText: '0',
+                                        hintStyle: TextStyle(
+                                            color: Colors.grey, fontSize: 13),
+                                        contentPadding: EdgeInsets.zero),
+                                    cursorColor:
+                                        Color(CommonConstants.bpDarkColor),
+                                    keyboardType: TextInputType.number,
+                                    cursorWidth: 0.5,
+                                    onSaved: (input) => setState(() {})),
+                              ),*/
+                              fhbBasicWidget.getErrorMsgForUnitEntered(
+                                  context,
+                                  CommonConstants.strDiastolicPressure,
+                                  commonConstants.bpDPUNIT,
+                                  diaStolicPressure, (errorValue) {
+                                setState(() {
+                                  errorMsg = errorValue;
+                                });
+                              }, errorMsg, variable.strbpunit, deviceName)
+                            ],
+                          ),
+                          flex: 1),
+                      Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(5),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Text(
+                                  'Pul',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12,
+                                      color:
+                                          Color(CommonConstants.bplightColor)),
+                                  softWrap: true,
+                                ),
+                                /*Container(
+                                  constraints: BoxConstraints(maxWidth: 100),
+                                  child: TextFormField(
+                                      textAlign: TextAlign.center,
+                                      controller: pulse,
+                                      style: TextStyle(
+                                          fontSize: 13.0,
+                                          fontWeight: FontWeight.w500,
+                                          color: Color(
+                                              CommonConstants.bpDarkColor)),
+                                      decoration: InputDecoration(
+                                          border: UnderlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color(CommonConstants
+                                                    .bpDarkColor),
+                                                width: 0.5),
+                                          ),
+                                          hintText: '0',
+                                          hintStyle: TextStyle(
+                                              color: Colors.grey, fontSize: 13),
+                                          contentPadding: EdgeInsets.zero),
+                                      cursorColor:
+                                          Color(CommonConstants.bpDarkColor),
+                                      keyboardType: TextInputType.number,
+                                      cursorWidth: 0.5,
+                                      onSaved: (input) => setState(() {})),
+                                ),*/
+                                fhbBasicWidget.getErrorMsgForUnitEntered(
+                                    context,
+                                    CommonConstants.strPulse,
+                                    commonConstants.bpPulseUNIT,
+                                    pulse, (errorValue) {
+                                  setState(() {
+                                    errorMsg = errorValue;
+                                  });
+                                }, errorMsg, variable.strpulse, deviceName),
+                              ],
+                            ),
+                          ),
+                          flex: 1),
+                      SizedBox(
+                        width: 15,
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 15,
-                  ),
-                  Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Sys',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
-                                  color: Color(CommonConstants.bplightColor)),
-                              softWrap: true,
-                            ),
-                            Container(
-                              child: TextFormField(
-                                  textAlign: TextAlign.center,
-                                  controller: deviceController,
-                                  style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.w500,
-                                      color:
-                                          Color(CommonConstants.bpDarkColor)),
-                                  decoration: InputDecoration(
-                                      border: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color(
-                                                CommonConstants.bpDarkColor),
-                                            width: 0.5),
-                                      ),
-                                      hintText: '0',
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey, fontSize: 13),
-                                      contentPadding: EdgeInsets.zero),
-                                  cursorColor:
-                                      Color(CommonConstants.bpDarkColor),
-                                  keyboardType: TextInputType.number,
-                                  cursorWidth: 0.5,
-                                  onSaved: (input) => setState(() {})),
-                            ),
-                          ],
-                        ),
-                      ),
-                      flex: 1),
-                  Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Dia',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                                color: Color(CommonConstants.bplightColor)),
-                            softWrap: true,
-                          ),
-                          Container(
-                            constraints: BoxConstraints(maxWidth: 100),
-                            child: TextFormField(
-                                controller: diaStolicPressure,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 13.0,
-                                    fontWeight: FontWeight.w500,
-                                    color: Color(CommonConstants.bpDarkColor)),
-                                decoration: InputDecoration(
-                                    border: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5),
-                                    ),
-                                    hintText: '0',
-                                    hintStyle: TextStyle(
-                                        color: Colors.grey, fontSize: 13),
-                                    contentPadding: EdgeInsets.zero),
-                                cursorColor: Color(CommonConstants.bpDarkColor),
-                                keyboardType: TextInputType.number,
-                                cursorWidth: 0.5,
-                                onSaved: (input) => setState(() {})),
-                          ),
-                        ],
-                      ),
-                      flex: 1),
-                  Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.all(5),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              'Pul',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12,
-                                  color: Color(CommonConstants.bplightColor)),
-                              softWrap: true,
-                            ),
-                            Container(
-                              constraints: BoxConstraints(maxWidth: 100),
-                              child: TextFormField(
-                                  textAlign: TextAlign.center,
-                                  controller: pulse,
-                                  style: TextStyle(
-                                      fontSize: 13.0,
-                                      fontWeight: FontWeight.w500,
-                                      color:
-                                          Color(CommonConstants.bpDarkColor)),
-                                  decoration: InputDecoration(
-                                      border: UnderlineInputBorder(
-                                        borderSide: BorderSide(
-                                            color: Color(
-                                                CommonConstants.bpDarkColor),
-                                            width: 0.5),
-                                      ),
-                                      hintText: '0',
-                                      hintStyle: TextStyle(
-                                          color: Colors.grey, fontSize: 13),
-                                      contentPadding: EdgeInsets.zero),
-                                  cursorColor:
-                                      Color(CommonConstants.bpDarkColor),
-                                  keyboardType: TextInputType.number,
-                                  cursorWidth: 0.5,
-                                  onSaved: (input) => setState(() {})),
-                            ),
-                          ],
-                        ),
-                      ),
-                      flex: 1),
-                  SizedBox(
-                    width: 15,
-                  ),
-                ],
-              ),
             ),
           ],
         ));
@@ -498,7 +580,6 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
         postMainData[parameters.strmetaInfo] = postMediaData;
 
         var params = json.encode(postMediaData);
-        print(params);
 
         _healthReportListForUserBlock
             .createHealtRecords(params.toString(), imagePathMain, '')
@@ -507,6 +588,8 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
             _healthReportListForUserBlock.getHelthReportLists().then((value) {
               Navigator.of(_keyLoader.currentContext, rootNavigator: true)
                   .pop();
+              errorMsg = '';
+              onOkClicked = false;
 
               PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value);
@@ -520,12 +603,16 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
               });
             });
           } else {
+            errorMsg = '';
+            onOkClicked = false;
             Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
             toast.getToast(Constants.ERR_MSG_RECORD_CREATE, Colors.red);
           }
         });
       }
     } else {
+      onOkClicked = false;
+
       showDialog(
           context: context,
           child: new AlertDialog(
@@ -651,7 +738,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             color: Color(CommonConstants.ThermolightColor)),
                         softWrap: true,
                       ),
-                      Container(
+                      /*Container(
                         width: 50,
                         constraints: BoxConstraints(maxWidth: 100),
                         child: TextFormField(
@@ -676,7 +763,16 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             keyboardType: TextInputType.number,
                             cursorWidth: 0.5,
                             onSaved: (input) => setState(() {})),
-                      ),
+                      )*/
+                      fhbBasicWidget.getErrorMsgForUnitEntered(
+                          context,
+                          CommonConstants.strTemperature,
+                          commonConstants.tempUNIT,
+                          deviceController, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, commonConstants.tempUNIT, deviceName)
                     ],
                   ),
                   Column(
@@ -770,32 +866,15 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                             color: Color(CommonConstants.weightlightColor)),
                         softWrap: true,
                       ),
-                      Container(
-                        width: 50,
-                        constraints: BoxConstraints(maxWidth: 100),
-                        child: TextFormField(
-                            controller: deviceController,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w500,
-                                color: Color(CommonConstants.weightDarkColor)),
-                            decoration: InputDecoration(
-                                border: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Color(
-                                          CommonConstants.weightDarkColor),
-                                      width: 0.5),
-                                ),
-                                hintText: '0',
-                                hintStyle:
-                                    TextStyle(color: Colors.grey, fontSize: 13),
-                                contentPadding: EdgeInsets.zero),
-                            cursorColor: Color(CommonConstants.weightDarkColor),
-                            keyboardType: TextInputType.number,
-                            cursorWidth: 0.5,
-                            onSaved: (input) => setState(() {})),
-                      ),
+                      fhbBasicWidget.getErrorMsgForUnitEntered(
+                          context,
+                          CommonConstants.strWeight,
+                          commonConstants.weightUNIT,
+                          deviceController, (errorValue) {
+                        setState(() {
+                          errorMsg = errorValue;
+                        });
+                      }, errorMsg, commonConstants.weightUNIT, deviceName),
                     ],
                   ),
                 ],
@@ -869,32 +948,15 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 color: Color(CommonConstants.pulselightColor)),
                             softWrap: true,
                           ),
-                          Container(
-                            width: 50,
-                            constraints: BoxConstraints(maxWidth: 100),
-                            child: TextFormField(
-                                controller: deviceController,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 13.0,
-                                    fontWeight: FontWeight.w500,
-                                    color:
-                                        Color(CommonConstants.pulseDarkColor)),
-                                decoration: InputDecoration(
-                                    border: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 0.5),
-                                    ),
-                                    hintText: '0',
-                                    hintStyle: TextStyle(
-                                        color: Colors.grey, fontSize: 13),
-                                    contentPadding: EdgeInsets.zero),
-                                cursorColor:
-                                    Color(CommonConstants.pulseDarkColor),
-                                keyboardType: TextInputType.number,
-                                cursorWidth: 0.5,
-                                onSaved: (input) => setState(() {})),
-                          ),
+                          fhbBasicWidget.getErrorMsgForUnitEntered(
+                              context,
+                              CommonConstants.strOxygenSaturation,
+                              commonConstants.poOxySatUNIT,
+                              deviceController, (errorValue) {
+                            setState(() {
+                              errorMsg = errorValue;
+                            });
+                          }, errorMsg, variable.strpulseUnit, deviceName),
                         ],
                       )),
                   Expanded(
@@ -910,7 +972,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 color: Color(CommonConstants.pulselightColor)),
                             softWrap: true,
                           ),
-                          Container(
+                          /* Container(
                             width: 50,
                             constraints: BoxConstraints(maxWidth: 100),
                             child: TextFormField(
@@ -937,7 +999,16 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                 keyboardType: TextInputType.number,
                                 cursorWidth: 0.5,
                                 onSaved: (input) => setState(() {})),
-                          ),
+                          ),*/
+                          fhbBasicWidget.getErrorMsgForUnitEntered(
+                              context,
+                              CommonConstants.strPulse,
+                              commonConstants.poPulseUNIT,
+                              pulse, (errorValue) {
+                            setState(() {
+                              errorMsg = errorValue;
+                            });
+                          }, errorMsg, variable.strpulse, deviceName),
                         ],
                       ))
                 ],
@@ -1005,33 +1076,15 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                           color: Color(CommonConstants.GlucolightColor)),
                       softWrap: true,
                     ),
-                    Container(
-                      width: 50,
-                      constraints: BoxConstraints(maxWidth: 100),
-                      child: TextFormField(
-                          controller: deviceController,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 15.0,
-                              fontWeight: FontWeight.w800,
-                              color: Color(CommonConstants.GlucoDarkColor)),
-                          decoration: InputDecoration(
-                              border: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Color(CommonConstants.GlucoDarkColor),
-                                    width: 0.5),
-                              ),
-                              hintText: '0',
-                              hintStyle: TextStyle(
-                                  color: Color(CommonConstants.GlucolightColor),
-                                  fontSize: 13),
-                              contentPadding: EdgeInsets.zero),
-                          cursorColor: Color(CommonConstants.GlucoDarkColor),
-                          keyboardType: TextInputType.number,
-                          cursorWidth: 0.5,
-                          onSaved: (input) => setState(() {})),
-                    ),
+                    fhbBasicWidget.getErrorMsgForUnitEntered(
+                        context,
+                        CommonConstants.strValue,
+                        commonConstants.glucometerUNIT,
+                        deviceController, (errorValue) {
+                      setState(() {
+                        errorMsg = errorValue;
+                      });
+                    }, errorMsg, variable.strGlucUnit, deviceName)
                   ],
                 )),
             SizedBox(
