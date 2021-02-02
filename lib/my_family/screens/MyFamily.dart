@@ -345,32 +345,20 @@ class _MyFamilyState extends State<MyFamily> {
                             },
                           )
                     //!add condition for login user data
-                    : (parentProfilePic != null && parentProfilePic != '')
-                        ? Image.file(
+                    : myProfile != null
+                        ? myProfile.result != null
+                            ? myProfile.result.profilePicThumbnailUrl != null
+                                ? new FHBBasicWidget()
+                                    .getProfilePicWidgeUsingUrl(
+                                        myProfile.result.profilePicThumbnailUrl)
+                                :
+                                /* ? Image.file(
                             File(parentProfilePic),
                             fit: BoxFit.cover,
                             width: 60,
                             height: 60,
-                          )
-                        : Container(
-                            width: 60,
-                            height: 60,
-                            color: Color(fhbColors.bgColorContainer),
-                            child: Center(
-                              child: Text(
-                                fulName != null ? fulName[0].toUpperCase() : '',
-                                style: TextStyle(
-                                    fontSize: 22,
-                                    color: Color(
-                                        CommonUtil().getMyPrimaryColor())),
-                              ),
-                            ),
-                          ),
-
-                /* ? myProfile != null
-                        ? myProfile.result != null
-                            ? myProfile.result.profilePicThumbnailUrl == null
-                                ? Container(
+                          )*/
+                                Container(
                                     width: 60,
                                     height: 60,
                                     color: Color(fhbColors.bgColorContainer),
@@ -386,36 +374,22 @@ class _MyFamilyState extends State<MyFamily> {
                                       ),
                                     ),
                                   )
-                                : Image.network(
-                                    myProfile.result.profilePicThumbnailUrl,
-                                    fit: BoxFit.cover,
-                                    width: 60,
-                                    height: 60,
-                                  )
-                            : data.child.profilePicThumbnailUrl == null
-                                ? Container(
-                                    width: 60,
-                                    height: 60,
-                                    color: Color(fhbColors.bgColorContainer),
-                                    child: Center(
-                                      child: Text(
-                                        data.child.firstName != null
-                                            ? data.child.firstName[0]
-                                                .toUpperCase()
-                                            : '',
-                                        style: TextStyle(
-                                            fontSize: 22,
-                                            color: Color(CommonUtil()
-                                                .getMyPrimaryColor())),
-                                      ),
-                                    ),
-                                  )
-                                : Image.network(
-                                    data.child.profilePicThumbnailUrl,
-                                    fit: BoxFit.cover,
-                                    width: 60,
-                                    height: 60,
-                                  )
+                            : Container(
+                                width: 60,
+                                height: 60,
+                                color: Color(fhbColors.bgColorContainer),
+                                child: Center(
+                                  child: Text(
+                                    fulName != null
+                                        ? fulName[0].toUpperCase()
+                                        : '',
+                                    style: TextStyle(
+                                        fontSize: 22,
+                                        color: Color(
+                                            CommonUtil().getMyPrimaryColor())),
+                                  ),
+                                ),
+                              )
                         : Container(
                             width: 60,
                             height: 60,
@@ -429,20 +403,7 @@ class _MyFamilyState extends State<MyFamily> {
                                         CommonUtil().getMyPrimaryColor())),
                               ),
                             ),
-                          )
-                    : Container(
-                        width: 60,
-                        height: 60,
-                        color: Color(fhbColors.bgColorContainer),
-                        child: Center(
-                          child: Text(
-                            fulName != null ? fulName[0].toUpperCase() : '',
-                            style: TextStyle(
-                                fontSize: 22,
-                                color: Color(CommonUtil().getMyPrimaryColor())),
                           ),
-                        ),
-                      ), */
               ),
               SizedBox(
                 width: 20,
