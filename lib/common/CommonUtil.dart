@@ -1386,7 +1386,8 @@ class CommonUtil {
             in data.healthRecordCollection) {
           if (mediaMasterIds.fileType == ".jpg" ||
               mediaMasterIds.fileType == ".png" ||
-              mediaMasterIds.fileType == ".pdf")
+              mediaMasterIds.fileType == ".pdf" ||
+              mediaMasterIds.fileType == ".jpeg")
             mediaMasterIdsList.add(mediaMasterIds);
         }
       }

@@ -126,10 +126,6 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
           }
         },
         onTap: () {
-          print('ontap ******************');
-          print(widget.allowSelect);
-          print(widget.showDetails);
-          print(widget.allowAttach);
           if (widget.allowSelect && widget.showDetails == false) {
             if (widget.allowAttach) {
               bool condition;
