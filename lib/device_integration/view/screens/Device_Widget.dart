@@ -12,10 +12,14 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/device_integration/view/screens/Clipper.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
+import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
+import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
+import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
 import 'package:myfhb/src/ui/HomeScreen.dart';
+import 'package:myfhb/src/ui/user/UserAccounts.dart';
 import 'package:myfhb/src/utils/FHBUtils.dart';
 import 'package:provider/provider.dart';
 
@@ -98,6 +102,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   var averageForPRBpm;
 
   var averageForWeigh;
+  bool isFamilyAvail = false;
 
   MyProfileModel myProfile;
   AddFamilyUserInfoRepository addFamilyUserInfoRepository =
@@ -110,10 +115,39 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   final GlobalKey<State> _key = new GlobalKey<State>();
 
   FlutterToast toast = new FlutterToast();
+  FamilyListBloc _familyListBloc;
 
   @override
   void initState() {
+    _familyListBloc = new FamilyListBloc();
+    getFamilyLength();
+
     super.initState();
+  }
+
+  getFamilyLength() async {
+    _familyListBloc.getFamilyMembersListNew().then((familyMembersList) {
+      setState(() {
+        if (familyMembersList != null && familyMembersList.result != null) {
+          if (familyMembersList.result.sharedByUsers != null) {
+            isFamilyAvail = true;
+          } else {
+            isFamilyAvail = false;
+          }
+        } else {
+          isFamilyAvail = false;
+        }
+      });
+    });
+  }
+
+  navigateToAddFamily() {
+    Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) {
+      return UserAccounts(arguments: UserAccountsArguments(selectedIndex: 1));
+    })).then((value) {
+      getFamilyLength();
+      setState(() {});
+    });
   }
 
   Future<MyProfileModel> getMyProfile() async {
@@ -302,7 +336,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   Widget projectWidget(BuildContext context) {
     if (deviceValues.toString() == null) {
-      print('device Values is empty reload to get data');
       return new Center(
         child: new CircularProgressIndicator(
           backgroundColor: Colors.grey,
@@ -737,10 +770,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                   ),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
-                                        0.10,
+                                        0.12,
                                   ),
-                                  SwitchProfile().buildActions(
-                                      context, _key, callBackToRefresh),
+                                  isFamilyAvail
+                                      ? SwitchProfile().buildActions(
+                                          context, _key, callBackToRefresh)
+                                      : getMaterialPlusIcon(context),
                                 ],
                               ),
                             ),
@@ -2310,6 +2345,24 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
     ).then((value) {
       setState(() {});
     });
+  }
+
+  Widget getMaterialPlusIcon(BuildContext context) {
+    return MaterialButton(
+      height: 28.0,
+      minWidth: 30.0,
+      onPressed: () {
+        navigateToAddFamily();
+      },
+      color: Colors.white,
+      textColor: Color(new CommonUtil().getMyPrimaryColor()),
+      child: Icon(
+        Icons.add,
+        size: 16,
+      ),
+      padding: EdgeInsets.all(2),
+      shape: CircleBorder(),
+    );
   }
 }
 
