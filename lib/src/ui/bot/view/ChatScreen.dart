@@ -45,6 +45,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 2000), vsync: this, value: 0.1);
     _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
     _controller.forward();
+
     getMyViewModel().clearMyConversation();
     if (widget.sheelaInputs != null && widget.sheelaInputs != '') {
       getMyViewModel(sheelaInputs: widget.sheelaInputs);
@@ -74,10 +75,13 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   // }
 
   dynamic getMyViewModel({String sheelaInputs}) {
-    if (sheelaInputs != null && sheelaInputs != ''){
-      return Provider.of<ChatScreenViewModel>(context, listen: false).startSheelaFromDashboard(sheelaInputs);
-    }else{
-    return Provider.of<ChatScreenViewModel>(context, listen: false);
+    ChatScreenViewModel.prof =
+        PreferenceUtil.getProfileData(constants.KEY_PROFILE);
+    if (sheelaInputs != null && sheelaInputs != '') {
+      return Provider.of<ChatScreenViewModel>(context, listen: false)
+          .startSheelaFromDashboard(sheelaInputs);
+    } else {
+      return Provider.of<ChatScreenViewModel>(context, listen: false);
     }
   }
 

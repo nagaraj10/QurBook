@@ -19,12 +19,11 @@ import '../../../utils/FHBUtils.dart';
 
 class ChatScreenViewModel extends ChangeNotifier {
   static MyProfileModel prof =
-      PreferenceUtil.getProfileData(constants.KEY_PROFILE_MAIN);
+      PreferenceUtil.getProfileData(constants.KEY_PROFILE);
   List<Conversation> conversations = new List();
   static var uuid = Uuid().v1();
-  var user_id = PreferenceUtil.getStringValue(constants.KEY_USERID_MAIN);
-  var user_name =
-      prof.result != null ? prof.result.firstName + prof.result.lastName : '';
+  var user_id;
+  var user_name;
   var auth_token = PreferenceUtil.getStringValue(constants.KEY_AUTHTOKEN);
   var isMayaSpeaks = -1;
   var isEndOfConv = false;
@@ -38,6 +37,13 @@ class ChatScreenViewModel extends ChangeNotifier {
   void clearMyConversation() {
     conversations = List();
     notifyListeners();
+  }
+
+  ChatScreenViewModel() {
+    prof = PreferenceUtil.getProfileData(constants.KEY_PROFILE);
+    user_name =
+        prof.result != null ? prof.result.firstName + prof.result.lastName : '';
+    user_id = PreferenceUtil.getStringValue(constants.KEY_USERID);
   }
 
   startMayaAutomatically() {
@@ -107,6 +113,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   sendToMaya(String msg) async {
     String uuidString = uuid;
     String tzOffset = DateTime.now().timeZoneOffset.toString();
+    var user_id = await PreferenceUtil.getStringValue(constants.KEY_USERID);
     var splitedArr = tzOffset.split(':');
     Map<String, dynamic> reqJson = {};
     reqJson[parameters.strSender] = user_id;
