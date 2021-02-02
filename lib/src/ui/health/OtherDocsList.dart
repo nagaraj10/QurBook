@@ -143,6 +143,8 @@ class _OtherDocsState extends State<OtherDocsList> {
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
+              } else {
+                toast.getToast('No Image Attached ', Colors.red);
               }
             } else {
               bool condition;
