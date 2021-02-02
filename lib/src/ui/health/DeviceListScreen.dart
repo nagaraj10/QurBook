@@ -195,7 +195,19 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                   ),
                 ),
                 SizedBox(
-                  width: 5,
+                  width: 3,
+                ),
+                Container(
+                  width: 70,
+                  child: Text(
+                    data.metadata.healthRecordType.name != null
+                        ? toBeginningOfSentenceCase(
+                            data.metadata.healthRecordType.name)
+                        : '',
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10),
+                    maxLines: 2,
+                    softWrap: true,
+                  ),
                 ),
                 Expanded(
                   child: getDeviceReadings(data, data.metadata.deviceReadings),
@@ -268,16 +280,9 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
   Widget getDeviceReadings(
       HealthResult data, List<DeviceReadings> deviceReadings) {
     List<Widget> list = new List<Widget>();
-    list.add(Text(
-      data.metadata.healthRecordType.name != null
-          ? toBeginningOfSentenceCase(data.metadata.healthRecordType.name)
-          : '',
-      style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10),
-      softWrap: true,
-    ));
     for (var i = 0; i < deviceReadings.length; i++) {
       list.add(Padding(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(3),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
@@ -287,6 +292,7 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                       deviceReadings[i].parameter.toLowerCase())
                   : '',
               style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10),
+              maxLines: 2,
               softWrap: true,
             ),
             Text(
@@ -294,10 +300,11 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
               style: TextStyle(
                   color: Colors.black,
                   fontWeight: FontWeight.w500,
-                  fontSize: 16),
+                  fontSize: 10),
             ),
             Text(deviceReadings[i].unit.toString(),
-                style: TextStyle(color: Colors.black54, fontSize: 12))
+                maxLines: 2,
+                style: TextStyle(color: Colors.black54, fontSize: 10))
           ],
         ),
       ));
