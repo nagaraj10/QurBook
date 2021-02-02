@@ -10,7 +10,7 @@ import 'package:myfhb/constants/fhb_constants.dart' as constants;
 class SenderLayout extends StatelessWidget {
   final Conversation c;
   MyProfileModel myProfile =
-      PreferenceUtil.getProfileData(constants.KEY_PROFILE_MAIN);
+      PreferenceUtil.getProfileData(constants.KEY_PROFILE);
 
   SenderLayout(this.c);
 
