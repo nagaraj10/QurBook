@@ -137,9 +137,7 @@ class _AppointmentsState extends State<Appointments> {
       case LoadingStatus.searching:
         return new Center(
           child: new CircularProgressIndicator(
-              backgroundColor:
-              Color(new CommonUtil().getMyPrimaryColor())
-          ),
+              backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
         );
       case LoadingStatus.completed:
         return Consumer<AppointmentsListViewModel>(
@@ -228,14 +226,16 @@ class _AppointmentsState extends State<Appointments> {
                                       .compareTo(b.plannedStartDateTime
                                           .toLowerCase()));
                                   return DoctorPastAppointments(
-                                      doc: isSearch
-                                          ? historyInfo[i]
-                                          : appointmentsData.result.past[i],
-                                      onChanged: (value) {
-                                        refreshAppointments();
-                                      },closePage: (value){
-                                       Navigator.pop(context);
-                                  },);
+                                    doc: isSearch
+                                        ? historyInfo[i]
+                                        : appointmentsData.result.past[i],
+                                    onChanged: (value) {
+                                      refreshAppointments();
+                                    },
+                                    closePage: (value) {
+                                      Navigator.pop(context);
+                                    },
+                                  );
                                 },
                                 itemCount: isSearch
                                     ? historyInfo.length
@@ -310,7 +310,7 @@ class _AppointmentsState extends State<Appointments> {
             softwrap: true,
           ),
         ),
-        new CommonUtil().getNotificationIcon(context),
+        CommonUtil().getNotificationIcon(context),
         SwitchProfile().buildActions(context, _key, callBackToRefresh),
         // IconWidget(
         //   icon: Icons.more_vert,
@@ -327,10 +327,8 @@ class _AppointmentsState extends State<Appointments> {
     refreshAppointments();
   }
 
-  void refreshAppointments(){
-    Provider.of<AppointmentsListViewModel>(
-        context,
-        listen: false)
+  void refreshAppointments() {
+    Provider.of<AppointmentsListViewModel>(context, listen: false)
       ..clearAppointments()
       ..fetchAppointments();
   }

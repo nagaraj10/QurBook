@@ -1440,72 +1440,73 @@ class CommonUtil {
               .collection('unreadNotifications')
               .document(targetID)
               .snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasData) {
-                count = 0;
-                if(snapshot.data.data!=null){
-                  if(snapshot.data['count']!=null && snapshot.data['count']!=''){
-                    count = snapshot.data['count'];
-                  }else{
-                    count = 0;
-                  }
-                }else{
+              count = 0;
+              if (snapshot.data.data != null) {
+                if (snapshot.data['count'] != null &&
+                    snapshot.data['count'] != '') {
+                  count = snapshot.data['count'];
+                } else {
                   count = 0;
                 }
+              } else {
+                count = 0;
+              }
 
-              return BadgeIcon(
-                  icon: GestureDetector(
-                    child: IconWidget(
-                      icon: Icons.notifications,
-                      colors: Colors.white,
-                      size: 22,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => NotificationMain()),
-                        );
-                      },
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NotificationMain()),
+                  );
+                },
+                child: BadgeIcon(
+                    icon: Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                      size: 30,
                     ),
-                  ),
-                  badgeColor: ColorUtils.countColor,
-                  badgeCount: count);
-            }
-            else {
-              return BadgeIcon(
-                  icon: GestureDetector(
-                    child: IconWidget(
-                      icon: Icons.notifications,
-                      colors: Colors.white,
-                      size: 22,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => NotificationMain()),
-                        );
-                      },
+                    badgeColor: ColorUtils.countColor,
+                    badgeCount: count),
+              );
+            } else {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NotificationMain()),
+                  );
+                },
+                child: BadgeIcon(
+                    icon: Icon(
+                      Icons.notifications,
+                      color: Colors.white,
+                      size: 30,
                     ),
-                  ),
-                  badgeColor: ColorUtils.countColor,
-                  badgeCount: 0);
+                    badgeColor: ColorUtils.countColor,
+                    badgeCount: 0),
+              );
             }
           });
     } catch (e) {
-      return BadgeIcon(
-          icon: GestureDetector(
-            child: IconWidget(
-              icon: Icons.notifications,
-              colors: Colors.white,
-              size: 22,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NotificationMain()),
-                );
-              },
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NotificationMain()),
+          );
+        },
+        child: BadgeIcon(
+            icon: Icon(
+              Icons.notifications,
+              color: Colors.white,
+              size: 30,
             ),
-          ),
-          badgeColor: ColorUtils.countColor,
-          badgeCount: 0);
+            badgeColor: ColorUtils.countColor,
+            badgeCount: 0),
+      );
     }
   }
 }
