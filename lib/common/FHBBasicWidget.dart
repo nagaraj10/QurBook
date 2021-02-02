@@ -572,7 +572,7 @@ class FHBBasicWidget {
 
     String errorValue = error;
     return Container(
-        width: MediaQuery.of(context).size.width - 60,
+        width: 50,
         child: TextField(
           autofocus: false,
           textAlign: TextAlign.center,

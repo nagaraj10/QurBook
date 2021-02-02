@@ -181,7 +181,8 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
   Future<bool> _onBackPressed() {
     onOkClicked = false;
-    return showDialog(
+    Navigator.of(context).pop(true);
+    /*return showDialog(
           context: context,
           builder: (context) => new AlertDialog(
             title: new Text('Are you sure?'),
@@ -199,7 +200,7 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
             ],
           ),
         ) ??
-        false;
+        false;*/
   }
 
   String getDeviceForString() {
