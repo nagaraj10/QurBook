@@ -395,6 +395,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       } catch (e) {
         averageForSys = '';
         averageForDia = '';
+        pulseBp = '';
+        averageForPulForBp = '';
       }
     } else {
       dateForBp = '';
@@ -403,6 +405,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       sourceForBp = '';
       averageForSys = '';
       averageForDia = '';
+      pulseBp = '';
+      averageForPulForBp = '';
     }
     if (deviceValues.bloodGlucose.entities.isNotEmpty) {
       dateTimeStampForGulcose =

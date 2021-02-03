@@ -20,10 +20,13 @@ class LastMeasureSync {
     bool isSuccess;
     LastMeasureSyncValues result;
 
-    factory LastMeasureSync.fromJson(Map<String, dynamic> json) => LastMeasureSync(
-        isSuccess: json[param.is_Success],
-        result: LastMeasureSyncValues.fromJson(json[param.dataResult]),
-    );
+    factory LastMeasureSync.fromJson(Map<String, dynamic> json) =>
+        LastMeasureSync(
+            isSuccess: json[param.is_Success],
+            result: json.containsKey(param.dataResult)
+                ? LastMeasureSyncValues.fromJson(json[param.dataResult])
+                : null,
+        );
 
     Map<String, dynamic> toJson() => {
         param.is_Success: isSuccess,
