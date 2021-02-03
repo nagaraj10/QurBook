@@ -120,7 +120,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
                         elements: translist,
-                        sort: true,
+                        sort: false,
                         groupSeparatorBuilder: (String value) => Padding(
                           padding: const EdgeInsets.all(6.0),
                           child: Row(
@@ -184,7 +184,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
                         elements: translist,
-                        sort: true,
+                        sort: false,
                         groupSeparatorBuilder: (String value) => Padding(
                           padding: const EdgeInsets.all(6.0),
                           child: Row(
@@ -252,7 +252,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
                         elements: translist,
-                        sort: true,
+                        sort: false,
                         groupSeparatorBuilder: (String value) => Padding(
                           padding: const EdgeInsets.all(6.0),
                           child: Row(
@@ -317,7 +317,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
                         elements: translist,
-                        sort: true,
+                        sort: false,
                         groupSeparatorBuilder: (String value) => Padding(
                           padding: const EdgeInsets.all(6.0),
                           child: Row(
@@ -382,7 +382,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                         groupBy: (element) =>
                             getFormattedDateTime(element.startDateTime),
                         elements: translist,
-                        sort: true,
+                        sort: false,
                         groupSeparatorBuilder: (String value) => Padding(
                           padding: const EdgeInsets.all(6.0),
                           child: Row(

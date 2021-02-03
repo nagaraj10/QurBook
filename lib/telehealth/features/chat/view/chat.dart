@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
@@ -587,6 +588,10 @@ class ChatScreenState extends State<ChatScreen> {
       //});
 
       String word = document[STR_CONTENT];
+      final RegExp REGEX_EMOJI = RegExp(r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])');
+      if(word.contains(REGEX_EMOJI)){
+        word = word.replaceAll(REGEX_EMOJI,'');
+      }
       List<String> tempList =
           word.length > 1 && word.indexOf(textFieldValue) != -1
               ? word.split(textFieldValue)
@@ -1644,6 +1649,7 @@ class ChatScreenState extends State<ChatScreen> {
                         //_patientDetailOrSearch();
                       },
                       controller: textEditingController,
+                      inputFormatters: [ FilteringTextInputFormatter.allow(RegExp("[a-zA-Z]")),],
                       decoration: InputDecoration(
                         hintText: "$chatTextFieldHintText",
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
