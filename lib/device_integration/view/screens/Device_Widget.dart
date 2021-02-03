@@ -96,7 +96,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   var prbPMOxi;
 
   var averageForFasting;
-  var averageForPP;
+  var averageForPP='';
 
   var averageForTemp;
 
@@ -368,15 +368,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         if (deviceValues.heartRate.entities.isNotEmpty) {
           try {
             pulseBp = deviceValues.heartRate.entities[0].bpm.toString();
-            averageForPulForBp = deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage.toString();
+            averageForPulForBp = deviceValues
+                .heartRate.entities[0].averageAsOfNow.pulseAverage
+                .toString();
           } catch (e) {
             pulseBp = '';
             averageForPulForBp = '';
-
           }
         } else {
-          pulseBp='';
-          averageForPulForBp='';
+          pulseBp = '';
+          averageForPulForBp = '';
         }
 
         averageForSys = deviceValues
@@ -387,8 +388,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .toString()
             : '';
         averageForDia = deviceValues
+            .bloodPressure.entities[0].averageAsOfNow.diastolicAverage!=null
+        ?deviceValues
             .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
-            .toString();
+            .toString():'';
       } catch (e) {
         averageForSys = '';
         averageForDia = '';
@@ -430,11 +433,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
       try {
         averageForFasting = deviceValues
+            .bloodGlucose.entities[0].averageAsOfNow.fastingAverage!=null?deviceValues
             .bloodGlucose.entities[0].averageAsOfNow.fastingAverage
-            .toString();
+            .toString():'';
         averageForPP = deviceValues
+            .bloodGlucose.entities[0].averageAsOfNow.ppAverage!=null?deviceValues
             .bloodGlucose.entities[0].averageAsOfNow.ppAverage
-            .toString();
+            .toString():'';
       } catch (e) {
         averageForFasting = '';
         averageForPP = '';
@@ -466,8 +471,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
       try {
         averageForSPO2 = deviceValues
+            .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage!=null?deviceValues
             .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage
-            .toString();
+            .toString():'';
       } catch (e) {
         averageForSPO2 = '';
       }
@@ -495,8 +501,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
       try {
         averageForTemp = deviceValues
+            .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage!=null?deviceValues
             .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage
-            .toString();
+            .toString():'';
       } catch (e) {
         averageForTemp = '';
       }
@@ -524,8 +531,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
       try {
         averageForWeigh = deviceValues
+            .bodyWeight.entities[0].averageAsOfNow.weightAverage!=null?deviceValues
             .bodyWeight.entities[0].averageAsOfNow.weightAverage
-            .toString();
+            .toString():'';
       } catch (e) {
         averageForWeigh = '';
       }
@@ -542,11 +550,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         prbPMOxi = deviceValues.heartRate.entities[0].bpm.toString();
 
         averageForPul = deviceValues
+            .heartRate.entities[0].averageAsOfNow.pulseAverage!=null?deviceValues
             .heartRate.entities[0].averageAsOfNow.pulseAverage
-            .toString();
+            .toString():'';
         averageForPRBpm = deviceValues
+            .heartRate.entities[0].averageAsOfNow.pulseAverage!=null?deviceValues
             .heartRate.entities[0].averageAsOfNow.pulseAverage
-            .toString();
+            .toString():'';
       } catch (e) {
         averageForPul = '';
         averageForPRBpm = '';
@@ -558,7 +568,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       averageForPul = '';
       averageForPRBpm = '';
       //pulseBp='';
-      prbPMOxi='';
+      prbPMOxi = '';
     }
 
     return getDeviceData(
@@ -692,9 +702,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    myProfile != null ?? myProfile.result.firstName != null &&  myProfile.result.firstName!=''
+                    myProfile != null ??
+                            myProfile.result.firstName != null &&
+                                myProfile.result.firstName != ''
                         ? 'Hey ' +
-                            toBeginningOfSentenceCase(myProfile.result.firstName)
+                            toBeginningOfSentenceCase(
+                                myProfile.result.firstName)
                         : 'Hey User',
                     style: TextStyle(
                         fontSize: 18,
@@ -784,11 +797,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                     width: MediaQuery.of(context).size.width *
                                         0.05,
                                   ),
-                                 Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.66,
-                                      child: _getUserName(),
-                                    ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.66,
+                                    child: _getUserName(),
+                                  ),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.12,
@@ -892,7 +905,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   color: Colors.black),
                                             ),
                                             Text(
-                                              timeForBp != null && timeForBp!=''
+                                              timeForBp != null &&
+                                                      timeForBp != ''
                                                   ? timeForBp
                                                   : '',
                                               style: TextStyle(
@@ -1008,7 +1022,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           '#39c5c2')),
                                                 ),
                                                 Text(
-                                                  pulseBp != '' && pulseBp!=null
+                                                  pulseBp != '' &&
+                                                          pulseBp != null
                                                       ? pulseBp.toString()
                                                       : '-',
                                                   style: TextStyle(
@@ -1051,7 +1066,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           '#afafaf')),
                                                 ),
                                                 Text(
-                                                  averageForSys != ''
+                                                  averageForSys != '' &&
+                                                          averageForSys != null
                                                       ? averageForSys.toString()
                                                       : '-',
                                                   style: TextStyle(
@@ -1076,7 +1092,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           '#afafaf')),
                                                 ),
                                                 Text(
-                                                  averageForDia != ''
+                                                  averageForDia != '' &&
+                                                          averageForDia != null
                                                       ? averageForDia.toString()
                                                       : '-',
                                                   style: TextStyle(
@@ -1101,8 +1118,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           '#afafaf')),
                                                 ),
                                                 Text(
-                                                  averageForPulForBp != '' && averageForPulForBp!=null
-                                                      ? averageForPulForBp.toString()
+                                                  averageForPulForBp != '' &&
+                                                          averageForPulForBp !=
+                                                              null
+                                                      ? averageForPulForBp
+                                                          .toString()
                                                       : '-',
                                                   style: TextStyle(
                                                       fontSize: 14,
@@ -1238,7 +1258,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 Colors.black),
                                                       ),
                                                       Text(
-                                                        timeForGulcose != null && timeForGulcose!=''
+                                                        timeForGulcose !=
+                                                                    null &&
+                                                                timeForGulcose !=
+                                                                    ''
                                                             ? timeForGulcose
                                                             : '',
                                                         style: TextStyle(
@@ -1342,7 +1365,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 ),
                                                 Container(
                                                   child: Text(
-                                                      value1ForGulcose != ''
+                                                      value1ForGulcose != '' &&
+                                                              value1ForGulcose !=
+                                                                  null
                                                           ? value1ForGulcose
                                                               .toString()
                                                           : '-',
@@ -1380,7 +1405,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       Container(
                                                         child: Text(
                                                           averageForFasting !=
-                                                                  ''
+                                                                      '' &&
+                                                                  averageForFasting !=
+                                                                      null
                                                               ? averageForFasting
                                                                   .toString()
                                                               : '-',
@@ -1413,7 +1440,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                          averageForPP != ''
+                                                          averageForPP != '' &&
+                                                                  averageForPP !=
+                                                                      null
                                                               ? averageForPP
                                                                   .toString()
                                                               : '-',
@@ -1527,7 +1556,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 Colors.black),
                                                       ),
                                                       Text(
-                                                         timeForTemp != null && timeForTemp!=''
+                                                        timeForTemp != null &&
+                                                                timeForTemp !=
+                                                                    ''
                                                             ? timeForTemp
                                                             : '',
                                                         style: TextStyle(
@@ -1640,28 +1671,33 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   child: Row(
                                                     children: [
                                                       Text(
-                                                          value1ForTemp != ''
+                                                          value1ForTemp != '' &&
+                                                                  value1ForTemp !=
+                                                                      null
                                                               ? value1ForTemp
-                                                                      .toString()
+                                                                  .toString()
                                                               : '-',
                                                           style: TextStyle(
                                                               fontSize: 18,
                                                               fontWeight:
-                                                                  FontWeight.w500,
+                                                                  FontWeight
+                                                                      .w500,
                                                               color: hexToColor(
                                                                   '#d95523'))),
                                                       Text(
-                                                        value1ForTemp != '' && value1ForTemp!=null
-                                                            ?'F'
+                                                        value1ForTemp != '' &&
+                                                                value1ForTemp !=
+                                                                    null
+                                                            ? 'F'
                                                             : '-',
                                                         style: TextStyle(
                                                             fontSize: 10,
                                                             fontWeight:
-                                                            FontWeight
-                                                                .w400,
+                                                                FontWeight.w400,
                                                             color: hexToColor(
                                                                 '#d95523')),
-                                                        textAlign: TextAlign.end,
+                                                        textAlign:
+                                                            TextAlign.end,
                                                       ),
                                                     ],
                                                   ),
@@ -1694,7 +1730,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         child: Row(
                                                           children: [
                                                             Text(
-                                                              averageForTemp != '' && averageForTemp!=null
+                                                              averageForTemp !=
+                                                                          '' &&
+                                                                      averageForTemp !=
+                                                                          null
                                                                   ? averageForTemp
                                                                       .toString()
                                                                   : '-',
@@ -1707,17 +1746,21 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                       '#afafaf')),
                                                             ),
                                                             Text(
-                                                              averageForTemp != '' && averageForTemp!=null
-                                                                  ?'F'
+                                                              averageForTemp !=
+                                                                          '' &&
+                                                                      averageForTemp !=
+                                                                          null
+                                                                  ? 'F'
                                                                   : '-',
                                                               style: TextStyle(
                                                                   fontSize: 8,
                                                                   fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
+                                                                      FontWeight
+                                                                          .w400,
                                                                   color: hexToColor(
                                                                       '#afafaf')),
-                                                              textAlign: TextAlign.end,
+                                                              textAlign:
+                                                                  TextAlign.end,
                                                             ),
                                                           ],
                                                         ),
@@ -1822,7 +1865,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 Colors.black),
                                                       ),
                                                       Text(
-                                                        timeForOs != null && timeForOs!=''
+                                                        timeForOs != null &&
+                                                                timeForOs != ''
                                                             ? timeForOs
                                                             : '',
                                                         style: TextStyle(
@@ -1933,7 +1977,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 ),
                                                 Container(
                                                   child: Text(
-                                                      value1ForOs != ''
+                                                      value1ForOs != '' &&
+                                                              value1ForOs !=
+                                                                  null
                                                           ? value1ForOs
                                                               .toString()
                                                           : '-',
@@ -1960,7 +2006,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 ),
                                                 Container(
                                                   child: Text(
-                                                      prbPMOxi != ''
+                                                      prbPMOxi != '' &&
+                                                              prbPMOxi != null
                                                           ? prbPMOxi.toString()
                                                           : '-',
                                                       style: TextStyle(
@@ -1996,7 +2043,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                          averageForSPO2 != ''
+                                                          averageForSPO2 !=
+                                                                      '' &&
+                                                                  averageForSPO2 !=
+                                                                      null
                                                               ? averageForSPO2
                                                                   .toString()
                                                               : '-',
@@ -2029,7 +2079,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                          averageForPRBpm != ''
+                                                          averageForPRBpm !=
+                                                                      '' &&
+                                                                  averageForPRBpm !=
+                                                                      null
                                                               ? averageForPRBpm
                                                                   .toString()
                                                               : '-',
@@ -2144,7 +2197,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 Colors.black),
                                                       ),
                                                       Text(
-                                                        timeForWeight != null
+                                                        timeForWeight != null &&
+                                                                timeForWeight !=
+                                                                    ''
                                                             ? timeForWeight
                                                             : '',
                                                         style: TextStyle(
@@ -2255,7 +2310,9 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                 ),
                                                 Container(
                                                   child: Text(
-                                                      value1ForWeight != ''
+                                                      value1ForWeight != '' &&
+                                                              value1ForWeight !=
+                                                                  null
                                                           ? value1ForWeight
                                                               .toString()
                                                           : '-',
@@ -2292,7 +2349,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       ),
                                                       Container(
                                                         child: Text(
-                                                          averageForWeigh != ''
+                                                          averageForWeigh !=
+                                                                      '' &&
+                                                                  averageForWeigh !=
+                                                                      null
                                                               ? averageForWeigh
                                                                   .toString()
                                                               : '-',
