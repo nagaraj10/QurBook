@@ -156,6 +156,8 @@ class _HealthReportListScreenState extends State<HealthReportListScreen> {
                   } else {
                     toast.getToast('No Image Attached ', Colors.red);
                   }
+                } else {
+                  toast.getToast('No Image Attached ', Colors.red);
                 }
               } else {
                 bool condition;

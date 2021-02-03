@@ -142,6 +142,9 @@ class _IDDocsListState extends State<IDDocsList> {
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
+              }else{
+                toast.getToast('No Image Attached ', Colors.red);
+
               }
             } else {
               bool condition;

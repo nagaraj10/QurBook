@@ -137,11 +137,14 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
               data.isSelected = !data.isSelected;
               if (data != null && data.healthRecordCollection.length > 0) {
                 mediMasterId = new CommonUtil().getMetaMasterIdListNew(data);
+                print(mediMasterId.length);
                 if (mediMasterId.length > 0) {
                   widget.healthRecordSelected(data.id, mediMasterId, condition);
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
+              } else {
+                toast.getToast('No Image Attached ', Colors.red);
               }
             } else {
               bool condition;

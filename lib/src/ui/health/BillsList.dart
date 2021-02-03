@@ -144,6 +144,9 @@ class _BillsListState extends State<BillsList> {
               } else {
                 toast.getToast('No Image Attached ', Colors.red);
               }
+            }else{
+              toast.getToast('No Image Attached ', Colors.red);
+
             }
           } else {
             bool condition;

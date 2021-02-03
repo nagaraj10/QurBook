@@ -142,6 +142,9 @@ class _LabReportListScreenState extends State<LabReportListScreen> {
               } else {
                 toast.getToast('No Image Attached ', Colors.red);
               }
+            }else{
+              toast.getToast('No Image Attached ', Colors.red);
+
             }
           } else {
             bool condition;

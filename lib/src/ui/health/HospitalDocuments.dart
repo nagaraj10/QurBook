@@ -138,6 +138,9 @@ class _HospitalDocumentsState extends State<HospitalDocuments> {
                 } else {
                   toast.getToast('No Image Attached ', Colors.red);
                 }
+              }else{
+                toast.getToast('No Image Attached ', Colors.red);
+
               }
             } else {
               bool condition;
