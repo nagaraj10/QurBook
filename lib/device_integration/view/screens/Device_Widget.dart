@@ -1149,7 +1149,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                       sourceForBp != '' && sourceForBp != null
                                           ? Column(
                                               children: [
-                                                TypeIcon(sourceForBp),
+                                                TypeIcon(sourceForBp,hexToColor('#059192')),
                                               ],
                                             )
                                           : SizedBox(),
@@ -1282,7 +1282,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     sourceForGluco != ''
                                                 ? Column(
                                                     children: [
-                                                      TypeIcon(sourceForGluco),
+                                                      TypeIcon(sourceForGluco,hexToColor('#b70a80')),
                                                     ],
                                                   )
                                                 : SizedBox()
@@ -1579,7 +1579,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     sourceForThermo != null
                                                 ? Column(
                                                     children: [
-                                                      TypeIcon(sourceForThermo),
+                                                      TypeIcon(sourceForThermo,hexToColor('#d95523')),
                                                     ],
                                                   )
                                                 : SizedBox()
@@ -1887,7 +1887,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     sourceForPulse != null
                                                 ? Column(
                                                     children: [
-                                                      TypeIcon(sourceForPulse),
+                                                      TypeIcon(sourceForPulse,hexToColor('#8600bd')),
                                                     ],
                                                   )
                                                 : SizedBox()
@@ -2220,7 +2220,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     sourceForWeigh != null
                                                 ? Column(
                                                     children: [
-                                                      TypeIcon(sourceForWeigh),
+                                                      TypeIcon(sourceForWeigh,hexToColor('#1abadd')),
                                                     ],
                                                   )
                                                 : SizedBox()
@@ -2494,7 +2494,7 @@ class Responsive {
   }
 }
 
-Widget TypeIcon(String type) {
+Widget TypeIcon(String type,Color color) {
   if (type == strsourceHK) {
     return Image.asset(
       'assets/devices/fit.png',
@@ -2515,9 +2515,10 @@ Widget TypeIcon(String type) {
     );
   } else {
     return Image.asset(
-      'assets/launcher/myfhb.png',
-      height: 20.0,
-      width: 20.0,
+      'assets/icons/myfhb_source.png',
+      height: 18.0,
+      width: 18.0,
+      color: color,
     );
   }
 }
