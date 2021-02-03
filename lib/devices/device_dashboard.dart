@@ -594,14 +594,15 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
 
               PreferenceUtil.saveCompleteData(
                   Constants.KEY_COMPLETE_DATA, value);
+              Navigator.of(context).pop(true);
 
-              setState(() {
+              /*setState(() {
                 deviceController.text = '';
                 pulse.text = '';
                 diaStolicPressure.text = '';
                 isSelected[0] = null;
                 isSelected[1] = null;
-              });
+              });*/
             });
           } else {
             errorMsg = '';
