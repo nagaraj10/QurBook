@@ -81,7 +81,7 @@ class _SuperMayaState extends State<SuperMaya> {
                     },
                   ),
                   elevation: 0,
-                  title: Text('Sheela'),
+                  title: Text('Sheela G'),
                   actions: [
                     Center(
                         child: new CommonUtil().getNotificationIcon(context)),

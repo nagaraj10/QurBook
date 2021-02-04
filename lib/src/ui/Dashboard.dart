@@ -166,7 +166,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       title: Text(
-                        'Sheela',
+                        'Sheela G',
                         style: TextStyle(color: Colors.black54),
                       )),
                   BottomNavigationBarItem(

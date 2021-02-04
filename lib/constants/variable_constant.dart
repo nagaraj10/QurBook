@@ -256,8 +256,8 @@ const String strSettings = 'Settings';
 const String strHelp = 'Help and support';
 const String strPrivacy = 'Privacy policy';
 const String strRateus = 'Rate us';
-const String strMaya = 'Sheela';
-const String strMAYA = 'SHEELA';
+const String strMaya = 'Sheela G';
+const String strMAYA = 'SHEELA G';
 
 const String strColorPalete = 'Color palette';
 
@@ -453,7 +453,7 @@ const String requestSheelaForweight = 'record my weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strdevice = 'device';
 
-const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
+const String strIntromaya = 'Hi, I am Sheela G your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';
 const String strpdf = 'pdf';
 const String strCropper = 'Cropper';
