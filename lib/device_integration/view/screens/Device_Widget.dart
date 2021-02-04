@@ -1224,7 +1224,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           },
                           child: Container(
                             width: Responsive.width(46, context),
-                            height: Responsive.width(48, context),
+                            height: Responsive.width(46, context),
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.only(
                                   topLeft: const Radius.circular(10.0),
@@ -1319,7 +1319,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       )
                                                     ],
                                                   ),
-                                                  getMealType(),
                                                 ],
                                               ),
                                             ),
@@ -1361,26 +1360,35 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Container(
-                                                  child: Text('mg/dL',
-                                                      style: TextStyle(
-                                                          fontSize: 9,
-                                                          color: hexToColor(
-                                                              '#b70a80'))),
+                                                  child:  getMealType(),
                                                 ),
                                                 Container(
-                                                  child: Text(
-                                                      value1ForGulcose != '' &&
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                          value1ForGulcose != '' &&
+                                                                  value1ForGulcose !=
+                                                                      null
+                                                              ? value1ForGulcose
+                                                                  .toString()
+                                                              : '-',
+                                                          style: TextStyle(
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight.w500,
+                                                              color: hexToColor(
+                                                                  '#b70a80'))),
+                                                      Text(
+                                                          value1ForGulcose != '' &&
                                                               value1ForGulcose !=
-                                                                  null
-                                                          ? value1ForGulcose
-                                                              .toString()
-                                                          : '-',
-                                                      style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: hexToColor(
-                                                              '#b70a80'))),
+                                                                  null?'mg/dL':'',
+                                                          textAlign: TextAlign.end,
+                                                          style: TextStyle(
+                                                              fontSize: 8,
+                                                              color: hexToColor(
+                                                                  '#b70a80')))
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -1407,26 +1415,40 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                     '#afafaf'))),
                                                       ),
                                                       Container(
-                                                        child: Text(
-                                                          averageForFasting !=
-                                                                      '' &&
-                                                                  averageForFasting !=
-                                                                      null
-                                                              ? averageForFasting
-                                                                  .toString()
-                                                              : '-',
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: hexToColor(
-                                                                  '#afafaf')),
+                                                        child: Row(
+                                                          children: [
+                                                            Text(
+                                                              averageForFasting !=
+                                                                          '' &&
+                                                                      averageForFasting !=
+                                                                          null
+                                                                  ? averageForFasting
+                                                                      .toString()
+                                                                  : '-',
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: hexToColor(
+                                                                      '#afafaf')),
+                                                            ),
+                                                            Text(
+                                                                averageForFasting !=
+                                                                    '' &&
+                                                                    averageForFasting !=
+                                                                        null?'mg/dL':'',
+                                                                textAlign: TextAlign.end,
+                                                                style: TextStyle(
+                                                                    fontSize: 6,
+                                                                    color: hexToColor(
+                                                                        '#b70a80')))
+                                                          ],
                                                         ),
                                                       ),
                                                     ],
                                                   ),
-                                                  SizedBoxWidget(width: 15),
+                                                  SizedBoxWidget(width: 8),
                                                   Column(
                                                     crossAxisAlignment:
                                                         CrossAxisAlignment
@@ -1443,20 +1465,33 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                     '#afafaf'))),
                                                       ),
                                                       Container(
-                                                        child: Text(
-                                                          averageForPP != '' &&
-                                                                  averageForPP !=
-                                                                      null
-                                                              ? averageForPP
-                                                                  .toString()
-                                                              : '-',
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: hexToColor(
-                                                                  '#afafaf')),
+                                                        child: Row(
+                                                          children: [
+                                                            Text(
+                                                              averageForPP != '' &&
+                                                                      averageForPP !=
+                                                                          null
+                                                                  ? averageForPP
+                                                                      .toString()
+                                                                  : '-',
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: hexToColor(
+                                                                      '#afafaf')),
+                                                            ),
+                                                            Text(
+                                                                    averageForPP != '' &&
+                                                                    averageForPP !=
+                                                                        null?'mg/dL':'',
+                                                                textAlign: TextAlign.end,
+                                                                style: TextStyle(
+                                                                    fontSize: 6,
+                                                                    color: hexToColor(
+                                                                        '#b70a80')))
+                                                          ],
                                                         ),
                                                       ),
                                                     ],
@@ -1524,7 +1559,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           },
                           child: Container(
                             width: Responsive.width(46, context),
-                            height: Responsive.width(48, context),
+                            height: Responsive.width(46, context),
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.only(
                                   topLeft: const Radius.circular(10.0),
@@ -1616,14 +1651,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       )
                                                     ],
                                                   ),
-                                                  Text(
-                                                    '',
-                                                    style: TextStyle(
-                                                        fontSize: 8,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black),
-                                                  )
                                                 ],
                                               ),
                                             ),
@@ -1834,7 +1861,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           },
                           child: Container(
                             width: Responsive.width(46, context),
-                            height: Responsive.width(48, context),
+                            height: Responsive.width(46, context),
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.only(
                                   topLeft: const Radius.circular(10.0),
@@ -1924,14 +1951,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       )
                                                     ],
                                                   ),
-                                                  Text(
-                                                    '',
-                                                    style: TextStyle(
-                                                        fontSize: 8,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black),
-                                                  )
                                                 ],
                                               ),
                                             ),
@@ -2164,7 +2183,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                           },
                           child: Container(
                             width: Responsive.width(46, context),
-                            height: Responsive.width(48, context),
+                            height: Responsive.width(46, context),
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.only(
                                   topLeft: const Radius.circular(10.0),
@@ -2257,14 +2276,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                       )
                                                     ],
                                                   ),
-                                                  Text(
-                                                    '',
-                                                    style: TextStyle(
-                                                        fontSize: 8,
-                                                        fontWeight:
-                                                            FontWeight.w400,
-                                                        color: Colors.black),
-                                                  )
                                                 ],
                                               ),
                                             ),
@@ -2306,26 +2317,38 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Container(
-                                                  child: Text('Kg',
+                                                  child: Text('Weight',
                                                       style: TextStyle(
                                                           fontSize: 9,
                                                           color: hexToColor(
                                                               '#1abadd'))),
                                                 ),
                                                 Container(
-                                                  child: Text(
-                                                      value1ForWeight != '' &&
+                                                  child: Row(
+                                                    children: [
+                                                      Text(
+                                                          value1ForWeight != '' &&
+                                                                  value1ForWeight !=
+                                                                      null
+                                                              ? value1ForWeight
+                                                                  .toString()
+                                                              : '-',
+                                                          style: TextStyle(
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight.w500,
+                                                              color: hexToColor(
+                                                                  '#1abadd'))),
+                                                      Text(
+                                                          value1ForWeight != '' &&
                                                               value1ForWeight !=
-                                                                  null
-                                                          ? value1ForWeight
-                                                              .toString()
-                                                          : '-',
-                                                      style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: hexToColor(
-                                                              '#1abadd'))),
+                                                                  null?'Kg':'',
+                                                          style: TextStyle(
+                                                              fontSize: 8,
+                                                              color: hexToColor(
+                                                                  '#1abadd')))
+                                                    ],
+                                                  ),
                                                 ),
                                               ],
                                             ),
@@ -2342,7 +2365,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                             .start,
                                                     children: [
                                                       Container(
-                                                        child: Text('Kg',
+                                                        child: Text('Weight',
                                                             style: TextStyle(
                                                                 fontSize: 10,
                                                                 fontWeight:
@@ -2352,21 +2375,37 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                     '#afafaf'))),
                                                       ),
                                                       Container(
-                                                        child: Text(
-                                                          averageForWeigh !=
-                                                                      '' &&
-                                                                  averageForWeigh !=
-                                                                      null
-                                                              ? averageForWeigh
-                                                                  .toString()
-                                                              : '-',
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: hexToColor(
-                                                                  '#afafaf')),
+                                                        child: Row(
+                                                          children: [
+                                                            Text(
+                                                              averageForWeigh !=
+                                                                          '' &&
+                                                                      averageForWeigh !=
+                                                                          null
+                                                                  ? averageForWeigh
+                                                                      .toString()
+                                                                  : '-',
+                                                              style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: hexToColor(
+                                                                      '#afafaf')),
+                                                            ),
+                                                            Text(
+                                                                averageForWeigh !=
+                                                                    '' &&
+                                                                    averageForWeigh !=
+                                                                        null?'Kg':'',
+                                                                style: TextStyle(
+                                                                    fontSize: 8,
+                                                                    fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                    color: hexToColor(
+                                                                        '#afafaf'))),
+                                                          ],
                                                         ),
                                                       ),
                                                     ],
