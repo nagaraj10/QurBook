@@ -7,6 +7,7 @@ import 'package:myfhb/authentication/view/authentication_validator.dart';
 import 'package:myfhb/authentication/model/change_password_model.dart'
     as changePasswordModel;
 import 'package:myfhb/authentication/view_model/patientauth_view_model.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class ChangePasswordScreen extends StatefulWidget {
   @override
@@ -69,7 +70,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -94,7 +95,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -118,7 +119,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -172,8 +173,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  Color(0xff138fcf),
-                  Color(0xff138fcf),
+                  Color(CommonUtil().getMyPrimaryColor()),
+                  Color(CommonUtil().getMyPrimaryColor()),
                 ])),
         child: Text(
           strChangeButtonText,

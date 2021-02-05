@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:myfhb/video_call/Prescription/model/prescription_medicines_model.dart';
 import 'package:myfhb/video_call/Prescription/view/new_prescription.dart';
-
+import 'package:myfhb/common/CommonUtil.dart';
 import '../../utils/priscriptionConstants.dart';
 import '../constants/prescription_constants.dart';
 
@@ -378,7 +378,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                   height: 15,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(2),
-                      border: Border.all(color: Color(0xff138fcf), width: 0.5)),
+                      border: Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
                   child: Text(
                     medsList[pos].schedule.morning,
                     style: TextStyle(
@@ -398,7 +398,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                   height: 15,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(2),
-                      border: Border.all(color: Color(0xff138fcf), width: 0.5)),
+                      border: Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
                   child: Text(
                     medsList[pos].schedule.morning,
                     style: TextStyle(
@@ -418,7 +418,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
                   height: 15,
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(2),
-                      border: Border.all(color: Color(0xff138fcf), width: 0.5)),
+                      border: Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
                   child: Text(
                     medsList[pos].schedule.morning,
                     style: TextStyle(
@@ -445,10 +445,10 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
     return FlatButton(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
-          side: BorderSide(color: Color(0xff138fcf))),
+          side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
       child: Text(
         buttonText,
-        style: TextStyle(color: Color(0xff138fcf)),
+        style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor())),
       ),
       onPressed: () {
         // Navigator.of(context).
@@ -503,7 +503,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
             showOnOff: true,
             activeTextColor: Colors.black,
             inactiveTextColor: Colors.black,
-            toggleColor: Color(0xff138fcf),
+            toggleColor: Color(CommonUtil().getMyPrimaryColor()),
             onToggle: (val) {
               setState(() {
                 status6 = val;
@@ -551,7 +551,7 @@ class ExistingPrescriptionState extends State<ExistingPrescription> {
   Widget prescriptionAppBar() {
     return AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Color(0xff138fcf),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         flexibleSpace: SafeArea(
             child: Row(
           children: <Widget>[

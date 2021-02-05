@@ -56,7 +56,7 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
       PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
           ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
           : 0xff5e1fe0;*/
-  int selectedPrimaryColor = 0xff5e1fe0;
+  int selectedPrimaryColor = 0xff5f0cf9;
 
   int selectedGradientColor =
       PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null

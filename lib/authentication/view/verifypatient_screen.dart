@@ -148,7 +148,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                                 child: Text(
                                   strresendOtp,
                                   style: TextStyle(
-                                      color: Color(0xff138fcf),
+                                      color: Color(CommonUtil().getMyPrimaryColor()),
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600),
                                 ),
@@ -184,7 +184,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
               child: Text(
                 strresendOtp,
                 style: TextStyle(
-                    color: Color(0xff138fcf),
+                    color: Color(CommonUtil().getMyPrimaryColor()),
                     fontSize: 13,
                     fontWeight: FontWeight.w600),
               ),

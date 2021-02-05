@@ -201,12 +201,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               //HomeScreen.of(context).refresh();
               //setState(() {});
             } else {
-              PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5e1fe0);
-              PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff753aec);
+              PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5f0cf9);
+              PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff9929ea);
             }
           } else {
-            PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5e1fe0);
-            PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff753aec);
+            PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5f0cf9);
+            PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff9929ea);
           }
         }
       }

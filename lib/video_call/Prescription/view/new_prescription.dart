@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/video_call/Prescription/model/prescription_medicines_model.dart';
 import 'package:myfhb/video_call/utils/callstatus.dart';
 import 'package:provider/provider.dart';
@@ -242,7 +243,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                             },
                             child: Icon(
                               Icons.add_circle_outline,
-                              color: Color(0xff138fcf),
+                              color: Color(CommonUtil().getMyPrimaryColor()),
                             ),
                           ),
                         ),
@@ -334,7 +335,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(2),
                         border:
-                            Border.all(color: Color(0xff138fcf), width: 0.5)),
+                            Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
                     child: Text(
                       medicineList[pos].schedule.morning ?? "",
                       style: TextStyle(
@@ -358,7 +359,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(2),
                         border:
-                            Border.all(color: Color(0xff138fcf), width: 0.5)),
+                            Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
                     child: Text(
                       medicineList[pos].schedule.afternoon ?? "",
                       style: TextStyle(
@@ -383,7 +384,7 @@ class NewPrescriptionState extends State<NewPrescription> {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(2),
                         border:
-                            Border.all(color: Color(0xff138fcf), width: 0.5)),
+                            Border.all(color: Color(CommonUtil().getMyPrimaryColor()), width: 0.5)),
                     child: Text(
                       medicineList[pos].schedule.evening ?? "",
                       style: TextStyle(
@@ -551,7 +552,7 @@ class NewPrescriptionState extends State<NewPrescription> {
         textStyle: TextStyle(color: Colors.black),
         height: 25,
         width: 96,
-        backgroundColor: Color(0xff138fcf),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         padding: EdgeInsets.all(4.0),
         borderRadius: BorderRadius.circular(5.0));
 
@@ -565,10 +566,10 @@ class NewPrescriptionState extends State<NewPrescription> {
     return FlatButton(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
-          side: BorderSide(color: Color(0xff138fcf))),
+          side: BorderSide(color: Color(CommonUtil().getMyPrimaryColor()))),
       child: Text(
         buttonText,
-        style: TextStyle(color: Color(0xff138fcf)),
+        style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor())),
       ),
       onPressed: () {},
     );
@@ -615,7 +616,7 @@ class NewPrescriptionState extends State<NewPrescription> {
           showOnOff: true,
           activeTextColor: Colors.black,
           inactiveTextColor: Colors.black,
-          toggleColor: Color(0xff138fcf),
+          toggleColor: Color(CommonUtil().getMyPrimaryColor()),
           onToggle: (val) {
             setState(() {
               status6 = val;
@@ -629,7 +630,7 @@ class NewPrescriptionState extends State<NewPrescription> {
   Widget prescriptionAppBar() {
     return AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Color(0xff138fcf),
+        backgroundColor: Color(CommonUtil().getMyPrimaryColor()),
         flexibleSpace: SafeArea(
             child: Row(
           children: <Widget>[
