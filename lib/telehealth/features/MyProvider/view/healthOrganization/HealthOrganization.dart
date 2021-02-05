@@ -392,7 +392,7 @@ class _HealthOrganizationState extends State<HealthOrganization> {
                                   getFees(eachHospitalModel[i])),
                           fontsize: 14.0,
                           fontWeight: FontWeight.w400,
-                          colors: Colors.blue[800]),
+                          colors: Color(new CommonUtil().getMyPrimaryColor())),
                     ),
                   ),
                 ],

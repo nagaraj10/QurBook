@@ -49,7 +49,7 @@ class PrescriptionModule extends StatelessWidget {
                                 IconButton(
                                     icon: ImageIcon(
                                       AssetImage('assets/icons/rx.png'),
-                                      color: Colors.blue,
+                                      color: Color(new CommonUtil().getMyPrimaryColor()),
                                     ),
                                     onPressed: () {
                                       FetchRecords(0, false, false, false, [],context);

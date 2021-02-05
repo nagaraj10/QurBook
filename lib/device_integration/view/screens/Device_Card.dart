@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myfhb/device_integration/view/screens/Device_Data.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class DeviceCard extends StatefulWidget {
   final DeviceData deviceData;
@@ -45,7 +46,7 @@ class _DeviceCardState extends State<DeviceCard> {
                           child: Icon(
                             Icons.check_circle,
                             size: 14,
-                            color: Colors.blue,
+                            color: Color(new CommonUtil().getMyPrimaryColor()),
                           ),
                         )
                       : Container()

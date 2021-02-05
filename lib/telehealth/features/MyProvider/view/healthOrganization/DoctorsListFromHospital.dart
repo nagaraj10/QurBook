@@ -378,7 +378,7 @@ class _HealthOrganizationState extends State<DoctorListFromHospital> {
                                         .getMoneyWithForamt(getFees(docs[i])),
                                 fontsize: 14.0,
                                 fontWeight: FontWeight.w400,
-                                colors: Colors.blue[800]),
+                                colors: Color(new CommonUtil().getMyPrimaryColor())),
                           ),
                         ),
                       ],

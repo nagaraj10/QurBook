@@ -398,7 +398,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                   width: 30,
                   height: 30,
                   decoration: BoxDecoration(
-                    color: Colors.blue[100], // border color
+                    color: Color(new CommonUtil().getMyPrimaryColor()), // border color
                     shape: BoxShape.circle,
                   ),
                   child: Padding(
@@ -407,7 +407,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       // or ClipRRect if you need to clip the content
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.blue[800], // inner circle color
+                        color: Color(new CommonUtil().getMyPrimaryColor()), // inner circle color
                       ),
                       child: Center(
                         child: TextWidget(
@@ -525,7 +525,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         child: IconButtonWidget(
                                           iconPath: Constants.NOTES_ICON_LINK,
                                           size: 18.0,
-                                          color: Colors.blue[800],
+                                          color: Color(new CommonUtil().getMyPrimaryColor()),
                                           padding: new EdgeInsets.all(1.0),
                                           onPressed: () {
                                             FetchRecords(
@@ -572,7 +572,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         child: IconButtonWidget(
                                           iconPath: Constants.VOICE_ICON_LINK,
                                           size: 18.0,
-                                          color: Colors.blue[800],
+                                          color: Color(new CommonUtil().getMyPrimaryColor()),
                                           padding: new EdgeInsets.all(1.0),
                                           onPressed: () {
                                             FetchRecords(
@@ -619,7 +619,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                         child: IconButtonWidget(
                                           iconPath: Constants.RECORDS_ICON_LINK,
                                           size: 18.0,
-                                          color: Colors.blue[800],
+                                          color: Color(new CommonUtil().getMyPrimaryColor()),
                                           padding: new EdgeInsets.all(1.0),
                                           onPressed: () {
                                             FetchRecords(
@@ -674,7 +674,7 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                   widget.healthOrganizationResult[widget.i])),
                       fontsize: 22.0,
                       fontWeight: FontWeight.w500,
-                      colors: Colors.blue[800]),
+                      colors: Color(new CommonUtil().getMyPrimaryColor())),
                 ),
               ),
               SizedBoxWidget(height: 35.0),
@@ -706,9 +706,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                       child: FlatButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.0),
-                            side: BorderSide(color: Colors.blue[800])),
+                            side: BorderSide(color: Color(new CommonUtil().getMyPrimaryColor()))),
                         color: Colors.transparent,
-                        textColor: Colors.blue[800],
+                        textColor: Color(new CommonUtil().getMyPrimaryColor()),
                         padding: EdgeInsets.all(8.0),
                         onPressed: () {
                           new FHBUtils().check().then((intenet) {
@@ -818,9 +818,9 @@ class BookingConfirmationState extends State<BookingConfirmation> {
                                           borderRadius:
                                               BorderRadius.circular(12.0),
                                           side: BorderSide(
-                                              color: Colors.blue[800])),
+                                              color: Color(new CommonUtil().getMyPrimaryColor()))),
                                       color: Colors.transparent,
-                                      textColor: Colors.blue[800],
+                                      textColor: Color(new CommonUtil().getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         addHealthRecords();

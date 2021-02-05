@@ -663,7 +663,7 @@ class _CallPageState extends State<CallPage> {
                         ),
                         child: Text(
                           _infoStrings[index],
-                          style: TextStyle(color: Colors.blueGrey),
+                          style: TextStyle(color: Color(new CommonUtil().getMyPrimaryColor())),
                         ),
                       ),
                     )

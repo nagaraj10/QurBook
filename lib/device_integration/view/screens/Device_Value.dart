@@ -110,7 +110,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 if (!snapshot.hasData) {
                   return new Center(
                     child: new CircularProgressIndicator(
-                      backgroundColor: Colors.blueAccent,
+                      backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -174,7 +174,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 if (!snapshot.hasData) {
                   return new Center(
                     child: new CircularProgressIndicator(
-                      backgroundColor: Colors.blueAccent,
+                      backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -242,7 +242,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 if (!snapshot.hasData) {
                   return new Center(
                     child: new CircularProgressIndicator(
-                      backgroundColor: Colors.blueAccent,
+                      backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -307,7 +307,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 if (!snapshot.hasData) {
                   return new Center(
                     child: new CircularProgressIndicator(
-                      backgroundColor: Colors.blueAccent,
+                      backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -372,7 +372,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                 if (!snapshot.hasData) {
                   return new Center(
                     child: new CircularProgressIndicator(
-                      backgroundColor: Colors.blueAccent,
+                      backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
                     ),
                   );
                 }
@@ -927,7 +927,7 @@ Widget TypeIcon(String type) {
     );
   } else if (type == strsourceSheela) {
     return Image.asset(
-      'assets/maya/maya_us.png',
+      'assets/maya/maya_us_main.png',
       height: 32.0,
       width: 32.0,
     );

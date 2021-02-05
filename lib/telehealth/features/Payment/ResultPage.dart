@@ -4,6 +4,7 @@ import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/src/model/home_screen_arguments.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class ResultPage extends StatefulWidget {
   final bool status;
@@ -27,7 +28,7 @@ class _ResultPage extends State<ResultPage> {
   Widget build(BuildContext context) {
     return new Scaffold(
       body: Container(
-        color: Colors.blue[600],
+        color: Color(new CommonUtil().getMyPrimaryColor()),
         child: Center(
           child: Container(
             child: SingleChildScrollView(
@@ -66,7 +67,7 @@ class _ResultPage extends State<ResultPage> {
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0),
                           side: BorderSide(color: Colors.white)),
-                      color: Colors.blue[600],
+                      color: Color(new CommonUtil().getMyPrimaryColor()),
                       textColor: Colors.white,
                       padding: EdgeInsets.all(12.0),
                       onPressed: () {

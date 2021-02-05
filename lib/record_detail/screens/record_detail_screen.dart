@@ -1238,7 +1238,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
                       : widget?.data?.metadata?.sourceName == 'SHEELA'
                           ? Container(
                               child: Image.asset(
-                                'assets/maya/maya_us.png',
+                                'assets/maya/maya_us_main.png',
                                 height: 100.0,
                                 width: 100.0,
                               ),
@@ -1253,7 +1253,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
               : widget?.data?.metadata?.sourceName == 'SHEELA'
                   ? Container(
                       child: Image.asset(
-                      'assets/maya/maya_us.png',
+                      'assets/maya/maya_us_main.png',
                       height: 100,
                       width: 100,
                     ))
@@ -1368,7 +1368,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           new CircularProgressIndicator(
-            backgroundColor: Colors.blue,
+            backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
           );
         } else if (snapshot.hasError) {
           return new Text('Error: ${snapshot.error}');

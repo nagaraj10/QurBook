@@ -2509,7 +2509,7 @@ Widget TypeIcon(String type,Color color) {
     );
   } else if (type == strsourceSheela) {
     return Image.asset(
-      'assets/maya/maya_us.png',
+      'assets/maya/maya_us_main.png',
       height: 20.0,
       width: 20.0,
     );
