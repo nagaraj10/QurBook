@@ -676,9 +676,9 @@ class _NotificationScreen extends State<NotificationScreen> {
                                           borderRadius:
                                               BorderRadius.circular(12.0),
                                           side: BorderSide(
-                                              color: Colors.blue[800])),
+                                              color: Color(new CommonUtil().getMyPrimaryColor()))),
                                       color: Colors.transparent,
-                                      textColor: Colors.blue[800],
+                                      textColor: Color(new CommonUtil().getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         Navigator.pop(

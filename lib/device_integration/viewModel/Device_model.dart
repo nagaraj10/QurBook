@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import '../model/LastMeasureSync.dart';
 import '../model/DeviceIntervalData.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 Future<String> _loadDeviceDataAsset() async {
   return await rootBundle.loadString('assets/devices.json');
@@ -56,7 +57,7 @@ class DevicesViewModel with ChangeNotifier {
         value_name: parameters.strOxgenSaturation,
         value1: 'OS',
         value2: '',
-        color: [Colors.blue, Colors.blueAccent]));
+        color: [Color(new CommonUtil().getMyPrimaryColor()), Color(new CommonUtil().getMyPrimaryColor())]));
     devicelist.add(DeviceData(
         title: Constants.STR_THERMOMETER,
         icon: Constants.Devices_THM,

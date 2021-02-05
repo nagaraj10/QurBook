@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 
 class MyYoutubePlayer extends StatefulWidget {
   final String videoId;
@@ -75,7 +76,7 @@ class _YoutubePlayerState extends State<MyYoutubePlayer> {
       player: YoutubePlayer(
         controller: _controller,
         showVideoProgressIndicator: false,
-        progressIndicatorColor: Colors.blueAccent,
+        progressIndicatorColor: Color(new CommonUtil().getMyPrimaryColor()),
         topActions: <Widget>[
           const SizedBox(width: 8.0),
           // Expanded(

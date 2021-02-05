@@ -1631,7 +1631,7 @@ class ChatScreenState extends State<ChatScreen> {
 
   Widget buildInput() {
     return IconTheme(
-      data: IconThemeData(color: Colors.blue),
+      data: IconThemeData(color: Color(new CommonUtil().getMyPrimaryColor())),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
