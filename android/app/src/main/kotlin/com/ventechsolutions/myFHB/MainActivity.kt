@@ -1,32 +1,31 @@
 package com.ventechsolutions.myFHB
 
 import android.app.Activity
-import android.speech.RecognizerIntent
-import android.speech.tts.TextToSpeech
-import android.util.Log
-import android.widget.Toast
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat
-import io.flutter.embedding.android.FlutterActivity
-import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugins.GeneratedPluginRegistrant
-import java.util.*
-import kotlin.collections.ArrayList
-import android.content.Intent
-import io.flutter.plugin.common.EventChannel
-import io.flutter.plugin.common.EventChannel.EventSink
+import android.app.AlertDialog
 import android.app.KeyguardManager
 import android.content.*
 import android.os.Bundle
+import android.speech.RecognitionListener
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
+import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import android.widget.Toast
+import androidx.annotation.NonNull
+import androidx.core.app.ActivityCompat
+import androidx.multidex.BuildConfig
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
-import android.view.WindowManager
-import androidx.multidex.BuildConfig
 import com.ventechsolutions.myFHB.constants.Constants
 import com.ventechsolutions.myFHB.services.AVServices
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.EventChannel.EventSink
+import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugins.GeneratedPluginRegistrant
+import java.util.*
 import kotlin.system.exitProcess
 
 
@@ -72,12 +71,15 @@ class MainActivity : FlutterActivity() {
     private var patId: String? = null
     private var patName: String? = null
     private var patPic: String? = null
+    private var speechRecognizer: SpeechRecognizer? = null
+    private lateinit var dialog: AlertDialog
+    private lateinit var builder: AlertDialog.Builder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //todo this must be un command when go to production
         //this.window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
-
+        speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this)
         val action = intent.action
         val type = intent.type
         if (Intent.ACTION_SEND == action && type != null) {
@@ -87,6 +89,13 @@ class MainActivity : FlutterActivity() {
         }
         //registerReceiver(smsBroadcastReceiver,
         //IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
+
+        builder= AlertDialog.Builder(context)
+        builder.setCancelable(true) // if you want user to wait for some process to finish,
+        builder.setView(R.layout.progess_dialog)
+        dialog= builder.create()
+        dialog.setInverseBackgroundForced(true)
+        //builder.show()
 
     }
 
@@ -144,7 +153,7 @@ class MainActivity : FlutterActivity() {
                 }else {
                     result.notImplemented()
                 }
-            }catch (e:Exception){
+            }catch (e: Exception){
                 print(e.printStackTrace())
             }
 
@@ -154,20 +163,20 @@ class MainActivity : FlutterActivity() {
             try {
                 if(call.method!!.contentEquals(Constants.FUN_ONG_NS)){
                     val passedMode = call.argument<String>(Constants.PROP_MODE)
-                    startOnGoingNS(username!!,passedMode!!)
+                    startOnGoingNS(username!!, passedMode!!)
                 }else {
                     result.notImplemented()
                 }
-            }catch (e:Exception){
+            }catch (e: Exception){
                 print(e.printStackTrace())
             }
 
         }
 
-        EventChannel(flutterEngine.dartExecutor.binaryMessenger,STREAM).setStreamHandler(
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, STREAM).setStreamHandler(
                 object : EventChannel.StreamHandler {
                     override fun onListen(arguments: Any?, events: EventSink?) {
-                        mEventChannel=events!!
+                        mEventChannel = events!!
                     }
 
                     override fun onCancel(arguments: Any?) {
@@ -218,24 +227,24 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger,TTS_CHANNEL).setMethodCallHandler{ call, result ->
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, TTS_CHANNEL).setMethodCallHandler{ call, result ->
             _TTSResult=result
             if(call.method==Constants.FUN_TEXT2SPEECH){
                 val msg = call.argument<String>(Constants.PROP_MSG)
                 val iscls = call.argument<Boolean>(Constants.PROP_IS_CLOSE)
                 val langCode = call.argument<String>(Constants.PROP_LANG) //todo this has to be uncomment
                 tts!!.language = Locale(langCode!!) //todo this has to be uncomment
-                textToSpeech(msg!!,iscls!!)
+                textToSpeech(msg!!, iscls!!)
             }else{
                 result.notImplemented()
             }
         }
     }
 
-    private fun startOnGoingNS(name:String,mode:String){
+    private fun startOnGoingNS(name: String, mode: String){
         if(mode == Constants.PROP_START){
             val serviceIntent = Intent(this, AVServices::class.java)
-            serviceIntent.putExtra(Constants.PROP_NAME,name)
+            serviceIntent.putExtra(Constants.PROP_NAME, name)
             startService(serviceIntent)
         }else if(mode==Constants.PROP_STOP){
             val serviceIntent = Intent(this, AVServices::class.java)
@@ -302,20 +311,53 @@ class MainActivity : FlutterActivity() {
         super.onDestroy()
         val serviceIntent = Intent(this, AVServices::class.java)
         stopService(serviceIntent)
+        speechRecognizer!!.destroy()
     }
 
     //todo this method need to uncomment
-    private fun speakWithVoiceAssistant(langCode:String) {
+    private fun speakWithVoiceAssistant(langCode: String) {
         val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
         //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) //todo this has to be comment
         GetSrcTargetLanguages()
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
-        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
-        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+        //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
+        //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
+
         try {
-            startActivityForResult(intent, REQ_CODE)
+            //startActivityForResult(intent, REQ_CODE)
+            speechRecognizer!!.setRecognitionListener(object : RecognitionListener {
+                override fun onReadyForSpeech(bundle: Bundle) {}
+                override fun onBeginningOfSpeech() {
+                    if(!dialog.isShowing){
+                        dialog.show()
+                    }else{
+                        dialog.dismiss()
+                    }
+                }
+
+                override fun onRmsChanged(v: Float) {}
+                override fun onBufferReceived(bytes: ByteArray) {}
+                override fun onEndOfSpeech() {
+                    dialog.dismiss()
+                }
+                override fun onError(i: Int) {}
+                override fun onResults(bundle: Bundle) {
+                    //micButton.setImageResource(R.drawable.ic_mic_black_off)
+                    val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    val finalWords = data!![0].toString()
+                    //Toast.makeText(applicationContext, "You said:\n$finalWords", Toast.LENGTH_LONG).show()
+                    _result.success(finalWords)
+                    speechRecognizer!!.stopListening()
+                    dialog.dismiss()
+                    //editText.setText(data!![0])
+                }
+
+                override fun onPartialResults(bundle: Bundle) {}
+                override fun onEvent(i: Int, bundle: Bundle) {}
+            })
+            speechRecognizer!!.startListening(intent)
         } catch (a: ActivityNotFoundException) {
             // Toast.makeText(applicationContext,
             //         "Sorry your device not supported",
@@ -368,7 +410,7 @@ class MainActivity : FlutterActivity() {
             val otpListener = object : SMSBroadcastReceiver.OTPListener {
                 override fun onOTPReceived(otp: String) {
                     //customCodeInput.setText(otp)
-                    Toast.makeText(this@MainActivity, otp , Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, otp, Toast.LENGTH_LONG).show()
                 }
 
                 override fun onOTPTimeOut() {
@@ -406,7 +448,7 @@ class MainActivity : FlutterActivity() {
     }
 
 
-    private fun textToSpeech(msg:String,isClose:Boolean){
+    private fun textToSpeech(msg: String, isClose: Boolean){
         tts!!.setSpeechRate(1.0f)
         if(isClose){
             tts!!.stop()
@@ -415,7 +457,7 @@ class MainActivity : FlutterActivity() {
                     TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID)
         }
 
-        tts!!.setOnUtteranceProgressListener(object : UtteranceProgressListener(){
+        tts!!.setOnUtteranceProgressListener(object : UtteranceProgressListener() {
             override fun onDone(p0: String?) {
                 runOnUiThread(Runnable { _TTSResult.success(1) })
             }
@@ -436,7 +478,7 @@ class MainActivity : FlutterActivity() {
     }
 
     private fun requestPermissionFromUSer(){
-        ActivityCompat.requestPermissions(this,arrayOf(android.Manifest.permission.RECORD_AUDIO),REQ_CODE)
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), REQ_CODE)
     }
 
     fun GetSrcTargetLanguages() {
@@ -457,17 +499,17 @@ class MainActivity : FlutterActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQ_CODE -> {
-                if (resultCode == Activity.RESULT_OK && data != null) {
+                /*if (resultCode == Activity.RESULT_OK && data != null) {
                     val result: ArrayList<*> = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
                     val finalWords = result[0].toString()
                     //Toast.makeText(applicationContext, "You said:\n$finalWords", Toast.LENGTH_LONG).show()
-                    _result.success(finalWords)
-                }
+                    //_result.success(finalWords)
+                }*/
             }
             INTENT_AUTHENTICATE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     _securityResult.success(1002)
-                }else{
+                } else {
                     //_securityResult.success(1003)
                     finishAffinity()
                     exitProcess(0)
