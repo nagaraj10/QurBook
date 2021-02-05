@@ -169,7 +169,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             Text(
               strSignIn,
               style: TextStyle(
-                  color: Color(0xff138fcf),
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                   fontSize: 13,
                   fontWeight: FontWeight.w600),
             ),

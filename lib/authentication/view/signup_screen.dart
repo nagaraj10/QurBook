@@ -93,7 +93,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -122,7 +122,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -160,7 +160,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -190,7 +190,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -222,7 +222,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -377,7 +377,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
             Text(
               strSignIn,
               style: TextStyle(
-                  color: Color(0xff138fcf),
+                  color: Color(CommonUtil().getMyPrimaryColor()),
                   fontSize: 13,
                   fontWeight: FontWeight.w600),
             ),
@@ -414,7 +414,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                 child: Text(
                   'T&C',
                   style: TextStyle(
-                    color: Color(0xff138fcf),
+                    color: Color(CommonUtil().getMyPrimaryColor()),
                   ),
                 ),
                 onTap: () {
@@ -427,7 +427,7 @@ class _PatientSignUpScreenState extends State<PatientSignUpScreen> {
                 child: Text(
                   'Privacy Policy ',
                   style: TextStyle(
-                    color: Color(0xff138fcf),
+                    color: Color(CommonUtil().getMyPrimaryColor()),
                   ),
                 ),
                 onTap: () {

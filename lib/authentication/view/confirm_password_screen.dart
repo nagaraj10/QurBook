@@ -79,7 +79,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),
@@ -109,7 +109,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                                 errorMaxLines: 2,
@@ -140,7 +140,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: BorderSide(
-                                    color: Color(0xff138fcf),
+                                    color: Color(CommonUtil().getMyPrimaryColor()),
                                   ),
                                 ),
                               ),

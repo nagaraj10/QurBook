@@ -237,7 +237,7 @@ List<String> mayaAssets = [
 ];
 
 List<int> myThemes = [
-  0xff015eea,
+  0xff5f0cf9,
   0xffcf4791,
   0xff0483df,
   0xff118c94,
@@ -245,7 +245,7 @@ List<int> myThemes = [
 ];
 
 List<int> myGradient = [
-  0xff00c0fa,
+  0xff9929ea,
   0xfffab273,
   0xff01bbd4,
   0xff0cbcb6,
