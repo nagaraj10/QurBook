@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             app:SpinKit_Color="#6021de"
-            app:SpinKit_Style="Wave"
+            style="@style/SpinKitView.Wave"
             android:background="@android:color/white"/>
 
     </androidx.cardview.widget.CardView>
