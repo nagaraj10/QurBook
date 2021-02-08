@@ -11,6 +11,7 @@ import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/common/customized_checkbox.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/devices/device_dashboard_arguments.dart';
+import 'package:myfhb/src/blocs/Category/CategoryListBlock.dart';
 import 'package:myfhb/src/blocs/Media/MediaTypeBlock.dart';
 import 'package:myfhb/src/blocs/health/HealthReportListForUserBlock.dart';
 import 'package:myfhb/src/model/Category/catergory_result.dart';
@@ -60,11 +61,25 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
   FHBBasicWidget fhbBasicWidget = new FHBBasicWidget();
   bool onOkClicked = false;
 
+  CategoryListBlock _categoryListBlock = new CategoryListBlock();
+  List<CategoryResult> catgoryDataList = new List();
+  MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+  MediaDataList mediaTypesResponse = new MediaDataList();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     deviceName = widget.arguments.deviceName;
+    catgoryDataList = PreferenceUtil.getCategoryType();
+    if (catgoryDataList == null) {
+      _categoryListBlock.getCategoryLists().then((value) {
+        catgoryDataList = value.result;
+      });
+    }
+    _mediaTypeBlock.getMediTypesList().then((value) {
+      mediaTypesResponse = value;
+    });
   }
 
   @override
@@ -472,18 +487,30 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
       Map<String, dynamic> postMediaData = new Map();
 
       String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-      List<CategoryResult> catgoryDataList = PreferenceUtil.getCategoryType();
+      try {
+        catgoryDataList = PreferenceUtil.getCategoryType();
+      } catch (e) {
+        if (catgoryDataList == null) {
+          _categoryListBlock.getCategoryLists().then((value) {
+            catgoryDataList = value.result;
+            categoryDataObj = new CommonUtil()
+                .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
+            postMediaData[parameters.strhealthRecordCategory] =
+                categoryDataObj.toJson();
+          });
+        }
+      }
 
-      categoryDataObj = new CommonUtil()
-          .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
-      postMediaData[parameters.strhealthRecordCategory] =
-          categoryDataObj.toJson();
-      MediaTypeBlock _mediaTypeBlock = new MediaTypeBlock();
+      List<MediaResult> metaDataFromSharedPrefernce = new List();
+      if (mediaTypesResponse != null &&
+          mediaTypesResponse.result != null &&
+          mediaTypesResponse.result.length > 0) {
+        metaDataFromSharedPrefernce = mediaTypesResponse.result;
+      } else {
+        mediaTypesResponse = await _mediaTypeBlock.getMediTypesList();
 
-      MediaDataList mediaTypesResponse =
-          await _mediaTypeBlock.getMediTypesList();
-
-      List<MediaResult> metaDataFromSharedPrefernce = mediaTypesResponse.result;
+        metaDataFromSharedPrefernce = mediaTypesResponse.result;
+      }
       mediaDataObj = new CommonUtil().getMediaTypeInfoForParticularDevice(
           deviceName, metaDataFromSharedPrefernce);
 
