@@ -143,7 +143,8 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
                           toast.getToast(
                               AppConstants.YOUR_BOOKING_SUCCESS, Colors.green);
                           var body = {};
-                          body['templateName'] = widget?.arguments?.templateName;
+                          body['templateName'] =
+                              widget?.arguments?.templateName;
                           body['contextId'] = _bookingId;
                           FetchNotificationService()
                               .updateNsActionStatus(body)
@@ -192,11 +193,8 @@ class _TelehealthProvidersState extends State<TelehealthProviders> {
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
         name: 'My Providers', imageIcon: 'assets/navicons/my_providers.png'));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
-      name: 'Sheela',
-      imageIcon: PreferenceUtil.getStringValue(Constants.keyMayaAsset) != null
-          ? PreferenceUtil.getStringValue(Constants.keyMayaAsset) +
-              variable.strExtImg
-          : 'assets/maya/maya_us_main.png',
+      name: variable.strMaya,
+      imageIcon: 'assets/maya/maya_us_main.png',
     ));
     bottomNavigationArgumentsList.add(new BottomNavigationArguments(
         name: 'Chats', imageIcon: 'assets/navicons/chat.png'));

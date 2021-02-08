@@ -126,7 +126,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
                         width: 120,
                       ),
                       SizedBox(height: 20),
-                      Text(strOtpText),
+                      Text(getNumber()),
                       SizedBox(
                         height: 10,
                       ),
@@ -148,7 +148,8 @@ class _VerifyPatientState extends State<VerifyPatient> {
                                 child: Text(
                                   strresendOtp,
                                   style: TextStyle(
-                                      color: Color(CommonUtil().getMyPrimaryColor()),
+                                      color: Color(
+                                          CommonUtil().getMyPrimaryColor()),
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600),
                                 ),
@@ -170,6 +171,16 @@ class _VerifyPatientState extends State<VerifyPatient> {
         ),
       ),
     );
+  }
+
+  String getNumber() {
+    if (from == strFromVerifyFamilyMember) {
+      return strOtpTextForFamilyMember + widget.fName + mobileNumber;
+    } else {
+      final num = widget.PhoneNumber.replaceRange(0,
+          widget.PhoneNumber.length - 4, 'x' * (widget.PhoneNumber.length - 4));
+      return strOtpText + num;
+    }
   }
 
   Widget _getResendForSignIN() {
@@ -208,7 +219,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
     } else {
       if (response.message != null) {
         toast.getToast(response.message, Colors.red);
-      }else{
+      } else {
         toast.getToast('Something went wrong.Please try again', Colors.red);
       }
     }
@@ -454,7 +465,6 @@ class _VerifyPatientState extends State<VerifyPatient> {
       CommonUtil()
           .sendDeviceToken(userId, '', user_mobile_no, token, true)
           .then((value) {
-
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
             LoaderClass.hideLoadingDialog(context);
@@ -503,7 +513,6 @@ class _VerifyPatientState extends State<VerifyPatient> {
       CommonUtil()
           .sendDeviceToken(userId, saveuser.email, user_mobile_no, token, true)
           .then((value) {
-
         if (value != null) {
           Future.delayed(Duration(seconds: 3), () {
             LoaderClass.hideLoadingDialog(context);
