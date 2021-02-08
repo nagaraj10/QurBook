@@ -148,7 +148,7 @@ class AddProvidersState extends State<AddProviders> {
     _hospitalListBlock = new HospitalListBlock();
     _labsListBlock = new LabsListBlock();
     providerViewModel = new MyProviderViewModel();
-    if(widget?.arguments?.data?.isTelehealthEnabled!=null) {
+    if (widget?.arguments?.data?.isTelehealthEnabled != null) {
       teleHealthAlertShown = widget.arguments.data.isTelehealthEnabled;
     }
     buildUI();
@@ -220,9 +220,7 @@ class AddProvidersState extends State<AddProviders> {
                           )),
                       Visibility(
                           visible: widget.arguments.hasData == true
-                              ? latitude == 0.0
-                                  ? true
-                                  : false
+                              ? latitude == 0.0 ? true : false
                               : false,
                           child: Container(
                             height: MediaQuery.of(context).size.height / 2 - 80,
@@ -1101,14 +1099,10 @@ class AddProvidersState extends State<AddProviders> {
           signInData[variable.strDescription] = '';
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null
-                  ? ''
-                  : address.locality;
+              : address.locality == null ? '' : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null
-                  ? ''
-                  : address.adminArea;
+              : address.adminArea == null ? '' : address.adminArea;
           signInData[variable.strPhoneNumbers] =
               widget.arguments.placeDetail == null
                   ? ''
@@ -1234,24 +1228,16 @@ class AddProvidersState extends State<AddProviders> {
                       : widget.arguments.confirmAddressDescription;
           signInData[variable.straddressLine2] = address == null
               ? ''
-              : address.addressLine == null
-                  ? ''
-                  : address.addressLine;
+              : address.addressLine == null ? '' : address.addressLine;
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null
-                  ? ''
-                  : address.locality;
+              : address.locality == null ? '' : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null
-                  ? ''
-                  : address.adminArea;
+              : address.adminArea == null ? '' : address.adminArea;
           signInData[variable.strzipCode] = address == null
               ? ''
-              : address.postalCode == null
-                  ? ''
-                  : address.postalCode;
+              : address.postalCode == null ? '' : address.postalCode;
           signInData[variable.strbranch] = '';
           signInData[variable.strIsUserDefined] = true;
           signInData[variable.strLatitude] =
