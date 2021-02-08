@@ -487,12 +487,19 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
       Map<String, dynamic> postMediaData = new Map();
 
       String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
-
-      catgoryDataList = PreferenceUtil.getCategoryType();
-      categoryDataObj = new CommonUtil()
-          .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
-      postMediaData[parameters.strhealthRecordCategory] =
-          categoryDataObj.toJson();
+      try {
+        catgoryDataList = PreferenceUtil.getCategoryType();
+      } catch (e) {
+        if (catgoryDataList == null) {
+          _categoryListBlock.getCategoryLists().then((value) {
+            catgoryDataList = value.result;
+            categoryDataObj = new CommonUtil()
+                .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
+            postMediaData[parameters.strhealthRecordCategory] =
+                categoryDataObj.toJson();
+          });
+        }
+      }
 
       List<MediaResult> metaDataFromSharedPrefernce = new List();
       if (mediaTypesResponse != null &&
