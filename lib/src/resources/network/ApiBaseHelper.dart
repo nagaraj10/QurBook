@@ -228,7 +228,6 @@ class ApiBaseHelper {
   Future<dynamic> getMedicalPreferencesList(String url) async {
     var responseJson;
     try {
-      print(_baseUrl + url);
       final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersAuthAcceptNew());
       responseJson = _returnResponse(response);
