@@ -96,7 +96,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   var prbPMOxi;
 
   var averageForFasting;
-  var averageForPP='';
+  var averageForPP = '';
 
   var averageForTemp;
 
@@ -387,11 +387,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .bloodPressure.entities[0].averageAsOfNow.systolicAverage
                 .toString()
             : '';
-        averageForDia = deviceValues
-            .bloodPressure.entities[0].averageAsOfNow.diastolicAverage!=null
-        ?deviceValues
-            .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
-            .toString():'';
+        averageForDia = deviceValues.bloodPressure.entities[0].averageAsOfNow
+                    .diastolicAverage !=
+                null
+            ? deviceValues
+                .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
+                .toString()
+            : '';
       } catch (e) {
         averageForSys = '';
         averageForDia = '';
@@ -437,13 +439,18 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
       try {
         averageForFasting = deviceValues
-            .bloodGlucose.entities[0].averageAsOfNow.fastingAverage!=null?deviceValues
-            .bloodGlucose.entities[0].averageAsOfNow.fastingAverage
-            .toString():'';
-        averageForPP = deviceValues
-            .bloodGlucose.entities[0].averageAsOfNow.ppAverage!=null?deviceValues
-            .bloodGlucose.entities[0].averageAsOfNow.ppAverage
-            .toString():'';
+                    .bloodGlucose.entities[0].averageAsOfNow.fastingAverage !=
+                null
+            ? deviceValues
+                .bloodGlucose.entities[0].averageAsOfNow.fastingAverage
+                .toString()
+            : '';
+        averageForPP =
+            deviceValues.bloodGlucose.entities[0].averageAsOfNow.ppAverage !=
+                    null
+                ? deviceValues.bloodGlucose.entities[0].averageAsOfNow.ppAverage
+                    .toString()
+                : '';
       } catch (e) {
         averageForFasting = '';
         averageForPP = '';
@@ -474,10 +481,47 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       }
 
       try {
-        averageForSPO2 = deviceValues
-            .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage!=null?deviceValues
-            .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage
-            .toString():'';
+        if (deviceValues.heartRate.entities.isNotEmpty) {
+          try {
+            prbPMOxi = deviceValues.heartRate.entities[0].bpm.toString();
+
+            averageForPul = deviceValues
+                        .heartRate.entities[0].averageAsOfNow.pulseAverage !=
+                    null
+                ? deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage
+                    .toString()
+                : '';
+            averageForPRBpm = deviceValues
+                        .heartRate.entities[0].averageAsOfNow.pulseAverage !=
+                    null
+                ? deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage
+                    .toString()
+                : '';
+          } catch (e) {
+            averageForPul = '';
+            averageForPRBpm = '';
+            prbPMOxi = '';
+          }
+        } else {
+          averageForPul = '';
+          averageForPRBpm = '';
+          prbPMOxi = '';
+        }
+      } catch (e) {
+        averageForPulForBp = '';
+        averageForPul = '';
+        averageForPRBpm = '';
+        prbPMOxi = '';
+      }
+
+      try {
+        averageForSPO2 = deviceValues.oxygenSaturation.entities[0]
+                    .averageAsOfNow.oxygenLevelAverage !=
+                null
+            ? deviceValues
+                .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage
+                .toString()
+            : '';
       } catch (e) {
         averageForSPO2 = '';
       }
@@ -504,10 +548,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       }
 
       try {
-        averageForTemp = deviceValues
-            .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage!=null?deviceValues
-            .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage
-            .toString():'';
+        averageForTemp = deviceValues.bodyTemperature.entities[0].averageAsOfNow
+                    .temperatureAverage !=
+                null
+            ? deviceValues
+                .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage
+                .toString()
+            : '';
       } catch (e) {
         averageForTemp = '';
       }
@@ -535,9 +582,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
       try {
         averageForWeigh = deviceValues
-            .bodyWeight.entities[0].averageAsOfNow.weightAverage!=null?deviceValues
-            .bodyWeight.entities[0].averageAsOfNow.weightAverage
-            .toString():'';
+                    .bodyWeight.entities[0].averageAsOfNow.weightAverage !=
+                null
+            ? deviceValues.bodyWeight.entities[0].averageAsOfNow.weightAverage
+                .toString()
+            : '';
       } catch (e) {
         averageForWeigh = '';
       }
@@ -546,33 +595,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       devicevalue1ForWeight = '';
       sourceForWeigh = '';
       averageForWeigh = '';
-    }
-
-    if (deviceValues.heartRate.entities.isNotEmpty) {
-      try {
-        //pulseBp = deviceValues.heartRate.entities[0].bpm.toString();
-        prbPMOxi = deviceValues.heartRate.entities[0].bpm.toString();
-
-        averageForPul = deviceValues
-            .heartRate.entities[0].averageAsOfNow.pulseAverage!=null?deviceValues
-            .heartRate.entities[0].averageAsOfNow.pulseAverage
-            .toString():'';
-        averageForPRBpm = deviceValues
-            .heartRate.entities[0].averageAsOfNow.pulseAverage!=null?deviceValues
-            .heartRate.entities[0].averageAsOfNow.pulseAverage
-            .toString():'';
-      } catch (e) {
-        averageForPul = '';
-        averageForPRBpm = '';
-        //pulseBp = '';
-        prbPMOxi = '';
-      }
-    } else {
-      dateForBp = '';
-      averageForPul = '';
-      averageForPRBpm = '';
-      //pulseBp='';
-      prbPMOxi = '';
     }
 
     return getDeviceData(
@@ -1149,7 +1171,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                       sourceForBp != '' && sourceForBp != null
                                           ? Column(
                                               children: [
-                                                TypeIcon(sourceForBp,hexToColor('#059192')),
+                                                TypeIcon(sourceForBp,
+                                                    hexToColor('#059192')),
                                               ],
                                             )
                                           : SizedBox(),
@@ -1282,7 +1305,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     sourceForGluco != ''
                                                 ? Column(
                                                     children: [
-                                                      TypeIcon(sourceForGluco,hexToColor('#b70a80')),
+                                                      TypeIcon(
+                                                          sourceForGluco,
+                                                          hexToColor(
+                                                              '#b70a80')),
                                                     ],
                                                   )
                                                 : SizedBox()
@@ -1360,13 +1386,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   CrossAxisAlignment.center,
                                               children: [
                                                 Container(
-                                                  child:  getMealType(),
+                                                  child: getMealType(),
                                                 ),
                                                 Container(
                                                   child: Row(
                                                     children: [
                                                       Text(
-                                                          value1ForGulcose != '' &&
+                                                          value1ForGulcose !=
+                                                                      '' &&
                                                                   value1ForGulcose !=
                                                                       null
                                                               ? value1ForGulcose
@@ -1375,14 +1402,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           style: TextStyle(
                                                               fontSize: 18,
                                                               fontWeight:
-                                                                  FontWeight.w500,
+                                                                  FontWeight
+                                                                      .w500,
                                                               color: hexToColor(
                                                                   '#b70a80'))),
                                                       Text(
-                                                          value1ForGulcose != '' &&
-                                                              value1ForGulcose !=
-                                                                  null?'mg/dL':'',
-                                                          textAlign: TextAlign.end,
+                                                          value1ForGulcose !=
+                                                                      '' &&
+                                                                  value1ForGulcose !=
+                                                                      null
+                                                              ? 'mg/dL'
+                                                              : '',
+                                                          textAlign:
+                                                              TextAlign.end,
                                                           style: TextStyle(
                                                               fontSize: 8,
                                                               color: hexToColor(
@@ -1435,10 +1467,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                             ),
                                                             Text(
                                                                 averageForFasting !=
-                                                                    '' &&
-                                                                    averageForFasting !=
-                                                                        null?'mg/dL':'',
-                                                                textAlign: TextAlign.end,
+                                                                            '' &&
+                                                                        averageForFasting !=
+                                                                            null
+                                                                    ? 'mg/dL'
+                                                                    : '',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
                                                                 style: TextStyle(
                                                                     fontSize: 6,
                                                                     color: hexToColor(
@@ -1468,7 +1504,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                         child: Row(
                                                           children: [
                                                             Text(
-                                                              averageForPP != '' &&
+                                                              averageForPP !=
+                                                                          '' &&
                                                                       averageForPP !=
                                                                           null
                                                                   ? averageForPP
@@ -1483,10 +1520,15 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                       '#afafaf')),
                                                             ),
                                                             Text(
-                                                                    averageForPP != '' &&
-                                                                    averageForPP !=
-                                                                        null?'mg/dL':'',
-                                                                textAlign: TextAlign.end,
+                                                                averageForPP !=
+                                                                            '' &&
+                                                                        averageForPP !=
+                                                                            null
+                                                                    ? 'mg/dL'
+                                                                    : '',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
                                                                 style: TextStyle(
                                                                     fontSize: 6,
                                                                     color: hexToColor(
@@ -1614,7 +1656,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     sourceForThermo != null
                                                 ? Column(
                                                     children: [
-                                                      TypeIcon(sourceForThermo,hexToColor('#d95523')),
+                                                      TypeIcon(
+                                                          sourceForThermo,
+                                                          hexToColor(
+                                                              '#d95523')),
                                                     ],
                                                   )
                                                 : SizedBox()
@@ -1914,7 +1959,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     sourceForPulse != null
                                                 ? Column(
                                                     children: [
-                                                      TypeIcon(sourceForPulse,hexToColor('#8600bd')),
+                                                      TypeIcon(
+                                                          sourceForPulse,
+                                                          hexToColor(
+                                                              '#8600bd')),
                                                     ],
                                                   )
                                                 : SizedBox()
@@ -2239,7 +2287,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     sourceForWeigh != null
                                                 ? Column(
                                                     children: [
-                                                      TypeIcon(sourceForWeigh,hexToColor('#1abadd')),
+                                                      TypeIcon(
+                                                          sourceForWeigh,
+                                                          hexToColor(
+                                                              '#1abadd')),
                                                     ],
                                                   )
                                                 : SizedBox()
@@ -2327,7 +2378,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   child: Row(
                                                     children: [
                                                       Text(
-                                                          value1ForWeight != '' &&
+                                                          value1ForWeight !=
+                                                                      '' &&
                                                                   value1ForWeight !=
                                                                       null
                                                               ? value1ForWeight
@@ -2336,13 +2388,17 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                           style: TextStyle(
                                                               fontSize: 18,
                                                               fontWeight:
-                                                                  FontWeight.w500,
+                                                                  FontWeight
+                                                                      .w500,
                                                               color: hexToColor(
                                                                   '#1abadd'))),
                                                       Text(
-                                                          value1ForWeight != '' &&
-                                                              value1ForWeight !=
-                                                                  null?'Kg':'',
+                                                          value1ForWeight !=
+                                                                      '' &&
+                                                                  value1ForWeight !=
+                                                                      null
+                                                              ? 'Kg'
+                                                              : '',
                                                           style: TextStyle(
                                                               fontSize: 8,
                                                               color: hexToColor(
@@ -2395,14 +2451,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                             ),
                                                             Text(
                                                                 averageForWeigh !=
-                                                                    '' &&
-                                                                    averageForWeigh !=
-                                                                        null?'Kg':'',
+                                                                            '' &&
+                                                                        averageForWeigh !=
+                                                                            null
+                                                                    ? 'Kg'
+                                                                    : '',
                                                                 style: TextStyle(
                                                                     fontSize: 8,
                                                                     fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
+                                                                        FontWeight
+                                                                            .w400,
                                                                     color: hexToColor(
                                                                         '#afafaf'))),
                                                           ],
@@ -2533,7 +2591,7 @@ class Responsive {
   }
 }
 
-Widget TypeIcon(String type,Color color) {
+Widget TypeIcon(String type, Color color) {
   if (type == strsourceHK) {
     return Image.asset(
       'assets/devices/fit.png',
