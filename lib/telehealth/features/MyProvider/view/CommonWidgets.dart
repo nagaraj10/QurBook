@@ -225,7 +225,7 @@ class CommonWidgets {
       height: 30,
       child: Icon(
         Icons.keyboard_arrow_down,
-        color: Colors.blue,
+        color: Color(new CommonUtil().getMyPrimaryColor()),
       ),
     );
   }
@@ -448,7 +448,7 @@ class CommonWidgets {
     return Text(
       textSlotTime,
       style: TextStyle(
-          color: Colors.blueGrey, fontSize: fhbStyles.fnt_sessionTime),
+          color: Color(new CommonUtil().getMyPrimaryColor()), fontSize: fhbStyles.fnt_sessionTime),
     );
   }
 

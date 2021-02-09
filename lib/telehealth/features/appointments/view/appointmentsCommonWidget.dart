@@ -302,7 +302,7 @@ class AppointmentsCommonWidget {
               (count == null || count == 0 || count == '' || count == '0')
                   ? Container()
                   : BadgesBlue(
-                      backColor: Colors.blue,
+                      backColor: Color(new CommonUtil().getMyPrimaryColor()),
                       badgeValue: count,
                     )
             ],
@@ -371,7 +371,7 @@ class AppointmentsCommonWidget {
       child: Container(
         decoration: BoxDecoration(
             border: Border.all(
-              color: Colors.blue[200],
+              color: Color(new CommonUtil().getMyPrimaryColor()),
               width: 3,
             ),
             borderRadius: BorderRadius.circular(50.0),

@@ -137,7 +137,7 @@ const String strCallLab = 'laboratories/';
 const String icon_fhb = 'assets/launcher/myfhb.png';
 const String icon_splash_logo = 'assets/launcher/myfhb.png';
 const String icon_attach = 'assets/icons/attach.png';
-const String icon_maya = 'assets/maya/maya_us.png';
+const String icon_maya = 'assets/maya/maya_us_main.png';
 const String icon_wifi = 'assets/icons/wifi.png';
 const String icon_mayaMain = 'assets/maya/maya_us_main.png';
 const String icon_faq = 'assets/navicons/faq.png';
@@ -237,7 +237,7 @@ List<String> mayaAssets = [
 ];
 
 List<int> myThemes = [
-  0xff015eea,
+  0xff5f0cf9,
   0xffcf4791,
   0xff0483df,
   0xff118c94,
@@ -245,7 +245,7 @@ List<int> myThemes = [
 ];
 
 List<int> myGradient = [
-  0xff00c0fa,
+  0xff9929ea,
   0xfffab273,
   0xff01bbd4,
   0xff0cbcb6,
@@ -256,8 +256,8 @@ const String strSettings = 'Settings';
 const String strHelp = 'Help and support';
 const String strPrivacy = 'Privacy policy';
 const String strRateus = 'Rate us';
-const String strMaya = 'Sheela';
-const String strMAYA = 'SHEELA';
+const String strMaya = 'Sheela G';
+const String strMAYA = 'SHEELA G';
 
 const String strColorPalete = 'Color palette';
 
@@ -453,7 +453,7 @@ const String requestSheelaForweight = 'record my weight';
 const String strspeakAssistant = 'speakWithVoiceAssistant';
 const String strdevice = 'device';
 
-const String strIntromaya = 'Hi, I am Sheela your voice health assistant.';
+const String strIntromaya = 'Hi, I am Sheela G your voice health assistant.';
 const String strTapMaya = 'Tap me and invoke. Lets converse';
 const String strpdf = 'pdf';
 const String strCropper = 'Cropper';

@@ -8,6 +8,7 @@ import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/chat/view/BadgeIcon.dart';
+import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 
 class BottomBarWidget extends StatelessWidget {
   String name;
@@ -25,9 +26,14 @@ class BottomBarWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            name == 'Sheela'
+            name == variable.strMaya
                 ? Image.asset(
-                    icon,
+                    PreferenceUtil.getStringValue(Constants.keyMayaAsset) !=
+                            null
+                        ? PreferenceUtil.getStringValue(
+                                Constants.keyMayaAsset) +
+                            variable.strExtImg
+                        : variable.icon_mayaMain,
                     height: 25,
                     width: 25,
                   )
@@ -70,7 +76,6 @@ class BottomBarWidget extends StatelessWidget {
                   element.data[STR_IS_READ_COUNT] != '') {
                 count = count + element.data[STR_IS_READ_COUNT];
               }
-
             });
             return BadgeIcon(
                 icon: GestureDetector(

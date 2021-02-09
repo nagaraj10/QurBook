@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gmiwidgetspackage/widgets/flutterToast.dart';
+import 'package:myfhb/common/CommonUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 import 'package:myfhb/src/model/home_screen_arguments.dart';
@@ -662,7 +663,7 @@ class _CallPageState extends State<CallPage> {
                         ),
                         child: Text(
                           _infoStrings[index],
-                          style: TextStyle(color: Colors.blueGrey),
+                          style: TextStyle(color: Color(new CommonUtil().getMyPrimaryColor())),
                         ),
                       ),
                     )
@@ -722,7 +723,7 @@ class _CallPageState extends State<CallPage> {
                   }
                 },
                 child: Text('Ok',
-                    style: TextStyle(color: Color(0xff138fcf), fontSize: 18)),
+                    style: TextStyle(color: Color(CommonUtil().getMyPrimaryColor()), fontSize: 18)),
               ),
             ],
           );

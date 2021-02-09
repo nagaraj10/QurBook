@@ -33,7 +33,10 @@ const String strSource = "myFHBMobile";
 const String strVerify = 'Verify';
 const String strOtp = 'OTP';
 const String strOtpHint = 'OTP Here';
-const String strOtpText = 'Enter OTP below which we sent to your mobile number';
+const String strOtpText =
+    'Enter OTP below which we sent to your mobile number ';
+const String strOtpTextForFamilyMember = 'Please enter the OTP received to ';
+const String mobileNumber = "'s mobile number ";
 
 //Strings used in VerifyPatient
 const String strAccount = 'Already have an account ?';

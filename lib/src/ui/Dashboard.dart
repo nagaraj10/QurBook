@@ -166,7 +166,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         ),
                       ),
                       title: Text(
-                        'Sheela',
+                        'Sheela G',
                         style: TextStyle(color: Colors.black54),
                       )),
                   BottomNavigationBarItem(
@@ -421,20 +421,34 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void callImportantsMethod() async {
-    getFamilyRelationAndMediaType();
-    getProfileData();
-    syncDevices();
+    try {
+      getFamilyRelationAndMediaType();
+    } catch (e) {}
+    try {
+      getProfileData();
+    } catch (e) {}
+    try {
+      syncDevices();
+    } catch (e) {}
 
-    await new CommonUtil().getMedicalPreference();
+    try {
+      await new CommonUtil().getMedicalPreference();
+    } catch (e) {}
   }
 
   void getFamilyRelationAndMediaType() async {
-    await new CommonUtil().getAllCustomRoles();
-    await new CommonUtil().getMediaTypes();
+    try {
+      await new CommonUtil().getAllCustomRoles();
+    } catch (e) {}
+    try {
+      await new CommonUtil().getMediaTypes();
+    } catch (e) {}
   }
 
   void getProfileData() async {
-    await new CommonUtil().getUserProfileData();
+    try {
+      await new CommonUtil().getUserProfileData();
+    } catch (e) {}
   }
 
   void syncDevices() async {
@@ -459,7 +473,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
           if (snapshot.hasData) {
             count = 0;
             snapshot.data.documents.toList().forEach((element) {
-              if(element.data[STR_IS_READ_COUNT]!=null && element.data[STR_IS_READ_COUNT]!=''){
+              if (element.data[STR_IS_READ_COUNT] != null &&
+                  element.data[STR_IS_READ_COUNT] != '') {
                 count = count + element.data[STR_IS_READ_COUNT];
               }
             });
@@ -486,15 +501,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
         });
   }
 
-      String createGroupId(String patientId, String peerId) {
-        String groupId = '';
+  String createGroupId(String patientId, String peerId) {
+    String groupId = '';
 
-        if (patientId.hashCode <= peerId.hashCode) {
-          groupId = '$patientId-$peerId';
-        } else {
-          groupId = '$peerId-$patientId';
-        }
+    if (patientId.hashCode <= peerId.hashCode) {
+      groupId = '$patientId-$peerId';
+    } else {
+      groupId = '$peerId-$patientId';
+    }
 
-        return groupId;
-      }
+    return groupId;
+  }
 }

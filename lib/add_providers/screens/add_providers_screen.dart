@@ -148,7 +148,7 @@ class AddProvidersState extends State<AddProviders> {
     _hospitalListBlock = new HospitalListBlock();
     _labsListBlock = new LabsListBlock();
     providerViewModel = new MyProviderViewModel();
-    if(widget?.arguments?.data?.isTelehealthEnabled!=null) {
+    if (widget?.arguments?.data?.isTelehealthEnabled != null) {
       teleHealthAlertShown = widget.arguments.data.isTelehealthEnabled;
     }
     buildUI();
@@ -220,9 +220,7 @@ class AddProvidersState extends State<AddProviders> {
                           )),
                       Visibility(
                           visible: widget.arguments.hasData == true
-                              ? latitude == 0.0
-                                  ? true
-                                  : false
+                              ? latitude == 0.0 ? true : false
                               : false,
                           child: Container(
                             height: MediaQuery.of(context).size.height / 2 - 80,
@@ -1008,13 +1006,13 @@ class AddProvidersState extends State<AddProviders> {
 //          }
         }
       } else {
-        if (teleHealthAlertShown) {
-          CommonUtil.showLoadingDialog(
-              context, _keyLoader, variable.Please_Wait); //
+        CommonUtil.showLoadingDialog(
+            context, _keyLoader, variable.Please_Wait); //
 
-          updateProvidersBloc.isPreferred = isPreferred;
+        updateProvidersBloc.isPreferred = isPreferred;
 
-          if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
+        if (widget.arguments.searchKeyWord == CommonConstants.doctors) {
+          if (teleHealthAlertShown) {
             if (widget.arguments.fromClass == router.rt_myprovider) {
               updateProvidersBloc.providerId = widget.arguments.data.doctorId;
               updateProvidersBloc.providerReferenceId =
@@ -1025,51 +1023,36 @@ class AddProvidersState extends State<AddProviders> {
                   widget.arguments.data.doctorReferenceId;
             }
             updateDoctorsIdWithUserDetails();
-          } else if (widget.arguments.searchKeyWord ==
-              CommonConstants.hospitals) {
-            if (widget.arguments.fromClass == router.rt_myprovider) {
-              updateProvidersBloc.providerId =
-                  widget.arguments.hospitalData.healthOrganizationId;
-              updateProvidersBloc.providerReferenceId =
-                  widget.arguments.hospitalData.healthOrganizationReferenceId;
-            } else {
-              updateProvidersBloc.providerId =
-                  widget.arguments.hospitalData.healthOrganizationId;
-              updateProvidersBloc.providerReferenceId =
-                  widget.arguments.hospitalData.healthOrganizationReferenceId;
-            }
-            updateHospitalsIdWithUserDetails();
           } else {
-            if (widget.arguments.fromClass == router.rt_myprovider) {
-              updateProvidersBloc.providerId =
-                  widget.arguments.labData.healthOrganizationId;
-              updateProvidersBloc.providerReferenceId =
-                  widget.arguments.labData.healthOrganizationReferenceId;
-            } else {
-              updateProvidersBloc.providerId =
-                  widget.arguments.labData.healthOrganizationId;
-              updateProvidersBloc.providerReferenceId =
-                  widget.arguments.labData.healthOrganizationReferenceId;
-            }
-            updateLabsIdWithUserDetails();
+            showDialogForDoctor();
           }
+        } else if (widget.arguments.searchKeyWord ==
+            CommonConstants.hospitals) {
+          if (widget.arguments.fromClass == router.rt_myprovider) {
+            updateProvidersBloc.providerId =
+                widget.arguments.hospitalData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.hospitalData.healthOrganizationReferenceId;
+          } else {
+            updateProvidersBloc.providerId =
+                widget.arguments.hospitalData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.hospitalData.healthOrganizationReferenceId;
+          }
+          updateHospitalsIdWithUserDetails();
         } else {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  content: Text(variable.strDisableTeleconsulting),
-                  actions: <Widget>[
-                    FlatButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          teleHealthAlertShown = true;
-                          _addBtnTapped();
-                        },
-                        child: Text('Ok'))
-                  ],
-                );
-              });
+          if (widget.arguments.fromClass == router.rt_myprovider) {
+            updateProvidersBloc.providerId =
+                widget.arguments.labData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.labData.healthOrganizationReferenceId;
+          } else {
+            updateProvidersBloc.providerId =
+                widget.arguments.labData.healthOrganizationId;
+            updateProvidersBloc.providerReferenceId =
+                widget.arguments.labData.healthOrganizationReferenceId;
+          }
+          updateLabsIdWithUserDetails();
         }
       }
     } else {
@@ -1101,14 +1084,10 @@ class AddProvidersState extends State<AddProviders> {
           signInData[variable.strDescription] = '';
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null
-                  ? ''
-                  : address.locality;
+              : address.locality == null ? '' : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null
-                  ? ''
-                  : address.adminArea;
+              : address.adminArea == null ? '' : address.adminArea;
           signInData[variable.strPhoneNumbers] =
               widget.arguments.placeDetail == null
                   ? ''
@@ -1234,24 +1213,16 @@ class AddProvidersState extends State<AddProviders> {
                       : widget.arguments.confirmAddressDescription;
           signInData[variable.straddressLine2] = address == null
               ? ''
-              : address.addressLine == null
-                  ? ''
-                  : address.addressLine;
+              : address.addressLine == null ? '' : address.addressLine;
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null
-                  ? ''
-                  : address.locality;
+              : address.locality == null ? '' : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null
-                  ? ''
-                  : address.adminArea;
+              : address.adminArea == null ? '' : address.adminArea;
           signInData[variable.strzipCode] = address == null
               ? ''
-              : address.postalCode == null
-                  ? ''
-                  : address.postalCode;
+              : address.postalCode == null ? '' : address.postalCode;
           signInData[variable.strbranch] = '';
           signInData[variable.strIsUserDefined] = true;
           signInData[variable.strLatitude] =
@@ -1363,5 +1334,24 @@ class AddProvidersState extends State<AddProviders> {
       return shouldPop;
     });
     widget.arguments.isRefresh();
+  }
+
+  void showDialogForDoctor() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text(variable.strDisableTeleconsulting),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    teleHealthAlertShown = true;
+                    _addBtnTapped();
+                  },
+                  child: Text('Ok'))
+            ],
+          );
+        });
   }
 }

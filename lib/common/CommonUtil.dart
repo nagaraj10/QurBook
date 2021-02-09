@@ -562,13 +562,13 @@ class CommonUtil {
   int getMyPrimaryColor() {
     return PreferenceUtil.getSavedTheme(Constants.keyPriColor) != null
         ? PreferenceUtil.getSavedTheme(Constants.keyPriColor)
-        : 0xff015eea;
+        : 0xff5f0cf9;
   }
 
   int getMyGredientColor() {
     return PreferenceUtil.getSavedTheme(Constants.keyGreyColor) != null
         ? PreferenceUtil.getSavedTheme(Constants.keyGreyColor)
-        : 0xff00c0fa;
+        : 0xff9929ea;
   }
 
   List<CategoryData> getAllCategoryList(List<Data> data) {
@@ -1086,7 +1086,7 @@ class CommonUtil {
           value_name: parameters.strOxgenSaturation,
           value1: 'OS',
           value2: '',
-          color: [Colors.blue, Colors.blueAccent]);
+          color: [Color(new CommonUtil().getMyPrimaryColor()), Color(new CommonUtil().getMyGredientColor())]);
     }
 
     if (PreferenceUtil.getStringValue(Constants.wsMon) != variable.strFalse) {

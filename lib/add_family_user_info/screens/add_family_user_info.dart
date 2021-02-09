@@ -605,7 +605,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
-                backgroundColor: Colors.blue,
+                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
             );
           } else {
@@ -661,7 +661,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
-                backgroundColor: Colors.blue,
+                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
             );
           } else {
@@ -716,7 +716,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(
-                backgroundColor: Colors.blue,
+                backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
               ),
             );
           } else {
