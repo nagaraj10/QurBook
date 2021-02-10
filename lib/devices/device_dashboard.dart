@@ -489,6 +489,10 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
       String userID = PreferenceUtil.getStringValue(Constants.KEY_USERID);
       try {
         catgoryDataList = PreferenceUtil.getCategoryType();
+        categoryDataObj = new CommonUtil()
+            .getCategoryObjForSelectedLabel(categoryID, catgoryDataList);
+        postMediaData[parameters.strhealthRecordCategory] =
+            categoryDataObj.toJson();
       } catch (e) {
         if (catgoryDataList == null) {
           _categoryListBlock.getCategoryLists().then((value) {
@@ -599,7 +603,8 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
           postDeviceData.add(postDeviceValuesExtraClone);
         }
         postMediaData[parameters.strdeviceReadings] = postDeviceData;
-        postMediaData[parameters.strfileName] = '';
+        postMediaData[parameters.strfileName] =
+            deviceName + '_${DateTime.now().toUtc().millisecondsSinceEpoch}';
         DateTime dateTime = DateTime.now();
 
         postMediaData[parameters.strdateOfVisit] =
