@@ -109,8 +109,6 @@ class _MyProvidersState extends State<MyProviders> {
         ));
   }
 
-
-
   /*Widget collapseListItem(BuildContext ctx, int i, List<DoctorIds> docs) {
     return Container(
       padding: EdgeInsets.all(10.0),
@@ -134,8 +132,6 @@ class _MyProvidersState extends State<MyProviders> {
       ),
     );
   }*/
-
-
 
   /*Widget getDoctorsWidget(int i, List<DoctorIds> docs) {
     return Row(
@@ -280,9 +276,7 @@ class _MyProvidersState extends State<MyProviders> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return new Center(
             child: new CircularProgressIndicator(
-                backgroundColor:
-                Color(new CommonUtil().getMyPrimaryColor())
-            ),
+                backgroundColor: Color(new CommonUtil().getMyPrimaryColor())),
           );
         } else if (snapshot.hasError) {
           return new Text('Error: ${snapshot.error}');
@@ -290,7 +284,8 @@ class _MyProvidersState extends State<MyProviders> {
           final items = snapshot.data ??
               <MyProvidersResponseData>[]; // handle the case that data is null
 
-          return (snapshot.data.result != null &&
+          return (snapshot.data != null &&
+                  snapshot.data.result != null &&
                   snapshot.data.result.doctors != null &&
                   snapshot.data.result.doctors.length > 0)
               ? myProviderList(snapshot.data)
@@ -317,9 +312,7 @@ class _MyProvidersState extends State<MyProviders> {
             color: Colors.transparent,
           );
         },
-        itemCount: isSearch
-            ? doctors.length
-            : copyOfdoctorsModel.length,
+        itemCount: isSearch ? doctors.length : copyOfdoctorsModel.length,
       );
     } else {
       return Container(
