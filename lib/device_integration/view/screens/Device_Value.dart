@@ -191,7 +191,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             children: [
                               SizedBoxWidget(width: 15),
                               Text(
-                                value,
+                                todayDate != value ? value : 'Today, ' + value,
                                 style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.black,
@@ -259,7 +259,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             children: [
                               SizedBoxWidget(width: 15),
                               Text(
-                                value,
+                                todayDate != value ? value : 'Today, ' + value,
                                 style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.black,
@@ -324,7 +324,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             children: [
                               SizedBoxWidget(width: 15),
                               Text(
-                                value,
+                                todayDate != value ? value : 'Today, ' + value,
                                 style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.black,
@@ -389,7 +389,7 @@ class _EachDeviceValuesState extends State<EachDeviceValues> {
                             children: [
                               SizedBoxWidget(width: 15),
                               Text(
-                                value,
+                                todayDate != value ? value : 'Today, ' + value,
                                 style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.black,
