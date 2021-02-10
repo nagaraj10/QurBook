@@ -86,6 +86,7 @@ class CommonUtil {
   static String GOOGLE_STATIC_MAP_URL = "";
   static String BASE_URL_FROM_RES = "";
   static String BASEURL_DEVICE_READINGS = '';
+  static String FIREBASE_CHAT_NOTIFY_TOKEN = '';
 
   static const secondaryGrey = 0xFF545454;
 
