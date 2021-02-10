@@ -2,18 +2,30 @@ package com.ventechsolutions.myFHB
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Dialog
 import android.app.KeyguardManager
 import android.content.*
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
+import android.util.Log
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.multidex.BuildConfig
+import com.github.ybq.android.spinkit.SpinKitView
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
@@ -26,6 +38,7 @@ import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.util.*
+import kotlin.concurrent.thread
 import kotlin.system.exitProcess
 
 
@@ -35,8 +48,8 @@ class MainActivity : FlutterActivity() {
     private val VOICE_CHANNEL = Constants.CN_VOICE_INTENT
     private val TTS_CHANNEL = Constants.CN_TTS
     private val SECURITY_CHANNEL = Constants.CN_SECURE
-    private val ROUTE_CHANNEL=Constants.CN_ROUTE
-    private val ONGOING_NS_CHANNEL=Constants.CN_ONG_NS
+    private val ROUTE_CHANNEL = Constants.CN_ROUTE
+    private val ONGOING_NS_CHANNEL = Constants.CN_ONG_NS
     private val STREAM = Constants.CN_EVE_STREAM
     private var sharedValue: String? = null
     private var username: String? = null
@@ -47,7 +60,7 @@ class MainActivity : FlutterActivity() {
     private var healthOrgId: String? = null
     private var docId: String? = null
     private var docPic: String? = null
-    private lateinit var mEventChannel:EventSink
+    private lateinit var mEventChannel: EventSink
     private val REQ_CODE = 112
     private val INTENT_AUTHENTICATE = 155
     private var voiceText = ""
@@ -60,6 +73,7 @@ class MainActivity : FlutterActivity() {
     var lang_list = arrayOf("English", "Tamil", "Telugu", "Hindi")
     var lang_ref = arrayOf("en_US", "ta_IN", "te_IN", "hi_IN")
     var tts: TextToSpeech? = null
+    private var finalWords: String? = null
 
     private lateinit var _result: MethodChannel.Result
     private lateinit var _securityResult: MethodChannel.Result
@@ -72,8 +86,18 @@ class MainActivity : FlutterActivity() {
     private var patName: String? = null
     private var patPic: String? = null
     private var speechRecognizer: SpeechRecognizer? = null
-    private lateinit var dialog: AlertDialog
-    private lateinit var builder: AlertDialog.Builder
+    private lateinit var dialog: Dialog
+    //private lateinit var builder: AlertDialog.Builder
+    internal lateinit var displayText: TextView
+    internal lateinit var errorTxt: TextView
+
+    //internal lateinit var errorTxt: TextView
+    internal lateinit var tryMe: LinearLayout
+    internal lateinit var listeningLayout: LinearLayout
+    internal lateinit var tryAgain: Button
+    internal lateinit var customLayout: View
+    internal lateinit var spin_kit: SpinKitView
+    private var isListenDone: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,11 +114,24 @@ class MainActivity : FlutterActivity() {
         //registerReceiver(smsBroadcastReceiver,
         //IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION))
 
-        builder= AlertDialog.Builder(context)
-        builder.setCancelable(true) // if you want user to wait for some process to finish,
-        builder.setView(R.layout.progess_dialog)
-        dialog= builder.create()
-        dialog.setInverseBackgroundForced(true)
+//        builder = AlertDialog.Builder(context)
+//        builder.setCancelable(true)
+        dialog = Dialog(this)
+        customLayout = getLayoutInflater().inflate(R.layout.progess_dialog, null)
+        displayText = customLayout.findViewById(R.id.displayTxt)
+        errorTxt = customLayout.findViewById(R.id.errorTxt)
+        spin_kit = customLayout.findViewById(R.id.spin_kit)
+        tryMe = customLayout.findViewById(R.id.tryMe)
+        listeningLayout = customLayout.findViewById(R.id.listeningLayout)
+        tryAgain = customLayout.findViewById(R.id.tryAgain)
+        //builder.setView(customLayout)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setContentView(customLayout)
+        //dialog = builder.create()
+        //dialog.setInverseBackgroundForced(true)
+        //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
         //builder.show()
 
     }
@@ -147,13 +184,13 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ROUTE_CHANNEL).setMethodCallHandler { call, result ->
             try {
-                if(call.method!!.contentEquals(Constants.FUN_GET_MY_ROUTE)){
+                if (call.method!!.contentEquals(Constants.FUN_GET_MY_ROUTE)) {
                     result.success(sharedValue)
-                    sharedValue=null
-                }else {
+                    sharedValue = null
+                } else {
                     result.notImplemented()
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 print(e.printStackTrace())
             }
 
@@ -161,13 +198,13 @@ class MainActivity : FlutterActivity() {
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, ONGOING_NS_CHANNEL).setMethodCallHandler { call, result ->
             try {
-                if(call.method!!.contentEquals(Constants.FUN_ONG_NS)){
+                if (call.method!!.contentEquals(Constants.FUN_ONG_NS)) {
                     val passedMode = call.argument<String>(Constants.PROP_MODE)
                     startOnGoingNS(username!!, passedMode!!)
-                }else {
+                } else {
                     result.notImplemented()
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 print(e.printStackTrace())
             }
 
@@ -207,7 +244,7 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, SECURITY_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_KEY_GAURD) {
                 //logics to show security methods
-                _securityResult=result
+                _securityResult = result
                 secureMe()
             } else {
                 result.notImplemented()
@@ -219,7 +256,7 @@ class MainActivity : FlutterActivity() {
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, VOICE_CHANNEL).setMethodCallHandler { call, result ->
             if (call.method == Constants.FUN_VOICE_ASST) {
                 val lang_code = call.argument<String>(Constants.PROP_LANG_CODE) //todo uncomment this line
-                _result=result
+                _result = result
                 speakWithVoiceAssistant(lang_code!!) //todo uncomment this line
                 //speakWithVoiceAssistant()//todo line need to remove
             } else {
@@ -227,26 +264,26 @@ class MainActivity : FlutterActivity() {
             }
         }
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, TTS_CHANNEL).setMethodCallHandler{ call, result ->
-            _TTSResult=result
-            if(call.method==Constants.FUN_TEXT2SPEECH){
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, TTS_CHANNEL).setMethodCallHandler { call, result ->
+            _TTSResult = result
+            if (call.method == Constants.FUN_TEXT2SPEECH) {
                 val msg = call.argument<String>(Constants.PROP_MSG)
                 val iscls = call.argument<Boolean>(Constants.PROP_IS_CLOSE)
                 val langCode = call.argument<String>(Constants.PROP_LANG) //todo this has to be uncomment
                 tts!!.language = Locale(langCode!!) //todo this has to be uncomment
                 textToSpeech(msg!!, iscls!!)
-            }else{
+            } else {
                 result.notImplemented()
             }
         }
     }
 
-    private fun startOnGoingNS(name: String, mode: String){
-        if(mode == Constants.PROP_START){
+    private fun startOnGoingNS(name: String, mode: String) {
+        if (mode == Constants.PROP_START) {
             val serviceIntent = Intent(this, AVServices::class.java)
             serviceIntent.putExtra(Constants.PROP_NAME, name)
             startService(serviceIntent)
-        }else if(mode==Constants.PROP_STOP){
+        } else if (mode == Constants.PROP_STOP) {
             val serviceIntent = Intent(this, AVServices::class.java)
             stopService(serviceIntent)
         }
@@ -256,43 +293,45 @@ class MainActivity : FlutterActivity() {
         sharedValue = intent.getStringExtra(Intent.EXTRA_TEXT)
         username = intent.getStringExtra(getString(R.string.username))
         docId = intent.getStringExtra(Constants.PROP_docId)
-        docPic= intent.getStringExtra(getString(R.string.docPic))
-        bookingId= intent.getStringExtra(Constants.PROP_BookingId)
-        appDate= intent.getStringExtra(Constants.PROP_PlannedStartTime)
-        docSessionId= intent.getStringExtra(Constants.PROP_docSessionId)
-        healthOrgId= intent.getStringExtra(Constants.PROP_healthOrgId)
-        templateName= intent.getStringExtra(Constants.PROP_TEMP_NAME)
+        docPic = intent.getStringExtra(getString(R.string.docPic))
+        bookingId = intent.getStringExtra(Constants.PROP_BookingId)
+        appDate = intent.getStringExtra(Constants.PROP_PlannedStartTime)
+        docSessionId = intent.getStringExtra(Constants.PROP_docSessionId)
+        healthOrgId = intent.getStringExtra(Constants.PROP_healthOrgId)
+        templateName = intent.getStringExtra(Constants.PROP_TEMP_NAME)
         val providerReqId = intent.getStringExtra(Constants.PROP_PROVIDER_REQID)
         val redirect_to = intent.getStringExtra(Constants.PROP_REDIRECT_TO)
         val data = intent.getStringExtra(Constants.PROP_DATA)
         patId = intent.getStringExtra(getString(R.string.pat_id))
         patName = intent.getStringExtra(getString(R.string.pat_name))
         patPic = intent.getStringExtra(getString(R.string.pat_pic))
-        if(sharedValue!=null && sharedValue =="chat"){
-            sharedValue="$sharedValue"
-        }else if(sharedValue!=null && username !=null && docId!=null && docPic !=null){
-            sharedValue="$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}"
-        }else if(sharedValue==Constants.PROP_DOC_RESCHDULE){
+        if (sharedValue != null && sharedValue == "chat") {
+            sharedValue = "$sharedValue"
+        } else if (sharedValue != null && username != null && docId != null && docPic != null) {
+            sharedValue = "$sharedValue&$username&$docId&$docPic&${Constants.PROP_CALL}&${patId}&${patName}&${patPic}"
+        } else if (sharedValue == Constants.PROP_DOC_RESCHDULE) {
             //todo redirect to telehealth page
-            sharedValue="${Constants.PROP_DOC_RESCHDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}&${templateName}"
-        }else if(sharedValue==Constants.PROP_DOC_CANCELLATION){
+            sharedValue = "${Constants.PROP_DOC_RESCHDULE}&${docId!!}&${bookingId}&${docSessionId}&${healthOrgId}&${templateName}"
+        } else if (sharedValue == Constants.PROP_DOC_CANCELLATION) {
             //todo redirect to telehealth page
-            sharedValue="${Constants.PROP_DOC_CANCELLATION}&${bookingId!!}&${appDate}&${templateName}"
-        }else if(providerReqId != null && providerReqId != ""){
-            if(sharedValue==Constants.PROP_ACCEPT){
-                sharedValue="$sharedValue&${providerReqId}&${"accepted"}"
-            }else{
-                sharedValue="$sharedValue&${providerReqId}&${"rejected"}"
+            sharedValue = "${Constants.PROP_DOC_CANCELLATION}&${bookingId!!}&${appDate}&${templateName}"
+        } else if (providerReqId != null && providerReqId != "") {
+            if (sharedValue == Constants.PROP_ACCEPT) {
+                sharedValue = "$sharedValue&${providerReqId}&${"accepted"}"
+            } else {
+                sharedValue = "$sharedValue&${providerReqId}&${"rejected"}"
             }
-        }else{
-            if(data != null){
-                sharedValue="${Constants.PROP_ACK}&${redirect_to!!}&${data!!}"
-            }else{
-                sharedValue="${Constants.PROP_ACK}&${redirect_to!!}&${""}"
+        } else {
+            if (data != null) {
+                sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${data!!}"
+            } else {
+                sharedValue = "${Constants.PROP_ACK}&${redirect_to!!}&${""}"
             }
 
         }
-        if (::mEventChannel.isInitialized){mEventChannel.success(sharedValue)}
+        if (::mEventChannel.isInitialized) {
+            mEventChannel.success(sharedValue)
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -322,39 +361,145 @@ class MainActivity : FlutterActivity() {
         //intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault()) //todo this has to be comment
         GetSrcTargetLanguages()
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, langCode) //todo this has to be uncomment
+        intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true)
+        intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
         //intent.putExtra(RecognizerIntent.EXTRA_PROMPT, Constants.VOICE_ASST_PROMPT)
-        //intent.addFlags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT)
 
+        //Timer().schedule(100){
         try {
             //startActivityForResult(intent, REQ_CODE)
             speechRecognizer!!.setRecognitionListener(object : RecognitionListener {
                 override fun onReadyForSpeech(bundle: Bundle) {}
                 override fun onBeginningOfSpeech() {
-                    if(!dialog.isShowing){
+                    Log.d("SHEELA", "onBeginningOfSpeech invoked")
+                    if (!dialog.isShowing) {
+                        this@MainActivity.runOnUiThread(
+                                object : Runnable {
+                                    override fun run() {
+                                        displayText.text = "Speak now"
+                                        listeningLayout.visibility = View.VISIBLE
+                                        tryMe.visibility = View.GONE
+                                    }
+                                }
+                        )
+
                         dialog.show()
-                    }else{
-                        dialog.dismiss()
                     }
                 }
 
                 override fun onRmsChanged(v: Float) {}
                 override fun onBufferReceived(bytes: ByteArray) {}
                 override fun onEndOfSpeech() {
-                    dialog.dismiss()
-                }
-                override fun onError(i: Int) {}
-                override fun onResults(bundle: Bundle) {
-                    //micButton.setImageResource(R.drawable.ic_mic_black_off)
-                    val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
-                    val finalWords = data!![0].toString()
-                    //Toast.makeText(applicationContext, "You said:\n$finalWords", Toast.LENGTH_LONG).show()
-                    _result.success(finalWords)
-                    speechRecognizer!!.stopListening()
-                    dialog.dismiss()
-                    //editText.setText(data!![0])
+                    Log.d("SHEELA", "onEndOfSpeech invoked")
+                    if (finalWords != null && finalWords?.length!! > 0) {
+                        //dialog.dismiss()
+                    } else {
+                        this@MainActivity.runOnUiThread(
+                                object : Runnable {
+                                    override fun run() {
+                                        if (listeningLayout.visibility == View.VISIBLE) {
+                                            listeningLayout.visibility = View.GONE
+                                            tryMe.visibility = View.VISIBLE
+                                            errorTxt.text = "Didn\'t catch that. Try speaking again."
+                                            tryAgain.setOnClickListener {
+                                                this@MainActivity.runOnUiThread(
+                                                        object : Runnable {
+                                                            override fun run() {
+                                                                displayText.text = "Speak now"
+                                                                listeningLayout.visibility = View.VISIBLE
+                                                                tryMe.visibility = View.GONE
+                                                                speechRecognizer!!.startListening(intent)
+                                                            }
+                                                        }
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                        )
+
+                    }
                 }
 
-                override fun onPartialResults(bundle: Bundle) {}
+                override fun onError(errorCode: Int) {
+                    Log.d("SHEELA", "errorCode invoked")
+                    val message: String
+                    when (errorCode) {
+                        SpeechRecognizer.ERROR_AUDIO -> message = "Audio recording error"
+                        SpeechRecognizer.ERROR_CLIENT -> message = "Client side error"
+                        SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS -> message = "Insufficient permissions"
+                        SpeechRecognizer.ERROR_NETWORK -> message = "Network error"
+                        SpeechRecognizer.ERROR_NETWORK_TIMEOUT -> message = "Network timeout"
+                        SpeechRecognizer.ERROR_NO_MATCH -> message = "No match"
+                        SpeechRecognizer.ERROR_RECOGNIZER_BUSY -> message = "RecognitionService busy"
+                        SpeechRecognizer.ERROR_SERVER -> message = "error from server"
+                        SpeechRecognizer.ERROR_SPEECH_TIMEOUT -> message = "No speech input"
+                        else -> {
+                            message = "Didn't understand, please try again.";
+                        }
+                    }
+                    this@MainActivity.runOnUiThread(
+                            object : Runnable {
+                                override fun run() {
+                                }
+                            }
+                    )
+                }
+
+                override fun onResults(bundle: Bundle) {
+                    Log.d("SHEELA", "onResults invoked")
+                    val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    finalWords = data!![0].toString()
+                    _result.success(finalWords)
+                    if (finalWords != null && finalWords?.length!! > 0) {
+//                        thread {
+//                            Thread.sleep(2000)
+//                            dialog.dismiss()
+//                            finalWords = null
+//                        }
+                        dialog.dismiss()
+                        finalWords = null
+                    } else {
+                        this@MainActivity.runOnUiThread(
+                                object : Runnable {
+                                    override fun run() {
+                                        if (listeningLayout.visibility == View.VISIBLE) {
+                                            listeningLayout.visibility = View.GONE
+                                            tryMe.visibility = View.VISIBLE
+                                            errorTxt.text = "Didn\'t catch that. Try speaking again."
+                                            tryAgain.setOnClickListener {
+                                                this@MainActivity.runOnUiThread(
+                                                        object : Runnable {
+                                                            override fun run() {
+                                                                displayText.text = "Speak now"
+                                                                listeningLayout.visibility = View.VISIBLE
+                                                                tryMe.visibility = View.GONE
+                                                                speechRecognizer!!.startListening(intent)
+                                                            }
+                                                        }
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                        )
+                    }
+                }
+
+                override fun onPartialResults(bundle: Bundle) {
+                    Log.d("SHEELA", "onPartialResults invoked")
+                    val data = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+                    finalWords = data!![0].toString()
+                    Log.d("SHEELA", finalWords)
+                    this@MainActivity.runOnUiThread(
+                            object : Runnable {
+                                override fun run() {
+                                    displayText.text = finalWords
+                                }
+                            }
+                    )
+                }
+
                 override fun onEvent(i: Int, bundle: Bundle) {}
             })
             speechRecognizer!!.startListening(intent)
@@ -396,7 +541,7 @@ class MainActivity : FlutterActivity() {
          })*/
     }*/
 
-    private fun listenForSMS(){
+    private fun listenForSMS() {
         //Initialize the SmsRetriever client
         val client = SmsRetriever.getClient(this)
         //Start the SMS Retriever task
@@ -428,19 +573,19 @@ class MainActivity : FlutterActivity() {
 
     }
 
-    private fun secureMe(){
+    private fun secureMe() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
             val km: KeyguardManager = getSystemService(android.content.Context.KEYGUARD_SERVICE) as KeyguardManager
             if (km.isKeyguardSecure()) {
                 //user has set pin/password/pattern
                 val authIntent: Intent = km.createConfirmDeviceCredentialIntent(Constants.KEY_GAURD_TITLE, Constants.KEY_GAURD_TITLE_DESC)
                 startActivityForResult(authIntent, INTENT_AUTHENTICATE)
-            }else{
+            } else {
                 //user has not enabled any password/pin/pattern
                 _securityResult.success(1004)
                 return
             }
-        }else{
+        } else {
             //there is no key guard feature below Android 5.0
             _securityResult.success(1000)
             return
@@ -448,11 +593,11 @@ class MainActivity : FlutterActivity() {
     }
 
 
-    private fun textToSpeech(msg: String, isClose: Boolean){
+    private fun textToSpeech(msg: String, isClose: Boolean) {
         tts!!.setSpeechRate(1.0f)
-        if(isClose){
+        if (isClose) {
             tts!!.stop()
-        }else{
+        } else {
             tts!!.speak(msg, TextToSpeech.QUEUE_FLUSH, null,
                     TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID)
         }
@@ -477,7 +622,7 @@ class MainActivity : FlutterActivity() {
         return "v$versionName b${versionCode.toString()}"
     }
 
-    private fun requestPermissionFromUSer(){
+    private fun requestPermissionFromUSer() {
         ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.RECORD_AUDIO), REQ_CODE)
     }
 

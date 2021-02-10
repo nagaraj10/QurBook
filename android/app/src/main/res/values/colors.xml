@@ -3,7 +3,7 @@
     <!-- For app theme -->
     <color name="colorPrimary">#5e1fe0</color>
     <color name="colorPrimaryDark">#5e1fe0</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#6021de</color>
     <color name="colorText">#3f4149</color>
 
     <!-- For roster view -->
