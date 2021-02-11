@@ -50,14 +50,13 @@ class AuthService {
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
-      } else if(response.statusCode==500){
+      } else if (response.statusCode == 500) {
         var responseResult = jsonDecode(response.body);
         String responseString = responseResult[strResult];
         await PreferenceUtil.saveString(
             Constants.KEY_AUTHTOKEN, responseString);
         return responseResult;
-      }
-      else {
+      } else {
         return createErrorJsonString(response);
       }
     } on SocketException {
@@ -74,6 +73,24 @@ class AuthService {
         },
         body: jsonEncode(params),
       );
+      if (response.statusCode == 200) {
+        var responseResult = jsonDecode(response.body);
+        return responseResult;
+      } else {
+        return createErrorJsonString(response);
+      }
+    } on SocketException {
+      return spocketException();
+    }
+  }
+
+  Future<dynamic> resendOtpserviceForAddingFamilyMember(
+      Map<String, dynamic> params) async {
+    final path = Constants.BASE_URL + strResendGenerateOTP;
+    final headers = await headerRequest.getRequestHeadersAuthContents();
+    try {
+      var response =
+          await http.post(path, headers: headers, body: jsonEncode(params));
       if (response.statusCode == 200) {
         var responseResult = jsonDecode(response.body);
         return responseResult;

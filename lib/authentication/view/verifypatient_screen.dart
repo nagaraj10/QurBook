@@ -156,7 +156,8 @@ class _VerifyPatientState extends State<VerifyPatient> {
                               )
                             : Container(),
                       ),
-                      widget.dataForResendOtp != null
+                      (widget.dataForResendOtp != null ||
+                              from == strFromVerifyFamilyMember)
                           ? _getResendForSignIN()
                           : Container(),
                       SizedBox(height: 10),
@@ -239,22 +240,35 @@ class _VerifyPatientState extends State<VerifyPatient> {
 
   _startTimer() async {
     numberOfTimesResendTapped++;
+    Map<String, String> data = {"phoneNumber": widget.PhoneNumber};
     if (numberOfTimesResendTapped < 3) {
       _updateResendButton();
       Future.delayed(Duration(minutes: 1), () {
         _updateResendButton();
       });
-      loginModel.PatientLogIn response =
-          await authViewModel.loginPatient(widget.dataForResendOtp);
-      _loginOTPSent(response);
+      if (from == strFromVerifyFamilyMember) {
+        ResendOtpModel response =
+            await authViewModel.resendOtpForAddingFamilyMember(data);
+        _checkOtpResponse(response);
+      } else {
+        loginModel.PatientLogIn response =
+            await authViewModel.loginPatient(widget.dataForResendOtp);
+        _loginOTPSent(response);
+      }
     } else if (numberOfTimesResendTapped == 3) {
       _updateResendButtonAfterBufferTime();
       Future.delayed(const Duration(minutes: 15), () {
         _updateResendButtonAfterBufferTime(resetCount: true);
       });
-      loginModel.PatientLogIn response =
-          await authViewModel.loginPatient(widget.dataForResendOtp);
-      _loginOTPSent(response);
+      if (from == strFromVerifyFamilyMember) {
+        ResendOtpModel response =
+            await authViewModel.resendOtpForAddingFamilyMember(data);
+        _checkOtpResponse(response);
+      } else {
+        loginModel.PatientLogIn response =
+            await authViewModel.loginPatient(widget.dataForResendOtp);
+        _loginOTPSent(response);
+      }
     }
   }
 
@@ -433,6 +447,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
 
   _checkOtpResponse(ResendOtpModel response) {
     if (response.isSuccess) {
+      toast.getToast('OTP sent successfully', Colors.green);
     } else {
       if (response.message != null) {
         toast.getToast(response.message, Colors.red);
