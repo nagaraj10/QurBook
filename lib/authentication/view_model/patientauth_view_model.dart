@@ -44,6 +44,14 @@ class AuthViewModel extends ChangeNotifier {
     return resend;
   }
 
+  Future<ResendOtpModel> resendOtpForAddingFamilyMember(
+      Map<String, dynamic> params) async {
+    var resendResponse =
+        await _authService.resendOtpserviceForAddingFamilyMember(params);
+    ResendOtpModel resend = ResendOtpModel.fromJson(resendResponse);
+    return resend;
+  }
+
   Future<PatientForgotPasswordModel> resetPassword(
       Map<String, dynamic> params) async {
     var resetResponse = await _authService.forgotPasswordservice(params);

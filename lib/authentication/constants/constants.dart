@@ -105,6 +105,7 @@ const String strStatus = "status";
 const String strBearer = 'Bearer';
 const String strWentWrong = 'Something went Wrong';
 const String strResendConfirmCode = 'resend-confirm-code';
+const String strResendGenerateOTP = 'user-relationship/generate-otp';
 
 //Strings used in ChangePassword
 const String strChangePasswordText =

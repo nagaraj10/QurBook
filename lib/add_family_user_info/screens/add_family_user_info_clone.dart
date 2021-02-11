@@ -171,27 +171,29 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                SizedBox(height: 80,),
+                SizedBox(
+                  height: 80,
+                ),
                 Padding(
-                    padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+                    padding:
+                        EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
                     child: Container(
                       width: 100,
                       height: 100,
                       decoration: ShapeDecoration(
                           shape: CircleBorder(),
-                          color:
-                          Color(new CommonUtil().getMyPrimaryColor())),
+                          color: Color(new CommonUtil().getMyPrimaryColor())),
                       child: Padding(
                         padding: EdgeInsets.all(circleBorderWidth),
                         child: InkWell(
                           child: ClipOval(
                               child: (imageURI != null && imageURI != '')
                                   ? Image.file(
-                                imageURI,
-                                fit: BoxFit.cover,
-                                width: 60,
-                                height: 60,
-                              )
+                                      imageURI,
+                                      fit: BoxFit.cover,
+                                      width: 60,
+                                      height: 60,
+                                    )
                                   : showProfileImageNew()),
                           onTap: () {
                             saveMediaDialog(context);
@@ -542,8 +544,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               textFieldConfiguration: TextFieldConfiguration(
                   controller: cntrlr_addr_city,
                   decoration: InputDecoration(
-                    hintText: "City",
-                    labelText: "City",
+                    hintText: "City*",
+                    labelText: "City*",
                     border: InputBorder.none,
                     hintStyle: TextStyle(fontSize: 14.0),
                   )),
@@ -581,9 +583,9 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
               onSuggestionSelected: (suggestion) {
                 cntrlr_addr_city.text = suggestion.name;
                 cityVal = suggestion;
-                if(cityVal!=null && cityVal?.state!=null){
-                  cntrlr_addr_state.text=suggestion.state.name;
-                  stateVal=suggestion.state;
+                if (cityVal != null && cityVal?.state != null) {
+                  cntrlr_addr_state.text = suggestion.state.name;
+                  stateVal = suggestion.state;
                 }
                 //stateVal = suggestion.state;
               },
