@@ -249,6 +249,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   }
                 },
               ),
+              backgroundColor: Colors.grey[200],
               body: SingleChildScrollView(
                 //height: MediaQuery.of(context).size.height - 200,
                 child: ChangeNotifierProvider(

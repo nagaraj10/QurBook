@@ -34,6 +34,7 @@ import 'package:myfhb/device_integration/viewModel/Device_model.dart';
 import 'package:myfhb/device_integration/model/LastMeasureSync.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
 import 'package:myfhb/constants/router_variable.dart' as router;
+import 'package:myfhb/src/utils/screenutils/size_extensions.dart';
 
 class ShowDevicesNew extends StatefulWidget {
   @override
@@ -96,7 +97,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   var prbPMOxi;
 
   var averageForFasting;
-  var averageForPP='';
+  var averageForPP = '';
 
   var averageForTemp;
 
@@ -221,7 +222,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height / 1.3,
+              height: 1.sh / 1.3,
               child: Center(
                   child: CircularProgressIndicator(
                       backgroundColor:
@@ -229,7 +230,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
+          return Text(
+            'Error: ${snapshot.error}',
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
+          );
         } else {
           return getValuesFromSharedPrefernce(context);
         }
@@ -243,20 +249,29 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         return Text(
           getMealText(deviceMealContext.toString()),
           style: TextStyle(
-              color: Colors.black, fontSize: 8, fontWeight: FontWeight.w400),
+            color: Colors.black,
+            fontSize: 8.0.sp,
+            fontWeight: FontWeight.w400,
+          ),
         );
       } else {
         return Text(
           '-',
           style: TextStyle(
-              color: Colors.black, fontSize: 8, fontWeight: FontWeight.w400),
+            color: Colors.black,
+            fontSize: 8.0.sp,
+            fontWeight: FontWeight.w400,
+          ),
         );
       }
     } else {
       return Text(
         '-',
         style: TextStyle(
-            color: Colors.black, fontSize: 8, fontWeight: FontWeight.w400),
+          color: Colors.black,
+          fontSize: 8.0.sp,
+          fontWeight: FontWeight.w400,
+        ),
       );
     }
   }
@@ -285,15 +300,23 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return SafeArea(
             child: SizedBox(
-              height: MediaQuery.of(context).size.height / 1.3,
+              height: 1.sh / 1.3,
               child: new Center(
-                  child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()))),
+                child: new CircularProgressIndicator(
+                  backgroundColor: Color(
+                    new CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+              ),
             ),
           );
         } else if (snapshot.hasError) {
-          return new Text('Error: ${snapshot.error}');
+          return new Text(
+            'Error: ${snapshot.error}',
+            style: TextStyle(
+              fontSize: 14.0.sp,
+            ),
+          );
         } else {
           return getBody(context);
         }
@@ -308,10 +331,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
   Widget getBody(BuildContext context) {
     DevicesViewModel _devicesmodel = Provider.of<DevicesViewModel>(context);
     return SafeArea(
-      child: SingleChildScrollView(
-        child: Container(
-          alignment: Alignment.center,
-          child: getValues(context, _devicesmodel),
+      child: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            alignment: Alignment.center,
+            child: getValues(context, _devicesmodel),
+          ),
         ),
       ),
     );
@@ -326,11 +351,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             return projectWidget(context);
           } else {
             return SizedBox(
-              height: MediaQuery.of(context).size.height / 1.3,
+              height: 1.sh / 1.3,
               child: new Center(
-                  child: new CircularProgressIndicator(
-                      backgroundColor:
-                          Color(new CommonUtil().getMyPrimaryColor()))),
+                child: new CircularProgressIndicator(
+                  backgroundColor: Color(
+                    new CommonUtil().getMyPrimaryColor(),
+                  ),
+                ),
+              ),
             );
           }
         });
@@ -387,11 +415,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 .bloodPressure.entities[0].averageAsOfNow.systolicAverage
                 .toString()
             : '';
-        averageForDia = deviceValues
-            .bloodPressure.entities[0].averageAsOfNow.diastolicAverage!=null
-        ?deviceValues
-            .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
-            .toString():'';
+        averageForDia = deviceValues.bloodPressure.entities[0].averageAsOfNow
+                    .diastolicAverage !=
+                null
+            ? deviceValues
+                .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
+                .toString()
+            : '';
       } catch (e) {
         averageForSys = '';
         averageForDia = '';
@@ -437,13 +467,18 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
       try {
         averageForFasting = deviceValues
-            .bloodGlucose.entities[0].averageAsOfNow.fastingAverage!=null?deviceValues
-            .bloodGlucose.entities[0].averageAsOfNow.fastingAverage
-            .toString():'';
-        averageForPP = deviceValues
-            .bloodGlucose.entities[0].averageAsOfNow.ppAverage!=null?deviceValues
-            .bloodGlucose.entities[0].averageAsOfNow.ppAverage
-            .toString():'';
+                    .bloodGlucose.entities[0].averageAsOfNow.fastingAverage !=
+                null
+            ? deviceValues
+                .bloodGlucose.entities[0].averageAsOfNow.fastingAverage
+                .toString()
+            : '';
+        averageForPP =
+            deviceValues.bloodGlucose.entities[0].averageAsOfNow.ppAverage !=
+                    null
+                ? deviceValues.bloodGlucose.entities[0].averageAsOfNow.ppAverage
+                    .toString()
+                : '';
       } catch (e) {
         averageForFasting = '';
         averageForPP = '';
@@ -474,10 +509,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       }
 
       try {
-        averageForSPO2 = deviceValues
-            .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage!=null?deviceValues
-            .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage
-            .toString():'';
+        averageForSPO2 = deviceValues.oxygenSaturation.entities[0]
+                    .averageAsOfNow.oxygenLevelAverage !=
+                null
+            ? deviceValues
+                .oxygenSaturation.entities[0].averageAsOfNow.oxygenLevelAverage
+                .toString()
+            : '';
       } catch (e) {
         averageForSPO2 = '';
       }
@@ -504,10 +542,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       }
 
       try {
-        averageForTemp = deviceValues
-            .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage!=null?deviceValues
-            .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage
-            .toString():'';
+        averageForTemp = deviceValues.bodyTemperature.entities[0].averageAsOfNow
+                    .temperatureAverage !=
+                null
+            ? deviceValues
+                .bodyTemperature.entities[0].averageAsOfNow.temperatureAverage
+                .toString()
+            : '';
       } catch (e) {
         averageForTemp = '';
       }
@@ -535,9 +576,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
       try {
         averageForWeigh = deviceValues
-            .bodyWeight.entities[0].averageAsOfNow.weightAverage!=null?deviceValues
-            .bodyWeight.entities[0].averageAsOfNow.weightAverage
-            .toString():'';
+                    .bodyWeight.entities[0].averageAsOfNow.weightAverage !=
+                null
+            ? deviceValues.bodyWeight.entities[0].averageAsOfNow.weightAverage
+                .toString()
+            : '';
       } catch (e) {
         averageForWeigh = '';
       }
@@ -553,14 +596,18 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         //pulseBp = deviceValues.heartRate.entities[0].bpm.toString();
         prbPMOxi = deviceValues.heartRate.entities[0].bpm.toString();
 
-        averageForPul = deviceValues
-            .heartRate.entities[0].averageAsOfNow.pulseAverage!=null?deviceValues
-            .heartRate.entities[0].averageAsOfNow.pulseAverage
-            .toString():'';
-        averageForPRBpm = deviceValues
-            .heartRate.entities[0].averageAsOfNow.pulseAverage!=null?deviceValues
-            .heartRate.entities[0].averageAsOfNow.pulseAverage
-            .toString():'';
+        averageForPul =
+            deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage !=
+                    null
+                ? deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage
+                    .toString()
+                : '';
+        averageForPRBpm =
+            deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage !=
+                    null
+                ? deviceValues.heartRate.entities[0].averageAsOfNow.pulseAverage
+                    .toString()
+                : '';
       } catch (e) {
         averageForPul = '';
         averageForPRBpm = '';
@@ -682,26 +729,26 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       child: Row(
         children: <Widget>[
           CircleAvatar(
-            radius: 20,
+            radius: 20.0.sp,
             backgroundImage: AssetImage("assets/user/profile_pic_ph.png"),
             child: CircleAvatar(
-              radius: 20,
+              radius: 20.0.sp,
               backgroundColor: Colors.transparent,
               backgroundImage: NetworkImage(
-                  myProfile != null && myProfile.toString().isNotEmpty ??
-                          myProfile.result != null ??
-                          myProfile.result.profilePicThumbnailUrl != null &&
-                              myProfile.result.profilePicThumbnailUrl.isNotEmpty
-                      ? myProfile.result.profilePicThumbnailUrl
-                      : ''),
+                myProfile != null && myProfile.toString().isNotEmpty ??
+                        myProfile.result != null ??
+                        myProfile.result.profilePicThumbnailUrl != null &&
+                            myProfile.result.profilePicThumbnailUrl.isNotEmpty
+                    ? myProfile.result.profilePicThumbnailUrl
+                    : '',
+              ),
             ),
           ),
           SizedBox(
-            width: 15,
+            width: 15.0.w,
           ),
           Expanded(
             child: Container(
-                child: Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -714,15 +761,16 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                 myProfile.result.firstName)
                         : 'Hey User',
                     style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400),
+                      fontSize: 18.0.sp,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                    ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                   ),
                 ],
               ),
-            )),
+            ),
           )
         ],
       ),
@@ -754,6 +802,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       //height: MediaQuery.of(context).size.height,
       color: Colors.grey[200],
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Container(
@@ -775,8 +824,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   PreferredSize(
-                    preferredSize: Size.fromHeight(
-                        MediaQuery.of(context).size.height * 0.15),
+                    preferredSize: Size.fromHeight(1.sh * 0.15),
                     child: Container(
                       decoration: BoxDecoration(
                           gradient: LinearGradient(
@@ -798,17 +846,14 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                               child: Row(
                                 children: <Widget>[
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.05,
+                                    width: 0.05.sw,
                                   ),
                                   Container(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.66,
+                                    width: 0.66.sw,
                                     child: _getUserName(),
                                   ),
                                   SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.12,
+                                    width: 0.12.sw,
                                   ),
                                   isFamilyAvail
                                       ? SwitchProfile().buildActions(
@@ -827,371 +872,382 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             ),
           ),
           SizedBoxWidget(
-            height: 10,
+            height: 10.0.h,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBoxWidget(
-                width: MediaQuery.of(context).size.width * 0.08,
+                width: 0.08.sw,
               ),
               Container(
                 child: Text(
                   'Devices',
                   style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500),
+                    fontSize: 16.0.sp,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
           ),
           SizedBoxWidget(
-            height: 10,
+            height: 10.0.h,
           ),
           Visibility(
             visible: bpMonitor,
-            child: Row(
-              children: [
-                SizedBoxWidget(
-                  width: Responsive.width(3, context),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ChangeNotifierProvider(
-                                  create: (context) => DevicesViewModel(),
-                                  child: EachDeviceValues(
-                                    sheelaRequestString:
-                                        variable.requestSheelaForbp,
-                                    device_name: strDataTypeBP,
-                                    device_icon: Devices_BP_Tool,
-                                  ),
-                                )),
-                      );
-                    },
-                    child: Container(
-                      height: Responsive.width(40, context),
-                      decoration: BoxDecoration(
-                        borderRadius: new BorderRadius.only(
-                            topLeft: const Radius.circular(10.0),
-                            topRight: const Radius.circular(10.0)),
-                        color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 12.0.w,
+              ),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChangeNotifierProvider(
+                              create: (context) => DevicesViewModel(),
+                              child: EachDeviceValues(
+                                sheelaRequestString:
+                                    variable.requestSheelaForbp,
+                                device_name: strDataTypeBP,
+                                device_icon: Devices_BP_Tool,
+                              ),
+                            )),
+                  );
+                },
+                child: Container(
+                  // height: 170.0.h,
+                  decoration: BoxDecoration(
+                    borderRadius: new BorderRadius.only(
+                      topLeft: Radius.circular(
+                        10.0.sp,
                       ),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.all(10),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBoxWidget(width: 15),
-                                  Container(
-                                    child: Column(
+                      topRight: Radius.circular(
+                        10.0.sp,
+                      ),
+                    ),
+                    color: Colors.white,
+                  ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.all(
+                          10.0.sp,
+                        ),
+                        child: IntrinsicHeight(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBoxWidget(
+                                width: 10.0.w,
+                              ),
+                              Expanded(
+                                flex: 2,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              dateForBp != null &&
-                                                      dateForBp != ''
-                                                  ? dateForBp + ', '
-                                                  : '',
-                                              style: TextStyle(
-                                                  fontSize: 8,
-                                                  color: Colors.black),
-                                            ),
-                                            Text(
-                                              timeForBp != null &&
-                                                      timeForBp != ''
-                                                  ? timeForBp
-                                                  : '',
-                                              style: TextStyle(
-                                                  fontSize: 8,
-                                                  color: Colors.black),
-                                            )
-                                          ],
+                                        Text(
+                                          dateForBp != null && dateForBp != ''
+                                              ? dateForBp + ', '
+                                              : '',
+                                          style: TextStyle(
+                                            fontSize: 8.0.sp,
+                                            color: Colors.black,
+                                          ),
                                         ),
-                                        SizedBoxWidget(height: 5),
-                                        Image.asset(
-                                          'assets/devices/bp_dashboard.png',
-                                          height: 48.0,
-                                          width: 40.0,
+                                        Text(
+                                          timeForBp != null && timeForBp != ''
+                                              ? timeForBp
+                                              : '',
+                                          style: TextStyle(
+                                            fontSize: 8.0.sp,
+                                            color: Colors.black,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                    SizedBoxWidget(
+                                      height: 5.0.h,
+                                    ),
+                                    Image.asset(
+                                      'assets/devices/bp_dashboard.png',
+                                      height: 48.0.h,
+                                      width: 40.0.w,
+                                      color: hexToColor('#059192'),
+                                    ),
+                                    SizedBoxWidget(
+                                      height: 5.0.h,
+                                    ),
+                                    Center(
+                                      child: Text(
+                                        'Blood Pressure',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 15.0.sp,
+                                          fontWeight: FontWeight.w500,
                                           color: hexToColor('#059192'),
                                         ),
-                                        SizedBoxWidget(height: 5),
-                                        Row(
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBoxWidget(
+                                width: 10.0.w,
+                              ),
+                              Center(
+                                child: Container(
+                                  child: VerticalDivider(
+                                    color: hexToColor('#059192'),
+                                    indent: 20.0.h,
+                                    endIndent: 10.0.h,
+                                    width: 2.0.w,
+                                  ),
+                                ),
+                              ),
+                              SizedBoxWidget(
+                                width: 20.0.w,
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  children: [
+                                    SizedBoxWidget(
+                                      height: 10.0.h,
+                                    ),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
                                           children: [
-                                            Container(
-                                              width: 80,
-                                              child: Center(
-                                                child: Text(
-                                                  'Blood Pressure',
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: hexToColor(
-                                                          '#059192')),
-                                                ),
+                                            Text(
+                                              'Sys',
+                                              style: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#39c5c2'),
+                                              ),
+                                            ),
+                                            Text(
+                                              value1ForBp != ''
+                                                  ? value1ForBp.toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 18.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#059192'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBoxWidget(
+                                          width: 15.0.w,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Dia',
+                                              style: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#39c5c2'),
+                                              ),
+                                            ),
+                                            Text(
+                                              value2ForBp != ''
+                                                  ? value2ForBp.toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 18.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#059192'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBoxWidget(
+                                          width: 15.0.w,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Pul',
+                                              style: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#39c5c2'),
+                                              ),
+                                            ),
+                                            Text(
+                                              pulseBp != '' && pulseBp != null
+                                                  ? pulseBp.toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 18.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#059192'),
                                               ),
                                             ),
                                           ],
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  SizedBoxWidget(width: 10),
-                                  Center(
-                                      child: Container(
-                                          height: 90,
-                                          child: VerticalDivider(
-                                              color: hexToColor('#059192')))),
-                                  SizedBoxWidget(width: 20),
-                                  Expanded(
-                                    child: Column(
+                                    SizedBoxWidget(
+                                      height: 10.0.h,
+                                    ),
+                                    Row(
                                       children: [
-                                        SizedBoxWidget(height: 10),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  'Sys',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: hexToColor(
-                                                          '#39c5c2')),
-                                                ),
-                                                Text(
-                                                  value1ForBp != ''
-                                                      ? value1ForBp.toString()
-                                                      : '-',
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: hexToColor(
-                                                          '#059192')),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBoxWidget(width: 15),
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  'Dia',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: hexToColor(
-                                                          '#39c5c2')),
-                                                ),
-                                                Text(
-                                                  value2ForBp != ''
-                                                      ? value2ForBp.toString()
-                                                      : '-',
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: hexToColor(
-                                                          '#059192')),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBoxWidget(width: 15),
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  'Pul',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: hexToColor(
-                                                          '#39c5c2')),
-                                                ),
-                                                Text(
-                                                  pulseBp != '' &&
-                                                          pulseBp != null
-                                                      ? pulseBp.toString()
-                                                      : '-',
-                                                  style: TextStyle(
-                                                      fontSize: 18,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: hexToColor(
-                                                          '#059192')),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                        SizedBoxWidget(width: 2.0.w),
+                                        Text(
+                                          '7 Days Avg',
+                                          style: TextStyle(
+                                            fontSize: 8.0.sp,
+                                            fontWeight: FontWeight.w400,
+                                            color: hexToColor('#afafaf'),
+                                          ),
                                         ),
-                                        SizedBoxWidget(height: 10),
-                                        Row(
-                                          children: [
-                                            SizedBoxWidget(width: 2),
-                                            Text(
-                                              '7 Days Avg',
-                                              style: TextStyle(
-                                                  fontSize: 8,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: hexToColor('#afafaf')),
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  'Sys',
-                                                  style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: hexToColor(
-                                                          '#afafaf')),
-                                                ),
-                                                Text(
-                                                  averageForSys != '' &&
-                                                          averageForSys != null
-                                                      ? averageForSys.toString()
-                                                      : '-',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: hexToColor(
-                                                          '#afafaf')),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBoxWidget(width: 15),
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  'Dia',
-                                                  style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: hexToColor(
-                                                          '#afafaf')),
-                                                ),
-                                                Text(
-                                                  averageForDia != '' &&
-                                                          averageForDia != null
-                                                      ? averageForDia.toString()
-                                                      : '-',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: hexToColor(
-                                                          '#afafaf')),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBoxWidget(width: 15),
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  'Pul',
-                                                  style: TextStyle(
-                                                      fontSize: 10,
-                                                      fontWeight:
-                                                          FontWeight.w400,
-                                                      color: hexToColor(
-                                                          '#afafaf')),
-                                                ),
-                                                Text(
-                                                  averageForPulForBp != '' &&
-                                                          averageForPulForBp !=
-                                                              null
-                                                      ? averageForPulForBp
-                                                          .toString()
-                                                      : '-',
-                                                  style: TextStyle(
-                                                      fontSize: 14,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: hexToColor(
-                                                          '#afafaf')),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
                                       ],
                                     ),
-                                  ),
-                                  Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      sourceForBp != '' && sourceForBp != null
-                                          ? Column(
-                                              children: [
-                                                TypeIcon(sourceForBp,hexToColor('#059192')),
-                                              ],
-                                            )
-                                          : SizedBox(),
-                                      MaterialButton(
-                                        height: 25.0,
-                                        minWidth: 45.0,
-                                        onPressed: () {
-                                          navigateToDeviceDashboardScreen(
-                                              Constants.STR_BP_MONITOR);
-                                        },
-                                        color: hexToColor('#059192'),
-                                        textColor: Colors.white,
-                                        child: Icon(
-                                          Icons.add,
-                                          size: 14,
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Sys',
+                                              style: TextStyle(
+                                                fontSize: 10.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                            Text(
+                                              averageForSys != '' &&
+                                                      averageForSys != null
+                                                  ? averageForSys.toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                          ],
                                         ),
-                                        padding: EdgeInsets.all(2),
-                                        shape: CircleBorder(),
-                                      ),
-                                    ],
+                                        SizedBoxWidget(
+                                          width: 15.0.w,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Dia',
+                                              style: TextStyle(
+                                                fontSize: 10.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                            Text(
+                                              averageForDia != '' &&
+                                                      averageForDia != null
+                                                  ? averageForDia.toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBoxWidget(
+                                          width: 15.0.w,
+                                        ),
+                                        Column(
+                                          children: [
+                                            Text(
+                                              'Pul',
+                                              style: TextStyle(
+                                                fontSize: 10.0.sp,
+                                                fontWeight: FontWeight.w400,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                            Text(
+                                              averageForPulForBp != '' &&
+                                                      averageForPulForBp != null
+                                                  ? averageForPulForBp
+                                                      .toString()
+                                                  : '-',
+                                              style: TextStyle(
+                                                fontSize: 14.0.sp,
+                                                fontWeight: FontWeight.w500,
+                                                color: hexToColor('#afafaf'),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                              Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  sourceForBp != '' && sourceForBp != null
+                                      ? TypeIcon(
+                                          sourceForBp,
+                                          hexToColor('#059192'),
+                                        )
+                                      : SizedBox(),
+                                  MaterialButton(
+                                    height: 25.0.h,
+                                    minWidth: 45.0.w,
+                                    onPressed: () {
+                                      navigateToDeviceDashboardScreen(
+                                          Constants.STR_BP_MONITOR);
+                                    },
+                                    color: hexToColor('#059192'),
+                                    textColor: Colors.white,
+                                    child: Icon(
+                                      Icons.add,
+                                      size: 14.0.sp,
+                                    ),
+                                    padding: EdgeInsets.all(
+                                      2.0.sp,
+                                    ),
+                                    shape: CircleBorder(),
                                   ),
                                 ],
                               ),
-                            ),
+                            ],
                           ),
-                          Divider(
-                              color: hexToColor('#059192'),
-                              thickness: 2,
-                              height: 2),
-                        ],
+                        ),
                       ),
-                    ),
+                      Divider(
+                        color: hexToColor('#059192'),
+                        thickness: 2.0.h,
+                        height: 2.0.h,
+                      ),
+                    ],
                   ),
                 ),
-                SizedBoxWidget(
-                  width: Responsive.width(3, context),
-                )
-              ],
+              ),
             ),
           ),
           SizedBoxWidget(
-            height: 12,
+            height: 12.0.h,
           ),
           Column(
             children: [
@@ -1211,328 +1267,376 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ChangeNotifierProvider(
-                                        create: (context) => DevicesViewModel(),
-                                        child: EachDeviceValues(
-                                          sheelaRequestString:
-                                              variable.requestSheelaForglucose,
-                                          device_name: strGlusoceLevel,
-                                          device_icon: Devices_GL_Tool,
-                                        ),
-                                      )),
+                                builder: (context) => ChangeNotifierProvider(
+                                  create: (context) => DevicesViewModel(),
+                                  child: EachDeviceValues(
+                                    sheelaRequestString:
+                                        variable.requestSheelaForglucose,
+                                    device_name: strGlusoceLevel,
+                                    device_icon: Devices_GL_Tool,
+                                  ),
+                                ),
+                              ),
                             );
                           },
                           child: Container(
-                            width: Responsive.width(46, context),
-                            height: Responsive.width(46, context),
+                            width: 190.0.w,
+                            // height: Responsive.width(46, context),
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(10.0),
-                                  topRight: const Radius.circular(10.0)),
+                                  topLeft: Radius.circular(
+                                    10.0.sp,
+                                  ),
+                                  topRight: Radius.circular(
+                                    10.0.sp,
+                                  )),
                               color: Colors.white,
                             ),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        dateForGulcose !=
-                                                                    null &&
-                                                                dateForGulcose !=
-                                                                    ''
-                                                            ? dateForGulcose +
-                                                                ', '
-                                                            : '',
-                                                        style: TextStyle(
-                                                            fontSize: 8,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                      Text(
-                                                        timeForGulcose !=
-                                                                    null &&
-                                                                timeForGulcose !=
-                                                                    ''
-                                                            ? timeForGulcose
-                                                            : '',
-                                                        style: TextStyle(
-                                                            fontSize: 8,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            sourceForGluco != null &&
-                                                    sourceForGluco != ''
-                                                ? Column(
-                                                    children: [
-                                                      TypeIcon(sourceForGluco,hexToColor('#b70a80')),
-                                                    ],
-                                                  )
-                                                : SizedBox()
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/devices/gulcose_dashboard.png',
-                                                  height: 24.0,
-                                                  width: 24.0,
-                                                  color: hexToColor('#b70a80'),
+                            child: IntrinsicHeight(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                        10.0.sp,
+                                        10.0.sp,
+                                        10.0.sp,
+                                        0.0.sp,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          dateForGulcose !=
+                                                                      null &&
+                                                                  dateForGulcose !=
+                                                                      ''
+                                                              ? dateForGulcose +
+                                                                  ', '
+                                                              : '',
+                                                          style: TextStyle(
+                                                            fontSize: 8.0.sp,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          timeForGulcose !=
+                                                                      null &&
+                                                                  timeForGulcose !=
+                                                                      ''
+                                                              ? timeForGulcose
+                                                              : '',
+                                                          style: TextStyle(
+                                                            fontSize: 8.0.sp,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                            SizedBoxWidget(width: 5),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                              ),
+                                              sourceForGluco != null &&
+                                                      sourceForGluco != ''
+                                                  ? TypeIcon(sourceForGluco,
+                                                      hexToColor('#b70a80'))
+                                                  : SizedBox()
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Column(
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        'Glucometer',
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: hexToColor(
-                                                                '#b70a80')),
-                                                      )
-                                                    ],
+                                                  Image.asset(
+                                                    'assets/devices/gulcose_dashboard.png',
+                                                    height: 24.0.h,
+                                                    width: 24.0.h,
+                                                    color:
+                                                        hexToColor('#b70a80'),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBoxWidget(height: 1),
-                                        Divider(
-                                          color: hexToColor('#b70a80'),
-                                          indent: 10,
-                                          endIndent: 10,
-                                          thickness: 1,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    child: Text(''),
+                                              SizedBoxWidget(width: 5.0.w),
+                                              Flexible(
+                                                child: Text(
+                                                  'Glucometer',
+                                                  style: TextStyle(
+                                                    fontSize: 15.0.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color:
+                                                        hexToColor('#b70a80'),
                                                   ),
-                                                  Container(
-                                                    child: Text(
-                                                      '7 Days Avg',
-                                                      style: TextStyle(
-                                                          fontSize: 8,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBoxWidget(
+                                            height: 1.0.h,
+                                          ),
+                                          Divider(
+                                            color: hexToColor('#b70a80'),
+                                            indent: 10.0.w,
+                                            endIndent: 10.0.w,
+                                            thickness: 1.0.h,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      child: Text(''),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                        '7 Days Avg',
+                                                        style: TextStyle(
+                                                          fontSize: 8.0.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: hexToColor(
-                                                              '#afafaf')),
+                                                              '#afafaf'),
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  child:  getMealType(),
+                                                  ],
                                                 ),
-                                                Container(
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                          value1ForGulcose != '' &&
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    child: getMealType(),
+                                                  ),
+                                                  Container(
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          value1ForGulcose !=
+                                                                      '' &&
                                                                   value1ForGulcose !=
                                                                       null
                                                               ? value1ForGulcose
                                                                   .toString()
                                                               : '-',
                                                           style: TextStyle(
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight.w500,
-                                                              color: hexToColor(
-                                                                  '#b70a80'))),
-                                                      Text(
-                                                          value1ForGulcose != '' &&
-                                                              value1ForGulcose !=
-                                                                  null?'mg/dL':'',
-                                                          textAlign: TextAlign.end,
+                                                            fontSize: 18.0.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: hexToColor(
+                                                                '#b70a80'),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          value1ForGulcose !=
+                                                                      '' &&
+                                                                  value1ForGulcose !=
+                                                                      null
+                                                              ? 'mg/dL'
+                                                              : '',
+                                                          textAlign:
+                                                              TextAlign.end,
                                                           style: TextStyle(
-                                                              fontSize: 8,
-                                                              color: hexToColor(
-                                                                  '#b70a80')))
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Row(
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        child: Text('Fasting',
-                                                            style: TextStyle(
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: hexToColor(
-                                                                    '#afafaf'))),
-                                                      ),
-                                                      Container(
-                                                        child: Row(
-                                                          children: [
-                                                            Text(
-                                                              averageForFasting !=
-                                                                          '' &&
-                                                                      averageForFasting !=
-                                                                          null
-                                                                  ? averageForFasting
-                                                                      .toString()
-                                                                  : '-',
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: hexToColor(
-                                                                      '#afafaf')),
-                                                            ),
-                                                            Text(
-                                                                averageForFasting !=
-                                                                    '' &&
-                                                                    averageForFasting !=
-                                                                        null?'mg/dL':'',
-                                                                textAlign: TextAlign.end,
-                                                                style: TextStyle(
-                                                                    fontSize: 6,
-                                                                    color: hexToColor(
-                                                                        '#b70a80')))
-                                                          ],
+                                                            fontSize: 8.0.sp,
+                                                            color: hexToColor(
+                                                                '#b70a80'),
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBoxWidget(width: 8),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        child: Text('PP',
-                                                            style: TextStyle(
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: hexToColor(
-                                                                    '#afafaf'))),
-                                                      ),
-                                                      Container(
-                                                        child: Row(
-                                                          children: [
-                                                            Text(
-                                                              averageForPP != '' &&
-                                                                      averageForPP !=
-                                                                          null
-                                                                  ? averageForPP
-                                                                      .toString()
-                                                                  : '-',
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: hexToColor(
-                                                                      '#afafaf')),
-                                                            ),
-                                                            Text(
-                                                                    averageForPP != '' &&
-                                                                    averageForPP !=
-                                                                        null?'mg/dL':'',
-                                                                textAlign: TextAlign.end,
-                                                                style: TextStyle(
-                                                                    fontSize: 6,
-                                                                    color: hexToColor(
-                                                                        '#b70a80')))
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                MaterialButton(
-                                                  height: 25.0,
-                                                  minWidth: 45.0,
-                                                  onPressed: () {
-                                                    navigateToDeviceDashboardScreen(
-                                                        Constants
-                                                            .STR_GLUCOMETER);
-                                                  },
-                                                  color: hexToColor('#b70a80'),
-                                                  textColor: Colors.white,
-                                                  child: Icon(
-                                                    Icons.add,
-                                                    size: 14,
-                                                  ),
-                                                  padding: EdgeInsets.all(2),
-                                                  shape: CircleBorder(),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Row(
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          child: Text(
+                                                            'Fasting',
+                                                            style: TextStyle(
+                                                              fontSize: 10.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: hexToColor(
+                                                                  '#afafaf'),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Row(
+                                                            children: [
+                                                              Text(
+                                                                averageForFasting !=
+                                                                            '' &&
+                                                                        averageForFasting !=
+                                                                            null
+                                                                    ? averageForFasting
+                                                                        .toString()
+                                                                    : '-',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      12.0.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: hexToColor(
+                                                                      '#afafaf'),
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                averageForFasting !=
+                                                                            '' &&
+                                                                        averageForFasting !=
+                                                                            null
+                                                                    ? 'mg/dL'
+                                                                    : '',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      6.0.sp,
+                                                                  color: hexToColor(
+                                                                      '#b70a80'),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBoxWidget(
+                                                      width: 8.0.w,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          child: Text(
+                                                            'PP',
+                                                            style: TextStyle(
+                                                              fontSize: 10.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: hexToColor(
+                                                                  '#afafaf'),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Row(
+                                                            children: [
+                                                              Text(
+                                                                averageForPP !=
+                                                                            '' &&
+                                                                        averageForPP !=
+                                                                            null
+                                                                    ? averageForPP
+                                                                        .toString()
+                                                                    : '-',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      12.0.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: hexToColor(
+                                                                      '#afafaf'),
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                averageForPP !=
+                                                                            '' &&
+                                                                        averageForPP !=
+                                                                            null
+                                                                    ? 'mg/dL'
+                                                                    : '',
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      6.0.sp,
+                                                                  color: hexToColor(
+                                                                      '#b70a80'),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
-                                      ],
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  MaterialButton(
+                                                    height: 25.0.h,
+                                                    minWidth: 45.0.w,
+                                                    onPressed: () {
+                                                      navigateToDeviceDashboardScreen(
+                                                          Constants
+                                                              .STR_GLUCOMETER);
+                                                    },
+                                                    color:
+                                                        hexToColor('#b70a80'),
+                                                    textColor: Colors.white,
+                                                    child: Icon(
+                                                      Icons.add,
+                                                      size: 14.0.sp,
+                                                    ),
+                                                    padding: EdgeInsets.all(
+                                                      2.0.sp,
+                                                    ),
+                                                    shape: CircleBorder(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Divider(
+                                  Divider(
                                     color: hexToColor('#b70a80'),
-                                    thickness: 2,
-                                    height: 2),
-                              ],
+                                    thickness: 2.0.h,
+                                    height: 2.0.h,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1546,162 +1650,171 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ChangeNotifierProvider(
-                                        create: (context) => DevicesViewModel(),
-                                        child: EachDeviceValues(
-                                          sheelaRequestString: variable
-                                              .requestSheelaFortemperature,
-                                          device_name: strTemperature,
-                                          device_icon: Devices_THM_Tool,
-                                        ),
-                                      )),
+                                builder: (context) => ChangeNotifierProvider(
+                                  create: (context) => DevicesViewModel(),
+                                  child: EachDeviceValues(
+                                    sheelaRequestString:
+                                        variable.requestSheelaFortemperature,
+                                    device_name: strTemperature,
+                                    device_icon: Devices_THM_Tool,
+                                  ),
+                                ),
+                              ),
                             );
                           },
                           child: Container(
-                            width: Responsive.width(46, context),
-                            height: Responsive.width(46, context),
+                            width: 190.0.w,
+                            // height: Responsive.width(46, context),
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(10.0),
-                                  topRight: const Radius.circular(10.0)),
+                                topLeft: Radius.circular(
+                                  10.0.sp,
+                                ),
+                                topRight: Radius.circular(
+                                  10.0.sp,
+                                ),
+                              ),
                               color: Colors.white,
                             ),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        dateForTemp != null &&
-                                                                dateForTemp !=
-                                                                    ''
-                                                            ? dateForTemp + ', '
-                                                            : '',
-                                                        style: TextStyle(
-                                                            fontSize: 8,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                      Text(
-                                                        timeForTemp != null &&
-                                                                timeForTemp !=
-                                                                    ''
-                                                            ? timeForTemp
-                                                            : '',
-                                                        style: TextStyle(
-                                                            fontSize: 8,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            sourceForThermo != '' &&
-                                                    sourceForThermo != null
-                                                ? Column(
-                                                    children: [
-                                                      TypeIcon(sourceForThermo,hexToColor('#d95523')),
-                                                    ],
-                                                  )
-                                                : SizedBox()
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/devices/temp_dashboard.png',
-                                                  height: 24.0,
-                                                  width: 24.0,
-                                                  color: hexToColor('#d95523'),
+                            child: IntrinsicHeight(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                        10.0.sp,
+                                        10.0.sp,
+                                        10.0.sp,
+                                        0.0.sp,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          dateForTemp != null &&
+                                                                  dateForTemp !=
+                                                                      ''
+                                                              ? dateForTemp +
+                                                                  ', '
+                                                              : '',
+                                                          style: TextStyle(
+                                                            fontSize: 8.0.sp,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          timeForTemp != null &&
+                                                                  timeForTemp !=
+                                                                      ''
+                                                              ? timeForTemp
+                                                              : '',
+                                                          style: TextStyle(
+                                                            fontSize: 8.0.sp,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                            SizedBoxWidget(width: 5),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                              ),
+                                              sourceForThermo != '' &&
+                                                      sourceForThermo != null
+                                                  ? TypeIcon(sourceForThermo,
+                                                      hexToColor('#d95523'))
+                                                  : SizedBox()
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Column(
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        'Thermometer',
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: hexToColor(
-                                                                '#d95523')),
-                                                      )
-                                                    ],
+                                                  Image.asset(
+                                                    'assets/devices/temp_dashboard.png',
+                                                    height: 24.0.h,
+                                                    width: 24.0.h,
+                                                    color:
+                                                        hexToColor('#d95523'),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBoxWidget(height: 1),
-                                        Divider(
-                                          color: hexToColor('#d95523'),
-                                          indent: 10,
-                                          endIndent: 10,
-                                          thickness: 1,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    child: Text(''),
+                                              SizedBoxWidget(
+                                                width: 5.0.w,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  'Thermometer',
+                                                  style: TextStyle(
+                                                    fontSize: 15.0.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color:
+                                                        hexToColor('#d95523'),
                                                   ),
-                                                  Container(
-                                                    child: Text(
-                                                      '7 Days Avg',
-                                                      style: TextStyle(
-                                                          fontSize: 8,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBoxWidget(
+                                            height: 1.0.h,
+                                          ),
+                                          Divider(
+                                            color: hexToColor('#d95523'),
+                                            indent: 10.0.w,
+                                            endIndent: 10.0.w,
+                                            thickness: 1.0.h,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      child: Text(''),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                        '7 Days Avg',
+                                                        style: TextStyle(
+                                                          fontSize: 8.0.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: hexToColor(
-                                                              '#afafaf')),
+                                                              '#afafaf'),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    child: Text(
+                                                      'Temp',
+                                                      style: TextStyle(
+                                                        fontSize: 9.0.sp,
+                                                        color: hexToColor(
+                                                            '#d95523'),
+                                                      ),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  child: Text('Temp',
-                                                      style: TextStyle(
-                                                          fontSize: 9,
-                                                          color: hexToColor(
-                                                              '#d95523'))),
-                                                ),
-                                                Container(
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
+                                                  Container(
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
                                                           value1ForTemp != '' &&
                                                                   value1ForTemp !=
                                                                       null
@@ -1709,132 +1822,149 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                   .toString()
                                                               : '-',
                                                           style: TextStyle(
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: hexToColor(
-                                                                  '#d95523'))),
-                                                      Text(
-                                                        value1ForTemp != '' &&
-                                                                value1ForTemp !=
-                                                                    null
-                                                            ? 'F'
-                                                            : '-',
-                                                        style: TextStyle(
-                                                            fontSize: 10,
+                                                            fontSize: 18.0.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: hexToColor(
+                                                                '#d95523'),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          value1ForTemp != '' &&
+                                                                  value1ForTemp !=
+                                                                      null
+                                                              ? 'F'
+                                                              : '-',
+                                                          style: TextStyle(
+                                                            fontSize: 10.0.sp,
                                                             fontWeight:
                                                                 FontWeight.w400,
                                                             color: hexToColor(
-                                                                '#d95523')),
-                                                        textAlign:
-                                                            TextAlign.end,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Row(
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        child: Text('Temp',
-                                                            style: TextStyle(
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: hexToColor(
-                                                                    '#afafaf'))),
-                                                      ),
-                                                      Container(
-                                                        child: Row(
-                                                          children: [
-                                                            Text(
-                                                              averageForTemp !=
-                                                                          '' &&
-                                                                      averageForTemp !=
-                                                                          null
-                                                                  ? averageForTemp
-                                                                      .toString()
-                                                                  : '-',
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: hexToColor(
-                                                                      '#afafaf')),
-                                                            ),
-                                                            Text(
-                                                              averageForTemp !=
-                                                                          '' &&
-                                                                      averageForTemp !=
-                                                                          null
-                                                                  ? 'F'
-                                                                  : '-',
-                                                              style: TextStyle(
-                                                                  fontSize: 8,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w400,
-                                                                  color: hexToColor(
-                                                                      '#afafaf')),
-                                                              textAlign:
-                                                                  TextAlign.end,
-                                                            ),
-                                                          ],
+                                                                '#d95523'),
+                                                          ),
+                                                          textAlign:
+                                                              TextAlign.end,
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                MaterialButton(
-                                                  height: 25.0,
-                                                  minWidth: 45.0,
-                                                  onPressed: () {
-                                                    navigateToDeviceDashboardScreen(
-                                                        Constants
-                                                            .STR_THERMOMETER);
-                                                  },
-                                                  color: hexToColor('#d95523'),
-                                                  textColor: Colors.white,
-                                                  child: Icon(
-                                                    Icons.add,
-                                                    size: 14,
-                                                  ),
-                                                  padding: EdgeInsets.all(2),
-                                                  shape: CircleBorder(),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Row(
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          child: Text(
+                                                            'Temp',
+                                                            style: TextStyle(
+                                                              fontSize: 10.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: hexToColor(
+                                                                  '#afafaf'),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Row(
+                                                            children: [
+                                                              Text(
+                                                                averageForTemp !=
+                                                                            '' &&
+                                                                        averageForTemp !=
+                                                                            null
+                                                                    ? averageForTemp
+                                                                        .toString()
+                                                                    : '-',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      12.0.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: hexToColor(
+                                                                      '#afafaf'),
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                averageForTemp !=
+                                                                            '' &&
+                                                                        averageForTemp !=
+                                                                            null
+                                                                    ? 'F'
+                                                                    : '-',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      8.0.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: hexToColor(
+                                                                      '#afafaf'),
+                                                                ),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
-                                      ],
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  MaterialButton(
+                                                    height: 25.0.h,
+                                                    minWidth: 45.0.w,
+                                                    onPressed: () {
+                                                      navigateToDeviceDashboardScreen(
+                                                          Constants
+                                                              .STR_THERMOMETER);
+                                                    },
+                                                    color:
+                                                        hexToColor('#d95523'),
+                                                    textColor: Colors.white,
+                                                    child: Icon(
+                                                      Icons.add,
+                                                      size: 14.0.sp,
+                                                    ),
+                                                    padding: EdgeInsets.all(
+                                                      2.0.sp,
+                                                    ),
+                                                    shape: CircleBorder(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Divider(
+                                  Divider(
                                     color: hexToColor('#d95523'),
-                                    thickness: 2,
-                                    height: 2),
-                              ],
+                                    thickness: 2.0.h,
+                                    height: 2.0.h,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -1860,146 +1990,152 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             );
                           },
                           child: Container(
-                            width: Responsive.width(46, context),
-                            height: Responsive.width(46, context),
+                            width: 190.0.w,
+                            // height: Responsive.width(46, context),
                             decoration: BoxDecoration(
-                              borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(10.0),
-                                  topRight: const Radius.circular(10.0)),
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(
+                                  10.0.sp,
+                                ),
+                                topRight: Radius.circular(
+                                  10.0.sp,
+                                ),
+                              ),
                               color: Colors.white,
                             ),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        dateForOs != null &&
-                                                                dateForOs != ''
-                                                            ? dateForOs + ', '
-                                                            : '',
-                                                        style: TextStyle(
-                                                            fontSize: 8,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                      Text(
-                                                        timeForOs != null &&
-                                                                timeForOs != ''
-                                                            ? timeForOs
-                                                            : '',
-                                                        style: TextStyle(
-                                                            fontSize: 8,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            sourceForPulse != '' &&
-                                                    sourceForPulse != null
-                                                ? Column(
-                                                    children: [
-                                                      TypeIcon(sourceForPulse,hexToColor('#8600bd')),
-                                                    ],
-                                                  )
-                                                : SizedBox()
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/devices/os_dashboard.png',
-                                                  height: 24.0,
-                                                  width: 24.0,
-                                                  color: hexToColor('#8600bd'),
+                            child: IntrinsicHeight(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                        10.0.sp,
+                                        10.0.sp,
+                                        10.0.sp,
+                                        0.0.sp,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          dateForOs != null &&
+                                                                  dateForOs !=
+                                                                      ''
+                                                              ? dateForOs + ', '
+                                                              : '',
+                                                          style: TextStyle(
+                                                            fontSize: 8.0.sp,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          timeForOs != null &&
+                                                                  timeForOs !=
+                                                                      ''
+                                                              ? timeForOs
+                                                              : '',
+                                                          style: TextStyle(
+                                                            fontSize: 8.0.sp,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                            SizedBoxWidget(width: 5),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        'Pulse Oximeter',
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: hexToColor(
-                                                                '#8600bd')),
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBoxWidget(height: 1),
-                                        Divider(
-                                          color: hexToColor('#8600bd'),
-                                          indent: 10,
-                                          endIndent: 10,
-                                          thickness: 1,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    child: Text(''),
+                                              sourceForPulse != '' &&
+                                                      sourceForPulse != null
+                                                  ? TypeIcon(
+                                                      sourceForPulse,
+                                                      hexToColor('#8600bd'),
+                                                    )
+                                                  : SizedBox()
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Image.asset(
+                                                'assets/devices/os_dashboard.png',
+                                                height: 24.0.h,
+                                                width: 24.0.h,
+                                                color: hexToColor('#8600bd'),
+                                              ),
+                                              SizedBoxWidget(
+                                                width: 5.0.w,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  'Pulse Oximeter',
+                                                  style: TextStyle(
+                                                    fontSize: 15.0.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color:
+                                                        hexToColor('#8600bd'),
                                                   ),
-                                                  Container(
-                                                    child: Text(
-                                                      '7 Days Avg',
-                                                      style: TextStyle(
-                                                          fontSize: 8,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBoxWidget(
+                                            height: 1.0.h,
+                                          ),
+                                          Divider(
+                                            color: hexToColor('#8600bd'),
+                                            indent: 10.0.w,
+                                            endIndent: 10.0.w,
+                                            thickness: 1.0.h,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      child: Text(''),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                        '7 Days Avg',
+                                                        style: TextStyle(
+                                                          fontSize: 8.0.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: hexToColor(
-                                                              '#afafaf')),
+                                                              '#afafaf'),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    child: Text(
+                                                      'SPO2',
+                                                      style: TextStyle(
+                                                        fontSize: 9.0.sp,
+                                                        color: hexToColor(
+                                                            '#8600bd'),
+                                                      ),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  child: Text('SPO2',
-                                                      style: TextStyle(
-                                                          fontSize: 9,
-                                                          color: hexToColor(
-                                                              '#8600bd'))),
-                                                ),
-                                                Container(
-                                                  child: Text(
+                                                  Container(
+                                                    child: Text(
                                                       value1ForOs != '' &&
                                                               value1ForOs !=
                                                                   null
@@ -2007,156 +2143,180 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                               .toString()
                                                           : '-',
                                                       style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: hexToColor(
-                                                              '#8600bd'))),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBoxWidget(width: 5),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  child: Text('PRBpm',
+                                                        fontSize: 18.0.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: hexToColor(
+                                                            '#8600bd'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBoxWidget(
+                                                width: 5.0.w,
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    child: Text(
+                                                      'PRBpm',
                                                       style: TextStyle(
-                                                          fontSize: 9,
-                                                          color: hexToColor(
-                                                              '#8600bd'))),
-                                                ),
-                                                Container(
-                                                  child: Text(
+                                                        fontSize: 9.0.sp,
+                                                        color: hexToColor(
+                                                            '#8600bd'),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    child: Text(
                                                       prbPMOxi != '' &&
                                                               prbPMOxi != null
                                                           ? prbPMOxi.toString()
                                                           : '-',
                                                       style: TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: hexToColor(
-                                                              '#8600bd'))),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Row(
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        child: Text('SPO2',
-                                                            style: TextStyle(
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: hexToColor(
-                                                                    '#afafaf'))),
+                                                        fontSize: 18.0.sp,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: hexToColor(
+                                                            '#8600bd'),
                                                       ),
-                                                      Container(
-                                                        child: Text(
-                                                          averageForSPO2 !=
-                                                                      '' &&
-                                                                  averageForSPO2 !=
-                                                                      null
-                                                              ? averageForSPO2
-                                                                  .toString()
-                                                              : '-',
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: hexToColor(
-                                                                  '#afafaf')),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  SizedBoxWidget(width: 15),
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        child: Text('PRBpm',
-                                                            style: TextStyle(
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: hexToColor(
-                                                                    '#afafaf'))),
-                                                      ),
-                                                      Container(
-                                                        child: Text(
-                                                          averageForPRBpm !=
-                                                                      '' &&
-                                                                  averageForPRBpm !=
-                                                                      null
-                                                              ? averageForPRBpm
-                                                                  .toString()
-                                                              : '-',
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w400,
-                                                              color: hexToColor(
-                                                                  '#afafaf')),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                MaterialButton(
-                                                  height: 25.0,
-                                                  minWidth: 45.0,
-                                                  onPressed: () {
-                                                    navigateToDeviceDashboardScreen(
-                                                        Constants
-                                                            .STR_PULSE_OXIMETER);
-                                                  },
-                                                  color: hexToColor('#8600bd'),
-                                                  textColor: Colors.white,
-                                                  child: Icon(
-                                                    Icons.add,
-                                                    size: 14,
-                                                  ),
-                                                  padding: EdgeInsets.all(2),
-                                                  shape: CircleBorder(),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Row(
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          child: Text(
+                                                            'SPO2',
+                                                            style: TextStyle(
+                                                              fontSize: 10.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: hexToColor(
+                                                                  '#afafaf'),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Text(
+                                                            averageForSPO2 !=
+                                                                        '' &&
+                                                                    averageForSPO2 !=
+                                                                        null
+                                                                ? averageForSPO2
+                                                                    .toString()
+                                                                : '-',
+                                                            style: TextStyle(
+                                                              fontSize: 12.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: hexToColor(
+                                                                  '#afafaf'),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    SizedBoxWidget(
+                                                      width: 15.0.w,
+                                                    ),
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          child: Text(
+                                                            'PRBpm',
+                                                            style: TextStyle(
+                                                              fontSize: 10.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: hexToColor(
+                                                                  '#afafaf'),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Text(
+                                                            averageForPRBpm !=
+                                                                        '' &&
+                                                                    averageForPRBpm !=
+                                                                        null
+                                                                ? averageForPRBpm
+                                                                    .toString()
+                                                                : '-',
+                                                            style: TextStyle(
+                                                              fontSize: 12.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: hexToColor(
+                                                                  '#afafaf'),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
-                                      ],
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  MaterialButton(
+                                                    height: 25.0.h,
+                                                    minWidth: 45.0.w,
+                                                    onPressed: () {
+                                                      navigateToDeviceDashboardScreen(
+                                                          Constants
+                                                              .STR_PULSE_OXIMETER);
+                                                    },
+                                                    color:
+                                                        hexToColor('#8600bd'),
+                                                    textColor: Colors.white,
+                                                    child: Icon(
+                                                      Icons.add,
+                                                      size: 14.0.sp,
+                                                    ),
+                                                    padding: EdgeInsets.all(
+                                                      2.0.sp,
+                                                    ),
+                                                    shape: CircleBorder(),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Divider(
+                                  Divider(
                                     color: hexToColor('#8600bd'),
-                                    thickness: 2,
-                                    height: 2),
-                              ],
+                                    thickness: 2.0.h,
+                                    height: 2.0.h,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -2182,271 +2342,305 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                             );
                           },
                           child: Container(
-                            width: Responsive.width(46, context),
-                            height: Responsive.width(46, context),
+                            width: 190.0.w,
+                            // height: Responsive.width(46, context),
                             decoration: BoxDecoration(
                               borderRadius: new BorderRadius.only(
-                                  topLeft: const Radius.circular(10.0),
-                                  topRight: const Radius.circular(10.0)),
+                                topLeft: Radius.circular(
+                                  10.0.sp,
+                                ),
+                                topRight: Radius.circular(
+                                  10.0.sp,
+                                ),
+                              ),
                               color: Colors.white,
                             ),
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                children: [
-                                                  Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        dateForWeight != null &&
-                                                                dateForWeight !=
-                                                                    ''
-                                                            ? dateForWeight +
-                                                                ', '
-                                                            : '',
-                                                        style: TextStyle(
-                                                            fontSize: 8,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                      Text(
-                                                        timeForWeight != null &&
-                                                                timeForWeight !=
-                                                                    ''
-                                                            ? timeForWeight
-                                                            : '',
-                                                        style: TextStyle(
-                                                            fontSize: 8,
-                                                            color:
-                                                                Colors.black),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            sourceForWeigh != '' &&
-                                                    sourceForWeigh != null
-                                                ? Column(
-                                                    children: [
-                                                      TypeIcon(sourceForWeigh,hexToColor('#1abadd')),
-                                                    ],
-                                                  )
-                                                : SizedBox()
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Image.asset(
-                                                  'assets/devices/weight_dashboard.png',
-                                                  height: 24.0,
-                                                  width: 24.0,
-                                                  color: hexToColor('#1abadd'),
+                            child: IntrinsicHeight(
+                              child: Column(
+                                children: [
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.fromLTRB(
+                                        10.0.sp,
+                                        10.0.sp,
+                                        10.0.sp,
+                                        0.0.sp,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  children: [
+                                                    Row(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          dateForWeight !=
+                                                                      null &&
+                                                                  dateForWeight !=
+                                                                      ''
+                                                              ? dateForWeight +
+                                                                  ', '
+                                                              : '',
+                                                          style: TextStyle(
+                                                            fontSize: 8.0.sp,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          timeForWeight !=
+                                                                      null &&
+                                                                  timeForWeight !=
+                                                                      ''
+                                                              ? timeForWeight
+                                                              : '',
+                                                          style: TextStyle(
+                                                            fontSize: 8.0.sp,
+                                                            color: Colors.black,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
-                                            SizedBoxWidget(width: 5),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
+                                              ),
+                                              sourceForWeigh != '' &&
+                                                      sourceForWeigh != null
+                                                  ? TypeIcon(sourceForWeigh,
+                                                      hexToColor('#1abadd'))
+                                                  : SizedBox()
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Column(
                                                 children: [
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        'WeighingScale',
-                                                        style: TextStyle(
-                                                            fontSize: 15,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color: hexToColor(
-                                                                '#1abadd')),
-                                                      )
-                                                    ],
+                                                  Image.asset(
+                                                    'assets/devices/weight_dashboard.png',
+                                                    height: 24.0.h,
+                                                    width: 24.0.h,
+                                                    color:
+                                                        hexToColor('#1abadd'),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBoxWidget(height: 1),
-                                        Divider(
-                                          color: hexToColor('#1abadd'),
-                                          indent: 10,
-                                          endIndent: 10,
-                                          thickness: 1,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                    child: Text(''),
+                                              SizedBoxWidget(
+                                                width: 5.0.w,
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  'Weighing Scale',
+                                                  style: TextStyle(
+                                                    fontSize: 15.0.sp,
+                                                    fontWeight: FontWeight.w500,
+                                                    color:
+                                                        hexToColor('#1abadd'),
                                                   ),
-                                                  Container(
-                                                    child: Text(
-                                                      '7 Days Avg',
-                                                      style: TextStyle(
-                                                          fontSize: 8,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBoxWidget(
+                                            height: 1.0.h,
+                                          ),
+                                          Divider(
+                                            color: hexToColor('#1abadd'),
+                                            indent: 10.0.w,
+                                            endIndent: 10.0.w,
+                                            thickness: 1.0.h,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Container(
+                                                      child: Text(''),
+                                                    ),
+                                                    Container(
+                                                      child: Text(
+                                                        '7 Days Avg',
+                                                        style: TextStyle(
+                                                          fontSize: 8.0.sp,
                                                           fontWeight:
                                                               FontWeight.w400,
                                                           color: hexToColor(
-                                                              '#afafaf')),
+                                                              '#afafaf'),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Container(
+                                                    child: Text(
+                                                      'Weight',
+                                                      style: TextStyle(
+                                                        fontSize: 9.0.sp,
+                                                        color: hexToColor(
+                                                            '#1abadd'),
+                                                      ),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                Container(
-                                                  child: Text('Weight',
-                                                      style: TextStyle(
-                                                          fontSize: 9,
-                                                          color: hexToColor(
-                                                              '#1abadd'))),
-                                                ),
-                                                Container(
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                          value1ForWeight != '' &&
+                                                  Container(
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          value1ForWeight !=
+                                                                      '' &&
                                                                   value1ForWeight !=
                                                                       null
                                                               ? value1ForWeight
                                                                   .toString()
                                                               : '-',
                                                           style: TextStyle(
-                                                              fontSize: 18,
-                                                              fontWeight:
-                                                                  FontWeight.w500,
-                                                              color: hexToColor(
-                                                                  '#1abadd'))),
-                                                      Text(
-                                                          value1ForWeight != '' &&
-                                                              value1ForWeight !=
-                                                                  null?'Kg':'',
+                                                            fontSize: 18.0.sp,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            color: hexToColor(
+                                                                '#1abadd'),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          value1ForWeight !=
+                                                                      '' &&
+                                                                  value1ForWeight !=
+                                                                      null
+                                                              ? 'Kg'
+                                                              : '',
                                                           style: TextStyle(
-                                                              fontSize: 8,
-                                                              color: hexToColor(
-                                                                  '#1abadd')))
-                                                    ],
+                                                            fontSize: 8.0.sp,
+                                                            color: hexToColor(
+                                                                '#1abadd'),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Row(
-                                                children: [
-                                                  Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Container(
-                                                        child: Text('Weight',
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Row(
+                                                  children: [
+                                                    Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Container(
+                                                          child: Text(
+                                                            'Weight',
                                                             style: TextStyle(
-                                                                fontSize: 10,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                color: hexToColor(
-                                                                    '#afafaf'))),
-                                                      ),
-                                                      Container(
-                                                        child: Row(
-                                                          children: [
-                                                            Text(
-                                                              averageForWeigh !=
-                                                                          '' &&
-                                                                      averageForWeigh !=
-                                                                          null
-                                                                  ? averageForWeigh
-                                                                      .toString()
-                                                                  : '-',
-                                                              style: TextStyle(
-                                                                  fontSize: 12,
+                                                              fontSize: 10.0.sp,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400,
+                                                              color: hexToColor(
+                                                                  '#afafaf'),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Container(
+                                                          child: Row(
+                                                            children: [
+                                                              Text(
+                                                                averageForWeigh !=
+                                                                            '' &&
+                                                                        averageForWeigh !=
+                                                                            null
+                                                                    ? averageForWeigh
+                                                                        .toString()
+                                                                    : '-',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      12.0.sp,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w400,
                                                                   color: hexToColor(
-                                                                      '#afafaf')),
-                                                            ),
-                                                            Text(
+                                                                      '#afafaf'),
+                                                                ),
+                                                              ),
+                                                              Text(
                                                                 averageForWeigh !=
-                                                                    '' &&
-                                                                    averageForWeigh !=
-                                                                        null?'Kg':'',
-                                                                style: TextStyle(
-                                                                    fontSize: 8,
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .w400,
-                                                                    color: hexToColor(
-                                                                        '#afafaf'))),
-                                                          ],
+                                                                            '' &&
+                                                                        averageForWeigh !=
+                                                                            null
+                                                                    ? 'Kg'
+                                                                    : '',
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize:
+                                                                      8.0.sp,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
+                                                                  color: hexToColor(
+                                                                      '#afafaf'),
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.end,
+                                                children: [
+                                                  MaterialButton(
+                                                    height: 25.0.h,
+                                                    minWidth: 45.0.w,
+                                                    onPressed: () {
+                                                      navigateToDeviceDashboardScreen(
+                                                          Constants
+                                                              .STR_WEIGHING_SCALE);
+                                                    },
+                                                    color:
+                                                        hexToColor('#1abadd'),
+                                                    textColor: Colors.white,
+                                                    child: Icon(
+                                                      Icons.add,
+                                                      size: 14.0.sp,
+                                                    ),
+                                                    padding: EdgeInsets.all(
+                                                      2.0.sp,
+                                                    ),
+                                                    shape: CircleBorder(),
                                                   ),
                                                 ],
                                               ),
-                                            ),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              children: [
-                                                MaterialButton(
-                                                  height: 25.0,
-                                                  minWidth: 45.0,
-                                                  onPressed: () {
-                                                    navigateToDeviceDashboardScreen(
-                                                        Constants
-                                                            .STR_WEIGHING_SCALE);
-                                                  },
-                                                  color: hexToColor('#1abadd'),
-                                                  textColor: Colors.white,
-                                                  child: Icon(
-                                                    Icons.add,
-                                                    size: 14,
-                                                  ),
-                                                  padding: EdgeInsets.all(2),
-                                                  shape: CircleBorder(),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
-                                      ],
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                Divider(
+                                  Divider(
                                     color: hexToColor('#1abadd'),
-                                    thickness: 2,
-                                    height: 2),
-                              ],
+                                    thickness: 2.0.h,
+                                    height: 2.0.h,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -2458,8 +2652,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
               Align(
                 alignment: Alignment.bottomRight,
                 child: MaterialButton(
-                  height: 35.0,
-                  minWidth: 55.0,
+                  height: 35.0.h,
+                  minWidth: 55.0.w,
                   onPressed: () {
                     toast.getToast('More devices coming soon!', Colors.red);
                   },
@@ -2467,9 +2661,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   textColor: Colors.white,
                   child: Icon(
                     Icons.add,
-                    size: 14,
+                    size: 14.0.sp,
                   ),
-                  padding: EdgeInsets.all(2),
+                  padding: EdgeInsets.all(
+                    2.0.sp,
+                  ),
                   shape: CircleBorder(),
                 ),
               ),
@@ -2533,7 +2729,7 @@ class Responsive {
   }
 }
 
-Widget TypeIcon(String type,Color color) {
+Widget TypeIcon(String type, Color color) {
   if (type == strsourceHK) {
     return Image.asset(
       'assets/devices/fit.png',

@@ -14,7 +14,7 @@ description: An AI powered digital locker to store family's health records.
 version: 1.0.0+10
 
 environment:
-  sdk: ">=2.2.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
