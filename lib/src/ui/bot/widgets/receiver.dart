@@ -7,11 +7,33 @@ import 'package:myfhb/src/ui/bot/widgets/maya_conv_ui.dart';
 import '../../../../common/CommonUtil.dart';
 import '../../../../common/PreferenceUtil.dart';
 import '../../../model/bot/ConversationModel.dart';
+import 'package:myfhb/constants/fhb_parameters.dart' as parameters;
 
-class ReceiverLayout extends StatelessWidget {
+class ReceiverLayout extends StatefulWidget {
   final Conversation c;
 
   ReceiverLayout(this.c);
+
+  @override
+  _ReceiverLayoutState createState() => _ReceiverLayoutState();
+}
+
+class _ReceiverLayoutState extends State<ReceiverLayout> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    closeIfByeSaid();
+  }
+
+  void closeIfByeSaid() async {
+    if (widget?.c?.redirect != null && widget?.c?.screen != null) {
+      if (widget?.c?.screen == parameters.strDashboard && widget?.c?.redirect) {
+        Future.delayed(Duration(seconds: 9), () => Navigator.pop(context));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -57,8 +79,8 @@ class ReceiverLayout extends StatelessWidget {
                   ),
                 ),
                 child: FutureBuilder(
-                  future:
-                      Future.delayed(Duration(seconds: 3), () => MayaConvUI(c)),
+                  future: Future.delayed(
+                      Duration(seconds: 3), () => MayaConvUI(widget.c)),
                   builder: (BuildContext context, snapshot) {
                     return snapshot.hasData
                         ? snapshot.data
@@ -71,7 +93,7 @@ class ReceiverLayout extends StatelessWidget {
               ),
             ),
             Text(
-              "${c.timeStamp}",
+              "${widget.c.timeStamp}",
               style:
                   Theme.of(context).textTheme.body1.apply(color: Colors.grey),
             ),

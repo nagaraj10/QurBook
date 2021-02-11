@@ -13,6 +13,8 @@ class Conversation {
   List<Buttons> buttons;
   String searchURL;
   List<VideoLinks> videoLinks;
+  String screen;
+  bool redirect;
   Conversation(
       {@required this.isMayaSaid,
       @required this.text,
@@ -22,7 +24,9 @@ class Conversation {
       this.buttons,
       this.langCode,
       this.searchURL,
-      this.videoLinks
+      this.videoLinks,
+      this.screen,
+      this.redirect
       });
 
   Conversation.fromJson(Map<String, dynamic> json) {
@@ -45,6 +49,8 @@ class Conversation {
         videoLinks.add(new VideoLinks.fromJson(v));
       });
     }
+    screen= json[parameters.strScreen];
+    redirect= json[parameters.strRedirect];
   }
 
   Map<String, dynamic> toJson() {
@@ -62,6 +68,8 @@ class Conversation {
     if (this.videoLinks != null) {
       data[parameters.strVideoLinks] = this.videoLinks.map((v) => v.toJson()).toList();
     }
+    data[parameters.strScreen] = this.screen;
+    data[parameters.strRedirect] = this.redirect;
     return data;
   }
 }

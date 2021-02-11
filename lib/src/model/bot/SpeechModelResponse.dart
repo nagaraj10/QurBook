@@ -11,10 +11,10 @@ class SpeechModelResponse {
   String lang;
   List<Buttons> buttons;
   List<VideoLinks> videoLinks;
-
+  bool redirect;
   SpeechModelResponse({
     this.recipientId, this.text,this.endOfConv,this.imageURL,
-    this.searchURL,this.lang,this.buttons,this.videoLinks
+    this.searchURL,this.lang,this.buttons,this.videoLinks,this.redirect
     });
 
   //setter
@@ -37,6 +37,7 @@ class SpeechModelResponse {
         videoLinks.add(new VideoLinks.fromJson(v));
       });
     }
+    redirect = json[parameters.strRedirect];
   }
 
   //getter
@@ -54,6 +55,7 @@ class SpeechModelResponse {
     if (this.videoLinks != null) {
       data[parameters.strVideoLinks] = this.videoLinks.map((v) => v.toJson()).toList();
     }
+    data[parameters.strRedirect] = this.redirect;
     return data;
   }
 }

@@ -99,6 +99,10 @@ const String strSearchUrl = 'searchURL';
 const String strButtons = 'buttons';
 const String strVideoLinks = 'videoLinks';
 const String strPlatforType = 'device_type';
+const String strScreen = 'screen';
+const String strRedirect = 'redirect';
+const String strDashboard = 'dashboard';
+const String strSheela = 'sheela';
 
 //for category
 const String strCategoryName = 'categoryName';
