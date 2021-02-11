@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:gmiwidgetspackage/widgets/IconWidget.dart';
 import 'package:gmiwidgetspackage/widgets/SizeBoxWithChild.dart';
@@ -15,6 +17,7 @@ import 'package:myfhb/devices/device_dashboard_arguments.dart';
 import 'package:myfhb/my_family/bloc/FamilyListBloc.dart';
 import 'package:myfhb/my_family/screens/MyFamily.dart';
 import 'package:myfhb/src/model/GetDeviceSelectionModel.dart';
+import 'package:myfhb/src/model/common_response.dart';
 import 'package:myfhb/src/model/user/MyProfileModel.dart';
 import 'package:myfhb/src/model/user/user_accounts_arguments.dart';
 import 'package:myfhb/src/resources/repository/health/HealthReportListForUserRepository.dart';
@@ -118,6 +121,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   FlutterToast toast = new FlutterToast();
   FamilyListBloc _familyListBloc;
+
+  AddFamilyUserInfoRepository _addFamilyUserInfoRepository =
+  new AddFamilyUserInfoRepository();
+
+  final double circleRadius = 38.0;
+  final double circleBorderWidth = 0.0;
 
   @override
   void initState() {
@@ -299,6 +308,67 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         }
       },
     );
+  }
+
+  Widget showProfileImageNew() {
+    String userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
+      return FutureBuilder<CommonResponse>(
+        future: _addFamilyUserInfoRepository
+            .getUserProfilePic(userId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot?.data?.isSuccess && snapshot?.data?.result != null) {
+              return Image.network(
+                snapshot.data.result,
+                fit: BoxFit.cover,
+                width: 38,
+                height: 38,
+                headers: {
+                  HttpHeaders.authorizationHeader:
+                  PreferenceUtil.getStringValue(Constants.KEY_AUTHTOKEN)
+                },
+              );
+            } else {
+              return Center(
+                child: Text(
+                    myProfile!=null?myProfile.result!=null?myProfile.result.firstName != null ?
+                    myProfile.result.firstName[0].toUpperCase():'':'':'',
+                  style: TextStyle(
+                    color: Color(
+                        new CommonUtil().getMyPrimaryColor()),
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w200,
+                  ),
+                ),
+              );
+            }
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 1.0,
+                  backgroundColor: Color(new CommonUtil().getMyPrimaryColor()),
+                ),
+              ),
+            );
+          } else {
+            return Center(
+              child: Text(
+                myProfile!=null?myProfile.result!=null?myProfile.result.firstName != null ?
+                myProfile.result.firstName[0].toUpperCase():'':'':'',
+                style: TextStyle(
+                  color: Color(
+                      new CommonUtil().getMyPrimaryColor()),
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.w200,
+                ),
+              ),
+            );
+          }
+        },
+      );
   }
 
   Widget build(BuildContext context) {
@@ -703,7 +773,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       duration: Duration(milliseconds: 10),
       child: Row(
         children: <Widget>[
-          CircleAvatar(
+          /*CircleAvatar(
             radius: 20,
             backgroundImage: AssetImage("assets/user/profile_pic_ph.png"),
             child: CircleAvatar(
@@ -717,7 +787,18 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                       ? myProfile.result.profilePicThumbnailUrl
                       : ''),
             ),
-          ),
+          ),*/
+          Container(
+              width: circleRadius,
+              height: circleRadius,
+              decoration: ShapeDecoration(
+                  shape: CircleBorder(),
+                  color: Colors.white),
+              child: Padding(
+                padding: EdgeInsets.all(circleBorderWidth),
+                child: ClipOval(child: showProfileImageNew()),
+              ),
+            ),
           SizedBox(
             width: 15,
           ),
@@ -1478,7 +1559,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 style: TextStyle(
                                                                     fontSize: 6,
                                                                     color: hexToColor(
-                                                                        '#b70a80')))
+                                                                        '#afafaf')))
                                                           ],
                                                         ),
                                                       ),
@@ -1532,7 +1613,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                                 style: TextStyle(
                                                                     fontSize: 6,
                                                                     color: hexToColor(
-                                                                        '#b70a80')))
+                                                                        '#afafaf')))
                                                           ],
                                                         ),
                                                       ),
