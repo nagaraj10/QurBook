@@ -595,80 +595,6 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         devicevalue1ForWeight,
         devicevalue1ForTemp,
         devicevalue2ForBp);
-
-    /*case parameters.strGlusoceLevel:
-        {
-          if (deviceValues.bloodGlucose.entities.isNotEmpty) {
-            dateTimeStamp = deviceValues.bloodGlucose.entities[0].startDateTime;
-            date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
-            time =
-                "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
-            devicevalue1 = deviceValues
-                .bloodGlucose.entities[0].bloodGlucoseLevel
-                .toString();
-          } else {
-            date = 'Record not available';
-            devicevalue1 = '';
-          }
-          return getDeviceData(
-              context, date, time, devicevalue1, '', deviceData);
-        }
-      case parameters.strOxgenSaturation:
-        {
-          if (deviceValues.oxygenSaturation.entities.isNotEmpty) {
-            dateTimeStamp =
-                deviceValues.oxygenSaturation.entities[0].startDateTime;
-            date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
-            time =
-                "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
-            devicevalue1 = deviceValues
-                .oxygenSaturation.entities[0].oxygenSaturation
-                .toString();
-          } else {
-            date = 'Record not available';
-            devicevalue1 = '';
-          }
-          return getDeviceData(
-              context, date, time, devicevalue1, '', deviceData);
-        }
-      case parameters.strTemperature:
-        {
-          if (deviceValues.bodyTemperature.entities.isNotEmpty) {
-            dateTimeStamp =
-                deviceValues.bodyTemperature.entities[0].startDateTime;
-            date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
-            time =
-                "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
-            devicevalue1 =
-                deviceValues.bodyTemperature.entities[0].temperature.toString();
-          } else {
-            date = 'Record not available';
-            devicevalue1 = '';
-          }
-          return getDeviceData(
-              context, date, time, devicevalue1, '', deviceData);
-        }
-      case parameters.strWeight:
-        {
-          if (deviceValues.bodyWeight.entities.isNotEmpty) {
-            dateTimeStamp = deviceValues.bodyWeight.entities[0].startDateTime;
-            date =
-                "${DateFormat(parameters.strDateYMD, variable.strenUs).format(dateTimeStamp)}";
-            time =
-                "${DateFormat(parameters.strTimeHM, variable.strenUs).format(dateTimeStamp)}";
-            devicevalue1 =
-                deviceValues.bodyWeight.entities[0].weight.toString();
-          } else {
-            date = 'Record not available';
-            devicevalue1 = '';
-          }
-          return getDeviceData(
-              context, date, time, devicevalue1, '', deviceData);
-        }*/
-    //}
   }
 
   void callBackToRefresh() {
@@ -752,6 +678,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       String value2ForBp) {
     return Container(
       //height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.width * 2.0,
       color: Colors.grey[200],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -1200,8 +1127,8 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                   crossAxisAlignment: WrapCrossAlignment.start,
                   runAlignment: WrapAlignment.start,
                   verticalDirection: VerticalDirection.down,
-                  spacing: 10,
-                  runSpacing: 14,
+                  spacing: 8,
+                  runSpacing: 10,
                   children: [
                     Visibility(
                       visible: glucoMeter,
