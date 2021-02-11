@@ -376,3 +376,5 @@ const String ERR_MSG_RECORD_CREATE =
     'Unable to save the information as the server rejected the message. Please contact Support';
 
 const String STR_USER_PROFILE_SETTING_ALREADY = 'User Profile Setting is already exists for this User.';
+const String STR_ARE_SURE = 'Are you sure?';
+const String STR_SURE_CANCEL_PAY = 'Do you want to cancel the payment';
