@@ -18,10 +18,7 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.multidex.BuildConfig
@@ -37,6 +34,7 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
+import kotlinx.android.synthetic.main.progess_dialog.*
 import java.util.*
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess
@@ -87,6 +85,7 @@ class MainActivity : FlutterActivity() {
     private var patPic: String? = null
     private var speechRecognizer: SpeechRecognizer? = null
     private lateinit var dialog: Dialog
+
     //private lateinit var builder: AlertDialog.Builder
     internal lateinit var displayText: TextView
     internal lateinit var errorTxt: TextView
@@ -97,7 +96,8 @@ class MainActivity : FlutterActivity() {
     internal lateinit var tryAgain: Button
     internal lateinit var customLayout: View
     internal lateinit var spin_kit: SpinKitView
-    private var isListenDone: Boolean = false
+    internal lateinit var close: ImageView
+    internal lateinit var micOn: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -124,14 +124,21 @@ class MainActivity : FlutterActivity() {
         tryMe = customLayout.findViewById(R.id.tryMe)
         listeningLayout = customLayout.findViewById(R.id.listeningLayout)
         tryAgain = customLayout.findViewById(R.id.tryAgain)
+        close = customLayout.findViewById(R.id.close)
+        micOn = customLayout.findViewById(R.id.micOn)
         //builder.setView(customLayout)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setContentView(customLayout)
+        dialog.setCancelable(false)
         //dialog = builder.create()
         //dialog.setInverseBackgroundForced(true)
         //dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
+        close.setOnClickListener {
+            if (dialog.isShowing) {
+                dialog.dismiss()
+            }
+        }
         //builder.show()
 
     }
@@ -376,7 +383,9 @@ class MainActivity : FlutterActivity() {
                         this@MainActivity.runOnUiThread(
                                 object : Runnable {
                                     override fun run() {
-                                        displayText.text = "Speak now"
+                                        //displayText.text = "Speak now"
+                                        micOn.visibility = View.VISIBLE
+                                        displayText.visibility = View.GONE
                                         listeningLayout.visibility = View.VISIBLE
                                         tryMe.visibility = View.GONE
                                     }
@@ -400,12 +409,14 @@ class MainActivity : FlutterActivity() {
                                         if (listeningLayout.visibility == View.VISIBLE) {
                                             listeningLayout.visibility = View.GONE
                                             tryMe.visibility = View.VISIBLE
-                                            errorTxt.text = "Didn\'t catch that. Try speaking again."
+                                            errorTxt.text = "Please Retry"
                                             tryAgain.setOnClickListener {
                                                 this@MainActivity.runOnUiThread(
                                                         object : Runnable {
                                                             override fun run() {
-                                                                displayText.text = "Speak now"
+                                                                //displayText.text = "Speak now"
+                                                                micOn.visibility = View.VISIBLE
+                                                                displayText.visibility = View.GONE
                                                                 listeningLayout.visibility = View.VISIBLE
                                                                 tryMe.visibility = View.GONE
                                                                 speechRecognizer!!.startListening(intent)
@@ -466,12 +477,14 @@ class MainActivity : FlutterActivity() {
                                         if (listeningLayout.visibility == View.VISIBLE) {
                                             listeningLayout.visibility = View.GONE
                                             tryMe.visibility = View.VISIBLE
-                                            errorTxt.text = "Didn\'t catch that. Try speaking again."
+                                            errorTxt.text = "Please Retry"
                                             tryAgain.setOnClickListener {
                                                 this@MainActivity.runOnUiThread(
                                                         object : Runnable {
                                                             override fun run() {
-                                                                displayText.text = "Speak now"
+                                                                //displayText.text = "Speak now"
+                                                                micOn.visibility = View.VISIBLE
+                                                                displayText.visibility = View.GONE
                                                                 listeningLayout.visibility = View.VISIBLE
                                                                 tryMe.visibility = View.GONE
                                                                 speechRecognizer!!.startListening(intent)
@@ -494,6 +507,16 @@ class MainActivity : FlutterActivity() {
                     this@MainActivity.runOnUiThread(
                             object : Runnable {
                                 override fun run() {
+                                    if (micOn.isShown) {
+                                        this@MainActivity.runOnUiThread(
+                                                object : Runnable {
+                                                    override fun run() {
+                                                        displayText.visibility = View.VISIBLE
+                                                        micOn.visibility = View.GONE
+                                                    }
+                                                }
+                                        )
+                                    }
                                     displayText.text = finalWords
                                 }
                             }
