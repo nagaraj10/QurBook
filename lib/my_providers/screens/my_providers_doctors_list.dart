@@ -10,6 +10,7 @@ import 'package:myfhb/constants/variable_constant.dart' as variable;
 import 'package:myfhb/my_providers/bloc/providers_block.dart';
 import 'package:myfhb/my_providers/models/Doctors.dart';
 import 'package:myfhb/my_providers/models/MyProviderResponseNew.dart';
+import 'package:myfhb/my_providers/models/User.dart';
 import 'package:myfhb/src/utils/colors_utils.dart';
 import 'package:myfhb/telehealth/features/MyProvider/view/CommonWidgets.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/MyProviderViewModel.dart';
@@ -149,10 +150,7 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
                           SizedBox(height: 5),
                           AutoSizeText(
                             eachDoctorModel.user != null
-                                ? eachDoctorModel.user.name != null
-                                    ? toBeginningOfSentenceCase(
-                                        eachDoctorModel.user.name)
-                                    : ''
+                                ? getDoctorName(eachDoctorModel.user)
                                 : '',
                             maxLines: 1,
                             style: TextStyle(
@@ -212,5 +210,19 @@ class _MyProvidersDoctorsList extends State<MyProvidersDoctorsList> {
       },
       itemCount: doctorsModel.length,
     );
+  }
+
+  getDoctorName(User user) {
+    String doctorName = '';
+
+    /*if (user.name != null && user.name != '') {
+      doctorName = user.name;
+    } else */
+    if (user.firstName != null && user.firstName != '') {
+      doctorName = user.firstName + ' ' + user.lastName;
+    } else if (user.userName != null && user.userName != '') {
+      doctorName = user.userName;
+    }
+    return doctorName;
   }
 }
