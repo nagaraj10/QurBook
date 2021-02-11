@@ -7,6 +7,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:myfhb/constants/fhb_constants.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/telehealth/features/MyProvider/model/updatePayment/UpdatePaymentModel.dart';
 import 'package:myfhb/telehealth/features/MyProvider/viewModel/UpdatePaymentViewModel.dart';
@@ -46,51 +47,86 @@ class _WebViewExampleState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(TITLE_BAR),
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: new IconButton(
+            icon: new Icon(Icons.arrow_back_ios),
+            onPressed: () {
+              _onWillPop();
+            },
+          ),
+          title: const Text(TITLE_BAR),
+          actions: <Widget>[
+            NavigationControls(_controller.future),
+          ],
+        ),
+
+        body: Builder(builder: (BuildContext context) {
+          return WebView(
+            initialUrl: PAYMENT_URL,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (WebViewController webViewController) {
+              _controller.complete(webViewController);
+            },
+            // ignore: prefer_collection_literals
+            javascriptChannels: <JavascriptChannel>[
+              _toasterJavascriptChannel(context),
+            ].toSet(),
+            navigationDelegate: (NavigationRequest request) {
+              String finalUrl = request.url.toString();
+              if (finalUrl.contains(CHECK_URL)) {
+                String paymentOrderId='';
+                String paymentRequestId='';
+                Uri uri = Uri.parse(finalUrl);
+                String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
+                paymentOrderId = uri.queryParameters[PAYMENT_ID];
+                paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
+                if (paymentStatus != null && paymentStatus == CREDIT) {
+                  updatePayment(paymentId, paymentOrderId, paymentRequestId);
+                } else {
+                  updatePayment(paymentId, paymentOrderId, paymentRequestId);
+                }
+              }
+              return NavigationDecision.navigate;
+            },
+            onPageStarted: (String url) {
+              //print('Page started loading: $url');
+            },
+            onPageFinished: (String url) {
+              //print('Page finished loading: $url');
+            },
+            gestureNavigationEnabled: true,
+          );
+        }),
+      ),
+    );
+  }
+
+  Future<bool> _onWillPop() {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(STR_ARE_SURE),
+        content: Text(STR_SURE_CANCEL_PAY),
         actions: <Widget>[
-          NavigationControls(_controller.future),
+          FlatButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('No'),
+          ),
+          FlatButton(
+            onPressed: () {
+              widget.closePage(STR_FAILED);
+              Navigator.pop(context);
+              Navigator.pop(context);
+            },
+            child: Text('Yes'),
+          ),
         ],
       ),
-      body: Builder(builder: (BuildContext context) {
-        return WebView(
-          initialUrl: PAYMENT_URL,
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (WebViewController webViewController) {
-            _controller.complete(webViewController);
-          },
-          // ignore: prefer_collection_literals
-          javascriptChannels: <JavascriptChannel>[
-            _toasterJavascriptChannel(context),
-          ].toSet(),
-          navigationDelegate: (NavigationRequest request) {
-            String finalUrl = request.url.toString();
-            if (finalUrl.contains(CHECK_URL)) {
-              String paymentOrderId='';
-              String paymentRequestId='';
-              Uri uri = Uri.parse(finalUrl);
-              String paymentStatus = uri.queryParameters[PAYMENT_STATUS];
-              paymentOrderId = uri.queryParameters[PAYMENT_ID];
-              paymentRequestId = uri.queryParameters[PAYMENT_REQ_ID];
-              if (paymentStatus != null && paymentStatus == CREDIT) {
-                updatePayment(paymentId, paymentOrderId, paymentRequestId);
-              } else {
-                updatePayment(paymentId, paymentOrderId, paymentRequestId);
-              }
-            }
-            return NavigationDecision.navigate;
-          },
-          onPageStarted: (String url) {
-            print('Page started loading: $url');
-          },
-          onPageFinished: (String url) {
-            print('Page finished loading: $url');
-          },
-          gestureNavigationEnabled: true,
-        );
-      }),
-    );
+    ) ??
+        false;
   }
 
   void callResultPage(bool status, String refNo) {
