@@ -86,13 +86,35 @@ class _MySettingsState extends State<MySettings> {
           userMappingId = selectionResult.result[0].id;
         } else {
           userMappingId = '';
+          _isdeviceRecognition = true;
+          _isHKActive = false;
+          _firstTym = true;
+          _isBPActive = true;
+          _isGLActive = true;
+          _isOxyActive = true;
+          _isTHActive = true;
+          _isWSActive = true;
+          _isHealthFirstTime = false;
         }
+      }else{
+          userMappingId = '';
+         _isdigitRecognition = true;
+         _isdeviceRecognition = true;
+         _isHKActive = false;
+         _firstTym = true;
+         _isBPActive = true;
+         _isGLActive = true;
+         _isOxyActive = true;
+         _isTHActive = true;
+         _isWSActive = true;
+         _isHealthFirstTime = false;
       }
     });
     return selectionResult;
   }
 
   Future<CreateDeviceSelectionModel> createDeviceSelection() async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await healthReportListForUserRepository
         .createDeviceSelection(
             _isdigitRecognition,
@@ -103,7 +125,8 @@ class _MySettingsState extends State<MySettings> {
             _isGLActive,
             _isOxyActive,
             _isTHActive,
-            _isWSActive)
+            _isWSActive,
+              userId)
         .then((value) {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel.isSuccess) {
