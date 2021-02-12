@@ -430,7 +430,17 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
           userMappingId = selectionResult.result[0].id;
         } else {
           userMappingId = '';
+          preColor = 0xff5e1fe0;
+          greColor = 0xff753aec;
+
+          selectedPrimaryColor = 0xff5f0cf9;
         }
+      }else{
+          userMappingId = '';
+         preColor = 0xff5e1fe0;
+         greColor = 0xff753aec;
+
+         selectedPrimaryColor = 0xff5f0cf9;
       }
     });
     return selectionResult;
@@ -448,10 +458,11 @@ class _MoreMenuScreenState extends State<MoreMenuScreen> {
   }
 
   Future<CreateDeviceSelectionModel> createAppColorSelection(int priColor,int greColor) async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     await healthReportListForUserRepository
         .createAppColorSelection(
         priColor,
-        greColor)
+        greColor,userId)
         .then((value) {
       createDeviceSelectionModel = value;
       if (createDeviceSelectionModel.isSuccess) {

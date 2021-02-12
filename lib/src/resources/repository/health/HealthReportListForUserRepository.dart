@@ -233,8 +233,9 @@ class HealthReportListForUserRepository {
   }
 
   Future<GetDeviceSelectionModel> getDeviceSelection() async {
+    var userId = PreferenceUtil.getStringValue(Constants.KEY_USERID);
     final response = await _helper.getDeviceSelection(
-        query.qr_user_profile + query.qr_user + query.qr_my_profile);
+        query.qr_user_profile + query.qr_user + query.qr_my_profile + query.qr_member_id + userId);
     return GetDeviceSelectionModel.fromJson(response);
   }
 
@@ -247,8 +248,11 @@ class HealthReportListForUserRepository {
       bool gluco,
       bool pulseOximeter,
       bool thermo,
-      bool weighScale) async {
+      bool weighScale,
+      String userId
+      ) async {
     var body = jsonEncode({
+      "userId": userId,
       'profileSetting': {
         'allowDigit': allowDigit,
         'allowDevice': allowDevice,
@@ -299,8 +303,9 @@ class HealthReportListForUserRepository {
 
   Future<CreateDeviceSelectionModel> createAppColorSelection(
       int priColor,
-      int greColor) async {
+      int greColor,String userId) async {
     var body = jsonEncode({
+      "userId": userId,
       'profileSetting': {
         'priColor': priColor,
         'greColor': greColor

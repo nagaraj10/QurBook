@@ -200,6 +200,7 @@ const String qr_metadata = 'metadata';
 
 const String qr_user_profile = 'user-profile-setting/';
 const String qr_my_profile = 'my-profile';
+const String qr_member_id = '?memberId=';
 const String qr_user_profile_no_slash = 'user-profile-setting';
 const String qr_save_health_rec = 'save-health-record';
 const String qr_digit_recog = 'digit-recognization/';

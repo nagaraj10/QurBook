@@ -218,7 +218,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
             PreferenceUtil.saveTheme(Constants.keyPriColor, 0xff5f0cf9);
             PreferenceUtil.saveTheme(Constants.keyGreyColor, 0xff9929ea);
           }
+        } else {
+          bpMonitor = true;
+          glucoMeter = true;
+          pulseOximeter = true;
+          thermoMeter = true;
+          weighScale = true;
         }
+      } else {
+        bpMonitor = true;
+        glucoMeter = true;
+        pulseOximeter = true;
+        thermoMeter = true;
+        weighScale = true;
       }
     });
     return selectionResult;
