@@ -424,7 +424,7 @@ class ChatScreenState extends State<ChatScreen> {
 
       addChatList(content, type);
     } else {
-      Fluttertoast.showToast(msg: NOTHING_SEND);
+      Fluttertoast.showToast(msg: NOTHING_SEND, backgroundColor: Colors.red);
     }
   }
 
@@ -1650,7 +1650,10 @@ class ChatScreenState extends State<ChatScreen> {
                         //_patientDetailOrSearch();
                       },
                       controller: textEditingController,
-                      inputFormatters: [ FilteringTextInputFormatter.allow(RegExp("[ A-Za-z0-9#+-.@&?!{}():'%/=-]*")),],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp("[ A-Za-z0-9#+-.@&?!{}():'%/=-]*")),
+                      ],
                       decoration: InputDecoration(
                         hintText: "$chatTextFieldHintText",
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 14),
