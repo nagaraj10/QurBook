@@ -620,7 +620,7 @@ class _RecordDetailScreenState extends State<RecordDetailScreen> {
 
   Future<Widget> getDialogBoxWithFamilyMember(FamilyMemberResult familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
-        familyData, context, _keyLoader, (context, userId, userName) {
+        familyData, context, _keyLoader, (context, userId, userName, _) {
       _healthReportListForUserBlock
           .switchDataToOtherUser(userId, widget.data.id)
           .then((moveMetaDataResponse) {

@@ -133,6 +133,7 @@ class AddProvidersState extends State<AddProviders> {
   bool teleHealthAlertShown = false;
   String USERID;
   MyProfileModel myProfile;
+  String updatedProfilePic;
 
   @override
   void initState() {
@@ -640,16 +641,46 @@ class AddProvidersState extends State<AddProviders> {
                     borderRadius: BorderRadius.circular(30),
                     color: Colors.white,
                   ),
-                  child: myProfile != null
-                      ? myProfile.result != null
-                          ? myProfile.result.profilePicThumbnailUrl != null
-                              ? getProfilePicWidget(
-                                  myProfile.result.profilePicThumbnailUrl)
+                  child: updatedProfilePic != null
+                      ? updatedProfilePic.length > 5
+                          ? getProfilePicWidget(updatedProfilePic)
+                          : Center(
+                              child: Text(
+                                selectedFamilyMemberName == null
+                                    ? myProfile.result.lastName.toUpperCase()
+                                    : selectedFamilyMemberName[0].toUpperCase(),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    color: Color(
+                                        CommonUtil().getMyPrimaryColor())),
+                              ),
+                            )
+                      : myProfile != null
+                          ? myProfile.result != null
+                              ? myProfile.result.profilePicThumbnailUrl != null
+                                  ? getProfilePicWidget(
+                                      myProfile.result.profilePicThumbnailUrl)
+                                  : Center(
+                                      child: Text(
+                                        selectedFamilyMemberName == null
+                                            ? myProfile.result.lastName
+                                                .toUpperCase()
+                                            : selectedFamilyMemberName[0]
+                                                .toUpperCase(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Color(CommonUtil()
+                                                .getMyPrimaryColor())),
+                                      ),
+                                    )
                               : Center(
                                   child: Text(
                                     selectedFamilyMemberName == null
-                                        ? myProfile.result.lastName
-                                            .toUpperCase()
+                                        ? myProfile.result != null
+                                            ? myProfile.result.lastName != null
+                                                ? myProfile.result.lastName
+                                                : ''
+                                            : ''
                                         : selectedFamilyMemberName[0]
                                             .toUpperCase(),
                                     style: TextStyle(
@@ -660,27 +691,13 @@ class AddProvidersState extends State<AddProviders> {
                                 )
                           : Center(
                               child: Text(
-                                selectedFamilyMemberName == null
-                                    ? myProfile.result != null
-                                        ? myProfile.result.lastName != null
-                                            ? myProfile.result.lastName
-                                            : ''
-                                        : ''
-                                    : selectedFamilyMemberName[0].toUpperCase(),
+                                '',
                                 style: TextStyle(
                                     fontSize: 14,
                                     color: Color(
                                         CommonUtil().getMyPrimaryColor())),
                               ),
-                            )
-                      : Center(
-                          child: Text(
-                            '',
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: Color(CommonUtil().getMyPrimaryColor())),
-                          ),
-                        ),
+                            ),
                 )),
                 SizedBox(width: 10),
                 Container(
@@ -1272,11 +1289,13 @@ class AddProvidersState extends State<AddProviders> {
 
   Future<Widget> getDialogBoxWithFamilyMemberScrap(
       FamilyMemberResult familyData) {
-    return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
-        familyData, context, _keyLoader, (context, userId, userName) {
+    return new FamilyListView(familyData)
+        .getDialogBoxWithFamilyMember(familyData, context, _keyLoader,
+            (context, userId, userName, profilePic) {
       USERID = userId;
       selectedFamilyMemberName = userName;
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      updatedProfilePic = profilePic;
       setState(() {});
       //Navigator.pop(context);
       /* PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
