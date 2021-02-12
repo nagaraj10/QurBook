@@ -49,6 +49,7 @@ import 'src/ui/SplashScreen.dart';
 import 'src/ui/connectivity_bloc.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
+import 'package:myfhb/src/utils/screenutils/screenutil.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -397,25 +398,38 @@ class _MyFHBState extends State<MyFHB> {
           create: (_) => ChatScreenViewModel(),
         ),
       ],
-      child: MaterialApp(
-        title: Constants.APP_NAME,
-        theme: ThemeData(
-          fontFamily: variable.font_poppins,
-          primaryColor: Color(myPrimaryColor),
-          accentColor: Colors.white,
-        ),
-        //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
-        home: findHomeWidget(navRoute),
-        routes: routes,
-        debugShowCheckedModeBanner: false,
-        navigatorKey: Get.key,
-        /* builder: (BuildContext context, Widget widget) {
+      child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+        return OrientationBuilder(
+            builder: (BuildContext context, Orientation orientation) {
+          ScreenUtil.init(
+            constraints,
+            designSize: orientation == Orientation.portrait
+                ? Size(411.4, 822.9)
+                : Size(822.9, 411.4),
+            allowFontScaling: false,
+          );
+          return MaterialApp(
+            title: Constants.APP_NAME,
+            theme: ThemeData(
+              fontFamily: variable.font_poppins,
+              primaryColor: Color(myPrimaryColor),
+              accentColor: Colors.white,
+            ),
+            //home: navRoute.isEmpty ? SplashScreen() : StartTheCall(),
+            home: findHomeWidget(navRoute),
+            routes: routes,
+            debugShowCheckedModeBanner: false,
+            navigatorKey: Get.key,
+            /* builder: (BuildContext context, Widget widget) {
           ErrorWidget.builder = (FlutterErrorDetails errorDetails) {
             return buildError(context, errorDetails);
           };
           return widget;
         },*/
-      ),
+          );
+        });
+      }),
     );
   }
 
