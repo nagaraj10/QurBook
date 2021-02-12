@@ -391,7 +391,7 @@ class _VerifyPatientState extends State<VerifyPatient> {
           //Navigator.pop(context);
           LoaderClass.hideLoadingDialog(context);
           toast.getToast(response.message, Colors.red);
-          Navigator.pop(context);
+          //Navigator.pop(context);
           // setState(() {
           //   from = strFromSignUp;
           // });
