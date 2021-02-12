@@ -132,6 +132,7 @@ class AddProvidersState extends State<AddProviders> {
   MyProviderViewModel providerViewModel;
   bool teleHealthAlertShown = false;
   String USERID;
+  MyProfileModel myProfile;
 
   @override
   void initState() {
@@ -220,7 +221,9 @@ class AddProvidersState extends State<AddProviders> {
                           )),
                       Visibility(
                           visible: widget.arguments.hasData == true
-                              ? latitude == 0.0 ? true : false
+                              ? latitude == 0.0
+                                  ? true
+                                  : false
                               : false,
                           child: Container(
                             height: MediaQuery.of(context).size.height / 2 - 80,
@@ -583,9 +586,11 @@ class AddProvidersState extends State<AddProviders> {
   }
 
   Widget _showUser() {
-    MyProfileModel myProfile;
+    MyProfileModel primaryUserProfile;
     try {
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      primaryUserProfile =
+          PreferenceUtil.getProfileData(Constants.KEY_PROFILE_MAIN);
     } catch (e) {}
     return InkWell(
         onTap: () {
@@ -682,7 +687,9 @@ class AddProvidersState extends State<AddProviders> {
                   margin: EdgeInsets.only(right: 10),
                   child: Text(
                     selectedFamilyMemberName == null
-                        ? variable.Self
+                        ? myProfile.result.id == primaryUserProfile.result.id
+                            ? variable.Self
+                            : myProfile.result.firstName
                         : toBeginningOfSentenceCase(selectedFamilyMemberName),
                     softWrap: true,
                     textAlign: TextAlign.left,
@@ -1084,10 +1091,14 @@ class AddProvidersState extends State<AddProviders> {
           signInData[variable.strDescription] = '';
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null ? '' : address.locality;
+              : address.locality == null
+                  ? ''
+                  : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null ? '' : address.adminArea;
+              : address.adminArea == null
+                  ? ''
+                  : address.adminArea;
           signInData[variable.strPhoneNumbers] =
               widget.arguments.placeDetail == null
                   ? ''
@@ -1213,16 +1224,24 @@ class AddProvidersState extends State<AddProviders> {
                       : widget.arguments.confirmAddressDescription;
           signInData[variable.straddressLine2] = address == null
               ? ''
-              : address.addressLine == null ? '' : address.addressLine;
+              : address.addressLine == null
+                  ? ''
+                  : address.addressLine;
           signInData[variable.strCity] = address == null
               ? ''
-              : address.locality == null ? '' : address.locality;
+              : address.locality == null
+                  ? ''
+                  : address.locality;
           signInData[variable.strState] = address == null
               ? ''
-              : address.adminArea == null ? '' : address.adminArea;
+              : address.adminArea == null
+                  ? ''
+                  : address.adminArea;
           signInData[variable.strzipCode] = address == null
               ? ''
-              : address.postalCode == null ? '' : address.postalCode;
+              : address.postalCode == null
+                  ? ''
+                  : address.postalCode;
           signInData[variable.strbranch] = '';
           signInData[variable.strIsUserDefined] = true;
           signInData[variable.strLatitude] =
@@ -1256,9 +1275,9 @@ class AddProvidersState extends State<AddProviders> {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
         familyData, context, _keyLoader, (context, userId, userName) {
       USERID = userId;
-      setState(() {
-        selectedFamilyMemberName = userName;
-      });
+      selectedFamilyMemberName = userName;
+      myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
+      setState(() {});
       //Navigator.pop(context);
       /* PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
         //getUserProfileData();

@@ -242,6 +242,7 @@ class FamilyListView {
                           if (index == 0) {
                             onTextFieldtap(context, sharedByMe[index].id,
                                 sharedByMe[index].nickName);
+                            Navigator.of(context).pop();
                           } else {
                             onTextFieldtap(context, sharedByMe[index].child.id,
                                 sharedByMe[index].nickName);
