@@ -27,7 +27,8 @@ class FamilyListView {
       FamilyMemberResult data,
       BuildContext context,
       GlobalKey<State> _keyLoader,
-      Function(BuildContext context, String searchParam, String name)
+      Function(BuildContext context, String searchParam, String name,
+              String profilePic)
           onTextFieldtap) async {
     // Navigator.of(_keyLoader.currentContext, rootNavigator: true).pop();
 
@@ -53,7 +54,8 @@ class FamilyListView {
   Widget setupAlertDialoadContainer(
       List<SharedByUsers> sharedByMeList,
       BuildContext context,
-      Function(BuildContext context, String searchParam, String name)
+      Function(BuildContext context, String searchParam, String name,
+              String profilePic)
           onTextFieldtap,
       GlobalKey<State> _keyLoader) {
     MyProfileModel myProfile =
@@ -240,11 +242,41 @@ class FamilyListView {
                         ),
                         onTap: () {
                           if (index == 0) {
-                            onTextFieldtap(context, sharedByMe[index].id,
-                                sharedByMe[index].nickName);
+                            onTextFieldtap(
+                                context,
+                                sharedByMe[index].id,
+                                sharedByMe[index].nickName,
+                                sharedByMe[index].nickName == variable.Self
+                                    ? myProfile.result.profilePicThumbnailUrl !=
+                                            null
+                                        ? myProfile
+                                            .result.profilePicThumbnailUrl
+                                        : ""
+                                    : myProfile.result != null
+                                        ? myProfile.result.firstName != null
+                                            ? myProfile.result.firstName[0]
+                                                .toUpperCase()
+                                            : 'S'
+                                        : '');
+                            Navigator.of(context).pop();
                           } else {
-                            onTextFieldtap(context, sharedByMe[index].child.id,
-                                sharedByMe[index].nickName);
+                            onTextFieldtap(
+                                context,
+                                sharedByMe[index].child.id,
+                                sharedByMe[index].nickName,
+                                sharedByMe[index]
+                                            .child
+                                            .profilePicThumbnailUrl !=
+                                        null
+                                    ? sharedByMe[index]
+                                        .child
+                                        .profilePicThumbnailUrl
+                                    : (sharedByMe[index].nickName[0] != null
+                                        ? sharedByMe[index]
+                                            .nickName[0]
+                                            .toUpperCase()
+                                        : ''));
+                            Navigator.of(context).pop();
                           }
                         },
                       ),

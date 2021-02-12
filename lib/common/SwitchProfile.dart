@@ -99,7 +99,7 @@ class SwitchProfile {
   Future<Widget> getDialogBoxWithFamilyMemberScrap(
       FamilyMemberResult familyData) {
     return new FamilyListView(familyData).getDialogBoxWithFamilyMember(
-        familyData, context, keyLoader, (context, userId, userName) {
+        familyData, context, keyLoader, (context, userId, userName, _) {
       PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
         if (PreferenceUtil.getStringValue(Constants.KEY_CATEGORYNAME) ==
             Constants.STR_IDDOCS) {
