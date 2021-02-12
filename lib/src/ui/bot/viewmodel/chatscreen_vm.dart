@@ -29,6 +29,8 @@ class ChatScreenViewModel extends ChangeNotifier {
   var isEndOfConv = false;
   var stopTTSNow = false;
   var isLoading = false;
+  var isRedirect = false;
+  var screenValue;
 
   List<Conversation> get getMyConversations => conversations;
 
@@ -48,7 +50,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   startMayaAutomatically() {
     Future.delayed(Duration(seconds: 1), () {
-      sendToMaya(variable.strhiMaya);
+      sendToMaya(variable.strhiMaya,screen: parameters.strSheela);
     });
 
     var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -59,6 +61,8 @@ class ChatScreenViewModel extends ChangeNotifier {
           ? prof.result.firstName + prof.result.lastName
           : '',
       timeStamp: date,
+      redirect: isRedirect,
+      screen: parameters.strSheela
     );
 
     conversations.add(model);
@@ -68,7 +72,7 @@ class ChatScreenViewModel extends ChangeNotifier {
   startSheelaFromDashboard(String inputs) async {
     Future.delayed(Duration(seconds: 1), () {
       if (inputs != null && inputs != '') {
-        sendToMaya(inputs);
+        sendToMaya(inputs,screen: parameters.strDashboard);
       } else {
         FlutterToast()
             .getToast('Invalid inputs for sheela from dashboard', Colors.red);
@@ -84,6 +88,8 @@ class ChatScreenViewModel extends ChangeNotifier {
             ? prof.result.firstName + prof.result.lastName
             : '',
         timeStamp: date,
+        redirect: isRedirect,
+        screen: parameters.strDashboard
       );
 
       conversations.add(model);
@@ -93,7 +99,7 @@ class ChatScreenViewModel extends ChangeNotifier {
 
   askUserForLanguage() {
     Future.delayed(Duration(seconds: 1), () {
-      sendToMaya(variable.strhiMaya);
+      sendToMaya(variable.strhiMaya,screen: parameters.strSheela);
     });
 
     var date = new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -104,13 +110,15 @@ class ChatScreenViewModel extends ChangeNotifier {
           ? prof.result.firstName + prof.result.lastName
           : '',
       timeStamp: date,
+      redirect: isRedirect,
+      screen: parameters.strSheela
     );
 
     conversations.add(model);
     notifyListeners();
   }
 
-  sendToMaya(String msg) async {
+  sendToMaya(String msg,{String screen}) async {
     String uuidString = uuid;
     String tzOffset = DateTime.now().timeZoneOffset.toString();
     var user_id = await PreferenceUtil.getStringValue(constants.KEY_USERID);
@@ -127,6 +135,8 @@ class ChatScreenViewModel extends ChangeNotifier {
         splitedArr.length > 0 ? '${splitedArr[0]}:${splitedArr[1]}' : '';
 
     reqJson[parameters.strPlatforType] = Platform.isAndroid ? 'android' : 'ios';
+    reqJson[parameters.strScreen] = screen;
+    screenValue = screen;
 
     Service mService = Service();
     final response = await mService.sendMetaToMaya(reqJson);
@@ -139,6 +149,7 @@ class ChatScreenViewModel extends ChangeNotifier {
         if (list.length > 0) {
           SpeechModelResponse res = SpeechModelResponse.fromJson(list[0]);
           isEndOfConv = res.endOfConv;
+          isRedirect = res.redirect;
           PreferenceUtil.saveString(constants.SHEELA_LANG, res.lang);
           var date =
               new FHBUtils().getFormattedDateString(DateTime.now().toString());
@@ -153,7 +164,9 @@ class ChatScreenViewModel extends ChangeNotifier {
               buttons: res.buttons,
               langCode: res.lang,
               searchURL: res.searchURL,
-              videoLinks: res.videoLinks);
+              videoLinks: res.videoLinks,
+              redirect: isRedirect,
+              screen: screenValue);
           conversations.add(model);
           isLoading = true;
           notifyListeners();
@@ -192,7 +205,7 @@ class ChatScreenViewModel extends ChangeNotifier {
     try {
       await variable.voice_platform.invokeMethod(variable.strspeakAssistant,
           {'langcode': Utils.getCurrentLanCode()}).then((response) {
-        sendToMaya(response);
+        sendToMaya(response,screen: screenValue);
         var date =
             new FHBUtils().getFormattedDateString(DateTime.now().toString());
         Conversation model = new Conversation(
@@ -202,6 +215,8 @@ class ChatScreenViewModel extends ChangeNotifier {
               ? prof.result.firstName + prof.result.lastName
               : '',
           timeStamp: date,
+          redirect: isRedirect,
+          screen: screenValue
         );
         conversations.add(model);
         notifyListeners();
