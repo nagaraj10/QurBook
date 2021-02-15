@@ -28,6 +28,10 @@ import 'package:myfhb/telehealth/features/appointments/viewModel/cancelAppointme
 import 'package:myfhb/telehealth/features/chat/view/home.dart';
 import 'package:myfhb/widgets/GradientAppBar.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
+import 'package:myfhb/telehealth/features/MyProvider/view/TelehealthProviders.dart';
+import 'package:myfhb/src/model/home_screen_arguments.dart';
+import 'package:myfhb/constants/router_variable.dart' as router;
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -134,19 +138,10 @@ class _NotificationScreen extends State<NotificationScreen> {
               onTap: (notification?.result[index]?.isUnread != null &&
                       notification?.result[index]?.isUnread)
                   ? () {
-                      NotificationOntapRequest req = NotificationOntapRequest();
-                      req.logIds = [notification?.result[index]?.id];
-                      final body = req.toJson();
-                      FetchNotificationService()
-                          .updateNsOnTapAction(body)
-                          .then((data) {
-                        if (data != null && data['isSuccess']) {
-                        } else {}
-                        Provider.of<FetchNotificationViewModel>(context,
-                            listen: false)
-                          ..clearNotifications()
-                          ..fetchNotifications();
-                      });
+                      notificationOnTapActions(
+                          notification?.result[index],
+                          notification?.result[index]?.messageDetails?.content
+                              ?.templateName);
                     }
                   : null,
               child: Column(
@@ -676,9 +671,11 @@ class _NotificationScreen extends State<NotificationScreen> {
                                           borderRadius:
                                               BorderRadius.circular(12.0),
                                           side: BorderSide(
-                                              color: Color(new CommonUtil().getMyPrimaryColor()))),
+                                              color: Color(new CommonUtil()
+                                                  .getMyPrimaryColor()))),
                                       color: Colors.transparent,
-                                      textColor: Color(new CommonUtil().getMyPrimaryColor()),
+                                      textColor: Color(
+                                          new CommonUtil().getMyPrimaryColor()),
                                       padding: EdgeInsets.all(8.0),
                                       onPressed: () {
                                         Navigator.pop(
@@ -757,5 +754,75 @@ class _NotificationScreen extends State<NotificationScreen> {
         .fetchCancelAppointment(bookingIds, dates);
 
     return cancelAppointment;
+  }
+
+  void notificationOnTapActions(
+      NotificationResult result, String templateName) {
+    switch (templateName) {
+      case "AppointmentReminder180":
+      case "AppointmentReminder1440":
+      case "AppointmentReminder30":
+      case "AppointmentReminderPost10":
+        Get.offAll(TelehealthProviders(
+          arguments: HomeScreenArguments(
+              selectedIndex: 0,
+              bookingId: result?.messageDetails?.payload?.bookingId,
+              date: result?.messageDetails?.payload?.appointmentDate,
+              templateName: result?.messageDetails?.content?.templateName),
+        ));
+        readUnreadAction(result);
+        break;
+      case "PaymentReceipt":
+      case "PaymentConfirmation":
+        Get.offAll(TelehealthProviders(
+          arguments: HomeScreenArguments(
+              selectedIndex: 0,
+              bookingId: result?.messageDetails?.payload?.bookingId,
+              date: result?.messageDetails?.payload?.appointmentDate,
+              templateName: result?.messageDetails?.content?.templateName),
+        ));
+        readUnreadAction(result);
+        break;
+      case "SlotsFull":
+        Get.offAll(TelehealthProviders(
+          arguments: HomeScreenArguments(
+              selectedIndex: 0,
+              bookingId: result?.messageDetails?.payload?.bookingId,
+              date: result?.messageDetails?.payload?.appointmentDate,
+              templateName: result?.messageDetails?.content?.templateName),
+        ));
+        readUnreadAction(result);
+        break;
+      case "PatientPrescription":
+        //* navigate user to prescription page.
+        Navigator.pushNamed(
+          context,
+          router.rt_HomeScreen,
+          arguments: HomeScreenArguments(selectedIndex: 1),
+        ).then((value) {
+          setState(() {});
+        });
+        readUnreadAction(result);
+        break;
+      case "AppointmentTransactionCancelledMidway":
+        readUnreadAction(result);
+        break;
+      default:
+        readUnreadAction(result);
+        break;
+    }
+  }
+
+  void readUnreadAction(NotificationResult result) {
+    NotificationOntapRequest req = NotificationOntapRequest();
+    req.logIds = [result?.id];
+    final body = req.toJson();
+    FetchNotificationService().updateNsOnTapAction(body).then((data) {
+      if (data != null && data['isSuccess']) {
+      } else {}
+      Provider.of<FetchNotificationViewModel>(context, listen: false)
+        ..clearNotifications()
+        ..fetchNotifications();
+    });
   }
 }
