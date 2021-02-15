@@ -300,7 +300,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     emailController,
                     emailFocus,
                     genderFocus,
-                    CommonConstants.email_address_optional,
+                    CommonConstants.emailWithStar,
                     CommonConstants.email_address_optional,
                     (widget.arguments.fromClass ==
                                 CommonConstants.user_update ||
