@@ -63,13 +63,20 @@ class OxygenSaturationEntity {
 
 class DeviceHealthRecord {
     SourceType sourceType;
+    List<HeartRateCollection> heartRateCollection;
 
-    DeviceHealthRecord({this.sourceType});
+    DeviceHealthRecord({this.sourceType,this.heartRateCollection});
 
     DeviceHealthRecord.fromJson(Map<String, dynamic> json) {
         sourceType = json['sourceType'] != null
             ? new SourceType.fromJson(json['sourceType'])
             : null;
+        if (json['heartRateCollection'] != null) {
+            heartRateCollection = new List<HeartRateCollection>();
+            json['heartRateCollection'].forEach((v) {
+                heartRateCollection.add(new HeartRateCollection.fromJson(v));
+            });
+        }
     }
 
     Map<String, dynamic> toJson() {
@@ -77,6 +84,63 @@ class DeviceHealthRecord {
         if (this.sourceType != null) {
             data['sourceType'] = this.sourceType.toJson();
         }
+        if (this.heartRateCollection != null) {
+            data['heartRateCollection'] =
+                this.heartRateCollection.map((v) => v.toJson()).toList();
+        }
+        return data;
+    }
+}
+
+class HeartRateCollection {
+    String id;
+    String startDateTime;
+    String endDateTime;
+    int bpm;
+    AverageAsOfNowPulse averageAsOfNow;
+
+    HeartRateCollection(
+        {this.id,
+            this.startDateTime,
+            this.endDateTime,
+            this.bpm,
+            this.averageAsOfNow});
+
+    HeartRateCollection.fromJson(Map<String, dynamic> json) {
+        id = json['id'];
+        startDateTime = json['startDateTime'];
+        endDateTime = json['endDateTime'];
+        bpm = json['bpm'];
+        averageAsOfNow = json['averageAsOfNow'] != null
+            ? new AverageAsOfNowPulse.fromJson(json['averageAsOfNow'])
+            : null;
+    }
+
+    Map<String, dynamic> toJson() {
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['id'] = this.id;
+        data['startDateTime'] = this.startDateTime;
+        data['endDateTime'] = this.endDateTime;
+        data['bpm'] = this.bpm;
+        if (this.averageAsOfNow != null) {
+            data['averageAsOfNow'] = this.averageAsOfNow.toJson();
+        }
+        return data;
+    }
+}
+
+class AverageAsOfNowPulse {
+    var pulseAverage;
+
+    AverageAsOfNowPulse({this.pulseAverage});
+
+    AverageAsOfNowPulse.fromJson(Map<String, dynamic> json) {
+        pulseAverage = json['pulseAverage'];
+    }
+
+    Map<String, dynamic> toJson() {
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['pulseAverage'] = this.pulseAverage;
         return data;
     }
 }

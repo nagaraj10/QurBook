@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -480,13 +481,33 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       }
 
       try {
-        if (deviceValues.heartRate.entities.isNotEmpty) {
-          try {
-            pulseBp = deviceValues.heartRate.entities[0].bpm.toString();
-            averageForPulForBp = deviceValues
-                .heartRate.entities[0].averageAsOfNow.pulseAverage
-                .toString();
-          } catch (e) {
+        if (deviceValues.bloodPressure.entities[0].deviceHealthRecord != null) {
+          if (deviceValues.bloodPressure.entities[0].deviceHealthRecord
+              .heartRateCollection.isNotEmpty) {
+            if (deviceValues.bloodPressure.entities[0].deviceHealthRecord
+                    .heartRateCollection[0].bpm !=
+                null) {
+              pulseBp = deviceValues.bloodPressure.entities[0]
+                  .deviceHealthRecord.heartRateCollection[0].bpm
+                  .toString();
+            } else {
+              pulseBp = '';
+            }
+            if (deviceValues.bloodPressure.entities[0].deviceHealthRecord
+                    .heartRateCollection[0].averageAsOfNow !=
+                null) {
+              averageForPulForBp = deviceValues
+                  .bloodPressure
+                  .entities[0]
+                  .deviceHealthRecord
+                  .heartRateCollection[0]
+                  .averageAsOfNow
+                  .pulseAverage
+                  .toString();
+            } else {
+              averageForPulForBp = '';
+            }
+          } else {
             pulseBp = '';
             averageForPulForBp = '';
           }
@@ -495,20 +516,25 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
           averageForPulForBp = '';
         }
 
-        averageForSys = deviceValues
-                    .bloodPressure.entities[0].averageAsOfNow.systolicAverage !=
-                null
-            ? deviceValues
-                .bloodPressure.entities[0].averageAsOfNow.systolicAverage
-                .toString()
-            : '';
-        averageForDia = deviceValues.bloodPressure.entities[0].averageAsOfNow
-                    .diastolicAverage !=
-                null
-            ? deviceValues
-                .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
-                .toString()
-            : '';
+        if (deviceValues.bloodPressure.entities[0].averageAsOfNow != null) {
+          averageForSys = deviceValues.bloodPressure.entities[0].averageAsOfNow
+                      .systolicAverage !=
+                  null
+              ? deviceValues
+                  .bloodPressure.entities[0].averageAsOfNow.systolicAverage
+                  .toString()
+              : '';
+          averageForDia = deviceValues.bloodPressure.entities[0].averageAsOfNow
+                      .diastolicAverage !=
+                  null
+              ? deviceValues
+                  .bloodPressure.entities[0].averageAsOfNow.diastolicAverage
+                  .toString()
+              : '';
+        } else {
+          averageForSys = '';
+          averageForDia = '';
+        }
       } catch (e) {
         averageForSys = '';
         averageForDia = '';
@@ -596,6 +622,70 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
       }
 
       try {
+        if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord !=
+            null) {
+          if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
+              .heartRateCollection.isNotEmpty) {
+            try {
+              if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
+                      .heartRateCollection[0].bpm !=
+                  null) {
+                prbPMOxi = deviceValues.oxygenSaturation.entities[0]
+                    .deviceHealthRecord.heartRateCollection[0].bpm
+                    .toString();
+              } else {
+                prbPMOxi = '';
+              }
+
+              if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
+                      .heartRateCollection[0].averageAsOfNow !=
+                  null) {
+                if (deviceValues.oxygenSaturation.entities[0].deviceHealthRecord
+                        .heartRateCollection[0].averageAsOfNow.pulseAverage !=
+                    null) {
+                  averageForPRBpm = deviceValues
+                      .oxygenSaturation
+                      .entities[0]
+                      .deviceHealthRecord
+                      .heartRateCollection[0]
+                      .averageAsOfNow
+                      .pulseAverage
+                      .toString();
+                } else {
+                  averageForPRBpm = '';
+                }
+              } else {
+                averageForPRBpm = '';
+              }
+              averageForPul =
+                  deviceValues.oxygenSaturation.entities[0].averageAsOfNow !=
+                          null
+                      ? deviceValues.oxygenSaturation.entities[0].averageAsOfNow
+                          .oxygenLevelAverage
+                          .toString()
+                      : '';
+            } catch (e) {
+              averageForPul = '';
+              averageForPRBpm = '';
+              prbPMOxi = '';
+            }
+          } else {
+            averageForPRBpm = '';
+            prbPMOxi = '';
+          }
+        } else {
+          averageForPul = '';
+          averageForPRBpm = '';
+          prbPMOxi = '';
+        }
+      } catch (e) {
+        averageForPulForBp = '';
+        averageForPul = '';
+        averageForPRBpm = '';
+        prbPMOxi = '';
+      }
+
+      /*try {
         if (deviceValues.heartRate.entities.isNotEmpty) {
           try {
             prbPMOxi = deviceValues.heartRate.entities[0].bpm.toString();
@@ -627,7 +717,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
         averageForPul = '';
         averageForPRBpm = '';
         prbPMOxi = '';
-      }
+      }*/
 
       try {
         averageForSPO2 = deviceValues.oxygenSaturation.entities[0]
