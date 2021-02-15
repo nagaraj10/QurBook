@@ -186,6 +186,7 @@ class ChatScreenState extends State<ChatScreen> {
   String nextAppointmentDate = '';
   String doctorDeviceToken = '';
   String patientDeviceToken = '';
+  String currentPlayedVoiceURL = '';
 
   @override
   void initState() {
@@ -372,23 +373,26 @@ class ChatScreenState extends State<ChatScreen> {
   }
 
   Future<dynamic> flutterStopPlayer(url) async {
+    setState(() {
+      isPlaying = false;
+    });
+    currentPlayedVoiceURL = '';
     await flutterSound.stopPlayer().then((value) {
-      flutterPlaySound(url);
+      // flutterPlaySound(url);
     });
   }
 
   flutterPlaySound(url) async {
+    currentPlayedVoiceURL = url;
+    setState(() {
+      isPlaying = true;
+    });
     await flutterSound.startPlayer(url);
-
     flutterSound.onPlayerStateChanged.listen((e) {
-      if (e == null) {
-        setState(() {
-          this.isPlaying = false;
-        });
-      } else {
-        setState(() {
-          this.isPlaying = false;
-        });
+      if (e != null) {
+        if (flutterSound.audioState == t_AUDIO_STATE.IS_STOPPED) {
+          flutterStopPlayer(url);
+        }
       }
     });
   }
@@ -791,7 +795,12 @@ class ChatScreenState extends State<ChatScreen> {
                                           child: Text(
                                               patientName.substring(0, 1))),
                                       IconButton(
-                                        icon: Icon(Icons.play_circle_filled),
+                                        icon: Icon(currentPlayedVoiceURL ==
+                                                document[STR_CONTENT]
+                                            ? isPlaying
+                                                ? Icons.pause_circle_filled
+                                                : Icons.play_circle_filled
+                                            : Icons.play_circle_filled),
                                         onPressed: () {
                                           isPlaying
                                               ? flutterStopPlayer(
@@ -1012,7 +1021,12 @@ class ChatScreenState extends State<ChatScreen> {
                                                     peerName.substring(0, 1))),
                                             IconButton(
                                               icon: Icon(
-                                                  Icons.play_circle_filled),
+                                                  Icon(currentPlayedVoiceURL ==
+                                                document[STR_CONTENT]
+                                            ? isPlaying
+                                                ? Icons.pause_circle_filled
+                                                : Icons.play_circle_filled
+                                            : Icons.play_circle_filled),
                                               onPressed: () {
                                                 isPlaying
                                                     ? flutterStopPlayer(
