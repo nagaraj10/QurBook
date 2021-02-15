@@ -969,8 +969,19 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                     width: 0.66.sw,
                                     child: _getUserName(),
                                   ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {});
+                                    },
+                                    child: Image.asset(
+                                      'assets/icons/refresh_dash.png',
+                                      height: 26.0,
+                                      width: 26.0,
+                                      color: Colors.white,
+                                    ),
+                                  ),
                                   SizedBox(
-                                    width: 0.12.sw,
+                                    width: 0.03.sw,
                                   ),
                                   isFamilyAvail
                                       ? SwitchProfile().buildActions(

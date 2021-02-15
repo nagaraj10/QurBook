@@ -1020,13 +1020,12 @@ class ChatScreenState extends State<ChatScreen> {
                                                 child: Text(
                                                     peerName.substring(0, 1))),
                                             IconButton(
-                                              icon: Icon(
-                                                  Icon(currentPlayedVoiceURL ==
-                                                document[STR_CONTENT]
-                                            ? isPlaying
-                                                ? Icons.pause_circle_filled
-                                                : Icons.play_circle_filled
-                                            : Icons.play_circle_filled),
+                                              icon: Icon(currentPlayedVoiceURL ==
+                                                  document[STR_CONTENT]
+                                                  ? isPlaying
+                                                  ? Icons.pause_circle_filled
+                                                  : Icons.play_circle_filled
+                                                  : Icons.play_circle_filled),
                                               onPressed: () {
                                                 isPlaying
                                                     ? flutterStopPlayer(
