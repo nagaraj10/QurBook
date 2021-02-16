@@ -258,7 +258,6 @@ class FamilyListView {
                                                 .toUpperCase()
                                             : 'S'
                                         : '');
-                            Navigator.of(context).pop();
                           } else {
                             onTextFieldtap(
                                 context,
@@ -276,7 +275,6 @@ class FamilyListView {
                                             .nickName[0]
                                             .toUpperCase()
                                         : ''));
-                            Navigator.of(context).pop();
                           }
                         },
                       ),
