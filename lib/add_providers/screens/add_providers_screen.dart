@@ -729,16 +729,16 @@ class AddProvidersState extends State<AddProviders> {
   Widget _ShowDoctorTextField() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-      child: new TextField(
+      child: TextField(
         cursorColor: Color(new CommonUtil().getMyPrimaryColor()),
         controller: doctorController,
         maxLines: 1,
         keyboardType: TextInputType.emailAddress,
-        focusNode: _doctorFocus,
+        //focusNode: _doctorFocus,
         textInputAction: TextInputAction.done,
-        autofocus: true,
-        enabled:
-            widget.arguments.fromClass == router.rt_myprovider ? false : true,
+        //autofocus: true,
+        enabled: false,
+        //widget.arguments.fromClass == router.rt_myprovider ? false : true,
         onSubmitted: (term) {
           _doctorFocus.unfocus();
         },
