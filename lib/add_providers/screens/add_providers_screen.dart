@@ -1296,6 +1296,7 @@ class AddProvidersState extends State<AddProviders> {
       selectedFamilyMemberName = userName;
       myProfile = PreferenceUtil.getProfileData(Constants.KEY_PROFILE);
       updatedProfilePic = profilePic;
+      Navigator.pop(context);
       setState(() {});
       //Navigator.pop(context);
       /* PreferenceUtil.saveString(Constants.KEY_USERID, userId).then((onValue) {
