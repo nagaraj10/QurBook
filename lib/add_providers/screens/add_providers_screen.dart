@@ -276,41 +276,44 @@ class AddProvidersState extends State<AddProviders> {
                     _showUser(),
                     SizedBox(height: 10),
                     InkWell(
-                      onTap: () {
-                        if (widget.arguments.fromClass !=
-                            router.rt_myprovider) {
-                          CommonUtil.showLoadingDialog(
-                              context, _keyLoader, variable.Please_Wait);
+                      // onTap: () {
+                      //   if (widget.arguments.fromClass !=
+                      //       router.rt_myprovider) {
+                      //     CommonUtil.showLoadingDialog(
+                      //         context, _keyLoader, variable.Please_Wait);
 
-                          if (_familyListBloc != null) {
-                            _familyListBloc = null;
-                            _familyListBloc = new FamilyListBloc();
-                          }
-                          _familyListBloc
-                              .getFamilyMembersListNew()
-                              .then((familyMembersList) {
-                            // Hide Loading
-                            Navigator.of(_keyLoader.currentContext,
-                                    rootNavigator: true)
-                                .pop();
-                            if (familyMembersList != null &&
-                                familyMembersList.result != null &&
-                                familyMembersList.result.length > 0) {
-                              getDialogBoxWithFamilyMemberScrap(
-                                  familyMembersList.result);
-                            } else {
-                              toast.getToast(Constants.NO_DATA_FAMIY_CLONE,
-                                  Colors.black54);
-                            }
-                          });
-                        }
-                      },
+                      //     if (_familyListBloc != null) {
+                      //       _familyListBloc = null;
+                      //       _familyListBloc = new FamilyListBloc();
+                      //     }
+                      //     _familyListBloc
+                      //         .getFamilyMembersListNew()
+                      //         .then((familyMembersList) {
+                      //       // Hide Loading
+                      //       Navigator.of(_keyLoader.currentContext,
+                      //               rootNavigator: true)
+                      //           .pop();
+
+                      //       if (familyMembersList != null &&
+                      //           familyMembersList.result != null &&
+                      //           familyMembersList.result.sharedByUsers.length >
+                      //               0) {
+                      //         getDialogBoxWithFamilyMemberScrap(
+                      //             familyMembersList.result);
+                      //       } else {
+                      //         toast.getToast(Constants.NO_DATA_FAMIY_CLONE,
+                      //             Colors.black54);
+                      //       }
+                      //     });
+                      //   }
+                      // },
                       child: Text(
                         variable.Switch_User,
                         style: TextStyle(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w400,
-                            color: Color(new CommonUtil().getMyPrimaryColor())),
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.w400,
+                          //color: Color(new CommonUtil().getMyPrimaryColor())
+                        ),
                       ),
                     ),
                     SizedBox(height: 10),
