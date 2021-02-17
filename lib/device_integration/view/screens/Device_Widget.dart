@@ -941,9 +941,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                     variable.requestSheelaForbp,
                                 device_name: strDataTypeBP,
                                 device_icon: Devices_BP_Tool,
+                                deviceNameForAdding: Constants.STR_BP_MONITOR,
                               ),
                             )),
-                  );
+                  ).then((value){
+                    setState(() {});
+                  });
                 },
                 child: Container(
                   // height: 170.0.h,
@@ -1238,7 +1241,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                           hexToColor('#059192'),
                                         )
                                       : SizedBox(),
-                                  MaterialButton(
+                                  /*MaterialButton(
                                     height: 25.0.h,
                                     minWidth: 45.0.w,
                                     onPressed: () {
@@ -1255,7 +1258,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                       2.0.sp,
                                     ),
                                     shape: CircleBorder(),
-                                  ),
+                                  ),*/
                                 ],
                               ),
                             ],
@@ -1301,10 +1304,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         variable.requestSheelaForglucose,
                                     device_name: strGlusoceLevel,
                                     device_icon: Devices_GL_Tool,
+                                    deviceNameForAdding: Constants.STR_GLUCOMETER,
                                   ),
                                 ),
                               ),
-                            );
+                            ).then((value) {
+                              setState(() {});
+                            });
                           },
                           child: Container(
                             width: 190.0.w,
@@ -1625,7 +1631,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   ],
                                                 ),
                                               ),
-                                              Column(
+                                              /*Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.end,
                                                 children: [
@@ -1650,9 +1656,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     shape: CircleBorder(),
                                                   ),
                                                 ],
-                                              ),
+                                              ),*/
                                             ],
-                                          )
+                                          ),
+                                          SizedBoxWidget(height: 10,),
                                         ],
                                       ),
                                     ),
@@ -1684,10 +1691,13 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                         variable.requestSheelaFortemperature,
                                     device_name: strTemperature,
                                     device_icon: Devices_THM_Tool,
+                                    deviceNameForAdding: Constants.STR_THERMOMETER,
                                   ),
                                 ),
                               ),
-                            );
+                            ).then((value) {
+                              setState(() {});
+                            });
                           },
                           child: Container(
                             width: 190.0.w,
@@ -1953,7 +1963,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   ],
                                                 ),
                                               ),
-                                              Column(
+                                              /*Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.end,
                                                 children: [
@@ -1978,9 +1988,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     shape: CircleBorder(),
                                                   ),
                                                 ],
-                                              ),
+                                              ),*/
                                             ],
-                                          )
+                                          ),
+                                          SizedBoxWidget(height: 10,),
                                         ],
                                       ),
                                     ),
@@ -2012,9 +2023,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               variable.requestSheelaForpo,
                                           device_name: strOxgenSaturation,
                                           device_icon: Devices_OxY_Tool,
+                                          deviceNameForAdding: Constants.STR_PULSE_OXIMETER,
                                         ),
                                       )),
-                            );
+                            ).then((value) {
+                              setState(() {});
+                            });
                           },
                           child: Container(
                             width: 190.0.w,
@@ -2305,7 +2319,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   ],
                                                 ),
                                               ),
-                                              Column(
+                                              /*Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.end,
                                                 children: [
@@ -2330,9 +2344,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     shape: CircleBorder(),
                                                   ),
                                                 ],
-                                              ),
+                                              ),*/
                                             ],
-                                          )
+                                          ),
+                                          SizedBoxWidget(height: 10,),
                                         ],
                                       ),
                                     ),
@@ -2364,9 +2379,12 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                               variable.requestSheelaForweight,
                                           device_name: strWeight,
                                           device_icon: Devices_WS_Tool,
+                                          deviceNameForAdding: Constants.STR_WEIGHING_SCALE,
                                         ),
                                       )),
-                            );
+                            ).then((value) {
+                              setState(() {});
+                            });
                           },
                           child: Container(
                             width: 190.0.w,
@@ -2629,7 +2647,7 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                   ],
                                                 ),
                                               ),
-                                              Column(
+                                              /*Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.end,
                                                 children: [
@@ -2654,9 +2672,10 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
                                                     shape: CircleBorder(),
                                                   ),
                                                 ],
-                                              ),
+                                              ),*/
                                             ],
-                                          )
+                                          ),
+                                          SizedBoxWidget(height: 10,),
                                         ],
                                       ),
                                     ),
