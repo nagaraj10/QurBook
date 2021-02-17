@@ -1541,6 +1541,8 @@ class CommonDialogBox {
                     searchWord: searchParam,
                   ),
                   toPreviousScreen: true,
+                  isSkipUnknown:
+                      searchParam == CommonConstants.keyDoctor ? true : false,
                 )))
         .then((results) {
       if (results != null) {

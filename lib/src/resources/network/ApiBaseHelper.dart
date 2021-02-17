@@ -189,7 +189,7 @@ class ApiBaseHelper {
       final response = await http.get(_baseUrl + url,
           headers: await headerRequest.getRequestHeadersForSearch());
 
-      responseJson = _returnResponse(response);
+      responseJson = _returnResponse(response, forDoctorSearch: true);
     } on SocketException {
       throw FetchDataException(variable.strNoInternet);
     }
@@ -412,7 +412,7 @@ class ApiBaseHelper {
     return responseJson;
   }
 
-  dynamic _returnResponse(http.Response response) {
+  dynamic _returnResponse(http.Response response, {bool forDoctorSearch}) {
     switch (response.statusCode) {
       case 200:
         var responseJson;
@@ -463,8 +463,18 @@ class ApiBaseHelper {
         return responseJson;
         break;
       case 500:
-        var responseJson = convert.jsonDecode(response.body.toString());
-        return responseJson;
+        try {
+          if (forDoctorSearch) {
+            var responseJson = convert.jsonDecode(response.body.toString());
+            return responseJson;
+          } else {
+            var responseJson = convert.jsonDecode(response.body.toString());
+            return responseJson;
+          }
+        } catch (e) {
+          var responseJson = convert.jsonDecode(response.body.toString());
+          return responseJson;
+        }
         break;
       default:
         throw FetchDataException(
