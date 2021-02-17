@@ -142,15 +142,15 @@ const String RECORDS_TITLE = 'My Records';
 const String NO_DATA_DASHBOARD =
     'Personalize the environment. \n Upload your favorite cover image..';
 const String NO_DATA_DOCTOR =
-    'Hey, Doctor' 's directory looks empty !! \n Add them now.';
+    'Hey, Doctor\'s directory looks empty !! \n Add them now.';
 const String NO_DATA_HOSPITAL =
     'Hello, Hospital listing looks empty !! \n Add it now.';
 const String NO_DATA_LAB =
     'Hey, You may need Labs contact coordinates !! \n Add it now.';
-const String NO_DATA_FAMIY = 'Looks like you haven'
-    't added your family members. \n Add them right away.';
-const String NO_DATA_FAMIY_CLONE = 'Looks like you haven'
-    't added your family members.';
+const String NO_DATA_FAMIY =
+    'Looks like you haven\'t added your family members. \n Add them right away.';
+const String NO_DATA_FAMIY_CLONE =
+    'Looks like you haven\'t added your family members.';
 const String NO_DATA_SCHEDULES =
     'Never miss any schedule. \n Add it to your calendar and get notified.';
 const String NO_DATA_PRESCRIPTION =
@@ -375,6 +375,7 @@ const String KEY_USERID_BOOK = 'userID_BOOK';
 const String ERR_MSG_RECORD_CREATE =
     'Unable to save the information as the server rejected the message. Please contact Support';
 
-const String STR_USER_PROFILE_SETTING_ALREADY = 'User Profile Setting is already exists for this User.';
+const String STR_USER_PROFILE_SETTING_ALREADY =
+    'User Profile Setting is already exists for this User.';
 const String STR_ARE_SURE = 'Are you sure?';
 const String STR_SURE_CANCEL_PAY = 'Do you want to cancel the payment';
