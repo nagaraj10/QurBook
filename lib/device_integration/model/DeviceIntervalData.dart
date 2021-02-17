@@ -37,6 +37,7 @@ class DeviceInterval {
 
 class DeviceIntervalData {
   DeviceIntervalData({
+    this.deviceId,
     this.startDateTime,
     this.endDateTime,
     this.lastSyncDateTime,
@@ -51,6 +52,7 @@ class DeviceIntervalData {
     this.oxygenSaturationCollection,
   });
 
+  String deviceId;
   DateTime startDateTime;
   DateTime endDateTime;
   DateTime lastSyncDateTime;
@@ -66,6 +68,7 @@ class DeviceIntervalData {
 
   factory DeviceIntervalData.fromJson(Map<String, dynamic> json) =>
       DeviceIntervalData(
+        deviceId: json["id"],
         startDateTime: DateTime.parse(json[param.strsyncStartDate]),
         endDateTime: DateTime.parse(json[param.strsyncEndDate]),
         lastSyncDateTime: DateTime.parse(json[param.strlastSyncDateTime]),
@@ -94,6 +97,7 @@ class DeviceIntervalData {
       );
 
   Map<String, dynamic> toJson() => {
+        "id": deviceId,
         param.strsyncStartDate: startDateTime.toIso8601String(),
         param.strsyncEndDate: endDateTime.toIso8601String(),
         param.strlastSyncDateTime: lastSyncDateTime.toIso8601String(),

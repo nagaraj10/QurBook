@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:myfhb/common/PreferenceUtil.dart';
 import 'package:myfhb/constants/fhb_constants.dart' as Constants;
+import 'package:myfhb/device_integration/model/DeleteDeviceHealthRecord.dart';
 import 'package:myfhb/record_detail/model/DoctorImageResponse.dart';
 import 'package:myfhb/record_detail/model/ImageDocumentResponse.dart';
 import 'package:myfhb/record_detail/model/MetaDataMovedResponse.dart';
@@ -331,5 +332,13 @@ class HealthReportListForUserRepository {
     final response = await _helper.updateDeviceSelection(
         query.qr_user_profile_no_slash, body);
     return UpdateDeviceModel.fromJson(response);
+  }
+
+  Future<DeleteDeviceHealthRecord> deleteDeviceRecords(
+      String deviceId) async {
+
+    final response = await _helper.deleteDeviceRecords(
+        query.device_health+deviceId);
+    return DeleteDeviceHealthRecord.fromJson(response);
   }
 }

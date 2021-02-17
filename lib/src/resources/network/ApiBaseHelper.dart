@@ -1396,6 +1396,18 @@ class ApiBaseHelper {
     }
     return responseJson;
   }
+
+  Future<dynamic> deleteDeviceRecords(String url) async {
+    var responseJson;
+    try {
+      final response = await http.delete(_baseUrl + url,
+          headers: await headerRequest.getRequestHeadersTimeSlot());
+      responseJson = _returnResponse(response);
+    } on SocketException {
+      throw FetchDataException(variable.strNoInternet);
+    }
+    return responseJson;
+  }
 }
 
 abstract class InnerException {

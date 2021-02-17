@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:myfhb/constants/fhb_parameters.dart';
 import 'package:myfhb/device_integration/model/BPValues.dart';
 import 'package:myfhb/device_integration/model/GulcoseValues.dart';
+import 'package:myfhb/device_integration/model/HeartRate.dart';
 import 'package:myfhb/device_integration/model/OxySaturationValues.dart';
 import 'package:myfhb/device_integration/model/TemperatureValues.dart';
 import 'package:myfhb/device_integration/model/WeightValues.dart';
@@ -99,7 +100,7 @@ class DevicesViewModel with ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<BPResult>> fetchBPDetails() async {
+  Future<List<dynamic>> fetchBPDetails() async {
     try {
       final resp = await _helper.getBPData();
       if (resp == null) {
@@ -108,7 +109,9 @@ class DevicesViewModel with ChangeNotifier {
       final parsedResponse = json.decode(resp.toString())[dataResult] as List;
       List<DeviceIntervalData> deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
+      List<dynamic> finalResult;
       List<BPResult> ret = new List();
+      //List<HeartRateEntity> heartRate = new List();
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bloodPressureCollection.isEmpty) {
           return [];
@@ -122,12 +125,29 @@ class DevicesViewModel with ChangeNotifier {
               diastolic: bpElement.diastolic);
           ret.add(bpList);
         });
+
+        /*dataElement.heartRateCollection.forEach((element) {
+          final heartRateList = HeartRateEntity(bpm: element.bpm);
+          heartRate.add(heartRateList);
+        });*/
+
       });
-      return ret;
+
+      if(deviceIntervalData.length==0 || deviceIntervalData==null){
+        deviceIntervalData =[];
+      }
+
+      if(ret.length==0 || ret==null){
+        ret =[];
+      }
+
+      finalResult = [ret,deviceIntervalData];
+
+      return finalResult;
     } catch (e) {}
   }
 
-  Future<List<GVResult>> fetchGLDetails() async {
+  Future<List<dynamic>> fetchGLDetails() async {
     try {
       final resp = await _helper.getBloodGlucoseData();
       if (resp == null) {
@@ -136,6 +156,7 @@ class DevicesViewModel with ChangeNotifier {
       final parsedResponse = json.decode(resp.toString())[dataResult] as List;
       List<DeviceIntervalData> deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
+      List<dynamic> finalResult;
       List<GVResult> ret = new List();
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bloodGlucoseCollection.isEmpty) {
@@ -158,11 +179,21 @@ class DevicesViewModel with ChangeNotifier {
           ret.add(bgList);
         });
       });
-      return ret;
+      if(deviceIntervalData.length==0 || deviceIntervalData==null){
+        deviceIntervalData =[];
+      }
+
+      if(ret.length==0 || ret==null){
+        ret =[];
+      }
+
+      finalResult = [ret,deviceIntervalData];
+
+      return finalResult;
     } catch (e) {}
   }
 
-  Future<List<OxyResult>> fetchOXYDetails(String response) async {
+  Future<List<dynamic>> fetchOXYDetails(String response) async {
     try {
       final resp = await _helper.getOxygenSaturationData();
       if (resp == null) {
@@ -171,9 +202,11 @@ class DevicesViewModel with ChangeNotifier {
       final parsedResponse = json.decode(resp.toString())[dataResult] as List;
       List<DeviceIntervalData> deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
+      List<dynamic> finalResult;
       List<OxyResult> ret = new List();
+      //List<HeartRateEntity> heartRate = new List();
       deviceIntervalData.forEach((dataElement) {
-        if (dataElement.oxygenSaturationCollection.isEmpty) {
+        if (dataElement.oxygenSaturationCollection.isEmpty && dataElement.heartRateCollection.isEmpty) {
           return [];
         }
         dataElement.oxygenSaturationCollection.forEach((oxyValue) {
@@ -184,12 +217,27 @@ class DevicesViewModel with ChangeNotifier {
               oxygenSaturation: oxyValue.oxygenSaturation);
           ret.add(oxyList);
         });
+       /* dataElement.heartRateCollection.forEach((element) {
+          final heartRateList = HeartRateEntity(bpm: element.bpm);
+          heartRate.add(heartRateList);
+        });*/
       });
-      return ret;
+
+      if(deviceIntervalData.length==0 || deviceIntervalData==null){
+        deviceIntervalData =[];
+      }
+
+      if(ret.length==0 || ret==null){
+        ret =[];
+      }
+
+      finalResult = [ret,deviceIntervalData];
+
+      return finalResult;
     } catch (e) {}
   }
 
-  Future<List<TMPResult>> fetchTMPDetails() async {
+  Future<List<dynamic>> fetchTMPDetails() async {
     try {
       final resp = await _helper.getBodyTemperatureData();
       if (resp == null) {
@@ -199,6 +247,7 @@ class DevicesViewModel with ChangeNotifier {
       List<DeviceIntervalData> deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<TMPResult> ret = new List();
+      List<dynamic> finalResult;
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bodyTemperatureCollection.isEmpty) {
           return [];
@@ -213,11 +262,21 @@ class DevicesViewModel with ChangeNotifier {
           ret.add(tempList);
         });
       });
-      return ret;
+      if(deviceIntervalData.length==0 || deviceIntervalData==null){
+        deviceIntervalData =[];
+      }
+
+      if(ret.length==0 || ret==null){
+        ret =[];
+      }
+
+      finalResult = [ret,deviceIntervalData];
+
+      return finalResult;
     } catch (e) {}
   }
 
-  Future<List<WVResult>> fetchWVDetails(String response) async {
+  Future<List<dynamic>> fetchWVDetails(String response) async {
     try {
       final resp = await _helper.getWeightData();
       if (resp == null) {
@@ -227,6 +286,7 @@ class DevicesViewModel with ChangeNotifier {
       List<DeviceIntervalData> deviceIntervalData =
           parsedResponse.map((e) => DeviceIntervalData.fromJson(e)).toList();
       List<WVResult> ret = new List();
+      List<dynamic> finalResult;
       deviceIntervalData.forEach((dataElement) {
         if (dataElement.bodyWeightCollection.isEmpty) {
           return [];
@@ -241,7 +301,17 @@ class DevicesViewModel with ChangeNotifier {
           ret.add(weightList);
         });
       });
-      return ret;
+      if(deviceIntervalData.length==0 || deviceIntervalData==null){
+        deviceIntervalData =[];
+      }
+
+      if(ret.length==0 || ret==null){
+        ret =[];
+      }
+
+      finalResult = [ret,deviceIntervalData];
+
+      return finalResult;
     } catch (e) {}
   }
 

@@ -184,71 +184,91 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
                 )
               ],
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: const Color(fhbColors.bgColorContainer),
-                  child: Image.network(
-                    data.metadata.healthRecordType.logo,
-                    height: 25,
-                    width: 25,
-                    color: Color(new CommonUtil().getMyPrimaryColor()),
-                  ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      new FHBUtils()
+                          .getFormattedDateString(data.createdOn),
+                      style: TextStyle(
+                          color: Color(
+                              new CommonUtil().getMyPrimaryColor()),
+                          fontWeight: FontWeight.w200,
+                          fontSize: 8),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  width: 3,
-                ),
-                Container(
-                  width: 70,
-                  child: Text(
-                    data.metadata.healthRecordType.name != null
-                        ? toBeginningOfSentenceCase(
-                            data.metadata.healthRecordType.name)
-                        : '',
-                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10),
-                    maxLines: 2,
-                    softWrap: true,
-                  ),
-                ),
-                Expanded(
-                  child: getDeviceReadings(data, data.metadata.deviceReadings),
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    IconButton(
-                        icon: data.isBookmarked
-                            ? ImageIcon(
-                                AssetImage(variable.icon_record_fav_active),
-                                //TODO chnage theme
-                                color:
-                                    Color(new CommonUtil().getMyPrimaryColor()),
-                                size: 20,
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundColor: const Color(fhbColors.bgColorContainer),
+                      child: Image.network(
+                        data.metadata.healthRecordType.logo,
+                        height: 25,
+                        width: 25,
+                        color: Color(new CommonUtil().getMyPrimaryColor()),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 3,
+                    ),
+                    Container(
+                      width: 70,
+                      child: Text(
+                        data.metadata.healthRecordType.name != null
+                            ? toBeginningOfSentenceCase(
+                                data.metadata.healthRecordType.name)
+                            : '',
+                        style: TextStyle(fontWeight: FontWeight.w500, fontSize: 10,color: Color(
+                            new CommonUtil().getMyPrimaryColor()),),
+                        maxLines: 2,
+                        softWrap: true,
+                      ),
+                    ),
+                    Expanded(
+                      child: getDeviceReadings(data, data.metadata.deviceReadings),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        IconButton(
+                            icon: data.isBookmarked
+                                ? ImageIcon(
+                                    AssetImage(variable.icon_record_fav_active),
+                                    //TODO chnage theme
+                                    color:
+                                        Color(new CommonUtil().getMyPrimaryColor()),
+                                    size: 20,
+                                  )
+                                : ImageIcon(
+                                    AssetImage(variable.icon_record_fav),
+                                    color: Colors.black,
+                                    size: 20,
+                                  ),
+                            onPressed: () {
+                              new CommonUtil().bookMarkRecord(data, _refresh);
+                            }),
+                        (data.metadata.hasVoiceNotes != null &&
+                                data.metadata.hasVoiceNotes)
+                            ? Icon(
+                                Icons.mic,
+                                color: Colors.black54,
                               )
-                            : ImageIcon(
-                                AssetImage(variable.icon_record_fav),
-                                color: Colors.black,
-                                size: 20,
-                              ),
-                        onPressed: () {
-                          new CommonUtil().bookMarkRecord(data, _refresh);
-                        }),
-                    (data.metadata.hasVoiceNotes != null &&
-                            data.metadata.hasVoiceNotes)
-                        ? Icon(
-                            Icons.mic,
-                            color: Colors.black54,
-                          )
-                        : Container(),
-                    widget.mediaMeta.contains(data.id)
-                        ? Icon(
-                            Icons.done,
-                            color: Color(new CommonUtil().getMyPrimaryColor()),
-                          )
-                        : SizedBox(),
+                            : Container(),
+                        widget.mediaMeta.contains(data.id)
+                            ? Icon(
+                                Icons.done,
+                                color: Color(new CommonUtil().getMyPrimaryColor()),
+                              )
+                            : SizedBox(),
+                      ],
+                    ),
                   ],
                 ),
               ],
@@ -298,16 +318,21 @@ class _DeviceListScreentState extends State<DeviceListScreen> {
               maxLines: 2,
               softWrap: true,
             ),
-            Text(
-              deviceReadings[i].value.toString(),
-              style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 10),
+            Row(
+              children: [
+                Text(
+                  deviceReadings[i].value.toString(),
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 10),
+                ),
+                Text(deviceReadings[i].unit.toString(),
+                    maxLines: 2,
+                    style: TextStyle(color: Colors.black54, fontSize: 8))
+              ],
             ),
-            Text(deviceReadings[i].unit.toString(),
-                maxLines: 2,
-                style: TextStyle(color: Colors.black54, fontSize: 10))
+
           ],
         ),
       ));

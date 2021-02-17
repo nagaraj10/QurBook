@@ -214,3 +214,4 @@ const String qr_update_appointment_records = '/update-appointment-records';
 const String appointmentSlash = 'appointment/';
 const String patientIdEqualTo = 'chat-screen-details?patientId=';
 const String doctorIdEqualTo = '&doctorId=';
+const String device_health = 'device-health-record/';

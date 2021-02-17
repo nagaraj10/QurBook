@@ -34,7 +34,7 @@ class HeartRateEntity {
   //String id;
   DateTime startDateTime;
   DateTime endDateTime;
-  int bpm;
+  var bpm;
   DeviceHealthRecord deviceHealthRecord;
   AverageAsOfNow averageAsOfNow;
 
