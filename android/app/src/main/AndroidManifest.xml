@@ -57,7 +57,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:host="test-qurbook.onelink.me"
-                    android:pathPrefix="/H5hv"
+                    android:pathPrefix="/kIiw"
                     android:scheme="https" />
             </intent-filter>
         </activity>
