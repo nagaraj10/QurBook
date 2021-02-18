@@ -50,6 +50,7 @@ import 'src/ui/connectivity_bloc.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/city.dart';
 import 'telehealth/features/appointments/model/fetchAppointments/past.dart';
 import 'package:myfhb/src/utils/screenutils/screenutil.dart';
+import 'package:appsflyer_sdk/appsflyer_sdk.dart';
 
 var firstCamera;
 List<CameraDescription> listOfCameras;
@@ -115,6 +116,19 @@ Future<void> main() async {
 //       AwesomeNotifications().requestPermissionToSendNotifications();
 //     }
 //   });
+
+  Map appsFlyerOptions = {
+    "afDevKey": 'UJdqFKHff633D3TcaZ5d55',
+    "afAppId": '',
+    "isDebug": true
+  };
+
+  AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
+
+  appsflyerSdk.initSdk(
+      registerConversionDataCallback: true,
+      registerOnAppOpenAttributionCallback: true,
+      registerOnDeepLinkingCallback: true);
 
   runApp(
     MyFHB(),
