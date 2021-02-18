@@ -126,9 +126,9 @@ Future<void> main() async {
   AppsflyerSdk appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
 
   appsflyerSdk.initSdk(
-      registerConversionDataCallback: true,
-      registerOnAppOpenAttributionCallback: true,
-      registerOnDeepLinkingCallback: true);
+    registerConversionDataCallback: true,
+    registerOnAppOpenAttributionCallback: true,
+  );
 
   runApp(
     MyFHB(),

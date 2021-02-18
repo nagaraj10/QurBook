@@ -50,15 +50,13 @@
                 <action android:name="android.intent.action.SEND"/>
                 <data android:mimeType="text/plain"/>
             </intent-filter>
-            <intent-filter android:autoVerify="true">
+            <intent-filter  android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="test-qurbook.onelink.me"
-                    android:pathPrefix="/kIiw"
-                    android:scheme="https" />
+                <data android:scheme="https"
+                    android:host="qurbook-install.onelink.me"
+                    android:pathPrefix="/77HX" />
             </intent-filter>
         </activity>
         <activity
