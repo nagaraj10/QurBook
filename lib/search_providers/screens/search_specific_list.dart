@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:myfhb/add_providers/models/add_providers_arguments.dart';
@@ -28,8 +29,10 @@ class SearchSpecificList extends StatefulWidget {
   SearchArguments arguments;
 
   bool toPreviousScreen;
+  bool isSkipUnknown;
 
-  SearchSpecificList({this.arguments, this.toPreviousScreen});
+  SearchSpecificList(
+      {this.arguments, this.toPreviousScreen, this.isSkipUnknown});
 
   @override
   State<StatefulWidget> createState() {
@@ -69,7 +72,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
       _doctorsListBlock.getDoctorsListNew(
           _textFieldController.text.toString() == null
               ? ''
-              : _textFieldController.text.toString());
+              : _textFieldController.text.toString(),
+          widget.isSkipUnknown);
     }
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
@@ -108,7 +112,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 onChanged: (editedValue) {
                   value = editedValue;
                   widget.arguments.searchWord == CommonConstants.doctors
-                      ? _doctorsListBlock.getDoctorsListNew(value)
+                      ? _doctorsListBlock.getDoctorsListNew(
+                          value, widget.isSkipUnknown)
                       : widget.arguments.searchWord == CommonConstants.hospitals
                           ? _hospitalListBlock.getHospitalListNew(value)
                           : _labsListBlock.getLabsListNew(value);
@@ -190,25 +195,31 @@ class SearchSpecificListState extends State<SearchSpecificList> {
 
           case Status.COMPLETED:
             rebuildBlockObject();
-            return snapshot.data.data.result == null
+            return (snapshot.data.data.isSuccess == false &&
+                    widget.isSkipUnknown == true)
                 ? Container(
-                    child: Center(
-                      child: Text(variable.strNodata),
-                    ),
+                    child: getAllDatasInDoctorsListScrap(snapshot.data.data),
+                    margin: EdgeInsets.all(5),
                   )
-                //getEmptyCard()
-                : snapshot.data.data.result.length == 0
+                : (snapshot.data.data.result == null)
                     ? Container(
                         child: Center(
                           child: Text(variable.strNodata),
                         ),
                       )
                     //getEmptyCard()
-                    : Container(
-                        child:
-                            getAllDatasInDoctorsList(snapshot.data.data.result),
-                        margin: EdgeInsets.all(5),
-                      );
+                    : snapshot.data.data.result.length == 0
+                        ? Container(
+                            child: Center(
+                              child: Text(variable.strNodata),
+                            ),
+                          )
+                        //getEmptyCard()
+                        : Container(
+                            child: getAllDatasInDoctorsList(
+                                snapshot.data.data.result),
+                            margin: EdgeInsets.all(5),
+                          );
             break;
         }
       },
@@ -336,44 +347,109 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     _labsListBlock = new LabsListBlock();
   }
 
-  Widget getEmptyCard() {
-    return value.length > 0
-        ? SingleChildScrollView(
-            child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Center(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(height: 50),
-                Image.asset(ImageUrlUtils.fileImg, width: 65, height: 90),
-                SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(variable.strNoData,
-                        style: new TextStyle(
-                          color: ColorUtils.blackcolor,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w500,
-                        )),
-                    SizedBox(width: 5),
-                    /*Text(value,
-                        style: new TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 15.0,
-                          fontWeight: FontWeight.w500,
-                        )),*/
-                  ],
-                ),
-                SizedBox(height: 10),
-                _showAddButton()
-              ],
-            )),
-            color: Colors.white,
-          ))
-        : Container();
+  Widget getEmptyCard(Diagnostics diagnostics) {
+    /*return SingleChildScrollView(
+        child: Container(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      child: Center(
+        child:
+            */ /* Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(height: 50),
+          Image.asset(ImageUrlUtils.fileImg, width: 65, height: 90),
+          SizedBox(height: 30),
+          Text(
+              "Looks like the Doctor you're searching is not available in the system,please check the spelling or",
+              style: new TextStyle(
+                color: ColorUtils.blackcolor,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w500,
+              )),
+          _showAddButton(diagnostics),
+          Text('to add the Doctor as',
+              style: new TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w500,
+              )),
+          Text('Unknown Doctor ',
+              style: new TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+              )),
+          Text('temporarily',
+              style: new TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontSize: 15.0,
+                fontWeight: FontWeight.bold,
+              )),
+
+        ],
+      )*/ /*
+
+      ),
+      color: Colors.white,
+    ));*/
+    return Center(
+      child: new RichText(
+        text: new TextSpan(
+          children: [
+            new TextSpan(
+              text:
+                  'Looks like the Doctor you\'re searching is not available in the system,please check the spelling or ',
+              style: new TextStyle(
+                color: ColorUtils.blackcolor,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            new TextSpan(
+              text: 'Click here ',
+              style: new TextStyle(
+                  color: Color(new CommonUtil().getMyPrimaryColor())),
+              recognizer: new TapGestureRecognizer()
+                ..onTap = () {
+                  if (widget.toPreviousScreen) {
+                    widget.arguments.searchWord == CommonConstants.doctors
+                        ? passDoctorsValue(diagnostics.errorData, context)
+                        : widget.arguments.searchWord ==
+                                CommonConstants.hospitals
+                            ? passHospitalValue(null, context)
+                            : passLaboratoryValue(null, context);
+                  }
+                },
+            ),
+            new TextSpan(
+              text: ' to add the Doctor as ',
+              style: new TextStyle(
+                color: ColorUtils.blackcolor,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            new TextSpan(
+              text: ' Unknown Doctor ',
+              style: new TextStyle(
+                color: ColorUtils.blackcolor,
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            new TextSpan(
+              text: ' temporarily',
+              style: new TextStyle(
+                color: ColorUtils.blackcolor,
+                fontSize: 15.0,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _refresh() async {
@@ -381,9 +457,17 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     await Future.delayed(Duration(milliseconds: 300));
   }
 
-  Widget _showAddButton() {
+  Widget _showAddButton(Diagnostics diagnostics) {
     final GestureDetector loginButtonWithGesture = new GestureDetector(
-      onTap: _addBtnTapped,
+      onTap: () {
+        if (widget.toPreviousScreen) {
+          widget.arguments.searchWord == CommonConstants.doctors
+              ? passDoctorsValue(diagnostics.errorData, context)
+              : widget.arguments.searchWord == CommonConstants.hospitals
+                  ? passHospitalValue(null, context)
+                  : passLaboratoryValue(null, context);
+        }
+      },
       child: new Container(
         width: 100,
         height: 40.0,
@@ -400,7 +484,7 @@ class SearchSpecificListState extends State<SearchSpecificList> {
         ),
         child: new Center(
           child: new Text(
-            variable.Add,
+            'Click Here',
             style: new TextStyle(
               color: Colors.white,
               fontSize: 14.0,
@@ -445,6 +529,46 @@ class SearchSpecificListState extends State<SearchSpecificList> {
               ),
               color: Color(fhbColors.bgColorContainer),
             ),
+    );
+  }
+
+  Widget getAllDatasInDoctorsListScrap(DoctorsSearchListResponse data) {
+    return RefreshIndicator(
+      key: _refreshIndicatorKey,
+      onRefresh: _refresh,
+      child: (data.isSuccess == false && widget.isSkipUnknown == true)
+          ? Container(
+              child: getEmptyCard(data.diagnostics),
+              color: Color(fhbColors.bgColorContainer),
+            )
+          : data.result != null
+              ? Container(
+                  color: Color(fhbColors.bgColorContainer),
+                  child: ListView.builder(
+                    itemBuilder: (c, i) => Container(
+                      padding: EdgeInsets.only(top: 2, bottom: 2),
+                      child: getCardToDisplaySearchList(
+                          (data.result[i].name != null &&
+                                  data.result[i].name != '')
+                              ? data.result[i].name
+                              : data.result[i].firstName +
+                                  ' ' +
+                                  data.result[i].lastName,
+                          getDoctorsAddress(data.result[i]),
+                          data.result[i].doctorId,
+                          data.result[i].profilePicThumbnailUrl,
+                          data.result[i],
+                          HospitalsListResult(),
+                          LabListResult()),
+                    ),
+                    itemCount: data.result.length,
+                  ))
+              : Container(
+                  child: Center(
+                    child: Text(variable.strNodata),
+                  ),
+                  color: Color(fhbColors.bgColorContainer),
+                ),
     );
   }
 
@@ -728,8 +852,8 @@ class SearchSpecificListState extends State<SearchSpecificList> {
     }
   }
 
-  void _addBtnTapped() {
-    Navigator.pushNamed(context, router.rt_AddProvider,
+  _addBtnTapped(Diagnostics diagnostics) {
+    /* Navigator.pushNamed(context, router.rt_AddProvider,
         arguments: AddProvidersArguments(
           searchText: value,
           fromClass: widget.arguments.fromClass == router.cn_AddProvider
@@ -749,7 +873,15 @@ class SearchSpecificListState extends State<SearchSpecificList> {
                 ? passHospitalValueSample(results, context)
                 : passLaboratoryValueSample(results, context);
       }
-    });
+    });*/
+
+    if (widget.toPreviousScreen) {
+      widget.arguments.searchWord == CommonConstants.doctors
+          ? passDoctorsValue(diagnostics.errorData, context)
+          : widget.arguments.searchWord == CommonConstants.hospitals
+              ? passHospitalValue(null, context)
+              : passLaboratoryValue(null, context);
+    }
   }
 
   passDoctorsValueSample(dynamic results, BuildContext context) {

@@ -215,3 +215,5 @@ const String appointmentSlash = 'appointment/';
 const String patientIdEqualTo = 'chat-screen-details?patientId=';
 const String doctorIdEqualTo = '&doctorId=';
 const String device_health = 'device-health-record/';
+
+const String qr_isSkipUnknown='isSkipUnknown=';

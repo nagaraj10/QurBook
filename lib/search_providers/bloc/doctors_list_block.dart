@@ -52,15 +52,18 @@ class DoctorsListBlock implements BaseBloc {
     }
   }
 
-  getDoctorsListNew(String param) async {
+  Future<DoctorsSearchListResponse> getDoctorsListNew(
+      String param, bool isSkipUnknown) async {
+    DoctorsSearchListResponse userHealthResponseList;
     doctorsListNewSink.add(ApiResponse.loading(variable.strGetDoctorsList));
     try {
-      DoctorsSearchListResponse userHealthResponseList =
-          await _doctorsListRepository.getDoctorsListFromSearchNew(param);
+      userHealthResponseList = await _doctorsListRepository
+          .getDoctorsListFromSearchNew(param, isSkipUnknown);
       doctorsListNewSink.add(ApiResponse.completed(userHealthResponseList));
     } catch (e) {
       doctorsListNewSink.add(ApiResponse.error(e.toString()));
     }
+    return userHealthResponseList;
   }
 
   Future<DoctorsListResponse> getDoctorObjUsingId(String doctorsId) async {

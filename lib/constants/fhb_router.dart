@@ -61,9 +61,9 @@ setRouter(List<CameraDescription> listOfCameras) async {
     router.rt_AddAddress: (BuildContext context) =>
         AddAddressScreen(arguments: ModalRoute.of(context).settings.arguments),
     router.rt_SearchProvider: (BuildContext context) => SearchSpecificList(
-          arguments: ModalRoute.of(context).settings.arguments,
-          toPreviousScreen: false,
-        ),
+        arguments: ModalRoute.of(context).settings.arguments,
+        toPreviousScreen: false,
+        isSkipUnknown: false),
     router.rt_TakePicture: (BuildContext context) =>
         TakePictureScreen(camera: firstCamera),
     router.rt_TakePictureForDevices: (BuildContext context) =>
