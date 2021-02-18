@@ -826,6 +826,11 @@ class _ShowDevicesNewState extends State<ShowDevicesNew> {
 
   void callBackToRefresh() {
     (context as Element).markNeedsBuild();
+
+    averageForPulForBp = '';
+    averageForPul = '';
+    averageForPRBpm = '';
+    prbPMOxi = '';
   }
 
   Widget _getUserName() {
