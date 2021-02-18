@@ -301,32 +301,6 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                           Color(CommonConstants.bplightColor)),
                                   softWrap: true,
                                 ),
-                                /*Container(
-                                  child: TextFormField(
-                                      textAlign: TextAlign.center,
-                                      controller: deviceController,
-                                      style: TextStyle(
-                                          fontSize: 13.0,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(
-                                              CommonConstants.bpDarkColor)),
-                                      decoration: InputDecoration(
-                                          border: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Color(CommonConstants
-                                                    .bpDarkColor),
-                                                width: 0.5),
-                                          ),
-                                          hintText: '0',
-                                          hintStyle: TextStyle(
-                                              color: Colors.grey, fontSize: 13),
-                                          contentPadding: EdgeInsets.zero),
-                                      cursorColor:
-                                          Color(CommonConstants.bpDarkColor),
-                                      keyboardType: TextInputType.number,
-                                      cursorWidth: 0.5,
-                                      onSaved: (input) => setState(() {})),
-                                )*/
                                 fhbBasicWidget.getErrorMsgForUnitEntered(
                                     context,
                                     CommonConstants.strSystolicPressure,
@@ -352,31 +326,6 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                     color: Color(CommonConstants.bplightColor)),
                                 softWrap: true,
                               ),
-                              /*Container(
-                                constraints: BoxConstraints(maxWidth: 100),
-                                child: TextFormField(
-                                    controller: diaStolicPressure,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 13.0,
-                                        fontWeight: FontWeight.w500,
-                                        color:
-                                            Color(CommonConstants.bpDarkColor)),
-                                    decoration: InputDecoration(
-                                        border: UnderlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color: Colors.black, width: 0.5),
-                                        ),
-                                        hintText: '0',
-                                        hintStyle: TextStyle(
-                                            color: Colors.grey, fontSize: 13),
-                                        contentPadding: EdgeInsets.zero),
-                                    cursorColor:
-                                        Color(CommonConstants.bpDarkColor),
-                                    keyboardType: TextInputType.number,
-                                    cursorWidth: 0.5,
-                                    onSaved: (input) => setState(() {})),
-                              ),*/
                               fhbBasicWidget.getErrorMsgForUnitEntered(
                                   context,
                                   CommonConstants.strDiastolicPressure,
@@ -404,33 +353,6 @@ class _DevicedashboardScreenState extends State<Devicedashboard> {
                                           Color(CommonConstants.bplightColor)),
                                   softWrap: true,
                                 ),
-                                /*Container(
-                                  constraints: BoxConstraints(maxWidth: 100),
-                                  child: TextFormField(
-                                      textAlign: TextAlign.center,
-                                      controller: pulse,
-                                      style: TextStyle(
-                                          fontSize: 13.0,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(
-                                              CommonConstants.bpDarkColor)),
-                                      decoration: InputDecoration(
-                                          border: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Color(CommonConstants
-                                                    .bpDarkColor),
-                                                width: 0.5),
-                                          ),
-                                          hintText: '0',
-                                          hintStyle: TextStyle(
-                                              color: Colors.grey, fontSize: 13),
-                                          contentPadding: EdgeInsets.zero),
-                                      cursorColor:
-                                          Color(CommonConstants.bpDarkColor),
-                                      keyboardType: TextInputType.number,
-                                      cursorWidth: 0.5,
-                                      onSaved: (input) => setState(() {})),
-                                ),*/
                                 fhbBasicWidget.getErrorMsgForUnitEntered(
                                     context,
                                     CommonConstants.strPulse,

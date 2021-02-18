@@ -576,6 +576,7 @@ class FHBBasicWidget {
         child: TextField(
           autofocus: false,
           textAlign: TextAlign.center,
+          maxLength: 3,
           style: TextStyle(
               fontSize: 13.0,
               fontWeight: FontWeight.w500,
@@ -583,6 +584,7 @@ class FHBBasicWidget {
           onTap: () {},
           controller: controllerValue,
           decoration: InputDecoration(
+              counterText: "",
               border: UnderlineInputBorder(
                 borderSide: BorderSide(
                     color: getColorBasedOnDevice(deviceName), width: 0.5),
