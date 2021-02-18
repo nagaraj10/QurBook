@@ -476,6 +476,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           controller: textEditingController,
           maxLines: 1,
           enableInteractiveSelection: false,
+          maxLength: isheightOrWeight ? 3 : 25,
           keyboardType:
               isheightOrWeight ? TextInputType.number : TextInputType.text,
           focusNode: focusNode,
@@ -490,6 +491,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           decoration: InputDecoration(
             labelText: labelText,
             hintText: hintText,
+            counterText: '',
             labelStyle: TextStyle(
                 fontSize: 13.0,
                 fontWeight: FontWeight.w400,
