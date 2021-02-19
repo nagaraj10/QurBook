@@ -141,7 +141,7 @@ class FamilyListView {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               ClipOval(
-                                  child: sharedByMe[index].nickName ==
+                                  child: sharedByMe[index].relationship.name ==
                                           variable.Self
                                       ? myProfile.result
                                                   .profilePicThumbnailUrl !=
@@ -188,10 +188,13 @@ class FamilyListView {
                                               width: 50,
                                               child: Center(
                                                 child: Text(
-                                                  sharedByMe[index].nickName !=
+                                                  sharedByMe[index]
+                                                              .child
+                                                              .firstName !=
                                                           null
                                                       ? sharedByMe[index]
-                                                          .nickName[0]
+                                                          .child
+                                                          .firstName[0]
                                                           .toUpperCase()
                                                       : '',
                                                   style: TextStyle(
@@ -208,12 +211,21 @@ class FamilyListView {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    sharedByMe[index].nickName != null
-                                        ? toBeginningOfSentenceCase(
-                                            sharedByMe[index]
-                                                .nickName
-                                                .toLowerCase())
-                                        : '',
+                                    index == 0
+                                        ? sharedByMe[index].nickName != null
+                                            ? toBeginningOfSentenceCase(
+                                                sharedByMe[index]
+                                                    .nickName
+                                                    .toLowerCase())
+                                            : ''
+                                        : sharedByMe[index].child.firstName !=
+                                                null
+                                            ? toBeginningOfSentenceCase(
+                                                sharedByMe[index]
+                                                    .child
+                                                    .firstName
+                                                    .toLowerCase())
+                                            : '',
                                     softWrap: false,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -262,7 +274,7 @@ class FamilyListView {
                             onTextFieldtap(
                                 context,
                                 sharedByMe[index].child.id,
-                                sharedByMe[index].nickName,
+                                sharedByMe[index].child.firstName,
                                 sharedByMe[index]
                                             .child
                                             .profilePicThumbnailUrl !=
@@ -270,9 +282,11 @@ class FamilyListView {
                                     ? sharedByMe[index]
                                         .child
                                         .profilePicThumbnailUrl
-                                    : (sharedByMe[index].nickName[0] != null
+                                    : (sharedByMe[index].child.firstName[0] !=
+                                            null
                                         ? sharedByMe[index]
-                                            .nickName[0]
+                                            .child
+                                            .firstName[0]
                                             .toUpperCase()
                                         : ''));
                           }
