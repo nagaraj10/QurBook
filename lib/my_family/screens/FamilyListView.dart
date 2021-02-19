@@ -220,43 +220,52 @@ class FamilyListView {
                                                   fhbColors.bgColorContainer),
                                             )),
                               SizedBox(width: 20),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    index == 0
-                                        ? sharedByMe[index].nickName != null
-                                            ? toBeginningOfSentenceCase(
-                                                sharedByMe[index]
-                                                    .nickName
-                                                    .toLowerCase())
-                                            : ''
-                                        : sharedByMe[index].child != null
-                                            ? getName(sharedByMe[index].child)
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: Text(
+                                        index == 0
+                                            ? sharedByMe[index].nickName != null
+                                                ? toBeginningOfSentenceCase(
+                                                    sharedByMe[index]
+                                                        .nickName
+                                                        .toLowerCase())
+                                                : ''
+                                            : sharedByMe[index].child != null
+                                                ? getName(
+                                                    sharedByMe[index].child)
+                                                : '',
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Text(
+                                        sharedByMe[index].relationship != null
+                                            ? sharedByMe[index]
+                                                        .relationship
+                                                        .name !=
+                                                    null
+                                                ? toBeginningOfSentenceCase(
+                                                    sharedByMe[index]
+                                                        .relationship
+                                                        .name
+                                                        .toLowerCase())
+                                                : ''
                                             : '',
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  Text(
-                                    sharedByMe[index].relationship != null
-                                        ? sharedByMe[index].relationship.name !=
-                                                null
-                                            ? toBeginningOfSentenceCase(
-                                                sharedByMe[index]
-                                                    .relationship
-                                                    .name
-                                                    .toLowerCase())
-                                            : ''
-                                        : '',
-                                    softWrap: false,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(fontSize: 10),
-                                  )
-                                ],
+                                        softWrap: false,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(fontSize: 10),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               )
                             ],
                           ),
