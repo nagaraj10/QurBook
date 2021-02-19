@@ -249,13 +249,13 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
 //                  ],
 //                ),
                 _showCommonEditText(
-                    mobileNoController,
-                    mobileNoFocus,
-                    firstNameFocus,
-                    CommonConstants.mobile_numberWithStar,
-                    CommonConstants.mobile_number,
-                    false,
-                    isheightOrWeight: false),
+                  mobileNoController,
+                  mobileNoFocus,
+                  firstNameFocus,
+                  CommonConstants.mobile_numberWithStar,
+                  CommonConstants.mobile_number,
+                  false,
+                ),
                 _showCommonEditText(
                     firstNameController,
                     firstNameFocus,
@@ -263,7 +263,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     CommonConstants.firstNameWithStar,
                     CommonConstants.firstName,
                     true,
-                    isheightOrWeight: false),
+                    maxLength: 35),
                 _showCommonEditText(
                     middleNameController,
                     middleNameFocus,
@@ -271,7 +271,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     CommonConstants.middleName,
                     CommonConstants.middleName,
                     true,
-                    isheightOrWeight: false),
+                    maxLength: 35),
                 _showCommonEditText(
                     lastNameController,
                     lastNameFocus,
@@ -279,7 +279,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                     CommonConstants.lastNameWithStar,
                     CommonConstants.lastName,
                     true,
-                    isheightOrWeight: false),
+                    maxLength: 35),
                 widget.arguments.fromClass == CommonConstants.my_family
                     ? (relationShipResponseList != null &&
                             relationShipResponseList.length > 0)
@@ -308,7 +308,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                                 CommonConstants.add_family)
                         ? true
                         : false,
-                    isheightOrWeight: false),
+                    maxLength: 50),
                 Row(
                   children: <Widget>[Expanded(child: getGenderDetails())],
                 ),
@@ -328,7 +328,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             CommonConstants.heightName,
                             CommonConstants.heightName,
                             true,
-                            isheightOrWeight: true)),
+                            isheightOrWeight: true,
+                            maxLength: 3)),
                     Expanded(
                         child: _showCommonEditText(
                             weightController,
@@ -337,7 +338,8 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
                             CommonConstants.weightName,
                             CommonConstants.weightName,
                             true,
-                            isheightOrWeight: true))
+                            isheightOrWeight: true,
+                            maxLength: 3))
                   ],
                 ),
                 _showDateOfBirthTextField(),
@@ -461,13 +463,15 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
   }
 
   Widget _showCommonEditText(
-      TextEditingController textEditingController,
-      FocusNode focusNode,
-      FocusNode nextFocusNode,
-      String labelText,
-      String hintText,
-      bool isEnabled,
-      {bool isheightOrWeight}) {
+    TextEditingController textEditingController,
+    FocusNode focusNode,
+    FocusNode nextFocusNode,
+    String labelText,
+    String hintText,
+    bool isEnabled, {
+    int maxLength,
+    bool isheightOrWeight: false,
+  }) {
     return Padding(
         padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
         child: TextField(
@@ -476,7 +480,7 @@ class AddFamilyUserInfoScreenState extends State<AddFamilyUserInfoScreen> {
           controller: textEditingController,
           maxLines: 1,
           enableInteractiveSelection: false,
-          maxLength: isheightOrWeight ? 3 : 25,
+          maxLength: maxLength,
           keyboardType:
               isheightOrWeight ? TextInputType.number : TextInputType.text,
           focusNode: focusNode,
